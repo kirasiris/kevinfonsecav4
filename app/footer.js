@@ -2,5 +2,13 @@ import "./global.css";
 import "./app.css";
 
 export default function Footer() {
-	return <>Made with &#10084; &#38; &#9749; by KEVIN URIEL</>;
+	return (
+		<footer className="py-5 bg-dark">
+			<div className="container">
+				<p className="m-0 text-center text-white">
+					Made with &#10084; &#38; &#9749; by KEVIN URIEL
+				</p>
+			</div>
+		</footer>
+	);
 }

@@ -27,6 +27,19 @@ async function getBlogs(params) {
 	return res.json();
 }
 
+async function getQuotes() {
+	const res = await fetch(`http://localhost:5000/api/v1/extras/quotes/random`, {
+		cache: "no-store",
+	});
+
+	if (!res.ok) {
+		// This will activate the closest `error.js` Error Boundary
+		throw new Error("Failed to fetch data");
+	}
+
+	return res.json();
+}
+
 const BlogIndex = async () => {
 	const getFeaturedBlogsData = getFeaturedBlog(
 		`?featured=true&postType=blog&status=published`
@@ -35,9 +48,12 @@ const BlogIndex = async () => {
 		`?page=1&limit=10&sort=-createdAt&postType=blog&status=published`
 	);
 
-	const [featured, blogs] = await Promise.all([
+	const getQuotesData = getQuotes();
+
+	const [featured, blogs, quotes] = await Promise.all([
 		getFeaturedBlogsData,
 		getBlogsData,
+		getQuotesData,
 	]);
 
 	return (
@@ -178,17 +194,19 @@ const BlogIndex = async () => {
 						<div className="card mb-4">
 							<div className="card-header">Random Quote</div>
 							<div className="card-body">
-								<figure>
-									<blockquote className="blockquote">
-										<p>
-											A well-known quote, contained in a blockquote element.
-										</p>
-									</blockquote>
-									<figcaption className="blockquote-footer">
-										Someone famous in{" "}
-										<cite title="Source Title">Source Title</cite>
-									</figcaption>
-								</figure>
+								{quotes.data.map((quote, index) => (
+									<figure key={quote._id}>
+										<blockquote className="blockquote">
+											<p>{quote.text}</p>
+										</blockquote>
+										<figcaption className="blockquote-footer">
+											{quote.authorName}&nbsp;-&nbsp;
+											<cite title={quote.sourceWebsite}>
+												{quote.sourceWebsite}
+											</cite>
+										</figcaption>
+									</figure>
+								))}
 							</div>
 						</div>
 					</div>

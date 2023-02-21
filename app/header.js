@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-export default function Header({ title = "", description = "" }) {
+export default function Header() {
 	return (
 		<>
 			<nav className="navbar navbar-expand-lg bg-dark">
@@ -52,7 +52,7 @@ export default function Header({ title = "", description = "" }) {
 								</Link>
 							</li>
 							<li className="nav-item">
-								<Link href="/themes" passHref legacyBehavior>
+								<Link href="/theme" passHref legacyBehavior>
 									<a className="nav-link" aria-current="page">
 										Themes
 									</a>
@@ -62,14 +62,6 @@ export default function Header({ title = "", description = "" }) {
 					</div>
 				</div>
 			</nav>
-			<header className="py-5 bg-light border-bottom mb-4">
-				<div className="container">
-					<div className="text-center my-5">
-						<h1 className="fw-bolder">Welcome to {title}!</h1>
-						<p className="lead mb-0">{description}</p>
-					</div>
-				</div>
-			</header>
 		</>
 	);
 }

@@ -1,0 +1,36 @@
+import Loading from "@/app/blog/loading";
+import Image from "next/image";
+import Link from "next/link";
+import { Suspense } from "react";
+
+const Single = ({ blog = {} }) => {
+	return (
+		<Suspense fallback={<Loading />}>
+			<article>
+				<div className="card mb-4">
+					<Link href={`/blog/${blog._id}`} passHref legacyBehavior>
+						<Image
+							src={blog.avatar.location.secure_location}
+							className="card-img-top"
+							alt={`${blog.title}'s featured image`}
+							width={`850`}
+							height={`350`}
+						/>
+					</Link>
+					<div className="card-body">
+						<div className="small text-muted">{blog.createdAt}</div>
+						<h2 className="card-title">
+							<Link href={`/blog/${blog._id}`}>{blog.title}</Link>
+						</h2>
+						<p className="card-text">{blog.text.iv}</p>
+						<Link href={`/blog/${blog._id}`} passHref legacyBehavior>
+							<a className="btn btn-primary">Read more</a>
+						</Link>
+					</div>
+				</div>
+			</article>
+		</Suspense>
+	);
+};
+
+export default Single;

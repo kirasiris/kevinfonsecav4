@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-const Header = ({ title = "No title", description = "No description" }) => {
+const Header = ({ title = "", description = "" }) => {
 	return (
 		<>
 			<nav className="navbar navbar-expand-lg bg-dark">
@@ -65,8 +65,8 @@ const Header = ({ title = "No title", description = "No description" }) => {
 			<header className="py-5 bg-light border-bottom mb-4">
 				<div className="container">
 					<div className="text-center my-5">
-						<h1 className="fw-bolder">{title}!</h1>
-						<p className="lead mb-0">{description}</p>
+						{title && <h1 className="fw-bolder">{title}</h1>}
+						{description && <p className="lead mb-0">{description}</p>}
 					</div>
 				</div>
 			</header>

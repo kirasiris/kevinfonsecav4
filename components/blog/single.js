@@ -1,14 +1,18 @@
-import Loading from "@/app/blog/loading";
+import { Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Suspense } from "react";
+import Loading from "@/app/blog/loading";
 
 const Single = ({ blog = {} }) => {
 	return (
 		<Suspense fallback={<Loading />}>
 			<article>
-				<div className="card mb-4">
-					<Link href={`/blog/${blog._id}`} passHref legacyBehavior>
+				<div className={`card ${blog.featured && "text-bg-primary"} mb-4`}>
+					<Link
+						href={`/blog/${blog._id}/${blog?.category?._id}/${blog?.category?.slug}/${blog.slug}`}
+						passHref
+						legacyBehavior
+					>
 						<Image
 							src={blog?.avatar?.location?.secure_location}
 							className="card-img-top"
@@ -20,10 +24,20 @@ const Single = ({ blog = {} }) => {
 					<div className="card-body">
 						<div className="small text-muted">{blog.createdAt}</div>
 						<h2 className="card-title">
-							<Link href={`/blog/${blog._id}`}>{blog.title}</Link>
+							<Link
+								href={`/blog/${blog._id}/${blog?.category?._id}/${blog?.category?.slug}/${blog.slug}`}
+							>
+								{blog.title}
+							</Link>
 						</h2>
-						<p className="card-text">{blog.text.iv}</p>
-						<Link href={`/blog/${blog._id}`} passHref legacyBehavior>
+						<p className="card-text">
+							TEXT IS EITHER ENCRYPTED OR PASSWORD PROTECTED
+						</p>
+						<Link
+							href={`/blog/${blog._id}/${blog?.category?._id}/${blog?.category?.slug}/${blog.slug}`}
+							passHref
+							legacyBehavior
+						>
 							<a className="btn btn-sm btn-primary">Read more</a>
 						</Link>
 					</div>

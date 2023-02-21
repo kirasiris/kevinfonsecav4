@@ -64,7 +64,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 										>
 											<a className="btn btn-sm btn-link">{category.title}</a>
 										</Link>
-										<span class="badge bg-primary rounded-pill">
+										<span className="badge bg-primary rounded-pill">
 											{category.timesUsed}
 										</span>
 										<ul className="list-group list-group-flush">
@@ -86,7 +86,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 																{childC.title}
 															</a>
 														</Link>
-														<span class="badge bg-primary rounded-pill">
+														<span className="badge bg-primary rounded-pill">
 															{childC.timesUsed}
 														</span>
 													</li>

@@ -87,11 +87,9 @@ const BlogIndex = async () => {
 				<div className="row">
 					<div className="col-lg-8">
 						{/* Featured list */}
-
 						{featured.data.map((featured, index) => (
 							<Single key={featured._id} blog={featured} />
 						))}
-
 						{/* Blog list */}
 						<div className="row">
 							<div className="col-lg-12">

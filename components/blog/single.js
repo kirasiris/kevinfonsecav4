@@ -10,7 +10,7 @@ const Single = ({ blog = {} }) => {
 				<div className="card mb-4">
 					<Link href={`/blog/${blog._id}`} passHref legacyBehavior>
 						<Image
-							src={blog.avatar.location.secure_location}
+							src={blog?.avatar?.location?.secure_location}
 							className="card-img-top"
 							alt={`${blog.title}'s featured image`}
 							width={`850`}

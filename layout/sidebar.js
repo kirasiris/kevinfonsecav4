@@ -52,8 +52,12 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 						<ul className="list-group list-group-flush">
 							{categories.data.map((category, index) => (
 								<li key={category._id} className="list-group-item">
-									<Link href={`/blogs?category=${category._id}`}>
-										{category.title}
+									<Link
+										href={`/blogs?category=${category._id}`}
+										passHref
+										legacyBehavior
+									>
+										<a className="btn btn-sm btn-link">{category.title}</a>
 									</Link>
 								</li>
 							))}

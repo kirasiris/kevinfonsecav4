@@ -1,7 +1,4 @@
-import "./global.css";
-import "./app.css";
-
-export default function Footer() {
+const Footer = () => {
 	return (
 		<footer className="py-5 bg-dark">
 			<div className="container">
@@ -11,4 +8,6 @@ export default function Footer() {
 			</div>
 		</footer>
 	);
-}
+};
+
+export default Footer;

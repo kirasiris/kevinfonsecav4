@@ -1,3 +1,5 @@
-export default async function Home() {
-	return <>HELLO</>;
-}
+const Home = async () => {
+	return <>INDEX</>;
+};
+
+export default Home;

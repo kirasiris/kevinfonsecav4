@@ -1,6 +1,8 @@
 import Single from "@/components/blog/single";
 import Header from "@/layout/header";
+import Footer from "@/layout/footer";
 import Sidebar from "@/layout/sidebar";
+import Head from "@/app/head";
 
 async function getFeaturedBlog(params) {
 	const res = await fetch(`http://localhost:5000/api/v1/blogs${params}`, {
@@ -29,9 +31,7 @@ async function getBlogs(params) {
 }
 
 async function getCategories(params) {
-	const res = await fetch(`http://localhost:5000/api/v1/categories${params}`, {
-		cache: "no-store",
-	});
+	const res = await fetch(`http://localhost:5000/api/v1/categories${params}`);
 
 	if (!res.ok) {
 		// This will activate the closest `error.js` Error Boundary
@@ -75,6 +75,10 @@ const BlogIndex = async () => {
 
 	return (
 		<>
+			<Head
+				title="Welcome to my Blog!"
+				description="Learn everything about my programming and life journey"
+			/>
 			<Header
 				title="Welcome to my Blog"
 				description="Learn everything about my programming and life journey"
@@ -147,6 +151,7 @@ const BlogIndex = async () => {
 					</div>
 				</div>
 			</div>
+			<Footer />
 		</>
 	);
 };

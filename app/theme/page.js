@@ -1,5 +1,6 @@
 import Single from "@/components/theme/single";
 import Header from "@/layout/header";
+import Footer from "@/layout/footer";
 
 async function getThemes(params) {
 	const res = await fetch(`http://localhost:5000/api/v1/themes${params}`, {
@@ -15,9 +16,7 @@ async function getThemes(params) {
 }
 
 async function getCategories(params) {
-	const res = await fetch(`http://localhost:5000/api/v1/categories${params}`, {
-		cache: "no-store",
-	});
+	const res = await fetch(`http://localhost:5000/api/v1/categories${params}`);
 
 	if (!res.ok) {
 		// This will activate the closest `error.js` Error Boundary
@@ -59,6 +58,7 @@ const ThemeIndex = async () => {
 					</div>
 				</div>
 			</div>
+			<Footer />
 		</>
 	);
 };

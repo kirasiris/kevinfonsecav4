@@ -2,8 +2,6 @@ import "./bootstrap.css";
 // import "./bootstrap.js";
 import "./global.css";
 import "./app.css";
-import Footer from "@/app/footer";
-import Header from "./header";
 
 export default function RootLayout({ children }) {
 	return (
@@ -14,9 +12,7 @@ export default function RootLayout({ children }) {
       */}
 			<head />
 			<body>
-				<Header />
 				<main>{children}</main>
-				<Footer />
 			</body>
 		</html>
 	);

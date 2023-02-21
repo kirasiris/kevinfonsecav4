@@ -24,7 +24,7 @@ const Single = ({ blog = {} }) => {
 						</h2>
 						<p className="card-text">{blog.text.iv}</p>
 						<Link href={`/blog/${blog._id}`} passHref legacyBehavior>
-							<a className="btn btn-primary">Read more</a>
+							<a className="btn btn-sm btn-primary">Read more</a>
 						</Link>
 					</div>
 				</div>

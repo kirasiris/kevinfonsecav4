@@ -3,10 +3,10 @@ import Image from "next/image";
 import Link from "next/link";
 import Loading from "@/app/blog/loading";
 
-const Single = ({ blog = {} }) => {
+const Single = ({ blog = {}, imageWidth = "850", imageHeight = "350" }) => {
 	return (
 		<Suspense fallback={<Loading />}>
-			<article>
+			<article className={blog._id}>
 				<div className={`card ${blog.featured && "text-bg-primary"} mb-4`}>
 					<Link
 						href={`/blog/${blog._id}/${blog?.category?._id}/${blog?.category?.slug}/${blog.slug}`}
@@ -20,8 +20,8 @@ const Single = ({ blog = {} }) => {
 							}
 							className="card-img-top"
 							alt={`${blog.title}'s featured image`}
-							width={`850`}
-							height={`350`}
+							width={imageWidth}
+							height={imageHeight}
 						/>
 					</Link>
 					<div className="card-body">
@@ -41,7 +41,7 @@ const Single = ({ blog = {} }) => {
 							passHref
 							legacyBehavior
 						>
-							<a className="btn btn-sm btn-primary">Read more</a>
+							<a className="btn btn-sm btn-light">Read more</a>
 						</Link>
 					</div>
 				</div>

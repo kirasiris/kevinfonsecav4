@@ -92,11 +92,11 @@ const BlogIndex = async () => {
 						))}
 						{/* Blog list */}
 						<div className="row">
-							<div className={`col-lg-12`}>
-								{blogs.data.map((blog, index) => (
-									<Single key={blog._id} blog={blog} />
-								))}
-							</div>
+							{blogs.data.map((blog, index) => (
+								<div key={blog._id} className="col-lg-6">
+									<Single blog={blog} imageWidth={`415`} imageHeight={`207`} />
+								</div>
+							))}
 						</div>
 						<nav aria-label="Pagination">
 							<hr className="my-0" />

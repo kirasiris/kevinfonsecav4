@@ -15,11 +15,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 							aria-label="Enter search term..."
 							aria-describedby="button-search"
 						/>
-						<button
-							className="btn btn-primary"
-							id="button-search"
-							type="button"
-						>
+						<button className="btn btn-light" id="button-search" type="button">
 							Go!
 						</button>
 					</div>

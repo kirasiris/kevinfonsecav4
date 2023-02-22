@@ -14,7 +14,10 @@ const Single = ({ blog = {} }) => {
 						legacyBehavior
 					>
 						<Image
-							src={blog?.avatar?.location?.secure_location}
+							src={
+								blog?.avatar?.location?.secure_location ||
+								`https://source.unsplash.com/random/1200x900`
+							}
 							className="card-img-top"
 							alt={`${blog.title}'s featured image`}
 							width={`850`}

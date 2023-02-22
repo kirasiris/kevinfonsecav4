@@ -11,6 +11,7 @@ const nextConfig = {
 			"kevinurielfonseca.me",
 			"i0.wp.com",
 			"res.cloudinary.com",
+			"source.unsplash.com",
 		],
 	},
 };

@@ -45,7 +45,7 @@ const ToggleTheme = () => {
 				toggleTheme(themeColor === "ligth-mode" ? "dark-mode" : "ligth-mode")
 			}
 		>
-			{themeColor === `ligth-mode` ? <></> : <></>}
+			{themeColor === `ligth-mode` ? <>🌞</> : <>🌕</>}
 		</span>
 	);
 };

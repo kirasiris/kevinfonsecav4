@@ -32,7 +32,7 @@ const Header = ({ title = "", description = "" }) => {
 						<ul className="navbar-nav">
 							<li className="nav-item">
 								<Link href="/" passHref legacyBehavior>
-									<a className="nav-link active" aria-current="page">
+									<a className="nav-link" aria-current="page">
 										Home
 									</a>
 								</Link>

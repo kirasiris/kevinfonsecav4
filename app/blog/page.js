@@ -92,7 +92,7 @@ const BlogIndex = async () => {
 						))}
 						{/* Blog list */}
 						<div className="row">
-							<div className="col-lg-12">
+							<div className={`col-lg-12`}>
 								{blogs.data.map((blog, index) => (
 									<Single key={blog._id} blog={blog} />
 								))}

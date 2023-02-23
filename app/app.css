@@ -1,6 +1,10 @@
 /*****************************
 GLOBAL
 *****************************/
+body {
+	font-family: "Courier New", Courier, monospace;
+}
+
 a {
 	text-decoration: none !important;
 }

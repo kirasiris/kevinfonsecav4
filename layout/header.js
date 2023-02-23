@@ -1,10 +1,16 @@
 import Image from "next/image";
 import Link from "next/link";
 
-const Header = ({ title = "", description = "" }) => {
+const Header = ({
+	title = "",
+	description = "",
+	headerClasses = "py-5 mb-4",
+	headerContainerClasses = "",
+	headerStyle = {},
+}) => {
 	return (
 		<>
-			<nav className="navbar navbar-expand-lg bg-dark">
+			<nav className="navbar navbar-expand-lg navbar-dark bg-dark">
 				<div className="container">
 					<Link href="/" passHref legacyBehavior>
 						<a className="navbar-brand">
@@ -62,8 +68,11 @@ const Header = ({ title = "", description = "" }) => {
 					</div>
 				</div>
 			</nav>
-			<header className="py-5 bg-light border-bottom mb-4">
-				<div className="container">
+			<header
+				className={`bg-light border-bottom ${headerClasses}`}
+				style={headerStyle}
+			>
+				<div className={`container ${headerContainerClasses}`}>
 					<div className="text-center my-5">
 						{title && <h1 className="fw-bolder">{title}</h1>}
 						{description && <p className="lead mb-0">{description}</p>}

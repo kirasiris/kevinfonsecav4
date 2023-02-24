@@ -7,17 +7,18 @@ const Single = ({ theme = {} }) => {
 	return (
 		<Suspense fallback={<Loading />}>
 			<article>
-				<div className="card products mb-4">
-					<Link href={`/theme/${theme._id}`} passHref legacyBehavior>
-						<Image
-							src={theme.avatar.location.secure_location}
-							className="card-img-top"
-							alt={`${theme.title}'s featured image`}
-							width={`850`}
-							height={`350`}
-						/>
-					</Link>
-				</div>
+				<Link href={`/theme/${theme._id}`} passHref legacyBehavior>
+					<Image
+						src={
+							theme.avatar.location.secure_location ||
+							`https://source.unsplash.com/random/1200x900`
+						}
+						className="card-img-top"
+						alt={`${theme.title}'s featured image`}
+						width={`850`}
+						height={`350`}
+					/>
+				</Link>
 			</article>
 		</Suspense>
 	);

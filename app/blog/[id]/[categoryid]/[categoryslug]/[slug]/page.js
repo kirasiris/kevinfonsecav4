@@ -93,7 +93,9 @@ const BlogRead = async ({ params }) => {
 									priority
 								/>
 							</figure>
-							<section className="mb-5">{blog.data.text}</section>
+							<section className="mb-5">
+								<p>{blog.data.text}</p>
+							</section>
 						</article>
 					</div>
 					{blog.data.fullWidth !== true && (

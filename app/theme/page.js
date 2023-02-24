@@ -45,17 +45,12 @@ const ThemeIndex = async () => {
 				description="Check my projects out and tell me what you think!"
 			/>
 			<div className="container">
-				<div className="row">
-					<div className="col-lg-12">
-						{/* Theme list */}
-						<div className="row">
-							<div className="col-lg-12">
-								{themes.data.map((theme, index) => (
-									<Single key={theme._id} theme={theme} />
-								))}
-							</div>
+				<div className="row justify-content-center">
+					{themes.data.map((theme, index) => (
+						<div key={theme._id} className={`col-lg-4 col-md-6 mb-4 ${index}`}>
+							<Single theme={theme} />
 						</div>
-					</div>
+					))}
 				</div>
 			</div>
 			<Footer />

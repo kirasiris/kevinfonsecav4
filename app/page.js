@@ -1,5 +1,9 @@
+import Image from "next/image";
+import Link from "next/link";
 import Header from "@/layout/header";
 import Footer from "@/layout/footer";
+import SingleBlog from "@/components/blog/single";
+import SingleTheme from "@/components/theme/single";
 
 async function getBlogs(params) {
 	const res = await fetch(`http://localhost:5000/api/v1/blogs${params}`, {
@@ -29,11 +33,11 @@ async function getThemes(params) {
 
 const Home = async () => {
 	const getBlogsData = getBlogs(
-		`?page=1&limit=10&sort=-createdAt&postType=blog&status=published`
+		`?page=1&limit=2&sort=-createdAt&postType=blog&status=published`
 	);
 
 	const getThemesData = getThemes(
-		`?page=1&limit=10&sort=-createdAt&postType=theme&status=published`
+		`?page=1&limit=3&sort=-createdAt&postType=theme&status=published`
 	);
 
 	const [blogs, themes] = await Promise.all([getBlogsData, getThemesData]);
@@ -48,7 +52,7 @@ const Home = async () => {
 				headerClasses="d-flex flex-column vh-100 vw-100"
 				headerContainerClasses="m-auto"
 				headerStyle={{
-					backgroundAttachment: "fixed",
+					backgroundAttachment: "fixed !important",
 					backgroundRepeat: "no-repeat",
 					backgroundSize: "cover",
 					backgroundPosition: "50% 50%",
@@ -58,14 +62,49 @@ const Home = async () => {
 					}) no-repeat center center`,
 				}}
 			/>
-			{/* SHOWCASE */}
-			<section className="showcase">xD</section>
 			{/* BLOGS */}
+			<section id="blogs" className="border-bottom py-5">
+				<div className="container">
+					<h2 className="page-section-heading display-5 text-center text-uppercase text-secondary my-5">
+						<Link href={`/blog`}>Latest Blogs</Link>
+					</h2>
+					<div className="row">
+						{blogs.data.map((blog, index) => (
+							<div key={blog._id} className="col-lg-6">
+								<SingleBlog
+									blog={blog}
+									imageWidth={`415`}
+									imageHeight={`207`}
+								/>
+							</div>
+						))}
+					</div>
+				</div>
+			</section>
 			{/* THEMES */}
+			<section id="themes" className="border-bottom py-5">
+				<div className="container">
+					<h2 className="page-section-heading display-5 text-center text-uppercase text-secondary my-5">
+						<Link href={`/theme`}>Latest Themes</Link>
+					</h2>
+					<div className="row justify-content-center">
+						{themes.data.map((theme, index) => (
+							<div
+								key={theme._id}
+								className={`col-lg-4 col-md-6 mb-4 ${index}`}
+							>
+								<SingleTheme theme={theme} />
+							</div>
+						))}
+					</div>
+				</div>
+			</section>
 			{/* WHAT PEOPLE SAY ABOUT ME */}
-			<section className="p-5 testimonials">
-				<div className="container-fluid py-5">
-					<h1 className="display-5 text-center fw-bold">Get to Know Me</h1>
+			<section id="testimonials" className="border-bottom py-5">
+				<div className="container">
+					<h2 className="page-section-heading display-5 text-center text-uppercase text-secondary my-5">
+						Get to Know Me
+					</h2>
 					<div className="row">
 						<div className="col-lg-4">
 							<p className="fs-4">
@@ -97,10 +136,14 @@ const Home = async () => {
 				</div>
 			</section>
 			{/* CALL TO ACTION - NEWSLETTER REGISTRATION BY EMAIL */}
-			<section className="p-5 text-center testimonials bg-black text-decoration-underline">
-				<div className="container-fluid py-5">
-					<h1 className="display-5 fw-bold">Newsletter</h1>
-					HERE GOES THE INPUT
+			<section id="newsletter" className="border-bottom py-5">
+				<div className="container">
+					<h2 className="page-section-heading display-5 text-center text-uppercase text-secondary my-5">
+						Newsletter
+					</h2>
+					<div className="row">
+						<div className="col-lg-12">HERE GOES THE INPUT</div>
+					</div>
 				</div>
 			</section>
 			{/* CONTACT ME */}

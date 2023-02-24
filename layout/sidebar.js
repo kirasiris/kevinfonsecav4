@@ -29,11 +29,26 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 						{quotes.data.map((quote, index) => (
 							<figure key={quote._id}>
 								<blockquote className="blockquote">
-									<p>{quote.text}</p>
+									<p>{quote.text.toUpperCase()}</p>
 								</blockquote>
 								<figcaption className="blockquote-footer">
-									{quote.authorName}&nbsp;-&nbsp;
-									<cite title={quote.sourceWebsite}>{quote.sourceWebsite}</cite>
+									<a
+										href={quote.authorUrl || "#"}
+										target="_blank"
+										rel="noreferrer noopener"
+									>
+										{quote.authorName}
+									</a>
+									&nbsp;-&nbsp;
+									<cite title={quote.sourceWebsite}>
+										<a
+											href={quote.sourceUrl || "#"}
+											target="_blank"
+											rel="noreferrer noopener"
+										>
+											{quote.sourceWebsite}
+										</a>
+									</cite>
 								</figcaption>
 							</figure>
 						))}

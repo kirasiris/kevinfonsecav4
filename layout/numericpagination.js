@@ -1,5 +1,8 @@
 "use client";
 import Link from "next/link";
+import router from "next/router";
+import { useEffect } from "react";
+
 // ACTIONS
 // HELPERS
 const NumericPagination = ({
@@ -8,18 +11,18 @@ const NumericPagination = ({
 	next = 0,
 	prev = 0,
 	componentMapping,
-	pageArray = [],
+	pagesArrayInfo = {},
 	pagePath = "/",
 	pageParams = {},
 }) => {
 	const firstItem = () => {
 		return (
-			prev !== "undefined" &&
+			prev !== undefined &&
 			prev !== 0 && (
 				<Link
 					href={{
 						pathname: pagePath,
-						query: { page: pageArray[0], limit: pageParams.limit },
+						query: { page: pagesArrayInfo.pages[0], limit: pageParams.limit },
 					}}
 					className="page-link"
 				>
@@ -31,12 +34,15 @@ const NumericPagination = ({
 
 	const lastItem = () => {
 		return (
-			next !== "undefined" &&
+			next !== undefined &&
 			next !== 0 && (
 				<Link
 					href={{
 						pathname: pagePath,
-						query: { page: pageArray.length, limit: pageParams.limit },
+						query: {
+							page: pagesArrayInfo.pages.length,
+							limit: pageParams.limit,
+						},
 					}}
 					className="page-link"
 				>
@@ -50,30 +56,20 @@ const NumericPagination = ({
 		return (
 			next !== "undefined" &&
 			next !== 0 && (
-				<button
-					onClick={() => {
-						history.push(nextParams);
-					}}
-					className={`page-link rounded-0`}
-				>
-					Next Page
-				</button>
+				<Link href={`/blog${nextParams}`} className={`page-link rounded-0`}>
+					Next
+				</Link>
 			)
 		);
 	};
 
 	const prevButton = () => {
 		return (
-			prev !== "undefined" &&
+			prev !== undefined &&
 			prev !== 0 && (
-				<button
-					onClick={() => {
-						router.push(prevParams);
-					}}
-					className={`page-link rounded-0`}
-				>
-					Previous Page
-				</button>
+				<Link href={`/blog${prevParams}`} className={`page-link rounded-0`}>
+					Previous
+				</Link>
 			)
 		);
 	};
@@ -81,17 +77,19 @@ const NumericPagination = ({
 	const numericPagination = () => {
 		return (
 			<nav aria-label="Pagination">
-				<hr className="my-0" />
 				<ul className="pagination justify-content-center my-4">
 					{/* FIRST/PREVIOUS */}
 					<li className="page-item">{firstItem()}</li>
 					<li className="page-item previous-item">{prevButton()}</li>
 					{/* NUMERIC PAGINATION */}
-					{pageArray.map((p, index) => (
+					{pagesArrayInfo.pages.map((p, index) => (
 						<li
-							key={index}
-							className={`page-item number-item page-${pageArray[index]} ${
-								pageArray[index] === pageParams.page ? "active" : ""
+							key={p}
+							id={p}
+							className={`page-item number-item page-${
+								pagesArrayInfo.pages[index]
+							} ${
+								pagesArrayInfo.pages[index] === pageParams.page ? "active" : ""
 							}`}
 						>
 							<Link
@@ -116,9 +114,7 @@ const NumericPagination = ({
 	return (
 		<>
 			{componentMapping}
-			{pageArray.length >= pageParams.limit && (
-				<div className={`paginationButtons`}>{numericPagination()}</div>
-			)}
+			{pagesArrayInfo.pages.length >= pageParams.limit && numericPagination()}
 		</>
 	);
 };

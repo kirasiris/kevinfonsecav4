@@ -59,10 +59,11 @@ const BlogIndex = async ({ params, searchParams }) => {
 	const getFeaturedBlogsData = getFeaturedBlog(
 		`?featured=true&postType=blog&status=published`
 	);
+	const limit = searchParams.limit || 10;
+	const page = searchParams.page || 1;
+
 	const getBlogsData = getBlogs(
-		`?page=${searchParams.page || 1}&limit=${
-			searchParams.limit || 10
-		}&sort=-createdAt&postType=blog&status=published`
+		`?page=${page}&limit=${limit}&sort=-createdAt&postType=blog&status=published`
 	);
 
 	const getCategoriesData = getCategories(`?categoryType=blog`);
@@ -75,6 +76,9 @@ const BlogIndex = async ({ params, searchParams }) => {
 		getCategoriesData,
 		getQuotesData,
 	]);
+
+	const nextPage = blogs?.pagination?.next?.page || 0;
+	const prevPage = blogs?.pagination?.prev?.page || 0;
 
 	return (
 		<>
@@ -96,16 +100,12 @@ const BlogIndex = async ({ params, searchParams }) => {
 						{/* Blog list */}
 						<div className="row">
 							<NumericPagination
-								nextParams={`?page=${
-									blogs?.pagination?.next?.page || 0
-								}&limit=${searchParams.limit}`}
-								prevParams={`?page=${
-									blogs?.pagination?.prev?.page || 0
-								}&limit=${searchParams.limit}`}
-								next={blogs?.pagination?.next?.page || 0}
-								prev={blogs?.pagination?.prev?.page || 0}
+								nextParams={`?page=${nextPage}&limit=${limit}`}
+								prevParams={`?page=${prevPage}&limit=${limit}`}
+								next={nextPage}
+								prev={prevPage}
 								loadMoreParams={`blog`}
-								pageArray={blogs?.pagination?.pages}
+								pagesArrayInfo={blogs?.pagination}
 								pagePath="/blog"
 								pageParams={searchParams}
 								componentMapping={blogs.data.map((blog, index) => (

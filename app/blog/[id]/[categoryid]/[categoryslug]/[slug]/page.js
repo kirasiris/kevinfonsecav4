@@ -5,6 +5,7 @@ import Header from "@/layout/header";
 import Footer from "@/layout/footer";
 import Sidebar from "@/layout/sidebar";
 import Loading from "@/app/blog/loading";
+import ShareButton from "@/layout/sharebuttons";
 
 async function getBlog(params) {
 	const res = await fetch(`http://localhost:5000/api/v1/blogs${params}`, {
@@ -95,6 +96,12 @@ const BlogRead = async ({ params }) => {
 							</figure>
 							<section className="mb-5">
 								<p>{blog.data.text}</p>
+								{blog.data.category && (
+									<ShareButton
+										linkToShare={`localhost:3000/blog/${blog.data._id}/${blog.data.category._id}/${blog.data.category.slug}/${blog.data.slug}`}
+										dataToEmbed={blog.data}
+									/>
+								)}
 							</section>
 						</article>
 					</div>

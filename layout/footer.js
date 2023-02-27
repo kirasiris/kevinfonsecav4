@@ -1,4 +1,4 @@
-import ToggleTheme from "./ToggleTheme";
+import ToggleTheme from "./toggletheme";
 
 const Footer = () => {
 	return (

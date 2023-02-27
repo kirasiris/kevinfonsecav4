@@ -51,7 +51,14 @@ const Header = ({
 								</Link>
 							</li>
 							<li className="nav-item">
-								<Link href="/blog" passHref legacyBehavior>
+								<Link
+									href={{
+										pathname: "/blog",
+										query: { page: 1, limit: 10 },
+									}}
+									passHref
+									legacyBehavior
+								>
 									<a className="nav-link" aria-current="page">
 										Blog
 									</a>

@@ -65,7 +65,7 @@ const Home = async () => {
 			{/* BLOGS */}
 			<section id="blogs" className="border-bottom py-5">
 				<div className="container">
-					<h2 className="page-section-heading display-5 text-center text-uppercase text-secondary my-5">
+					<h2 className="page-section-heading display-5 text-uppercase text-secondary my-5">
 						<Link href={`/blog`}>Latest Blogs</Link>
 					</h2>
 					<div className="row">
@@ -84,7 +84,7 @@ const Home = async () => {
 			{/* THEMES */}
 			<section id="themes" className="border-bottom py-5">
 				<div className="container">
-					<h2 className="page-section-heading display-5 text-center text-uppercase text-secondary my-5">
+					<h2 className="page-section-heading display-5 text-uppercase text-secondary my-5">
 						<Link href={`/theme`}>Latest Themes</Link>
 					</h2>
 					<div className="row justify-content-center">
@@ -102,7 +102,7 @@ const Home = async () => {
 			{/* WHAT PEOPLE SAY ABOUT ME */}
 			<section id="testimonials" className="border-bottom py-5">
 				<div className="container">
-					<h2 className="page-section-heading display-5 text-center text-uppercase text-secondary my-5">
+					<h2 className="page-section-heading display-5 text-center text-uppercase my-5">
 						Get to Know Me
 					</h2>
 					<div className="row">
@@ -138,7 +138,7 @@ const Home = async () => {
 			{/* CALL TO ACTION - NEWSLETTER REGISTRATION BY EMAIL */}
 			<section id="newsletter" className="border-bottom py-5">
 				<div className="container">
-					<h2 className="page-section-heading display-5 text-center text-uppercase text-secondary my-5">
+					<h2 className="page-section-heading display-5 text-center text-uppercase my-5">
 						Newsletter
 					</h2>
 					<div className="row">

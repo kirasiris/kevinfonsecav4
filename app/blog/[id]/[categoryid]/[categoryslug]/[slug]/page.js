@@ -23,11 +23,6 @@ async function getBlog(params) {
 async function getCategories(params) {
 	const res = await fetch(`http://localhost:5000/api/v1/categories${params}`);
 
-	if (!res.ok) {
-		// This will activate the closest `error.js` Error Boundary
-		throw new Error("Failed to fetch data");
-	}
-
 	return res.json();
 }
 
@@ -35,11 +30,6 @@ async function getQuotes() {
 	const res = await fetch(`http://localhost:5000/api/v1/extras/quotes/random`, {
 		cache: "no-store",
 	});
-
-	if (!res.ok) {
-		// This will activate the closest `error.js` Error Boundary
-		throw new Error("Failed to fetch data");
-	}
 
 	return res.json();
 }

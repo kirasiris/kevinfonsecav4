@@ -22,11 +22,11 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 				</div>
 			</div>
 			{/* Random quote box */}
-			{quotes.data.length > 0 && (
+			{quotes.data?.length > 0 && (
 				<div className="card mb-4">
 					<div className="card-header">Random Quote</div>
 					<div className="card-body">
-						{quotes.data.map((quote, index) => (
+						{quotes.data?.map((quote, index) => (
 							<figure key={quote._id}>
 								<blockquote className="blockquote">
 									<p>{quote.text.toUpperCase()}</p>
@@ -56,13 +56,13 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 				</div>
 			)}
 			{/* Categories box */}
-			{categories.data.length > 0 && (
+			{categories.data?.length > 0 && (
 				<div className="card mb-4">
 					<div className="card-header">Categories</div>
 					<div className="card-body p-0">
 						<ul className="list-group list-group-flush">
 							{categories.data
-								.filter((c) => c.parentCategory === undefined)
+								?.filter((c) => c.parentCategory === undefined)
 								.map((category, index) => (
 									<li
 										key={category._id}

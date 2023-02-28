@@ -10,11 +10,6 @@ async function getBlogs(params) {
 		cache: "no-store",
 	});
 
-	if (!res.ok) {
-		// This will activate the closest `error.js` Error Boundary
-		throw new Error("Failed to fetch data");
-	}
-
 	return res.json();
 }
 
@@ -22,11 +17,6 @@ async function getThemes(params) {
 	const res = await fetch(`http://localhost:5000/api/v1/themes${params}`, {
 		cache: "no-store",
 	});
-
-	if (!res.ok) {
-		// This will activate the closest `error.js` Error Boundary
-		throw new Error("Failed to fetch data");
-	}
 
 	return res.json();
 }
@@ -63,42 +53,47 @@ const Home = async () => {
 				}}
 			/>
 			{/* BLOGS */}
-			<section id="blogs" className="border-bottom py-5">
-				<div className="container">
-					<h2 className="page-section-heading display-5 text-uppercase text-secondary my-5">
-						<Link href={`/blog`}>Latest Blogs</Link>
-					</h2>
-					<div className="row">
-						{blogs.data.map((blog, index) => (
-							<div key={blog._id} className="col-lg-6">
-								<SingleBlog
-									blog={blog}
-									imageWidth={`415`}
-									imageHeight={`207`}
-								/>
-							</div>
-						))}
+			{blogs?.data?.length > 0 && (
+				<section id="blogs" className="border-bottom py-5">
+					<div className="container">
+						<h2 className="page-section-heading display-5 text-uppercase text-secondary my-5">
+							<Link href={`/blog`}>Latest Blogs</Link>
+						</h2>
+						<div className="row">
+							{blogs.data.map((blog, index) => (
+								<div key={blog._id} className={`col-lg-6 ${index}`}>
+									<SingleBlog
+										blog={blog}
+										imageWidth={`415`}
+										imageHeight={`207`}
+									/>
+								</div>
+							))}
+						</div>
 					</div>
-				</div>
-			</section>
+				</section>
+			)}
 			{/* THEMES */}
-			<section id="themes" className="border-bottom py-5">
-				<div className="container">
-					<h2 className="page-section-heading display-5 text-uppercase text-secondary my-5">
-						<Link href={`/theme`}>Latest Themes</Link>
-					</h2>
-					<div className="row justify-content-center">
-						{themes.data.map((theme, index) => (
-							<div
-								key={theme._id}
-								className={`col-lg-4 col-md-6 mb-4 ${index}`}
-							>
-								<SingleTheme theme={theme} />
-							</div>
-						))}
+			{themes?.data?.length > 0 && (
+				<section id="themes" className="border-bottom py-5">
+					<div className="container">
+						<h2 className="page-section-heading display-5 text-uppercase text-secondary my-5">
+							<Link href={`/theme`}>Latest Themes</Link>
+						</h2>
+						<div className="row justify-content-center">
+							{themes.data.map((theme, index) => (
+								<div
+									key={theme._id}
+									className={`col-lg-4 col-md-6 mb-4 ${index}`}
+								>
+									<SingleTheme theme={theme} />
+								</div>
+							))}
+						</div>
 					</div>
-				</div>
-			</section>
+				</section>
+			)}
+
 			{/* WHAT PEOPLE SAY ABOUT ME */}
 			<section id="testimonials" className="border-bottom py-5">
 				<div className="container">

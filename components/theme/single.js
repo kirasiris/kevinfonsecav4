@@ -10,7 +10,7 @@ const Single = ({ theme = {} }) => {
 				<Link href={`/theme/${theme._id}`} passHref legacyBehavior>
 					<Image
 						src={
-							theme.avatar.location.secure_location ||
+							theme.avatar?.location.secure_location ||
 							`https://source.unsplash.com/random/1200x900`
 						}
 						className="card-img-top"

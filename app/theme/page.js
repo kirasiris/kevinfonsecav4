@@ -7,21 +7,11 @@ async function getThemes(params) {
 		cache: "no-store",
 	});
 
-	if (!res.ok) {
-		// This will activate the closest `error.js` Error Boundary
-		throw new Error("Failed to fetch data");
-	}
-
 	return res.json();
 }
 
 async function getCategories(params) {
 	const res = await fetch(`http://localhost:5000/api/v1/categories${params}`);
-
-	if (!res.ok) {
-		// This will activate the closest `error.js` Error Boundary
-		throw new Error("Failed to fetch data");
-	}
 
 	return res.json();
 }
@@ -46,7 +36,7 @@ const ThemeIndex = async () => {
 			/>
 			<div className="container">
 				<div className="row justify-content-center">
-					{themes.data.map((theme, index) => (
+					{themes?.data?.map((theme, index) => (
 						<div key={theme._id} className={`col-lg-4 col-md-6 mb-4 ${index}`}>
 							<Single theme={theme} />
 						</div>

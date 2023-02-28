@@ -15,7 +15,7 @@ const Single = ({ blog = {}, imageWidth = "850", imageHeight = "350" }) => {
 					>
 						<Image
 							src={
-								blog?.avatar?.location?.secure_location ||
+								blog.avatar?.location.secure_location ||
 								`https://source.unsplash.com/random/1200x900`
 							}
 							className="card-img-top"

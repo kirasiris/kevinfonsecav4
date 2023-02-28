@@ -10,11 +10,6 @@ async function getFeaturedBlog(params) {
 		cache: "no-store",
 	});
 
-	if (!res.ok) {
-		// This will activate the closest `error.js` Error Boundary
-		throw new Error("Failed to fetch data");
-	}
-
 	return res.json();
 }
 
@@ -23,21 +18,11 @@ async function getBlogs(params) {
 		cache: "no-store",
 	});
 
-	if (!res.ok) {
-		// This will activate the closest `error.js` Error Boundary
-		throw new Error("Failed to fetch data");
-	}
-
 	return res.json();
 }
 
 async function getCategories(params) {
 	const res = await fetch(`http://localhost:5000/api/v1/categories${params}`);
-
-	if (!res.ok) {
-		// This will activate the closest `error.js` Error Boundary
-		throw new Error("Failed to fetch data");
-	}
 
 	return res.json();
 }
@@ -46,11 +31,6 @@ async function getQuotes() {
 	const res = await fetch(`http://localhost:5000/api/v1/extras/quotes/random`, {
 		cache: "no-store",
 	});
-
-	if (!res.ok) {
-		// This will activate the closest `error.js` Error Boundary
-		throw new Error("Failed to fetch data");
-	}
 
 	return res.json();
 }
@@ -94,7 +74,7 @@ const BlogIndex = async ({ params, searchParams }) => {
 				<div className="row">
 					<div className="col-lg-8">
 						{/* Featured list */}
-						{featured.data.map((featured, index) => (
+						{featured.data?.map((featured, index) => (
 							<Single key={featured._id} blog={featured} />
 						))}
 						{/* Blog list */}
@@ -108,7 +88,7 @@ const BlogIndex = async ({ params, searchParams }) => {
 								pagesArrayInfo={blogs?.pagination}
 								pagePath="/blog"
 								pageParams={searchParams}
-								componentMapping={blogs.data.map((blog, index) => (
+								componentMapping={blogs.data?.map((blog, index) => (
 									<div key={blog._id} className={`col-lg-6 ${index}`}>
 										<Single
 											blog={blog}

@@ -23,34 +23,37 @@ const Header = ({
 							/>
 						</a>
 					</Link>
-					<button
-						className="navbar-toggle"
-						type="button"
-						data-bs-toggle="collapse"
-						data-bs-target="#navbarNav"
-						aria-controls="navbarNav"
-						aria-expanded="false"
-						aria-label="Toggle navigation"
-					>
-						<span className="navbar-toggle-icon"></span>
-					</button>
-					<div className="collapse navbar-collapse" id="navbarNav">
-						<ul className="navbar-nav">
-							<li className="nav-item">
+					<div id="navbarNav">
+						<ul className="navbar-nav flex-row">
+							<li className="nav-item mx-1">
 								<Link href="/" passHref legacyBehavior>
 									<a className="nav-link" aria-current="page">
 										Home
 									</a>
 								</Link>
 							</li>
-							<li className="nav-item">
+							<li className="nav-item mx-1">
 								<Link href="/about" passHref legacyBehavior>
 									<a className="nav-link" aria-current="page">
 										About
 									</a>
 								</Link>
 							</li>
-							<li className="nav-item">
+							<li className="nav-item mx-1">
+								<Link
+									href={{
+										pathname: "/post",
+										query: { page: 1, limit: 10 },
+									}}
+									passHref
+									legacyBehavior
+								>
+									<a className="nav-link" aria-current="page">
+										Posts
+									</a>
+								</Link>
+							</li>
+							<li className="nav-item mx-1">
 								<Link
 									href={{
 										pathname: "/blog",
@@ -64,8 +67,15 @@ const Header = ({
 									</a>
 								</Link>
 							</li>
-							<li className="nav-item">
-								<Link href="/theme" passHref legacyBehavior>
+							<li className="nav-item mx-1">
+								<Link
+									href={{
+										pathname: "/theme",
+										query: { page: 1, limit: 10 },
+									}}
+									passHref
+									legacyBehavior
+								>
 									<a className="nav-link" aria-current="page">
 										Themes
 									</a>

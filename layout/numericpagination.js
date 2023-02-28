@@ -114,7 +114,7 @@ const NumericPagination = ({
 	return (
 		<>
 			{componentMapping}
-			{pagesArrayInfo.pages.length >= pageParams.limit && numericPagination()}
+			{pagesArrayInfo.pages?.length >= pageParams.limit && numericPagination()}
 		</>
 	);
 };

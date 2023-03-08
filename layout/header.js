@@ -1,5 +1,9 @@
+"use client";
 import Image from "next/image";
 import Link from "next/link";
+import Navbar from "react-bootstrap/Navbar";
+import Container from "react-bootstrap/Container";
+import Nav from "react-bootstrap/Nav";
 
 const Header = ({
 	title = "",
@@ -10,8 +14,8 @@ const Header = ({
 }) => {
 	return (
 		<>
-			<nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-				<div className="container">
+			<Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+				<Container>
 					<Link href="/" passHref legacyBehavior>
 						<a className="navbar-brand">
 							<Image
@@ -23,8 +27,9 @@ const Header = ({
 							/>
 						</a>
 					</Link>
-					<div id="navbarNav">
-						<ul className="navbar-nav flex-row">
+					<Navbar.Toggle aria-controls="responsive-navbar-nav" />
+					<Navbar.Collapse id="responsive-navbar-nav">
+						<Nav as="ul">
 							<li className="nav-item mx-1">
 								<Link href="/" passHref legacyBehavior>
 									<a className="nav-link" aria-current="page">
@@ -33,10 +38,8 @@ const Header = ({
 								</Link>
 							</li>
 							<li className="nav-item mx-1">
-								<Link href="/about" passHref legacyBehavior>
-									<a className="nav-link" aria-current="page">
-										About
-									</a>
+								<Link href="/about" className="nav-link">
+									About
 								</Link>
 							</li>
 							<li className="nav-item mx-1">
@@ -81,10 +84,10 @@ const Header = ({
 									</a>
 								</Link>
 							</li>
-						</ul>
-					</div>
-				</div>
-			</nav>
+						</Nav>
+					</Navbar.Collapse>
+				</Container>
+			</Navbar>
 			<header
 				className={`bg-light border-bottom ${headerClasses}`}
 				style={headerStyle}

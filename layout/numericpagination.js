@@ -82,7 +82,7 @@ const NumericPagination = ({
 					<li className="page-item">{firstItem()}</li>
 					<li className="page-item previous-item">{prevButton()}</li>
 					{/* NUMERIC PAGINATION */}
-					{pagesArrayInfo.pages.map((p, index) => (
+					{pagesArrayInfo.pages.split(0, 5).map((p, index) => (
 						<li
 							key={p}
 							id={p}

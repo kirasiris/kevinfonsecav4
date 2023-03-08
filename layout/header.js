@@ -38,21 +38,16 @@ const Header = ({
 								</Link>
 							</li>
 							<li className="nav-item mx-1">
-								<Link href="/about" className="nav-link">
-									About
-								</Link>
-							</li>
-							<li className="nav-item mx-1">
 								<Link
 									href={{
-										pathname: "/post",
+										pathname: "/me",
 										query: { page: 1, limit: 10 },
 									}}
 									passHref
 									legacyBehavior
 								>
 									<a className="nav-link" aria-current="page">
-										Posts
+										Me
 									</a>
 								</Link>
 							</li>
@@ -84,12 +79,26 @@ const Header = ({
 									</a>
 								</Link>
 							</li>
+							<li className="nav-item mx-1">
+								<Link
+									href={{
+										pathname: "/quizz",
+										query: { page: 1, limit: 10 },
+									}}
+									passHref
+									legacyBehavior
+								>
+									<a className="nav-link" aria-current="page">
+										Quizzes
+									</a>
+								</Link>
+							</li>
 						</Nav>
 					</Navbar.Collapse>
 				</Container>
 			</Navbar>
 			<header
-				className={`bg-light border-bottom ${headerClasses}`}
+				className={`bg-secondary border-bottom ${headerClasses}`}
 				style={headerStyle}
 			>
 				<div className={`container ${headerContainerClasses}`}>

@@ -54,11 +54,11 @@ body.dark-mode h6,
 body.dark-mode a,
 body.dark-mode p,
 body.dark-mode .card-header,
-body.dark-mode .btn-light {
+body.dark-mode .btn-secondary {
 	text-shadow: 0 0 20px #00cc00;
 }
 
-body.dark-mode > span.badge.bg-primary.rounded-pill {
+body.dark-mode > span.badge.bg-secondary.rounded-pill {
 	background-color: #00cc00 !important;
 }
 
@@ -72,23 +72,29 @@ body.dark-mode .card-body {
 	background-color: #222;
 }
 
-body.dark-mode .bg-light {
+body.dark-mode .bg-secondary {
 	background-color: transparent !important;
 }
 
-body.dark-mode .btn-light {
+body.dark-mode .btn-secondary {
 	color: #00cc00;
 	background-color: transparent;
 }
 
 body.dark-mode a,
-body.dark-mode .btn-link {
+body.dark-mode p,
+body.dark-mode .btn-link,
+body.dark-mode .bg-secondary {
 	color: #00cc00;
+}
+
+body.dark-mode .badge {
+	background-color: #00cc00;
 }
 
 body.dark-mode a:hover,
 body.dark-mode .btn-link:hover,
-body.dark-mode .btn-light:hover {
+body.dark-mode .btn-secondary:hover {
 	color: #00ff00;
 }
 

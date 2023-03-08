@@ -15,7 +15,11 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 							aria-label="Enter search term..."
 							aria-describedby="button-search"
 						/>
-						<button className="btn btn-light" id="button-search" type="button">
+						<button
+							className="btn btn-secondary"
+							id="button-search"
+							type="button"
+						>
 							Go!
 						</button>
 					</div>
@@ -75,7 +79,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 										>
 											<a className="btn btn-sm btn-link">{category.title}</a>
 										</Link>
-										<span className="badge bg-primary rounded-pill">
+										<span className="badge bg-secondary rounded-pill">
 											{category.timesUsed}
 										</span>
 										<ul className="list-group list-group-flush">
@@ -97,7 +101,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 																{childC.title}
 															</a>
 														</Link>
-														<span className="badge bg-primary rounded-pill">
+														<span className="badge bg-secondary rounded-pill">
 															{childC.timesUsed}
 														</span>
 													</li>

@@ -6,8 +6,14 @@ import { Suspense } from "react";
 const Single = ({ theme = {} }) => {
 	return (
 		<Suspense fallback={<Loading />}>
-			<article>
-				<Link href={`/theme/${theme._id}`} passHref legacyBehavior>
+			<article className={theme._id}>
+				<Link
+					href={{
+						pathname: `/theme/${theme._id}/${theme?.category?._id}/${theme?.category?.slug}/${theme.slug}`,
+					}}
+					passHref
+					legacyBehavior
+				>
 					<Image
 						src={
 							theme.avatar?.location.secure_location ||

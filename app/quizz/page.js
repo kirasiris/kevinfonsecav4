@@ -47,19 +47,21 @@ const QuizIndex = async ({ params, searchParams }) => {
 			/>
 			<div className="container">
 				<div className="row">
-					<NumericPagination
-						nextParams={`page${nextPage}&limit=${limit}`}
-						next={nextPage}
-						prev={prevPage}
-						loadMoreParams={`quiz`}
-						pagesArrayInfo={quizzes?.pagination}
-						pagePath={searchParams}
-						componentMapping={quizzes.data?.map((quiz, index) => (
-							<div key={quiz._id} className={`col-lg-3 ${index}`}>
-								<Single quiz={quiz} />
-							</div>
-						))}
-					/>
+					{quizzes?.data?.length > 0 && (
+						<NumericPagination
+							nextParams={`page${nextPage}&limit=${limit}`}
+							next={nextPage}
+							prev={prevPage}
+							loadMoreParams={`quiz`}
+							pagesArrayInfo={quizzes?.pagination}
+							pagePath={searchParams}
+							componentMapping={quizzes.data?.map((quiz, index) => (
+								<div key={quiz._id} className={`col-lg-3 ${index}`}>
+									<Single quiz={quiz} />
+								</div>
+							))}
+						/>
+					)}
 				</div>
 			</div>
 			<Footer />

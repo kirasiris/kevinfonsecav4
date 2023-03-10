@@ -70,12 +70,22 @@ const MeIndex = async () => {
 				<div className="row">
 					<div className="col-xl-8 col-lg-8 col-md-12 col-sm-12 col-xs-12">
 						{/* Featured list */}
-						{featured.data?.map((featured) => (
-							<Single key={featured._id} post={featured} />
-						))}
-						{posts?.data?.map((post) => (
-							<Single key={post._id} post={post} />
-						))}
+						{featured?.data?.length > 0 && (
+							<>
+								<h2>Featured</h2>
+								{featured.data?.map((featured) => (
+									<Single key={featured._id} post={featured} />
+								))}
+							</>
+						)}
+						{posts?.data?.length > 0 && (
+							<>
+								<h2>Timeline</h2>
+								{posts.data?.map((post) => (
+									<Single key={post._id} post={post} />
+								))}
+							</>
+						)}
 					</div>
 					<div className="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-xs-12">
 						<div className="card mb-3">

@@ -36,11 +36,15 @@ const ThemeIndex = async () => {
 			/>
 			<div className="container">
 				<div className="row justify-content-center">
-					{themes?.data?.map((theme, index) => (
-						<div key={theme._id} className={`col-lg-4 col-md-6 mb-4 ${index}`}>
-							<Single theme={theme} />
-						</div>
-					))}
+					{themes?.data?.length > 0 &&
+						themes.data?.map((theme, index) => (
+							<div
+								key={theme._id}
+								className={`col-lg-4 col-md-6 mb-4 ${index}`}
+							>
+								<Single theme={theme} />
+							</div>
+						))}
 				</div>
 			</div>
 			<Footer />

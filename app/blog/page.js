@@ -74,30 +74,33 @@ const BlogIndex = async ({ params, searchParams }) => {
 				<div className="row">
 					<div className="col-lg-8">
 						{/* Featured list */}
-						{featured.data?.map((featured, index) => (
-							<Single key={featured._id} blog={featured} />
-						))}
+						{featured?.data?.length > 0 &&
+							featured.data.map((featured, index) => (
+								<Single key={featured._id} blog={featured} />
+							))}
 						{/* Blog list */}
 						<div className="row">
-							<NumericPagination
-								nextParams={`?page=${nextPage}&limit=${limit}`}
-								prevParams={`?page=${prevPage}&limit=${limit}`}
-								next={nextPage}
-								prev={prevPage}
-								loadMoreParams={`blog`}
-								pagesArrayInfo={blogs?.pagination}
-								pagePath="/blog"
-								pageParams={searchParams}
-								componentMapping={blogs.data?.map((blog, index) => (
-									<div key={blog._id} className={`col-lg-6 ${index}`}>
-										<Single
-											blog={blog}
-											imageWidth={`415`}
-											imageHeight={`207`}
-										/>
-									</div>
-								))}
-							/>
+							{blogs?.data?.length > 0 && (
+								<NumericPagination
+									nextParams={`?page=${nextPage}&limit=${limit}`}
+									prevParams={`?page=${prevPage}&limit=${limit}`}
+									next={nextPage}
+									prev={prevPage}
+									loadMoreParams={`blog`}
+									pagesArrayInfo={blogs?.pagination}
+									pagePath="/blog"
+									pageParams={searchParams}
+									componentMapping={blogs.data?.map((blog, index) => (
+										<div key={blog._id} className={`col-lg-6 ${index}`}>
+											<Single
+												blog={blog}
+												imageWidth={`415`}
+												imageHeight={`207`}
+											/>
+										</div>
+									))}
+								/>
+							)}
 						</div>
 					</div>
 					<div className="col-lg-4">

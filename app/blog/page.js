@@ -82,8 +82,8 @@ const BlogIndex = async ({ params, searchParams }) => {
 						<div className="row">
 							{blogs?.data?.length > 0 && (
 								<NumericPagination
-									nextParams={`?page=${nextPage}&limit=${limit}`}
-									prevParams={`?page=${prevPage}&limit=${limit}`}
+									nextParams={`/blog?page=${nextPage}&limit=${limit}`}
+									prevParams={`/blog?page=${prevPage}&limit=${limit}`}
 									next={nextPage}
 									prev={prevPage}
 									loadMoreParams={`blog`}

@@ -5,11 +5,44 @@ import { Suspense } from "react";
 import Carousel from "react-bootstrap/Carousel";
 import Badge from "react-bootstrap/Badge";
 import Loading from "@/app/blog/loading";
+import ExportModal from "@/layout/exportmodal";
+import { DropdownButton, Button } from "react-bootstrap";
+import Waveform from "@/layout/waveform";
 
 const Single = ({ post = {} }) => {
 	const Author = (author = {}, postedto = {}, postedfrom = {}) => {
 		return (
 			<>
+				<div className="float-start">
+					<Link
+						// href={{
+						// 	pathname: `/profiles/${user._id ? user._id : auth?.user?._id}/${user.username ? user.username : auth?.user?.username}/posts`,
+						// 	query: {
+						// 		page: 1,
+						// 		limit: 10,
+						// 		sort: `-createdAt`,
+						// 		loggedInUser: auth?.user?._id,
+						// 	},
+						// }}
+						href="#!"
+						passHref
+						legacyBehavior
+					>
+						<a>
+							<Image
+								src={
+									post.avatar?.location.secure_location ||
+									`https://source.unsplash.com/random/35x35`
+								}
+								className="me-3"
+								width="35"
+								height="35"
+								alt={`Username's profile avatar`}
+								style={{ objectFit: "cover" }}
+							/>
+						</a>
+					</Link>
+				</div>
 				<Link
 					// href={{
 					// 	pathname: `/profiles/${user._id ? user._id : auth?.user?._id}/${user.username ? user.username : auth?.user?.username}/posts`,
@@ -24,21 +57,12 @@ const Single = ({ post = {} }) => {
 					passHref
 					legacyBehavior
 				>
-					<a className="me-2">
-						<Image
-							src={
-								post.avatar?.location.secure_location ||
-								`https://source.unsplash.com/random/35x35`
-							}
-							className="me-2"
-							width="35"
-							height="35"
-							alt={`Username's profile avatar`}
-							style={{ objectFit: "cover" }}
-						/>
-						USERNAME
-					</a>
+					<a className="me-1">USERNAME</a>
 				</Link>
+				is playing
+				<a href="#!" className="mx-1">
+					Ghost Recon Breakpoint
+				</a>
 				{postedto && (
 					<>
 						posted to
@@ -81,7 +105,104 @@ const Single = ({ post = {} }) => {
 						</Link>
 					</>
 				)}
-				<div className="float-end"></div>
+				<div className={`position-absolute privacy-options`}>
+					<small className="me-1">2 days ago</small>
+					<DropdownButton
+						alignright="true"
+						variant={`secondary`}
+						size={`sm`}
+						drop={`down`}
+						id={`update-post`}
+						title={<i className={`fas fa-ellipsis-h`} />}
+					>
+						<>
+							<Button
+								// onClick={!featureded ? featurePost : unfeaturePost}
+								className={`dropdown-item`}
+								type={`button`}
+							>
+								{/* <i className={`${featuredIcon} mr-1`} aria-hidden /> */}
+								Only me
+							</Button>
+							<Button
+								// onClick={!hiden ? hidePost : unhidePost}
+								className={`dropdown-item`}
+								type={`button`}
+							>
+								{/* <i className={`${hiddenIcon} mr-1`} aria-hidden /> */}
+								Everyone can see
+							</Button>
+							<Button
+								// onClick={!openEditor ? editorOpen : editorClosed}
+								className={`dropdown-item`}
+								type={`button`}
+							>
+								<i className={`fas fa-edit mr-1`} aria-hidden />
+								People I follow
+							</Button>
+							<Button
+								// onClick={!openEditor ? editorOpen : editorClosed}
+								className={`dropdown-item`}
+								type={`button`}
+							>
+								<i className={`fas fa-edit mr-1`} aria-hidden />
+								People following me
+							</Button>
+							<Button
+								// onClick={!openEditor ? editorOpen : editorClosed}
+								className={`dropdown-item`}
+								type={`button`}
+							>
+								<i className={`fas fa-edit mr-1`} aria-hidden />
+								Anonymous
+							</Button>
+						</>
+					</DropdownButton>
+				</div>
+				<DropdownButton
+					alignright="true"
+					variant={`secondary`}
+					size={`sm`}
+					drop={`down`}
+					id={`update-post`}
+					title={<i className={`fas fa-ellipsis-h`} />}
+					className={`float-end`}
+				>
+					<>
+						<Button
+							// onClick={!featureded ? featurePost : unfeaturePost}
+							className={`dropdown-item`}
+							type={`button`}
+						>
+							{/* <i className={`${featuredIcon} mr-1`} aria-hidden /> */}
+							Pin post
+						</Button>
+						<Button
+							// onClick={!hiden ? hidePost : unhidePost}
+							className={`dropdown-item`}
+							type={`button`}
+						>
+							{/* <i className={`${hiddenIcon} mr-1`} aria-hidden /> */}
+							Hide post
+						</Button>
+						<Button
+							// onClick={!openEditor ? editorOpen : editorClosed}
+							className={`dropdown-item`}
+							type={`button`}
+						>
+							<i className={`fas fa-edit mr-1`} aria-hidden />
+							Update post
+						</Button>
+						<Button
+							// onClick={!openEditor ? editorOpen : editorClosed}
+							className={`dropdown-item`}
+							type={`button`}
+						>
+							<i className={`fas fa-edit mr-1`} aria-hidden />
+							Disable comments
+						</Button>
+					</>
+				</DropdownButton>
 			</>
 		);
 	};
@@ -169,6 +290,12 @@ const Single = ({ post = {} }) => {
 							media={images}
 							text={`TEXT IS EITHER ENCRYPTED OR PASSWORD PROTECTED`}
 						/>
+						{/* <Waveform audio="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" /> */}
+					</div>
+					<div className="card-footer">
+						<div className="float-end">
+							<ExportModal object={post} />
+						</div>
 					</div>
 				</div>
 			</article>

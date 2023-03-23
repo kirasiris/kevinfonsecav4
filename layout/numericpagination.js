@@ -15,19 +15,43 @@ const NumericPagination = ({
 	pagePath = "/",
 	pageParams = {},
 }) => {
+	// const current = pagesArrayInfo.current;
+	// const last_page = pagesArrayInfo.pages.length;
+	// function paginate(current, last_page, onSides = 3) {
+	// 	let pages = [];
+	// 	for (let i = 1; i <= last_page; i++) {
+	// 		// Define offset
+	// 		let offset = i == 1 || last_page ? onSides + 1 : onSides;
+	// 		// If added
+	// 		if (
+	// 			i == 1 ||
+	// 			(current - offset <= i && current + offset >= i) ||
+	// 			i == current ||
+	// 			i == last_page
+	// 		) {
+	// 			pages.push(i);
+	// 		} else if (i == current - (offset + 1) || i == current + (offset + 1)) {
+	// 			pages.push("...");
+	// 		}
+	// 	}
+	// 	return pages;
+	// }
+
 	const firstItem = () => {
 		return (
 			prev !== undefined &&
 			prev !== 0 && (
-				<Link
-					href={{
-						pathname: pagePath,
-						query: { page: pagesArrayInfo.pages[0], limit: pageParams.limit },
-					}}
-					className="page-link"
-				>
-					First
-				</Link>
+				<li className="page-item">
+					<Link
+						href={{
+							pathname: pagePath,
+							query: { page: pagesArrayInfo.pages[0], limit: pageParams.limit },
+						}}
+						className="page-link"
+					>
+						First
+					</Link>
+				</li>
 			)
 		);
 	};
@@ -36,18 +60,20 @@ const NumericPagination = ({
 		return (
 			next !== undefined &&
 			next !== 0 && (
-				<Link
-					href={{
-						pathname: pagePath,
-						query: {
-							page: pagesArrayInfo.pages.length,
-							limit: pageParams.limit,
-						},
-					}}
-					className="page-link"
-				>
-					Last
-				</Link>
+				<li className="page-item">
+					<Link
+						href={{
+							pathname: pagePath,
+							query: {
+								page: pagesArrayInfo.pages.length,
+								limit: pageParams.limit,
+							},
+						}}
+						className="page-link"
+					>
+						Last
+					</Link>
+				</li>
 			)
 		);
 	};
@@ -56,9 +82,11 @@ const NumericPagination = ({
 		return (
 			next !== "undefined" &&
 			next !== 0 && (
-				<Link href={`/blog${nextParams}`} className={`page-link rounded-0`}>
-					Next
-				</Link>
+				<li className={`page-item next-item`}>
+					<Link href={nextParams} className={`page-link rounded-0`}>
+						Next
+					</Link>
+				</li>
 			)
 		);
 	};
@@ -67,9 +95,11 @@ const NumericPagination = ({
 		return (
 			prev !== undefined &&
 			prev !== 0 && (
-				<Link href={`/blog${prevParams}`} className={`page-link rounded-0`}>
-					Previous
-				</Link>
+				<li className="page-item previous-item">
+					<Link href={prevParams} className={`page-link rounded-0`}>
+						Previous
+					</Link>
+				</li>
 			)
 		);
 	};
@@ -79,33 +109,38 @@ const NumericPagination = ({
 			<nav aria-label="Pagination">
 				<ul className="pagination justify-content-center my-4">
 					{/* FIRST/PREVIOUS */}
-					<li className="page-item">{firstItem()}</li>
-					<li className="page-item previous-item">{prevButton()}</li>
+					{firstItem()}
+					{prevButton()}
 					{/* NUMERIC PAGINATION */}
-					{pagesArrayInfo.pages.split(0, 5).map((p, index) => (
-						<li
-							key={p}
-							id={p}
-							className={`page-item number-item page-${
-								pagesArrayInfo.pages[index]
-							} ${
-								pagesArrayInfo.pages[index] === pageParams.page ? "active" : ""
-							}`}
-						>
-							<Link
-								href={{
-									pathname: pagePath,
-									query: { page: p, limit: pageParams.limit },
-								}}
-								className={`page-link`}
+					{pagesArrayInfo.pages
+						.filter((p) => p < pageParams.limit)
+						.map((p, index) => (
+							<li
+								key={p}
+								id={p}
+								className={`page-item number-item page-${
+									pagesArrayInfo.pages[index]
+								} ${
+									pagesArrayInfo.pages[index] === pageParams.page
+										? "active"
+										: ""
+								}`}
 							>
-								{p}
-							</Link>
-						</li>
-					))}
+								<Link
+									href={{
+										pathname: pagePath,
+										query: { page: p, limit: pageParams.limit },
+									}}
+									className={`page-link`}
+								>
+									{p}
+								</Link>
+							</li>
+						))}
+					{/* {paginate(pagesArrayInfo.current, pagesArrayInfo.pages.length, 3)} */}
 					{/* LAST/NEXT */}
-					<li className={`page-item next-item`}>{nextButton()}</li>
-					<li className="page-item">{lastItem()}</li>
+					{nextButton()}
+					{lastItem()}
 				</ul>
 			</nav>
 		);

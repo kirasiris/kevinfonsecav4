@@ -33,6 +33,23 @@ body.dark-mode::-webkit-scrollbar-thumb:window-inactive {
 body.dark-mode::-webkit-scrollbar-button {
 	background-color: #00cc00;
 }
+
+.privacy-options {
+	left: 70px;
+}
+/*****************************
+SHORTS/STORIES
+*****************************/
+.single-story {
+	width: 110px;
+	height: 175px;
+}
+
+.single-story img {
+	height: 100%;
+	width: 100%;
+	object-fit: cover;
+}
 /*****************************
 BODY-DARK
 *****************************/

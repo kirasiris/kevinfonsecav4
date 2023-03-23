@@ -28,7 +28,7 @@ const QuizIndex = async ({ params, searchParams }) => {
 	const page = searchParams.page || 1;
 
 	const getQuizzesData = getQuizzes(
-		`?page=1&limit=10&sort=-createdAt&status=published`
+		`?page=${page}&limit=${limit}&sort=-createdAt&status=published`
 	);
 
 	const [featured, quizzes] = await Promise.all([
@@ -49,12 +49,14 @@ const QuizIndex = async ({ params, searchParams }) => {
 				<div className="row">
 					{quizzes?.data?.length > 0 && (
 						<NumericPagination
-							nextParams={`page${nextPage}&limit=${limit}`}
+							nextParams={`/quizz?page=${nextPage}&limit=${limit}`}
+							prevParams={`/quizz?page=${prevPage}&limit=${limit}`}
 							next={nextPage}
 							prev={prevPage}
 							loadMoreParams={`quiz`}
 							pagesArrayInfo={quizzes?.pagination}
-							pagePath={searchParams}
+							pagePath="/quizz"
+							pageParams={searchParams}
 							componentMapping={quizzes.data?.map((quiz, index) => (
 								<div key={quiz._id} className={`col-lg-3 ${index}`}>
 									<Single quiz={quiz} />

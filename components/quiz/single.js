@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import Loading from "@/app/blog/loading";
+import Image from "next/image";
 
 const Single = ({ quiz = {} }) => {
 	return (
@@ -20,6 +21,28 @@ const Single = ({ quiz = {} }) => {
 					</div>
 					<div className="card-body p-0">
 						<ul className="list-group list-group-flush">
+							<li className="list-group-item p-0">
+								<p className="m-0">
+									<Link
+										href={{
+											pathname: `/quizz/${quiz._id}/${quiz?.category?._id}/${quiz?.category?.slug}/${quiz.slug}`,
+										}}
+										passHref
+										legacyBehavior
+									>
+										<Image
+											src={
+												quiz.avatar?.location?.secure_location ||
+												`https://source.unsplash.com/random/300x200`
+											}
+											className="card-img-top rounded-0"
+											alt={`${quiz.title}'s featured image`}
+											width={`300`}
+											height={`200`}
+										/>
+									</Link>
+								</p>
+							</li>
 							<li className="list-group-item">
 								<p className="m-0">
 									Category: {quiz.category?.title || "No category"}
@@ -36,6 +59,11 @@ const Single = ({ quiz = {} }) => {
 							</li>
 							<li className="list-group-item">
 								<p className="m-0">Attempts allowed: {quiz.attempts}</p>
+							</li>
+							<li className="list-group-item">
+								<p className="m-0">
+									{quiz.singlePage ? "Single page" : "Multiple pages"}
+								</p>
 							</li>
 						</ul>
 					</div>

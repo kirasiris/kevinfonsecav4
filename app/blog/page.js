@@ -35,7 +35,7 @@ async function getQuotes() {
 	return res.json();
 }
 
-const BlogIndex = async ({ params, searchParams }) => {
+const BlogIndex = async ({ searchParams }) => {
 	const getFeaturedBlogsData = getFeaturedBlog(
 		`?featured=true&postType=blog&status=published`
 	);
@@ -75,7 +75,7 @@ const BlogIndex = async ({ params, searchParams }) => {
 					<div className="col-lg-8">
 						{/* Featured list */}
 						{featured?.data?.length > 0 &&
-							featured.data.map((featured, index) => (
+							featured.data.map((featured) => (
 								<Single key={featured._id} blog={featured} />
 							))}
 						{/* Blog list */}
@@ -90,14 +90,13 @@ const BlogIndex = async ({ params, searchParams }) => {
 									pagesArrayInfo={blogs?.pagination}
 									pagePath="/blog"
 									pageParams={searchParams}
-									componentMapping={blogs.data?.map((blog, index) => (
-										<div key={blog._id} className={`col-lg-6 ${index}`}>
-											<Single
-												blog={blog}
-												imageWidth={`415`}
-												imageHeight={`207`}
-											/>
-										</div>
+									componentMapping={blogs.data?.map((blog) => (
+										<Single
+											key={blog._id}
+											blog={blog}
+											imageWidth={`415`}
+											imageHeight={`207`}
+										/>
 									))}
 								/>
 							)}

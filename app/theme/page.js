@@ -16,9 +16,12 @@ async function getCategories(params) {
 	return res.json();
 }
 
-const ThemeIndex = async () => {
+const ThemeIndex = async ({ searchParams }) => {
+	const limit = searchParams.limit || 10;
+	const page = searchParams.page || 1;
+
 	const getThemesData = getThemes(
-		`?page=1&limit=10&sort=-createdAt&postType=theme&status=published`
+		`?page=${page}&limit=${limit}&sort=-createdAt&postType=theme&status=published`
 	);
 
 	const getCategoriesData = getCategories(`?categoryType=theme`);
@@ -27,6 +30,9 @@ const ThemeIndex = async () => {
 		getThemesData,
 		getCategoriesData,
 	]);
+
+	const nextPage = themes?.pagination?.next?.page || 0;
+	const prevPage = themes?.pagination?.prev?.page || 0;
 
 	return (
 		<>
@@ -37,13 +43,8 @@ const ThemeIndex = async () => {
 			<div className="container">
 				<div className="row justify-content-center">
 					{themes?.data?.length > 0 &&
-						themes.data?.map((theme, index) => (
-							<div
-								key={theme._id}
-								className={`col-lg-4 col-md-6 mb-4 ${index}`}
-							>
-								<Single theme={theme} />
-							</div>
+						themes.data?.map((theme) => (
+							<Single key={theme._id} theme={theme} />
 						))}
 				</div>
 			</div>

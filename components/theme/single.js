@@ -6,7 +6,7 @@ import { Suspense } from "react";
 const Single = ({ theme = {} }) => {
 	return (
 		<Suspense fallback={<Loading />}>
-			<article className={theme._id}>
+			<article className={`${theme._id} col-lg-4 col-md-6 mb-4`}>
 				<Link
 					href={{
 						pathname: `/theme/${theme._id}/${theme?.category?._id}/${theme?.category?.slug}/${theme.slug}`,

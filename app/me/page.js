@@ -35,19 +35,25 @@ async function getMedias(params) {
 	return res.json();
 }
 
-const MeIndex = async () => {
+const MeIndex = async ({ searchParams }) => {
 	const getMeData = getMe(`?username=kirasiris&email=kebin1421@hotmail.com`);
 
 	const getFeaturedPostsData = getFeaturedPost(
 		`?featured=true&status=published`
 	);
 
+	const limit = searchParams.limit || 10;
+	const page = searchParams.page || 1;
+
 	const getStoriesData = getPosts(
-		`?page=1&limit=10&sort=-createdAt&status=published&postType=story`
+		`?page=${page}&limit=${limit}&sort=-createdAt&status=published&postType=story`
 	);
 
+	const subType =
+		(searchParams.subType && `&subType=${searchParams.subType}`) || "";
+
 	const getPostsData = getPosts(
-		`?page=1&limit=10&sort=-createdAt&status=published&postType=post`
+		`?page=${page}&limit=${limit}&sort=-createdAt&status=published&postType=post${subType}`
 	);
 
 	const getMediasData = getMedias(`?limit=9&type=image`);
@@ -60,6 +66,9 @@ const MeIndex = async () => {
 		getPostsData,
 		getMediasData,
 	]);
+
+	const nextPage = posts?.pagination?.next?.page || 0;
+	const prevPage = posts?.pagination?.prev?.page || 0;
 
 	return (
 		<>

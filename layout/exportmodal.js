@@ -29,7 +29,7 @@ const ExportModal = ({
 }) => {
 	const [showExportModal, setShowExportModal] = useState(false);
 	return (
-		<div>
+		<>
 			<Button
 				variant="secondary"
 				size="sm"
@@ -136,7 +136,7 @@ const ExportModal = ({
 					</Modal.Body>
 				</Modal>
 			)}
-		</div>
+		</>
 	);
 };
 

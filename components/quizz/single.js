@@ -3,20 +3,20 @@ import Link from "next/link";
 import Loading from "@/app/blog/loading";
 import Image from "next/image";
 
-const Single = ({ quiz = {} }) => {
+const Single = ({ quizz = {} }) => {
 	return (
 		<Suspense fallback={<Loading />}>
-			<article className={quiz._id}>
+			<article className={`${quizz._id} col-lg-3`}>
 				<div className={`card mb-3`}>
 					<div className="card-header">
 						<Link
 							href={{
-								pathname: `/quizz/${quiz._id}/${quiz?.category?._id}/${quiz?.category?.slug}/${quiz.slug}`,
+								pathname: `/quizz/${quizz._id}/${quizz?.category?._id}/${quizz?.category?.slug}/${quizz.slug}`,
 							}}
 							passHref
 							legacyBehavior
 						>
-							<a>{quiz.title}</a>
+							<a>{quizz.title}</a>
 						</Link>
 					</div>
 					<div className="card-body p-0">
@@ -25,18 +25,18 @@ const Single = ({ quiz = {} }) => {
 								<p className="m-0">
 									<Link
 										href={{
-											pathname: `/quizz/${quiz._id}/${quiz?.category?._id}/${quiz?.category?.slug}/${quiz.slug}`,
+											pathname: `/quizz/${quizz._id}/${quizz?.category?._id}/${quizz?.category?.slug}/${quizz.slug}`,
 										}}
 										passHref
 										legacyBehavior
 									>
 										<Image
 											src={
-												quiz.avatar?.location?.secure_location ||
+												quizz.avatar?.location?.secure_location ||
 												`https://source.unsplash.com/random/300x200`
 											}
 											className="card-img-top rounded-0"
-											alt={`${quiz.title}'s featured image`}
+											alt={`${quizz.title}'s featured image`}
 											width={`300`}
 											height={`200`}
 										/>
@@ -45,24 +45,24 @@ const Single = ({ quiz = {} }) => {
 							</li>
 							<li className="list-group-item">
 								<p className="m-0">
-									Category: {quiz.category?.title || "No category"}
+									Category: {quizz.category?.title || "No category"}
 								</p>
 							</li>
 							<li className="list-group-item">
-								<p className="m-0">Duration: {quiz.duration}</p>
+								<p className="m-0">Duration: {quizz.duration}</p>
 							</li>
 							<li className="list-group-item">
-								<p className="m-0">Minimum score: {quiz.minimumSocre}</p>
+								<p className="m-0">Minimum score: {quizz.minimumSocre}</p>
 							</li>
 							<li className="list-group-item">
-								<p className="m-0">Maximum score: {quiz.maximumScore}</p>
+								<p className="m-0">Maximum score: {quizz.maximumScore}</p>
 							</li>
 							<li className="list-group-item">
-								<p className="m-0">Attempts allowed: {quiz.attempts}</p>
+								<p className="m-0">Attempts allowed: {quizz.attempts}</p>
 							</li>
 							<li className="list-group-item">
 								<p className="m-0">
-									{quiz.singlePage ? "Single page" : "Multiple pages"}
+									{quizz.singlePage ? "Single page" : "Multiple pages"}
 								</p>
 							</li>
 						</ul>
@@ -70,7 +70,7 @@ const Single = ({ quiz = {} }) => {
 					<div className="card-footer">
 						<Link
 							href={{
-								pathname: `/quizz/${quiz._id}/${quiz?.category?._id}/${quiz?.category?.slug}/${quiz.slug}`,
+								pathname: `/quizz/${quizz._id}/${quizz?.category?._id}/${quizz?.category?.slug}/${quizz.slug}`,
 							}}
 							passHref
 							legacyBehavior

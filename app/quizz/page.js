@@ -1,4 +1,4 @@
-import Single from "@/components/quiz/single";
+import Single from "@/components/quizz/single";
 import Header from "@/layout/header";
 import Footer from "@/layout/footer";
 import NumericPagination from "@/layout/numericpagination";
@@ -19,7 +19,7 @@ async function getQuizzes(params) {
 	return res.json();
 }
 
-const QuizIndex = async ({ params, searchParams }) => {
+const QuizIndex = async ({ searchParams }) => {
 	const getFeaturedQuizzesData = getFeaturedQuizz(
 		`?featured=true&status=published`
 	);
@@ -53,14 +53,12 @@ const QuizIndex = async ({ params, searchParams }) => {
 							prevParams={`/quizz?page=${prevPage}&limit=${limit}`}
 							next={nextPage}
 							prev={prevPage}
-							loadMoreParams={`quiz`}
+							loadMoreParams={`quizz`}
 							pagesArrayInfo={quizzes?.pagination}
 							pagePath="/quizz"
 							pageParams={searchParams}
-							componentMapping={quizzes.data?.map((quiz, index) => (
-								<div key={quiz._id} className={`col-lg-3 ${index}`}>
-									<Single quiz={quiz} />
-								</div>
+							componentMapping={quizzes.data?.map((quizz) => (
+								<Single key={quizz._id} quizz={quizz} />
 							))}
 						/>
 					)}

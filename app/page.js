@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import Header from "@/layout/header";
 import Footer from "@/layout/footer";

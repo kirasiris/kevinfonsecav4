@@ -15,28 +15,6 @@ const NumericPagination = ({
 	pagePath = "/",
 	pageParams = {},
 }) => {
-	// const current = pagesArrayInfo.current;
-	// const last_page = pagesArrayInfo.pages.length;
-	// function paginate(current, last_page, onSides = 3) {
-	// 	let pages = [];
-	// 	for (let i = 1; i <= last_page; i++) {
-	// 		// Define offset
-	// 		let offset = i == 1 || last_page ? onSides + 1 : onSides;
-	// 		// If added
-	// 		if (
-	// 			i == 1 ||
-	// 			(current - offset <= i && current + offset >= i) ||
-	// 			i == current ||
-	// 			i == last_page
-	// 		) {
-	// 			pages.push(i);
-	// 		} else if (i == current - (offset + 1) || i == current + (offset + 1)) {
-	// 			pages.push("...");
-	// 		}
-	// 	}
-	// 	return pages;
-	// }
-
 	const firstItem = () => {
 		return (
 			prev !== undefined &&
@@ -106,7 +84,7 @@ const NumericPagination = ({
 
 	const numericPagination = () => {
 		return (
-			<nav aria-label="Pagination">
+			<nav aria-label="pagination">
 				<ul className="pagination justify-content-center my-4">
 					{/* FIRST/PREVIOUS */}
 					{firstItem()}
@@ -137,7 +115,7 @@ const NumericPagination = ({
 								</Link>
 							</li>
 						))}
-					{/* {paginate(pagesArrayInfo.current, pagesArrayInfo.pages.length, 3)} */}
+
 					{/* LAST/NEXT */}
 					{nextButton()}
 					{lastItem()}

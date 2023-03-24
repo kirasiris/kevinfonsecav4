@@ -21,16 +21,16 @@ const Single = ({ question = {} }) => {
 				</div>
 				<div className={`col-lg-6 float-end`}>
 					<h2>{question.title}</h2>
-					{Object.entries(question.answers).forEach(([key, value]) => (
+					{Object.entries(question.answers).map(([key, value]) => (
 						<div key={key} className="form-check">
 							<input
 								className="form-check-input"
 								type="radio"
-								name={value}
+								name={key}
 								id={key}
 							/>
 							<label className="form-check-label" for={key}>
-								{value}
+								{key} - {value}
 							</label>
 						</div>
 					))}

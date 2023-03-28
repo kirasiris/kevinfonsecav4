@@ -7,6 +7,18 @@ const Sidebar = ({ me = {}, photos = [] }) => {
 				<div className="card-header">About</div>
 				<div className="card-body p-0">
 					<ul className="list-group list-group-flush">
+						{me.data[0].isOnline && (
+							<li className="list-group-item">
+								<p className="m-0">
+									<strong className="text-success">Is Online</strong>
+									{me.data[0].isLive && (
+										<>
+											&nbsp;&amp;&nbsp;<strong>Is Live</strong>
+										</>
+									)}
+								</p>
+							</li>
+						)}
 						{me.data[0].bio && (
 							<li className="list-group-item">
 								<p className="m-0">{me.data[0].bio}</p>
@@ -17,6 +29,14 @@ const Sidebar = ({ me = {}, photos = [] }) => {
 								<p className="m-0">
 									{me.data[0].sex.charAt(0).toUpperCase() +
 										me.data[0].sex.slice(1)}
+								</p>
+							</li>
+						)}
+						{me.data[0].gender && (
+							<li className="list-group-item">
+								<p className="m-0">
+									{me.data[0].gender.charAt(0).toUpperCase() +
+										me.data[0].gender.slice(1)}
 								</p>
 							</li>
 						)}
@@ -89,7 +109,7 @@ const Sidebar = ({ me = {}, photos = [] }) => {
 						))}
 				</div>
 			</div>
-			{photos.data.length > 0 && (
+			{photos.data?.length > 0 && (
 				<div className="card mb-3">
 					<div className="card-header">
 						Photos
@@ -109,7 +129,7 @@ const Sidebar = ({ me = {}, photos = [] }) => {
 						</Link>
 					</div>
 					<div className="card-body p-0">
-						{photos.data.map((photo, index) => (
+						{photos.data?.map((photo, index) => (
 							<Link
 								key={index}
 								href={{

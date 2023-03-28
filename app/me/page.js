@@ -56,7 +56,7 @@ const MeIndex = async ({ searchParams }) => {
 		`?page=${page}&limit=${limit}&sort=-createdAt&status=published&postType=post${subType}`
 	);
 
-	const getMediasData = getMedias(`?limit=9&type=image`);
+	const getMediasData = getMedias(`?limit=9&album=posts`);
 
 	const me = await getMeData;
 

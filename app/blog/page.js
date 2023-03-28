@@ -91,12 +91,7 @@ const BlogIndex = async ({ searchParams }) => {
 									pagePath="/blog"
 									pageParams={searchParams}
 									componentMapping={blogs.data?.map((blog) => (
-										<Single
-											key={blog._id}
-											blog={blog}
-											imageWidth={`415`}
-											imageHeight={`207`}
-										/>
+										<Single key={blog._id} blog={blog} />
 									))}
 								/>
 							)}

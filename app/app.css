@@ -50,6 +50,35 @@ SHORTS/STORIES
 	width: 100%;
 	object-fit: cover;
 }
+
+/*****************************
+PROFILE PICTURES
+*****************************/
+
+.profile-pictures {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+}
+
+.profile-pictures article {
+	box-sizing: border-box;
+	overflow: hidden;
+	flex-basis: 0px;
+	position: relative;
+	flex-grow: 1;
+	min-width: 168px;
+	padding: 4px;
+}
+
+.profile-pictures img {
+	object-fit: cover;
+	width: 100%;
+	border-radius: 8px;
+	box-sizing: border-box;
+	height: 100%;
+}
+
 /*****************************
 BODY-DARK
 *****************************/

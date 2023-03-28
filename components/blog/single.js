@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Loading from "@/app/blog/loading";
 
-const Single = ({ blog = {}, imageWidth = "850", imageHeight = "350" }) => {
+const Single = ({ blog = {}, imageWidth = "415", imageHeight = "207" }) => {
 	return (
 		<Suspense fallback={<Loading />}>
 			<article className={`${blog._id} col-lg-6`}>
@@ -16,7 +16,7 @@ const Single = ({ blog = {}, imageWidth = "850", imageHeight = "350" }) => {
 						<Image
 							src={
 								blog.avatar?.location.secure_location ||
-								`https://source.unsplash.com/random/1200x900`
+								`https://source.unsplash.com/random/415x207`
 							}
 							className="card-img-top"
 							alt={`${blog.title}'s featured image`}

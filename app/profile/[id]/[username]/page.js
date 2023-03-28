@@ -35,8 +35,8 @@ async function getMedias(params) {
 	return res.json();
 }
 
-const MeIndex = async ({ searchParams }) => {
-	const getMeData = getMe(`?username=kirasiris&email=kebin1421@hotmail.com`);
+const ProfileIndex = async ({ params, searchParams }) => {
+	const getProfileData = getMe(`/${params.id}`);
 
 	const getFeaturedPostsData = getFeaturedPost(
 		`?featured=true&status=published`
@@ -58,7 +58,7 @@ const MeIndex = async ({ searchParams }) => {
 
 	const getMediasData = getMedias(`?limit=9&album=posts`);
 
-	const me = await getMeData;
+	const me = await getProfileData;
 
 	const [featured, stories, posts, photos] = await Promise.all([
 		getFeaturedPostsData,
@@ -75,7 +75,7 @@ const MeIndex = async ({ searchParams }) => {
 			<Header
 				headerStyle={{
 					background: `linear-gradient(to bottom, rgba(0,0,0,0.7) 0%,rgba(0,0,0,0.7) 100%), url(${
-						me.data[0].cover?.location.secure_location ||
+						me.data[0]?.cover?.location.secure_location ||
 						`https://befreebucket-for-outputs.s3.amazonaws.com/2023/02/map-image.png`
 					})`,
 					backgroundPosition: "center",
@@ -85,7 +85,7 @@ const MeIndex = async ({ searchParams }) => {
 			<div className="container">
 				<div className="row">
 					<div className="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-xs-12">
-						<Sidebar me={me} photos={photos} />
+						<Sidebar profile={me} photos={photos} />
 					</div>
 					<div className="col-xl-8 col-lg-8 col-md-12 col-sm-12 col-xs-12">
 						{/* Stories */}
@@ -126,4 +126,4 @@ const MeIndex = async ({ searchParams }) => {
 	);
 };
 
-export default MeIndex;
+export default ProfileIndex;

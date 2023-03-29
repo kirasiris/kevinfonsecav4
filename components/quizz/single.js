@@ -1,7 +1,7 @@
 import { Suspense } from "react";
-import Link from "next/link";
-import Loading from "@/app/blog/loading";
 import Image from "next/image";
+import Link from "next/link";
+import Loading from "@/app/quizz/loading";
 
 const Single = ({ quizz = {} }) => {
 	return (

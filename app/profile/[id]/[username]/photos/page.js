@@ -1,6 +1,8 @@
+import { Suspense } from "react";
 import Single from "@/components/media/single";
 import Header from "@/layout/header";
 import Footer from "@/layout/footer";
+import Loading from "@/app/profile/loading";
 
 async function getMe(params) {
 	const res = await fetch(`http://localhost:5000/api/v1/users${params}`);
@@ -35,7 +37,7 @@ const MePhotosIndex = async ({ params, searchParams }) => {
 	};
 
 	return (
-		<>
+		<Suspense fallback={<Loading />}>
 			<Header
 				headerStyle={{
 					background: `linear-gradient(to bottom, rgba(0,0,0,0.7) 0%,rgba(0,0,0,0.7) 100%), url(${
@@ -61,7 +63,7 @@ const MePhotosIndex = async ({ params, searchParams }) => {
 				</div>
 			</div>
 			<Footer />
-		</>
+		</Suspense>
 	);
 };
 

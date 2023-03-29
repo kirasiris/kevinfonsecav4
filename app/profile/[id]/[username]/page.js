@@ -1,10 +1,12 @@
-import SingleStory from "@/components/me/singlestory";
-import Single from "@/components/me/single";
+import { Suspense } from "react";
+import SingleStory from "@/components/profile/singlestory";
+import SinglePost from "@/components/profile/singlepost";
 import Header from "@/layout/header";
 import Footer from "@/layout/footer";
-import Filter from "@/components/me/filter";
-import Sidebar from "@/components/me/sidebar";
-import PostNew from "@/components/me/postnew";
+import Filter from "@/components/profile/filter";
+import Sidebar from "@/components/profile/sidebar";
+import Loading from "@/app/profile/loading";
+import PostNew from "@/components/profile/postnew";
 
 async function getMe(params) {
 	const res = await fetch(`http://localhost:5000/api/v1/users${params}`);
@@ -71,7 +73,7 @@ const ProfileIndex = async ({ params, searchParams }) => {
 	const prevPage = posts?.pagination?.prev?.page || 0;
 
 	return (
-		<>
+		<Suspense fallback={<Loading />}>
 			<Header
 				headerStyle={{
 					background: `linear-gradient(to bottom, rgba(0,0,0,0.7) 0%,rgba(0,0,0,0.7) 100%), url(${
@@ -104,7 +106,7 @@ const ProfileIndex = async ({ params, searchParams }) => {
 							<>
 								<h2>Featured</h2>
 								{featured.data?.map((featured) => (
-									<Single key={featured._id} post={featured} />
+									<SinglePost key={featured._id} post={featured} />
 								))}
 							</>
 						)}
@@ -113,16 +115,16 @@ const ProfileIndex = async ({ params, searchParams }) => {
 							<>
 								<h2>Timeline</h2>
 								{posts.data?.map((post) => (
-									<Single key={post._id} post={post} />
+									<SinglePost key={post._id} post={post} />
 								))}
 							</>
 						)}
-						<Single />
+						<SinglePost />
 					</div>
 				</div>
 			</div>
 			<Footer />
-		</>
+		</Suspense>
 	);
 };
 

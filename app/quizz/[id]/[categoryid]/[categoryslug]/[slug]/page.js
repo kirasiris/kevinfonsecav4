@@ -3,7 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import Header from "@/layout/header";
 import Footer from "@/layout/footer";
-import Loading from "@/app/blog/loading";
+import Loading from "@/app/quizz/loading";
 import NumericPagination from "@/layout/numericpagination";
 import Single from "@/components/question/single";
 

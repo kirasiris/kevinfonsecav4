@@ -1,10 +1,10 @@
 "use client";
+import { Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Suspense } from "react";
+import Loading from "@/app/profile/loading";
 import Carousel from "react-bootstrap/Carousel";
 import Badge from "react-bootstrap/Badge";
-import Loading from "@/app/blog/loading";
 import ExportModal from "@/layout/exportmodal";
 import { DropdownButton, Button } from "react-bootstrap";
 import Waveform from "@/layout/waveform";

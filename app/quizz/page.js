@@ -19,7 +19,7 @@ async function getQuizzes(params) {
 	return res.json();
 }
 
-const QuizIndex = async ({ searchParams }) => {
+const QuizzIndex = async ({ searchParams }) => {
 	const getFeaturedQuizzesData = getFeaturedQuizz(
 		`?featured=true&status=published`
 	);
@@ -69,4 +69,4 @@ const QuizIndex = async ({ searchParams }) => {
 	);
 };
 
-export default QuizIndex;
+export default QuizzIndex;

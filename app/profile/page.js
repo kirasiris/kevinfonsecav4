@@ -10,7 +10,7 @@ async function getProfiles(params) {
 	return res.json();
 }
 
-const ProfilesIndex = async ({ params, searchParams }) => {
+const ProfileIndex = async ({ params, searchParams }) => {
 	const limit = searchParams.limit || 10;
 	const page = searchParams.page || 1;
 
@@ -43,4 +43,4 @@ const ProfilesIndex = async ({ params, searchParams }) => {
 	);
 };
 
-export default ProfilesIndex;
+export default ProfileIndex;

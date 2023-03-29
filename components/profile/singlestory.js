@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import Loading from "@/app/blog/loading";
+import Loading from "@/app/profile/loading";
 
 const SingleStory = ({
 	story = {},

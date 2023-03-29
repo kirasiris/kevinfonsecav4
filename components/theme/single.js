@@ -1,7 +1,7 @@
-import Loading from "@/app/blog/loading";
+import { Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Suspense } from "react";
+import Loading from "@/app/theme/loading";
 
 const Single = ({ theme = {} }) => {
 	return (

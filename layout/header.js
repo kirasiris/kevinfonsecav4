@@ -40,7 +40,7 @@ const Header = ({
 							<li className="nav-item mx-1">
 								<Link
 									href={{
-										pathname: "/me",
+										pathname: "/profile",
 										query: { page: 1, limit: 10 },
 									}}
 									passHref

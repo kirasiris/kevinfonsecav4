@@ -3,6 +3,15 @@ import Header from "@/layout/header";
 import Footer from "@/layout/footer";
 import SingleBlog from "@/components/blog/single";
 import SingleTheme from "@/components/theme/single";
+import NewsletterForm from "@/layout/newsletter";
+
+async function getNewsletters(params) {
+	const res = await fetch(`http://localhost:5000/api/v1/newsletters${params}`, {
+		cache: "no-store",
+	});
+
+	return res.json();
+}
 
 async function getBlogs(params) {
 	const res = await fetch(`http://localhost:5000/api/v1/blogs${params}`, {
@@ -21,6 +30,7 @@ async function getThemes(params) {
 }
 
 const Home = async () => {
+	const getNewslettersData = getNewsletters(``);
 	const getBlogsData = getBlogs(
 		`?page=1&limit=2&sort=-createdAt&postType=blog&status=published`
 	);
@@ -29,7 +39,11 @@ const Home = async () => {
 		`?page=1&limit=3&sort=-createdAt&postType=theme&status=published`
 	);
 
-	const [blogs, themes] = await Promise.all([getBlogsData, getThemesData]);
+	const [newsletters, blogs, themes] = await Promise.all([
+		getNewslettersData,
+		getBlogsData,
+		getThemesData,
+	]);
 
 	const showcaseImage = "";
 
@@ -51,6 +65,15 @@ const Home = async () => {
 					}) no-repeat center center`,
 				}}
 			/>
+			{/* CALL TO ACTION - NEWSLETTER REGISTRATION BY EMAIL */}
+			<section id="newsletter" className="border-bottom py-5">
+				<div className="container">
+					<h2 className="page-section-heading display-5 text-uppercase my-5">
+						Subscribe to our Newsletter
+					</h2>
+					<NewsletterForm newsletters={newsletters} />
+				</div>
+			</section>
 			{/* BLOGS */}
 			{blogs?.data?.length > 0 && (
 				<section id="blogs" className="border-bottom py-5">
@@ -126,17 +149,6 @@ const Home = async () => {
 								</div>
 							</div>
 						</div>
-					</div>
-				</div>
-			</section>
-			{/* CALL TO ACTION - NEWSLETTER REGISTRATION BY EMAIL */}
-			<section id="newsletter" className="border-bottom py-5">
-				<div className="container">
-					<h2 className="page-section-heading display-5 text-uppercase my-5">
-						Newsletter
-					</h2>
-					<div className="row">
-						<div className="col-lg-12">HERE GOES THE INPUT</div>
 					</div>
 				</div>
 			</section>

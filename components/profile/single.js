@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import Loading from "@/app/blog/loading";
+import Loading from "@/app/profile/loading";
 
 const Single = ({ profile = {}, imageWidth = "168", imageHeight = "168" }) => {
 	return (

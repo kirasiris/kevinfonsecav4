@@ -24,10 +24,11 @@ const Head = async ({
 	cssLink,
 	cssInline,
 	jsLink,
-
 	params,
 }) => {
-	const blog = await getBlog(`/${params.id}`);
+	const getBlogsData = await getBlog(`/${params?.id}`);
+
+	const [blog] = await Promise.all([getBlogsData]);
 
 	return (
 		<>

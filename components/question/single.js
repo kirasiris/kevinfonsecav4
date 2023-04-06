@@ -1,13 +1,13 @@
+"use client";
 import { Suspense } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import Loading from "@/app/quizz/loading";
 
-const Single = ({ question = {} }) => {
+const Single = ({ question = {}, selectedAnswers = [] }) => {
 	return (
 		<Suspense fallback={<Loading />}>
-			<article className={`${question._id}`}>
-				<div className={`col-lg-6 float-start`}>
+			<article className={`${question._id} row`}>
+				<div className={`col`}>
 					<Image
 						src={
 							question.avatar?.location?.secure_location ||
@@ -19,17 +19,21 @@ const Single = ({ question = {} }) => {
 						height={`200`}
 					/>
 				</div>
-				<div className={`col-lg-6 float-end`}>
+				<div className={`col`}>
 					<h2>{question.title}</h2>
 					{Object.entries(question.answers).map(([key, value]) => (
-						<div key={key} className="form-check">
+						<div
+							key={key}
+							className="form-check"
+							onClick={() => selectedAnswers.push(...selectedAnswers, key)}
+						>
 							<input
 								className="form-check-input"
 								type="radio"
-								name={key}
+								name="correctAnswer"
 								id={key}
 							/>
-							<label className="form-check-label" for={key}>
+							<label className="form-check-label" htmlFor={key}>
 								{key} - {value}
 							</label>
 						</div>

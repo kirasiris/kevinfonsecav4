@@ -37,6 +37,7 @@ body.dark-mode::-webkit-scrollbar-button {
 .privacy-options {
 	left: 70px;
 }
+
 /*****************************
 SHORTS/STORIES
 *****************************/
@@ -52,9 +53,15 @@ SHORTS/STORIES
 }
 
 /*****************************
+ACCORDION
+*****************************/
+.accordion-button {
+	border-radius: 0px !important;
+}
+
+/*****************************
 PROFILE PICTURES
 *****************************/
-
 .profile-pictures {
 	display: flex;
 	flex-direction: row;
@@ -154,4 +161,14 @@ body.dark-mode footer {
 
 body.dark-mode .list-group-item {
 	background-color: #212529;
+}
+
+body.dark-mode .accordion-button {
+	background-color: #212529;
+	color: #00cc00;
+}
+
+body.dark-mode .accordion-body {
+	background-color: #222222;
+	color: #00cc00;
 }

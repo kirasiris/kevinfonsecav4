@@ -8,9 +8,7 @@ import NumericPagination from "@/layout/numericpagination";
 import Single from "@/components/question/single";
 
 async function getQuizz(params) {
-	const res = await fetch(`http://localhost:5000/api/v1/quizzes${params}`, {
-		cache: "no-store",
-	});
+	const res = await fetch(`http://localhost:5000/api/v1/quizzes${params}`);
 
 	if (!res.ok) {
 		// This will activate the closest `error.js` Error Boundary
@@ -34,12 +32,14 @@ async function getQuestions(params) {
 }
 
 const QuizzRead = async ({ params, searchParams }) => {
-	const limit = searchParams.limit || 1;
+	const limit = searchParams.limit;
 	const page = searchParams.page || 1;
 
 	const getQuizzesData = getQuizz(`/${params.id}`);
 
-	const getQuestionsData = getQuestions(`?resourceId=${params.id}`);
+	const getQuestionsData = getQuestions(
+		`?resourceId=${params.id}&page=${page}&limit=${limit}&sort=-createdAt&status=published`
+	);
 
 	const [quizz, questions] = await Promise.all([
 		getQuizzesData,
@@ -59,7 +59,10 @@ const QuizzRead = async ({ params, searchParams }) => {
 							start: true,
 							singlePage: quizz.data.singlePage,
 							page: page,
-							limit: limit,
+							limit:
+								quizz.data.singlePage === false && questions.data.length > 0
+									? 1
+									: limit,
 						},
 					}}
 					passHref
@@ -71,25 +74,40 @@ const QuizzRead = async ({ params, searchParams }) => {
 		);
 	};
 
+	const selectedAnswers = [];
+
 	return (
 		<Suspense fallback={<Loading />}>
 			<Header title={quizz.data.title} />
 			<div className="container">
 				<div className="row">
 					{searchParams.start !== undefined ? (
-						<NumericPagination
-							nextParams={`/quizz/${params.id}/${params.categoryid}/${params.categoryslug}/${params.slug}?start${searchParams.start}&singlePage=${searchParams.singlePage}&page=${nextPage}&limit=${limit}&`}
-							prevParams={`/quizz/${params.id}/${params.categoryid}/${params.categoryslug}/${params.slug}?start${searchParams.start}&singlePage=${searchParams.singlePage}&page=${prevPage}&limit=${limit}&`}
-							next={nextPage}
-							prev={prevPage}
-							loadMoreParams={`quizz`}
-							pagesArrayInfo={questions?.pagination}
-							pagePath="/quizz"
-							pageParams={searchParams}
-							componentMapping={questions.data?.map((question) => (
-								<Single key={question._id} question={question} />
-							))}
-						/>
+						searchParams.singlePage === "false" ? (
+							<NumericPagination
+								nextParams={`/quizz/${params.id}/${params.categoryid}/${params.categoryslug}/${params.slug}?start=${searchParams.start}&singlePage=${searchParams.singlePage}&page=${nextPage}&limit=${limit}`}
+								prevParams={`/quizz/${params.id}/${params.categoryid}/${params.categoryslug}/${params.slug}?start=${searchParams.start}&singlePage=${searchParams.singlePage}&page=${prevPage}&limit=${limit}`}
+								next={nextPage}
+								prev={prevPage}
+								pagesArrayInfo={questions?.pagination}
+								pagePath={`/quizz/${params.id}/${params.categoryid}/${params.categoryslug}/${params.slug}`}
+								pageParams={searchParams}
+								componentMapping={questions.data?.map((question) => (
+									<Single
+										key={question._id}
+										question={question}
+										selectedAnswers={selectedAnswers}
+									/>
+								))}
+							/>
+						) : (
+							questions.data?.map((question) => (
+								<Single
+									key={question._id}
+									question={question}
+									selectedAnswers={selectedAnswers}
+								/>
+							))
+						)
 					) : (
 						<div className="col-lg-12">
 							<Image
@@ -106,6 +124,11 @@ const QuizzRead = async ({ params, searchParams }) => {
 							<h2>Instructions</h2>
 							<p>{quizz.data.text}</p>
 							<ul className="list-group">
+								<li className="list-group-item">
+									<p className="m-0">
+										Number of questions: {questions.data.length || "0"}
+									</p>
+								</li>
 								<li className="list-group-item">
 									<p className="m-0">
 										Category: {quizz.data.category?.title || "No category"}

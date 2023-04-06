@@ -41,7 +41,7 @@ const Single = ({ blog = {}, imageWidth = "415", imageHeight = "207" }) => {
 							passHref
 							legacyBehavior
 						>
-							<a className="btn btn-sm btn-light">Read more</a>
+							<a className="btn btn-sm btn-secondary">Read more</a>
 						</Link>
 					</div>
 				</div>

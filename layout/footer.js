@@ -7,6 +7,76 @@ const Footer = () => {
 				<p className="m-0 text-center text-white">
 					Made with &#10084; &#38; &#9749; by KEVIN URIEL <ToggleTheme />
 				</p>
+				<hr />
+				<div
+					className="row text-white"
+					style={{
+						wordBreak: "break-word",
+					}}
+				>
+					<div className="col-lg-3">
+						<h5>Latest Comments</h5>
+					</div>
+					<div className="col-lg-3">
+						<h5>Mind to donate?</h5>
+						<ul className="nav flex-column">
+							<li className="nav-item mb-2">
+								<p>
+									<a
+										rel="noreferrer noopener"
+										href="https://www.paypal.com/paypalme/kirasiris"
+										target="_blank"
+									>
+										https://www.paypal.com/paypalme/kirasiris
+									</a>
+								</p>
+							</li>
+							<li className="nav-item mb-2">
+								<p>
+									<a
+										href="https://wordpress.com/refer-a-friend/AgJ8XA6iNz1XmnGwkWYQ/"
+										target="_blank"
+										rel="noreferrer noopener"
+									>
+										https://wordpress.com/refer-a-friend/AgJ8XA6iNz1XmnGwkWYQ/
+									</a>
+								</p>
+							</li>
+							<li className="nav-item mb-2">
+								<p>
+									<a
+										href="https://cash.app/$kirasiris"
+										target="_blank"
+										rel="noreferrer noopener"
+									>
+										https://cash.app/$kirasiris
+									</a>
+								</p>
+							</li>
+						</ul>
+					</div>
+					<div className="col-lg-3">
+						<h5>Calendar</h5>
+						<ul className="nav flex-column">
+							<li className="nav-item mb-2">fgfdgfd</li>
+						</ul>
+					</div>
+					<div className="col-lg-3">
+						<h5>About</h5>
+						<ul className="nav flex-column">
+							<li className="nav-item mb-2">
+								<p>
+									All of the articles found on this website are owned by me.
+								</p>
+								<p>
+									Every opinion, though, say,etc is said by me, myself and I;
+									not a single company or any other individual other than me
+									should be held accountable
+								</p>
+							</li>
+						</ul>
+					</div>
+				</div>
 			</div>
 		</footer>
 	);

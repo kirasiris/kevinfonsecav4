@@ -86,7 +86,6 @@ const BlogIndex = async ({ searchParams }) => {
 									prevParams={`/blog?page=${prevPage}&limit=${limit}`}
 									next={nextPage}
 									prev={prevPage}
-									loadMoreParams={`blog`}
 									pagesArrayInfo={blogs?.pagination}
 									pagePath="/blog"
 									pageParams={searchParams}

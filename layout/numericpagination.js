@@ -23,7 +23,11 @@ const NumericPagination = ({
 					<Link
 						href={{
 							pathname: pagePath,
-							query: { page: pagesArrayInfo.pages[0], limit: pageParams.limit },
+							query: {
+								...pageParams,
+								page: pagesArrayInfo.pages[0],
+								limit: pageParams.limit,
+							},
 						}}
 						className="page-link"
 					>
@@ -43,6 +47,7 @@ const NumericPagination = ({
 						href={{
 							pathname: pagePath,
 							query: {
+								...pageParams,
 								page: pagesArrayInfo.pages.length,
 								limit: pageParams.limit,
 							},
@@ -91,7 +96,7 @@ const NumericPagination = ({
 					{prevButton()}
 					{/* NUMERIC PAGINATION */}
 					{pagesArrayInfo.pages
-						.filter((p) => p < pageParams.limit)
+						// .filter((p) => p < pageParams.limit)
 						.map((p, index) => (
 							<li
 								key={p}
@@ -107,7 +112,7 @@ const NumericPagination = ({
 								<Link
 									href={{
 										pathname: pagePath,
-										query: { page: p, limit: pageParams.limit },
+										query: { ...pageParams, page: p, limit: pageParams.limit },
 									}}
 									className={`page-link`}
 								>

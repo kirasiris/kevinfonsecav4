@@ -1,3 +1,4 @@
+import Link from "next/link";
 import ToggleTheme from "./toggletheme";
 
 const Footer = () => {
@@ -15,7 +16,26 @@ const Footer = () => {
 					}}
 				>
 					<div className="col-lg-3">
-						<h5>Latest Comments</h5>
+						<h5>Menu</h5>
+						<ul className="nav flex-column">
+							<li className="nav-item mb-2">
+								<p>
+									<Link
+										href={{
+											pathname: "/changelog",
+											query: {
+												page: undefined,
+												limit: undefined,
+											},
+										}}
+										passHref
+										legacyBehavior
+									>
+										Changelog
+									</Link>
+								</p>
+							</li>
+						</ul>
 					</div>
 					<div className="col-lg-3">
 						<h5>Mind to donate?</h5>

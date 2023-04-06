@@ -7,6 +7,7 @@ import Sidebar from "@/layout/sidebar";
 import Loading from "@/app/blog/loading";
 import ExportModal from "@/layout/exportmodal";
 import Single from "@/components/comment/single";
+import AuthorBox from "@/layout/authorbox";
 
 async function getBlog(params) {
 	const res = await fetch(`http://localhost:5000/api/v1/blogs${params}`, {
@@ -122,6 +123,7 @@ const BlogRead = async ({ params }) => {
 								) : (
 									<p>No comments allowed</p>
 								)}
+								<AuthorBox author={blog.data.user} />
 							</section>
 						</article>
 					</div>

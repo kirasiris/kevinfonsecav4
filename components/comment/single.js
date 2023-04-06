@@ -7,8 +7,8 @@ const Single = ({
 	author = {},
 	comment = {},
 	commentId = null,
-	imageWidth = "415",
-	imageHeight = "207",
+	imageWidth = "64",
+	imageHeight = "64",
 }) => {
 	return (
 		<Suspense fallback={<Loading />}>

@@ -3,7 +3,11 @@ import { Suspense } from "react";
 import Image from "next/image";
 import Loading from "@/app/quizz/loading";
 
-const Single = ({ question = {}, selectedAnswers = [] }) => {
+const Single = ({
+	question = {},
+	selectedAnswers = [],
+	setSelectedAnswers,
+}) => {
 	return (
 		<Suspense fallback={<Loading />}>
 			<article className={`${question._id} row`}>
@@ -25,7 +29,14 @@ const Single = ({ question = {}, selectedAnswers = [] }) => {
 						<div
 							key={key}
 							className="form-check"
-							onClick={() => selectedAnswers.push(...selectedAnswers, key)}
+							onClick={(e) => {
+								e.preventDefault();
+								// setSelectedAnswers({
+								// 	...selectedAnswers,
+								// 	key,
+								// });
+								selectedAnswers.push([...selectedAnswers, key]);
+							}}
 						>
 							<input
 								className="form-check-input"

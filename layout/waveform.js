@@ -1,4 +1,4 @@
-"use strict";
+"use client";
 import { useEffect, useRef, useState } from "react";
 import WaveSurfer from "wavesurfer.js";
 import { FaPlayCircle, FaPauseCircle } from "react-icons/fa";

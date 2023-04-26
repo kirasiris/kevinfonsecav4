@@ -8,6 +8,7 @@ import Loading from "@/app/blog/loading";
 import ExportModal from "@/layout/exportmodal";
 import Single from "@/components/comment/single";
 import AuthorBox from "@/layout/authorbox";
+import CommentBox from "@/components/global/commentbox";
 
 async function getBlog(params) {
 	const res = await fetch(`http://localhost:5000/api/v1/blogs${params}`, {
@@ -36,14 +37,6 @@ async function getQuotes() {
 	return res.json();
 }
 
-async function getComments(params) {
-	const res = await fetch(`http://localhost:5000/api/v1/comments${params}`, {
-		cache: "no-store",
-	});
-
-	return res.json();
-}
-
 const BlogRead = async ({ params }) => {
 	const getBlogsData = getBlog(`/${params.id}`);
 
@@ -51,15 +44,10 @@ const BlogRead = async ({ params }) => {
 
 	const getQuotesData = getQuotes();
 
-	const getCommentsData = getComments(
-		`?resourceId=${params.id}&sort=-createdAt&status=published`
-	);
-
-	const [blog, categories, quotes, comments] = await Promise.all([
+	const [blog, categories, quotes] = await Promise.all([
 		getBlogsData,
 		getCategoriesData,
 		getQuotesData,
-		getCommentsData,
 	]);
 
 	return (
@@ -101,29 +89,22 @@ const BlogRead = async ({ params }) => {
 							</figure>
 							<section className="mb-5">
 								{blog.data.text}
+								<hr />
 								{blog.data.category && (
 									<ExportModal
 										linkToShare={`localhost:3000/blog/${blog.data._id}/${blog.data.category._id}/${blog.data.category.slug}/${blog.data.slug}`}
 										object={blog.data}
 									/>
 								)}
-								{blog.data.commented ? (
-									comments?.data?.length > 0 && (
-										<>
-											<h5>Comments: {comments?.data?.length}</h5>
-											{comments.data?.map((comment) => (
-												<Single
-													key={comment._id}
-													author={blog.data.user}
-													comment={comment}
-												/>
-											))}
-										</>
-									)
-								) : (
-									<p>No comments allowed</p>
-								)}
 								<AuthorBox author={blog.data.user} />
+								<CommentBox
+									user={blog.data.user}
+									postId={blog.data._id}
+									secondPostId={blog.data._id}
+									isVisible={blog.data.commented}
+									postType="blog"
+									onModel="Blog"
+								/>
 							</section>
 						</article>
 					</div>

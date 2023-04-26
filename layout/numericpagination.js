@@ -1,7 +1,5 @@
 "use client";
 import Link from "next/link";
-import router from "next/router";
-import { useEffect } from "react";
 
 // ACTIONS
 // HELPERS
@@ -15,6 +13,13 @@ const NumericPagination = ({
 	pagePath = "/",
 	pageParams = {},
 }) => {
+	const siblingsCount = 3;
+	const siblingsStart = Math.max(pagesArrayInfo.current, 1);
+	const siblingsEnd = Math.min(
+		pagesArrayInfo.current + siblingsCount,
+		pagesArrayInfo.totalpages
+	);
+
 	const firstItem = () => {
 		return (
 			prev !== undefined &&
@@ -96,31 +101,36 @@ const NumericPagination = ({
 					{prevButton()}
 					{/* NUMERIC PAGINATION */}
 					{pagesArrayInfo.pages
-						// .filter((p) => p < pageParams.limit)
-						.map((p, index) => (
-							<li
-								key={p}
-								id={p}
-								className={`page-item number-item page-${
-									pagesArrayInfo.pages[index]
-								} ${
-									pagesArrayInfo.pages[index] === pageParams.page
-										? "active"
-										: ""
-								}`}
-							>
-								<Link
-									href={{
-										pathname: pagePath,
-										query: { ...pageParams, page: p, limit: pageParams.limit },
-									}}
-									className={`page-link`}
+						.slice(siblingsStart - 1, siblingsEnd)
+						.map((p, index) => {
+							return (
+								<li
+									key={p}
+									id={p}
+									className={`page-item number-item page-${
+										pagesArrayInfo.pages[index]
+									} ${
+										pagesArrayInfo.pages[index] === pageParams.page
+											? "active"
+											: ""
+									}`}
 								>
-									{p}
-								</Link>
-							</li>
-						))}
-
+									<Link
+										href={{
+											pathname: pagePath,
+											query: {
+												...pageParams,
+												page: p,
+												limit: pageParams.limit,
+											},
+										}}
+										className={`page-link`}
+									>
+										{p}
+									</Link>
+								</li>
+							);
+						})}
 					{/* LAST/NEXT */}
 					{nextButton()}
 					{lastItem()}

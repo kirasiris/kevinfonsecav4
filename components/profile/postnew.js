@@ -1,7 +1,19 @@
+"use client";
 import MyTextArea from "@/layout/mytextarea";
 import Link from "next/link";
+import { useState } from "react";
 
 const PostNew = ({}) => {
+	const [postData, setPostData] = useState({
+		title: "",
+		text: "",
+	});
+	const { title, text } = postData;
+
+	const handleChange = (name) => (e) => {
+		setPostData({ ...postData, [name]: e.target.value });
+	};
+
 	return (
 		<form className="mb-3">
 			<div className="card">
@@ -34,10 +46,19 @@ const PostNew = ({}) => {
 						autoComplete={`title`}
 						name={`title`}
 						id={`title`}
+						value={title}
+						onChange={handleChange("title")}
 						className="form-control"
 					/>
 					<br />
-					<MyTextArea name="text" id="text" />
+					<MyTextArea
+						name="text"
+						id="text"
+						objectData={postData}
+						setObjectData={setPostData}
+						value={text}
+						handleChangeValue={"text"}
+					/>
 				</div>
 				<div className="card-footer">
 					<button className="btn btn-secondary btn-sm" type="submit">

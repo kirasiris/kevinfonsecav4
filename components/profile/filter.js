@@ -1,11 +1,11 @@
 import Link from "next/link";
 
-const Filter = () => {
+const Filter = ({ params = {} }) => {
 	return (
 		<div className="btn-group mb-3" role="group" aria-label="Basic example">
 			<Link
 				href={{
-					pathname: "/me",
+					pathname: `/profile/${params.id}/${params.username}`,
 					query: { page: 1, limit: 10 },
 				}}
 				passHref
@@ -15,7 +15,7 @@ const Filter = () => {
 			</Link>
 			<Link
 				href={{
-					pathname: "/me",
+					pathname: `/profile/${params.id}/${params.username}`,
 					query: { page: 1, limit: 10, subType: "text" },
 				}}
 				passHref
@@ -25,7 +25,7 @@ const Filter = () => {
 			</Link>
 			<Link
 				href={{
-					pathname: "/me",
+					pathname: `/profile/${params.id}/${params.username}`,
 					query: { page: 1, limit: 10, subType: "photos" },
 				}}
 				passHref
@@ -35,7 +35,7 @@ const Filter = () => {
 			</Link>
 			<Link
 				href={{
-					pathname: "/me",
+					pathname: `/profile/${params.id}/${params.username}`,
 					query: { page: 1, limit: 10, subType: "videos" },
 				}}
 				passHref
@@ -45,7 +45,7 @@ const Filter = () => {
 			</Link>
 			<Link
 				href={{
-					pathname: "/me",
+					pathname: `/profile/${params.id}/${params.username}`,
 					query: { page: 1, limit: 10, subType: "audios" },
 				}}
 				passHref
@@ -55,7 +55,7 @@ const Filter = () => {
 			</Link>
 			<Link
 				href={{
-					pathname: "/me",
+					pathname: `/profile/${params.id}/${params.username}`,
 					query: { page: 1, limit: 10, subType: "files" },
 				}}
 				passHref
@@ -65,7 +65,7 @@ const Filter = () => {
 			</Link>
 			<Link
 				href={{
-					pathname: "/me",
+					pathname: `/profile/${params.id}/${params.username}`,
 					query: { page: 1, limit: 10, subType: "maps" },
 				}}
 				passHref

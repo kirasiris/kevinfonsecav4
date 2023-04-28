@@ -2,9 +2,9 @@
 import Link from "next/link";
 import ToggleTheme from "./toggletheme";
 
-const Footer = () => {
+const Footer = ({ classes = "", styles = {} }) => {
 	return (
-		<footer className="py-5 mt-4 bg-dark">
+		<footer className={`py-5 mt-4 bg-dark ${classes}`} style={styles}>
 			<div className="container">
 				<p className="m-0 text-center text-white">
 					Made with &#10084; &#38; &#9749; by KEVIN URIEL <ToggleTheme />
@@ -33,6 +33,62 @@ const Footer = () => {
 										legacyBehavior
 									>
 										Changelog
+									</Link>
+								</p>
+							</li>
+						</ul>
+					</div>
+					<div className="col-lg-3">
+						<h5>Tools</h5>
+						<ul className="nav flex-column">
+							<li className="nav-item mb-2">
+								<p>
+									<Link
+										href={{
+											pathname: "/opengraphviewer",
+											query: {
+												page: undefined,
+												limit: undefined,
+											},
+										}}
+										passHref
+										legacyBehavior
+									>
+										OpenGraph Viewer
+									</Link>
+								</p>
+							</li>
+							<li className="nav-item mb-2">
+								<p>
+									<Link
+										href={{
+											pathname: "/livecode",
+											query: {
+												page: undefined,
+												limit: undefined,
+											},
+										}}
+										passHref
+										legacyBehavior
+									>
+										HTML, CSS and JS Viewer
+									</Link>
+								</p>
+							</li>
+							<li className="nav-item mb-2">
+								<p>
+									<Link
+										href={{
+											pathname: "/sqlcompiler",
+											query: {
+												page: undefined,
+												limit: undefined,
+											},
+										}}
+										passHref
+										legacyBehavior
+									>
+										SQL Compiler
 									</Link>
 								</p>
 							</li>
@@ -82,7 +138,7 @@ const Footer = () => {
 							<li className="nav-item mb-2">fgfdgfd</li>
 						</ul>
 					</div>
-					<div className="col-lg-3">
+					<div className="col-lg-12">
 						<h5>About</h5>
 						<ul className="nav flex-column">
 							<li className="nav-item mb-2">

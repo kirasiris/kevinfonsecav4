@@ -1,3 +1,4 @@
+"use client";
 const MyTextArea = ({
 	name = "",
 	id = "",

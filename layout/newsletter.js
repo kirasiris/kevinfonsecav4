@@ -1,3 +1,4 @@
+"use client";
 const NewsletterForm = ({ newsletters = {} }) => {
 	return (
 		<>

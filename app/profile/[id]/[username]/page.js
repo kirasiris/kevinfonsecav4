@@ -100,7 +100,7 @@ const ProfileIndex = async ({ params, searchParams }) => {
 						)}
 						{/* TEXT AREA */}
 						<PostNew />
-						<Filter />
+						<Filter params={params} />
 						{/* Featured list */}
 						{featured?.data?.length > 0 && (
 							<>

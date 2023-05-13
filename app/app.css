@@ -87,6 +87,263 @@ PROFILE PICTURES
 }
 
 /*****************************
+PREVIEWER
+*****************************/
+.facebook-preview-container {
+	width: 524px;
+	font-family: Helvetica;
+	cursor: pointer;
+	max-width: 100%;
+}
+
+.facebook-preview-info-container {
+	padding: 10px 12px;
+	background-color: #f2f3f5;
+}
+
+.facebook-preview-info-domain {
+	line-height: 12px;
+	text-transform: uppercase;
+	font-size: 12px;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
+
+.facebook-preview-info-title-description-container {
+	border-spacing: 0px;
+	text-align: left;
+	overflow-wrap: break-word;
+	overflow: hidden;
+	user-select: none;
+	border-collapse: separate;
+	max-height: 46px;
+	height: 46px;
+}
+
+.facebook-preview-info-title {
+	line-height: 20px;
+	font-weight: 600;
+	font-size: 16px;
+	padding-top: 2px;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	margin-top: 3px;
+}
+
+.facebook-preview-info-description {
+	border-spacing: 0px;
+	line-height: 20px;
+	font-size: 14px;
+	text-align: left;
+	overflow-wrap: break-word;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	border-collapse: separate;
+	max-height: 80px;
+	height: 18px;
+	margin-top: 3px;
+	display: block;
+}
+
+.twitter-preview-container {
+	width: 438px;
+	--tw-text-opacity: 1;
+	color: rgb(0 0 0);
+	line-height: 1.3em;
+	--tw-border-opacity: 1;
+	border-color: rgb(225 232 237);
+	border-width: 1px;
+	border-radius: 0.85714em;
+	overflow: hidden;
+	cursor: pointer;
+	max-width: 100%;
+}
+
+.twitter-preview-info-container {
+	overflow-wrap: break-word;
+	border: 1px solid #dadde1;
+	padding: 0.75em;
+	-webkit-font-smoothing: antialiased;
+	border-bottom-right-radius: 0.85714em;
+	border-bottom-left-radius: 0.85714em;
+}
+
+.twitter-preview-info-domain {
+	margin-top: 0.32333em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	font-size: 14px;
+	text-transform: lowercase;
+	line-height: 18px;
+	color: #8899a6;
+}
+
+.twitter-preview-info-title-description-container {
+	border-spacing: 0px;
+	text-align: left;
+	overflow-wrap: break-word;
+	overflow: hidden;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	user-select: none;
+	border-collapse: separate;
+	display: block;
+}
+
+.twitter-preview-info-title {
+	line-height: 18px;
+	font-weight: 600;
+	font-size: 14px;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	margin-bottom: 0.15em;
+	margin: 0;
+}
+
+.twitter-preview-info-description {
+	-webkit-line-clamp: 1;
+	border-spacing: 0px;
+	-webkit-box-orient: vertical;
+	line-height: 18px;
+	font-size: 14px;
+	text-align: left;
+	overflow-wrap: break-word;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	user-select: none;
+	border-collapse: separate;
+	max-height: 2.6em;
+	display: block;
+	margin-top: 0.32333em;
+}
+
+.linkedin-preview-container {
+	width: 520px;
+	--tw-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+		0 2px 4px -2px rgba(0, 0, 0, 0.1);
+	--tw-shadow-colored: 0 4px 6px -1px var(--tw-shadow-color),
+		0 2px 4px -2px var(--tw-shadow-color);
+	box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000),
+		var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+	font-family: Helvetica;
+	border-radius: 2px;
+	overflow: hidden;
+	cursor: pointer;
+	max-width: 100%;
+}
+
+.linkedin-preview-info-container {
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	padding: 10px;
+	--tw-bg-opacity: 1;
+	background-color: rgb(255 255 255);
+	overflow-wrap: break-word;
+}
+
+.linkedin-preview-info-domain {
+	color: #0009;
+	text-transform: uppercase;
+	font-weight: 400;
+	font-size: 0.75rem;
+	line-height: 1rem;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
+
+.linkedin-preview-info-title-description-container {
+	border-spacing: 0px;
+	text-align: left;
+	overflow-wrap: break-word;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	user-select: none;
+	border-collapse: separate;
+	max-height: 50px;
+	height: auto;
+	display: block;
+}
+
+.linkedin-preview-info-title {
+	color: #000000e6;
+	line-height: 24px;
+	font-weight: 600;
+	font-size: 16px;
+	padding-bottom: 2px;
+}
+
+.discord-preview-container {
+	width: 432px;
+	font-family: Helvetica;
+	background-color: rgb(47 49 54);
+	border-color: rgb(32 34 37);
+	border-left-width: 4px;
+	border-radius: 4px;
+	overflow: hidden;
+	justify-self: start !important;
+	align-items: flex-start;
+	cursor: pointer;
+	max-width: 100%;
+	display: grid;
+}
+
+.discord-preview-info-container {
+	padding-bottom: 1rem;
+	padding-top: 0.5rem;
+	padding-right: 1rem;
+	padding-left: 0.75rem;
+	overflow: hidden;
+	grid-template-rows: auto;
+	grid-template-columns: auto;
+	display: inline-grid;
+}
+
+.discord-preview-info-domain {
+	grid-column: 1 / 1;
+	--tw-text-opacity: 1;
+	color: rgb(255 255 255);
+	line-height: 1rem;
+	font-weight: 400;
+	font-size: 0.75rem;
+	line-height: 1rem;
+	margin-top: 0.5rem;
+}
+
+.discord-preview-info-title {
+	grid-column: 1 / 1;
+	--tw-text-opacity: 1;
+	color: rgb(0 176 244);
+	font-weight: 600;
+	font-size: 1rem;
+	line-height: 1.5rem;
+	overflow-wrap: break-word;
+	display: inline-block;
+	margin-top: 0.5rem;
+}
+
+.discord-preview-info-description {
+	grid-column: 1 / 1;
+	--tw-text-opacity: 1;
+	color: rgb(220 221 222);
+	font-weight: 400;
+	font-size: 0.875rem;
+	line-height: 1.25rem;
+	padding: 0;
+	border-width: 0;
+	overflow-wrap: break-word;
+	white-space: pre-line;
+	margin-top: 0.5rem;
+}
+/*****************************
 BODY-DARK
 *****************************/
 body.light-mode {

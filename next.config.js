@@ -5,6 +5,7 @@ const nextConfig = {
 	},
 	images: {
 		domains: [
+			"www.opengraph.xyz",
 			"gravatar.com",
 			"s3-us-west-1.amazonaws.com",
 			"befreebucket-for-outputs.s3.amazonaws.com",
@@ -12,6 +13,8 @@ const nextConfig = {
 			"i0.wp.com",
 			"res.cloudinary.com",
 			"source.unsplash.com",
+			"i.ytimg.com",
+			"cdn.sstatic.net",
 		],
 	},
 };

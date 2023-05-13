@@ -3,11 +3,6 @@ import { useState, useMemo, useRef, useEffect, useCallback } from "react";
 import CodeMirror from "@uiw/react-codemirror";
 import { loadLanguage } from "@uiw/codemirror-extensions-langs";
 import { vscodeDark } from "@uiw/codemirror-theme-vscode";
-// import { javascript } from "codemirror/lang-javascript";
-// import "codemirror/theme/material.css";
-// import "codemirror/mode/htmlmixed/htmlmixed";
-// import "codemirror/mode/css/css";
-// import "codemirror/mode/javascript/javascript";
 
 const LiveCodePage = () => {
 	const CodeEditor = ({

@@ -1,6 +1,7 @@
 import Header from "@/layout/header";
 import Footer from "@/layout/footer";
 import Head from "@/app/head";
+import OpenGraphViewerPage from "@/components/opengraphviewer/opengraphviewerpage";
 
 const OpenGraphViewerIndex = async ({ searchParams }) => {
 	return (
@@ -13,12 +14,7 @@ const OpenGraphViewerIndex = async ({ searchParams }) => {
 				title="Preview Social Media Share and Generate Metatags"
 				description="The Easiest Way to Preview and Generate Open Graph Meta Tags. Try the Free Meta Tag Generator and preview all Open Graph meta tags in one place. Website!."
 			/>
-			<div className="container">
-				<div className="row">
-					<div className="col-lg-6"></div>
-					<div className="col-lg-6"></div>
-				</div>
-			</div>
+			<OpenGraphViewerPage searchParams={searchParams} />
 			<Footer />
 		</>
 	);

@@ -36,6 +36,23 @@ const Footer = ({ classes = "", styles = {} }) => {
 									</Link>
 								</p>
 							</li>
+							<li className="nav-item mb-2">
+								<p>
+									<Link
+										href={{
+											pathname: "/youtube",
+											query: {
+												page: undefined,
+												limit: undefined,
+											},
+										}}
+										passHref
+										legacyBehavior
+									>
+										YouTube
+									</Link>
+								</p>
+							</li>
 						</ul>
 					</div>
 					<div className="col-lg-3">

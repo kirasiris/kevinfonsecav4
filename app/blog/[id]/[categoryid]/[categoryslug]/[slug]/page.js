@@ -6,7 +6,6 @@ import Footer from "@/layout/footer";
 import Sidebar from "@/layout/sidebar";
 import Loading from "@/app/blog/loading";
 import ExportModal from "@/layout/exportmodal";
-import Single from "@/components/comment/single";
 import AuthorBox from "@/layout/authorbox";
 import CommentBox from "@/components/global/commentbox";
 

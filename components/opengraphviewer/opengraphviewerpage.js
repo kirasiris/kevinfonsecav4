@@ -12,7 +12,6 @@ const OpenGraphViewerPage = ({ searchParams }) => {
 	const router = useRouter();
 	const [openGraphData, setOpenGraphData] = useState({
 		url: ``,
-		_id: 0,
 		title: ``,
 		text: ``,
 		image: ``,
@@ -20,7 +19,7 @@ const OpenGraphViewerPage = ({ searchParams }) => {
 		domain: ``,
 	});
 
-	const { url, _id, title, text, image, type, domain } = openGraphData;
+	const { url, title, text, image, type, domain } = openGraphData;
 
 	const [checkWebsiteBtnText, setCheckWebsiteBtnText] =
 		useState("Check website");
@@ -33,7 +32,7 @@ const OpenGraphViewerPage = ({ searchParams }) => {
 		e.preventDefault();
 		setCheckWebsiteBtnText("...");
 		const res = await fetch(
-			`http://localhost:5000/api/v1/extras/tools/opengraphs/check`,
+			`http://localhost:5000/api/v1/extras/tools/opengraphs`,
 			{
 				method: "POST",
 				headers: {
@@ -46,7 +45,6 @@ const OpenGraphViewerPage = ({ searchParams }) => {
 		setCheckWebsiteBtnText(checkWebsiteBtnText);
 		setOpenGraphData({
 			...openGraphData,
-			_id: data.data._id,
 			title: data.data["og:title"],
 			text: data.data["og:description"],
 			image: data.data["og:image"],
@@ -54,18 +52,31 @@ const OpenGraphViewerPage = ({ searchParams }) => {
 			domain: new URL(data.data["og:url"]).hostname,
 		});
 
-		router.push(`/opengraphviewer?_id=${_id}`);
+		router.push(`/opengraphviewer?_id=${data.data._id}`);
 	};
 
-	useEffect(() => {
-		const fetchOpenGraphObject = async (params) => {
-			const res = await fetch(
-				`http://localhost:5000/api/v1/extras/tools/opengraphs/get/${_id}`
-			);
-			return res.json();
-		};
-		fetchOpenGraphObject();
-	}, [router]);
+	if (searchParams._id) {
+		useEffect(() => {
+			const fetchOpenGraphObject = async (params) => {
+				const res = await fetch(
+					`http://localhost:5000/api/v1/extras/tools/opengraphs/${params}`
+				);
+				return res.json();
+			};
+			fetchOpenGraphObject(searchParams._id).then((result) => {
+				console.log(result.data);
+				setOpenGraphData({
+					...openGraphData,
+					title: result.data.title,
+					text: result.data.text,
+					image: result.data.image,
+					type: result.data.type,
+					domain: result.data.domain,
+				});
+			});
+			return () => {};
+		}, []);
+	}
 
 	return (
 		<section className="container-fluid py-5 mb-4">

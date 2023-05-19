@@ -3,7 +3,7 @@ import Footer from "@/layout/footer";
 import Head from "@/app/head";
 import LiveCodePage from "@/components/livecode/livecodepage";
 
-const LiveCodeIndex = async ({}) => {
+const LiveCodeIndex = async ({ searchParams }) => {
 	return (
 		<>
 			<Head
@@ -14,8 +14,8 @@ const LiveCodeIndex = async ({}) => {
 				title="Live Code"
 				description="Design elements, playground and code snippets for Bootstrap HTML/CSS/JS framework!."
 			/>
-			<LiveCodePage />
-			<Footer styles={{ marginTop: "0px !important" }} />
+			<LiveCodePage searchParams={searchParams} />
+			<Footer styles={{ marginTop: "12px !important" }} />
 		</>
 	);
 };

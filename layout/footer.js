@@ -36,6 +36,11 @@ const Footer = ({ classes = "", styles = {} }) => {
 									</Link>
 								</p>
 							</li>
+						</ul>
+					</div>
+					<div className="col-lg-3">
+						<h5>Tools</h5>
+						<ul className="nav flex-column">
 							<li className="nav-item mb-2">
 								<p>
 									<Link
@@ -53,11 +58,23 @@ const Footer = ({ classes = "", styles = {} }) => {
 									</Link>
 								</p>
 							</li>
-						</ul>
-					</div>
-					<div className="col-lg-3">
-						<h5>Tools</h5>
-						<ul className="nav flex-column">
+							<li className="nav-item mb-2">
+								<p>
+									<Link
+										href={{
+											pathname: "/restful",
+											query: {
+												page: undefined,
+												limit: undefined,
+											},
+										}}
+										passHref
+										legacyBehavior
+									>
+										RESTFUL Tester
+									</Link>
+								</p>
+							</li>
 							<li className="nav-item mb-2">
 								<p>
 									<Link

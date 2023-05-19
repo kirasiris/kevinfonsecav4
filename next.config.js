@@ -15,6 +15,7 @@ const nextConfig = {
 			"source.unsplash.com",
 			"i.ytimg.com",
 			"cdn.sstatic.net",
+			"setwan.bimakota.go.id",
 		],
 	},
 };

@@ -1,6 +1,5 @@
 "use client";
 import { useRouter } from "next/navigation";
-
 import { useState } from "react";
 import CodeMirror from "@uiw/react-codemirror";
 import { loadLanguage } from "@uiw/codemirror-extensions-langs";
@@ -14,7 +13,7 @@ const OpenGraphViewerPage = ({ searchParams }) => {
 		url: ``,
 		title: ``,
 		text: ``,
-		image: ``,
+		image: `https://setwan.bimakota.go.id/assets/images/no-image.png`,
 		type: ``,
 		domain: ``,
 	});
@@ -64,7 +63,6 @@ const OpenGraphViewerPage = ({ searchParams }) => {
 				return res.json();
 			};
 			fetchOpenGraphObject(searchParams._id).then((result) => {
-				console.log(result.data);
 				setOpenGraphData({
 					...openGraphData,
 					title: result.data.title,
@@ -132,7 +130,7 @@ const OpenGraphViewerPage = ({ searchParams }) => {
 							className="form-control"
 							placeholder={"Description"}
 							value={text.trim()}
-							onChange={handleChange("description")}
+							onChange={handleChange("text")}
 							rows="3"
 						/>
 					</div>

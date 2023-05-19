@@ -1,88 +1,91 @@
 "use client";
-import { useState, useMemo, useRef, useEffect, useCallback } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import CodeMirror from "@uiw/react-codemirror";
-import { loadLanguage } from "@uiw/codemirror-extensions-langs";
+import { javascript } from "@codemirror/lang-javascript";
+import { html } from "@codemirror/lang-html";
+import { css } from "@codemirror/lang-css";
 import { vscodeDark } from "@uiw/codemirror-theme-vscode";
 
-const LiveCodePage = () => {
-	const CodeEditor = ({
-		id = "",
-		name = "",
-		value,
-		onChange,
-		mode,
-		theme,
-		extensions,
-	}) => {
-		return (
-			<CodeMirror
-				id={id}
-				name={name}
-				value={value}
-				height="200px"
-				theme={vscodeDark}
-				extensions={[loadLanguage(mode)]}
-				onChange={onChange}
-			/>
-		);
-	};
-
-	const [editorData, setEditorData] = useState({
-		html: ``,
-		css: ``,
-		javascript: ``,
+const LiveCodePage = ({ searchParams }) => {
+	const [snippetsData, setSnippetsData] = useState({
+		html: "<div>test</div>",
+		css: "body {}",
+		js: "console.log('hello world!');",
 	});
 
-	const { html, css, javascript } = editorData;
+	const iframeRef = useRef(null);
 
-	const handleChange = useCallback(
-		(name) => (e) => {
-			setEditorData({ ...editorData, [name]: e });
-		},
-		[editorData]
-	);
+	const jsString = snippetsData.js
+		? `<script type="text/javascript">${snippetsData.js}</script>`
+		: "";
+	const cssString = snippetsData.css
+		? `<style>${snippetsData.css}</style>`
+		: "";
+	const result = `<!DOCTYPE html><html><head>${cssString}</head><body>${snippetsData.html}</body>${jsString}</html>`;
+
+	useEffect(() => {
+		const blob = new Blob([result], { type: "text/html" });
+		if (iframeRef.current) {
+			iframeRef.current.src = URL.createObjectURL(blob);
+		}
+	}, [result]);
 
 	return (
 		<div className="container-fluid">
 			<div className="row">
 				<div className="col-lg-4">
 					<h2>HTML</h2>
-					<CodeEditor
+					<CodeMirror
 						id="html"
 						name="html"
-						value={html}
-						onChange={handleChange("html")}
-						mode={`html`}
-						theme={`material`}
+						value={snippetsData.html}
+						height="200px"
+						theme={vscodeDark}
+						extensions={[html()]}
+						onChange={(value) => {
+							setSnippetsData({ ...snippetsData, html: value });
+						}}
 					/>
 				</div>
 				<div className="col-lg-4">
 					<h2>CSS</h2>
-					<CodeEditor
+					<CodeMirror
 						id="css"
 						name="css"
-						value={css}
-						onChange={handleChange("css")}
-						mode={`css`}
-						theme={`material`}
+						value={snippetsData.css}
+						height="200px"
+						theme={vscodeDark}
+						extensions={[css()]}
+						onChange={(value) => {
+							setSnippetsData({ ...snippetsData, css: value });
+						}}
 					/>
 				</div>
 				<div className="col-lg-4">
 					<h2>JavaScript</h2>
-					<CodeEditor
-						id="javascript"
-						name="javascript"
-						value={javascript}
-						onChange={handleChange("javascript")}
-						mode={`javascript`}
-						theme={`material`}
+					<CodeMirror
+						id="js"
+						name="js"
+						value={snippetsData.js}
+						height="200px"
+						theme={vscodeDark}
+						extensions={[javascript({ jsx: true })]}
+						onChange={(value) => {
+							setSnippetsData({ ...snippetsData, js: value });
+						}}
 					/>
 				</div>
 			</div>
-			<div
+			<iframe
+				ref={iframeRef}
+				title="Test"
 				className="preview"
-				dangerouslySetInnerHTML={{
-					__html: `<style>${css}</style>${html}<script>${javascript}</script>`,
+				id="preview"
+				style={{
+					border: "1px solid #00cc00",
+					width: "100%",
+					marginTop: "20px",
+					minHeight: "600px",
 				}}
 			/>
 		</div>

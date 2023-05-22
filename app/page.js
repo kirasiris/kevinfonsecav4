@@ -1,6 +1,5 @@
 import Link from "next/link";
 import Header from "@/layout/header";
-import Footer from "@/layout/footer";
 import SingleBlog from "@/components/blog/single";
 import SingleTheme from "@/components/theme/single";
 import NewsletterForm from "@/layout/newsletter";
@@ -115,7 +114,6 @@ const Home = async () => {
 					</div>
 				</section>
 			)}
-
 			{/* WHAT PEOPLE SAY ABOUT ME */}
 			<section id="testimonials" className="border-bottom py-5">
 				<div className="container">
@@ -153,7 +151,6 @@ const Home = async () => {
 				</div>
 			</section>
 			{/* CONTACT ME */}
-			<Footer />
 		</>
 	);
 };

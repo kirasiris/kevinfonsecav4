@@ -2,7 +2,6 @@ import { Suspense } from "react";
 import SingleStory from "@/components/profile/singlestory";
 import SinglePost from "@/components/profile/singlepost";
 import Header from "@/layout/header";
-import Footer from "@/layout/footer";
 import Filter from "@/components/profile/filter";
 import Sidebar from "@/components/profile/sidebar";
 import Loading from "@/app/profile/loading";
@@ -123,7 +122,6 @@ const ProfileIndex = async ({ params, searchParams }) => {
 					</div>
 				</div>
 			</div>
-			<Footer />
 		</Suspense>
 	);
 };

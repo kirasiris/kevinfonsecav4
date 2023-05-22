@@ -1,5 +1,4 @@
 import Header from "@/layout/header";
-import Footer from "@/layout/footer";
 import Head from "@/app/head";
 import YouTubePage from "@/components/youtube/youtubepage";
 
@@ -13,9 +12,11 @@ const LiveCodeIndex = async ({ searchParams }) => {
 			<Header
 				title="YTDownloader"
 				description="An actual good YouTube videos downloader, totally for free!."
+				headerStyle={{
+					marginBottom: "0px !important",
+				}}
 			/>
 			<YouTubePage searchParams={searchParams} />
-			<Footer />
 		</>
 	);
 };

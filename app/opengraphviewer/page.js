@@ -1,5 +1,4 @@
 import Header from "@/layout/header";
-import Footer from "@/layout/footer";
 import Head from "@/app/head";
 import OpenGraphViewerPage from "@/components/opengraphviewer/opengraphviewerpage";
 
@@ -15,7 +14,6 @@ const OpenGraphViewerIndex = async ({ searchParams }) => {
 				description="The Easiest Way to Preview and Generate Open Graph Meta Tags. Try the Free Meta Tag Generator and preview all Open Graph meta tags in one place. Website!."
 			/>
 			<OpenGraphViewerPage searchParams={searchParams} />
-			<Footer />
 		</>
 	);
 };

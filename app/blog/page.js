@@ -1,6 +1,5 @@
 import Single from "@/components/blog/single";
 import Header from "@/layout/header";
-import Footer from "@/layout/footer";
 import Sidebar from "@/layout/sidebar";
 import Head from "@/app/head";
 import NumericPagination from "@/layout/numericpagination";
@@ -101,7 +100,6 @@ const BlogIndex = async ({ searchParams }) => {
 					</div>
 				</div>
 			</div>
-			<Footer />
 		</>
 	);
 };

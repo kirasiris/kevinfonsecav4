@@ -1,6 +1,5 @@
 import Single from "@/components/changelog/single";
 import Header from "@/layout/header";
-import Footer from "@/layout/footer";
 import Head from "@/app/head";
 import NumericPagination from "@/layout/numericpagination";
 
@@ -72,7 +71,6 @@ const ChangelogIndex = async ({ searchParams }) => {
 					</div>
 				</div>
 			</div>
-			<Footer />
 		</>
 	);
 };

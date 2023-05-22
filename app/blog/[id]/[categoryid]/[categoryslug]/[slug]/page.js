@@ -2,7 +2,6 @@ import { Suspense } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import Header from "@/layout/header";
-import Footer from "@/layout/footer";
 import Sidebar from "@/layout/sidebar";
 import Loading from "@/app/blog/loading";
 import ExportModal from "@/layout/exportmodal";
@@ -114,7 +113,6 @@ const BlogRead = async ({ params }) => {
 					)}
 				</div>
 			</div>
-			<Footer />
 		</Suspense>
 	);
 };

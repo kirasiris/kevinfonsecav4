@@ -1,7 +1,6 @@
 import { Suspense } from "react";
 import Single from "@/components/media/single";
 import Header from "@/layout/header";
-import Footer from "@/layout/footer";
 import Loading from "@/app/profile/loading";
 
 async function getMe(params) {
@@ -62,7 +61,6 @@ const MePhotosIndex = async ({ params, searchParams }) => {
 					</div>
 				</div>
 			</div>
-			<Footer />
 		</Suspense>
 	);
 };

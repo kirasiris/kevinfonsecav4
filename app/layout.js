@@ -1,3 +1,4 @@
+import Footer from "@/layout/footer";
 import "./bootstrap.css";
 // import "./bootstrap.js";
 import "./global.css";
@@ -13,6 +14,7 @@ export default function RootLayout({ children }) {
 			<head />
 			<body>
 				<main>{children}</main>
+				<Footer />
 			</body>
 		</html>
 	);

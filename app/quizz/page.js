@@ -1,6 +1,5 @@
 import Single from "@/components/quizz/single";
 import Header from "@/layout/header";
-import Footer from "@/layout/footer";
 import NumericPagination from "@/layout/numericpagination";
 
 async function getQuizzes(params) {
@@ -50,7 +49,6 @@ const QuizzIndex = async ({ searchParams }) => {
 					)}
 				</div>
 			</div>
-			<Footer />
 		</>
 	);
 };

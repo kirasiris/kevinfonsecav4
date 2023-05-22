@@ -1,5 +1,4 @@
 import Header from "@/layout/header";
-import Footer from "@/layout/footer";
 import Head from "@/app/head";
 import MongoDBCompilerPage from "@/components/mongodbcompiler/mongodbcompilerpage";
 
@@ -16,7 +15,6 @@ const MongoDBCompilerIndex = async ({}) => {
 			/>
 
 			<MongoDBCompilerPage />
-			<Footer />
 		</>
 	);
 };

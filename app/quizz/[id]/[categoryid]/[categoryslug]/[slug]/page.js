@@ -6,7 +6,6 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 import Header from "@/layout/header";
-import Footer from "@/layout/footer";
 import Loading from "@/app/quizz/loading";
 import NumericPagination from "@/layout/numericpagination";
 import Single from "@/components/question/single";
@@ -205,7 +204,6 @@ const QuizzRead = async ({ params, searchParams }) => {
 					)}
 				</div>
 			</div>
-			<Footer />
 		</Suspense>
 	);
 };

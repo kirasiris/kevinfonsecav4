@@ -8,7 +8,7 @@ import { vscodeDark } from "@uiw/codemirror-theme-vscode";
 
 const LiveCodePage = ({ searchParams }) => {
 	const [snippetsData, setSnippetsData] = useState({
-		html: "<div>test</div>",
+		html: "<h1>Title</h1>",
 		css: "body {}",
 		js: "console.log('hello world!');",
 	});

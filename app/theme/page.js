@@ -1,6 +1,5 @@
 import Single from "@/components/theme/single";
 import Header from "@/layout/header";
-import Footer from "@/layout/footer";
 
 async function getThemes(params) {
 	const res = await fetch(`http://localhost:5000/api/v1/themes${params}`, {
@@ -48,7 +47,6 @@ const ThemeIndex = async ({ searchParams }) => {
 						))}
 				</div>
 			</div>
-			<Footer />
 		</>
 	);
 };

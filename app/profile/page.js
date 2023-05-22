@@ -1,6 +1,5 @@
 import Single from "@/components/profile/single";
 import Header from "@/layout/header";
-import Footer from "@/layout/footer";
 
 async function getProfiles(params) {
 	const res = await fetch(`http://localhost:5000/api/v1/users${params}`, {
@@ -38,7 +37,6 @@ const ProfileIndex = async ({ params, searchParams }) => {
 						profiles.data.map((p) => <Single key={p._id} profile={p} />)}
 				</div>
 			</div>
-			<Footer />
 		</>
 	);
 };

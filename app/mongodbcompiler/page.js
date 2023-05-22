@@ -1,24 +1,24 @@
 import Header from "@/layout/header";
 import Footer from "@/layout/footer";
 import Head from "@/app/head";
-import SQLCompilerPage from "@/components/sqlcompiler/sqlcompilerpage";
+import MongoDBCompilerPage from "@/components/mongodbcompiler/mongodbcompilerpage";
 
-const SQLCompilerIndex = async ({}) => {
+const MongoDBCompilerIndex = async ({}) => {
 	return (
 		<>
 			<Head
-				title="SQL Snipps"
+				title="MongoDB Schema Builder"
 				description="A tool for easy online testing and sharing of database problems and their solutions.!."
 			/>
 			<Header
-				title="SQL Snipps"
+				title="MongoDB Schema Builder"
 				description="A tool for easy online testing and sharing of database problems and their solutions.!."
 			/>
 
-			<SQLCompilerPage />
+			<MongoDBCompilerPage />
 			<Footer />
 		</>
 	);
 };
 
-export default SQLCompilerIndex;
+export default MongoDBCompilerIndex;

@@ -113,7 +113,7 @@ const Footer = ({ classes = "", styles = {} }) => {
 								<p>
 									<Link
 										href={{
-											pathname: "/sqlcompiler",
+											pathname: "/mongodbcompiler",
 											query: {
 												page: undefined,
 												limit: undefined,
@@ -122,7 +122,7 @@ const Footer = ({ classes = "", styles = {} }) => {
 										passHref
 										legacyBehavior
 									>
-										SQL Compiler
+										MongoDB Compiler
 									</Link>
 								</p>
 							</li>

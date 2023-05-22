@@ -336,7 +336,7 @@ const YouTubePage = ({ searchParams }) => {
 							{list?.length > 0 ? (
 								<ul className="list-group list-group-flush">
 									{list?.map(
-										(video, index) =>
+										(video) =>
 											video !== undefined &&
 											video !== null && (
 												<li className="list-group-item" key={`${video?._id}`}>

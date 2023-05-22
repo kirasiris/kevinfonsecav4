@@ -54,8 +54,8 @@ const OpenGraphViewerPage = ({ searchParams }) => {
 		router.push(`/opengraphviewer?_id=${data.data._id}`);
 	};
 
-	if (searchParams._id) {
-		useEffect(() => {
+	useEffect(() => {
+		if (searchParams._id) {
 			const fetchOpenGraphObject = async (params) => {
 				const res = await fetch(
 					`http://localhost:5000/api/v1/extras/tools/opengraphs/${params}`
@@ -72,9 +72,9 @@ const OpenGraphViewerPage = ({ searchParams }) => {
 					domain: result.data.domain,
 				});
 			});
-			return () => {};
-		}, []);
-	}
+		}
+		return () => {};
+	}, [searchParams._id]);
 
 	return (
 		<section className="container-fluid py-5 mb-4">

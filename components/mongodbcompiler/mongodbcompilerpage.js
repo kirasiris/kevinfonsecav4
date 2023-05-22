@@ -4,7 +4,7 @@ import CodeMirror from "@uiw/react-codemirror";
 import { sql } from "@codemirror/lang-sql";
 import { vscodeDark } from "@uiw/codemirror-theme-vscode";
 
-const SQLCompilerPage = ({ searchParams }) => {
+const MongoDBCompilerPage = ({ searchParams }) => {
 	const [editorData, setEditorData] = useState({
 		ddl: `CREATE TABLE table(postID int NOT NULL AUTO_INCREMENT, title varchar(999), PRIMARY KEY(postID));
 INSERT INTO table
@@ -13,10 +13,15 @@ VALUES
    (1, 'My first blog, YAY!!'),
    (2, 'My second blog, YAY!');
 `,
-		dml: `SELECT * FROM table WHERE postID = 1`,
+		dml: `SELECT * FROM table WHERE postID = 1;`,
 	});
 
 	const { ddl, dml } = editorData;
+
+	const handleChange = (name) => (e) => {
+		e.preventDefault();
+		setEditorData({ ...editorData, [name]: e.target.value });
+	};
 
 	return (
 		<div className="container-fluid">
@@ -53,6 +58,7 @@ VALUES
 								dml: value,
 							});
 						}}
+						readOnly={ddl.length > 0 ? !true : !false}
 					/>
 				</div>
 			</div>
@@ -60,4 +66,4 @@ VALUES
 	);
 };
 
-export default SQLCompilerPage;
+export default MongoDBCompilerPage;

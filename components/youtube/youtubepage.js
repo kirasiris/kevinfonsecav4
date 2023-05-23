@@ -1,12 +1,10 @@
 "use client";
-import Link from "next/link";
 import { useState, useEffect } from "react";
-import Tabs from "react-bootstrap/Tabs";
-import Tab from "react-bootstrap/Tab";
 import Carousel from "react-bootstrap/Carousel";
 import Modal from "react-bootstrap/Modal";
 import RelatedCarousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
+import Waveform from "@/layout/waveform";
 
 const YouTubePage = ({ searchParams }) => {
 	const [video, setVideo] = useState({});
@@ -201,7 +199,7 @@ const YouTubePage = ({ searchParams }) => {
 						{activeTab.video ? (
 							<>
 								<div className="ratio ratio-16x9">
-									<embed
+									<iframe
 										src={
 											video?.videoEmbedUrl
 												? video?.videoEmbedUrl

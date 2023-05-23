@@ -17,6 +17,11 @@ a {
 	left: 70px;
 }
 
+#waveform > wave {
+	overflow: unset !important;
+	cursor: pointer !important;
+}
+
 /*****************************
 SHORTS/STORIES
 *****************************/

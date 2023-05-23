@@ -290,7 +290,13 @@ const Single = ({ post = {} }) => {
 							media={images}
 							text={`TEXT IS EITHER ENCRYPTED OR PASSWORD PROTECTED`}
 						/>
-						{/* <Waveform audio="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" /> */}
+						<Waveform
+							src="/JinMoriSaysRun.mp3"
+							mediaTitle="The God of High School OST - Seoul Team / Monkey King Say Run ( HQ Cover)"
+							mediaAuthor="Dude's Cover"
+							mediaAlbum=""
+							mediaArtwork={images}
+						/>
 					</div>
 					<div className="card-footer">
 						<div className="float-end">

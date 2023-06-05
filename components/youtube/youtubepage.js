@@ -4,7 +4,6 @@ import Carousel from "react-bootstrap/Carousel";
 import Modal from "react-bootstrap/Modal";
 import RelatedCarousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
-import Waveform from "@/layout/waveform";
 
 const YouTubePage = ({ searchParams }) => {
 	const [video, setVideo] = useState({});
@@ -321,6 +320,7 @@ const YouTubePage = ({ searchParams }) => {
 							<>
 								<hr />
 								<h2>Videos found ({list.length})...</h2>
+								<p>Data gets deleted on the 15 of each month</p>
 								<hr />
 							</>
 						)}

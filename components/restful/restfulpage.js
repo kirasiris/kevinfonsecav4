@@ -1,56 +1,323 @@
 "use client";
-
 import { useState } from "react";
+import CodeMirror from "@uiw/react-codemirror";
+import { loadLanguage } from "@uiw/codemirror-extensions-langs";
+import { vscodeDark } from "@uiw/codemirror-theme-vscode";
+import { Tab, Tabs } from "react-bootstrap";
+import queryString from "query-string";
 
 const RestfulPage = ({ searchParams }) => {
-	const [response, setResponse] = useState(null);
-	const [loading, setLoading] = useState(false);
-	const [error, setError] = useState(null);
-	const [endpoint, setEndpoint] = useState("");
-	const [params, setParams] = useState("");
+	const [data, setData] = useState({});
+	const [restfulData, setRestfulData] = useState({
+		apiURL: ``,
+		paramsAPI: [
+			{
+				key: "",
+				value: "",
+				description: "",
+			},
+		],
+		methodAPI: "GET",
+		headersAPI: [
+			{
+				key: "",
+				value: "",
+				description: "",
+			},
+		],
+		bodyAPI: {},
+		modeAPI: ["cors", "no-cors", "same-origin"],
+		credentialsAPI: [],
+	});
 
-	const handleSubmit = async (e) => {
-		e.preventDefault();
-		setLoading(true);
-		setError(null);
+	const {
+		apiURL,
+		paramsAPI,
+		methodAPI,
+		headersAPI,
+		bodyAPI,
+		modeAPI,
+		credentialsAPI,
+	} = restfulData;
 
-		try {
-			const res = await fetch(`www.google.com/search?q=${params}`);
-			const data = await res.json();
-			setResponse(data);
-		} catch (err) {
-			setError(err.message);
+	const [error, setError] = useState("");
+
+	const [checkWebsiteBtnText, setCheckWebsiteBtnText] = useState("Test API");
+
+	const handleParamsChange = (index, field) => (e) => {
+		const newParams = [...paramsAPI];
+		newParams[index][field] = e.target.value;
+
+		if (index === restfulData.paramsAPI.length - 1 && e.target.value !== "") {
+			newParams.push({ key: "", value: "", description: "" });
 		}
 
-		setLoading(false);
+		let newApiURL = restfulData.apiURL;
+
+		/*
+		ALGUIEN QUE ME AYUDE A ARREGLAR ESTO? La funcion hace un appending inapropiado de strings
+		XD
+		*/
+		newParams.forEach((param, i) => {
+			if (param.key.trim() !== "" && param.value.trim() !== "") {
+				if (
+					newApiURL.includes(`?${param.key}=`) ||
+					newApiURL.includes(`&${param.key}=`)
+				) {
+					// Aqui puede encontrarse el error
+					newApiURL = newApiURL.replace(
+						new RegExp(`${param.key}=[^&]*(&|$)`),
+						""
+					);
+				}
+
+				if (i === 0 && !newApiURL.includes("?")) {
+					// Si no aqui
+					newApiURL += `?${param.key}=${param.value}`;
+				} else {
+					// O aqui LOL
+					newApiURL += `&${param.key}=${param.value}`;
+				}
+			}
+		});
+
+		setRestfulData({
+			...restfulData,
+			paramsAPI: newParams,
+			apiURL: newApiURL,
+		});
+	};
+
+	const handleAddRow = () => {
+		paramsAPI.push({ key: "", value: "", description: "" });
+	};
+
+	const handleRemoveRow = (index) => () => {
+		const newParams = paramsAPI.filter((_, i) => i !== index);
+		setRestfulData({
+			...restfulData,
+			paramsAPI: newParams,
+		});
+	};
+
+	const testRemoteAPI = async (e) => {
+		e.preventDefault();
+		setCheckWebsiteBtnText("...");
+		await fetch(`${apiURL}`, {
+			method: methodAPI.toString().toUpperCase(),
+			headers: {
+				...headersAPI,
+				"Content-Type": "application/json",
+			},
+		})
+			.then((res) => {
+				return res.json();
+			})
+			.then((data) => {
+				setCheckWebsiteBtnText(checkWebsiteBtnText);
+				setData(data);
+			})
+			.catch((err) => {
+				console.log(err.message);
+				setError(err.message);
+			});
 	};
 
 	return (
 		<div className="container-fluid">
 			<div className="row">
-				<form onSubmit={handleSubmit}>
-					<label htmlFor="endpoint">Endpoint:</label>
-					<input
-						type="text"
-						id="endpoint"
-						value={endpoint}
-						onChange={(e) => setEndpoint(e.target.value)}
-					/>
-					<br />
-					<label htmlFor="params">Parameters:</label>
-					<input
-						type="text"
-						id="params"
-						value={params}
-						onChange={(e) => setParams(e.target.value)}
-					/>
-					<br />
-					<button type="submit" disabled={loading}>
-						{loading ? "Loading..." : "Submit"}
-					</button>
-				</form>
-				{error && <p>{error}</p>}
-				{response && <pre>{JSON.stringify(response, null, 2)}</pre>}
+				<div className="col-lg-6">
+					<form onSubmit={testRemoteAPI} className="row">
+						<div className="col-lg-9">
+							<div className="input-group">
+								<select
+									id="methodAPI"
+									name="methodAPI"
+									value={methodAPI}
+									onChange={(e) => {
+										setRestfulData({
+											...restfulData,
+											methodAPI: e.target.value,
+										});
+									}}
+									className="form-select"
+								>
+									<option value="GET">GET</option>
+									<option value="POST">POST</option>
+									<option value="PUT">PUT</option>
+									<option value="PATCH">PATCH</option>
+									<option value="DELETE">DELETE</option>
+									<option value="HEAD">HEAD</option>
+									<option value="OPTIONS">OPTIONS</option>
+								</select>
+								<input
+									id="apiURL"
+									name="apiURL"
+									value={apiURL}
+									onChange={(e) => {
+										setRestfulData({
+											...restfulData,
+											apiURL: e.target.value,
+										});
+									}}
+									type="text"
+									className="form-control w-75"
+									placeholder="http://localhost:5000/"
+								/>
+							</div>
+						</div>
+						<div className="col-lg-3">
+							<button
+								type="submit"
+								disabled={apiURL.length > 0 ? !true : !false}
+								className="btn btn-secondary rounded-0 w-100"
+							>
+								{checkWebsiteBtnText}
+							</button>
+						</div>
+						<div className="col-lg-12 mt-3">
+							<Tabs defaultActiveKey="params" className="mb-3" fill>
+								<Tab eventKey="params" title="Params">
+									<table className="table table-striped table-hover">
+										<thead>
+											<tr>
+												<th scope="col">#</th>
+												<th scope="col">Key</th>
+												<th scope="col">Value</th>
+												<th scope="col">Description</th>
+											</tr>
+										</thead>
+										<tbody>
+											{paramsAPI?.length > 0 &&
+												paramsAPI?.map((param, index) => (
+													<tr key={index}>
+														<th scope="row">{index + 1}</th>
+														<td>
+															<input
+																id={`paramsAPI[${index}].key`}
+																name={`paramsAPI[${index}].key`}
+																value={param.key}
+																onChange={handleParamsChange(index, "key")}
+																type="text"
+																className="form-control w-75"
+																placeholder=""
+															/>
+														</td>
+														<td>
+															<input
+																id={`paramsAPI[${index}].value`}
+																name={`paramsAPI[${index}].value`}
+																value={param.value}
+																onChange={handleParamsChange(index, "value")}
+																type="text"
+																className="form-control w-75"
+																placeholder=""
+															/>
+														</td>
+														<td>
+															<input
+																id={`paramsAPI[${index}].description`}
+																name={`paramsAPI[${index}].description`}
+																value={param.description}
+																onChange={handleParamsChange(
+																	index,
+																	"description"
+																)}
+																type="text"
+																className="form-control w-75"
+																placeholder=""
+															/>
+														</td>
+														<td>
+															{index === paramsAPI.length - 1 ? (
+																<button onClick={handleAddRow}>+</button>
+															) : (
+																<button onClick={handleRemoveRow(index)}>
+																	-
+																</button>
+															)}
+														</td>
+													</tr>
+												))}
+										</tbody>
+									</table>
+								</Tab>
+								<Tab eventKey="authorization" title="Authorization">
+									Tab content for Authorization
+								</Tab>
+								<Tab eventKey="headers" title="Headers">
+									<table className="table table-striped table-hover">
+										<thead>
+											<tr>
+												<th scope="col">#</th>
+												<th scope="col">Key</th>
+												<th scope="col">Value</th>
+												<th scope="col">Description</th>
+											</tr>
+										</thead>
+										<tbody>
+											{/* {headersAPI.map((header, index) => (
+												<tr key={index}>
+													<th scope="row">{index + 1}</th>
+													<td>
+														<input
+															id={`headersAPI[${index}].key`}
+															name={`headersAPI[${index}].key`}
+															value={header.key}
+															// onChange={handleChange(index, "key")}
+															type="text"
+															className="form-control w-75"
+															placeholder=""
+														/>
+													</td>
+													<td>
+														<input
+															id={`headersAPI[${index}].value`}
+															name={`headersAPI[${index}].value`}
+															value={header.value}
+															// onChange={handleChange(index, "value")}
+															type="text"
+															className="form-control w-75"
+															placeholder=""
+														/>
+													</td>
+													<td>
+														<input
+															id={`headersAPI[${index}].description`}
+															name={`headersAPI[${index}].description`}
+															value={header.description}
+															// onChange={handleChange(index, "description")}
+															type="text"
+															className="form-control w-75"
+															placeholder=""
+														/>
+													</td>
+												</tr>
+											))} */}
+										</tbody>
+									</table>
+								</Tab>
+								<Tab eventKey="body" title="Body">
+									Tab content for Body
+								</Tab>
+							</Tabs>
+						</div>
+					</form>
+					<pre>
+						<code>{JSON.stringify(restfulData, null, 2)}</code>
+					</pre>
+				</div>
+				<div className="col-lg-6">
+					{error && <p>{error}</p>}
+					{data && (
+						<CodeMirror
+							value={JSON.stringify(data, null, 4)}
+							theme={vscodeDark}
+							extensions={[loadLanguage("json")]}
+							readOnly
+						/>
+					)}
+				</div>
 			</div>
 		</div>
 	);

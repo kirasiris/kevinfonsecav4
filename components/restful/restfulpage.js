@@ -58,28 +58,46 @@ const RestfulPage = ({ searchParams }) => {
 		ALGUIEN QUE ME AYUDE A ARREGLAR ESTO? La funcion hace un appending inapropiado de strings
 		XD
 		*/
-		newParams.forEach((param, i) => {
-			if (param.key.trim() !== "" && param.value.trim() !== "") {
-				if (
-					newApiURL.includes(`?${param.key}=`) ||
-					newApiURL.includes(`&${param.key}=`)
-				) {
-					// Aqui puede encontrarse el error
-					newApiURL = newApiURL.replace(
-						new RegExp(`${param.key}=[^&]*(&|$)`),
-						""
-					);
-				}
+		// let prevValue = "";
 
-				if (i === 0 && !newApiURL.includes("?")) {
-					// Si no aqui
-					newApiURL += `?${param.key}=${param.value}`;
-				} else {
-					// O aqui LOL
-					newApiURL += `&${param.key}=${param.value}`;
-				}
+		// newParams.forEach((param, i) => {
+		// 	if (param.key.trim() !== "" && param.value.trim() !== "") {
+		// 		const encodedKey = encodeURIComponent(param.key);
+		// 		const encodedValue = encodeURIComponent(param.value);
+
+		// 		if (newApiURL.match(new RegExp(`[?&]${encodedKey}=[^&]*`))) {
+		// 			newApiURL = newApiURL.replace(
+		// 				new RegExp(`[?&]${encodedKey}=[^&]*`),
+		// 				""
+		// 			);
+		// 		}
+
+		// 		if (param.value.trim() !== "" && param.value !== prevValue) {
+		// 			if (i === 0 && !newApiURL.includes("?")) {
+		// 				newApiURL += `?${encodedKey}=${encodedValue}`;
+		// 			} else {
+		// 				newApiURL += `${
+		// 					newApiURL.startsWith("?") ? "&" : "&"
+		// 				}${encodedKey}=${encodedValue}`;
+		// 			}
+		// 			prevValue = param.value;
+		// 		}
+		// 	}
+		// });
+
+		let urlParams = new URLSearchParams();
+
+		newParams.forEach((param) => {
+			if (param.key.trim() !== "" && param.value.trim() !== "") {
+				const encodedKey = encodeURIComponent(param.key);
+				const encodedValue = encodeURIComponent(param.value);
+
+				urlParams.append(encodedKey, encodedValue);
 			}
 		});
+
+		const queryString = urlParams.toString();
+		newApiURL = queryString ? `${newApiURL}?${queryString}` : newApiURL;
 
 		setRestfulData({
 			...restfulData,

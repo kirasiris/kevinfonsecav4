@@ -1,4 +1,5 @@
 "use client";
+import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import Carousel from "react-bootstrap/Carousel";
 import Modal from "react-bootstrap/Modal";
@@ -8,6 +9,8 @@ import "react-multi-carousel/lib/styles.css";
 const YouTubePage = ({ searchParams }) => {
 	const [video, setVideo] = useState({});
 	const [videos, setVideos] = useState([]);
+
+	const router = useRouter();
 
 	const [videoData, setVideoData] = useState({
 		video_url: ``,
@@ -88,14 +91,30 @@ const YouTubePage = ({ searchParams }) => {
 		},
 	};
 
+	// If searchParams are found, load the corresponding video data
 	useEffect(() => {
-		const fetchYouTubes = async () => {
+		const fetchYouTube = async (id, videoId) => {
+			const res = await fetch(
+				`http://localhost:5000/api/v1/extras/youtube/${id}/${videoId}`
+			);
+			const data = await res.json();
+			setVideo(data.data);
+		};
+
+		searchParams._id &&
+			searchParams.videoId &&
+			fetchYouTube(searchParams._id, searchParams.videoId);
+	}, []);
+
+	// Otherwise load the most recent video found in DB
+	useEffect(() => {
+		const fetchYouTubes = async (id, videoId) => {
 			const res = await fetch(`http://localhost:5000/api/v1/extras/youtube`);
 			const data = await res.json();
-			setVideo(data.data[0]);
+			!id && !videoId && setVideo(data.data[0]);
 			setVideos(data.data);
 		};
-		fetchYouTubes();
+		fetchYouTubes(searchParams._id, searchParams.videoId);
 	}, []);
 
 	const loadVideo = async (id, videoId) => {
@@ -104,6 +123,7 @@ const YouTubePage = ({ searchParams }) => {
 		);
 		const data = await res.json();
 		setVideo(data.data);
+		router.push(`/youtube?_id=${id}&videoId=${videoId}`);
 	};
 
 	const [activeTab, setActiveTab] = useState({

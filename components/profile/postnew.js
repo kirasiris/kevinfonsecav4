@@ -10,10 +10,6 @@ const PostNew = ({}) => {
 	});
 	const { title, text } = postData;
 
-	const handleChange = (name) => (e) => {
-		setPostData({ ...postData, [name]: e.target.value });
-	};
-
 	return (
 		<form className="mb-3">
 			<div className="card">
@@ -47,7 +43,12 @@ const PostNew = ({}) => {
 						name={`title`}
 						id={`title`}
 						value={title}
-						onChange={handleChange("title")}
+						onChange={(e) => {
+							setPostData({
+								...postData,
+								title: e.target.value,
+							});
+						}}
 						className="form-control"
 					/>
 					<br />

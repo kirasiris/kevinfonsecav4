@@ -16,6 +16,7 @@ const nextConfig = {
 			"i.ytimg.com",
 			"cdn.sstatic.net",
 			"setwan.bimakota.go.id",
+			"setwan.bimakdota.go.id",
 		],
 	},
 };

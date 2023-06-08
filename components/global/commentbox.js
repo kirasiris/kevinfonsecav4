@@ -48,10 +48,6 @@ const CommentBox = ({
 
 	const { title, text } = commentData;
 
-	const onCommentChange = (name) => (e) => {
-		setCommentData({ ...commentData, [name]: e.target.value });
-	};
-
 	const newComment = async (e) => {
 		e.preventDefault();
 
@@ -89,7 +85,12 @@ const CommentBox = ({
 									name={`title`}
 									id={`title`}
 									className="form-control"
-									onChange={onCommentChange("title")}
+									onChange={(e) => {
+										setCommentData({
+											...commentData,
+											title: e.target.value,
+										});
+									}}
 									value={title}
 								/>
 								<br />
@@ -97,7 +98,12 @@ const CommentBox = ({
 									name="text"
 									id="text"
 									value={text}
-									handleChange={onCommentChange("text")}
+									handleChange={(e) => {
+										setCommentData({
+											...commentData,
+											text: e.target.value,
+										});
+									}}
 								/>
 							</div>
 						</div>

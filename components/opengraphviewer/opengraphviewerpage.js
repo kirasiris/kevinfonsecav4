@@ -23,10 +23,6 @@ const OpenGraphViewerPage = ({ searchParams }) => {
 	const [checkWebsiteBtnText, setCheckWebsiteBtnText] =
 		useState("Check website");
 
-	const handleChange = (name) => (e) => {
-		setOpenGraphData({ ...openGraphData, [name]: e.target.value });
-	};
-
 	const checkWebsite = async (e) => {
 		e.preventDefault();
 		setCheckWebsiteBtnText("...");
@@ -86,7 +82,12 @@ const OpenGraphViewerPage = ({ searchParams }) => {
 								id="url"
 								name="url"
 								value={url}
-								onChange={handleChange("url")}
+								onChange={(e) => {
+									setOpenGraphData({
+										...openGraphData,
+										url: e.target.value,
+									});
+								}}
 								type="text"
 								className="form-control rounded-0"
 								placeholder="Enter website"
@@ -112,25 +113,35 @@ const OpenGraphViewerPage = ({ searchParams }) => {
 						</label>
 						<input
 							id="title"
-							name="text"
+							name="title"
 							className="form-control"
 							type="text"
 							value={title.trim()}
 							placeholder={"Title"}
-							onChange={handleChange("title")}
+							onChange={(e) => {
+								setOpenGraphData({
+									...openGraphData,
+									title: e.target.value,
+								});
+							}}
 						/>
 					</div>
 					<div className="mb-3">
-						<label htmlFor="description" className="form-label">
-							Description
+						<label htmlFor="text" className="form-label">
+							Text
 						</label>
 						<textarea
-							id="description"
-							name="description"
+							id="text"
+							name="text"
 							className="form-control"
-							placeholder={"Description"}
+							placeholder={"Text"}
 							value={text.trim()}
-							onChange={handleChange("text")}
+							onChange={(e) => {
+								setOpenGraphData({
+									...openGraphData,
+									text: e.target.value,
+								});
+							}}
 							rows="3"
 						/>
 					</div>
@@ -145,7 +156,12 @@ const OpenGraphViewerPage = ({ searchParams }) => {
 							type="text"
 							value={image.trim()}
 							placeholder={"Image"}
-							onChange={handleChange("image")}
+							onChange={(e) => {
+								setOpenGraphData({
+									...openGraphData,
+									image: e.target.value,
+								});
+							}}
 						/>
 						<div className="form-text">
 							<b>Recommended:</b> 1200x630px

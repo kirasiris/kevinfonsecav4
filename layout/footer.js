@@ -23,6 +23,40 @@ const Footer = ({ classes = "", styles = {} }) => {
 								<p>
 									<Link
 										href={{
+											pathname: "/openai/generateimage",
+											query: {
+												page: undefined,
+												limit: undefined,
+											},
+										}}
+										passHref
+										legacyBehavior
+									>
+										Generate AI Image
+									</Link>
+								</p>
+							</li>
+							<li className="nav-item mb-2">
+								<p>
+									<Link
+										href={{
+											pathname: "/openai/generatecode",
+											query: {
+												page: undefined,
+												limit: undefined,
+											},
+										}}
+										passHref
+										legacyBehavior
+									>
+										Generate AI Code
+									</Link>
+								</p>
+							</li>
+							<li className="nav-item mb-2">
+								<p>
+									<Link
+										href={{
 											pathname: "/changelog",
 											query: {
 												page: undefined,

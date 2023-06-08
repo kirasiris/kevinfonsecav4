@@ -21,11 +21,6 @@ const YouTubePage = ({ searchParams }) => {
 
 	const [submitButtonText, setButtonText] = useState(`Search`);
 
-	const handleChange = (name) => (e) => {
-		e.preventDefault();
-		setVideoData({ ...videoData, [name]: e.target.value });
-	};
-
 	const initLookout = async (e) => {
 		e.preventDefault();
 		setButtonText("...");
@@ -146,7 +141,12 @@ const YouTubePage = ({ searchParams }) => {
 								id="video_url"
 								name="video_url"
 								value={video_url}
-								onChange={handleChange("video_url")}
+								onChange={(e) => {
+									setVideoData({
+										...videoData,
+										video_url: e.target.value,
+									});
+								}}
 								type="text"
 								className="form-control mb-3"
 								placeholder="https://www.youtube.com/watch?v=jDWahg4odAY"
@@ -160,7 +160,12 @@ const YouTubePage = ({ searchParams }) => {
 								id="download_video"
 								name="download_video"
 								value={download_video}
-								onChange={handleChange("download_video")}
+								onChange={(e) => {
+									setVideoData({
+										...videoData,
+										download_video: e.target.value,
+									});
+								}}
 								className="form-control"
 							>
 								<option value={true}>Yes</option>
@@ -334,7 +339,7 @@ const YouTubePage = ({ searchParams }) => {
 							}}
 							type="text"
 							className="form-control mb-3"
-							placeholder="Enter website"
+							placeholder="Enter name of video (EXACT MATCH!)"
 						/>
 						{list?.length > 0 && (
 							<>

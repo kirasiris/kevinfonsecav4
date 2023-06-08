@@ -18,11 +18,6 @@ VALUES
 
 	const { ddl, dml } = editorData;
 
-	const handleChange = (name) => (e) => {
-		e.preventDefault();
-		setEditorData({ ...editorData, [name]: e.target.value });
-	};
-
 	return (
 		<div className="container-fluid">
 			<div className="row">

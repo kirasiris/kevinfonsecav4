@@ -322,7 +322,7 @@ const RestfulPage = ({ searchParams }) => {
 						</div>
 					</form>
 					<pre>
-						<code>{JSON.stringify(restfulData, null, 2)}</code>
+						<code>{JSON.stringify(restfulData, null, 4)}</code>
 					</pre>
 				</div>
 				<div className="col-lg-6">

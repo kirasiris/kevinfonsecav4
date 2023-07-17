@@ -17,6 +17,7 @@ const nextConfig = {
 			"cdn.sstatic.net",
 			"setwan.bimakota.go.id",
 			"setwan.bimakdota.go.id",
+			"https://oaidalleapiprodscus.blob.core.windows.net",
 		],
 	},
 };

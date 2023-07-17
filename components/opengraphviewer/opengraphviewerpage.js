@@ -89,11 +89,15 @@ const OpenGraphViewerPage = ({ searchParams }) => {
 									});
 								}}
 								type="text"
-								className="form-control rounded-0"
+								className="form-control rounded-start"
 								placeholder="Enter website"
 							/>
 							<span className="input-group-btn">
-								<button className="btn btn-secondary rounded-0" type="submit">
+								<button
+									className="btn btn-secondary rounded-start-0 rounded-end"
+									type="submit"
+									disabled={url.length > 0 ? !true : !false}
+								>
 									{checkWebsiteBtnText}
 								</button>
 							</span>

@@ -27,8 +27,6 @@ const AImagePage = ({ searchParams }) => {
 		setShowPrompt(true);
 	};
 
-	const [myData, setData] = useState("");
-
 	const initImage = async (e) => {
 		e.preventDefault();
 		try {
@@ -44,8 +42,7 @@ const AImagePage = ({ searchParams }) => {
 				}
 			);
 			const data = await res.json();
-			setData(data);
-			// setImages([data.image, ...images]);
+			setImages([data.data, ...images]);
 			setButtonText(submitButtonText);
 		} catch (err) {
 			console.log(err);
@@ -55,18 +52,17 @@ const AImagePage = ({ searchParams }) => {
 	return (
 		<div className="container-fluid">
 			<div className="row">
-				{images.length > 0 &&
+				{images?.length > 0 &&
 					images.map((image, index) => (
 						<Image
 							key={index}
-							src={`data:image/jpeg;base64,${image.b64_json}`}
+							src={image.url}
 							className="img-fluid col mb-b"
 							alt={`Image #${index}`}
 							width="1024"
 							height="1024"
 						/>
 					))}
-				<pre>{JSON.stringify(myData, null, 4)}</pre>
 				<div className="col-lg-12">
 					{!showPromp ? (
 						<div className="input-group">
@@ -109,12 +105,12 @@ const AImagePage = ({ searchParams }) => {
 										});
 									}}
 									type="text"
-									className="form-control form-control-sm mb-3"
+									className="form-control rounded-start mb-3"
 									placeholder="https://www.youtube.com/watch?v=jDWahg4odAY"
 								/>
 								<span className="input-group-btn">
 									<button
-										className="btn btn-secondary btn-sm rounded-0"
+										className="btn btn-secondary rounded-start-0 rounded-end"
 										type="submit"
 										disabled={prompt.length > 0 ? !true : !false}
 									>

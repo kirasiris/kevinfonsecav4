@@ -42,6 +42,7 @@ const AImagePage = ({ searchParams }) => {
 				}
 			);
 			const data = await res.json();
+			console.log("Images", data);
 			setImages([data.data, ...images]);
 			setButtonText(submitButtonText);
 		} catch (err) {
@@ -54,14 +55,16 @@ const AImagePage = ({ searchParams }) => {
 			<div className="row">
 				{images?.length > 0 &&
 					images.map((image, index) => (
-						<Image
-							key={index}
-							src={image.url}
-							className="img-fluid col mb-b"
-							alt={`Image #${index}`}
-							width="1024"
-							height="1024"
-						/>
+						<>
+							<Image
+								key={index}
+								src={`${image.url}`}
+								className="img-fluid col mb-b"
+								alt={`Image #${index}`}
+								width="1024"
+								height="1024"
+							/>
+						</>
 					))}
 				<div className="col-lg-12">
 					{!showPromp ? (

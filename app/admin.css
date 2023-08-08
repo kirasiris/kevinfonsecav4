@@ -58,3 +58,13 @@
 	top: 50%;
 	transform: translate(-50%, -50%);
 }
+
+.blog-actions-ellipsis-menu {
+	display: flex;
+	flex-shrink: 0;
+	margin-left: 8px;
+}
+
+.ellipsis-menu {
+	display: flex;
+}

@@ -23,13 +23,13 @@
     "@uiw/codemirror-themes": "^4.19.16",
     "@uiw/codemirror-themes-all": "^4.19.16",
     "@uiw/react-codemirror": "^4.19.16",
+    "axios": "^1.4.0",
     "bootstrap": "^5.2.3",
     "eslint": "8.34.0",
     "eslint-config-next": "^13.4.3",
     "next": "^13.4.4",
     "next-sitemap": "^4.0.6",
     "plyr": "^3.7.8",
-    "query-string": "^8.1.0",
     "react": "^18.2.0",
     "react-bootstrap": "^2.7.2",
     "react-codemirror-merge": "^4.19.16",
@@ -39,6 +39,7 @@
     "react-infinite-scroller": "^1.2.6",
     "react-multi-carousel": "^2.8.3",
     "react-share": "^4.4.1",
+    "react-toastify": "^9.1.3",
     "wavesurfer.js": "^6.6.1"
   }
 }

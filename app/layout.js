@@ -3,6 +3,7 @@ import "./bootstrap.css";
 // import "./bootstrap.js";
 import "./global.css";
 import "./app.css";
+import Menu from "@/layout/menu";
 
 export default function RootLayout({ children }) {
 	return (
@@ -13,6 +14,7 @@ export default function RootLayout({ children }) {
       */}
 			<head />
 			<body>
+				<Menu />
 				<main>{children}</main>
 				<Footer />
 			</body>

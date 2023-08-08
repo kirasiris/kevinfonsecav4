@@ -1,0 +1,196 @@
+"use client";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import AdminSidebar from "@/layout/admin/adminsidebar";
+import MyTextArea from "@/layout/mytextarea";
+
+const CreateBlog = () => {
+	// const {files} = useContext(GlobalContext)
+	const router = useRouter();
+
+	const [categories, setCategories] = useState([]);
+
+	const fetchCategories = async (params = "") => {
+		try {
+			// const res = await axios.get(`/categories${params}`);
+			const res = await fetch(
+				`http://localhost:5000/api/v1/categories${params}`
+			);
+			const render = await res.json();
+			setCategories(render?.data);
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
+	useEffect(() => {
+		fetchCategories(`?categoryType=blog`);
+	}, []);
+
+	const [blogData, setBlogData] = useState({
+		title: `Untitled`,
+		// avatar: files?.selected?._id,
+		text: `No description`,
+		featured: false,
+		embedding: false,
+		category: undefined,
+		commented: false,
+		password: ``,
+		status: `draft`,
+		fullWidth: false,
+	});
+
+	const {
+		title,
+		avatar,
+		text,
+		featured,
+		embedding,
+		category,
+		commented,
+		password,
+		status,
+		fullWidth,
+	} = blogData;
+
+	const createBlog = async (e) => {
+		e.preventDefault();
+		try {
+			await fetch(`http://localhost:5000/api/v1/blogs`, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({ ...blogData, postType: "blog" }),
+			});
+			toast.success(`Item created`);
+			resetForm();
+			router.push(`/admin/blogs`);
+		} catch (err) {
+			console.log(err);
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return { msg: err?.response?.statusText, status: err?.response?.status };
+		}
+	};
+
+	const resetForm = () => {
+		setBlogData({
+			title: `Untitled`,
+			// avatar: files?.selected?._id,
+			text: `No description`,
+			featured: false,
+			embedding: false,
+			category: undefined,
+			commented: false,
+			password: ``,
+			tags: [],
+			status: `draft`,
+			fullWidth: false,
+		});
+	};
+
+	return (
+		<form className="row" onSubmit={createBlog}>
+			<div className="col">
+				<label htmlFor="blog-title" className="form-label">
+					Title
+				</label>
+				<input
+					id="blog-title"
+					name="title"
+					value={title}
+					onChange={(e) => {
+						setBlogData({
+							...blogData,
+							title: e.target.value,
+						});
+					}}
+					type="text"
+					className="form-control mb-3"
+					placeholder=""
+				/>
+				<label htmlFor="blog-text multipurpose-textarea" className="form-label">
+					Text
+				</label>
+				<MyTextArea
+					id="blog-text"
+					name="text"
+					value={text}
+					handleChangeValue={(e) =>
+						setBlogData({
+							...blogData,
+							text: e.target.value,
+						})
+					}
+				/>
+			</div>
+			<div className="col-lg-3">
+				<AdminSidebar
+					avatar={avatar}
+					status={status}
+					fullWidth={fullWidth}
+					password={password}
+					featured={featured}
+					commented={commented}
+					embedding={embedding}
+					github={false}
+					category={category}
+					categories={categories}
+					objectData={blogData}
+					setObjectData={setBlogData}
+					multipleFiles={false}
+					onModel={"Blog"}
+				/>
+				<br />
+				<button
+					type="submit"
+					className="btn btn-secondary btn-sm float-start"
+					disabled={title.length > 0 && text.length > 0 ? !true : !false}
+				>
+					Submit
+				</button>
+				<button
+					type="button"
+					className="btn btn-secondary btn-sm float-end"
+					onClick={resetForm}
+				>
+					Reset
+				</button>
+			</div>
+		</form>
+	);
+};
+
+export default CreateBlog;

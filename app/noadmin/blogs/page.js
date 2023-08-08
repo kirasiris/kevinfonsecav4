@@ -1,7 +1,109 @@
-import Image from "next/image";
+"use client";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import Single from "@/components/admin/blogs/single";
 
 const AdminBlogIndex = () => {
+	const [blogs, setBlogs] = useState([]);
+	const router = useRouter();
+	const [params] = useState(`?page=1&limit=10&sort=-createdAt&postType=blog`);
+
+	const fetchBlogs = async () => {
+		try {
+			// const res = await axios.get(`/blogs${params}`);
+			const res = await fetch(`http://localhost:5000/api/v1/blogs${params}`);
+			const render = await res.json();
+			setBlogs(render?.data);
+			// setTotalResults({ ...totalResults, blogs: res?.data?.countAll });
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
+	useEffect(() => {
+		fetchBlogs();
+	}, [router]);
+
+	const handleDelete = async (id) => {
+		try {
+			await fetch(`http://localhost:5000/api/v1/blogs/${id}`, {
+				method: "DELETE",
+			});
+			toast.success("Blog deleted");
+			fetchBlogs();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
+	const handleDeleteAll = async () => {
+		try {
+			// await axios.delete(`/blogs/deleteallblogs`);
+			await fetch(`http://localhost:5000/api/v1/blogs/deleteallblogs`, {
+				method: "DELETE",
+			});
+			toast.success("Blogs deleted");
+			fetchBlogs();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
 	return (
 		<>
 			<div className="bg-body-secondary mb-3 p-1">
@@ -68,59 +170,31 @@ const AdminBlogIndex = () => {
 					>
 						<a className="btn btn-link btn-sm float-start">Blogs</a>
 					</Link>
-					<Link
-						href={{
-							pathname: "/noadmin/blogs/add",
-							query: {},
-						}}
-						passHref
-						legacyBehavior
-					>
-						<a className="btn btn-danger btn-sm float-end">Add new blog</a>
-					</Link>
+					<div className="btn-group float-end">
+						<Link
+							href={{
+								pathname: "/noadmin/blogs/create",
+								query: {},
+							}}
+							passHref
+							legacyBehavior
+						>
+							<a className="btn btn-primary btn-sm">Add new blog</a>
+						</Link>
+						<button className="btn btn-danger btn-sm">Delete all</button>
+					</div>
 				</div>
-				<ul className="list-group list-group-flush">
-					<li className="list-group-item">
-						<div className="blog-item__panel">
-							<div className="blog-item__detail">
-								<div className="blog-item__info"></div>
-								<h1 className="blog-item__title">
-									<Link
-										href={{
-											pathname: "/noadmin/blogs/update/:ID",
-											query: {},
-										}}
-										passHref
-										legacyBehavior
-									>
-										<a className="blog-item__title-link">TITLE</a>
-									</Link>
-								</h1>
-								<div className="blog-item__meta"></div>
-							</div>
-							<div className="blog-type-list__blog-thumbnail-wrapper has-image">
-								<Link
-									href={{
-										pathname: "/noadmin/blogs/update/:ID",
-										query: {},
-									}}
-									passHref
-									legacyBehavior
-								>
-									<a className="blog-type-list__blog-thumbnail-link">
-										<Image
-											src="https://i0.wp.com/befreebucket-for-outputs.s3.amazonaws.com/2023/04/Changelog.jpg?ssl=1&h=160"
-											className="blog-type-list__blog-thumbnail"
-											alt="Blog titles image"
-											width="83"
-											height="63"
-										/>
-									</a>
-								</Link>
-							</div>
-						</div>
-					</li>
-				</ul>
+				{blogs?.length > 0 ? (
+					<ul className="list-group list-group-flush">
+						{blogs?.map((blog) => (
+							<Single key={blog._id} object={blog} />
+						))}
+					</ul>
+				) : (
+					<div className="alert alert-danger rounded-0 m-0 border-0">
+						Nothing found
+					</div>
+				)}
 			</div>
 		</>
 	);

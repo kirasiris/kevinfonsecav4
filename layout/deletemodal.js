@@ -1,0 +1,104 @@
+"use client";
+import { useState } from "react";
+import Button from "react-bootstrap/Button";
+import Modal from "react-bootstrap/Modal";
+
+const DeleteModal = ({
+	id = null,
+	sId = null,
+	location = ``,
+	as = `button`,
+	size = `sm`,
+	classStr = ``,
+	action,
+	action2,
+	setObjects,
+	objects = [],
+	setTotalResults,
+}) => {
+	const [confirmDeleteModal, setConfirmDeleteModal] = useState(false);
+	const [, setError] = useState(false);
+
+	const openDeleteModal = (e) => {
+		setConfirmDeleteModal(true);
+	};
+
+	const closeDeleteModal = (e) => {
+		setConfirmDeleteModal(false);
+	};
+
+	const deleteObject = async (e) => {
+		e.preventDefault();
+		await action(id, sId)
+			.then(() => {
+				if (typeof action2 === `function`) {
+					action2(location)
+						.then(() => {
+							console.log(`Done`);
+						})
+						.catch((err) => {
+							setError(true);
+						});
+				}
+			})
+			.catch((err) => {
+				setError(true);
+			});
+		if (sId) {
+			setObjects(objects.filter((object) => object._id !== sId));
+		} else {
+			setObjects(objects.filter((object) => object._id !== id));
+		}
+		setTotalResults(objects.length - 1);
+	};
+
+	return (
+		<>
+			<Button
+				variant={`danger`}
+				size={size}
+				onClick={openDeleteModal}
+				data-target={`deleteModal#${id}`}
+				as={as}
+				className={classStr}
+			>
+				{/* <i className={`fas fa-trash-alt mr-1`} aria-hidden /> */}
+				Delete
+			</Button>
+			{confirmDeleteModal && (
+				<Modal
+					show={true}
+					onHide={closeDeleteModal}
+					backdrop={true}
+					animation={true}
+					size={`sm`}
+					id={`deleteModal#${id}`}
+				>
+					<Modal.Header closeButton>
+						<Modal.Title>Are you sure?</Modal.Title>
+					</Modal.Header>
+					<Modal.Body>{id}</Modal.Body>
+					<Modal.Footer>
+						<Button
+							variant={`secondary`}
+							size={`sm`}
+							onClick={closeDeleteModal}
+						>
+							Close
+						</Button>
+						<Button
+							type={`submit`}
+							size={`sm`}
+							onClick={deleteObject}
+							variant={`primary`}
+						>
+							Submit
+						</Button>
+					</Modal.Footer>
+				</Modal>
+			)}
+		</>
+	);
+};
+
+export default DeleteModal;

@@ -4,7 +4,6 @@ import CodeMirror from "@uiw/react-codemirror";
 import { loadLanguage } from "@uiw/codemirror-extensions-langs";
 import { vscodeDark } from "@uiw/codemirror-theme-vscode";
 import { Tab, Tabs } from "react-bootstrap";
-import queryString from "query-string";
 
 const RestfulPage = ({ searchParams }) => {
 	const [data, setData] = useState({});
@@ -248,10 +247,18 @@ const RestfulPage = ({ searchParams }) => {
 														</td>
 														<td>
 															{index === paramsAPI.length - 1 ? (
-																<button onClick={handleAddRow}>+</button>
+																<button
+																	className="btn btn-success"
+																	onClick={handleAddRow}
+																>
+																	+
+																</button>
 															) : (
-																<button onClick={handleRemoveRow(index)}>
-																	-
+																<button
+																	className="btn btn-danger"
+																	onClick={handleRemoveRow(index)}
+																>
+																	x
 																</button>
 															)}
 														</td>

@@ -1,4 +1,5 @@
 "use client";
+import axios from "axios";
 // import { useEffect, useState } from "react";
 
 // export const useScript = (
@@ -46,20 +47,22 @@ const deleteCookie = (name, path, domain) => {
 	}
 };
 
-// export const setAuthToken = (token) => {
-// 	if (token) {
-// 		if (typeof window !== "undefined") {
-// 			axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-// 			axios.defaults.headers["Authorization"] = `Bearer ${token}`;
-// 			window?.localStorage.setItem("xAuthToken", token);
-// 		}
-// 	} else {
-// 		delete axios.defaults.headers.common["Authorization"];
-// 		delete axios.defaults.headers["Authorization"];
-// 		window?.localStorage.removeItem("xAuthToken");
-// 		deleteCookie("xAuthToken", "/");
-// 	}
-// };
+export const setAuthToken = (token) => {
+	if (token) {
+		console.log("Token gets to setAuthToken function", token);
+		if (typeof window !== "undefined") {
+			axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+			axios.defaults.headers["Authorization"] = `Bearer ${token}`;
+			window?.localStorage.setItem("xAuthToken", token);
+		}
+	} else {
+		console.log("Token does not gets to setAuthToken function", token);
+		delete axios.defaults.headers.common["Authorization"];
+		delete axios.defaults.headers["Authorization"];
+		window?.localStorage.removeItem("xAuthToken");
+		deleteCookie("xAuthToken", "/");
+	}
+};
 
 export const capitalizeWordsInArray = (wordArray) => {
 	return wordArray

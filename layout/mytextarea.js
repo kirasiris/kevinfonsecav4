@@ -1,35 +1,43 @@
 "use client";
+// Require Editor CSS files.
+import "froala-editor/css/froala_style.min.css";
+import "froala-editor/css/froala_editor.pkgd.min.css";
+import FroalaEditorComponent from "react-froala-wysiwyg";
+
 const MyTextArea = ({
 	name = "",
 	id = "",
 	objectData,
 	setObjectData,
 	value = "",
-	handleChangeValue = "",
+	handleChangeValue,
 }) => {
-	const handleChange = (name) => (e) => {
-		const inputText = e.target.value;
-		const regex = /(@\w+)|(#\w+)/g;
-		const newText = inputText.replace(regex, (match) => {
-			if (match.startsWith("@")) {
-				return `<a href="/users/${match.substring(1)}">${match}</a>`;
-			} else if (match.startsWith("#")) {
-				return `<a href="/hashtags/${match.substring(1)}">${match}</a>`;
-			}
-		});
-		setObjectData({ ...objectData, [name]: inputText });
-	};
 	return (
 		<>
-			<textarea
+			<FroalaEditorComponent
+				tag="textarea"
+				config={{
+					// id: `${id} multipurpose-textarea`,
+					// name: name,
+					placeholderText:
+						"Share something new. Now with #hashtags support, YAY!!!",
+					pluginsEnabled: ["image", "link"],
+				}}
+
+				// config={config}
+				// model={model}
+				// onModelChange={handleModelChange}
+			/>
+			{/* <textarea
 				name={name}
 				className="form-control"
-				id={`multipurpose-textarea ${id}`}
+				id={`${id} multipurpose-textarea`}
 				// onKeyUp="previewUrls()"
 				placeholder="Share something new. Now with #hashtags support, YAY!!!"
 				value={value}
-				onChange={handleChange(handleChangeValue)}
-			/>
+				onChange={handleChangeValue}
+				rows="3"
+			/> */}
 			{/* <div id="preview-urls" className="text-center d-none"></div> */}
 		</>
 	);

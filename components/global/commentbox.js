@@ -98,7 +98,7 @@ const CommentBox = ({
 									name="text"
 									id="text"
 									value={text}
-									handleChange={(e) => {
+									handleChangeValue={(e) => {
 										setCommentData({
 											...commentData,
 											text: e.target.value,

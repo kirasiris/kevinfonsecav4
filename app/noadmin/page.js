@@ -1,8 +1,13 @@
+"use client";
 import QuickBlogDraft from "@/components/admin/quickblogdraft";
 import QuickQuoteDraft from "@/components/admin/quickquotedraft";
+import AuthContext from "@/helpers/globalContext";
 import DynamicCards from "@/layout/dynamiccards";
+import { useContext } from "react";
 
-const AdminHome = async () => {
+const AdminHome = ({}) => {
+	const { auth } = useContext(AuthContext);
+
 	return (
 		<>
 			<div className="row">

@@ -314,16 +314,6 @@ const AdminCategoriesIndex = () => {
 								</a>
 							</Link>
 							<div className="btn-group float-end">
-								<Link
-									href={{
-										pathname: "/noadmin/categories",
-										query: {},
-									}}
-									passHref
-									legacyBehavior
-								>
-									<a className="btn btn-primary btn-sm">Add new category</a>
-								</Link>
 								<button
 									className="btn btn-danger btn-sm"
 									type="button"

@@ -5,7 +5,7 @@ import AdminSidebar from "@/layout/admin/adminsidebar";
 import MyTextArea from "@/layout/mytextarea";
 import axios from "axios";
 
-const CreateBlog = () => {
+const CreateTheme = () => {
 	// const {files} = useContext(GlobalContext)
 	const router = useRouter();
 
@@ -46,17 +46,18 @@ const CreateBlog = () => {
 		fetchCategories(`?categoryType=blog`);
 	}, []);
 
-	const [blogData, setBlogData] = useState({
+	const [themeData, setThemeData] = useState({
 		title: `Untitled`,
 		// avatar: files?.selected?._id,
 		text: `No description`,
-		featured: false,
-		embedding: false,
+		featured: true,
+		embedding: true,
 		category: undefined,
-		commented: false,
+		commented: true,
 		password: ``,
 		status: `draft`,
 		fullWidth: false,
+		github_readme: `#`,
 	});
 
 	const {
@@ -70,15 +71,16 @@ const CreateBlog = () => {
 		password,
 		status,
 		fullWidth,
-	} = blogData;
+		github_readme,
+	} = themeData;
 
-	const addBlog = async (e) => {
+	const addTheme = async (e) => {
 		e.preventDefault();
 		try {
-			await axios.post(`/blogs`, { ...blogData, postType: "blog" });
+			await axios.post(`/blogs`, { ...themeData, postType: "theme" });
 			toast.success(`Item created`);
 			resetForm();
-			router.push(`/admin/blogs`);
+			router.push(`/admin/themes`);
 		} catch (err) {
 			console.log(err);
 			// const error = err.response.data.message;
@@ -101,10 +103,10 @@ const CreateBlog = () => {
 	};
 
 	const resetForm = () => {
-		setBlogData({
+		setThemeData({
 			title: `Untitled`,
 			// avatar: files?.selected?._id,
-			text: `No description`,
+			text: ``,
 			featured: false,
 			embedding: false,
 			category: undefined,
@@ -113,11 +115,12 @@ const CreateBlog = () => {
 			tags: [],
 			status: `draft`,
 			fullWidth: false,
+			github_readme: ``,
 		});
 	};
 
 	return (
-		<form className="row" onSubmit={addBlog}>
+		<form className="row" onSubmit={addTheme}>
 			<div className="col">
 				<label htmlFor="blog-title" className="form-label">
 					Title
@@ -127,8 +130,8 @@ const CreateBlog = () => {
 					name="title"
 					value={title}
 					onChange={(e) => {
-						setBlogData({
-							...blogData,
+						setThemeData({
+							...themeData,
 							title: e.target.value,
 						});
 					}}
@@ -144,8 +147,8 @@ const CreateBlog = () => {
 					name="text"
 					value={text}
 					handleChangeValue={(e) =>
-						setBlogData({
-							...blogData,
+						setThemeData({
+							...themeData,
 							text: e.target.value,
 						})
 					}
@@ -160,13 +163,14 @@ const CreateBlog = () => {
 					featured={featured}
 					commented={commented}
 					embedding={embedding}
-					github={false}
+					github={true}
+					github_readme={github_readme}
 					category={category}
 					categories={categories}
-					objectData={blogData}
-					setObjectData={setBlogData}
-					multipleFiles={false}
-					onModel={"Blog"}
+					objectData={themeData}
+					setObjectData={setThemeData}
+					multipleFiles={true}
+					onModel={"Theme"}
 				/>
 				<br />
 				<button
@@ -188,4 +192,4 @@ const CreateBlog = () => {
 	);
 };
 
-export default CreateBlog;
+export default CreateTheme;

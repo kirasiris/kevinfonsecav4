@@ -70,7 +70,7 @@ const AdminSidebar = ({
 						onChange={(e) => {
 							setObjectData({
 								...objectData,
-								fullWidth: e,
+								fullWidth: e.target.value,
 							});
 						}}
 						className="form-control"
@@ -105,7 +105,7 @@ const AdminSidebar = ({
 						<label htmlFor="github_readme" className="form-label">
 							GitHub readME
 						</label>
-						<select
+						<input
 							id="github_readme"
 							name="github_readme"
 							value={github_readme}
@@ -115,13 +115,10 @@ const AdminSidebar = ({
 									github_readme: e.target.value,
 								});
 							}}
-							className="form-control"
-						>
-							<option value={`draft`}>Draft</option>
-							<option value={`published`}>Published</option>
-							<option value={`trash`}>Trash</option>
-							<option value={`scheduled`}>Scheduled</option>
-						</select>
+							type="text"
+							className="form-control mb-3"
+							placeholder="#"
+						/>
 					</>
 				)}
 			<label htmlFor="featured" className="form-label">
@@ -134,7 +131,7 @@ const AdminSidebar = ({
 				onChange={(e) => {
 					setObjectData({
 						...objectData,
-						featured: e,
+						featured: e.target.value,
 					});
 				}}
 				className="form-control"
@@ -152,7 +149,7 @@ const AdminSidebar = ({
 				onChange={(e) => {
 					setObjectData({
 						...objectData,
-						commented: e,
+						commented: e.target.value,
 					});
 				}}
 				className="form-control"
@@ -170,7 +167,7 @@ const AdminSidebar = ({
 				onChange={(e) => {
 					setObjectData({
 						...objectData,
-						embedding: e,
+						embedding: e.target.value,
 					});
 				}}
 				className="form-control"

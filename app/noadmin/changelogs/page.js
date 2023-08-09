@@ -4,23 +4,23 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useContext } from "react";
 import { toast } from "react-toastify";
-import Single from "@/components/admin/blogs/single";
+import Single from "@/components/admin/changelogs/single";
 import AuthContext from "@/helpers/globalContext";
 
-const AdminBlogIndex = () => {
+const AdminChangelogsIndex = () => {
 	const { totalResults, setTotalResults } = useContext(AuthContext);
 
 	const router = useRouter();
 
-	const [blogs, setBlogs] = useState([]);
+	const [changelogs, setChangelogs] = useState([]);
 
-	const [params] = useState(`?page=1&limit=10&sort=-createdAt&postType=blog`);
+	const [params] = useState(`?page=1&limit=10&sort=-createdAt`);
 
-	const fetchBlogs = async () => {
+	const fetchChangelogs = async () => {
 		try {
-			const res = await axios.get(`/blogs${params}`);
-			setBlogs(res?.data?.data);
-			setTotalResults({ ...totalResults, blogs: res?.data?.countAll });
+			const res = await axios.get(`/changelogs${params}`);
+			setChangelogs(res?.data?.data);
+			setTotalResults({ ...totalResults, changelogs: res?.data?.countAll });
 		} catch (err) {
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;
@@ -45,14 +45,14 @@ const AdminBlogIndex = () => {
 	};
 
 	useEffect(() => {
-		fetchBlogs();
+		fetchChangelogs();
 	}, [router]);
 
 	const handleDelete = async (id) => {
 		try {
-			await axios.delete(`/blogs/${id}`);
-			toast.success("Blog deleted");
-			fetchBlogs();
+			await axios.delete(`/changelogs/${id}`);
+			toast.success("Changelog deleted");
+			fetchChangelogs();
 		} catch (err) {
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;
@@ -78,9 +78,9 @@ const AdminBlogIndex = () => {
 
 	const handleDeleteAll = async () => {
 		try {
-			await axios.delete(`/blogs/deleteall`);
-			toast.success("Blogs deleted");
-			fetchBlogs();
+			await axios.delete(`/changelogs/deleteall`);
+			toast.success("Changelogs deleted");
+			fetchChangelogs();
 		} catch (err) {
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;
@@ -109,7 +109,7 @@ const AdminBlogIndex = () => {
 			<div className="bg-body-secondary mb-3 p-1">
 				<Link
 					href={{
-						pathname: "/noadmin/blogs",
+						pathname: "/noadmin/changelogs",
 						query: { page: 1, limit: 10 },
 					}}
 					passHref
@@ -119,7 +119,7 @@ const AdminBlogIndex = () => {
 				</Link>
 				<Link
 					href={{
-						pathname: "/noadmin/blogs/published",
+						pathname: "/noadmin/changelogs/published",
 						query: { page: 1, limit: 10 },
 					}}
 					passHref
@@ -129,7 +129,7 @@ const AdminBlogIndex = () => {
 				</Link>
 				<Link
 					href={{
-						pathname: "/noadmin/blogs/draft",
+						pathname: "/noadmin/changelogs/draft",
 						query: { page: 1, limit: 10 },
 					}}
 					passHref
@@ -139,7 +139,7 @@ const AdminBlogIndex = () => {
 				</Link>
 				<Link
 					href={{
-						pathname: "/noadmin/blogs/scheduled",
+						pathname: "/noadmin/changelogs/scheduled",
 						query: { page: 1, limit: 10 },
 					}}
 					passHref
@@ -149,7 +149,7 @@ const AdminBlogIndex = () => {
 				</Link>
 				<Link
 					href={{
-						pathname: "/noadmin/blogs/trashed",
+						pathname: "/noadmin/changelogs/trashed",
 						query: { page: 1, limit: 10 },
 					}}
 					passHref
@@ -162,26 +162,26 @@ const AdminBlogIndex = () => {
 				<div className="card-header">
 					<Link
 						href={{
-							pathname: "/noadmin/blogs",
+							pathname: "/noadmin/changelogs",
 							query: { page: 1, limit: 10 },
 						}}
 						passHref
 						legacyBehavior
 					>
 						<a className="btn btn-link btn-sm float-start">
-							Blogs - ({totalResults.blogs})
+							Changelogs - ({totalResults.changelogs})
 						</a>
 					</Link>
 					<div className="btn-group float-end">
 						<Link
 							href={{
-								pathname: "/noadmin/blogs/create",
+								pathname: "/noadmin/changelogs/create",
 								query: {},
 							}}
 							passHref
 							legacyBehavior
 						>
-							<a className="btn btn-primary btn-sm">Add new blog</a>
+							<a className="btn btn-primary btn-sm">Add new changelog</a>
 						</Link>
 						<button
 							className="btn btn-danger btn-sm"
@@ -192,15 +192,15 @@ const AdminBlogIndex = () => {
 						</button>
 					</div>
 				</div>
-				{blogs?.length > 0 ? (
+				{changelogs?.length > 0 ? (
 					<ul className="list-group list-group-flush">
-						{blogs?.map((blog) => (
+						{changelogs?.map((changelog) => (
 							<Single
-								key={blog._id}
-								object={blog}
+								key={changelog._id}
+								object={changelog}
 								handleDelete={handleDelete}
-								blogs={blogs}
-								setBlogs={setBlogs}
+								changelogs={changelogs}
+								setChangelogs={setChangelogs}
 								setTotalResults={setTotalResults}
 							/>
 						))}
@@ -215,4 +215,4 @@ const AdminBlogIndex = () => {
 	);
 };
 
-export default AdminBlogIndex;
+export default AdminChangelogsIndex;

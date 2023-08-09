@@ -17,22 +17,21 @@ const MyTextArea = ({
 			<FroalaEditorComponent
 				tag="textarea"
 				config={{
-					// id: `${id} multipurpose-textarea`,
-					// name: name,
 					placeholderText:
 						"Share something new. Now with #hashtags support, YAY!!!",
-					pluginsEnabled: ["image", "link"],
 				}}
-
-				// config={config}
-				// model={model}
-				// onModelChange={handleModelChange}
+				model={value}
+				onModelChange={(newValue) =>
+					setChangelogData({
+						...changelogData,
+						text: newValue,
+					})
+				}
 			/>
 			{/* <textarea
 				name={name}
 				className="form-control"
 				id={`${id} multipurpose-textarea`}
-				// onKeyUp="previewUrls()"
 				placeholder="Share something new. Now with #hashtags support, YAY!!!"
 				value={value}
 				onChange={handleChangeValue}

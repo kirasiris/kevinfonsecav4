@@ -22,7 +22,7 @@ const AdminQuotesIndex = () => {
 		try {
 			const res = await axios.get(`/extras/quotes${params}`);
 			setQuotes(res?.data?.data);
-			setTotalResults({ ...totalResults, blogs: res?.data?.countAll });
+			setTotalResults({ ...totalResults, quotes: res?.data?.countAll });
 		} catch (err) {
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;
@@ -318,7 +318,7 @@ const AdminQuotesIndex = () => {
 							onChange={(e) => {
 								setQuoteData({
 									...quoteData,
-									embedding: e,
+									embedding: e.target.value,
 								});
 							}}
 							className="form-control"
@@ -393,12 +393,10 @@ const AdminQuotesIndex = () => {
 								{quotes?.map((quote) => (
 									<Single
 										key={quote._id}
-										linkTo={`/noadmin/quotes/update/${quote._id}`}
 										object={quote}
 										handleDelete={handleDelete}
 										quotes={quotes}
 										setQuotes={setQuotes}
-										// totalResults={totalResults}
 										setTotalResults={setTotalResults}
 									/>
 								))}

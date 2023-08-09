@@ -4,23 +4,23 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useContext } from "react";
 import { toast } from "react-toastify";
-import Single from "@/components/admin/blogs/single";
+import Single from "@/components/admin/logs/single";
 import AuthContext from "@/helpers/globalContext";
 
-const AdminBlogIndex = () => {
+const AdminLogsIndex = () => {
 	const { totalResults, setTotalResults } = useContext(AuthContext);
 
 	const router = useRouter();
 
-	const [blogs, setBlogs] = useState([]);
+	const [logs, setLogs] = useState([]);
 
-	const [params] = useState(`?page=1&limit=10&sort=-createdAt&postType=blog`);
+	const [params] = useState(`?page=1&limit=10&sort=-createdAt`);
 
-	const fetchBlogs = async () => {
+	const fetchLogs = async () => {
 		try {
-			const res = await axios.get(`/blogs${params}`);
-			setBlogs(res?.data?.data);
-			setTotalResults({ ...totalResults, blogs: res?.data?.countAll });
+			const res = await axios.get(`/logs${params}`);
+			setLogs(res?.data?.data);
+			setTotalResults({ ...totalResults, logs: res?.data?.countAll });
 		} catch (err) {
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;
@@ -45,14 +45,14 @@ const AdminBlogIndex = () => {
 	};
 
 	useEffect(() => {
-		fetchBlogs();
+		fetchLogs();
 	}, [router]);
 
 	const handleDelete = async (id) => {
 		try {
-			await axios.delete(`/blogs/${id}`);
-			toast.success("Blog deleted");
-			fetchBlogs();
+			await axios.delete(`/logs/${id}`);
+			toast.success("Log deleted");
+			fetchLogs();
 		} catch (err) {
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;
@@ -78,9 +78,9 @@ const AdminBlogIndex = () => {
 
 	const handleDeleteAll = async () => {
 		try {
-			await axios.delete(`/blogs/deleteall`);
-			toast.success("Blogs deleted");
-			fetchBlogs();
+			await axios.delete(`/logs/deleteall`);
+			toast.success("Logs deleted");
+			fetchLogs();
 		} catch (err) {
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;
@@ -109,7 +109,7 @@ const AdminBlogIndex = () => {
 			<div className="bg-body-secondary mb-3 p-1">
 				<Link
 					href={{
-						pathname: "/noadmin/blogs",
+						pathname: "/noadmin/logs",
 						query: { page: 1, limit: 10 },
 					}}
 					passHref
@@ -119,7 +119,7 @@ const AdminBlogIndex = () => {
 				</Link>
 				<Link
 					href={{
-						pathname: "/noadmin/blogs/published",
+						pathname: "/noadmin/logs/published",
 						query: { page: 1, limit: 10 },
 					}}
 					passHref
@@ -129,7 +129,7 @@ const AdminBlogIndex = () => {
 				</Link>
 				<Link
 					href={{
-						pathname: "/noadmin/blogs/draft",
+						pathname: "/noadmin/logs/draft",
 						query: { page: 1, limit: 10 },
 					}}
 					passHref
@@ -139,7 +139,7 @@ const AdminBlogIndex = () => {
 				</Link>
 				<Link
 					href={{
-						pathname: "/noadmin/blogs/scheduled",
+						pathname: "/noadmin/logs/scheduled",
 						query: { page: 1, limit: 10 },
 					}}
 					passHref
@@ -149,7 +149,7 @@ const AdminBlogIndex = () => {
 				</Link>
 				<Link
 					href={{
-						pathname: "/noadmin/blogs/trashed",
+						pathname: "/noadmin/logs/trashed",
 						query: { page: 1, limit: 10 },
 					}}
 					passHref
@@ -162,27 +162,17 @@ const AdminBlogIndex = () => {
 				<div className="card-header">
 					<Link
 						href={{
-							pathname: "/noadmin/blogs",
+							pathname: "/noadmin/logs",
 							query: { page: 1, limit: 10 },
 						}}
 						passHref
 						legacyBehavior
 					>
 						<a className="btn btn-link btn-sm float-start">
-							Blogs - ({totalResults.blogs})
+							Logs - ({totalResults.logs})
 						</a>
 					</Link>
 					<div className="btn-group float-end">
-						<Link
-							href={{
-								pathname: "/noadmin/blogs/create",
-								query: {},
-							}}
-							passHref
-							legacyBehavior
-						>
-							<a className="btn btn-primary btn-sm">Add new blog</a>
-						</Link>
 						<button
 							className="btn btn-danger btn-sm"
 							type="button"
@@ -192,15 +182,15 @@ const AdminBlogIndex = () => {
 						</button>
 					</div>
 				</div>
-				{blogs?.length > 0 ? (
+				{logs?.length > 0 ? (
 					<ul className="list-group list-group-flush">
-						{blogs?.map((blog) => (
+						{logs?.map((log) => (
 							<Single
-								key={blog._id}
-								object={blog}
+								key={log._id}
+								object={log}
 								handleDelete={handleDelete}
-								blogs={blogs}
-								setBlogs={setBlogs}
+								logs={logs}
+								setLogs={setLogs}
 								setTotalResults={setTotalResults}
 							/>
 						))}
@@ -215,4 +205,4 @@ const AdminBlogIndex = () => {
 	);
 };
 
-export default AdminBlogIndex;
+export default AdminLogsIndex;

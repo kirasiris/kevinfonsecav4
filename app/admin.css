@@ -68,3 +68,32 @@
 .ellipsis-menu {
 	display: flex;
 }
+
+.blog-item__meta-time-status {
+	display: inline-block;
+	margin-right: 16px;
+}
+
+.blog-relative-time-status {
+	display: inline-block;
+}
+
+a.blog-relative-time-status__link {
+	color: #646970;
+}
+
+.blog-relative-time-status__time {
+	align-items: center;
+	display: inline-flex;
+	margin-right: 0.9166666667em;
+}
+
+.blog-item__meta ul {
+	vertical-align: middle;
+}
+
+.blog-action-counts {
+	display: inline-block;
+	list-style: none;
+	margin: 0;
+}

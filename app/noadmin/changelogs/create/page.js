@@ -5,7 +5,7 @@ import AdminSidebar from "@/layout/admin/adminsidebar";
 import MyTextArea from "@/layout/mytextarea";
 import axios from "axios";
 
-const CreateBlog = () => {
+const CreateChangelog = () => {
 	// const {files} = useContext(GlobalContext)
 	const router = useRouter();
 
@@ -43,42 +43,26 @@ const CreateBlog = () => {
 	};
 
 	useEffect(() => {
-		fetchCategories(`?categoryType=blog`);
+		fetchCategories(`?categoryType=theme`);
 	}, []);
 
-	const [blogData, setBlogData] = useState({
-		title: `Untitled`,
-		// avatar: files?.selected?._id,
-		text: `No description`,
-		featured: false,
-		embedding: false,
-		category: undefined,
-		commented: false,
-		password: ``,
+	const [changelogData, setChangelogData] = useState({
+		title: ``,
+		text: ``,
 		status: `draft`,
-		fullWidth: false,
+		postType: `enhancement`,
+		version: `1.0.0`,
 	});
 
-	const {
-		title,
-		avatar,
-		text,
-		featured,
-		embedding,
-		category,
-		commented,
-		password,
-		status,
-		fullWidth,
-	} = blogData;
+	const { title, text, status, postType, version } = changelogData;
 
-	const addBlog = async (e) => {
+	const addChangelog = async (e) => {
 		e.preventDefault();
 		try {
-			await axios.post(`/blogs`, { ...blogData, postType: "blog" });
+			await axios.post(`/changelogs`, changelogData);
 			toast.success(`Item created`);
 			resetForm();
-			router.push(`/admin/blogs`);
+			router.push(`/admin/changelogs`);
 		} catch (err) {
 			console.log(err);
 			// const error = err.response.data.message;
@@ -101,23 +85,24 @@ const CreateBlog = () => {
 	};
 
 	const resetForm = () => {
-		setBlogData({
-			title: `Untitled`,
-			// avatar: files?.selected?._id,
-			text: `No description`,
-			featured: false,
-			embedding: false,
-			category: undefined,
-			commented: false,
-			password: ``,
-			tags: [],
+		setChangelogData({
+			title: ``,
+			text: ``,
 			status: `draft`,
-			fullWidth: false,
+			postType: `enhancement`,
+			version: `1.0.0`,
+		});
+	};
+
+	const handleTextAreaChangeValue = (newValue) => {
+		setChangelogData({
+			...changelogData,
+			text: newValue,
 		});
 	};
 
 	return (
-		<form className="row" onSubmit={addBlog}>
+		<form className="row" onSubmit={addChangelog}>
 			<div className="col">
 				<label htmlFor="blog-title" className="form-label">
 					Title
@@ -127,8 +112,8 @@ const CreateBlog = () => {
 					name="title"
 					value={title}
 					onChange={(e) => {
-						setBlogData({
-							...blogData,
+						setChangelogData({
+							...changelogData,
 							title: e.target.value,
 						});
 					}}
@@ -143,31 +128,73 @@ const CreateBlog = () => {
 					id="blog-text"
 					name="text"
 					value={text}
-					handleChangeValue={(e) =>
-						setBlogData({
-							...blogData,
-							text: e.target.value,
-						})
-					}
+					handleChangeValue={handleTextAreaChangeValue}
 				/>
-			</div>
-			<div className="col-lg-3">
-				<AdminSidebar
-					avatar={avatar}
-					status={status}
-					fullWidth={fullWidth}
-					password={password}
-					featured={featured}
-					commented={commented}
-					embedding={embedding}
-					github={false}
-					category={category}
-					categories={categories}
-					objectData={blogData}
-					setObjectData={setBlogData}
-					multipleFiles={false}
-					onModel={"Blog"}
+				<label htmlFor="version" className="form-label">
+					Version
+				</label>
+				<input
+					id="version"
+					name="version"
+					value={version}
+					onChange={(e) => {
+						setChangelogData({
+							...changelogData,
+							version: e.target.value,
+						});
+					}}
+					type="text"
+					className="form-control mb-3"
+					placeholder=""
 				/>
+				<label htmlFor="postType" className="form-label">
+					Post type
+				</label>
+				<select
+					id="postType"
+					name="postType"
+					value={postType}
+					onChange={(e) => {
+						const selectedOptions = Array.from(e.target.selectedOptions).map(
+							(option) => option.value
+						);
+						setChangelogData({
+							...changelogData,
+							postType: selectedOptions,
+						});
+					}}
+					className="form-control"
+					multiple
+				>
+					<option value={`bug`}>Bug</option>
+					<option value={`dependencies`}>Dependencies</option>
+					<option value={`duplicate`}>Duplicate</option>
+					<option value={`enhancement`}>Enhancement</option>
+					<option value={`help`}>Help</option>
+					<option value={`invalid`}>Invalid</option>
+					<option value={`question`}>Question</option>
+					<option value={`wontfix`}>Wontfix</option>
+				</select>
+				<label htmlFor="status" className="form-label">
+					Status
+				</label>
+				<select
+					id="status"
+					name="status"
+					value={status}
+					onChange={(e) => {
+						setChangelogData({
+							...changelogData,
+							status: e.target.value,
+						});
+					}}
+					className="form-control"
+				>
+					<option value={`draft`}>Draft</option>
+					<option value={`published`}>Published</option>
+					<option value={`trash`}>Trash</option>
+					<option value={`scheduled`}>Scheduled</option>
+				</select>
 				<br />
 				<button
 					type="submit"
@@ -188,4 +215,4 @@ const CreateBlog = () => {
 	);
 };
 
-export default CreateBlog;
+export default CreateChangelog;

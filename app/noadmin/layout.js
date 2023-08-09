@@ -10,7 +10,7 @@ export default function AdminLayout({ children }) {
 	return (
 		<AuthProvider>
 			<AuthenticatedRoute>
-				<div className="container-fluid">
+				<div className="container-fluid my-4">
 					<div className="row">
 						<AdminMenu />
 						<div className="col-lg-11">{children}</div>

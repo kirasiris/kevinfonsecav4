@@ -1,11 +1,12 @@
 "use client";
 import axios from "axios";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useContext } from "react";
 import { toast } from "react-toastify";
 import Single from "@/components/admin/blogs/single";
 import AuthContext from "@/helpers/globalContext";
+import AdminStatusesMenu from "@/layout/admin/adminstatusesmenu";
+import AdminCardHeaderMenu from "@/layout/admin/admincardheadermenu";
 
 const AdminBlogIndex = () => {
 	const { totalResults, setTotalResults } = useContext(AuthContext);
@@ -106,92 +107,22 @@ const AdminBlogIndex = () => {
 
 	return (
 		<>
-			<div className="bg-body-secondary mb-3 p-1">
-				<Link
-					href={{
-						pathname: "/noadmin/blogs",
-						query: { page: 1, limit: 10 },
-					}}
-					passHref
-					legacyBehavior
-				>
-					<a className="btn btn-link btn-sm">All</a>
-				</Link>
-				<Link
-					href={{
-						pathname: "/noadmin/blogs/published",
-						query: { page: 1, limit: 10 },
-					}}
-					passHref
-					legacyBehavior
-				>
-					<a className="btn btn-link btn-sm">Published</a>
-				</Link>
-				<Link
-					href={{
-						pathname: "/noadmin/blogs/draft",
-						query: { page: 1, limit: 10 },
-					}}
-					passHref
-					legacyBehavior
-				>
-					<a className="btn btn-link btn-sm">Draft</a>
-				</Link>
-				<Link
-					href={{
-						pathname: "/noadmin/blogs/scheduled",
-						query: { page: 1, limit: 10 },
-					}}
-					passHref
-					legacyBehavior
-				>
-					<a className="btn btn-link btn-sm">Scheduled</a>
-				</Link>
-				<Link
-					href={{
-						pathname: "/noadmin/blogs/trashed",
-						query: { page: 1, limit: 10 },
-					}}
-					passHref
-					legacyBehavior
-				>
-					<a className="btn btn-link btn-sm">Trashed</a>
-				</Link>
-			</div>
+			<AdminStatusesMenu
+				allLink="/noadmin/blogs"
+				publishedLink="/noadmin/blogs/published"
+				draftLink="/noadmin/blogs/draft"
+				scheduledLink="/noadmin/blogs/scheduled"
+				trashedLink="/noadmin/blogs/trashed"
+			/>
 			<div className="card rounded-0">
-				<div className="card-header">
-					<Link
-						href={{
-							pathname: "/noadmin/blogs",
-							query: { page: 1, limit: 10 },
-						}}
-						passHref
-						legacyBehavior
-					>
-						<a className="btn btn-link btn-sm float-start">
-							Blogs - ({totalResults.blogs})
-						</a>
-					</Link>
-					<div className="btn-group float-end">
-						<Link
-							href={{
-								pathname: "/noadmin/blogs/create",
-								query: {},
-							}}
-							passHref
-							legacyBehavior
-						>
-							<a className="btn btn-primary btn-sm">Add new blog</a>
-						</Link>
-						<button
-							className="btn btn-danger btn-sm"
-							type="button"
-							onClick={handleDeleteAll}
-						>
-							Delete all
-						</button>
-					</div>
-				</div>
+				<AdminCardHeaderMenu
+					allLink={`/noadmin/blogs`}
+					pageText="Blogs"
+					totalResults={totalResults.blogs}
+					addLink={`/noadmin/blogs/create`}
+					addLinkText={`blog`}
+					handleDeleteAllFunction={handleDeleteAll}
+				/>
 				{blogs?.length > 0 ? (
 					<ul className="list-group list-group-flush">
 						{blogs?.map((blog) => (

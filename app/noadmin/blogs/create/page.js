@@ -1,9 +1,9 @@
 "use client";
+import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import AdminSidebar from "@/layout/admin/adminsidebar";
 import MyTextArea from "@/layout/mytextarea";
-import axios from "axios";
 
 const CreateBlog = () => {
 	// const {files} = useContext(GlobalContext)

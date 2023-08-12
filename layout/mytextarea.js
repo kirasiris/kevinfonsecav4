@@ -3,41 +3,132 @@
 import "froala-editor/css/froala_style.min.css";
 import "froala-editor/css/froala_editor.pkgd.min.css";
 import FroalaEditorComponent from "react-froala-wysiwyg";
+import { useState } from "react";
 
 const MyTextArea = ({
-	name = "",
 	id = "",
-	objectData,
-	setObjectData,
+	name = "",
 	value = "",
-	handleChangeValue,
+	objectData,
+	setObjectData = () => {},
 }) => {
+	const [model, setModel] = useState(value);
+
+	const handleModelChange = (event) => {
+		setModel(event);
+	};
+
+	setObjectData({
+		...objectData,
+		text: model,
+	});
+
+	console.log(objectData);
+
 	return (
 		<>
 			<FroalaEditorComponent
 				tag="textarea"
+				model={model}
+				onModelChange={handleModelChange}
 				config={{
+					// documentReady: true,
 					placeholderText:
 						"Share something new. Now with #hashtags support, YAY!!!",
+					toolbarButtons: {
+						moreText: {
+							buttons: [
+								"bold",
+								"italic",
+								"underline",
+								"strikeThrough",
+								"subscript",
+								"superscript",
+								"fontFamily",
+								"fontSize",
+								"textColor",
+								"backgroundColor",
+								"inlineClass",
+								"inlineStyle",
+								"clearFormatting",
+							],
+						},
+						moreParagraph: {
+							buttons: [
+								"alignLeft",
+								"alignCenter",
+								"formatOLSimple",
+								"alignRight",
+								"alignJustify",
+								"formatOL",
+								"formatUL",
+								"paragraphFormat",
+								"paragraphStyle",
+								"lineHeight",
+								"outdent",
+								"indent",
+								"quote",
+							],
+						},
+						moreRich: {
+							buttons: [
+								"insertLink",
+								"insertImage",
+								"insertVideo",
+								"insertTable",
+								"emoticons",
+								"fontAwesome",
+								"specialCharacters",
+								"embedly",
+								"insertFile",
+								"insertHR",
+							],
+						},
+						moreMisc: {
+							buttons: [
+								"undo",
+								"redo",
+								"fullscreen",
+								"print",
+								"getPDF",
+								"spellChecker",
+								"selectAll",
+								"html",
+								"help",
+							],
+							align: "right",
+							buttonsVisible: 2,
+						},
+					},
+					pluginsEnabled: [
+						"table",
+						"spell",
+						"quote",
+						"save",
+						"quickInsert",
+						"paragraphFormat",
+						"paragraphStyle",
+						"help",
+						"draggable",
+						"align",
+						"link",
+						"lists",
+						"file",
+						"image",
+						"emoticons",
+						"url",
+						"video",
+						"embedly",
+						"colors",
+						"entities",
+						"inlineClass",
+						"inlineStyle",
+						// 'codeBeautif '
+						// 'spellChecker',
+						"imageTUI",
+					],
 				}}
-				model={value}
-				onModelChange={(newValue) =>
-					setChangelogData({
-						...changelogData,
-						text: newValue,
-					})
-				}
 			/>
-			{/* <textarea
-				name={name}
-				className="form-control"
-				id={`${id} multipurpose-textarea`}
-				placeholder="Share something new. Now with #hashtags support, YAY!!!"
-				value={value}
-				onChange={handleChangeValue}
-				rows="3"
-			/> */}
-			{/* <div id="preview-urls" className="text-center d-none"></div> */}
 		</>
 	);
 };

@@ -1,11 +1,12 @@
 "use client";
 import axios from "axios";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useContext } from "react";
 import { toast } from "react-toastify";
 import Single from "@/components/admin/changelogs/single";
 import AuthContext from "@/helpers/globalContext";
+import AdminStatusesMenu from "@/layout/admin/adminstatusesmenu";
+import AdminCardHeaderMenu from "@/layout/admin/admincardheadermenu";
 
 const AdminChangelogsIndex = () => {
 	const { totalResults, setTotalResults } = useContext(AuthContext);
@@ -106,92 +107,22 @@ const AdminChangelogsIndex = () => {
 
 	return (
 		<>
-			<div className="bg-body-secondary mb-3 p-1">
-				<Link
-					href={{
-						pathname: "/noadmin/changelogs",
-						query: { page: 1, limit: 10 },
-					}}
-					passHref
-					legacyBehavior
-				>
-					<a className="btn btn-link btn-sm">All</a>
-				</Link>
-				<Link
-					href={{
-						pathname: "/noadmin/changelogs/published",
-						query: { page: 1, limit: 10 },
-					}}
-					passHref
-					legacyBehavior
-				>
-					<a className="btn btn-link btn-sm">Published</a>
-				</Link>
-				<Link
-					href={{
-						pathname: "/noadmin/changelogs/draft",
-						query: { page: 1, limit: 10 },
-					}}
-					passHref
-					legacyBehavior
-				>
-					<a className="btn btn-link btn-sm">Draft</a>
-				</Link>
-				<Link
-					href={{
-						pathname: "/noadmin/changelogs/scheduled",
-						query: { page: 1, limit: 10 },
-					}}
-					passHref
-					legacyBehavior
-				>
-					<a className="btn btn-link btn-sm">Scheduled</a>
-				</Link>
-				<Link
-					href={{
-						pathname: "/noadmin/changelogs/trashed",
-						query: { page: 1, limit: 10 },
-					}}
-					passHref
-					legacyBehavior
-				>
-					<a className="btn btn-link btn-sm">Trashed</a>
-				</Link>
-			</div>
+			<AdminStatusesMenu
+				allLink="/noadmin/changelogs"
+				publishedLink="/noadmin/changelogs/published"
+				draftLink="/noadmin/changelogs/draft"
+				scheduledLink="/noadmin/changelogs/scheduled"
+				trashedLink="/noadmin/changelogs/trashed"
+			/>
 			<div className="card rounded-0">
-				<div className="card-header">
-					<Link
-						href={{
-							pathname: "/noadmin/changelogs",
-							query: { page: 1, limit: 10 },
-						}}
-						passHref
-						legacyBehavior
-					>
-						<a className="btn btn-link btn-sm float-start">
-							Changelogs - ({totalResults.changelogs})
-						</a>
-					</Link>
-					<div className="btn-group float-end">
-						<Link
-							href={{
-								pathname: "/noadmin/changelogs/create",
-								query: {},
-							}}
-							passHref
-							legacyBehavior
-						>
-							<a className="btn btn-primary btn-sm">Add new changelog</a>
-						</Link>
-						<button
-							className="btn btn-danger btn-sm"
-							type="button"
-							onClick={handleDeleteAll}
-						>
-							Delete all
-						</button>
-					</div>
-				</div>
+				<AdminCardHeaderMenu
+					allLink={`/noadmin/changelogs`}
+					pageText="Changelogs"
+					totalResults={totalResults.changelogs}
+					addLink={`/noadmin/changelogs/create`}
+					addLinkText={`changelog`}
+					handleDeleteAllFunction={handleDeleteAll}
+				/>
 				{changelogs?.length > 0 ? (
 					<ul className="list-group list-group-flush">
 						{changelogs?.map((changelog) => (

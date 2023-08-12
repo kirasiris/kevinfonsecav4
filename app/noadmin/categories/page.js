@@ -1,6 +1,5 @@
 "use client";
 import axios from "axios";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
@@ -8,6 +7,8 @@ import Single from "@/components/admin/categories/single";
 import MyTextArea from "@/layout/mytextarea";
 import { useContext } from "react";
 import AuthContext from "@/helpers/globalContext";
+import AdminStatusesMenu from "@/layout/admin/adminstatusesmenu";
+import AdminCardHeaderMenu from "@/layout/admin/admincardheadermenu";
 
 const AdminCategoriesIndex = () => {
 	const { totalResults, setTotalResults } = useContext(AuthContext);
@@ -154,58 +155,13 @@ const AdminCategoriesIndex = () => {
 
 	return (
 		<>
-			<div className="bg-body-secondary mb-3 p-1">
-				<Link
-					href={{
-						pathname: "/noadmin/categories",
-						query: { page: 1, limit: 10 },
-					}}
-					passHref
-					legacyBehavior
-				>
-					<a className="btn btn-link btn-sm">All</a>
-				</Link>
-				<Link
-					href={{
-						pathname: "/noadmin/categories/published",
-						query: { page: 1, limit: 10 },
-					}}
-					passHref
-					legacyBehavior
-				>
-					<a className="btn btn-link btn-sm">Published</a>
-				</Link>
-				<Link
-					href={{
-						pathname: "/noadmin/categories/draft",
-						query: { page: 1, limit: 10 },
-					}}
-					passHref
-					legacyBehavior
-				>
-					<a className="btn btn-link btn-sm">Draft</a>
-				</Link>
-				<Link
-					href={{
-						pathname: "/noadmin/categories/scheduled",
-						query: { page: 1, limit: 10 },
-					}}
-					passHref
-					legacyBehavior
-				>
-					<a className="btn btn-link btn-sm">Scheduled</a>
-				</Link>
-				<Link
-					href={{
-						pathname: "/noadmin/categories/trashed",
-						query: { page: 1, limit: 10 },
-					}}
-					passHref
-					legacyBehavior
-				>
-					<a className="btn btn-link btn-sm">Trashed</a>
-				</Link>
-			</div>
+			<AdminStatusesMenu
+				allLink="/noadmin/categories"
+				publishedLink="/noadmin/categories/published"
+				draftLink="/noadmin/categories/draft"
+				scheduledLink="/noadmin/categories/scheduled"
+				trashedLink="/noadmin/categories/trashed"
+			/>
 			<div className="row">
 				<div className="col">
 					<form onSubmit={createCategory}>
@@ -300,29 +256,14 @@ const AdminCategoriesIndex = () => {
 				</div>
 				<div className="col-lg-10">
 					<div className="card rounded-0">
-						<div className="card-header">
-							<Link
-								href={{
-									pathname: "/noadmin/categories",
-									query: { page: 1, limit: 10 },
-								}}
-								passHref
-								legacyBehavior
-							>
-								<a className="btn btn-link btn-sm float-start">
-									Categories - ({totalResults.categories})
-								</a>
-							</Link>
-							<div className="btn-group float-end">
-								<button
-									className="btn btn-danger btn-sm"
-									type="button"
-									onClick={handleDeleteAll}
-								>
-									Delete all
-								</button>
-							</div>
-						</div>
+						<AdminCardHeaderMenu
+							allLink={`/noadmin/categories`}
+							pageText="Categoriess"
+							totalResults={totalResults.categories}
+							addLink={`/noadmin/categories/create`}
+							addLinkText={`categories`}
+							handleDeleteAllFunction={handleDeleteAll}
+						/>
 						{categories?.length > 0 ? (
 							<ul className="list-group list-group-flush">
 								{categories?.map((category) => (

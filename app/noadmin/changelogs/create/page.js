@@ -1,7 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import AdminSidebar from "@/layout/admin/adminsidebar";
 import MyTextArea from "@/layout/mytextarea";
 import axios from "axios";
 
@@ -94,13 +93,6 @@ const CreateChangelog = () => {
 		});
 	};
 
-	const handleTextAreaChangeValue = (newValue) => {
-		setChangelogData({
-			...changelogData,
-			text: newValue,
-		});
-	};
-
 	return (
 		<form className="row" onSubmit={addChangelog}>
 			<div className="col">
@@ -128,7 +120,8 @@ const CreateChangelog = () => {
 					id="blog-text"
 					name="text"
 					value={text}
-					handleChangeValue={handleTextAreaChangeValue}
+					objectData={changelogData}
+					setObjectData={setChangelogData}
 				/>
 				<label htmlFor="version" className="form-label">
 					Version

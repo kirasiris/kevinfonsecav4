@@ -8,6 +8,8 @@ import Single from "@/components/admin/quotes/single";
 import MyTextArea from "@/layout/mytextarea";
 import { useContext } from "react";
 import AuthContext from "@/helpers/globalContext";
+import AdminStatusesMenu from "@/layout/admin/adminstatusesmenu";
+import AdminCardHeaderMenu from "@/layout/admin/admincardheadermenu";
 
 const AdminQuotesIndex = () => {
 	const { totalResults, setTotalResults } = useContext(AuthContext);
@@ -168,58 +170,13 @@ const AdminQuotesIndex = () => {
 
 	return (
 		<>
-			<div className="bg-body-secondary mb-3 p-1">
-				<Link
-					href={{
-						pathname: "/noadmin/quotes",
-						query: { page: 1, limit: 10 },
-					}}
-					passHref
-					legacyBehavior
-				>
-					<a className="btn btn-link btn-sm">All</a>
-				</Link>
-				<Link
-					href={{
-						pathname: "/noadmin/quotes/published",
-						query: { page: 1, limit: 10 },
-					}}
-					passHref
-					legacyBehavior
-				>
-					<a className="btn btn-link btn-sm">Published</a>
-				</Link>
-				<Link
-					href={{
-						pathname: "/noadmin/quotes/draft",
-						query: { page: 1, limit: 10 },
-					}}
-					passHref
-					legacyBehavior
-				>
-					<a className="btn btn-link btn-sm">Draft</a>
-				</Link>
-				<Link
-					href={{
-						pathname: "/noadmin/quotes/scheduled",
-						query: { page: 1, limit: 10 },
-					}}
-					passHref
-					legacyBehavior
-				>
-					<a className="btn btn-link btn-sm">Scheduled</a>
-				</Link>
-				<Link
-					href={{
-						pathname: "/noadmin/quotes/trashed",
-						query: { page: 1, limit: 10 },
-					}}
-					passHref
-					legacyBehavior
-				>
-					<a className="btn btn-link btn-sm">Trashed</a>
-				</Link>
-			</div>
+			<AdminStatusesMenu
+				allLink="/noadmin/quotes"
+				publishedLink="/noadmin/quotes/published"
+				draftLink="/noadmin/quotes/draft"
+				scheduledLink="/noadmin/quotes/scheduled"
+				trashedLink="/noadmin/quotes/trashed"
+			/>
 			<div className="row">
 				<div className="col">
 					<form onSubmit={createQuote}>
@@ -365,29 +322,14 @@ const AdminQuotesIndex = () => {
 				</div>
 				<div className="col-lg-10">
 					<div className="card rounded-0">
-						<div className="card-header">
-							<Link
-								href={{
-									pathname: "/noadmin/quotes",
-									query: { page: 1, limit: 10 },
-								}}
-								passHref
-								legacyBehavior
-							>
-								<a className="btn btn-link btn-sm float-start">
-									Quotes - ({totalResults.quotes})
-								</a>
-							</Link>
-							<div className="btn-group float-end">
-								<button
-									className="btn btn-danger btn-sm"
-									type="button"
-									onClick={handleDeleteAll}
-								>
-									Delete all
-								</button>
-							</div>
-						</div>
+						<AdminCardHeaderMenu
+							allLink={`/noadmin/quotes`}
+							pageText="Quotes"
+							totalResults={totalResults.quotes}
+							addLink={`/noadmin/quotes/create`}
+							addLinkText={`quote`}
+							handleDeleteAllFunction={handleDeleteAll}
+						/>
 						{quotes?.length > 0 ? (
 							<ul className="list-group list-group-flush">
 								{quotes?.map((quote) => (

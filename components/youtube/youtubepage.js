@@ -6,7 +6,7 @@ import Modal from "react-bootstrap/Modal";
 import RelatedCarousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 
-const YouTubePage = ({ searchParams }) => {
+const YouTubePage = ({ searchParams, pushTo = true }) => {
 	const [video, setVideo] = useState({});
 	const [videos, setVideos] = useState([]);
 
@@ -118,7 +118,9 @@ const YouTubePage = ({ searchParams }) => {
 		);
 		const data = await res.json();
 		setVideo(data.data);
-		router.push(`/youtube?_id=${id}&videoId=${videoId}`);
+		if (pushTo) {
+			router.push(`/youtube?_id=${id}&videoId=${videoId}`);
+		}
 	};
 
 	const [activeTab, setActiveTab] = useState({

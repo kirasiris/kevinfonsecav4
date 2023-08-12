@@ -16,7 +16,7 @@ const LiveCodeIndex = async ({ searchParams }) => {
 					marginBottom: "0px !important",
 				}}
 			/>
-			<YouTubePage searchParams={searchParams} />
+			<YouTubePage searchParams={searchParams} pushTo={true} />
 		</>
 	);
 };

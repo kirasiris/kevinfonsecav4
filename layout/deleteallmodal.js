@@ -1,19 +1,9 @@
 "use client";
 import { useState } from "react";
-import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 
-const DeleteAllModal = ({
-	id = null,
-	sId = null,
-	size = `sm`,
-	action,
-	setObjects,
-	objects = [],
-	setTotalResults,
-}) => {
+const DeleteAllModal = ({ action }) => {
 	const [confirmDeleteAllModal, setConfirmDeleteAllModal] = useState(false);
-	const [, setError] = useState(false);
 
 	const openDeleteModal = (e) => {
 		setConfirmDeleteAllModal(true);
@@ -25,32 +15,25 @@ const DeleteAllModal = ({
 
 	const deleteObject = async (e) => {
 		e.preventDefault();
-		await action(id, sId)
+		await action()
 			.then(() => {
-				console.log("All from this collection has been deleted");
+				closeDeleteModal();
 			})
 			.catch((err) => {
-				setError(true);
+				console.error(err);
 			});
-		if (sId) {
-			setObjects(objects.filter((object) => object._id !== sId));
-		} else {
-			setObjects(objects.filter((object) => object._id !== id));
-		}
-		setTotalResults(objects.length - 1);
 	};
 
 	return (
 		<>
-			<Button
-				variant={`danger`}
-				size={size}
+			<button
+				className="btn btn-danger btn-sm"
+				type="button"
 				onClick={openDeleteModal}
-				data-target={`deleteModal#${id}`}
 			>
 				{/* <i className={`fas fa-trash-alt mr-1`} aria-hidden /> */}
-				Delete
-			</Button>
+				Delete all
+			</button>
 			{confirmDeleteAllModal && (
 				<Modal
 					show={true}
@@ -58,30 +41,27 @@ const DeleteAllModal = ({
 					backdrop={true}
 					animation={true}
 					size={`sm`}
-					id={`deleteModal#${id}`}
 				>
 					<Modal.Header closeButton>
 						<Modal.Title>Are you sure about this?</Modal.Title>
 					</Modal.Header>
 					<Modal.Body>
-						You are about to delete everything from this collection
+						You are about to delete everything from this collection!
 					</Modal.Body>
 					<Modal.Footer>
-						<Button
-							variant={`secondary`}
-							size={`sm`}
+						<button
+							className="btn btn-secondary btn-sm"
 							onClick={closeDeleteModal}
 						>
 							Close
-						</Button>
-						<Button
-							type={`submit`}
-							size={`sm`}
+						</button>
+						<button
+							className="btn btn-primary btn-sm"
+							type="submit"
 							onClick={deleteObject}
-							variant={`primary`}
 						>
 							Submit
-						</Button>
+						</button>
 					</Modal.Footer>
 				</Modal>
 			)}

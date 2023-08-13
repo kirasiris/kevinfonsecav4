@@ -18,7 +18,7 @@ const AdminCategoriesIndex = () => {
 	const [categories, setCategories] = useState([]);
 	const [isTopLevel, setTopLevel] = useState(true);
 
-	const [params] = useState(`?page=1&sort=-createdAt`);
+	const [params] = useState(`?page=1&limit=10&sort=-createdAt`);
 
 	const fetchCategories = async () => {
 		try {

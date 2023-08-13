@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import DeleteAllModal from "../deleteallmodal";
 
 const AdminCardHeaderMenu = ({
 	allLink = "",
@@ -34,13 +35,7 @@ const AdminCardHeaderMenu = ({
 				>
 					<a className="btn btn-primary btn-sm">Add new {addLinkText}</a>
 				</Link>
-				<button
-					className="btn btn-danger btn-sm"
-					type="button"
-					onClick={handleDeleteAllFunction}
-				>
-					Delete all
-				</button>
+				<DeleteAllModal action={handleDeleteAllFunction} />
 			</div>
 		</div>
 	);

@@ -50,7 +50,7 @@ const Single = ({
 											className="blog-relative-time-status__time-text"
 											datetime="2023-07-29T21:55:36-04:00"
 										>
-											Jul 29, at 8:55 PM
+											{object.createdAt}
 										</time>
 									</span>
 								</a>

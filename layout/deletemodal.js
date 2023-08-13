@@ -79,21 +79,19 @@ const DeleteModal = ({
 					</Modal.Header>
 					<Modal.Body>{id}</Modal.Body>
 					<Modal.Footer>
-						<Button
-							variant={`secondary`}
-							size={`sm`}
+						<button
+							className="btn btn-secondary btn-sm"
 							onClick={closeDeleteModal}
 						>
 							Close
-						</Button>
-						<Button
-							type={`submit`}
-							size={`sm`}
+						</button>
+						<button
+							className="btn btn-primary btn-sm"
+							type="submit"
 							onClick={deleteObject}
-							variant={`primary`}
 						>
 							Submit
-						</Button>
+						</button>
 					</Modal.Footer>
 				</Modal>
 			)}

@@ -7,6 +7,7 @@ import Loading from "@/app/blog/loading";
 import ExportModal from "@/layout/exportmodal";
 import AuthorBox from "@/layout/authorbox";
 import CommentBox from "@/components/global/commentbox";
+import ParseHtml from "@/layout/parseHtml";
 
 async function getBlog(params) {
 	const res = await fetch(`http://localhost:5000/api/v1/blogs${params}`, {
@@ -86,7 +87,7 @@ const BlogRead = async ({ params }) => {
 								/>
 							</figure>
 							<section className="mb-5">
-								{blog.data.text}
+								<ParseHtml text={blog.data.text} />
 								<hr />
 								{blog.data.category && (
 									<ExportModal

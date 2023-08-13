@@ -8,43 +8,6 @@ const CreateChangelog = () => {
 	// const {files} = useContext(GlobalContext)
 	const router = useRouter();
 
-	const [categories, setCategories] = useState([]);
-
-	const fetchCategories = async (params = "") => {
-		try {
-			// const res = await axios.get(`/categories${params}`);
-			const res = await fetch(
-				`http://localhost:5000/api/v1/categories${params}`
-			);
-			const render = await res.json();
-			setCategories(render?.data);
-		} catch (err) {
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
-
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return {
-				msg: err?.response?.statusText,
-				status: err?.response?.status,
-			};
-		}
-	};
-
-	useEffect(() => {
-		fetchCategories(`?categoryType=theme`);
-	}, []);
-
 	const [changelogData, setChangelogData] = useState({
 		title: ``,
 		text: ``,

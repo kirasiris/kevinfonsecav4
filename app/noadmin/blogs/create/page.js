@@ -143,12 +143,8 @@ const CreateBlog = () => {
 					id="blog-text"
 					name="text"
 					value={text}
-					handleChangeValue={(e) =>
-						setBlogData({
-							...blogData,
-							text: e.target.value,
-						})
-					}
+					objectData={blogData}
+					setObjectData={setBlogData}
 				/>
 			</div>
 			<div className="col-lg-3">

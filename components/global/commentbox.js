@@ -1,7 +1,6 @@
 "use client";
+import axios from "axios";
 import React, { useEffect, useState } from "react";
-import Tabs from "react-bootstrap/Tabs";
-import Tab from "react-bootstrap/Tab";
 import Single from "../comment/single";
 import MyTextArea from "@/layout/mytextarea";
 
@@ -31,9 +30,10 @@ const CommentBox = ({
 
 	useEffect(() => {
 		const getComments = async () => {
-			const res = await fetch(`http://localhost:5000/api/v1/comments${params}`);
-			const comments = await res.json();
-			setComments(comments.data);
+			const res = await axios.get(
+				`http://localhost:5000/api/v1/comments${params}`
+			);
+			setComments(res?.data?.data);
 		};
 		getComments();
 	}, [postId]);
@@ -44,20 +44,39 @@ const CommentBox = ({
 		text: "",
 		parentId: parentId,
 		secondResourceId: secondPostId,
+		postType: postType,
+		onModel: onModel,
 	});
 
 	const { title, text } = commentData;
 
 	const newComment = async (e) => {
 		e.preventDefault();
+		try {
+			const res = await axios.post(
+				`http://localhost:5000/api/v1/comments/${postId}`,
+				commentData
+			);
+			setComments([res?.data?.data, ...comments]);
+			resetForm();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
 
-		const res = await fetch(`http://localhost:5000/api/v1/comments`, {
-			method: "POST",
-			body: commentData,
-		});
-		const comments = await res.json();
-		console.log(comments.data);
-		setComments([comments.data, ...comments]);
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return { msg: err?.response?.statusText, status: err?.response?.status };
+		}
 	};
 
 	const resetForm = () => {
@@ -98,12 +117,8 @@ const CommentBox = ({
 									name="text"
 									id="text"
 									value={text}
-									handleChangeValue={(e) => {
-										setCommentData({
-											...commentData,
-											text: e.target.value,
-										});
-									}}
+									objectData={commentData}
+									setObjectData={setCommentData}
 								/>
 							</div>
 						</div>

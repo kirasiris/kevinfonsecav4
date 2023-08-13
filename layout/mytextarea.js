@@ -3,7 +3,6 @@
 import "froala-editor/css/froala_style.min.css";
 import "froala-editor/css/froala_editor.pkgd.min.css";
 import FroalaEditorComponent from "react-froala-wysiwyg";
-import { useState } from "react";
 
 const MyTextArea = ({
 	id = "",
@@ -12,25 +11,17 @@ const MyTextArea = ({
 	objectData,
 	setObjectData = () => {},
 }) => {
-	const [model, setModel] = useState(value);
-
-	const handleModelChange = (event) => {
-		setModel(event);
-	};
-
-	setObjectData({
-		...objectData,
-		text: model,
-	});
-
-	console.log(objectData);
-
 	return (
 		<>
 			<FroalaEditorComponent
 				tag="textarea"
-				model={model}
-				onModelChange={handleModelChange}
+				model={value}
+				onModelChange={(e) => {
+					setObjectData({
+						...objectData,
+						text: e,
+					});
+				}}
 				config={{
 					// documentReady: true,
 					placeholderText:

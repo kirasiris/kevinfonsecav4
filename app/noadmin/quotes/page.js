@@ -18,7 +18,7 @@ const AdminQuotesIndex = () => {
 
 	const [quotes, setQuotes] = useState([]);
 
-	const [params] = useState(`?page=1&sort=-createdAt`);
+	const [params] = useState(`?page=1&limit=10&sort=-createdAt`);
 
 	const fetchQuotes = async () => {
 		try {

@@ -144,6 +144,8 @@ export const AuthProvider = ({ children }) => {
 	});
 	const [files, setFiles] = useState({
 		media: [],
+		previews: [],
+		mediaLength: 0,
 		selected: null,
 		showMediaModal: false,
 	});

@@ -1,12 +1,12 @@
 "use client";
 import Link from "next/link";
 
-const AdminStatusesMenu = ({
+const AdminMediaLibraryMenu = ({
 	allLink = "",
-	publishedLink = "",
-	draftLink = "",
-	scheduledLink = "",
-	trashedLink = "",
+	imagesLink = "",
+	documentsLink = "",
+	videosLink = "",
+	audioLink = "",
 }) => {
 	return (
 		<div
@@ -29,46 +29,46 @@ const AdminStatusesMenu = ({
 			</Link>
 			<Link
 				href={{
-					pathname: publishedLink,
+					pathname: imagesLink,
 					query: { page: 1, limit: 10 },
 				}}
 				passHref
 				legacyBehavior
 			>
-				<a className="btn btn-link btn-sm">Published</a>
+				<a className="btn btn-link btn-sm">Images</a>
 			</Link>
 			<Link
 				href={{
-					pathname: draftLink,
+					pathname: documentsLink,
 					query: { page: 1, limit: 10 },
 				}}
 				passHref
 				legacyBehavior
 			>
-				<a className="btn btn-link btn-sm">Draft</a>
+				<a className="btn btn-link btn-sm">Documents</a>
 			</Link>
 			<Link
 				href={{
-					pathname: scheduledLink,
+					pathname: videosLink,
 					query: { page: 1, limit: 10 },
 				}}
 				passHref
 				legacyBehavior
 			>
-				<a className="btn btn-link btn-sm">Scheduled</a>
+				<a className="btn btn-link btn-sm">Videos</a>
 			</Link>
 			<Link
 				href={{
-					pathname: trashedLink,
+					pathname: audioLink,
 					query: { page: 1, limit: 10 },
 				}}
 				passHref
 				legacyBehavior
 			>
-				<a className="btn btn-link btn-sm">Trashed</a>
+				<a className="btn btn-link btn-sm">Audio</a>
 			</Link>
 		</div>
 	);
 };
 
-export default AdminStatusesMenu;
+export default AdminMediaLibraryMenu;

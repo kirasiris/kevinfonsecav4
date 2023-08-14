@@ -13,12 +13,8 @@ const CreateBlog = () => {
 
 	const fetchCategories = async (params = "") => {
 		try {
-			// const res = await axios.get(`/categories${params}`);
-			const res = await fetch(
-				`http://localhost:5000/api/v1/categories${params}`
-			);
-			const render = await res.json();
-			setCategories(render?.data);
+			const res = await axios.get(`/categories${params}`);
+			setCategories(res?.data?.data);
 		} catch (err) {
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;

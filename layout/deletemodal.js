@@ -19,14 +19,6 @@ const DeleteModal = ({
 	const [confirmDeleteModal, setConfirmDeleteModal] = useState(false);
 	const [, setError] = useState(false);
 
-	const openDeleteModal = (e) => {
-		setConfirmDeleteModal(true);
-	};
-
-	const closeDeleteModal = (e) => {
-		setConfirmDeleteModal(false);
-	};
-
 	const deleteObject = async (e) => {
 		e.preventDefault();
 		await action(id, sId)
@@ -57,7 +49,7 @@ const DeleteModal = ({
 			<Button
 				variant={`danger`}
 				size={size}
-				onClick={openDeleteModal}
+				onClick={() => setConfirmDeleteModal(!confirmDeleteModal)}
 				data-target={`deleteModal#${id}`}
 				as={as}
 				className={classStr}
@@ -65,36 +57,34 @@ const DeleteModal = ({
 				{/* <i className={`fas fa-trash-alt mr-1`} aria-hidden /> */}
 				Delete
 			</Button>
-			{confirmDeleteModal && (
-				<Modal
-					show={true}
-					onHide={closeDeleteModal}
-					backdrop={true}
-					animation={true}
-					size={`sm`}
-					id={`deleteModal#${id}`}
-				>
-					<Modal.Header closeButton>
-						<Modal.Title>Are you sure?</Modal.Title>
-					</Modal.Header>
-					<Modal.Body>{id}</Modal.Body>
-					<Modal.Footer>
-						<button
-							className="btn btn-secondary btn-sm"
-							onClick={closeDeleteModal}
-						>
-							Close
-						</button>
-						<button
-							className="btn btn-primary btn-sm"
-							type="submit"
-							onClick={deleteObject}
-						>
-							Submit
-						</button>
-					</Modal.Footer>
-				</Modal>
-			)}
+			<Modal
+				show={confirmDeleteModal}
+				onHide={() => setConfirmDeleteModal(!confirmDeleteModal)}
+				backdrop={true}
+				animation={true}
+				size={`sm`}
+				id={`deleteModal#${id}`}
+			>
+				<Modal.Header closeButton>
+					<Modal.Title>Are you sure?</Modal.Title>
+				</Modal.Header>
+				<Modal.Body>{id}</Modal.Body>
+				<Modal.Footer>
+					<button
+						className="btn btn-secondary btn-sm"
+						onClick={() => setConfirmDeleteModal(!confirmDeleteModal)}
+					>
+						Close
+					</button>
+					<button
+						className="btn btn-primary btn-sm"
+						type="submit"
+						onClick={deleteObject}
+					>
+						Submit
+					</button>
+				</Modal.Footer>
+			</Modal>
 		</>
 	);
 };

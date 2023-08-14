@@ -1,7 +1,9 @@
 "use client";
-
-import Image from "next/image";
 import { useContext } from "react";
+import AuthContext from "@/helpers/globalContext";
+import Image from "next/image";
+import { Modal } from "react-bootstrap";
+import AdminMediaLibray from "./adminmedialibray";
 
 const AdminSidebar = ({
 	displayAvatar = true,
@@ -21,20 +23,22 @@ const AdminSidebar = ({
 	multipleFiles = false,
 	onModel = "Blog",
 }) => {
-	// const {files, setFiles} = useContext(GlobalContext)
+	const { files, setFiles } = useContext(AuthContext);
 
 	return (
 		<>
 			{/* HERE GOES THE AVATAR */}
 			{displayAvatar && (
 				<>
-					<button
-						type="button"
-						className="btn btn-secondary btn-sm btn-block"
-						// onClick={() => setFiles({...files, showMediaModal: true})}
-					>
-						Featured Image
-					</button>
+					<div className="d-grid gap-2">
+						<button
+							type="button"
+							className="btn btn-secondary btn-sm btn-block"
+							onClick={() => setFiles({ ...files, showMediaModal: true })}
+						>
+							Featured Image
+						</button>
+					</div>
 					{/* <Image /> */}
 				</>
 			)}
@@ -176,8 +180,71 @@ const AdminSidebar = ({
 				<option value={false}>No</option>
 			</select>
 			{/* HERE GOES THE CATEGORIES SELECT */}
-
+			<label htmlFor="category" className="form-label">
+				Category
+			</label>
+			<select
+				id="category"
+				name="category"
+				value={category}
+				onChange={(e) => {
+					setObjectData({
+						...objectData,
+						category: e.target.value,
+					});
+				}}
+				className="form-control"
+			>
+				{categories
+					.filter((c) => c.parentCategory === undefined)
+					.map((category) => (
+						<optgroup key={category._id} label={category.title}>
+							{categories
+								.filter((c) => c.parentCategory?._id === category._id)
+								.map((childC) => (
+									<option key={childC._id} value={childC._id}>
+										{childC.title}
+									</option>
+								))}
+						</optgroup>
+					))}
+			</select>
 			{/* HERE GOES THE MODAL TO OPEN GALLERY */}
+			<Modal
+				show={files.showMediaModal}
+				onHide={() => {
+					setFiles({ ...files, showMediaModal: false });
+				}}
+				backdrop={true}
+				animation={true}
+				fullscreen={true}
+			>
+				<Modal.Header closeButton>
+					<Modal.Title>Media Library</Modal.Title>
+				</Modal.Header>
+				<Modal.Body>
+					<AdminMediaLibray multipleFiles={multipleFiles} onModel={onModel} />
+				</Modal.Body>
+				<Modal.Footer>
+					<button
+						className="btn btn-secondary btn-sm"
+						onClick={() => {
+							setFiles({ ...files, showMediaModal: false });
+						}}
+					>
+						Close
+					</button>
+					<button
+						className="btn btn-primary btn-sm"
+						type="submit"
+						onClick={() => {
+							setFiles({ ...files, showMediaModal: false });
+						}}
+					>
+						Submit
+					</button>
+				</Modal.Footer>
+			</Modal>
 		</>
 	);
 };

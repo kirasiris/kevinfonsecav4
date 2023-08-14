@@ -97,3 +97,40 @@ a.blog-relative-time-status__link {
 	list-style: none;
 	margin: 0;
 }
+
+/* ---------------------------------------------------
+  DROPZONE
+----------------------------------------------------- */
+.dropzone-root {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	align-items: center;
+	height: 95vh;
+}
+
+.dropzone {
+	background-color: white;
+	border: none;
+	/* height: 60vh; */
+	width: 50vw;
+	/* margin-top: 5vh; */
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	cursor: pointer;
+}
+
+.dropzone-image {
+	margin: 15vh auto 3vh;
+	height: 14vh;
+	width: 10vw;
+}
+
+.dropzone-upload {
+	width: 50vw;
+}
+
+.dropzone-upload:hover {
+	background-color: gainsboro;
+}

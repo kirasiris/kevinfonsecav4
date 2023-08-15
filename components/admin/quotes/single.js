@@ -32,7 +32,7 @@ const Single = ({
 				</div>
 				<div className="blog-actions-ellipsis-menu">
 					<span className="ellipsis-menu">
-						<DropdownButton variant="secondary">
+						<DropdownButton title="Options" variant="secondary">
 							<DeleteModal
 								id={object._id ? object._id : object._id}
 								action={handleDelete}

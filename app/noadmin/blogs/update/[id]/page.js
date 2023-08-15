@@ -1,13 +1,13 @@
 "use client";
 import axios from "axios";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import AdminSidebar from "@/layout/admin/adminsidebar";
 import MyTextArea from "@/layout/mytextarea";
 import AuthContext from "@/helpers/globalContext";
 
-const CreateBlog = () => {
+const UpdateBlog = () => {
 	const { files } = useContext(AuthContext);
 
 	const router = useRouter();
@@ -47,6 +47,7 @@ const CreateBlog = () => {
 
 	const [blogData, setBlogData] = useState({
 		title: `Untitled`,
+		avatar: files?.selected?._id,
 		text: `No description`,
 		featured: false,
 		embedding: false,
@@ -58,6 +59,7 @@ const CreateBlog = () => {
 	});
 	const {
 		title,
+		avatar,
 		text,
 		featured,
 		embedding,
@@ -68,16 +70,67 @@ const CreateBlog = () => {
 		fullWidth,
 	} = blogData;
 
-	const addBlog = async (e) => {
+	const [blog, setBlog] = useState(null);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState(false);
+
+	const { id } = useParams();
+	const blogId = id;
+
+	useEffect(() => {
+		const fetchBlog = async () => {
+			try {
+				const res = await axios.get(`/blogs/${blogId}`);
+				setBlog(res?.data?.data);
+				setBlogData({
+					title: res?.data?.data?.title,
+					avatar: res?.data?.data?.files?.avatar,
+					text: res?.data?.data?.text,
+					featured: res?.data?.data?.featured,
+					embedding: res?.data?.data?.embedding,
+					category: res?.data?.data?.category,
+					commented: res?.data?.data?.commented,
+					// password: res?.data?.data?.password,
+					status: res?.data?.data?.status,
+					fullWidth: res?.data?.data?.fullWidth,
+				});
+				setLoading(false);
+			} catch (err) {
+				console.log(err);
+				// const error = err.response.data.message;
+				const error = err?.response?.data?.error?.errors;
+				const errors = err?.response?.data?.errors;
+
+				if (error) {
+					// dispatch(setAlert(error, 'danger'));
+					error &&
+						Object.entries(error).map(([, value]) =>
+							toast.error(value.message)
+						);
+				}
+
+				if (errors) {
+					errors.forEach((error) => toast.error(error.msg));
+				}
+
+				toast.error(err?.response?.statusText);
+				return {
+					msg: err?.response?.statusText,
+					status: err?.response?.status,
+				};
+			}
+		};
+		fetchBlog();
+	}, [blogId]);
+
+	const updateBlog = async (e) => {
 		e.preventDefault();
 		try {
-			await axios.post(`/blogs`, {
+			await axios.put(`/blogs/${blog._id}`, {
 				...blogData,
-				postType: "blog",
 				files: { avatar: files?.selected?._id },
 			});
-			toast.success(`Item created`);
-			resetForm();
+			toast.success(`Item updated`);
 			router.push(`/noadmin/blogs`);
 		} catch (err) {
 			console.log(err);
@@ -103,6 +156,7 @@ const CreateBlog = () => {
 	const resetForm = () => {
 		setBlogData({
 			title: `Untitled`,
+			avatar: files?.selected?._id,
 			text: `No description`,
 			featured: false,
 			embedding: false,
@@ -115,8 +169,14 @@ const CreateBlog = () => {
 		});
 	};
 
-	return (
-		<form className="row" onSubmit={addBlog}>
+	return loading || blog === null || blog === undefined ? (
+		error ? (
+			<>Not found</>
+		) : (
+			<>Loading...</>
+		)
+	) : (
+		<form className="row" onSubmit={updateBlog}>
 			<div className="col">
 				<label htmlFor="blog-title" className="form-label">
 					Title
@@ -148,7 +208,7 @@ const CreateBlog = () => {
 			</div>
 			<div className="col-lg-3">
 				<AdminSidebar
-					avatar={files?.selected?._id}
+					avatar={avatar}
 					status={status}
 					fullWidth={fullWidth}
 					password={password}
@@ -156,7 +216,7 @@ const CreateBlog = () => {
 					commented={commented}
 					embedding={embedding}
 					github={false}
-					category={category}
+					category={category._id ? category._id : category}
 					categories={categories}
 					objectData={blogData}
 					setObjectData={setBlogData}
@@ -183,4 +243,4 @@ const CreateBlog = () => {
 	);
 };
 
-export default CreateBlog;
+export default UpdateBlog;

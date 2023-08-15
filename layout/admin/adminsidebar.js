@@ -29,18 +29,26 @@ const AdminSidebar = ({
 		<>
 			{/* HERE GOES THE AVATAR */}
 			{displayAvatar && (
-				<>
-					<div className="d-grid gap-2">
-						<button
-							type="button"
-							className="btn btn-secondary btn-sm btn-block"
-							onClick={() => setFiles({ ...files, showMediaModal: true })}
-						>
-							Featured Image
-						</button>
-					</div>
-					{/* <Image /> */}
-				</>
+				<div className="d-grid gap-2">
+					<button
+						type="button"
+						className="btn btn-secondary btn-sm btn-block"
+						onClick={() => setFiles({ ...files, showMediaModal: true })}
+					>
+						Featured Image
+					</button>
+					<img
+						src={
+							files?.selected?.location?.secure_location ||
+							avatar?.location?.secure_location ||
+							"https://static.vecteezy.com/system/resources/previews/005/337/799/original/icon-image-not-found-free-vector.jpg"
+						}
+						style={{
+							maxWidth: "100%",
+						}}
+						onClick={() => setFiles({ ...files, showMediaModal: true })}
+					/>
+				</div>
 			)}
 			<label htmlFor="status" className="form-label">
 				Status

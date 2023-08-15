@@ -18,6 +18,7 @@ const nextConfig = {
 			"setwan.bimakota.go.id",
 			"setwan.bimakdota.go.id",
 			"https://oaidalleapiprodscus.blob.core.windows.net",
+			"static.vecteezy.com",
 		],
 	},
 };

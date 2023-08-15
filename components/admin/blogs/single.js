@@ -42,7 +42,10 @@ const Single = ({
 					>
 						<a className="blog-type-list__blog-thumbnail-link">
 							<Image
-								src="https://i0.wp.com/befreebucket-for-outputs.s3.amazonaws.com/2023/04/Changelog.jpg?ssl=1&h=160"
+								src={
+									object.files?.avatar?.location.secure_location ||
+									`https://source.unsplash.com/random/415x207`
+								}
 								className="blog-type-list__blog-thumbnail"
 								alt="Blog titles image"
 								width="83"
@@ -53,7 +56,7 @@ const Single = ({
 				</div>
 				<div className="blog-actions-ellipsis-menu">
 					<span className="ellipsis-menu">
-						<DropdownButton variant="secondary">
+						<DropdownButton title="Options" variant="secondary">
 							<DeleteModal
 								id={object._id ? object._id : object._id}
 								action={handleDelete}

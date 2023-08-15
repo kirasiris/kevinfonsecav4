@@ -1,11 +1,11 @@
 "use client";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import MyTextArea from "@/layout/mytextarea";
 import axios from "axios";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { toast } from "react-toastify";
+import MyTextArea from "@/layout/mytextarea";
 
 const CreateChangelog = () => {
-	// const {files} = useContext(GlobalContext)
 	const router = useRouter();
 
 	const [changelogData, setChangelogData] = useState({
@@ -24,7 +24,7 @@ const CreateChangelog = () => {
 			await axios.post(`/changelogs`, changelogData);
 			toast.success(`Item created`);
 			resetForm();
-			router.push(`/admin/changelogs`);
+			router.push(`/noadmin/changelogs`);
 		} catch (err) {
 			console.log(err);
 			// const error = err.response.data.message;

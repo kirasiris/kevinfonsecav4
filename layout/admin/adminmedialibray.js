@@ -6,13 +6,15 @@ import { toast } from "react-toastify";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Dropzone from "react-dropzone";
-import AuthContext from "@/helpers/globalContext";
 import { ButtonGroup, Dropdown } from "react-bootstrap";
+import AuthContext from "@/helpers/globalContext";
+
 import AdminMediaLibraryMenu from "./adminmediamenu";
+import UseProgress from "../useprogress";
 
 const AdminMediaLibray = ({
-	id = "",
-	name = "",
+	id = "single",
+	name = "single",
 	multipleFiles = true,
 	onModel = "Blog",
 }) => {
@@ -24,26 +26,11 @@ const AdminMediaLibray = ({
 
 	const [uploadPercentage, setUploadPercentage] = useState(0);
 
-	/*
-	 *
-	 * SINGLE FILE UPLOAD
-	 *
-	 */
-	/*
-	 *
-	 * MULTIPLE FILE UPLOAD
-	 *
-	 */
-	/*
-	 *
-	 * FETCH FILES
-	 *
-	 */
 	const [params] = useState(`?page=1&limit=10&sort=-createdAt`);
 
 	const fetchMedia = async () => {
 		try {
-			const res = await axios.get(`/medias${params}`);
+			const res = await axios.get(`/files${params}`);
 			setFiles((prev) => ({ ...prev, media: res?.data?.data }));
 		} catch (err) {
 			// const error = err.response.data.message;
@@ -72,10 +59,10 @@ const AdminMediaLibray = ({
 		fetchMedia();
 	}, [router]);
 
-	const handleDelete = async (id, name) => {
+	const handleDelete = async (id, publicId) => {
 		try {
-			await axios.delete(`/uploads/deleteObject?name=${name}`);
-			await axios.delete(`/medias/${id}`);
+			await axios.delete(`/files/${id}`);
+			await axios.delete(`/uploads/deleteObject?publicId=${publicId}`);
 			toast.success("File deleted");
 			setFiles({
 				...files,
@@ -109,7 +96,7 @@ const AdminMediaLibray = ({
 
 	const handleDeleteAll = async () => {
 		try {
-			await axios.delete(`/medias/deleteall`);
+			await axios.delete(`/files/deleteall`);
 			toast.success("Files deleted");
 			fetchMedia();
 		} catch (err) {
@@ -144,6 +131,7 @@ const AdminMediaLibray = ({
 				videosLink="/noadmin/media/videos"
 				audioLink="/noadmin/media/audios"
 			/>
+			<UseProgress percentage={uploadPercentage} />
 			<div className="card rounded-0">
 				<div className="card-header">
 					<Dropdown as={ButtonGroup} size="sm" title="Add new">
@@ -164,19 +152,19 @@ const AdminMediaLibray = ({
 				</div>
 				<div className="card-body">
 					{showDropzone && (
-						<>
-							<Dropzone
-								onDrop={async (acceptedFiles) => {
-									setFiles({
-										...files,
-										media: acceptedFiles,
-										previews: acceptedFiles.map((file) => ({
-											...file,
-											preview: URL.createObjectURL(file),
-										})),
-										mediaLength: acceptedFiles.length,
-									});
-									// HERE YOU CAN MANAGE FILES UPLOADED
+						<Dropzone
+							onDrop={async (acceptedFiles) => {
+								setFiles({
+									...files,
+									media: acceptedFiles,
+									previews: acceptedFiles.map((file) => ({
+										...file,
+										preview: URL.createObjectURL(file),
+									})),
+									mediaLength: acceptedFiles.length,
+								});
+								// HERE YOU CAN MANAGE FILES UPLOADED
+								for (let i = 0; i < acceptedFiles.length; i++) {
 									const res = await axios.put(
 										`/uploads/uploadObject`,
 										{
@@ -184,10 +172,12 @@ const AdminMediaLibray = ({
 											username: auth?.user.username,
 											userEmail: auth?.user.email,
 											onModel: onModel,
+											file: acceptedFiles[i],
 										},
 										{
 											headers: {
 												Authorization: `Bearer ${auth?.token}`,
+												"Content-Type": "multipart/form-data",
 											},
 											onUploadProgress: (ProgressEvent) => {
 												setUploadPercentage(
@@ -196,79 +186,89 @@ const AdminMediaLibray = ({
 															ProgressEvent.total
 													)
 												);
-												if (Timeout) {
-													setTimeout(() => setUploadPercentage(0), 10000);
-												}
+												setTimeout(() => setUploadPercentage(0), 10000);
 											},
 										}
 									);
 									setFiles({
 										...files,
-										media: [...files, res?.data?.data],
+										media: [...files.media, res?.data?.data],
 									});
-								}}
-							>
-								{({ getRootProps, getInputProps }) => (
-									<div className="container">
-										<div
-											{...getRootProps({
-												className: "dropzone",
-												onDrop: (event) => {
-													event.stopPropagation();
-												},
+								}
+								setShowDropzone(false);
+								setUploadPercentage(0);
+							}}
+						>
+							{({ getRootProps, getInputProps }) => (
+								<div className="container">
+									<div
+										{...getRootProps({
+											className: "dropzone",
+											onDrop: (event) => {
+												event.stopPropagation();
+											},
+										})}
+									>
+										<input
+											{...getInputProps({
+												id,
+												name,
+												multiple: { multipleFiles },
 											})}
-										>
-											<input
-												{...getInputProps({
-													id,
-													name,
-													multiple: { multipleFiles },
-												})}
-											/>
-											<p>
-												Drag &apos;n&apos; drop some files here, or click to
-												select files
-											</p>
-										</div>
+										/>
+										<p>
+											Drag &apos;n&apos; drop some files here, or click to
+											select files
+										</p>
 									</div>
-								)}
-							</Dropzone>
-						</>
+								</div>
+							)}
+						</Dropzone>
 					)}
 					<div className="row">
-						{files.previews?.length > 0 && (
-							<>
-								{files.previews.map((file, index) => (
+						{files.previews?.length > 0 &&
+							files.previews.map((file, index) => (
+								<Image
+									key={index}
+									src={file.preview}
+									className={`${index} col mb-4`}
+									alt={`${index} image preview`}
+									width={`188`}
+									height={`188`}
+								/>
+							))}
+						{files?.media?.length > 0 &&
+							files?.media.map((mediaFile) => (
+								<>
 									<Image
-										key={index}
-										src={file.preview}
-										className={`${index} col mb-4`}
-										alt={`${index} image preview`}
+										key={mediaFile?._id}
+										src={
+											mediaFile?.location?.secure_location ||
+											`https://source.unsplash.com/random/188x188`
+										}
+										className="col mb-4"
+										alt={`featured image`}
 										width={`188`}
 										height={`188`}
+										onClick={() => {
+											setFiles({
+												...files,
+												selected: mediaFile,
+												showMediaModal: false,
+											});
+										}}
 									/>
-								))}
-							</>
-						)}
-						{/* {files?.media?.map((mediaFile) => (
-							<Image
-								key={mediaFile._id}
-								src={
-									// mediaFile.location.secure_location ||
-									`https://source.unsplash.com/random/188x188`
-								}
-								className="col mb-4"
-								alt={`featured image`}
-								width={`188`}
-								height={`188`}
-								onClick={() => {
-									setFiles({
-										...files,
-										selected: mediaFile,
-									});
-								}}
-							/>
-						))} */}
+									<button
+										className="btn btn-danger btn-sm"
+										onClick={() =>
+											handleDelete(mediaFile._id, mediaFile.location.publicId)
+										}
+										type="button"
+									>
+										Delete
+									</button>
+								</>
+							))}
 					</div>
 				</div>
 			</div>

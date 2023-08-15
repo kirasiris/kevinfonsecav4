@@ -208,7 +208,7 @@ const AdminCategoriesIndex = () => {
 								checked={isTopLevel}
 								onClick={() => setTopLevel(!isTopLevel)}
 							/>
-							<label className="form-check-label" for="isTopLevel">
+							<label htmlFor="isTopLevel" className="form-check-label">
 								{isTopLevel ? "Is Top Level" : "Is Not Top Level"}
 							</label>
 						</div>

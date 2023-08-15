@@ -77,7 +77,7 @@ const BlogRead = async ({ params }) => {
 								<Image
 									className="img-fluid"
 									src={
-										blog?.data?.avatar?.location?.secure_location ||
+										blog?.data?.files?.avatar?.location?.secure_location ||
 										`https://source.unsplash.com/random/1200x900`
 									}
 									alt={`${blog?.data?.avatar?.location?.fileName}'s featured image`}

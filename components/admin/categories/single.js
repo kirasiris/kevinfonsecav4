@@ -1,4 +1,3 @@
-import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import Link from "next/link";
 import DeleteModal from "@/layout/deletemodal";
@@ -34,7 +33,7 @@ const Single = ({
 				</div>
 				<div className="blog-actions-ellipsis-menu">
 					<span className="ellipsis-menu">
-						<DropdownButton variant="secondary">
+						<DropdownButton title="Options" variant="secondary">
 							<DeleteModal
 								id={object._id ? object._id : object._id}
 								action={handleDelete}

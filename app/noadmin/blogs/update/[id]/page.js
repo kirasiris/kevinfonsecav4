@@ -123,7 +123,7 @@ const UpdateBlog = () => {
 		fetchBlog();
 	}, [blogId]);
 
-	const updateBlog = async (e) => {
+	const upgradeBlog = async (e) => {
 		e.preventDefault();
 		try {
 			await axios.put(`/blogs/${blog._id}`, {
@@ -176,7 +176,7 @@ const UpdateBlog = () => {
 			<>Loading...</>
 		)
 	) : (
-		<form className="row" onSubmit={updateBlog}>
+		<form className="row" onSubmit={upgradeBlog}>
 			<div className="col">
 				<label htmlFor="blog-title" className="form-label">
 					Title

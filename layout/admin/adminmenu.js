@@ -120,10 +120,10 @@ const AdminMenu = () => {
 						Secrets
 					</a>
 				</Link>
-				<Link href={"/noadmin/media"} passHref legacyBehavior>
+				<Link href={"/noadmin/files"} passHref legacyBehavior>
 					<a
 						className={`list-group-item list-group-item-action ${isActive(
-							"/noadmin/media"
+							"/noadmin/files"
 						)}`}
 					>
 						Media

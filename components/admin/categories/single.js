@@ -5,8 +5,8 @@ const Single = ({
 	linkTo = "",
 	object = {},
 	handleDelete,
-	categories,
-	setCategories,
+	objects,
+	setObjects,
 	// totalResults,
 	setTotalResults,
 }) => {
@@ -38,8 +38,8 @@ const Single = ({
 								id={object._id ? object._id : object._id}
 								action={handleDelete}
 								classStr={`dropdown-item`}
-								objects={categories}
-								setObjects={setCategories}
+								objects={objects}
+								setObjects={setObjects}
 								setTotalResults={setTotalResults}
 							/>
 						</DropdownButton>

@@ -130,8 +130,8 @@ const AdminEmailsIndex = () => {
 								key={email._id}
 								object={email}
 								handleDelete={handleDelete}
-								emails={emails}
-								setEmails={setEmails}
+								objects={emails}
+								setObjects={setEmails}
 								setTotalResults={setTotalResults}
 							/>
 						))}

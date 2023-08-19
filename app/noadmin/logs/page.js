@@ -130,8 +130,8 @@ const AdminLogsIndex = () => {
 								key={log._id}
 								object={log}
 								handleDelete={handleDelete}
-								logs={logs}
-								setLogs={setLogs}
+								objects={logs}
+								setObjects={setLogs}
 								setTotalResults={setTotalResults}
 							/>
 						))}

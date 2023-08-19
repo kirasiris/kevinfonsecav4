@@ -1,13 +1,13 @@
 "use client";
 import axios from "axios";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import AdminSidebar from "@/layout/admin/adminsidebar";
 import MyTextArea from "@/layout/mytextarea";
 import AuthContext from "@/helpers/globalContext";
 
-const CreateTheme = () => {
+const UpdateTheme = () => {
 	const { files } = useContext(AuthContext);
 
 	const router = useRouter();
@@ -73,20 +73,72 @@ const CreateTheme = () => {
 		github_readme,
 	} = themeData;
 
-	const addTheme = async (e) => {
+	const [theme, setTheme] = useState(null);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState(false);
+
+	const { id } = useParams();
+	const themeId = id;
+
+	useEffect(() => {
+		const fetchTheme = async () => {
+			try {
+				const res = await axios.get(`/themes/${themeId}`);
+				setTheme(res?.data?.data);
+				setThemeData({
+					title: res?.data?.data?.title,
+					avatar: res?.data?.data?.files?.avatar,
+					text: res?.data?.data?.text,
+					featured: res?.data?.data?.featured,
+					embedding: res?.data?.data?.embedding,
+					category: res?.data?.data?.category,
+					commented: res?.data?.data?.commented,
+					// password: res?.data?.data?.password,
+					status: res?.data?.data?.status,
+					fullWidth: res?.data?.data?.fullWidth,
+					github_readme: res?.data?.data?.github_readme,
+				});
+				setLoading(false);
+			} catch (err) {
+				console.log(err);
+				// const error = err.response.data.message;
+				const error = err?.response?.data?.error?.errors;
+				const errors = err?.response?.data?.errors;
+
+				if (error) {
+					// dispatch(setAlert(error, 'danger'));
+					error &&
+						Object.entries(error).map(([, value]) =>
+							toast.error(value.message)
+						);
+				}
+
+				if (errors) {
+					errors.forEach((error) => toast.error(error.msg));
+				}
+
+				toast.error(err?.response?.statusText);
+				return {
+					msg: err?.response?.statusText,
+					status: err?.response?.status,
+				};
+			}
+		};
+		fetchTheme();
+	}, [themeId]);
+
+	const upgradeTheme = async (e) => {
 		e.preventDefault();
 		try {
-			await axios.post(`/themes`, {
+			await axios.put(`/themes/${theme._id}`, {
 				...themeData,
-				postType: "theme",
 				files: { avatar: files?.selected?._id },
 			});
-			toast.success(`Item created`);
-			resetForm();
+			toast.success(`Item updated`);
 			router.push(`/noadmin/themes`);
 		} catch (err) {
 			console.log(err);
-			// const error = err.response.data.message;
+			// const error = err.respgfonse.data.message;
 			const error = err?.response?.data?.error?.errors;
 			const errors = err?.response?.data?.errors;
 
@@ -122,8 +174,14 @@ const CreateTheme = () => {
 		});
 	};
 
-	return (
-		<form className="row" onSubmit={addTheme}>
+	return loading || theme === null || theme === undefined ? (
+		error ? (
+			<>Not found</>
+		) : (
+			<>Loading... {console.log(error)}</>
+		)
+	) : (
+		<form className="row" onSubmit={upgradeTheme}>
 			<div className="col">
 				<label htmlFor="blog-title" className="form-label">
 					Title
@@ -191,4 +249,4 @@ const CreateTheme = () => {
 	);
 };
 
-export default CreateTheme;
+export default UpdateTheme;

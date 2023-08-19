@@ -3,7 +3,7 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useContext } from "react";
 import { toast } from "react-toastify";
-import Single from "@/components/admin/blogs/single";
+import Single from "@/components/admin/themes/single";
 import AuthContext from "@/helpers/globalContext";
 import AdminStatusesMenu from "@/layout/admin/adminstatusesmenu";
 import AdminCardHeaderMenu from "@/layout/admin/admincardheadermenu";
@@ -130,8 +130,8 @@ const AdminThemesIndex = () => {
 								key={theme._id}
 								object={theme}
 								handleDelete={handleDelete}
-								themes={themes}
-								setThemes={setThemes}
+								objects={themes}
+								setObjects={setThemes}
 								setTotalResults={setTotalResults}
 							/>
 						))}

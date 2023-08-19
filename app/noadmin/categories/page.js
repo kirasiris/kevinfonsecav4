@@ -272,8 +272,8 @@ const AdminCategoriesIndex = () => {
 										linkTo={`/noadmin/categories/update/${category._id}`}
 										object={category}
 										handleDelete={handleDelete}
-										categories={categories}
-										setCategories={setCategories}
+										objects={categories}
+										setObjects={setCategories}
 										// totalResults={totalResults}
 										setTotalResults={setTotalResults}
 									/>

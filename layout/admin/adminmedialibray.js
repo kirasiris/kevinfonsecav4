@@ -8,9 +8,9 @@ import { useRouter } from "next/navigation";
 import Dropzone from "react-dropzone";
 import { ButtonGroup, Dropdown } from "react-bootstrap";
 import AuthContext from "@/helpers/globalContext";
-
 import AdminMediaLibraryMenu from "./adminmediamenu";
 import UseProgress from "../useprogress";
+import Single from "@/components/admin/files/single";
 
 const AdminMediaLibray = ({
 	id = "single",
@@ -26,7 +26,7 @@ const AdminMediaLibray = ({
 
 	const [uploadPercentage, setUploadPercentage] = useState(0);
 
-	const [params] = useState(`?page=1&limit=10&sort=-createdAt`);
+	const [params] = useState(`?page=1&sort=-createdAt`);
 
 	const fetchMedia = async () => {
 		try {
@@ -125,11 +125,11 @@ const AdminMediaLibray = ({
 	return (
 		<>
 			<AdminMediaLibraryMenu
-				allLink="/noadmin/media"
-				imagesLink="/noadmin/media/images"
-				documentsLink="/noadmin/media/documents"
-				videosLink="/noadmin/media/videos"
-				audioLink="/noadmin/media/audios"
+				allLink="/noadmin/files"
+				imagesLink="/noadmin/files/images"
+				documentsLink="/noadmin/files/documents"
+				videosLink="/noadmin/files/videos"
+				audioLink="/noadmin/files/audios"
 			/>
 			<UseProgress percentage={uploadPercentage} />
 			<div className="card rounded-0">
@@ -239,35 +239,13 @@ const AdminMediaLibray = ({
 							))}
 						{files?.media?.length > 0 &&
 							files?.media.map((mediaFile) => (
-								<>
-									<Image
-										key={mediaFile?._id}
-										src={
-											mediaFile?.location?.secure_location ||
-											`https://source.unsplash.com/random/188x188`
-										}
-										className="col mb-4"
-										alt={`featured image`}
-										width={`188`}
-										height={`188`}
-										onClick={() => {
-											setFiles({
-												...files,
-												selected: mediaFile,
-												showMediaModal: false,
-											});
-										}}
-									/>
-									<button
-										className="btn btn-danger btn-sm"
-										onClick={() =>
-											handleDelete(mediaFile._id, mediaFile.location.publicId)
-										}
-										type="button"
-									>
-										Delete
-									</button>
-								</>
+								<Single
+									key={mediaFile?._id}
+									object={mediaFile}
+									handleDelete={handleDelete}
+									objects={files}
+									setObjects={setFiles}
+								/>
 							))}
 					</div>
 				</div>

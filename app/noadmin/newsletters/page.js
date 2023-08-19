@@ -130,8 +130,8 @@ const AdminNewslettersIndex = () => {
 								key={blog._id}
 								object={blog}
 								handleDelete={handleDelete}
-								newsletters={newsletters}
-								setNewsletters={setNewsletters}
+								objects={newsletters}
+								setObjects={setNewsletters}
 								setTotalResults={setTotalResults}
 							/>
 						))}

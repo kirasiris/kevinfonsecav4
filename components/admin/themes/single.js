@@ -6,8 +6,8 @@ import Image from "next/image";
 const Single = ({
 	object = {},
 	handleDelete,
-	themes,
-	setThemes,
+	objects,
+	setObjects,
 	setTotalResults,
 }) => {
 	return (
@@ -28,7 +28,7 @@ const Single = ({
 						</Link>
 					</h1>
 					<div className="blog-item__meta">
-						<span className="blog-item__meta-time-status">{object.text}</span>
+						{/* <span className="blog-item__meta-time-status">{object.text}</span> */}
 					</div>
 				</div>
 				<div className="blog-type-list__blog-thumbnail-wrapper has-image">
@@ -42,7 +42,10 @@ const Single = ({
 					>
 						<a className="blog-type-list__blog-thumbnail-link">
 							<Image
-								src="https://i0.wp.com/befreebucket-for-outputs.s3.amazonaws.com/2023/04/Changelog.jpg?ssl=1&h=160"
+								src={
+									object.files?.avatar?.location.secure_location ||
+									`https://source.unsplash.com/random/83x63`
+								}
 								className="blog-type-list__blog-thumbnail"
 								alt="Blog titles image"
 								width="83"
@@ -58,8 +61,8 @@ const Single = ({
 								id={object._id ? object._id : object._id}
 								action={handleDelete}
 								classStr={`dropdown-item`}
-								objects={themes}
-								setObjects={setThemes}
+								objects={objects}
+								setObjects={setObjects}
 								setTotalResults={setTotalResults}
 							/>
 						</DropdownButton>

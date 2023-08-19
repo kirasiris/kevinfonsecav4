@@ -105,6 +105,15 @@ const AdminChangelogsIndex = () => {
 		}
 	};
 
+	const groupByDate = changelogs?.reduce((groups, changelog) => {
+		const date = changelog.createdAt.split("T")[0];
+		if (!groups[date]) {
+			groups[date] = [];
+		}
+		groups[date].push(changelog);
+		return groups;
+	}, {});
+
 	return (
 		<>
 			<AdminStatusesMenu
@@ -125,15 +134,20 @@ const AdminChangelogsIndex = () => {
 				/>
 				{changelogs?.length > 0 ? (
 					<ul className="list-group list-group-flush">
-						{changelogs?.map((changelog) => (
-							<Single
-								key={changelog._id}
-								object={changelog}
-								handleDelete={handleDelete}
-								changelogs={changelogs}
-								setChangelogs={setChangelogs}
-								setTotalResults={setTotalResults}
-							/>
+						{Object.entries(groupByDate)?.map(([date, changelogs]) => (
+							<div key={date}>
+								<p className="text-center my-3">{date}</p>
+								{changelogs?.map((changelog) => (
+									<Single
+										key={changelog._id}
+										object={changelog}
+										handleDelete={handleDelete}
+										objects={changelogs}
+										setObjects={setChangelogs}
+										setTotalResults={setTotalResults}
+									/>
+								))}
+							</div>
 						))}
 					</ul>
 				) : (

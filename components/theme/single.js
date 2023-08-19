@@ -16,7 +16,7 @@ const Single = ({ theme = {} }) => {
 				>
 					<Image
 						src={
-							theme.avatar?.location.secure_location ||
+							theme.files?.avatar?.location.secure_location ||
 							`https://source.unsplash.com/random/1200x900`
 						}
 						className="card-img-top"

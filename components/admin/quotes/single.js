@@ -5,8 +5,8 @@ import DeleteModal from "@/layout/deletemodal";
 const Single = ({
 	object = {},
 	handleDelete,
-	quotes,
-	setQuotes,
+	objects,
+	setObjects,
 	setTotalResults,
 }) => {
 	return (
@@ -37,8 +37,8 @@ const Single = ({
 								id={object._id ? object._id : object._id}
 								action={handleDelete}
 								classStr={`dropdown-item`}
-								objects={quotes}
-								setObjects={setQuotes}
+								objects={objects}
+								setObjects={setObjects}
 								setTotalResults={setTotalResults}
 							/>
 						</DropdownButton>

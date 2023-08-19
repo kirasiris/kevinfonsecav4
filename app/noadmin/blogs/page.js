@@ -8,7 +8,7 @@ import AuthContext from "@/helpers/globalContext";
 import AdminStatusesMenu from "@/layout/admin/adminstatusesmenu";
 import AdminCardHeaderMenu from "@/layout/admin/admincardheadermenu";
 
-const AdminBlogIndex = () => {
+const AdminBlogsIndex = () => {
 	const { totalResults, setTotalResults } = useContext(AuthContext);
 
 	const router = useRouter();
@@ -130,8 +130,8 @@ const AdminBlogIndex = () => {
 								key={blog._id}
 								object={blog}
 								handleDelete={handleDelete}
-								blogs={blogs}
-								setBlogs={setBlogs}
+								objects={blogs}
+								setObjects={setBlogs}
 								setTotalResults={setTotalResults}
 							/>
 						))}
@@ -146,4 +146,4 @@ const AdminBlogIndex = () => {
 	);
 };
 
-export default AdminBlogIndex;
+export default AdminBlogsIndex;

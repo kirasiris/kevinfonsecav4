@@ -6,8 +6,8 @@ import Image from "next/image";
 const Single = ({
 	object = {},
 	handleDelete,
-	blogs,
-	setBlogs,
+	objects,
+	setObjects,
 	setTotalResults,
 }) => {
 	return (
@@ -44,7 +44,7 @@ const Single = ({
 							<Image
 								src={
 									object.files?.avatar?.location.secure_location ||
-									`https://source.unsplash.com/random/415x207`
+									`https://source.unsplash.com/random/83x63`
 								}
 								className="blog-type-list__blog-thumbnail"
 								alt="Blog titles image"
@@ -61,8 +61,8 @@ const Single = ({
 								id={object._id ? object._id : object._id}
 								action={handleDelete}
 								classStr={`dropdown-item`}
-								objects={blogs}
-								setObjects={setBlogs}
+								objects={objects}
+								setObjects={setObjects}
 								setTotalResults={setTotalResults}
 							/>
 						</DropdownButton>

@@ -1,11 +1,12 @@
 import Accordion from "react-bootstrap/Accordion";
 import DeleteModal from "@/layout/deletemodal";
+import ParseHtml from "@/layout/parseHtml";
 
 const Single = ({
 	object = {},
 	handleDelete,
-	changelogs,
-	setChangelogs,
+	objects,
+	setObjects,
 	setTotalResults,
 }) => {
 	return (
@@ -24,12 +25,12 @@ const Single = ({
 						id={object._id ? object._id : object._id}
 						action={handleDelete}
 						// classStr={`dropdown-item`}
-						objects={changelogs}
-						setObjects={setChangelogs}
+						objects={objects}
+						setObjects={setObjects}
 						setTotalResults={setTotalResults}
 					/>
 					<hr />
-					{object.text}
+					<ParseHtml text={object.text} />
 				</Accordion.Body>
 			</Accordion.Item>
 		</Accordion>

@@ -1,6 +1,5 @@
 "use client";
 import axios from "axios";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
@@ -337,8 +336,8 @@ const AdminQuotesIndex = () => {
 										key={quote._id}
 										object={quote}
 										handleDelete={handleDelete}
-										quotes={quotes}
-										setQuotes={setQuotes}
+										objects={quotes}
+										setObjects={setQuotes}
 										setTotalResults={setTotalResults}
 									/>
 								))}

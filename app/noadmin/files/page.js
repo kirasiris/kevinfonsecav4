@@ -2,8 +2,8 @@
 
 import AdminMediaLibray from "@/layout/admin/adminmedialibray";
 
-const AdminMediaIndex = () => {
+const AdminFilesIndex = () => {
 	return <AdminMediaLibray />;
 };
 
-export default AdminMediaIndex;
+export default AdminFilesIndex;

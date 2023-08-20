@@ -4,10 +4,11 @@ import Image from "next/image";
 import Header from "@/layout/header";
 import Sidebar from "@/layout/sidebar";
 import Loading from "@/app/blog/loading";
-import ExportModal from "@/layout/exportmodal";
-import AuthorBox from "@/layout/authorbox";
+import ExportModal from "@/components/global/exportmodal";
+import AuthorBox from "@/components/global/authorbox";
 import CommentBox from "@/components/global/commentbox";
 import ParseHtml from "@/layout/parseHtml";
+import ReportModal from "@/components/global/reportmodal";
 
 async function getBlog(params) {
 	const res = await fetch(`http://localhost:5000/api/v1/blogs${params}`, {
@@ -80,27 +81,37 @@ const BlogRead = async ({ params }) => {
 										blog?.data?.files?.avatar?.location?.secure_location ||
 										`https://source.unsplash.com/random/1200x900`
 									}
-									alt={`${blog?.data?.avatar?.location?.fileName}'s featured image`}
+									alt={`${blog?.data?.files?.avatar?.location?.filename}'s featured image`}
 									width={1200}
 									height={900}
 									priority
 								/>
 							</figure>
 							<section className="mb-5">
-								<ParseHtml text={blog.data.text} />
+								<ParseHtml text={blog?.data?.text} />
 								<hr />
-								{blog.data.category && (
-									<ExportModal
-										linkToShare={`localhost:3000/blog/${blog.data._id}/${blog.data.category._id}/${blog.data.category.slug}/${blog.data.slug}`}
-										object={blog.data}
+								<div className="float-start">
+									{blog?.data?.category && (
+										<ExportModal
+											linkToShare={`localhost:3000/blog/${blog?.data?._id}/${blog?.data?.category?._id}/${blog?.data?.category.slug}/${blog?.data?.slug}`}
+											object={blog?.data}
+										/>
+									)}
+								</div>
+								<div className="float-end">
+									<ReportModal
+										postId={blog?.data?._id}
+										postType="blog"
+										onModel="Blog"
 									/>
-								)}
-								<AuthorBox author={blog.data.user} />
+								</div>
+								<div style={{ clear: "both" }} />
+								<AuthorBox author={blog?.data?.user} />
 								<CommentBox
-									user={blog.data.user}
-									postId={blog.data._id}
-									secondPostId={blog.data._id}
-									isVisible={blog.data.commented}
+									user={blog?.data?.user}
+									postId={blog?.data?._id}
+									secondPostId={blog?.data?._id}
+									isVisible={blog?.data?.commented}
 									postType="blog"
 									onModel="Blog"
 								/>

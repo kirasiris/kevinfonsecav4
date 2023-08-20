@@ -1,5 +1,5 @@
 "use client";
-import MyTextArea from "@/layout/mytextarea";
+import MyTextArea from "@/components/global/mytextarea";
 import Link from "next/link";
 import { useState } from "react";
 

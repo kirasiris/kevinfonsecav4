@@ -1,6 +1,7 @@
 import DropdownButton from "react-bootstrap/DropdownButton";
 import Link from "next/link";
-import DeleteModal from "@/layout/deletemodal";
+import DeleteModal from "@/components/global/deletemodal";
+
 const Single = ({
 	linkTo = "",
 	object = {},

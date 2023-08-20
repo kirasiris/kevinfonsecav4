@@ -4,11 +4,11 @@ import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import Single from "@/components/admin/quotes/single";
-import MyTextArea from "@/layout/mytextarea";
+import MyTextArea from "@/components/global/mytextarea";
 import { useContext } from "react";
 import AuthContext from "@/helpers/globalContext";
-import AdminStatusesMenu from "@/layout/admin/adminstatusesmenu";
-import AdminCardHeaderMenu from "@/layout/admin/admincardheadermenu";
+import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
+import AdminCardHeaderMenu from "@/components/admin/admincardheadermenu";
 
 const AdminQuotesIndex = () => {
 	const { totalResults, setTotalResults } = useContext(AuthContext);

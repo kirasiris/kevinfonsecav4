@@ -2,7 +2,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import Single from "../comment/single";
-import MyTextArea from "@/layout/mytextarea";
+import MyTextArea from "@/components/global/mytextarea";
 
 const CommentBox = ({
 	user = {},

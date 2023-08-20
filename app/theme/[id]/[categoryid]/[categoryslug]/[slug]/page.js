@@ -3,8 +3,8 @@ import Link from "next/link";
 import Image from "next/image";
 import Header from "@/layout/header";
 import Loading from "@/app/theme/loading";
-import ExportModal from "@/layout/exportmodal";
-import AuthorBox from "@/layout/authorbox";
+import ExportModal from "@/components/global/exportmodal";
+import AuthorBox from "@/components/global/authorbox";
 import CommentBox from "@/components/global/commentbox";
 import ParseHtml from "@/layout/parseHtml";
 

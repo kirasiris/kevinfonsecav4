@@ -1,14 +1,13 @@
 "use client";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { toast } from "react-toastify";
 import Single from "@/components/admin/categories/single";
-import MyTextArea from "@/layout/mytextarea";
-import { useContext } from "react";
+import MyTextArea from "@/components/global/mytextarea";
 import AuthContext from "@/helpers/globalContext";
-import AdminStatusesMenu from "@/layout/admin/adminstatusesmenu";
-import AdminCardHeaderMenu from "@/layout/admin/admincardheadermenu";
+import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
+import AdminCardHeaderMenu from "@/components/admin/admincardheadermenu";
 
 const AdminCategoriesIndex = () => {
 	const { totalResults, setTotalResults } = useContext(AuthContext);

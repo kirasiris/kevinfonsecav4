@@ -5,7 +5,7 @@ import Link from "next/link";
 import Loading from "@/app/profile/loading";
 import Carousel from "react-bootstrap/Carousel";
 import Badge from "react-bootstrap/Badge";
-import ExportModal from "@/layout/exportmodal";
+import ExportModal from "@/components/global/exportmodal";
 import { DropdownButton, Button } from "react-bootstrap";
 import Waveform from "@/layout/waveform";
 

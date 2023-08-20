@@ -4,7 +4,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import Image from "next/image";
-import MyTextArea from "@/layout/mytextarea";
+import MyTextArea from "@/components/global/mytextarea";
 
 const UpdateFile = () => {
 	const router = useRouter();

@@ -1,5 +1,5 @@
 import Accordion from "react-bootstrap/Accordion";
-import DeleteModal from "@/layout/deletemodal";
+import DeleteModal from "@/components/global/deletemodal";
 import ParseHtml from "@/layout/parseHtml";
 
 const Single = ({

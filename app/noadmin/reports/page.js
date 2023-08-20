@@ -3,25 +3,25 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useContext } from "react";
 import { toast } from "react-toastify";
-import Single from "@/components/admin/themes/single";
+import Single from "@/components/admin/reports/single";
 import AuthContext from "@/helpers/globalContext";
 import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
 import AdminCardHeaderMenu from "@/components/admin/admincardheadermenu";
 
-const AdminThemesIndex = () => {
+const AdminReportsIndex = () => {
 	const { totalResults, setTotalResults } = useContext(AuthContext);
 
 	const router = useRouter();
 
-	const [themes, setThemes] = useState([]);
+	const [reports, setReports] = useState([]);
 
-	const [params] = useState(`?page=1&limit=10&sort=-createdAt&postType=theme`);
+	const [params] = useState(`?page=1&limit=10&sort=-createdAt`);
 
-	const fetchThemes = async () => {
+	const fetchReports = async () => {
 		try {
-			const res = await axios.get(`/themes${params}`);
-			setThemes(res?.data?.data);
-			setTotalResults({ ...totalResults, themes: res?.data?.countAll });
+			const res = await axios.get(`/reports${params}`);
+			setReports(res?.data?.data);
+			setTotalResults({ ...totalResults, reports: res?.data?.countAll });
 		} catch (err) {
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;
@@ -46,14 +46,14 @@ const AdminThemesIndex = () => {
 	};
 
 	useEffect(() => {
-		fetchThemes();
+		fetchReports();
 	}, [router]);
 
 	const handleDelete = async (id) => {
 		try {
-			await axios.delete(`/themes/${id}`);
-			toast.success("Theme deleted");
-			fetchThemes();
+			await axios.delete(`/reports/${id}`);
+			toast.success("Report deleted");
+			fetchReports();
 		} catch (err) {
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;
@@ -79,9 +79,9 @@ const AdminThemesIndex = () => {
 
 	const handleDeleteAll = async () => {
 		try {
-			await axios.delete(`/themes/deleteall`);
-			toast.success("Themes deleted");
-			fetchThemes();
+			await axios.delete(`/reports/deleteall`);
+			toast.success("Reports deleted");
+			fetchReports();
 		} catch (err) {
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;
@@ -108,30 +108,30 @@ const AdminThemesIndex = () => {
 	return (
 		<>
 			<AdminStatusesMenu
-				allLink="/noadmin/themes"
-				publishedLink="/noadmin/themes/published"
-				draftLink="/noadmin/themes/draft"
-				scheduledLink="/noadmin/themes/scheduled"
-				trashedLink="/noadmin/themes/trashed"
+				allLink="/noadmin/reports"
+				publishedLink="/noadmin/reports/published"
+				draftLink="/noadmin/reports/draft"
+				scheduledLink="/noadmin/reports/scheduled"
+				trashedLink="/noadmin/reports/trashed"
 			/>
 			<div className="card rounded-0">
 				<AdminCardHeaderMenu
-					allLink="/noadmin/themes"
-					pageText="Themes"
-					totalResults={totalResults.themes}
-					addLink="/noadmin/themes/create"
-					addLinkText="theme"
+					allLink={`/noadmin/reports`}
+					pageText="Reports"
+					totalResults={totalResults.reports}
+					addLink={`/noadmin/reports/create`}
+					addLinkText={`report`}
 					handleDeleteAllFunction={handleDeleteAll}
 				/>
-				{themes?.length > 0 ? (
+				{reports?.length > 0 ? (
 					<ul className="list-group list-group-flush">
-						{themes?.map((theme) => (
+						{reports?.map((report) => (
 							<Single
-								key={theme._id}
-								object={theme}
+								key={report._id}
+								object={report}
 								handleDelete={handleDelete}
-								objects={themes}
-								setObjects={setThemes}
+								objects={reports}
+								setObjects={setReports}
 								setTotalResults={setTotalResults}
 							/>
 						))}
@@ -146,4 +146,4 @@ const AdminThemesIndex = () => {
 	);
 };
 
-export default AdminThemesIndex;
+export default AdminReportsIndex;

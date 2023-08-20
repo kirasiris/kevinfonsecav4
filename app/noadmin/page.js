@@ -2,7 +2,7 @@
 import QuickBlogDraft from "@/components/admin/quickblogdraft";
 import QuickQuoteDraft from "@/components/admin/quickquotedraft";
 import AuthContext from "@/helpers/globalContext";
-import DynamicCards from "@/layout/dynamiccards";
+import DynamicCards from "@/components/global/dynamiccards";
 import Header from "@/layout/header";
 import { useContext } from "react";
 

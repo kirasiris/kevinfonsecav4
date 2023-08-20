@@ -1,6 +1,6 @@
 "use client";
 
-import AdminMediaLibray from "@/layout/admin/adminmedialibray";
+import AdminMediaLibray from "@/components/admin/adminmedialibray";
 
 const AdminFilesIndex = () => {
 	return <AdminMediaLibray />;

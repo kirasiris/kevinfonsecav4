@@ -3,7 +3,7 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "react-toastify";
-import MyTextArea from "@/layout/mytextarea";
+import MyTextArea from "@/components/global/mytextarea";
 
 const CreateChangelog = () => {
 	const router = useRouter();

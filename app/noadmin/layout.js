@@ -3,7 +3,7 @@ import { AuthProvider } from "@/helpers/globalContext";
 import "../global.css";
 import "../admin.css";
 import "../app.css";
-import AdminMenu from "@/layout/admin/adminmenu";
+import AdminMenu from "@/components/admin/adminmenu";
 import AuthenticatedRoute from "./authenticatedroute";
 
 export default function AdminLayout({ children }) {

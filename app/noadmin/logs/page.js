@@ -5,8 +5,8 @@ import { useState, useEffect, useContext } from "react";
 import { toast } from "react-toastify";
 import Single from "@/components/admin/logs/single";
 import AuthContext from "@/helpers/globalContext";
-import AdminStatusesMenu from "@/layout/admin/adminstatusesmenu";
-import AdminCardHeaderMenu from "@/layout/admin/admincardheadermenu";
+import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
+import AdminCardHeaderMenu from "@/components/admin/admincardheadermenu";
 
 const AdminLogsIndex = () => {
 	const { totalResults, setTotalResults } = useContext(AuthContext);

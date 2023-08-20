@@ -1,5 +1,4 @@
 "use client";
-
 import axios from "axios";
 import { useContext, useState, useEffect } from "react";
 import { toast } from "react-toastify";
@@ -9,7 +8,7 @@ import Dropzone from "react-dropzone";
 import { ButtonGroup, Dropdown } from "react-bootstrap";
 import AuthContext from "@/helpers/globalContext";
 import AdminMediaLibraryMenu from "./adminmediamenu";
-import UseProgress from "../useprogress";
+import UseProgress from "../../components/global/useprogress";
 import Single from "@/components/admin/files/single";
 
 const AdminMediaLibray = ({

@@ -1,6 +1,7 @@
 import DropdownButton from "react-bootstrap/DropdownButton";
 import Link from "next/link";
 import DeleteModal from "@/components/global/deletemodal";
+import Image from "next/image";
 
 const Single = ({
 	object = {},
@@ -17,17 +18,17 @@ const Single = ({
 					<h1 className="blog-item__title">
 						<Link
 							href={{
-								pathname: `/noadmin/quotes/update/${object._id}`,
+								pathname: `/noadmin/reports/read/${object._id}`,
 								query: {},
 							}}
 							passHref
 							legacyBehavior
 						>
-							<a className="blog-item__title-link">{object.authorName}</a>
+							<a className="blog-item__title-link">{object.title}</a>
 						</Link>
 					</h1>
 					<div className="blog-item__meta">
-						<span>{object.text}</span>
+						{/* <span className="blog-item__meta-time-status">{object.text}</span> */}
 					</div>
 				</div>
 				<div className="blog-actions-ellipsis-menu">

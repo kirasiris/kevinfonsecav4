@@ -3,8 +3,8 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import AdminSidebar from "@/layout/admin/adminsidebar";
-import MyTextArea from "@/layout/mytextarea";
+import AdminSidebar from "@/components/admin/adminsidebar";
+import MyTextArea from "@/components/global/mytextarea";
 import AuthContext from "@/helpers/globalContext";
 
 const CreateTheme = () => {

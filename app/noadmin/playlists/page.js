@@ -3,25 +3,25 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useContext } from "react";
 import { toast } from "react-toastify";
-import Single from "@/components/admin/posts/single";
+import Single from "@/components/admin/playlists/single";
 import AuthContext from "@/helpers/globalContext";
 import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
 import AdminCardHeaderMenu from "@/components/admin/admincardheadermenu";
 
-const AdminPostsIndex = () => {
-	const { auth, totalResults, setTotalResults } = useContext(AuthContext);
+const AdminPlaylistsIndex = () => {
+	const { totalResults, setTotalResults } = useContext(AuthContext);
 
 	const router = useRouter();
 
-	const [posts, setPosts] = useState([]);
+	const [playlists, setPlaylists] = useState([]);
 
-	const [params] = useState(`?page=1&limit=10&sort=-createdAt&postType=post`);
+	const [params] = useState(`?page=1&limit=10&sort=-createdAt`);
 
-	const fetchPosts = async () => {
+	const fetchPlaylists = async () => {
 		try {
-			const res = await axios.get(`/posts${params}`);
-			setPosts(res?.data?.data);
-			setTotalResults({ ...totalResults, posts: res?.data?.countAll });
+			const res = await axios.get(`/playlists${params}`);
+			setPlaylists(res?.data?.data);
+			setTotalResults({ ...totalResults, playlists: res?.data?.countAll });
 		} catch (err) {
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;
@@ -46,14 +46,14 @@ const AdminPostsIndex = () => {
 	};
 
 	useEffect(() => {
-		fetchPosts();
+		fetchPlaylists();
 	}, [router]);
 
 	const handleDelete = async (id) => {
 		try {
-			await axios.delete(`/posts/${id}`);
-			toast.success("Post deleted");
-			fetchPosts();
+			await axios.delete(`/playlists/${id}`);
+			toast.success("Playlist deleted");
+			fetchPlaylists();
 		} catch (err) {
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;
@@ -79,9 +79,9 @@ const AdminPostsIndex = () => {
 
 	const handleDeleteAll = async () => {
 		try {
-			await axios.delete(`/posts/deleteall`);
-			toast.success("Posts deleted");
-			fetchPosts();
+			await axios.delete(`/playlists/deleteall`);
+			toast.success("Playlists deleted");
+			fetchPlaylists();
 		} catch (err) {
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;
@@ -108,32 +108,31 @@ const AdminPostsIndex = () => {
 	return (
 		<>
 			<AdminStatusesMenu
-				allLink="/noadmin/posts"
-				publishedLink="/noadmin/posts/published"
-				draftLink="/noadmin/posts/draft"
-				scheduledLink="/noadmin/posts/scheduled"
-				trashedLink="/noadmin/posts/trashed"
+				allLink="/noadmin/playlists"
+				publishedLink="/noadmin/playlists/published"
+				draftLink="/noadmin/playlists/draft"
+				scheduledLink="/noadmin/playlists/scheduled"
+				trashedLink="/noadmin/playlists/trashed"
 			/>
 			<div className="card rounded-0">
 				<AdminCardHeaderMenu
-					allLink={`/noadmin/posts`}
-					pageText="Posts"
-					totalResults={totalResults.posts}
-					addLink={`/noadmin/posts/create`}
-					addLinkText={`post`}
+					allLink={`/noadmin/playlists`}
+					pageText="Playlists"
+					totalResults={totalResults.playlists}
+					addLink={`/noadmin/playlists/create`}
+					addLinkText={`playlist`}
 					handleDeleteAllFunction={handleDeleteAll}
 				/>
-				{posts?.length > 0 ? (
+				{playlists?.length > 0 ? (
 					<ul className="list-group list-group-flush">
-						{posts?.map((post) => (
+						{playlists?.map((playlist) => (
 							<Single
-								key={post._id}
-								object={post}
+								key={playlist._id}
+								object={playlist}
 								handleDelete={handleDelete}
-								objects={posts}
-								setObjects={setPosts}
+								objects={playlists}
+								setObjects={setPlaylists}
 								setTotalResults={setTotalResults}
-								auth={auth}
 							/>
 						))}
 					</ul>
@@ -147,4 +146,4 @@ const AdminPostsIndex = () => {
 	);
 };
 
-export default AdminPostsIndex;
+export default AdminPlaylistsIndex;

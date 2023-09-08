@@ -86,30 +86,36 @@ const YouTubePage = ({ searchParams, pushTo = true }) => {
 		},
 	};
 
-	// If searchParams are found, load the corresponding video data
 	useEffect(() => {
-		const fetchYouTube = async (id, videoId) => {
-			const res = await fetch(
-				`http://localhost:5000/api/v1/extras/youtube/${id}/${videoId}`
-			);
-			const data = await res.json();
-			setVideo(data.data);
-		};
+		if (searchParams._id && searchParams.videoId) {
+			const fetchYouTube = async (id, videoId) => {
+				const res = await fetch(
+					`http://localhost:5000/api/v1/extras/youtube/${id}/${videoId}`
+				);
+				const data = await res.json();
+				setVideo(data.data);
+			};
+			fetchYouTube(searchParams._id, searchParams.videoId).then((result) => {
+				setVideoData({
+					...videoData,
+					video_url: result.data.video_url,
+					download_video: result.data.download_video,
+				});
+			});
+		}
+		return () => {};
+	}, [searchParams._id, searchParams.videoId]);
 
-		searchParams._id &&
-			searchParams.videoId &&
-			fetchYouTube(searchParams._id, searchParams.videoId);
-	}, []);
-
-	// Otherwise load the most recent video found in DB
 	useEffect(() => {
 		const fetchYouTubes = async (id, videoId) => {
 			const res = await fetch(`http://localhost:5000/api/v1/extras/youtube`);
 			const data = await res.json();
-			!id && !videoId && setVideo(data.data[0]);
-			setVideos(data.data);
+			// !id && !videoId && setVideo(data?.data[0]);
+			setVideo(data.data[0]); // Display the most recent video
+			setVideos(data.data); // The set rest of them
 		};
-		fetchYouTubes(searchParams._id, searchParams.videoId);
+		// fetchYouTubes(searchParams._id, searchParams.videoId);
+		fetchYouTubes();
 	}, []);
 
 	const loadVideo = async (id, videoId) => {

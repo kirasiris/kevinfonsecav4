@@ -141,6 +141,7 @@ export const AuthProvider = ({ children }) => {
 		ytdownloads: 0,
 		shorturls: 0,
 		logs: 0,
+		users: 0,
 	});
 	const [files, setFiles] = useState({
 		media: [],

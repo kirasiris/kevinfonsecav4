@@ -3,25 +3,25 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useContext } from "react";
 import { toast } from "react-toastify";
-import Single from "@/components/admin/posts/single";
+import Single from "@/components/admin/users/single";
 import AuthContext from "@/helpers/globalContext";
 import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
 import AdminCardHeaderMenu from "@/components/admin/admincardheadermenu";
 
-const AdminPostsIndex = () => {
-	const { auth, totalResults, setTotalResults } = useContext(AuthContext);
+const AdminUsersIndex = () => {
+	const { totalResults, setTotalResults } = useContext(AuthContext);
 
 	const router = useRouter();
 
-	const [posts, setPosts] = useState([]);
+	const [users, setUsers] = useState([]);
 
-	const [params] = useState(`?page=1&limit=10&sort=-createdAt&postType=post`);
+	const [params] = useState(`?page=1&limit=10&sort=-createdAt`);
 
-	const fetchPosts = async () => {
+	const fetchUsers = async () => {
 		try {
-			const res = await axios.get(`/posts${params}`);
-			setPosts(res?.data?.data);
-			setTotalResults({ ...totalResults, posts: res?.data?.countAll });
+			const res = await axios.get(`/users${params}`);
+			setUsers(res?.data?.data);
+			setTotalResults({ ...totalResults, users: res?.data?.countAll });
 		} catch (err) {
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;
@@ -46,14 +46,14 @@ const AdminPostsIndex = () => {
 	};
 
 	useEffect(() => {
-		fetchPosts();
+		fetchUsers();
 	}, [router]);
 
 	const handleDelete = async (id) => {
 		try {
-			await axios.delete(`/posts/${id}`);
-			toast.success("Post deleted");
-			fetchPosts();
+			await axios.delete(`/users/${id}`);
+			toast.success("User deleted");
+			fetchUsers();
 		} catch (err) {
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;
@@ -79,9 +79,9 @@ const AdminPostsIndex = () => {
 
 	const handleDeleteAll = async () => {
 		try {
-			await axios.delete(`/posts/deleteall`);
-			toast.success("Posts deleted");
-			fetchPosts();
+			await axios.delete(`/users/deleteall`);
+			toast.success("Users deleted");
+			fetchUsers();
 		} catch (err) {
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;
@@ -108,32 +108,31 @@ const AdminPostsIndex = () => {
 	return (
 		<>
 			<AdminStatusesMenu
-				allLink="/noadmin/posts"
-				publishedLink="/noadmin/posts/published"
-				draftLink="/noadmin/posts/draft"
-				scheduledLink="/noadmin/posts/scheduled"
-				trashedLink="/noadmin/posts/trashed"
+				allLink="/noadmin/users"
+				publishedLink="/noadmin/users/published"
+				draftLink="/noadmin/users/draft"
+				scheduledLink="/noadmin/users/scheduled"
+				trashedLink="/noadmin/users/trashed"
 			/>
 			<div className="card rounded-0">
 				<AdminCardHeaderMenu
-					allLink={`/noadmin/posts`}
-					pageText="Posts"
-					totalResults={totalResults.posts}
-					addLink={`/noadmin/posts/create`}
-					addLinkText={`post`}
+					allLink={`/noadmin/users`}
+					pageText="Users"
+					totalResults={totalResults.users}
+					addLink={`/noadmin/users/create`}
+					addLinkText={`user`}
 					handleDeleteAllFunction={handleDeleteAll}
 				/>
-				{posts?.length > 0 ? (
+				{users?.length > 0 ? (
 					<ul className="list-group list-group-flush">
-						{posts?.map((post) => (
+						{users?.map((user) => (
 							<Single
-								key={post._id}
-								object={post}
+								key={user._id}
+								object={user}
 								handleDelete={handleDelete}
-								objects={posts}
-								setObjects={setPosts}
+								objects={users}
+								setObjects={setUsers}
 								setTotalResults={setTotalResults}
-								auth={auth}
 							/>
 						))}
 					</ul>
@@ -147,4 +146,4 @@ const AdminPostsIndex = () => {
 	);
 };
 
-export default AdminPostsIndex;
+export default AdminUsersIndex;

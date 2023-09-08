@@ -103,12 +103,7 @@ const Home = async () => {
 						</h2>
 						<div className="row justify-content-center">
 							{themes.data.map((theme, index) => (
-								<div
-									key={theme._id}
-									className={`col-lg-4 col-md-6 mb-4 ${index}`}
-								>
-									<SingleTheme theme={theme} />
-								</div>
+								<SingleTheme key={theme._id} theme={theme} />
 							))}
 						</div>
 					</div>

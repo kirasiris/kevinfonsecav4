@@ -182,7 +182,7 @@ const AdminCategoriesIndex = () => {
 							placeholder=""
 						/>
 						<label
-							htmlFor="blog-text multipurpose-textarea"
+							htmlFor="category-text multipurpose-textarea"
 							className="form-label"
 						>
 							Text
@@ -191,12 +191,8 @@ const AdminCategoriesIndex = () => {
 							id="category-text"
 							name="text"
 							value={text}
-							handleChangeValue={(e) =>
-								setCategoryData({
-									...categoryData,
-									text: e.target.value,
-								})
-							}
+							objectData={categoryData}
+							setObjectData={setCategoryData}
 						/>
 						<div className="form-check form-switch">
 							<input

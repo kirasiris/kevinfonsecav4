@@ -157,11 +157,14 @@ const CreateVideo = () => {
 					className="form-control mb-3"
 					placeholder=""
 				/>
-				<label htmlFor="blog-text multipurpose-textarea" className="form-label">
+				<label
+					htmlFor="video-text multipurpose-textarea"
+					className="form-label"
+				>
 					Text
 				</label>
 				<MyTextArea
-					id="blog-text"
+					id="video-text"
 					name="text"
 					value={text}
 					objectData={videoData}

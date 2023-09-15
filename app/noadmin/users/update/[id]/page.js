@@ -1,13 +1,13 @@
 "use client";
 import axios from "axios";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import MyTextArea from "@/components/global/mytextarea";
 import AuthContext from "@/helpers/globalContext";
 
-const CreateUser = () => {
-	const { auth } = useContext(AuthContext);
+const UpdateUser = () => {
+	const { auth, files } = useContext(AuthContext);
 
 	const router = useRouter();
 
@@ -18,7 +18,6 @@ const CreateUser = () => {
 			const res = await axios.get(`/users${params}`);
 			setUsers(res?.data?.data);
 		} catch (err) {
-			console.log("Aqui hay un error", err);
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;
 			const errors = err?.response?.data?.errors;
@@ -100,11 +99,79 @@ const CreateUser = () => {
 		xboxId,
 	} = userData;
 
-	const addUser = async (e) => {
+	const [user, setUser] = useState(null);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState(false);
+
+	const { id } = useParams();
+	const userId = id;
+
+	useEffect(() => {
+		const fetchUser = async () => {
+			try {
+				const res = await axios.get(`/users/${userId}`);
+				setUser(res?.data?.data);
+				setUserData({
+					username: res?.data?.data?.username,
+					name: res?.data?.data?.name,
+					email: res?.data?.data?.email,
+					secondaryEmail: res?.data?.data?.secondaryEmail,
+					phoneNumber: res?.data?.data?.phoneNumber,
+					password: res?.data?.data?.password,
+					password2: res?.data?.data?.password,
+					isEmailConfirmed: res?.data?.data?.isEmailConfirmed,
+					role: res?.data?.data?.role,
+					sex: res?.data?.data?.sex,
+					gender: res?.data?.data?.gender,
+					age: res?.data?.data?.age,
+					relationshipStatus: res?.data?.data?.relationshipStatus,
+					inRelationshipWith: res?.data?.data?.inRelationshipWith,
+					company: res?.data?.data?.company,
+					workstatus: res?.data?.data?.workstatus,
+					bio: res?.data?.data?.bio,
+					website: res?.data?.data?.website,
+					twitter: res?.data?.data?.twitter,
+					facebook: res?.data?.data?.facebook,
+					youtube: res?.data?.data?.youtube,
+					instagram: res?.data?.data?.instagram,
+					linkedin: res?.data?.data?.linkedin,
+					steamId: res?.data?.data?.steamId,
+					xboxId: res?.data?.data?.xboxId,
+				});
+				setLoading(false);
+			} catch (err) {
+				console.log(err);
+				// const error = err.response.data.message;
+				const error = err?.response?.data?.error?.errors;
+				const errors = err?.response?.data?.errors;
+
+				if (error) {
+					// dispatch(setAlert(error, 'danger'));
+					error &&
+						Object.entries(error).map(([, value]) =>
+							toast.error(value.message)
+						);
+				}
+
+				if (errors) {
+					errors.forEach((error) => toast.error(error.msg));
+				}
+
+				toast.error(err?.response?.statusText);
+				return {
+					msg: err?.response?.statusText,
+					status: err?.response?.status,
+				};
+			}
+		};
+		fetchUser();
+	}, [userId]);
+
+	const upgradeUser = async (e) => {
 		e.preventDefault();
 		try {
-			await axios.post(`/users`, userData);
-			toast.success(`Item created`);
+			await axios.put(`/users/${user._id}`, userData);
+			toast.success(`Item updated`);
 			router.push(`/noadmin/users`);
 		} catch (err) {
 			console.log(err);
@@ -157,8 +224,14 @@ const CreateUser = () => {
 		});
 	};
 
-	return (
-		<form onSubmit={addUser}>
+	return loading || user === null || user === undefined ? (
+		error ? (
+			<>Not found</>
+		) : (
+			<>Loading... {console.log(error)}</>
+		)
+	) : (
+		<form onSubmit={upgradeUser}>
 			<div className="row">
 				<div className="col">
 					<label htmlFor="username" className="form-label">
@@ -701,4 +774,4 @@ const CreateUser = () => {
 	);
 };
 
-export default CreateUser;
+export default UpdateUser;

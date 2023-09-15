@@ -52,7 +52,7 @@ const AdminQuotesIndex = () => {
 	}, [router]);
 
 	const [quoteData, setQuoteData] = useState({
-		text: ``,
+		text: `No description`,
 		authorName: ``,
 		authorUrl: `#`,
 		sourceWebsite: ``,
@@ -157,7 +157,7 @@ const AdminQuotesIndex = () => {
 
 	const resetForm = () => {
 		setQuoteData({
-			text: ``,
+			text: `No description`,
 			authorName: ``,
 			authorUrl: `#`,
 			sourceWebsite: ``,
@@ -180,21 +180,17 @@ const AdminQuotesIndex = () => {
 				<div className="col">
 					<form onSubmit={createQuote}>
 						<label
-							htmlFor="blog-text multipurpose-textarea"
+							htmlFor="quote-text multipurpose-textarea"
 							className="form-label"
 						>
 							Text
 						</label>
 						<MyTextArea
-							id="category-text"
+							id="quote-text"
 							name="text"
 							value={text}
-							handleChangeValue={(e) =>
-								setQuoteData({
-									...quoteData,
-									text: e.target.value,
-								})
-							}
+							objectData={quoteData}
+							setObjectData={setQuoteData}
 						/>
 						<label htmlFor="authorName" className="form-label">
 							Author Name

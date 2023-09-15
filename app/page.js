@@ -28,7 +28,7 @@ async function getThemes(params) {
 	return res.json();
 }
 
-const Home = async () => {
+const HomeIndex = async () => {
 	const getNewslettersData = getNewsletters(``);
 	const getBlogsData = getBlogs(
 		`?page=1&limit=2&sort=-createdAt&postType=blog&status=published`
@@ -150,4 +150,4 @@ const Home = async () => {
 	);
 };
 
-export default Home;
+export default HomeIndex;

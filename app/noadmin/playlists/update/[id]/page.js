@@ -76,7 +76,7 @@ const UpdatePlaylist = () => {
 	useEffect(() => {
 		const fetchPlaylist = async () => {
 			try {
-				const res = await axios.get(`/playlists/${playlistId}`);
+				const res = await axios.get(`/playlists/${playlist._id}`);
 				setPlaylist(res?.data?.data);
 				setPlaylistData({
 					title: res?.data?.data?.title,
@@ -187,11 +187,14 @@ const UpdatePlaylist = () => {
 					className="form-control mb-3"
 					placeholder=""
 				/>
-				<label htmlFor="blog-text multipurpose-textarea" className="form-label">
+				<label
+					htmlFor="playlist-text multipurpose-textarea"
+					className="form-label"
+				>
 					Text
 				</label>
 				<MyTextArea
-					id="blog-text"
+					id="playlist-text"
 					name="text"
 					value={text}
 					objectData={playlistData}

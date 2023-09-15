@@ -2,7 +2,7 @@ import Header from "@/layout/header";
 import Head from "@/app/head";
 import YouTubePage from "@/components/youtube/youtubepage";
 
-const LiveCodeIndex = async ({ searchParams }) => {
+const YouTubeIndex = async ({ searchParams }) => {
 	return (
 		<>
 			<Head
@@ -21,4 +21,4 @@ const LiveCodeIndex = async ({ searchParams }) => {
 	);
 };
 
-export default LiveCodeIndex;
+export default YouTubeIndex;

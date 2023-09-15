@@ -9,10 +9,10 @@ const CreateChangelog = () => {
 	const router = useRouter();
 
 	const [changelogData, setChangelogData] = useState({
-		title: ``,
-		text: ``,
+		title: `Untitled`,
+		text: `No description`,
 		status: `draft`,
-		postType: `enhancement`,
+		postType: [`enhancement`],
 		version: `1.0.0`,
 	});
 
@@ -48,10 +48,10 @@ const CreateChangelog = () => {
 
 	const resetForm = () => {
 		setChangelogData({
-			title: ``,
-			text: ``,
+			title: `Untitled`,
+			text: `No description`,
 			status: `draft`,
-			postType: `enhancement`,
+			postType: [`enhancement`],
 			version: `1.0.0`,
 		});
 	};

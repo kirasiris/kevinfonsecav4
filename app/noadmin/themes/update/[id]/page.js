@@ -200,11 +200,14 @@ const UpdateTheme = () => {
 					className="form-control mb-3"
 					placeholder=""
 				/>
-				<label htmlFor="blog-text multipurpose-textarea" className="form-label">
+				<label
+					htmlFor="theme-text multipurpose-textarea"
+					className="form-label"
+				>
 					Text
 				</label>
 				<MyTextArea
-					id="blog-text"
+					id="theme-text"
 					name="text"
 					value={text}
 					objectData={themeData}

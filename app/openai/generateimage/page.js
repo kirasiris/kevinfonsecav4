@@ -1,8 +1,8 @@
 import Header from "@/layout/header";
 import Head from "@/app/head";
-import AImagePage from "@/components/openai/generateimage/AImagePage";
+import AImagePage from "@/components/openai/generateimage/aimagepage";
 
-const AImage = async ({ searchParams }) => {
+const AImageIndex = async ({ searchParams }) => {
 	return (
 		<>
 			<Head
@@ -19,4 +19,4 @@ const AImage = async ({ searchParams }) => {
 	);
 };
 
-export default AImage;
+export default AImageIndex;

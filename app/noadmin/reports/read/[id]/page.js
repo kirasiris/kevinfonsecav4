@@ -3,8 +3,6 @@ import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import Image from "next/image";
-import MyTextArea from "@/components/global/mytextarea";
 import ParseHtml from "@/layout/parseHtml";
 
 const ReadReport = () => {

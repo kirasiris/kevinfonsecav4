@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import WaveSurfer from "wavesurfer.js";
 import { FaPlayCircle, FaPauseCircle, FaStop } from "react-icons/fa";
 import { GoMute, GoUnmute } from "react-icons/go";
-import WaveSurferMicrophone from "wavesurfer.js/dist/plugin/wavesurfer.microphone";
 import WaverSurferCursor from "wavesurfer.js/dist/plugin/wavesurfer.cursor";
 import WaverSurferMediaSessionData from "wavesurfer.js/dist/plugin/wavesurfer.mediasession";
 
@@ -37,15 +36,6 @@ const Waveform = ({
 			responsive: false,
 			height: 100,
 			plugins: [
-				WaveSurferMicrophone.create({
-					bufferSize: 4096,
-					numberOfInputChannels: 1,
-					numberOfOutputChannels: 1,
-					constraints: {
-						video: false,
-						audio: true,
-					},
-				}),
 				WaverSurferCursor.create({
 					showTime: true,
 					opacity: 1,
@@ -71,14 +61,6 @@ const Waveform = ({
 		setWaveSurfer(wavesurfer);
 
 		wavesurfer.load(src);
-
-		wavesurfer.microphone?.on("deviceReady", function (stream) {
-			console.log("Device ready!", stream);
-		});
-
-		wavesurfer.microphone?.on("deviceError", function (code) {
-			console.warn("Device error: " + code);
-		});
 
 		return () => {
 			wavesurfer.destroy();

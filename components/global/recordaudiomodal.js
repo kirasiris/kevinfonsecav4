@@ -1,30 +1,58 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Modal from "react-bootstrap/Modal";
 import { FaMicrophone, FaMicrophoneSlash, FaStop } from "react-icons/fa";
-import { ReactMic } from "react-mic";
+import WaveSurfer from "wavesurfer.js";
+import RecordPlugin from "wavesurfer.js/dist/plugins/record.esm";
 import {
 	recordAudio,
 	stopAudio,
 	cancelAudio,
 } from "@/helpers/formatConvertions";
-
 import Waveform from "@/layout/waveform";
 
 const RecordAudioModal = ({}) => {
 	const [audioRecordModal, setAudioRecordModal] = useState(false);
-
 	const [recordingAudio, setRecordingAudio] = useState(false);
 	const [recordingAudioVisual, setRecordingAudioVisual] = useState(false);
 	const [audioRecordingUrl, setAudioRecordingUrl] = useState(null);
 
+	useEffect(() => {
+		if (recordingAudio) {
+			const wavesurfer = WaveSurfer.create({
+				container: "#mic",
+				waveColor: "#f50",
+				progressColor: "#333",
+				cursorColor: "#f50",
+				barWidth: 3,
+				barHeight: 1,
+				barRadius: 0,
+				barGap: null,
+				responsive: false,
+				height: 100,
+			});
+
+			const record = RecordPlugin.create();
+
+			wavesurfer.registerPlugin(record);
+
+			if (record.isRecording()) {
+				record.stopRecording();
+				return;
+			}
+
+			record.startRecording();
+
+			return () => {
+				wavesurfer.destroy();
+			};
+		}
+	}, [recordingAudio]);
+
 	const startRecordingAudio = async () => {
 		setAudioRecordingUrl(null);
 		setRecordingAudio(true);
-		// setRecordingAudioVisual(true);
-		setTimeout(() => {
-			setRecordingAudioVisual(true);
-		}, 100);
+		setRecordingAudioVisual(true);
 		await recordAudio();
 	};
 
@@ -47,7 +75,9 @@ const RecordAudioModal = ({}) => {
 			<button
 				className="btn btn-secondary btn-sm"
 				type="button"
-				onClick={() => setAudioRecordModal(!audioRecordModal)}
+				onClick={() => {
+					setAudioRecordModal(!audioRecordModal);
+				}}
 			>
 				<FaMicrophone style={{ fontSize: "25px" }} />
 			</button>
@@ -86,16 +116,24 @@ const RecordAudioModal = ({}) => {
 							<FaStop style={{ fontSize: "25px" }} />
 						</button>
 					)}
+
 					{recordingAudioVisual && (
-						<ReactMic
-							record={recordingAudio}
-							className="react-mic"
-							strokeColor="#000"
-							backgroundColor="#fff"
+						<div
+							id="mic"
+							style={{
+								border: "1px solid #ddd",
+								marginTop: "1rem",
+							}}
 						/>
 					)}
 					{audioRecordingUrl !== undefined && audioRecordingUrl !== null && (
-						<Waveform src={audioRecordingUrl} />
+						<Waveform
+							src={audioRecordingUrl}
+							styleGiven={{
+								border: "1px solid #ddd",
+								marginTop: "1rem",
+							}}
+						/>
 					)}
 				</Modal.Body>
 				<Modal.Footer>

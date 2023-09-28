@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import RecordAudioModal from "@/components/global/recordaudiomodal";
+import Waveform from "@/layout/waveform";
 
 const PlaygroundIndex = () => {
 	/*
@@ -42,6 +43,12 @@ const PlaygroundIndex = () => {
 		<div className="container">
 			<div className="row">PlaygroundIndex</div>
 			<RecordAudioModal />
+			<Waveform
+				src="/JinMoriSaysRun.mp3"
+				mediaTitle="The God of High School OST - Seoul Team / Monkey King Say Run ( HQ Cover)"
+				mediaAuthor="Dude's Cover"
+				mediaAlbum=""
+			/>
 		</div>
 	);
 };

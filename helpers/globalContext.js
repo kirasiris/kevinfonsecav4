@@ -22,7 +22,7 @@ export const AuthProvider = ({ children }) => {
 	const loadUser = async () => {
 		try {
 			const res = await axios.get(`/auth/me`);
-			console.log("Holas from loadUser function call", res);
+			console.log("Holas from loadUser function call", res?.data?.data);
 			return res?.data;
 		} catch (err) {
 			// const error = err.response.data.message;

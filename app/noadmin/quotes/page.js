@@ -191,6 +191,8 @@ const AdminQuotesIndex = () => {
 							value={text}
 							objectData={quoteData}
 							setObjectData={setQuoteData}
+							onModel="Quote"
+							advancedTextEditor={false}
 						/>
 						<label htmlFor="authorName" className="form-label">
 							Author Name

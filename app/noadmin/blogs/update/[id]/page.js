@@ -204,6 +204,8 @@ const UpdateBlog = () => {
 					value={text}
 					objectData={blogData}
 					setObjectData={setBlogData}
+					onModel="Blog"
+					advancedTextEditor={true}
 				/>
 			</div>
 			<div className="col-lg-3">

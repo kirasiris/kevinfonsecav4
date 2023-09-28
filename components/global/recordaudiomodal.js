@@ -10,12 +10,20 @@ import {
 	cancelAudio,
 } from "@/helpers/formatConvertions";
 import Waveform from "@/layout/waveform";
+import axios from "axios";
+import UseProgress from "./useprogress";
 
-const RecordAudioModal = ({}) => {
+const RecordAudioModal = ({
+	auth,
+	objectData,
+	setObjectData,
+	onModel = "Blog",
+}) => {
 	const [audioRecordModal, setAudioRecordModal] = useState(false);
 	const [recordingAudio, setRecordingAudio] = useState(false);
 	const [recordingAudioVisual, setRecordingAudioVisual] = useState(false);
 	const [audioRecordingUrl, setAudioRecordingUrl] = useState(null);
+	const [uploadPercentage, setUploadPercentage] = useState(0);
 
 	useEffect(() => {
 		if (recordingAudio) {
@@ -60,7 +68,32 @@ const RecordAudioModal = ({}) => {
 		setRecordingAudio(false);
 		setRecordingAudioVisual(false);
 		const finalAudio = await stopAudio();
-		setAudioRecordingUrl(finalAudio);
+		setAudioRecordingUrl(finalAudio.blobUrl);
+		const res = await axios.put(
+			`/uploads/uploadObject`,
+			{
+				userId: auth?.user._id,
+				username: auth?.user.username,
+				userEmail: auth?.user.email,
+				onModel: onModel,
+				file: finalAudio.blobFile,
+			},
+			{
+				headers: {
+					Authorization: `Bearer ${auth?.token}`,
+					"Content-Type": "multipart/form-data",
+				},
+				onUploadProgress: (ProgressEvent) => {
+					setUploadPercentage(
+						parseInt(
+							Math.round(ProgressEvent.loaded * 100) / ProgressEvent.total
+						)
+					);
+					setTimeout(() => setUploadPercentage(0), 10000);
+				},
+			}
+		);
+		setObjectData({ ...objectData, files: res?.data?.data });
 	};
 
 	const cancelRecordingAudio = async () => {
@@ -116,16 +149,17 @@ const RecordAudioModal = ({}) => {
 							<FaStop style={{ fontSize: "25px" }} />
 						</button>
 					)}
-
 					{recordingAudioVisual && (
 						<div
 							id="mic"
 							style={{
 								border: "1px solid #ddd",
 								marginTop: "1rem",
+								height: "100px",
 							}}
 						/>
 					)}
+					<UseProgress percentage={uploadPercentage} />
 					{audioRecordingUrl !== undefined && audioRecordingUrl !== null && (
 						<Waveform
 							src={audioRecordingUrl}
@@ -148,7 +182,16 @@ const RecordAudioModal = ({}) => {
 					>
 						Close
 					</button>
-					<button className="btn btn-primary btn-sm" type="submit">
+					<button
+						className="btn btn-primary btn-sm"
+						onClick={() => {
+							setAudioRecordModal(!audioRecordModal);
+							setRecordingAudio(false);
+							setRecordingAudioVisual(false);
+							setAudioRecordingUrl(null);
+						}}
+						type="submit"
+					>
 						Submit
 					</button>
 				</Modal.Footer>

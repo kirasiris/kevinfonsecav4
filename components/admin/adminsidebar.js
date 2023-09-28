@@ -208,7 +208,11 @@ const AdminSidebar = ({
 					.map((category) => (
 						<optgroup key={category._id} label={category.title}>
 							{categories
-								.filter((c) => c.parentCategory?._id === category._id)
+								.filter(
+									(c) =>
+										c.parentCategory?._id === category._id ||
+										c._id === category._id
+								)
 								.map((childC) => (
 									<option key={childC._id} value={childC._id}>
 										{childC.title}

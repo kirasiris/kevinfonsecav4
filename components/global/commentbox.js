@@ -119,6 +119,8 @@ const CommentBox = ({
 									value={text}
 									objectData={commentData}
 									setObjectData={setCommentData}
+									onModel="Comment"
+									advancedTextEditor={false}
 								/>
 							</div>
 						</div>

@@ -31,7 +31,7 @@ async function getThemes(params) {
 const HomeIndex = async () => {
 	const getNewslettersData = getNewsletters(``);
 	const getBlogsData = getBlogs(
-		`?page=1&limit=2&sort=-createdAt&postType=blog&status=published`
+		`?page=1&limit=3&sort=-createdAt&postType=blog&status=published`
 	);
 
 	const getThemesData = getThemes(

@@ -1,10 +1,11 @@
 "use client";
 import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { toast } from "react-toastify";
 import Image from "next/image";
 import MyTextArea from "@/components/global/mytextarea";
+import Plyr from "plyr";
 
 const UpdateFile = () => {
 	const router = useRouter();
@@ -100,6 +101,73 @@ const UpdateFile = () => {
 		});
 	};
 
+	/*
+	 *
+	 * IMAGE OBJECT
+	 *
+	 */
+	const imgObj = ({ file }) => {
+		return (
+			<figure title={file.title}>
+				<Image
+					src={
+						file?.location?.secure_location ||
+						`https://source.unsplash.com/random/188x188`
+					}
+					alt={file.title}
+					width={`1200`}
+					height={`900`}
+				/>
+			</figure>
+		);
+	};
+
+	/*
+	 *
+	 * PDF OBJECT
+	 *
+	 */
+
+	const pdfObj = ({ file }) => {
+		return (
+			<object
+				data={file?.location?.secure_location}
+				type={`${file?.format_type}/${file?.format}`}
+				width="100%"
+				height="100%"
+			>
+				<p>
+					Alternative text - include a link{" "}
+					<a href="http://africau.edu/images/default/sample.pdf">to the PDF!</a>
+				</p>
+			</object>
+		);
+	};
+	/*
+	 *
+	 * VIDEO OBJECT
+	 *
+	 */
+	const videoRef = useRef(null);
+
+	useEffect(() => {
+		const player = new Plyr(videoRef.current);
+		return () => {
+			player.destroy();
+		};
+	}, [fileId]);
+
+	const vidObj = ({ file }) => {
+		return (
+			<video ref={videoRef} title={file.title} controls>
+				<source
+					src={file?.location?.secure_location}
+					type={`${file?.format_type}/${file?.format}`}
+				/>
+			</video>
+		);
+	};
+
 	return loading || file === null || file === undefined ? (
 		error ? (
 			<>Not found</>
@@ -109,12 +177,9 @@ const UpdateFile = () => {
 	) : (
 		<form className="row" onSubmit={upgradeFile}>
 			<div className="col">
-				<Image
-					src={file?.location?.secure_location}
-					alt={file.title}
-					width={`1200`}
-					height={`900`}
-				/>
+				{file.format_type === "image" && imgObj({ file })}
+				{file.format_type === "application" && pdfObj({ file })}
+				{file.format_type === "video" && vidObj({ file })}
 			</div>
 			<div className="col">
 				<label htmlFor="file-title" className="form-label">
@@ -177,6 +242,8 @@ const UpdateFile = () => {
 					value={text}
 					objectData={fileData}
 					setObjectData={setFileData}
+					onModel="File"
+					advancedTextEditor={false}
 				/>
 				<label htmlFor="file-url" className="form-label">
 					URL

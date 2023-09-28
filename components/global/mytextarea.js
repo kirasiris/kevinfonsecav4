@@ -1,35 +1,13 @@
 "use client";
-import { useContext } from "react";
+import axios from "axios";
 import FroalaEditorComponent from "react-froala-wysiwyg";
 // Require Editor CSS files.
 import "froala-editor/css/froala_style.min.css";
 import "froala-editor/css/froala_editor.pkgd.min.css";
 // Import all Froala Editor plugins;
 import "froala-editor/js/plugins.pkgd.min.js";
-// Import a single Froala Editor plugin.
-import "froala-editor/js/plugins/image.min.js";
-// import 'froala-editor/js/plugins/align.min.js';
-
-// Import a language file.
-// import 'froala-editor/js/languages/de.js';
-
-// Import a third-party plugin.
-// import 'froala-editor/js/third_party/image_tui.min.js';
-// import 'froala-editor/js/third_party/embedly.min.js';
-// import 'froala-editor/js/third_party/spell_checker.min.js';
-
-// Include font-awesome css if required.
-// install using "npm install font-awesome --save"
-// import 'font-awesome/css/font-awesome.css';
-// import 'froala-editor/js/third_party/font_awesome.min.js';
-
-// Include special components if required.
-// import FroalaEditorView from 'react-froala-wysiwyg/FroalaEditorView';
-// import FroalaEditorA from 'react-froala-wysiwyg/FroalaEditorA';
-// import FroalaEditorButton from 'react-froala-wysiwyg/FroalaEditorButton';
-// import FroalaEditorImg from 'react-froala-wysiwyg/FroalaEditorImg';
-// import FroalaEditorInput from 'react-froala-wysiwyg/FroalaEditorInput';
 import AuthContext from "@/helpers/globalContext";
+import { useContext } from "react";
 
 const MyTextArea = ({
 	id = "",
@@ -37,10 +15,12 @@ const MyTextArea = ({
 	value = "",
 	objectData,
 	setObjectData = () => {},
+	onModel = "Blog",
+	advancedTextEditor = true,
 }) => {
-	// const { auth } = useContext(AuthContext);
-	// console.log("Textarea auth object", auth);
-	return (
+	const { auth } = useContext(AuthContext);
+
+	return advancedTextEditor ? (
 		<FroalaEditorComponent
 			tag="textarea"
 			model={value}
@@ -57,38 +37,108 @@ const MyTextArea = ({
 				imageUpload: true,
 				imageDefaultAlign: "left",
 				imageDefaultDisplay: "inline-block",
-				// Set max image size to 5MB.
-				imageMaxSize: 5 * 1024 * 1024,
-				// Allow to upload PNG and JPG.
 				imageAllowedTypes: ["jpeg", "jpg", "png"],
+				videoAllowedTypes: ["webm", "jpg", "ogg", "mp4"],
 				events: {
-					"froalaEditor.image.beforeUpload": function (e, editor, images) {
-						// Before image is uploaded
+					"image.beforeUpload": async (images) => {
+						console.log("Auth from image.beforeUpload event", auth);
 						const data = new FormData();
-						data.append("image", images[0]);
-
-						axios
-							.post(`https://locahost:5000/api/v1/uploads`, data, {
+						data.append("userId", auth?.user?._id);
+						data.append("username", auth?.user?.username);
+						data.append("userEmail", auth?.user?.email);
+						data.append("onModel", onModel);
+						data.append("file", images[0]);
+						await axios.put(
+							`http://localhost:5000/api/v1/uploads/uploadObject`,
+							data,
+							{
 								headers: {
 									accept: "application/json",
 									Authorization: `Bearer ${auth.token}`,
-									"Accept-Language": "en-US,en;q=0.8",
 									"Content-Type": `multipart/form-data; boundary=${data._boundary}`,
 								},
-							})
-							.then((res) => {
-								console.log("File uploaded at:", res);
-								// editor.image.insert(
-								// 	res.data.data.link,
-								// 	null,
-								// 	null,
-								// 	editor.image.get()
-								// );
-							})
-							.catch((err) => {
-								console.log(err);
-							});
-						return false;
+							}
+						);
+					},
+					"image.uploaded": function (response) {
+						// Image was uploaded to the server.
+						console.log("Image was uploaded to server", response);
+					},
+					"image.inserted": function ($img, response) {
+						// Image was inserted in the editor.
+					},
+					"image.replaced": function ($img, response) {
+						// Image was replaced in the editor.
+					},
+					"image.error": function (error, response) {
+						if (error.code == 1) {
+							console.log("Bad link.");
+						} else if (error.code == 2) {
+							console.log("No link in upload response.");
+						} else if (error.code == 3) {
+							console.log("Error during image upload.");
+						} else if (error.code == 4) {
+							console.log("Parsing response failed.");
+						} else if (error.code == 5) {
+							console.log("Image too text-large.");
+						} else if (error.code == 6) {
+							console.log("Invalid image type.");
+						} else if (error.code == 7) {
+							console.log(
+								"Image can be uploaded only to same domain in IE 8 and IE 9."
+							);
+						}
+						// Response contains the original server response to the request if available.
+					},
+					"video.beforeUpload": async (videos) => {
+						console.log("Auth from video.beforeUpload event", auth);
+						const data = new FormData();
+						data.append("userId", auth?.user?._id);
+						data.append("username", auth?.user?.username);
+						data.append("userEmail", auth?.user?.email);
+						data.append("onModel", onModel);
+						data.append("file", videos[0]);
+						await axios.put(
+							`http://localhost:5000/api/v1/uploads/uploadObject`,
+							data,
+							{
+								headers: {
+									accept: "application/json",
+									Authorization: `Bearer ${auth.token}`,
+									"Content-Type": `multipart/form-data; boundary=${data._boundary}`,
+								},
+							}
+						);
+						// Return false if you want to stop the video upload.
+					},
+					"video.uploaded": function (response) {
+						// Video was uploaded to the server.
+					},
+					"video.inserted": function ($img, response) {
+						// Video was inserted in the editor.
+					},
+					"video.replaced": function ($img, response) {
+						// Video was replaced in the editor.
+					},
+					"video.error": function (error, response) {
+						if (error.code == 1) {
+							console.log("Bad link.");
+						} else if (error.code == 2) {
+							console.log("No link in upload response.");
+						} else if (error.code == 3) {
+							console.log("Error during video upload.");
+						} else if (error.code == 4) {
+							console.log("Parsing response failed.");
+						} else if (error.code == 5) {
+							console.log("Video too text-large.");
+						} else if (error.code == 6) {
+							console.log("Invalid video type.");
+						} else if (error.code == 7) {
+							console.log(
+								"Video can be uploaded only to same domain in IE 8 and IE 9."
+							);
+						}
+						// Response contains the original server response to the request if available.
 					},
 				},
 				toolbarButtons: {
@@ -185,6 +235,17 @@ const MyTextArea = ({
 				],
 			}}
 		/>
+	) : (
+		<textarea
+			id={id}
+			name={name}
+			onChange={(e) => {
+				setObjectData({ ...objectData, text: e.target.value });
+			}}
+			className="form-control"
+		>
+			{value}
+		</textarea>
 	);
 };
 

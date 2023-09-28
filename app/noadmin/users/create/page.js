@@ -526,6 +526,8 @@ const CreateUser = () => {
 				value={bio}
 				objectData={userData}
 				setObjectData={setUserData}
+				onModel="User"
+				advancedTextEditor={false}
 			/>
 			<div className="row">
 				<div className="col">

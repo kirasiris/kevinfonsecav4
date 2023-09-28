@@ -8,7 +8,7 @@ import MyTextArea from "@/components/global/mytextarea";
 import AuthContext from "@/helpers/globalContext";
 
 const CreateBlog = () => {
-	const { files } = useContext(AuthContext);
+	const { auth, files } = useContext(AuthContext);
 
 	const router = useRouter();
 
@@ -144,6 +144,8 @@ const CreateBlog = () => {
 					value={text}
 					objectData={blogData}
 					setObjectData={setBlogData}
+					onModel="Blog"
+					advancedTextEditor={true}
 				/>
 			</div>
 			<div className="col-lg-3">

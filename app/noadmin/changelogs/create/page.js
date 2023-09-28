@@ -85,6 +85,8 @@ const CreateChangelog = () => {
 					value={text}
 					objectData={changelogData}
 					setObjectData={setChangelogData}
+					onModel="Changelog"
+					advancedTextEditor={true}
 				/>
 				<label htmlFor="version" className="form-label">
 					Version

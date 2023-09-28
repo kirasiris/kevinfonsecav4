@@ -98,8 +98,8 @@ const YouTubePage = ({ searchParams, pushTo = true }) => {
 			fetchYouTube(searchParams._id, searchParams.videoId).then((result) => {
 				setVideoData({
 					...videoData,
-					video_url: result.data.video_url,
-					download_video: result.data.download_video,
+					video_url: result?.data.video_url,
+					download_video: result?.data.download_video,
 				});
 			});
 		}
@@ -114,8 +114,8 @@ const YouTubePage = ({ searchParams, pushTo = true }) => {
 			setVideo(data.data[0]); // Display the most recent video
 			setVideos(data.data); // The set rest of them
 		};
-		// fetchYouTubes(searchParams._id, searchParams.videoId);
-		fetchYouTubes();
+		fetchYouTubes(searchParams._id, searchParams.videoId);
+		// fetchYouTubes();
 	}, []);
 
 	const loadVideo = async (id, videoId) => {
@@ -185,7 +185,7 @@ const YouTubePage = ({ searchParams, pushTo = true }) => {
 						<button
 							className="btn btn-secondary btn-sm float-start"
 							type="submit"
-							disabled={video_url.length > 0 ? !true : !false}
+							disabled={video_url?.length > 0 ? !true : !false}
 						>
 							{submitButtonText}
 						</button>

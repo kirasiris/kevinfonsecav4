@@ -107,14 +107,14 @@ const BlogRead = async ({ params }) => {
 								</div>
 								<div style={{ clear: "both" }} />
 								<AuthorBox author={blog?.data?.user} />
-								<CommentBox
+								{/* <CommentBox
 									user={blog?.data?.user}
 									postId={blog?.data?._id}
 									secondPostId={blog?.data?._id}
 									isVisible={blog?.data?.commented}
 									postType="blog"
 									onModel="Blog"
-								/>
+								/> */}
 							</section>
 						</article>
 					</div>

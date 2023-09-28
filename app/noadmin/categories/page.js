@@ -193,6 +193,8 @@ const AdminCategoriesIndex = () => {
 							value={text}
 							objectData={categoryData}
 							setObjectData={setCategoryData}
+							onModel="Category"
+							advancedTextEditor={false}
 						/>
 						<div className="form-check form-switch">
 							<input

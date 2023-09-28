@@ -136,6 +136,8 @@ const CreatePlaylist = () => {
 					value={text}
 					objectData={playlistData}
 					setObjectData={setPlaylistData}
+					onModel="Playlist"
+					advancedTextEditor={false}
 				/>
 			</div>
 			<div className="col-lg-3">

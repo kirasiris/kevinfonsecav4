@@ -1,12 +1,16 @@
 "use client";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { use, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import Tab from "react-bootstrap/Tab";
+import Tabs from "react-bootstrap/Tabs";
+import Link from "next/link";
 import { toast } from "react-toastify";
-import AdminSidebar from "@/components/admin/adminsidebar";
 import MyTextArea from "@/components/global/mytextarea";
 import AuthContext from "@/helpers/globalContext";
-import Link from "next/link";
+import RecordAudioModal from "@/components/global/recordaudiomodal";
+import Waveform from "@/layout/waveform";
+import UseDropzone from "@/components/global/dropzone";
 
 const CreatePost = () => {
 	const { auth, files } = useContext(AuthContext);
@@ -150,12 +154,10 @@ const CreatePost = () => {
 						passHref
 						legacyBehavior
 					>
-						<a href="#!">
-							<img
-								src="https://yt3.ggpht.com/ytc/AL5GRJUOhe9c1D67-yLQEkT2EqyRclI5V3EOTANZQXmt=s48-c-k-c0x00ffffff-no-rj"
-								className="me-1"
-							/>
-						</a>
+						<img
+							src="https://yt3.ggpht.com/ytc/AL5GRJUOhe9c1D67-yLQEkT2EqyRclI5V3EOTANZQXmt=s48-c-k-c0x00ffffff-no-rj"
+							className="me-1"
+						/>
 					</Link>
 				</div>
 				<Link
@@ -200,14 +202,7 @@ const CreatePost = () => {
 					className="form-control mb-3"
 					placeholder=""
 				/>
-				<br />
-				<MyTextArea
-					id="text"
-					name="text"
-					value={text}
-					postData={postData}
-					setPostData={setPostData}
-				/>
+
 				<div className="row">
 					<div className="col">
 						<label htmlFor="postedto" className="form-label">
@@ -260,6 +255,82 @@ const CreatePost = () => {
 						</select>
 					</div>
 				</div>
+				<br />
+				<Tabs
+					defaultActiveKey="text"
+					id="uncontrolled-tab-example"
+					className="mb-3"
+				>
+					<Tab eventKey="text" title="Text">
+						<MyTextArea
+							id="text"
+							name="text"
+							value={text}
+							objectData={postData}
+							setObjectData={setPostData}
+							onModel="Post"
+							advancedTextEditor={false}
+						/>
+					</Tab>
+					<Tab eventKey="photos" title="Photos">
+						<UseDropzone
+							id="files"
+							name="files"
+							multipleFiles={true}
+							onModel="Post"
+						/>
+					</Tab>
+					<Tab eventKey="videos" title="Videos">
+						<UseDropzone
+							id="files"
+							name="files"
+							multipleFiles={false}
+							onModel="Post"
+						/>
+					</Tab>
+					<Tab eventKey="audios" title="Audios">
+						<RecordAudioModal
+							auth={auth}
+							objectData={postData}
+							setObjectData={setPostData}
+							onModel={"Post"}
+						/>
+						<Waveform
+							src={
+								postData.files &&
+								postData.files.length > 0 &&
+								postData.files.location.secure_location
+							}
+						/>
+					</Tab>
+					<Tab eventKey="files" title="Files">
+						<UseDropzone
+							id="files"
+							name="files"
+							multipleFiles={false}
+							onModel="Post"
+						/>
+					</Tab>
+					<Tab eventKey="maps" title="Maps">
+						<label htmlFor="address" className="form-label">
+							Address
+						</label>
+						<input
+							id="address"
+							name="address"
+							value={address}
+							onChange={(e) => {
+								setPostData({
+									...postData,
+									address: subType === "maps" ? e.target.value : undefined,
+								});
+							}}
+							type="text"
+							className="form-control mb-3"
+							placeholder=""
+						/>
+					</Tab>
+				</Tabs>
 				<br />
 				<div className="d-grid">
 					<button
@@ -439,29 +510,6 @@ const CreatePost = () => {
 									<option value={`files`}>Files</option>
 									<option value={`maps`}>Maps</option>
 								</select>
-								{subType === "maps" && (
-									<>
-										<br />
-										<label htmlFor="address" className="form-label">
-											Address
-										</label>
-										<input
-											id="address"
-											name="address"
-											value={address}
-											onChange={(e) => {
-												setPostData({
-													...postData,
-													address:
-														subType === "maps" ? e.target.value : undefined,
-												});
-											}}
-											type="text"
-											className="form-control mb-3"
-											placeholder=""
-										/>
-									</>
-								)}
 							</div>
 							<div className="col">
 								<label htmlFor="premiumContent" className="form-label">

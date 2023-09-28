@@ -177,7 +177,10 @@ export const stopAudio = async () => {
 		console.log("Stopping Audio Recording...");
 		const audioAsblob = await audioRecorder.stop();
 		// Do something with the recorded audio
-		return createObjectUrl(audioAsblob);
+		return {
+			blobFile: audioAsblob,
+			blobUrl: createObjectUrl(audioAsblob),
+		};
 	} catch (error) {
 		// Error handling structure
 		switch (error.name) {

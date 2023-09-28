@@ -1,5 +1,7 @@
+"use client";
 import Image from "next/image";
 import Link from "next/link";
+import { FaFilePdf, FaFileVideo } from "react-icons/fa";
 
 const Single = ({
 	object = {},
@@ -8,6 +10,11 @@ const Single = ({
 	setObjects,
 	setTotalResults,
 }) => {
+	/*
+	 *
+	 * IMAGE OBJECT
+	 *
+	 */
 	const imgObj = ({ object }) => {
 		return (
 			<figure title={object.title}>
@@ -31,12 +38,22 @@ const Single = ({
 		);
 	};
 
-	const pdfObj = ({ object }) => {
-		return <figure title={object.title}>{object.title}</figure>;
-	};
+	/*
+	 *
+	 * PDF OBJECT
+	 *
+	 */
 
-	const vidObj = ({ object }) => {
-		return <figure title={object.title}>{object.title}</figure>;
+	const pdfObj = () => {
+		return <FaFilePdf />;
+	};
+	/*
+	 *
+	 * VIDEO OBJECT
+	 *
+	 */
+	const vidObj = () => {
+		return <FaFileVideo />;
 	};
 
 	return (
@@ -49,8 +66,8 @@ const Single = ({
 		>
 			<a className="blog-gallery-item col">
 				{object.format_type === "image" && imgObj({ object })}
-				{object.format_type === "application" && pdfObj({ object })}
-				{object.format_type === "video" && vidObj({ object })}
+				{object.format_type === "application" && pdfObj()}
+				{object.format_type === "video" && vidObj()}
 				{/* <button
 										className="btn btn-danger btn-sm"
 										onClick={() =>

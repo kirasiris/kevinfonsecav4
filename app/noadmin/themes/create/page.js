@@ -154,6 +154,8 @@ const CreateTheme = () => {
 					value={text}
 					objectData={themeData}
 					setObjectData={setThemeData}
+					onModel="Blog"
+					advancedTextEditor={true}
 				/>
 			</div>
 			<div className="col-lg-3">

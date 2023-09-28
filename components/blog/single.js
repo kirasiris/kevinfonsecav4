@@ -3,10 +3,15 @@ import Image from "next/image";
 import Link from "next/link";
 import Loading from "@/app/blog/loading";
 
-const Single = ({ blog = {}, imageWidth = "415", imageHeight = "207" }) => {
+const Single = ({
+	blog = {},
+	fullWidth = false,
+	imageWidth = "415",
+	imageHeight = "207",
+}) => {
 	return (
 		<Suspense fallback={<Loading />}>
-			<article className={`${blog._id} col-lg-6`}>
+			<article className={`${blog._id} ${fullWidth ? "col" : "col-lg-6"}`}>
 				<div className={`card ${blog.featured && "text-bg-primary"} mb-4`}>
 					<Link
 						href={`/blog/${blog._id}/${blog?.category?._id}/${blog?.category?.slug}/${blog.slug}`}

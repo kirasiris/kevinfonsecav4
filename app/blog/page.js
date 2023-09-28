@@ -75,7 +75,7 @@ const BlogIndex = async ({ searchParams }) => {
 						{/* Featured list */}
 						{featured?.data?.length > 0 &&
 							featured.data.map((featured) => (
-								<Single key={featured._id} blog={featured} />
+								<Single key={featured._id} blog={featured} fullWidth={true} />
 							))}
 						{/* Blog list */}
 						<div className="row">

@@ -22,6 +22,13 @@ const Waveform = ({
 	const [isMute, setItMute] = useState(true);
 	const [myWaveSurfer, setMyWaveSurfer] = useState(null);
 
+	const formatTime = (seconds) => {
+		const minutes = Math.floor(seconds / 60);
+		const secondsRemainder = Math.round(seconds) % 60;
+		const paddedSeconds = `0${secondsRemainder}`.slice(-2);
+		return `${minutes}:${paddedSeconds}`;
+	};
+
 	useEffect(() => {
 		const wavesurfer = WaveSurfer.create({
 			container: "#waveform",
@@ -38,7 +45,33 @@ const Waveform = ({
 
 		setMyWaveSurfer(wavesurfer);
 
+		// Load source
 		wavesurfer.load(src);
+
+		// Get initial duraction of source
+		const timeEl = document.querySelector("#waveform-time");
+		wavesurfer.on("timeupdate", (currentTime) => {
+			timeEl.textContent = formatTime(currentTime);
+		});
+
+		// Get duration of source
+		const durationEl = document.querySelector("#waveform-duration");
+		wavesurfer.on("decode", (finalDuration) => {
+			durationEl.textContent = formatTime(finalDuration);
+		});
+
+		// Play/pause on click
+		wavesurfer.on("interaction", () => {
+			wavesurfer.playPause();
+		});
+
+		// Hover effect
+		const hover = document.querySelector("#waveform-hover");
+		const waveform = document.querySelector("#waveform");
+		waveform.addEventListener(
+			"pointermove",
+			(e) => (hover.style.width = `${e.offsetX}px`)
+		);
 
 		return () => {
 			wavesurfer.destroy();
@@ -71,7 +104,11 @@ const Waveform = ({
 	return (
 		<div className="row">
 			<div className="col-lg-12">
-				<div id="waveform" style={styleGiven}></div>
+				<div id="waveform" style={styleGiven}>
+					<div id="waveform-time" />
+					<div id="waveform-duration" />
+					<div id="waveform-hover" />
+				</div>
 			</div>
 			<div className="btn-group">
 				<button

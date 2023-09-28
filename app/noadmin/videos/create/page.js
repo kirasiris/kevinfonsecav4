@@ -169,6 +169,8 @@ const CreateVideo = () => {
 					value={text}
 					objectData={videoData}
 					setObjectData={setVideoData}
+					onModel="video"
+					advancedTextEditor={true}
 				/>
 			</div>
 			<div className="col-lg-3">

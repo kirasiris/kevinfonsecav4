@@ -203,7 +203,7 @@ const MyTextArea = ({
 							"help",
 						],
 						align: "right",
-						buttonsVisible: 2,
+						buttonsVisible: 9,
 					},
 				},
 				pluginsEnabled: [

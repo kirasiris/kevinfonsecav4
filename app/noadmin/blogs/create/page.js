@@ -8,7 +8,7 @@ import MyTextArea from "@/components/global/mytextarea";
 import AuthContext from "@/helpers/globalContext";
 
 const CreateBlog = () => {
-	const { auth, files } = useContext(AuthContext);
+	const { files } = useContext(AuthContext);
 
 	const router = useRouter();
 

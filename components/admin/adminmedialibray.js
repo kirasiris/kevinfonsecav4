@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { ButtonGroup, Dropdown } from "react-bootstrap";
 import AuthContext from "@/helpers/globalContext";
 import AdminMediaLibraryMenu from "./adminmediamenu";
-import UseProgress from "../../components/global/useprogress";
+
 import Single from "@/components/admin/files/single";
 import UseDropzone from "@/components/global/dropzone";
 
@@ -22,8 +22,6 @@ const AdminMediaLibray = ({
 	const router = useRouter();
 
 	const [showDropzone, setShowDropzone] = useState(false);
-
-	const [uploadPercentage, setUploadPercentage] = useState(0);
 
 	const [params] = useState(`?page=1&sort=-createdAt`);
 
@@ -130,7 +128,7 @@ const AdminMediaLibray = ({
 				videosLink="/noadmin/files/videos"
 				audioLink="/noadmin/files/audios"
 			/>
-			<UseProgress percentage={uploadPercentage} />
+
 			<div className="card rounded-0">
 				<div className="card-header">
 					<Dropdown as={ButtonGroup} size="sm" title="Add new">

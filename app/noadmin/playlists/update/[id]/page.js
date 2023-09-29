@@ -76,7 +76,7 @@ const UpdatePlaylist = () => {
 	useEffect(() => {
 		const fetchPlaylist = async () => {
 			try {
-				const res = await axios.get(`/playlists/${playlist._id}`);
+				const res = await axios.get(`/playlists/${playlistId}`);
 				setPlaylist(res?.data?.data);
 				setPlaylistData({
 					title: res?.data?.data?.title,
@@ -200,7 +200,7 @@ const UpdatePlaylist = () => {
 					objectData={playlistData}
 					setObjectData={setPlaylistData}
 					onModel="Playlist"
-					advancedTextEditor={false}
+					advancedTextEditor={true}
 				/>
 			</div>
 			<div className="col-lg-3">

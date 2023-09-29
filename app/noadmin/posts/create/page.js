@@ -17,6 +17,8 @@ const CreatePost = () => {
 
 	const router = useRouter();
 
+	const [showDropzone, setShowDropzone] = useState(false);
+
 	const [users, setUsers] = useState([]);
 
 	const fetchUsers = async (params = "") => {
@@ -87,12 +89,13 @@ const CreatePost = () => {
 
 	const addPost = async (e) => {
 		e.preventDefault();
+		console.log(postData);
 		try {
-			await axios.post(`/posts`, {
-				...postData,
-				postType: "post",
-				// files:
-			});
+			// await axios.post(`/posts`, {
+			// 	...postData,
+			// 	postType: "post",
+			// 	// files:
+			// });
 			toast.success(`Item created`);
 			// resetForm();
 			// router.push(`/noadmin/posts`);
@@ -157,6 +160,7 @@ const CreatePost = () => {
 						<img
 							src="https://yt3.ggpht.com/ytc/AL5GRJUOhe9c1D67-yLQEkT2EqyRclI5V3EOTANZQXmt=s48-c-k-c0x00ffffff-no-rj"
 							className="me-1"
+							alt="lzlalala"
 						/>
 					</Link>
 				</div>
@@ -254,39 +258,41 @@ const CreatePost = () => {
 							))}
 						</select>
 					</div>
+					<MyTextArea
+						id="text"
+						name="text"
+						value={text}
+						objectData={postData}
+						setObjectData={setPostData}
+						onModel="Post"
+						advancedTextEditor={false}
+					/>
 				</div>
 				<br />
 				<Tabs
-					defaultActiveKey="text"
+					defaultActiveKey="photos"
 					id="uncontrolled-tab-example"
 					className="mb-3"
 				>
-					<Tab eventKey="text" title="Text">
-						<MyTextArea
-							id="text"
-							name="text"
-							value={text}
-							objectData={postData}
-							setObjectData={setPostData}
-							onModel="Post"
-							advancedTextEditor={false}
-						/>
-					</Tab>
 					<Tab eventKey="photos" title="Photos">
 						<UseDropzone
 							id="files"
 							name="files"
 							multipleFiles={true}
 							onModel="Post"
+							showDropzone={showDropzone}
+							setShowDropzone={setShowDropzone}
 						/>
 					</Tab>
 					<Tab eventKey="videos" title="Videos">
-						<UseDropzone
+						{/* <UseDropzone
 							id="files"
 							name="files"
 							multipleFiles={false}
 							onModel="Post"
-						/>
+							showDropzone={showDropzone}
+							setShowDropzone={setShowDropzone}
+						/> */}
 					</Tab>
 					<Tab eventKey="audios" title="Audios">
 						<RecordAudioModal

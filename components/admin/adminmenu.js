@@ -57,6 +57,15 @@ const AdminMenu = () => {
 						Playlists
 					</a>
 				</Link>
+				<Link href={"/noadmin/courses"} passHref legacyBehavior>
+					<a
+						className={`list-group-item list-group-item-action ${isActive(
+							"/noadmin/courses"
+						)}`}
+					>
+						Courses
+					</a>
+				</Link>
 				<Link href={"/noadmin/videos"} passHref legacyBehavior>
 					<a
 						className={`list-group-item list-group-item-action ${isActive(

@@ -14,6 +14,9 @@ const CreateVideo = () => {
 
 	const [categories, setCategories] = useState([]);
 
+	const [playlists, setPlaylists] = useState([]);
+	const [courses, setCourses] = useState([]);
+
 	const fetchCategories = async (params = "") => {
 		try {
 			const res = await axios.get(`/categories${params}`);
@@ -45,7 +48,71 @@ const CreateVideo = () => {
 		fetchCategories(`?categoryType=video`);
 	}, []);
 
+	const fetchPlaylists = async (params = "") => {
+		try {
+			const res = await axios.get(`/playlists${params}`);
+			setPlaylists(res?.data?.data);
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
+	useEffect(() => {
+		fetchPlaylists(`?page=1&limit=10&sort=-createdAt`);
+	}, []);
+
+	const fetchCourses = async (params = "") => {
+		try {
+			const res = await axios.get(`/courses${params}`);
+			setCourses(res?.data?.data);
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
+	useEffect(() => {
+		fetchCourses(`?page=1&limit=10&sort=-createdAt`);
+	}, []);
+
 	const [videoData, setVideoData] = useState({
+		playlist: "",
+		course: "",
 		title: `Untitled`,
 		avatar: files?.selected?._id,
 		text: `No description`,
@@ -65,6 +132,8 @@ const CreateVideo = () => {
 		license: undefined,
 	});
 	const {
+		playlist,
+		course,
 		title,
 		avatar,
 		text,
@@ -172,6 +241,27 @@ const CreateVideo = () => {
 					onModel="video"
 					advancedTextEditor={true}
 				/>
+				<label htmlFor="playlist" className="form-label">
+					Playlist
+				</label>
+				<select
+					id="playlist"
+					name="playlist"
+					value={playlist}
+					onChange={(e) => {
+						setObjectData({
+							...objectData,
+							playlist: e.target.value,
+						});
+					}}
+					className="form-control"
+				>
+					{playlists.map((playlist) => (
+						<option key={playlist._id} value={playlist._id}>
+							{playlist.title}
+						</option>
+					))}
+				</select>
 			</div>
 			<div className="col-lg-3">
 				<AdminSidebar

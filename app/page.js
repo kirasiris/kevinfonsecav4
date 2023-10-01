@@ -3,6 +3,15 @@ import Header from "@/layout/header";
 import SingleBlog from "@/components/blog/single";
 import SingleTheme from "@/components/theme/single";
 import NewsletterForm from "@/layout/newsletter";
+import Head from "@/app/head";
+
+async function getSetting(params) {
+	const res = await fetch(`http://localhost:5000/api/v1/settings/${params}`, {
+		cache: "no-store",
+	});
+
+	return res.json();
+}
 
 async function getNewsletters(params) {
 	const res = await fetch(`http://localhost:5000/api/v1/newsletters${params}`, {
@@ -29,9 +38,10 @@ async function getThemes(params) {
 }
 
 const HomeIndex = async () => {
+	const settings = await getSetting(`6519d7b34d26360354527e9a`);
 	const getNewslettersData = getNewsletters(``);
 	const getBlogsData = getBlogs(
-		`?page=1&limit=3&sort=-createdAt&postType=blog&status=published`
+		`?page=1&limit=6&sort=-createdAt&postType=blog&status=published`
 	);
 
 	const getThemesData = getThemes(
@@ -44,13 +54,17 @@ const HomeIndex = async () => {
 		getThemesData,
 	]);
 
-	const showcaseImage = "";
-
 	return (
 		<>
+			{/* <Head
+				title={settings.data.title}
+				description={settings.data.text}
+				favicon={settings.data.favicon}
+				canonical={settings.data.site_url}
+			/> */}
 			<Header
-				title="Kevin Uriel"
-				description="Programmer, Geek, Gamer and now Soldier"
+				title={settings.data.title}
+				description={settings.data.text}
 				headerClasses="d-flex flex-column vh-100 vw-100"
 				headerContainerClasses="m-auto"
 				headerStyle={{
@@ -59,7 +73,7 @@ const HomeIndex = async () => {
 					backgroundSize: "cover",
 					backgroundPosition: "50% 50%",
 					background: `linear-gradient(to bottom, rgba(0,0,0,0.7) 0%,rgba(0,0,0,0.7) 100%), url(${
-						showcaseImage ||
+						settings.data.showcase_image ||
 						`https://befreebucket-for-outputs.s3.amazonaws.com/2023/02/map-image.png`
 					}) no-repeat center center`,
 				}}
@@ -81,14 +95,13 @@ const HomeIndex = async () => {
 							<Link href={`/blog`}>Latest Blogs</Link>
 						</h2>
 						<div className="row">
-							{blogs.data.map((blog, index) => (
-								<div key={blog._id} className={`col-lg-6 ${index}`}>
-									<SingleBlog
-										blog={blog}
-										imageWidth={`415`}
-										imageHeight={`207`}
-									/>
-								</div>
+							{blogs.data.map((blog) => (
+								<SingleBlog
+									key={blog._id}
+									blog={blog}
+									imageWidth={`415`}
+									imageHeight={`207`}
+								/>
 							))}
 						</div>
 					</div>
@@ -101,8 +114,8 @@ const HomeIndex = async () => {
 						<h2 className="page-section-heading display-5 text-uppercase text-secondary my-5">
 							<Link href={`/theme`}>Latest Themes</Link>
 						</h2>
-						<div className="row justify-content-center">
-							{themes.data.map((theme, index) => (
+						<div className="row">
+							{themes.data.map((theme) => (
 								<SingleTheme key={theme._id} theme={theme} />
 							))}
 						</div>

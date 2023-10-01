@@ -9,12 +9,10 @@ import { useContext } from "react";
 const AdminHome = ({}) => {
 	const { auth, totalResults } = useContext(AuthContext);
 
-	console.log(totalResults);
-
 	return (
 		<>
 			<Header
-				title="Welcome back Admin"
+				title={`Welcome back ${auth?.user?.username}`}
 				description="This is the place where you have the full control of your website. Feel free to play with it as you like!"
 			/>
 			<div className="row">

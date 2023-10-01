@@ -243,9 +243,8 @@ const MyTextArea = ({
 				setObjectData({ ...objectData, text: e.target.value });
 			}}
 			className="form-control"
-		>
-			{value}
-		</textarea>
+			defaultValue={value}
+		/>
 	);
 };
 

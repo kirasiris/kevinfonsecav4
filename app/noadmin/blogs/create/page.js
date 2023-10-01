@@ -139,7 +139,7 @@ const CreateBlog = () => {
 					Text
 				</label>
 				<MyTextArea
-					id="blog-text"
+					id="blog-text multipurpose-textarea"
 					name="text"
 					value={text}
 					objectData={blogData}

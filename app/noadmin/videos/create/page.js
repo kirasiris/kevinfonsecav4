@@ -186,6 +186,8 @@ const CreateVideo = () => {
 
 	const resetForm = () => {
 		setVideoData({
+			playlist: "",
+			course: "",
 			title: `Untitled`,
 			avatar: files?.selected?._id,
 			text: `No description`,
@@ -259,6 +261,27 @@ const CreateVideo = () => {
 					{playlists.map((playlist) => (
 						<option key={playlist._id} value={playlist._id}>
 							{playlist.title}
+						</option>
+					))}
+				</select>
+				<label htmlFor="course" className="form-label">
+					Course
+				</label>
+				<select
+					id="course"
+					name="course"
+					value={course}
+					onChange={(e) => {
+						setObjectData({
+							...objectData,
+							course: e.target.value,
+						});
+					}}
+					className="form-control"
+				>
+					{courses.map((course) => (
+						<option key={course._id} value={course._id}>
+							{course.title}
 						</option>
 					))}
 				</select>

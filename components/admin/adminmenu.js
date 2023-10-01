@@ -201,13 +201,13 @@ const AdminMenu = () => {
 						Logs
 					</a>
 				</Link>
-				<Link href={"/noadmin/customize"} passHref legacyBehavior>
+				<Link href={"/noadmin/settings"} passHref legacyBehavior>
 					<a
 						className={`list-group-item list-group-item-action ${isActive(
-							"/noadmin/customize"
+							"/noadmin/settings"
 						)}`}
 					>
-						Customize
+						Settings
 					</a>
 				</Link>
 			</div>

@@ -1,7 +1,6 @@
 import Single from "@/components/blog/single";
 import Header from "@/layout/header";
 import Sidebar from "@/layout/sidebar";
-import Head from "@/app/head";
 import NumericPagination from "@/layout/numericpagination";
 
 async function getFeaturedBlog(params) {
@@ -61,10 +60,6 @@ const BlogIndex = async ({ searchParams }) => {
 
 	return (
 		<>
-			<Head
-				title="Welcome to my Blog!"
-				description="Learn everything about my programming and life journey"
-			/>
 			<Header
 				title="Welcome to my Blog"
 				description="Learn everything about my programming and life journey"

@@ -5,26 +5,32 @@ import Navbar from "react-bootstrap/Navbar";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 
-const Menu = () => {
+const Menu = ({
+	title = "",
+	logo = "https://getbootstrap.com/docs/5.3/assets/brand/bootstrap-logo.svg",
+	canonical = "",
+}) => {
 	return (
 		<Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
 			<Container>
-				<Link href="/" passHref legacyBehavior>
-					<a className="navbar-brand">
-						<Image
-							alt={`Kevin Uriel Fonseca`}
-							src={`https://getbootstrap.com/docs/5.3/assets/brand/bootstrap-logo.svg`}
-							width="30"
-							height="24"
-							className="d-inline-block align-text-top"
-						/>
-					</a>
-				</Link>
-				<Navbar.Toggle aria-controls="responsive-navbar-nav" />
+				<div className="navbar-header">
+					<Navbar.Toggle aria-controls="responsive-navbar-nav" />
+					<Link href={canonical} passHref legacyBehavior>
+						<a className="navbar-brand">
+							<Image
+								alt={title}
+								src={logo}
+								width="150"
+								height="40"
+								className="d-inline-block align-text-top"
+							/>
+						</a>
+					</Link>
+				</div>
 				<Navbar.Collapse id="responsive-navbar-nav">
 					<Nav as="ul">
 						<li className="nav-item mx-1">
-							<Link href="/" passHref legacyBehavior>
+							<Link href={canonical} passHref legacyBehavior>
 								<a className="nav-link" aria-current="page">
 									Home
 								</a>
@@ -33,7 +39,7 @@ const Menu = () => {
 						<li className="nav-item mx-1">
 							<Link
 								href={{
-									pathname: "/profile",
+									pathname: `${canonical}/profile`,
 									query: { page: 1, limit: 10 },
 								}}
 								passHref
@@ -47,7 +53,7 @@ const Menu = () => {
 						<li className="nav-item mx-1">
 							<Link
 								href={{
-									pathname: "/blog",
+									pathname: `${canonical}/blog`,
 									query: { page: 1, limit: 10 },
 								}}
 								passHref
@@ -61,7 +67,7 @@ const Menu = () => {
 						<li className="nav-item mx-1">
 							<Link
 								href={{
-									pathname: "/theme",
+									pathname: `${canonical}/theme`,
 									query: { page: 1, limit: 10 },
 								}}
 								passHref
@@ -75,7 +81,7 @@ const Menu = () => {
 						<li className="nav-item mx-1">
 							<Link
 								href={{
-									pathname: "/quizz",
+									pathname: `${canonical}/quizz`,
 									query: { page: 1, limit: 10 },
 								}}
 								passHref

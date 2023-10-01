@@ -40,7 +40,7 @@ const ThemeIndex = async ({ searchParams }) => {
 				description="Check my projects out and tell me what you think!"
 			/>
 			<div className="container">
-				<div className="row justify-content-center">
+				<div className="row">
 					{themes?.data?.length > 0 &&
 						themes.data?.map((theme) => (
 							<Single key={theme._id} theme={theme} />

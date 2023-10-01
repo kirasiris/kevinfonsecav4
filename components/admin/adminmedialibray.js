@@ -1,15 +1,16 @@
 "use client";
 import axios from "axios";
+import Link from "next/link";
 import { useContext, useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { ButtonGroup, Dropdown } from "react-bootstrap";
 import AuthContext from "@/helpers/globalContext";
 import AdminMediaLibraryMenu from "./adminmediamenu";
 
 import Single from "@/components/admin/files/single";
 import UseDropzone from "@/components/global/dropzone";
+import DeleteAllModal from "../global/deleteallmodal";
 
 const AdminMediaLibray = ({
 	id = "single",
@@ -17,7 +18,8 @@ const AdminMediaLibray = ({
 	multipleFiles = true,
 	onModel = "Blog",
 }) => {
-	const { files, setFiles } = useContext(AuthContext);
+	const { files, setFiles, totalResults, setTotalResults } =
+		useContext(AuthContext);
 
 	const router = useRouter();
 
@@ -29,6 +31,7 @@ const AdminMediaLibray = ({
 		try {
 			const res = await axios.get(`/files${params}`);
 			setFiles((prev) => ({ ...prev, media: res?.data?.data }));
+			setTotalResults({ ...totalResults, files: res?.data?.countAll });
 		} catch (err) {
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;
@@ -131,21 +134,28 @@ const AdminMediaLibray = ({
 
 			<div className="card rounded-0">
 				<div className="card-header">
-					<Dropdown as={ButtonGroup} size="sm" title="Add new">
+					<Link
+						href={{
+							pathname: "/noadmin/files",
+							query: { page: 1, limit: 10 },
+						}}
+						passHref
+						legacyBehavior
+					>
+						<a className="btn btn-link btn-sm float-start">
+							Files - ({totalResults.files})
+						</a>
+					</Link>
+					<div className="btn-group float-end">
 						<button
-							className="btn btn-danger btn-sm float-start"
+							className="btn btn-primary btn-sm"
 							type="button"
 							onClick={() => setShowDropzone(!showDropzone)}
 						>
-							Add new
+							Add new file
 						</button>
-						<Dropdown.Toggle split variant="danger" id="dropdown-split-basic" />
-						<Dropdown.Menu>
-							<Dropdown.Item href="#/action-1">Add via URL</Dropdown.Item>
-							<Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
-							<Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
-						</Dropdown.Menu>
-					</Dropdown>
+						<DeleteAllModal action={handleDeleteAll} />
+					</div>
 				</div>
 				<div className="card-body">
 					<UseDropzone

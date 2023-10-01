@@ -13,7 +13,9 @@ const DynamicCards = ({
 		<div className="col-lg-3 mb-3">
 			<div className={`card ${bgcolor} ${txtcolor}`}>
 				<div className="card-header">{title}</div>
-				<div className="card-body">{text}</div>
+				<div className="card-body">
+					<p className="display-1 m-0">{text}</p>
+				</div>
 				<div className="card-footer">
 					<Link
 						href={{

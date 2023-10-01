@@ -256,6 +256,7 @@ const UpdateFile = () => {
 					className="form-control mb-3"
 					placeholder=""
 					readOnly
+					disabled
 				/>
 				<div className="row gap-3">
 					<div className="col">
@@ -270,6 +271,7 @@ const UpdateFile = () => {
 							className="form-control"
 							placeholder=""
 							readOnly
+							disabled
 						/>
 						<label htmlFor="file-dimensions" className="form-label">
 							DIMENSIONS
@@ -282,6 +284,7 @@ const UpdateFile = () => {
 							className="form-control"
 							placeholder=""
 							readOnly
+							disabled
 						/>
 					</div>
 					<div className="col">
@@ -296,6 +299,7 @@ const UpdateFile = () => {
 							className="form-control"
 							placeholder=""
 							readOnly
+							disabled
 						/>
 						<label htmlFor="file-uploadedAt" className="form-label">
 							UPLOAD DATE
@@ -308,6 +312,7 @@ const UpdateFile = () => {
 							className="form-control"
 							placeholder=""
 							readOnly
+							disabled
 						/>
 					</div>
 				</div>

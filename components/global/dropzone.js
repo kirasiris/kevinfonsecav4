@@ -67,7 +67,7 @@ const UseDropzone = ({
 					}}
 				>
 					{({ getRootProps, getInputProps }) => (
-						<div className="container">
+						<div className="dropzone-root">
 							<div
 								{...getRootProps({
 									className: "dropzone",
@@ -81,6 +81,11 @@ const UseDropzone = ({
 										id,
 										multiple: { multipleFiles },
 									})}
+								/>
+								<img
+									alt="upload"
+									className="dropzone-image"
+									src="https://s3-us-west-1.amazonaws.com/youtube-clone-assets/upload-background.svg"
 								/>
 								<p>
 									Drag &apos;n&apos; drop some files here, or click to select

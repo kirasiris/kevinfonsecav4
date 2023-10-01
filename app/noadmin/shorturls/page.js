@@ -3,25 +3,25 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useContext } from "react";
 import { toast } from "react-toastify";
-import Single from "@/components/admin/courses/single";
+import Single from "@/components/admin/shorturls/single";
 import AuthContext from "@/helpers/globalContext";
 import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
 import AdminCardHeaderMenu from "@/components/admin/admincardheadermenu";
 
-const AdminCoursesIndex = () => {
+const AdminShortUrlsIndex = () => {
 	const { totalResults, setTotalResults } = useContext(AuthContext);
 
 	const router = useRouter();
 
-	const [courses, setCourses] = useState([]);
+	const [shorturls, setShortUrls] = useState([]);
 
 	const [params] = useState(`?page=1&limit=10&sort=-createdAt`);
 
-	const fetchCourses = async () => {
+	const fetchShortUrls = async () => {
 		try {
-			const res = await axios.get(`/courses${params}`);
-			setCourses(res?.data?.data);
-			setTotalResults({ ...totalResults, courses: res?.data?.countAll });
+			const res = await axios.get(`/extras/shorturls${params}`);
+			setShortUrls(res?.data?.data);
+			setTotalResults({ ...totalResults, shorturls: res?.data?.countAll });
 		} catch (err) {
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;
@@ -46,14 +46,14 @@ const AdminCoursesIndex = () => {
 	};
 
 	useEffect(() => {
-		fetchCourses();
+		fetchShortUrls();
 	}, [router]);
 
 	const handleDelete = async (id) => {
 		try {
-			await axios.delete(`/courses/${id}`);
-			toast.success("Playlist deleted");
-			fetchCourses();
+			await axios.delete(`/extras/shorturls/${id}`);
+			toast.success("Shorturl deleted");
+			fetchShortUrls();
 		} catch (err) {
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;
@@ -79,9 +79,9 @@ const AdminCoursesIndex = () => {
 
 	const handleDeleteAll = async () => {
 		try {
-			await axios.delete(`/courses/deleteall`);
-			toast.success("Courses deleted");
-			fetchCourses();
+			await axios.delete(`/extras/shorturls/deleteall`);
+			toast.success("Shorturls deleted");
+			fetchShortUrls();
 		} catch (err) {
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;
@@ -108,30 +108,30 @@ const AdminCoursesIndex = () => {
 	return (
 		<>
 			<AdminStatusesMenu
-				allLink="/noadmin/courses"
-				publishedLink="/noadmin/courses/published"
-				draftLink="/noadmin/courses/draft"
-				scheduledLink="/noadmin/courses/scheduled"
-				trashedLink="/noadmin/courses/trashed"
+				allLink="/noadmin/shorturls"
+				publishedLink="/noadmin/shorturls/published"
+				draftLink="/noadmin/shorturls/draft"
+				scheduledLink="/noadmin/shorturls/scheduled"
+				trashedLink="/noadmin/shorturls/trashed"
 			/>
 			<div className="card rounded-0">
 				<AdminCardHeaderMenu
-					allLink={`/noadmin/courses`}
-					pageText="Courses"
-					totalResults={totalResults.courses}
-					addLink={`/noadmin/courses/create`}
-					addLinkText={`course`}
+					allLink={`/noadmin/shorturls`}
+					pageText="Shorturls"
+					totalResults={totalResults.shorturls}
+					addLink={`/noadmin/shorturls/create`}
+					addLinkText={`shorturl`}
 					handleDeleteAllFunction={handleDeleteAll}
 				/>
-				{courses?.length > 0 ? (
+				{shorturls?.length > 0 ? (
 					<ul className="list-group list-group-flush">
-						{courses?.map((courses) => (
+						{shorturls?.map((shorturl) => (
 							<Single
-								key={courses._id}
-								object={courses}
+								key={shorturl._id}
+								object={shorturl}
 								handleDelete={handleDelete}
-								objects={courses}
-								setObjects={setCourses}
+								objects={shorturls}
+								setObjects={setShortUrls}
 								setTotalResults={setTotalResults}
 							/>
 						))}
@@ -146,4 +146,4 @@ const AdminCoursesIndex = () => {
 	);
 };
 
-export default AdminCoursesIndex;
+export default AdminShortUrlsIndex;

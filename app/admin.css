@@ -98,21 +98,6 @@ a.blog-relative-time-status__link {
 	margin: 0;
 }
 
-.blog-gallery-item {
-	background-color: rgb(195, 196, 199);
-	overflow: hidden;
-	position: relative;
-	align-items: center;
-	display: flex;
-	justify-content: center;
-	margin-top: auto;
-	margin-bottom: auto;
-	margin-right: 13px;
-	margin-left: 13px;
-	height: 188px;
-	width: 188px;
-}
-
 /* ---------------------------------------------------
   DROPZONE
 ----------------------------------------------------- */

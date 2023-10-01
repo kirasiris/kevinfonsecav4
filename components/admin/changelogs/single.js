@@ -1,3 +1,4 @@
+"use client";
 import Accordion from "react-bootstrap/Accordion";
 import DeleteModal from "@/components/global/deletemodal";
 import ParseHtml from "@/layout/parseHtml";

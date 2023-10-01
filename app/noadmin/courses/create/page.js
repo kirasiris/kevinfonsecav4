@@ -16,12 +16,12 @@ const CreateCourse = () => {
 		title: `Untitled`,
 		sub_title: ``,
 		text: `No description`,
-		price: 99.99,
+		price: 0,
 		featured: false,
 		embedding: false,
 		category: "development",
 		sub_category: "web-development",
-		isFree: false,
+		isFree: true,
 		language: "english",
 		difficulty: "beginner",
 		commented: false,
@@ -49,12 +49,11 @@ const CreateCourse = () => {
 		e.preventDefault();
 		try {
 			console.log(courseData);
-			// await axios.post(`/courses`, {
-			// 	...courseData,
-			// 	files: { avatar: files?.selected?._id },
-			// });
-			// toast.success(`Item created`);
-			// router.push(`/noadmin/playlists`);
+			await axios.post(`/courses`, {
+				...courseData,
+				files: { avatar: files?.selected?._id },
+			});
+			router.push(`/noadmin/courses`);
 		} catch (err) {
 			console.log(err);
 			// const error = err.response.data.message;
@@ -81,12 +80,12 @@ const CreateCourse = () => {
 			title: `Untitled`,
 			sub_title: ``,
 			text: `No description`,
-			price: 99.99,
+			price: 0,
 			featured: false,
 			embedding: false,
 			category: "development",
 			sub_category: "web-development",
-			isFree: false,
+			isFree: true,
 			language: "english",
 			difficulty: "beginner",
 			commented: false,
@@ -196,98 +195,142 @@ const CreateCourse = () => {
 							}}
 							className="form-control"
 						>
-							<option value={"web-development"}>Web Development</option>
-							<option value={"mobile-development"}>Mobile Development</option>
-							<option value="programming-languages">
-								Programming Languages
-							</option>
-							<option value="game-development">Game Development</option>
-							<option value="database-design-and-development">
-								Database Design and Development
-							</option>
-							<option value="software-testing">Software Testing</option>
-							<option value="entrepreneurship">Entrepreneurship</option>
-							<option value="communication">Communication</option>
-							<option value="management">Management</option>
-							<option value="sales">Sales</option>
-							<option value="business-strategy">Business Strategy</option>
-							<option value="accounting-and-bookkeeping">
-								Accounting and Bookkeeping
-							</option>
-							<option value="cryptocurrency-and-blockchain">
-								Cryptocurrency and Blockchain
-							</option>
-							<option value="finance">Finance</option>
-							<option value="financial-modeling-and-analysis">
-								Financial Modeling and Analysis
-							</option>
-							<option value="investing-and-trading">
-								Investing and Trading
-							</option>
-							<option value="it-certifications">IT Certifications</option>
-							<option value="network-and-security">Network and Security</option>
-							<option value="hardware">Hardware</option>
-							<option value="operating-systems-and-servers">
-								Operating Systems and Servers
-							</option>
-							<option value="other-it-and-software">
-								Other IT and Software
-							</option>
-							<option value="microsoft">Microsoft</option>
-							<option value="apple">Apple</option>
-							<option value="google">Google</option>
-							<option value="sap">SAP</option>
-							<option value="oracle">Oracle</option>
-							<option value="other-office-productivity">
-								Other Office Productivity
-							</option>
-							<option value="personal-transformation">
-								Personal Transformation
-							</option>
-							<option value="personal-productivity">
-								Personal Productivity
-							</option>
-							<option value="leadership">Leadership</option>
-							<option value="career-development">Career Development</option>
-							<option value="parenting-and-relationships">
-								Parenting and Relationships
-							</option>
-							<option value="web-design">Web Design</option>
-							<option value="graphic-design-and-illustration">
-								Graphic Design and Illustration
-							</option>
-							<option value="design-tools">Design Tools</option>
-							<option value="user-experience-design">
-								User Experience Design
-							</option>
-							<option value="game-design">Game Design</option>
-							<option value="3d-and-animation">3D and Animation</option>
-							<option value="digital-marketing">Digital Marketing</option>
-							<option value="search-engine-optimization">
-								Search Engine Optimization
-							</option>
-							<option value="social-media-marketing">
-								Social Media Marketing
-							</option>
-							<option value="branding">Branding</option>
-							<option value="marketing-fundamentals">
-								Marketing Fundamentals
-							</option>
-							<option value="marketing-analytics-and-automation">
-								Marketing Analytics and Automation
-							</option>
-							<option value="fitness">Fitness</option>
-							<option value="general-health">General Health</option>
-							<option value="sports">Sports</option>
-							<option value="nutrition-and-diet">Nutrition and Diet</option>
-							<option value="yoga">Yoga</option>
-							<option value="mental-health">Mental Health</option>
-							<option value="instruments">Instruments</option>
-							<option value="music-production">Music Production</option>
-							<option value="music-fundamentals">Music Fundamentals</option>
-							<option value="vocal">Vocal</option>
-							<option value="music-techniques">Music Techniques</option>
-							<option value="music-software">Music Software</option>
+							{category === "development" && (
+								<>
+									<option value={"web-development"}>Web Development</option>
+									<option value={"mobile-development"}>
+										Mobile Development
+									</option>
+									<option value="programming-languages">
+										Programming Languages
+									</option>
+									<option value="game-development">Game Development</option>
+									<option value="database-design-and-development">
+										Database Design and Development
+									</option>
+									<option value="software-testing">Software Testing</option>
+								</>
+							)}
+							{category === "business" && (
+								<>
+									<option value="entrepreneurship">Entrepreneurship</option>
+									<option value="communication">Communication</option>
+									<option value="management">Management</option>
+									<option value="sales">Sales</option>
+									<option value="business-strategy">Business Strategy</option>
+								</>
+							)}
+							{category === "finance-and-accounting" && (
+								<>
+									<option value="accounting-and-bookkeeping">
+										Accounting and Bookkeeping
+									</option>
+									<option value="cryptocurrency-and-blockchain">
+										Cryptocurrency and Blockchain
+									</option>
+									<option value="finance">Finance</option>
+									<option value="financial-modeling-and-analysis">
+										Financial Modeling and Analysis
+									</option>
+									<option value="investing-and-trading">
+										Investing and Trading
+									</option>
+								</>
+							)}
+							{category === "it-and-software" && (
+								<>
+									<option value="it-certifications">IT Certifications</option>
+									<option value="network-and-security">
+										Network and Security
+									</option>
+									<option value="hardware">Hardware</option>
+									<option value="operating-systems-and-servers">
+										Operating Systems and Servers
+									</option>
+									<option value="other-it-and-software">
+										Other IT and Software
+									</option>
+								</>
+							)}
+							{category === "office-productivity" && (
+								<>
+									<option value="microsoft">Microsoft</option>
+									<option value="apple">Apple</option>
+									<option value="google">Google</option>
+									<option value="sap">SAP</option>
+									<option value="oracle">Oracle</option>
+									<option value="other-office-productivity">
+										Other Office Productivity
+									</option>
+								</>
+							)}
+							{category === "personal-development" && (
+								<>
+									<option value="personal-transformation">
+										Personal Transformation
+									</option>
+									<option value="personal-productivity">
+										Personal Productivity
+									</option>
+									<option value="leadership">Leadership</option>
+									<option value="career-development">Career Development</option>
+									<option value="parenting-and-relationships">
+										Parenting and Relationships
+									</option>
+								</>
+							)}
+							{category === "design" && (
+								<>
+									<option value="web-design">Web Design</option>
+									<option value="graphic-design-and-illustration">
+										Graphic Design and Illustration
+									</option>
+									<option value="design-tools">Design Tools</option>
+									<option value="user-experience-design">
+										User Experience Design
+									</option>
+									<option value="game-design">Game Design</option>
+									<option value="3d-and-animation">3D and Animation</option>
+								</>
+							)}
+							{category === "marketing" && (
+								<>
+									<option value="digital-marketing">Digital Marketing</option>
+									<option value="search-engine-optimization">
+										Search Engine Optimization
+									</option>
+									<option value="social-media-marketing">
+										Social Media Marketing
+									</option>
+									<option value="branding">Branding</option>
+									<option value="marketing-fundamentals">
+										Marketing Fundamentals
+									</option>
+									<option value="marketing-analytics-and-automation">
+										Marketing Analytics and Automation
+									</option>
+								</>
+							)}
+							{category === "health-and-fitness" && (
+								<>
+									<option value="fitness">Fitness</option>
+									<option value="general-health">General Health</option>
+									<option value="sports">Sports</option>
+									<option value="nutrition-and-diet">Nutrition and Diet</option>
+									<option value="yoga">Yoga</option>
+									<option value="mental-health">Mental Health</option>
+								</>
+							)}
+							{category === "music" && (
+								<>
+									<option value="instruments">Instruments</option>
+									<option value="music-production">Music Production</option>
+									<option value="music-fundamentals">Music Fundamentals</option>
+									<option value="vocal">Vocal</option>
+									<option value="music-techniques">Music Techniques</option>
+									<option value="music-software">Music Software</option>
+								</>
+							)}
 						</select>
 					</div>
 				</div>
@@ -311,6 +354,27 @@ const CreateCourse = () => {
 							<option value={true}>Yes</option>
 							<option value={false}>No</option>
 						</select>
+						{isFree === "false" && (
+							<>
+								<label htmlFor="price" className="form-label">
+									Price
+								</label>
+								<input
+									id="price"
+									name="price"
+									value={price}
+									onChange={(e) => {
+										setCourseData({
+											...courseData,
+											price: e.target.value,
+										});
+									}}
+									type="text"
+									className="form-control mb-3"
+									placeholder=""
+								/>
+							</>
+						)}
 					</div>
 					<div className="col">
 						<label htmlFor="language" className="form-label">

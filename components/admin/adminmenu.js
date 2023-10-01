@@ -135,7 +135,7 @@ const AdminMenu = () => {
 							"/noadmin/files"
 						)}`}
 					>
-						Media
+						Files
 					</a>
 				</Link>
 				<Link href={"/noadmin/categories"} passHref legacyBehavior>
@@ -183,10 +183,10 @@ const AdminMenu = () => {
 						Youtube
 					</a>
 				</Link>
-				<Link href={"/noadmin/urls"} passHref legacyBehavior>
+				<Link href={"/noadmin/shorturls"} passHref legacyBehavior>
 					<a
 						className={`list-group-item list-group-item-action ${isActive(
-							"/noadmin/urls"
+							"/noadmin/shorturls"
 						)}`}
 					>
 						Shortened Urls

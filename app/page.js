@@ -3,7 +3,6 @@ import Header from "@/layout/header";
 import SingleBlog from "@/components/blog/single";
 import SingleTheme from "@/components/theme/single";
 import NewsletterForm from "@/layout/newsletter";
-import Head from "@/app/head";
 
 async function getSetting(params) {
 	const res = await fetch(`http://localhost:5000/api/v1/settings/${params}`, {
@@ -56,12 +55,6 @@ const HomeIndex = async () => {
 
 	return (
 		<>
-			{/* <Head
-				title={settings.data.title}
-				description={settings.data.text}
-				favicon={settings.data.favicon}
-				canonical={settings.data.site_url}
-			/> */}
 			<Header
 				title={settings.data.title}
 				description={settings.data.text}

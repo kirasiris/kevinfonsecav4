@@ -1,10 +1,10 @@
-import Footer from "@/layout/footer";
 import "./bootstrap.css";
 // import "./bootstrap.js";
 import "./global.css";
 import "./app.css";
-import Menu from "@/layout/menu";
 import Head from "@/app/head";
+import Menu from "@/layout/menu";
+import Footer from "@/layout/footer";
 
 async function getSetting(params) {
 	const res = await fetch(`http://localhost:5000/api/v1/settings/${params}`, {
@@ -19,11 +19,6 @@ export default async function RootLayout({ children }) {
 
 	return (
 		<html lang="en">
-			{/*
-        <head /> will contain the components returned by the nearest parent
-        head.js. Find out more at https://beta.nextjs.org/docs/api-reference/file-conventions/head
-      */}
-			{/* <head /> */}
 			<Head
 				title={settings.data.title}
 				description={settings.data.text}

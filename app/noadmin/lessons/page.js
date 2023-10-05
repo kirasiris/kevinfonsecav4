@@ -8,21 +8,21 @@ import AuthContext from "@/helpers/globalContext";
 import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
 import AdminCardHeaderMenu from "@/components/admin/admincardheadermenu";
 
-const AdminVideosIndex = () => {
+const AdminLessonsIndex = () => {
 	const { totalResults, setTotalResults } = useContext(AuthContext);
 
 	const router = useRouter();
 
-	const [videos, setVideos] = useState([]);
+	const [lessons, setLessons] = useState([]);
 
 	const [params] = useState(
 		`?page=1&limit=10&sort=-createdAt&onModel=Playlist`
 	);
 
-	const fetchVideos = async () => {
+	const fetchLessons = async () => {
 		try {
 			const res = await axios.get(`/videos${params}`);
-			setVideos(res?.data?.data);
+			setLessons(res?.data?.data);
 			setTotalResults({ ...totalResults, videos: res?.data?.countAll });
 		} catch (err) {
 			// const error = err.response.data.message;
@@ -48,14 +48,14 @@ const AdminVideosIndex = () => {
 	};
 
 	useEffect(() => {
-		fetchVideos();
+		fetchLessons();
 	}, [router]);
 
 	const handleDelete = async (id) => {
 		try {
 			await axios.delete(`/videos/${id}`);
-			toast.success("Video deleted");
-			fetchVideos();
+			toast.success("Lesson deleted");
+			fetchLessons();
 		} catch (err) {
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;
@@ -82,8 +82,8 @@ const AdminVideosIndex = () => {
 	const handleDeleteAll = async () => {
 		try {
 			await axios.delete(`/videos/deleteall`);
-			toast.success("Videos deleted");
-			fetchVideos();
+			toast.success("Lessons deleted");
+			fetchLessons();
 		} catch (err) {
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;
@@ -110,30 +110,30 @@ const AdminVideosIndex = () => {
 	return (
 		<>
 			<AdminStatusesMenu
-				allLink="/noadmin/videos"
-				publishedLink="/noadmin/videos/published"
-				draftLink="/noadmin/videos/draft"
-				scheduledLink="/noadmin/videos/scheduled"
-				trashedLink="/noadmin/videos/trashed"
+				allLink="/noadmin/lessons"
+				publishedLink="/noadmin/lessons/published"
+				draftLink="/noadmin/lessons/draft"
+				scheduledLink="/noadmin/lessons/scheduled"
+				trashedLink="/noadmin/lessons/trashed"
 			/>
 			<div className="card rounded-0">
 				<AdminCardHeaderMenu
-					allLink={`/noadmin/videos`}
-					pageText="Videos"
-					totalResults={totalResults.videos}
-					addLink={`/noadmin/videos/create`}
-					addLinkText={`video`}
+					allLink={`/noadmin/lessons`}
+					pageText="Lessons"
+					totalResults={totalResults.lessons}
+					addLink={`/noadmin/lessons/create`}
+					addLinkText={`lesson`}
 					handleDeleteAllFunction={handleDeleteAll}
 				/>
-				{videos?.length > 0 ? (
+				{lessons?.length > 0 ? (
 					<ul className="list-group list-group-flush">
-						{videos?.map((video) => (
+						{lessons?.map((video) => (
 							<Single
 								key={video._id}
 								object={video}
 								handleDelete={handleDelete}
-								objects={videos}
-								setObjects={setVideos}
+								objects={lessons}
+								setObjects={setLessons}
 								setTotalResults={setTotalResults}
 							/>
 						))}
@@ -148,4 +148,4 @@ const AdminVideosIndex = () => {
 	);
 };
 
-export default AdminVideosIndex;
+export default AdminLessonsIndex;

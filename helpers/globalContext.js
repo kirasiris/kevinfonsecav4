@@ -13,10 +13,11 @@ export const AuthProvider = ({ children }) => {
 		token: ``,
 		isAuthenticated: false,
 		user: null,
+		role: null,
 	});
 
 	const resetSetAuth = () => {
-		setAuth({ token: ``, isAuthenticated: false, user: null });
+		setAuth({ token: ``, isAuthenticated: false, user: null, role: null });
 	};
 
 	const loadUser = async () => {
@@ -95,17 +96,20 @@ export const AuthProvider = ({ children }) => {
 
 	useEffect(() => {
 		const localToken = async () => {
-			// let token = window.localStorage.xAuthToken;
 			let token = localStorage.getItem("xAuthToken");
 			setAuthToken(token);
 			if (token) {
-				axios
+				await axios
 					.get(`/auth/me`)
 					.then((res) => {
 						return setAuth({
 							token: token,
 							isAuthenticated: true,
 							user: res.data.data,
+							role: localStorage.setItem(
+								"isFounder",
+								res.data.data.role.includes("founder")
+							),
 						});
 					})
 					.catch((err) => {
@@ -132,6 +136,7 @@ export const AuthProvider = ({ children }) => {
 		courses: 0,
 		emails: 0,
 		files: 0,
+		lessons: 0,
 		logs: 0,
 		newsletters: 0,
 		playlists: 0,

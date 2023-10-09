@@ -15,7 +15,7 @@ const AdminBlogsIndex = () => {
 
 	const [blogs, setBlogs] = useState([]);
 
-	const [params] = useState(`?page=1&limit=10&sort=-createdAt&postType=blog`);
+	const [params] = useState(`?page=1&sort=-createdAt&postType=blog`);
 
 	const fetchBlogs = async () => {
 		try {

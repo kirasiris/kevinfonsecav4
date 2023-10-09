@@ -2,8 +2,6 @@
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
-import Tab from "react-bootstrap/Tab";
-import Tabs from "react-bootstrap/Tabs";
 import Link from "next/link";
 import { toast } from "react-toastify";
 import MyTextArea from "@/components/global/mytextarea";
@@ -11,13 +9,13 @@ import AuthContext from "@/helpers/globalContext";
 import RecordAudioModal from "@/components/global/recordaudiomodal";
 import Waveform from "@/layout/waveform";
 import UseDropzone from "@/components/global/dropzone";
+import Image from "next/image";
+import { FaFileVideo } from "react-icons/fa";
 
 const CreatePost = () => {
-	const { auth, files } = useContext(AuthContext);
+	const { auth, files, setFiles } = useContext(AuthContext);
 
 	const router = useRouter();
-
-	const [showDropzone, setShowDropzone] = useState(false);
 
 	const [users, setUsers] = useState([]);
 
@@ -57,7 +55,8 @@ const CreatePost = () => {
 		text: "No description",
 		postedto: undefined,
 		postedfrom: undefined, // used when sharing post
-		files: [],
+		// files: [],
+		// filePreviews: [],
 		featured: false,
 		embedding: false,
 		commented: false,
@@ -65,7 +64,7 @@ const CreatePost = () => {
 		status: "draft",
 		hidden: false,
 		postType: "post",
-		subType: "text",
+		subType: "photos",
 		premiumContent: false,
 		address: "",
 	});
@@ -75,6 +74,8 @@ const CreatePost = () => {
 		text,
 		postedto,
 		postedfrom,
+		// files,
+		// filePreviews,
 		featured,
 		embedding,
 		commented,
@@ -96,8 +97,6 @@ const CreatePost = () => {
 			// 	postType: "post",
 			// 	// files:
 			// });
-			toast.success(`Item created`);
-			// resetForm();
 			// router.push(`/noadmin/posts`);
 		} catch (err) {
 			// const error = err.response.data.message;
@@ -125,7 +124,8 @@ const CreatePost = () => {
 			text: "No description",
 			postedto: undefined,
 			postedfrom: undefined, // used when sharing post
-			files: [],
+			// files: [],
+			// filePreviews: [],
 			featured: false,
 			embedding: false,
 			commented: false,
@@ -133,13 +133,28 @@ const CreatePost = () => {
 			status: "draft",
 			hidden: false,
 			postType: "post",
-			subType: "text",
+			subType: "photos",
 			premiumContent: false,
 			address: "",
 		});
 	};
 
 	const [moreOptions, setMoreOptions] = useState(false);
+
+	const [showDropzone, setShowDropzone] = useState(true);
+
+	const handleDeleteFromDom = (index) => {
+		const newMedia = [...files.media];
+		const newPreviews = [...files.previews];
+
+		// newMedia.splice(index, 1);
+		newPreviews.splice(index, 1);
+
+		setFiles({
+			media: newMedia,
+			previews: newPreviews,
+		});
+	};
 
 	return (
 		<form className="card" onSubmit={addPost}>
@@ -176,8 +191,13 @@ const CreatePost = () => {
 					passHref
 					legacyBehavior
 				>
-					{auth.user?.username}
+					<a className="position-absolute" style={{ left: "68px" }}>
+						{auth.user?.username}
+					</a>
 				</Link>
+				<p className="position-absolute" style={{ left: "68px", top: "30px" }}>
+					{auth?.user?.name}
+				</p>
 				<div className="float-end">
 					<select className="form-control">
 						<option value="1">Only me</option>
@@ -222,9 +242,8 @@ const CreatePost = () => {
 									postedto: e.target.value,
 								});
 							}}
-							className="form-control"
+							className="form-control mb-3"
 						>
-							<option selected>Choose an option</option>
 							{users
 								.filter((excludedUser) => excludedUser._id !== auth.user._id)
 								.map((user) => (
@@ -248,9 +267,8 @@ const CreatePost = () => {
 									postedfrom: e.target.value,
 								});
 							}}
-							className="form-control"
+							className="form-control mb-3"
 						>
-							<option selected>Choose an option</option>
 							{users.map((user) => (
 								<option key={user._id} value={user._id}>
 									{user.username}
@@ -258,42 +276,111 @@ const CreatePost = () => {
 							))}
 						</select>
 					</div>
-					<MyTextArea
-						id="text"
-						name="text"
-						value={text}
-						objectData={postData}
-						setObjectData={setPostData}
-						onModel="Post"
-						advancedTextEditor={false}
-					/>
 				</div>
+				<MyTextArea
+					id="text"
+					name="text"
+					value={text}
+					objectData={postData}
+					setObjectData={setPostData}
+					onModel="Post"
+					advancedTextEditor={false}
+				/>
 				<br />
-				<Tabs
+				<UseDropzone
+					id="files"
+					name="files"
+					multipleFiles={true}
+					onModel="Post"
+					showDropzone={showDropzone}
+					setShowDropzone={setShowDropzone}
+					keepShowing={true}
+				/>
+				{/* <label htmlFor="files" className="form-label">
+					Files
+				</label>
+				<input
+					id="files"
+					name="files[]"
+					onChange={(e) => {
+						const selectedFiles = Array.from(e.target.files);
+						const filePreviews = selectedFiles.map((file) => {
+							if (file instanceof Blob || file instanceof File) {
+								return {
+									...file,
+									preview: URL.createObjectURL(file),
+								};
+							}
+							return file;
+						});
+						setPostData({
+							...postData,
+							files: [...postData.files, ...selectedFiles],
+							filePreviews: [...postData.filePreviews, ...filePreviews],
+						});
+					}}
+					className="form-control mb-3"
+					type="file"
+					multiple
+				/> */}
+				<div
+					className="row"
+					style={{
+						display: "flex",
+						flexWrap: "nowrap",
+						overflowX: "auto",
+					}}
+				>
+					{files.previews?.length > 0 &&
+						files.previews.map((file, index) => {
+							const format = file.path.split(".")[1];
+							return (
+								<div key={index} className="col-auto mb-3">
+									{format === "png" && (
+										<>
+											<figure>
+												<Image
+													src={file.preview}
+													className={`${index}`}
+													alt={`${index} image preview`}
+													width={`188`}
+													height={`188`}
+												/>
+											</figure>
+											<div className="btn-group">
+												<button
+													className="btn btn-danger btn-sm"
+													onClick={() => handleDeleteFromDom(index)}
+												>
+													Delete
+												</button>
+											</div>
+										</>
+									)}
+									{format === "mp4" && (
+										<>
+											<figure>
+												<FaFileVideo style={{ fontSize: "188px" }} />
+											</figure>
+											<div className="btn-group">
+												<button
+													className="btn btn-danger btn-sm"
+													onClick={() => handleDeleteFromDom(index)}
+												>
+													Delete
+												</button>
+											</div>
+										</>
+									)}
+								</div>
+							);
+						})}
+				</div>
+				{/* <Tabs
 					defaultActiveKey="photos"
 					id="uncontrolled-tab-example"
 					className="mb-3"
 				>
-					<Tab eventKey="photos" title="Photos">
-						<UseDropzone
-							id="files"
-							name="files"
-							multipleFiles={true}
-							onModel="Post"
-							showDropzone={showDropzone}
-							setShowDropzone={setShowDropzone}
-						/>
-					</Tab>
-					<Tab eventKey="videos" title="Videos">
-						{/* <UseDropzone
-							id="files"
-							name="files"
-							multipleFiles={false}
-							onModel="Post"
-							showDropzone={showDropzone}
-							setShowDropzone={setShowDropzone}
-						/> */}
-					</Tab>
 					<Tab eventKey="audios" title="Audios">
 						<RecordAudioModal
 							auth={auth}
@@ -309,14 +396,7 @@ const CreatePost = () => {
 							}
 						/>
 					</Tab>
-					<Tab eventKey="files" title="Files">
-						<UseDropzone
-							id="files"
-							name="files"
-							multipleFiles={false}
-							onModel="Post"
-						/>
-					</Tab>
+					
 					<Tab eventKey="maps" title="Maps">
 						<label htmlFor="address" className="form-label">
 							Address
@@ -336,7 +416,7 @@ const CreatePost = () => {
 							placeholder=""
 						/>
 					</Tab>
-				</Tabs>
+				</Tabs> */}
 				<br />
 				<div className="d-grid">
 					<button

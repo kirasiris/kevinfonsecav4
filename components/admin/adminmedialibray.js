@@ -11,6 +11,7 @@ import AdminMediaLibraryMenu from "./adminmediamenu";
 import Single from "@/components/admin/files/single";
 import UseDropzone from "@/components/global/dropzone";
 import DeleteAllModal from "../global/deleteallmodal";
+import { FaFileVideo } from "react-icons/fa";
 
 const AdminMediaLibray = ({
 	id = "single",
@@ -122,6 +123,19 @@ const AdminMediaLibray = ({
 		}
 	};
 
+	const handleDeleteFromDom = (index) => {
+		const newMedia = [...files.media];
+		const newPreviews = [...files.previews];
+
+		// newMedia.splice(index, 1);
+		newPreviews.splice(index, 1);
+
+		setFiles({
+			media: newMedia,
+			previews: newPreviews,
+		});
+	};
+
 	return (
 		<>
 			<AdminMediaLibraryMenu
@@ -168,16 +182,49 @@ const AdminMediaLibray = ({
 					/>
 					<div className="row">
 						{files.previews?.length > 0 &&
-							files.previews.map((file, index) => (
-								<Image
-									key={index}
-									src={file.preview}
-									className={`${index} col mb-4`}
-									alt={`${index} image preview`}
-									width={`188`}
-									height={`188`}
-								/>
-							))}
+							files.previews.map((file, index) => {
+								const format = file.path.split(".")[1];
+								return (
+									<div key={index} className="col mb-3">
+										{format === "png" && (
+											<>
+												<figure>
+													<Image
+														src={file.preview}
+														className={`${index}`}
+														alt={`${index} image preview`}
+														width={`188`}
+														height={`188`}
+													/>
+												</figure>
+												<div className="btn-group">
+													<button
+														className="btn btn-danger btn-sm"
+														onClick={() => handleDeleteFromDom(index)}
+													>
+														Delete
+													</button>
+												</div>
+											</>
+										)}
+										{format === "mp4" && (
+											<>
+												<figure>
+													<FaFileVideo style={{ fontSize: "188px" }} />
+												</figure>
+												<div className="btn-group">
+													<button
+														className="btn btn-danger btn-sm"
+														onClick={() => handleDeleteFromDom(index)}
+													>
+														Delete
+													</button>
+												</div>
+											</>
+										)}
+									</div>
+								);
+							})}
 						{files?.media?.length > 0 &&
 							files?.media.map((mediaFile) => (
 								<Single

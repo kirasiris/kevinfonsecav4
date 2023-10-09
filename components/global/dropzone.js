@@ -12,6 +12,7 @@ const UseDropzone = ({
 	onModel = "Blog",
 	showDropzone,
 	setShowDropzone,
+	keepShowing = false,
 }) => {
 	const { auth, files, setFiles } = useContext(AuthContext);
 	const [uploadPercentage, setUploadPercentage] = useState(0);
@@ -21,48 +22,66 @@ const UseDropzone = ({
 				<UseProgress percentage={uploadPercentage} />
 				<Dropzone
 					onDrop={async (acceptedFiles) => {
+						const newMedia = [...files.media, ...acceptedFiles];
+						const newPreviews = newMedia
+							.filter((file) => acceptedFiles.includes(file))
+							.map((file) => {
+								if (file instanceof Blob || file instanceof File) {
+									return {
+										...file,
+										preview: URL.createObjectURL(file),
+									};
+								}
+								return file;
+							});
+
 						setFiles({
-							...files,
-							media: acceptedFiles,
-							previews: acceptedFiles.map((file) => ({
-								...file,
-								preview: URL.createObjectURL(file),
-							})),
+							media: newMedia,
+							previews: [...files.previews, ...newPreviews],
 							mediaLength: acceptedFiles.length,
 						});
-						// HERE YOU CAN MANAGE FILES UPLOADED
-						for (let i = 0; i < acceptedFiles.length; i++) {
-							const res = await axios.put(
-								`/uploads/uploadObject`,
-								{
-									userId: auth?.user._id,
-									username: auth?.user.username,
-									userEmail: auth?.user.email,
-									onModel: onModel,
-									file: acceptedFiles[i],
-								},
-								{
-									headers: {
-										Authorization: `Bearer ${auth?.token}`,
-										"Content-Type": "multipart/form-data",
-									},
-									onUploadProgress: (ProgressEvent) => {
-										setUploadPercentage(
-											parseInt(
-												Math.round(ProgressEvent.loaded * 100) /
-													ProgressEvent.total
-											)
-										);
-										setTimeout(() => setUploadPercentage(0), 10000);
-									},
-								}
-							);
-							setFiles({
-								...files,
-								media: [...files.media, res?.data?.data],
-							});
-						}
-						setShowDropzone(false);
+
+						// setFiles({
+						// 	...files,
+						// 	media: acceptedFiles,
+						// 	previews: acceptedFiles.map((file) => ({
+						// 		...file,
+						// 		preview: URL.createObjectURL(file),
+						// 	})),
+						// 	mediaLength: acceptedFiles.length,
+						// });
+						// for (let i = 0; i < acceptedFiles.length; i++) {
+						// 	const res = await axios.put(
+						// 		`/uploads/uploadObject`,
+						// 		{
+						// 			userId: auth?.user._id,
+						// 			username: auth?.user.username,
+						// 			userEmail: auth?.user.email,
+						// 			onModel: onModel,
+						// 			file: acceptedFiles[i],
+						// 		},
+						// 		{
+						// 			headers: {
+						// 				Authorization: `Bearer ${auth?.token}`,
+						// 				"Content-Type": "multipart/form-data",
+						// 			},
+						// 			onUploadProgress: (ProgressEvent) => {
+						// 				setUploadPercentage(
+						// 					parseInt(
+						// 						Math.round(ProgressEvent.loaded * 100) /
+						// 							ProgressEvent.total
+						// 					)
+						// 				);
+						// 				setTimeout(() => setUploadPercentage(0), 10000);
+						// 			},
+						// 		}
+						// 	);
+						// 	setFiles({
+						// 		...files,
+						// 		media: [...files.media, res?.data?.data],
+						// 	});
+						// }
+						setShowDropzone(keepShowing);
 						setUploadPercentage(0);
 					}}
 				>

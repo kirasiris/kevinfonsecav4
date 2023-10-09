@@ -2,6 +2,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { FaFilePdf, FaFileVideo } from "react-icons/fa";
+import DeleteModal from "@/components/global/deletemodal";
 
 const Single = ({
 	object = {},
@@ -17,16 +18,16 @@ const Single = ({
 	 */
 	const imgObj = ({ object }) => {
 		return (
-			<div className="col mb-3">
+			<div className="col-auto mb-3">
 				<figure title={object.title}>
 					<Image
 						src={
 							object?.location?.secure_location ||
-							`https://source.unsplash.com/random/188x188`
+							`https://source.unsplash.com/random/184x184`
 						}
 						alt={object.title}
-						width={`188`}
-						height={`188`}
+						width={`184`}
+						height={`184`}
 						onClick={() => {
 							setObjects({
 								...objects,
@@ -46,13 +47,13 @@ const Single = ({
 					>
 						<a className="btn btn-secondary btn-sm">Read more</a>
 					</Link>
-					<button
-						className="btn btn-danger btn-sm"
-						onClick={() => handleDelete(object._id, object.location.public_id)}
-						type="button"
-					>
-						Delete
-					</button>
+					<DeleteModal
+						id={object._id ? object._id : object._id}
+						action={handleDelete}
+						objects={objects}
+						setObjects={setObjects}
+						setTotalResults={setTotalResults}
+					/>
 				</div>
 			</div>
 		);
@@ -66,9 +67,9 @@ const Single = ({
 
 	const pdfObj = ({ object }) => {
 		return (
-			<div className="col mb-3">
+			<div className="col-auto mb-3">
 				<figure title={object.title}>
-					<FaFilePdf style={{ fontSize: "188px" }} />
+					<FaFilePdf style={{ fontSize: "184px" }} />
 				</figure>
 				<div className="btn-group">
 					<Link
@@ -80,13 +81,13 @@ const Single = ({
 					>
 						<a className="btn btn-secondary btn-sm">Read more</a>
 					</Link>
-					<button
-						className="btn btn-danger btn-sm"
-						onClick={() => handleDelete(object._id, object.location.public_id)}
-						type="button"
-					>
-						Delete
-					</button>
+					<DeleteModal
+						id={object._id ? object._id : object._id}
+						action={handleDelete}
+						objects={objects}
+						setObjects={setObjects}
+						setTotalResults={setTotalResults}
+					/>
 				</div>
 			</div>
 		);
@@ -98,9 +99,9 @@ const Single = ({
 	 */
 	const vidObj = ({ object }) => {
 		return (
-			<div className="col mb-3">
+			<div className="col-auto mb-3">
 				<figure title={object.title}>
-					<FaFileVideo style={{ fontSize: "188px" }} />
+					<FaFileVideo style={{ fontSize: "184px" }} />
 				</figure>
 				<div className="btn-group">
 					<Link
@@ -112,13 +113,13 @@ const Single = ({
 					>
 						<a className="btn btn-secondary btn-sm">Read more</a>
 					</Link>
-					<button
-						className="btn btn-danger btn-sm"
-						onClick={() => handleDelete(object._id, object.location.public_id)}
-						type="button"
-					>
-						Delete
-					</button>
+					<DeleteModal
+						id={object._id ? object._id : object._id}
+						action={handleDelete}
+						objects={objects}
+						setObjects={setObjects}
+						setTotalResults={setTotalResults}
+					/>
 				</div>
 			</div>
 		);

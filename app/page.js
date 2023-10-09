@@ -3,6 +3,7 @@ import Header from "@/layout/header";
 import SingleBlog from "@/components/blog/single";
 import SingleTheme from "@/components/theme/single";
 import NewsletterForm from "@/layout/newsletter";
+import ErrorPage from "@/layout/errorpage";
 
 async function getSetting(params) {
 	const res = await fetch(`http://localhost:5000/api/v1/settings/${params}`, {
@@ -53,7 +54,7 @@ const HomeIndex = async () => {
 		getThemesData,
 	]);
 
-	return (
+	return settings.data.maintenance === false ? (
 		<>
 			<Header
 				title={settings.data.title}
@@ -153,6 +154,8 @@ const HomeIndex = async () => {
 			</section>
 			{/* CONTACT ME */}
 		</>
+	) : (
+		<ErrorPage />
 	);
 };
 

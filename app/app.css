@@ -374,6 +374,13 @@ WAVEFORM
 	right: 0;
 }
 /*****************************
+ERROR COMPONENT
+*****************************/
+.error-container {
+	padding-top: 3rem !important;
+	padding-bottom: 3rem !important;
+}
+/*****************************
 BODY-DARK
 *****************************/
 body.light-mode {

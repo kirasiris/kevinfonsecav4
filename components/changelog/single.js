@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import Accordion from "react-bootstrap/Accordion";
 import Loading from "@/app/changelog/loading";
 import ParseHtml from "@/layout/parseHtml";
+import Link from "next/link";
 
 const Single = ({
 	changelog = {},
@@ -24,6 +25,10 @@ const Single = ({
 						</Accordion.Header>
 						<Accordion.Body>
 							<ParseHtml text={changelog.text} />
+							<hr />
+							<Link href={`/changelog/${changelog._id}/${changelog.slug}`}>
+								{changelog.title}
+							</Link>
 						</Accordion.Body>
 					</Accordion.Item>
 				</Accordion>

@@ -4,13 +4,13 @@ import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import Link from "next/link";
 import { toast } from "react-toastify";
+import Image from "next/image";
+import { FaFileVideo } from "react-icons/fa";
 import MyTextArea from "@/components/global/mytextarea";
 import AuthContext from "@/helpers/globalContext";
 import RecordAudioModal from "@/components/global/recordaudiomodal";
 import Waveform from "@/layout/waveform";
 import UseDropzone from "@/components/global/dropzone";
-import Image from "next/image";
-import { FaFileVideo } from "react-icons/fa";
 
 const CreatePost = () => {
 	const { auth, files, setFiles } = useContext(AuthContext);
@@ -55,8 +55,6 @@ const CreatePost = () => {
 		text: "No description",
 		postedto: undefined,
 		postedfrom: undefined, // used when sharing post
-		// files: [],
-		// filePreviews: [],
 		featured: false,
 		embedding: false,
 		commented: false,
@@ -74,8 +72,6 @@ const CreatePost = () => {
 		text,
 		postedto,
 		postedfrom,
-		// files,
-		// filePreviews,
 		featured,
 		embedding,
 		commented,
@@ -91,11 +87,12 @@ const CreatePost = () => {
 	const addPost = async (e) => {
 		e.preventDefault();
 		console.log(postData);
+		console.log(files.uploaded);
 		try {
 			// await axios.post(`/posts`, {
 			// 	...postData,
 			// 	postType: "post",
-			// 	// files:
+			// 	// files: files.uploaded.map((file) => file._id)
 			// });
 			// router.push(`/noadmin/posts`);
 		} catch (err) {
@@ -124,8 +121,6 @@ const CreatePost = () => {
 			text: "No description",
 			postedto: undefined,
 			postedfrom: undefined, // used when sharing post
-			// files: [],
-			// filePreviews: [],
 			featured: false,
 			embedding: false,
 			commented: false,
@@ -143,19 +138,6 @@ const CreatePost = () => {
 
 	const [showDropzone, setShowDropzone] = useState(true);
 
-	const handleDeleteFromDom = (index) => {
-		const newMedia = [...files.media];
-		const newPreviews = [...files.previews];
-
-		// newMedia.splice(index, 1);
-		newPreviews.splice(index, 1);
-
-		setFiles({
-			media: newMedia,
-			previews: newPreviews,
-		});
-	};
-
 	return (
 		<form className="card" onSubmit={addPost}>
 			<div className="card-header">
@@ -172,10 +154,12 @@ const CreatePost = () => {
 						passHref
 						legacyBehavior
 					>
-						<img
+						<Image
 							src="https://yt3.ggpht.com/ytc/AL5GRJUOhe9c1D67-yLQEkT2EqyRclI5V3EOTANZQXmt=s48-c-k-c0x00ffffff-no-rj"
 							className="me-1"
 							alt="lzlalala"
+							width="48"
+							height="48"
 						/>
 					</Link>
 				</div>
@@ -296,86 +280,40 @@ const CreatePost = () => {
 					setShowDropzone={setShowDropzone}
 					keepShowing={true}
 				/>
-				{/* <label htmlFor="files" className="form-label">
-					Files
-				</label>
-				<input
-					id="files"
-					name="files[]"
-					onChange={(e) => {
-						const selectedFiles = Array.from(e.target.files);
-						const filePreviews = selectedFiles.map((file) => {
-							if (file instanceof Blob || file instanceof File) {
-								return {
-									...file,
-									preview: URL.createObjectURL(file),
-								};
-							}
-							return file;
-						});
-						setPostData({
-							...postData,
-							files: [...postData.files, ...selectedFiles],
-							filePreviews: [...postData.filePreviews, ...filePreviews],
-						});
-					}}
-					className="form-control mb-3"
-					type="file"
-					multiple
-				/> */}
-				<div
-					className="row"
-					style={{
-						display: "flex",
-						flexWrap: "nowrap",
-						overflowX: "auto",
-					}}
-				>
-					{files.previews?.length > 0 &&
-						files.previews.map((file, index) => {
+				{files.previews?.length > 0 && (
+					<div
+						className="row"
+						style={{
+							display: "flex",
+							flexWrap: "nowrap",
+							overflowX: "auto",
+						}}
+					>
+						{files.previews.map((file, index) => {
 							const format = file.path.split(".")[1];
 							return (
 								<div key={index} className="col-auto mb-3">
 									{format === "png" && (
-										<>
-											<figure>
-												<Image
-													src={file.preview}
-													className={`${index}`}
-													alt={`${index} image preview`}
-													width={`188`}
-													height={`188`}
-												/>
-											</figure>
-											<div className="btn-group">
-												<button
-													className="btn btn-danger btn-sm"
-													onClick={() => handleDeleteFromDom(index)}
-												>
-													Delete
-												</button>
-											</div>
-										</>
+										<figure>
+											<Image
+												src={file.preview}
+												className={`${index}`}
+												alt={`${index} image preview`}
+												width={`188`}
+												height={`188`}
+											/>
+										</figure>
 									)}
 									{format === "mp4" && (
-										<>
-											<figure>
-												<FaFileVideo style={{ fontSize: "188px" }} />
-											</figure>
-											<div className="btn-group">
-												<button
-													className="btn btn-danger btn-sm"
-													onClick={() => handleDeleteFromDom(index)}
-												>
-													Delete
-												</button>
-											</div>
-										</>
+										<figure>
+											<FaFileVideo style={{ fontSize: "188px" }} />
+										</figure>
 									)}
 								</div>
 							);
 						})}
-				</div>
+					</div>
+				)}
 				{/* <Tabs
 					defaultActiveKey="photos"
 					id="uncontrolled-tab-example"
@@ -417,7 +355,6 @@ const CreatePost = () => {
 						/>
 					</Tab>
 				</Tabs> */}
-				<br />
 				<div className="d-grid">
 					<button
 						type="button"

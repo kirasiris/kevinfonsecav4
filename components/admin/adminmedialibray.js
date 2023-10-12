@@ -5,13 +5,12 @@ import { useContext, useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { FaFileVideo } from "react-icons/fa";
 import AuthContext from "@/helpers/globalContext";
 import AdminMediaLibraryMenu from "./adminmediamenu";
-
 import Single from "@/components/admin/files/single";
 import UseDropzone from "@/components/global/dropzone";
 import DeleteAllModal from "../global/deleteallmodal";
-import { FaFileVideo } from "react-icons/fa";
 
 const AdminMediaLibray = ({
 	id = "single",
@@ -127,7 +126,6 @@ const AdminMediaLibray = ({
 		const newMedia = [...files.media];
 		const newPreviews = [...files.previews];
 
-		// newMedia.splice(index, 1);
 		newPreviews.splice(index, 1);
 
 		setFiles({

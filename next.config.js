@@ -17,6 +17,7 @@ const nextConfig = {
 			"setwan.bimakdota.go.id",
 			"https://oaidalleapiprodscus.blob.core.windows.net",
 			"static.vecteezy.com",
+			"yt3.ggpht.com",
 		],
 	},
 };

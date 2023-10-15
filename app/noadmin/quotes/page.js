@@ -179,14 +179,11 @@ const AdminQuotesIndex = () => {
 			<div className="row">
 				<div className="col">
 					<form onSubmit={createQuote}>
-						<label
-							htmlFor="quote-text multipurpose-textarea"
-							className="form-label"
-						>
+						<label htmlFor="text" className="form-label">
 							Text
 						</label>
 						<MyTextArea
-							id="quote-text"
+							id="text"
 							name="text"
 							value={text}
 							objectData={quoteData}

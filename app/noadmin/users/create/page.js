@@ -514,14 +514,11 @@ const CreateUser = () => {
 					</select>
 				</div>
 			</div>
-			<label
-				htmlFor="bio-textarea multipurpose-textarea"
-				className="form-label"
-			>
+			<label htmlFor="text" className="form-label">
 				Biography
 			</label>
 			<MyTextArea
-				id="bio-textarea"
+				id="text"
 				name="bio"
 				value={bio}
 				objectData={userData}

@@ -1,3 +1,8 @@
+@import url("https://fonts.googleapis.com/css?family=Roboto:400,300,300italic,400italic,700,700italic&subset=latin,vietnamese,latin-ext,cyrillic,cyrillic-ext,greek-ext,greek");
+@import url("https://fonts.googleapis.com/css?family=Oswald:400,300,700&subset=latin,latin-ext");
+@import url("https://fonts.googleapis.com/css?family=Montserrat:400,700");
+@import url("https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300,300italic,700&subset=latin,greek,greek-ext,vietnamese,cyrillic-ext,cyrillic,latin-ext");
+
 .blog-item__panel {
 	align-items: center;
 	background: #ffffff;
@@ -98,6 +103,50 @@ a.blog-relative-time-status__link {
 	margin: 0;
 }
 
+/* ---------------------------------------------------
+  FROALA-EDITOR
+----------------------------------------------------- */
+.froala-editor-wrapper:focus-visible {
+	border-radius: 11px;
+}
+/* ---------------------------------------------------
+  TRIBUTEJS
+----------------------------------------------------- */
+.tribute-container {
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: auto;
+	max-height: 300px;
+	max-width: 500px;
+	overflow: auto;
+	display: block;
+	z-index: 999999;
+}
+.tribute-container ul {
+	margin: 0;
+	margin-top: 2px;
+	padding: 0;
+	list-style: none;
+	background: #efefef;
+}
+.tribute-container li {
+	padding: 5px 5px;
+	cursor: pointer;
+}
+.tribute-container li.highlight,
+.tribute-container li:hover {
+	background: #ddd;
+}
+.tribute-container li span {
+	font-weight: bold;
+}
+.tribute-container li.no-match {
+	cursor: default;
+}
+.tribute-container .menu-highlighted {
+	font-weight: bold;
+}
 /* ---------------------------------------------------
   DROPZONE
 ----------------------------------------------------- */

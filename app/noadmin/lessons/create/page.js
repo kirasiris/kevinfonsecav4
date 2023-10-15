@@ -192,14 +192,11 @@ const CreateLesson = () => {
 					className="form-control mb-3"
 					placeholder=""
 				/>
-				<label
-					htmlFor="video-text multipurpose-textarea"
-					className="form-label"
-				>
+				<label htmlFor="text" className="form-label">
 					Text
 				</label>
 				<MyTextArea
-					id="video-text"
+					id="text"
 					name="text"
 					value={text}
 					objectData={lessonData}

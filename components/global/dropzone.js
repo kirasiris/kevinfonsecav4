@@ -68,10 +68,11 @@ const UseDropzone = ({
 									},
 								}
 							);
+							// https://zzzcode.ai/code-debug?id=d4089bcf-b450-42d5-9f05-5c73442b8477
 							setFiles({
 								...files,
 								media: [res?.data?.data, ...files.media],
-								uploaded: [...files.uploaded, res?.data?.data?._id],
+								uploaded: [...files.uploaded, res?.data?.data],
 							});
 						}
 						setShowDropzone(keepShowing);

@@ -1,3 +1,5 @@
+import Script from "next/script";
+
 export default function Head({
 	title = ``,
 	description = ``,
@@ -106,15 +108,12 @@ export default function Head({
 			)}
 			{/* {jsLink && <script src={`${jsLink}`} crossorigin="anonymous"></script>}
 				{cssInline && <style>{cssInline}</style>} */}
-			<script
+			<Script
 				src="https://kit.fontawesome.com/4cde37f226.js"
 				crossOrigin="anonymous"
 				async
-			></script>
-			<script
-				async
-				src="https://code.iconify.design/1/1.0.7/iconify.min.js"
-			></script>
+			/>
+			<Script src="https://code.iconify.design/1/1.0.7/iconify.min.js" async />
 		</>
 	);
 }

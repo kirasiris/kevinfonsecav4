@@ -113,6 +113,8 @@ const AdminCoursesIndex = () => {
 				draftLink="/noadmin/courses/draft"
 				scheduledLink="/noadmin/courses/scheduled"
 				trashedLink="/noadmin/courses/trashed"
+				categoriesLink="/noadmin/courses/categories"
+				categoryType="course"
 			/>
 			<div className="card rounded-0">
 				<AdminCardHeaderMenu

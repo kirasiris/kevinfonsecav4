@@ -113,6 +113,8 @@ const AdminBlogsIndex = () => {
 				draftLink="/noadmin/blogs/draft"
 				scheduledLink="/noadmin/blogs/scheduled"
 				trashedLink="/noadmin/blogs/trashed"
+				categoriesLink="/noadmin/blogs/categories"
+				categoryType="blog"
 			/>
 			<div className="card rounded-0">
 				<AdminCardHeaderMenu

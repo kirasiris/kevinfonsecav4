@@ -64,7 +64,7 @@ const HomeIndex = async () => {
 				headerStyle={{
 					backgroundAttachment: "fixed !important",
 					backgroundRepeat: "no-repeat",
-					backgroundSize: "cover",
+					backgroundSize: "cover !important",
 					backgroundPosition: "50% 50%",
 					background: `linear-gradient(to bottom, rgba(0,0,0,0.7) 0%,rgba(0,0,0,0.7) 100%), url(${
 						settings.data.showcase_image ||

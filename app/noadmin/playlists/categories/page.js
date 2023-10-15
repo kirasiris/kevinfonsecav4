@@ -4,12 +4,12 @@ import { useRouter } from "next/navigation";
 import { useState, useEffect, useContext } from "react";
 import { toast } from "react-toastify";
 import Single from "@/components/admin/categories/single";
-import MyTextArea from "@/components/global/mytextarea";
 import AuthContext from "@/helpers/globalContext";
 import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
 import AdminCardHeaderMenu from "@/components/admin/admincardheadermenu";
+import MyTextArea from "@/components/global/mytextarea";
 
-const AdminCategoriesIndex = () => {
+const AdminPlaylistCategoriesIndex = () => {
 	const { totalResults, setTotalResults } = useContext(AuthContext);
 
 	const router = useRouter();
@@ -17,7 +17,9 @@ const AdminCategoriesIndex = () => {
 	const [categories, setCategories] = useState([]);
 	const [isTopLevel, setTopLevel] = useState(true);
 
-	const [params] = useState(`?page=1&limit=10&sort=-createdAt`);
+	const [params] = useState(
+		`?page=1&limit=50&sort=-createdAt&categoryType=playlist`
+	);
 
 	const fetchCategories = async () => {
 		try {
@@ -62,7 +64,10 @@ const AdminCategoriesIndex = () => {
 	const createCategory = async (e) => {
 		e.preventDefault();
 		try {
-			const res = await axios.post(`/categories`, categoryData);
+			const res = await axios.post(`/categories`, {
+				...categoryData,
+				categoryType: "playlist",
+			});
 			setCategories([res?.data?.data, ...categories]);
 			setTotalResults({ ...totalResults, categories: categories.length + 1 });
 			toast.success(`Item created`);
@@ -155,11 +160,12 @@ const AdminCategoriesIndex = () => {
 	return (
 		<>
 			<AdminStatusesMenu
-				allLink="/noadmin/categories"
-				publishedLink="/noadmin/categories/published"
-				draftLink="/noadmin/categories/draft"
-				scheduledLink="/noadmin/categories/scheduled"
-				trashedLink="/noadmin/categories/trashed"
+				allLink="/noadmin/playlists"
+				publishedLink="/noadmin/playlists/published"
+				draftLink="/noadmin/playlists/draft"
+				scheduledLink="/noadmin/playlists/scheduled"
+				trashedLink="/noadmin/playlists/trashed"
+				categoriesLink="/noadmin/playlists/categories"
 			/>
 			<div className="row">
 				<div className="col">
@@ -193,6 +199,7 @@ const AdminCategoriesIndex = () => {
 							onModel="Category"
 							advancedTextEditor={false}
 						/>
+
 						<div className="form-check form-switch">
 							<input
 								className="form-check-input"
@@ -251,10 +258,10 @@ const AdminCategoriesIndex = () => {
 				<div className="col-lg-10">
 					<div className="card rounded-0">
 						<AdminCardHeaderMenu
-							allLink={`/noadmin/categories`}
-							pageText="Categoriess"
+							allLink={`/noadmin/playlists/categories`}
+							pageText="Playlist Categories"
 							totalResults={totalResults.categories}
-							addLink={`/noadmin/categories`}
+							addLink={`/noadmin/playlists/categories`}
 							addLinkText={`categories`}
 							handleDeleteAllFunction={handleDeleteAll}
 						/>
@@ -268,7 +275,6 @@ const AdminCategoriesIndex = () => {
 										handleDelete={handleDelete}
 										objects={categories}
 										setObjects={setCategories}
-										// totalResults={totalResults}
 										setTotalResults={setTotalResults}
 									/>
 								))}
@@ -285,4 +291,4 @@ const AdminCategoriesIndex = () => {
 	);
 };
 
-export default AdminCategoriesIndex;
+export default AdminPlaylistCategoriesIndex;

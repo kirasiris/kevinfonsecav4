@@ -131,14 +131,11 @@ const CreateCourse = () => {
 					className="form-control mb-3"
 					placeholder=""
 				/>
-				<label
-					htmlFor="playlist-text multipurpose-textarea"
-					className="form-label"
-				>
+				<label htmlFor="text" className="form-label">
 					Text
 				</label>
 				<MyTextArea
-					id="playlist-text"
+					id="text"
 					name="text"
 					value={text}
 					objectData={courseData}

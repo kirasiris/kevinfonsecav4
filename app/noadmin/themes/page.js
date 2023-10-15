@@ -113,6 +113,8 @@ const AdminThemesIndex = () => {
 				draftLink="/noadmin/themes/draft"
 				scheduledLink="/noadmin/themes/scheduled"
 				trashedLink="/noadmin/themes/trashed"
+				categoriesLink="/noadmin/themes/categories"
+				categoryType="theme"
 			/>
 			<div className="card rounded-0">
 				<AdminCardHeaderMenu

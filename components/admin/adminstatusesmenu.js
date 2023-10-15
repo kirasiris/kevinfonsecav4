@@ -7,6 +7,8 @@ const AdminStatusesMenu = ({
 	draftLink = "",
 	scheduledLink = "",
 	trashedLink = "",
+	categoriesLink = "",
+	categoryType = "",
 }) => {
 	return (
 		<div
@@ -66,6 +68,18 @@ const AdminStatusesMenu = ({
 				legacyBehavior
 			>
 				<a className="btn btn-link btn-sm">Trashed</a>
+			</Link>
+			<Link
+				href={{
+					pathname: categoriesLink,
+					query: { page: 1, limit: 10, categoryType: categoryType },
+				}}
+				passHref
+				legacyBehavior
+			>
+				<a className="btn btn-link btn-sm border-1 border-secondary">
+					Categories
+				</a>
 			</Link>
 		</div>
 	);

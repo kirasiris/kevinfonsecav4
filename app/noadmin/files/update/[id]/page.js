@@ -233,11 +233,11 @@ const UpdateFile = () => {
 					className="form-control mb-3"
 					placeholder=""
 				/>
-				<label htmlFor="file-text multipurpose-textarea" className="form-label">
+				<label htmlFor="text" className="form-label">
 					Text
 				</label>
 				<MyTextArea
-					id="file-text"
+					id="text"
 					name="text"
 					value={text}
 					objectData={fileData}

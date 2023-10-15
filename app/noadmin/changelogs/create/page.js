@@ -76,11 +76,11 @@ const CreateChangelog = () => {
 					className="form-control mb-3"
 					placeholder=""
 				/>
-				<label htmlFor="blog-text multipurpose-textarea" className="form-label">
+				<label htmlFor="text" className="form-label">
 					Text
 				</label>
 				<MyTextArea
-					id="blog-text"
+					id="text"
 					name="text"
 					value={text}
 					objectData={changelogData}

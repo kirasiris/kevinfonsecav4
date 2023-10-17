@@ -51,7 +51,8 @@ const MyTextArea = ({
 		},
 		requireLeadingSpace: true,
 		menuItemTemplate: (item) => {
-			return `<div><img src=${item.original.files.avatar.location.secure_location} />${item.original.username}</div>`;
+			// return `<div><img src=${item.original.files.avatar.location.secure_location} />${item.original.username}</div>`;
+			return `<div>${item.original.username}</div>`;
 		},
 	});
 
@@ -63,7 +64,7 @@ const MyTextArea = ({
 	}
 
 	return advancedTextEditor ? (
-		<div id={id} className="froala-editor-wrapper">
+		<div id={id} name={name} className="froala-editor-wrapper">
 			<FroalaEditorComponent
 				tag="textarea"
 				model={value}
@@ -84,6 +85,17 @@ const MyTextArea = ({
 					imageAllowedTypes: ["jpeg", "jpg", "png"],
 					videoAllowedTypes: ["webm", "jpg", "ogg", "mp4"],
 					events: {
+						/*
+						 *
+						 * CUSTOM BUTTON EVENTS
+						 *
+						 */
+
+						/*
+						 *
+						 * IMAGE EVENTS
+						 *
+						 */
 						"image.beforeUpload": async (images) => {
 							console.log("Auth from image.beforeUpload event", auth);
 							const data = new FormData();
@@ -134,6 +146,11 @@ const MyTextArea = ({
 							}
 							// Response contains the original server response to the request if available.
 						},
+						/*
+						 *
+						 * VIDEO EVENTS
+						 *
+						 */
 						"video.beforeUpload": async (videos) => {
 							console.log("Auth from video.beforeUpload event", auth);
 							const data = new FormData();
@@ -220,7 +237,6 @@ const MyTextArea = ({
 								"quote",
 							],
 						},
-
 						moreRich: {
 							buttons: [
 								"insertLink",
@@ -237,9 +253,10 @@ const MyTextArea = ({
 						},
 						moreMisc: {
 							buttons: [
+								"markdown",
 								"undo",
 								"redo",
-								"fullscreen",
+								"fullScreen",
 								"print",
 								"getPDF",
 								"spellChecker",

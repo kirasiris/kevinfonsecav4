@@ -355,208 +355,195 @@ const CreatePost = () => {
 						/>
 					</Tab>
 				</Tabs> */}
-				<div className="d-grid">
-					<button
-						type="button"
-						onClick={() => setMoreOptions(!moreOptions)}
-						className="btn btn-secondary btn-block"
-					>
-						Add to your post
-					</button>
+				<div className="row">
+					<div className="col">
+						<label htmlFor="status" className="form-label">
+							Status
+						</label>
+						<select
+							id="status"
+							name="status"
+							value={status}
+							onChange={(e) => {
+								setPostData({
+									...postData,
+									status: e.target.value,
+								});
+							}}
+							className="form-control"
+						>
+							<option value={`draft`}>Draft</option>
+							<option value={`published`}>Published</option>
+							<option value={`trash`}>Trash</option>
+							<option value={`scheduled`}>Scheduled</option>
+						</select>
+					</div>
+					<div className="col">
+						<label htmlFor="password" className="form-label">
+							Password
+						</label>
+						<input
+							id="password"
+							name="password"
+							value={password}
+							onChange={(e) => {
+								setPostData({
+									...postData,
+									password: e.target.value,
+								});
+							}}
+							type="password"
+							className="form-control mb-3"
+							placeholder="******"
+						/>
+					</div>
+					<div className="col">
+						<label htmlFor="featured" className="form-label">
+							Featured
+						</label>
+						<select
+							id="featured"
+							name="featured"
+							value={featured}
+							onChange={(e) => {
+								setPostData({
+									...postData,
+									featured: e.target.value,
+								});
+							}}
+							className="form-control"
+						>
+							<option value={true}>Yes</option>
+							<option value={false}>No</option>
+						</select>
+					</div>
+					<div className="col">
+						<label htmlFor="commented" className="form-label">
+							Commented
+						</label>
+						<select
+							id="commented"
+							name="commented"
+							value={commented}
+							onChange={(e) => {
+								setPostData({
+									...postData,
+									commented: e.target.value,
+								});
+							}}
+							className="form-control"
+						>
+							<option value={true}>Yes</option>
+							<option value={false}>No</option>
+						</select>
+					</div>
+					<div className="col">
+						<label htmlFor="embedding" className="form-label">
+							Embedding
+						</label>
+						<select
+							id="embedding"
+							name="embedding"
+							value={embedding}
+							onChange={(e) => {
+								setPostData({
+									...postData,
+									embedding: e.target.value,
+								});
+							}}
+							className="form-control"
+						>
+							<option value={true}>Yes</option>
+							<option value={false}>No</option>
+						</select>
+					</div>
+					<div className="col">
+						<label htmlFor="hidden" className="form-label">
+							Hidden
+						</label>
+						<select
+							id="hidden"
+							name="hidden"
+							value={hidden}
+							onChange={(e) => {
+								setPostData({
+									...postData,
+									hidden: e.target.value,
+								});
+							}}
+							className="form-control"
+						>
+							<option value={true}>Yes</option>
+							<option value={false}>No</option>
+						</select>
+					</div>
 				</div>
-				{moreOptions && (
-					<>
-						<div className="row">
-							<div className="col">
-								<label htmlFor="status" className="form-label">
-									Status
-								</label>
-								<select
-									id="status"
-									name="status"
-									value={status}
-									onChange={(e) => {
-										setPostData({
-											...postData,
-											status: e.target.value,
-										});
-									}}
-									className="form-control"
-								>
-									<option value={`draft`}>Draft</option>
-									<option value={`published`}>Published</option>
-									<option value={`trash`}>Trash</option>
-									<option value={`scheduled`}>Scheduled</option>
-								</select>
-							</div>
-							<div className="col">
-								<label htmlFor="password" className="form-label">
-									Password
-								</label>
-								<input
-									id="password"
-									name="password"
-									value={password}
-									onChange={(e) => {
-										setPostData({
-											...postData,
-											password: e.target.value,
-										});
-									}}
-									type="password"
-									className="form-control mb-3"
-									placeholder="******"
-								/>
-							</div>
-							<div className="col">
-								<label htmlFor="featured" className="form-label">
-									Featured
-								</label>
-								<select
-									id="featured"
-									name="featured"
-									value={featured}
-									onChange={(e) => {
-										setPostData({
-											...postData,
-											featured: e.target.value,
-										});
-									}}
-									className="form-control"
-								>
-									<option value={true}>Yes</option>
-									<option value={false}>No</option>
-								</select>
-							</div>
-							<div className="col">
-								<label htmlFor="commented" className="form-label">
-									Commented
-								</label>
-								<select
-									id="commented"
-									name="commented"
-									value={commented}
-									onChange={(e) => {
-										setPostData({
-											...postData,
-											commented: e.target.value,
-										});
-									}}
-									className="form-control"
-								>
-									<option value={true}>Yes</option>
-									<option value={false}>No</option>
-								</select>
-							</div>
-							<div className="col">
-								<label htmlFor="embedding" className="form-label">
-									Embedding
-								</label>
-								<select
-									id="embedding"
-									name="embedding"
-									value={embedding}
-									onChange={(e) => {
-										setPostData({
-											...postData,
-											embedding: e.target.value,
-										});
-									}}
-									className="form-control"
-								>
-									<option value={true}>Yes</option>
-									<option value={false}>No</option>
-								</select>
-							</div>
-							<div className="col">
-								<label htmlFor="hidden" className="form-label">
-									Hidden
-								</label>
-								<select
-									id="hidden"
-									name="hidden"
-									value={hidden}
-									onChange={(e) => {
-										setPostData({
-											...postData,
-											hidden: e.target.value,
-										});
-									}}
-									className="form-control"
-								>
-									<option value={true}>Yes</option>
-									<option value={false}>No</option>
-								</select>
-							</div>
-						</div>
-						<div className="row">
-							<div className="col">
-								<label htmlFor="postType" className="form-label">
-									Post Type
-								</label>
-								<select
-									id="postType"
-									name="postType"
-									value={postType}
-									onChange={(e) => {
-										setPostData({
-											...postData,
-											postType: e.target.value,
-										});
-									}}
-									className="form-control"
-								>
-									<option value={`post`}>Post</option>
-									<option value={`story`}>Story</option>
-								</select>
-							</div>
-							<div className="col">
-								<label htmlFor="subType" className="form-label">
-									Sub type
-								</label>
-								<select
-									id="subType"
-									name="subType"
-									value={subType}
-									onChange={(e) => {
-										setPostData({
-											...postData,
-											subType: e.target.value,
-										});
-									}}
-									className="form-control"
-								>
-									<option value={`text`}>Text</option>
-									<option value={`photos`}>Photos</option>
-									<option value={`videos`}>Videos</option>
-									<option value={`audios`}>Audios</option>
-									<option value={`files`}>Files</option>
-									<option value={`maps`}>Maps</option>
-								</select>
-							</div>
-							<div className="col">
-								<label htmlFor="premiumContent" className="form-label">
-									Premium Content
-								</label>
-								<select
-									id="premiumContent"
-									name="premiumContent"
-									value={premiumContent}
-									onChange={(e) => {
-										setPostData({
-											...postData,
-											premiumContent: e.target.value,
-										});
-									}}
-									className="form-control"
-								>
-									<option value={true}>Yes</option>
-									<option value={false}>No</option>
-								</select>
-							</div>
-						</div>
-					</>
-				)}
+				<div className="row">
+					<div className="col">
+						<label htmlFor="postType" className="form-label">
+							Post Type
+						</label>
+						<select
+							id="postType"
+							name="postType"
+							value={postType}
+							onChange={(e) => {
+								setPostData({
+									...postData,
+									postType: e.target.value,
+								});
+							}}
+							className="form-control"
+						>
+							<option value={`post`}>Post</option>
+							<option value={`story`}>Story</option>
+						</select>
+					</div>
+					<div className="col">
+						<label htmlFor="subType" className="form-label">
+							Sub type
+						</label>
+						<select
+							id="subType"
+							name="subType"
+							value={subType}
+							onChange={(e) => {
+								setPostData({
+									...postData,
+									subType: e.target.value,
+								});
+							}}
+							className="form-control"
+						>
+							<option value={`text`}>Text</option>
+							<option value={`photos`}>Photos</option>
+							<option value={`videos`}>Videos</option>
+							<option value={`audios`}>Audios</option>
+							<option value={`files`}>Files</option>
+							<option value={`maps`}>Maps</option>
+						</select>
+					</div>
+					<div className="col">
+						<label htmlFor="premiumContent" className="form-label">
+							Premium Content
+						</label>
+						<select
+							id="premiumContent"
+							name="premiumContent"
+							value={premiumContent}
+							onChange={(e) => {
+								setPostData({
+									...postData,
+									premiumContent: e.target.value,
+								});
+							}}
+							className="form-control"
+						>
+							<option value={true}>Yes</option>
+							<option value={false}>No</option>
+						</select>
+					</div>
+				</div>
 			</div>
 			<div className="card-footer">
 				<button

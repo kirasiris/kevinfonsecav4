@@ -127,7 +127,8 @@ export const AuthProvider = ({ children }) => {
 	 *
 	 */
 	const [categories, setCategories] = useState([]);
-
+	const [totalPages, setTotalPages] = useState(0);
+	const [currentResults, setCurrentResults] = useState(0);
 	const [totalResults, setTotalResults] = useState({
 		blogs: 0,
 		categories: 0,
@@ -157,6 +158,8 @@ export const AuthProvider = ({ children }) => {
 		mediaLength: 0,
 		selected: null,
 		showMediaModal: false,
+		playing: null,
+		playlist: [],
 	});
 
 	const fetchCategories = async (params = "") => {
@@ -201,6 +204,10 @@ export const AuthProvider = ({ children }) => {
 				setAuth,
 				categories,
 				setCategories,
+				totalPages,
+				setTotalPages,
+				currentResults,
+				setCurrentResults,
 				totalResults,
 				setTotalResults,
 				files,

@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import AdminSidebar from "@/components/admin/adminsidebar";
 import MyTextArea from "@/components/global/mytextarea";
 import AuthContext from "@/helpers/globalContext";
+import ParseHtml from "@/layout/parseHtml";
 
 const UpdateBlog = () => {
 	const { files } = useContext(AuthContext);

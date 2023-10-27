@@ -92,6 +92,7 @@ const UseDropzone = ({
 								<input
 									{...getInputProps({
 										id,
+										name,
 										multiple: { multipleFiles },
 									})}
 								/>

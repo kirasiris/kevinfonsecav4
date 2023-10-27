@@ -1,0 +1,149 @@
+"use client";
+import _ from "lodash";
+
+const ClientNumericPagination = ({
+	totalPages,
+	page,
+	limit,
+	sortby,
+	siblings,
+	setParams,
+}) => {
+	let pageNo;
+	if (page <= totalPages) {
+		pageNo = page;
+	} else {
+		setParams(
+			`?page=${totalPages}&limit=${limit}&sort=${sortby}&postType=blog`
+		);
+		pageNo = page;
+	}
+	const handlePageChange = (value) => {
+		if (value === "&laquo;") {
+			setParams(`?page=1&limit=${limit}&sort=${sortby}&postType=blog`);
+		} else if (value === "&lsaquo;") {
+			if (pageNo !== 1) {
+				setParams(
+					`?page=${pageNo - 1}&limit=${limit}&sort=${sortby}&postType=blog`
+				);
+			}
+		} else if (value === "&rsaquo;") {
+			if (pageNo !== totalPages) {
+				setParams(
+					`?page=${pageNo + 1}&limit=${limit}&sort=${sortby}&postType=blog`
+				);
+			}
+		} else if (value === "&raquo;") {
+			setParams(
+				`?page=${totalPages}&limit=${limit}&sort=${sortby}&postType=blog`
+			);
+		} else {
+			setParams(`?page=${value}&limit=${limit}&sort=${sortby}&postType=blog`);
+		}
+	};
+
+	const paginationRange = (siblings) => {
+		let totalPagesNoInArray = 7 + siblings;
+		if (totalPagesNoInArray >= totalPages) {
+			return _.range(1, totalPages + 1);
+		}
+
+		let leftSiblingsIndex = Math.max(pageNo - siblings, 1);
+		let rightSiblingsIndex = Math.min(pageNo + siblings, totalPages);
+
+		let showLeftDots = leftSiblingsIndex > 2;
+		let showRightDots = rightSiblingsIndex < totalPages - 2;
+
+		if (!showLeftDots && showRightDots) {
+			let leftItemsCount = 3 + 2 * siblings;
+			let leftRange = _.range(1, leftItemsCount + 1);
+			return [...leftRange, "...", totalPages];
+		} else if (showLeftDots && !showRightDots) {
+			let rightItemsCount = 3 + 2 * siblings;
+			let rightRange = _.range(
+				totalPages - rightItemsCount + 1,
+				totalPages + 1
+			);
+			return [1, "...", ...rightRange];
+		} else {
+			let middleRange = _.range(leftSiblingsIndex, rightSiblingsIndex + 1);
+			return [1, "...", ...middleRange, "...", totalPages];
+		}
+	};
+
+	let array = paginationRange(siblings);
+
+	const handlePageLimit = (value) => {
+		setParams(`?page=${pageNo}&limit=${value}&sort=${sortby}&postType=blog`);
+	};
+
+	const selectLimit = () => {
+		return (
+			<select
+				onChange={(e) => handlePageLimit(e.target.value)}
+				className="form-select form-select-sm"
+			>
+				<option value={5}>5</option>
+				<option value={10}>10</option>
+				<option value={15}>15</option>
+			</select>
+		);
+	};
+
+	return (
+		<div className="pagination-container">
+			{selectLimit()}
+			<ul className="pagination justify-content-end m-0 my-1 mx-1">
+				<li className="page-item">
+					<span
+						onClick={() => handlePageChange("&laquo;")}
+						className="page-link"
+					>
+						&laquo;
+					</span>
+				</li>
+				<li className="page-item">
+					<span
+						onClick={() => handlePageChange("&lsaquo;")}
+						className="page-link"
+					>
+						&lsaquo;
+					</span>
+				</li>
+				{array.map((index) => {
+					return (
+						<li
+							key={index}
+							className={`page-item ${index === pageNo ? "active" : ""}`}
+						>
+							<span
+								onClick={() => handlePageChange(index)}
+								className="page-link"
+							>
+								{index}
+							</span>
+						</li>
+					);
+				})}
+				<li className="page-item">
+					<span
+						onClick={() => handlePageChange("&rsaquo;")}
+						className="page-link"
+					>
+						&rsaquo;
+					</span>
+				</li>
+				<li className="page-item">
+					<span
+						onClick={() => handlePageChange("&raquo;")}
+						className="page-link"
+					>
+						&raquo;
+					</span>
+				</li>
+			</ul>
+		</div>
+	);
+};
+
+export default ClientNumericPagination;

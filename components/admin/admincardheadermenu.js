@@ -5,7 +5,8 @@ import DeleteAllModal from "../../components/global/deleteallmodal";
 const AdminCardHeaderMenu = ({
 	allLink = "",
 	pageText = "",
-	totalResults,
+	currentResults = 0,
+	totalResults = 0,
 	addLink = "#",
 	addLinkText = "",
 	handleDeleteAllFunction,
@@ -21,7 +22,7 @@ const AdminCardHeaderMenu = ({
 				legacyBehavior
 			>
 				<a className="btn btn-link btn-sm float-start">
-					{pageText} - ({totalResults})
+					{pageText} - ({currentResults} / {totalResults})
 				</a>
 			</Link>
 			<div className="btn-group float-end">

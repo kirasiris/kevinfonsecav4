@@ -104,6 +104,19 @@ a.blog-relative-time-status__link {
 }
 
 /* ---------------------------------------------------
+  PAGINATION
+----------------------------------------------------- */
+.pagination-container {
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+}
+
+.pagination-container > select {
+	width: 100px;
+	height: 37px;
+}
+/* ---------------------------------------------------
   FROALA-EDITOR
 ----------------------------------------------------- */
 .froala-editor-wrapper:focus-visible {

@@ -21,8 +21,8 @@ const MyTextArea = ({
 }) => {
 	const { auth } = useContext(AuthContext);
 
-	const remoteSearch = (text, cb) => {
-		var URL = "http://localhost:5000/api/v1/users";
+	const userSearch = (text, cb) => {
+		var URL = `http://localhost:5000/api/v1/users`;
 		const xhr = new XMLHttpRequest();
 		xhr.onreadystatechange = function () {
 			if (xhr.readyState === 4) {
@@ -42,7 +42,7 @@ const MyTextArea = ({
 		trigger: "@",
 		containerClass: "tribute-container",
 		values: (query, cb) => {
-			remoteSearch(query, (users) => cb(users));
+			userSearch(query, (users) => cb(users));
 		},
 		lookup: "username",
 		fillAttr: "username",

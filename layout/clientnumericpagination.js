@@ -8,37 +8,45 @@ const ClientNumericPagination = ({
 	sortby,
 	siblings,
 	setParams,
+	postType = "",
+	router,
 }) => {
 	let pageNo;
 	if (page <= totalPages) {
 		pageNo = page;
 	} else {
 		setParams(
-			`?page=${totalPages}&limit=${limit}&sort=${sortby}&postType=blog`
+			`?page=${totalPages}&limit=${limit}&sort=${sortby}&postType=${postType}`
 		);
 		pageNo = page;
 	}
+
 	const handlePageChange = (value) => {
 		if (value === "&laquo;") {
-			setParams(`?page=1&limit=${limit}&sort=${sortby}&postType=blog`);
+			setParams(`?page=1&limit=${limit}&sort=${sortby}&postType=${postType}`);
 		} else if (value === "&lsaquo;") {
 			if (pageNo !== 1) {
 				setParams(
-					`?page=${pageNo - 1}&limit=${limit}&sort=${sortby}&postType=blog`
+					`?page=${
+						pageNo - 1
+					}&limit=${limit}&sort=${sortby}&postType=${postType}`
 				);
 			}
 		} else if (value === "&rsaquo;") {
-			if (pageNo !== totalPages) {
+			if (pageNo !== totalPages)
 				setParams(
-					`?page=${pageNo + 1}&limit=${limit}&sort=${sortby}&postType=blog`
+					`?page=${
+						pageNo + 1
+					}&limit=${limit}&sort=${sortby}&postType=${postType}`
 				);
-			}
 		} else if (value === "&raquo;") {
 			setParams(
-				`?page=${totalPages}&limit=${limit}&sort=${sortby}&postType=blog`
+				`?page=${totalPages}&limit=${limit}&sort=${sortby}&postType=${postType}`
 			);
 		} else {
-			setParams(`?page=${value}&limit=${limit}&sort=${sortby}&postType=blog`);
+			setParams(
+				`?page=${value}&limit=${limit}&sort=${sortby}&postType=${postType}`
+			);
 		}
 	};
 
@@ -74,18 +82,26 @@ const ClientNumericPagination = ({
 	let array = paginationRange(siblings);
 
 	const handlePageLimit = (value) => {
-		setParams(`?page=${pageNo}&limit=${value}&sort=${sortby}&postType=blog`);
+		setParams(
+			`?page=${pageNo}&limit=${value}&sort=${sortby}&postType=${postType}`
+		);
 	};
 
 	const selectLimit = () => {
 		return (
 			<select
 				onChange={(e) => handlePageLimit(e.target.value)}
-				className="form-select form-select-sm"
+				className="form-select form-select-sm d-none d-md-block d-lg-block d-xl-block d-xxl-block"
 			>
+				<option value={1}>1</option>
+				<option value={3}>3</option>
 				<option value={5}>5</option>
 				<option value={10}>10</option>
 				<option value={15}>15</option>
+				<option value={20}>20</option>
+				<option value={25}>25</option>
+				<option value={50}>50</option>
+				<option value={100}>100</option>
 			</select>
 		);
 	};

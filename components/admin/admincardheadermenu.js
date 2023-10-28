@@ -10,21 +10,39 @@ const AdminCardHeaderMenu = ({
 	addLink = "#",
 	addLinkText = "",
 	handleDeleteAllFunction,
+	keyword = "",
+	setKeyword,
 }) => {
 	return (
 		<div className="card-header">
-			<Link
-				href={{
-					pathname: allLink,
-					query: { page: 1, limit: 10 },
-				}}
-				passHref
-				legacyBehavior
-			>
-				<a className="btn btn-link btn-sm float-start">
-					{pageText} - ({currentResults} / {totalResults})
-				</a>
-			</Link>
+			<div className="float-start objects-quantity-and-search-bar">
+				<Link
+					href={{
+						pathname: allLink,
+						query: { page: 1, limit: 10 },
+					}}
+					passHref
+					legacyBehavior
+				>
+					<a className="btn btn-link btn-sm">
+						{pageText} - ({currentResults} / {totalResults})
+					</a>
+				</Link>
+				<form className="d-none d-md-block d-lg-block d-xl-block d-xxl-block">
+					<input
+						id="keyword"
+						name="keyword"
+						value={keyword}
+						onChange={(e) => {
+							e.preventDefault();
+							setKeyword(e.target.value);
+						}}
+						type="text"
+						className="form-control"
+						placeholder="Search title of object (EXACT MATCH)"
+					/>
+				</form>
+			</div>
 			<div className="btn-group float-end">
 				<Link
 					href={{

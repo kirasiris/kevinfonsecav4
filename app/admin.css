@@ -106,7 +106,8 @@ a.blog-relative-time-status__link {
 /* ---------------------------------------------------
   PAGINATION
 ----------------------------------------------------- */
-.pagination-container {
+.pagination-container,
+.objects-quantity-and-search-bar {
 	display: flex;
 	justify-content: flex-end;
 	align-items: center;
@@ -115,6 +116,12 @@ a.blog-relative-time-status__link {
 .pagination-container > select {
 	width: 100px;
 	height: 37px;
+}
+
+.pagination-container > select:hover,
+.pagination-container > select > option:hover,
+.page-item:hover {
+	cursor: pointer;
 }
 /* ---------------------------------------------------
   FROALA-EDITOR

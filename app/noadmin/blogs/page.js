@@ -25,10 +25,12 @@ const AdminBlogsIndex = () => {
 	const [page, setPage] = useState(1);
 	const [limit] = useState(10);
 	const [sortby] = useState(`-createdAt`);
-
 	const [params, setParams] = useState(
 		`?page=${page}&limit=${limit}&sort=${sortby}&postType=blog`
 	);
+	const [keyword, setKeyword] = useState("");
+	const [list, setList] = useState([]);
+	const [loading, setLoading] = useState(true);
 
 	const fetchBlogs = async () => {
 		try {
@@ -38,6 +40,7 @@ const AdminBlogsIndex = () => {
 			setCurrentResults(res?.data?.count);
 			setTotalResults({ ...totalResults, blogs: res?.data?.countAll });
 			setPage(res?.data?.pagination?.current);
+			setLoading(false);
 		} catch (err) {
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;
@@ -64,6 +67,21 @@ const AdminBlogsIndex = () => {
 	useEffect(() => {
 		fetchBlogs();
 	}, [router, params]);
+
+	useEffect(() => {
+		setList(blogs);
+	}, [blogs]);
+
+	useEffect(() => {
+		if (keyword !== "") {
+			const result = blogs.filter((object) => {
+				return object.title.toLowerCase().startsWith(keyword.toLowerCase());
+			});
+			setList(result);
+		} else {
+			setList(blogs);
+		}
+	}, [keyword]);
 
 	const handleDelete = async (id) => {
 		try {
@@ -141,16 +159,18 @@ const AdminBlogsIndex = () => {
 					addLink={`/noadmin/blogs/create`}
 					addLinkText={`blog`}
 					handleDeleteAllFunction={handleDeleteAll}
+					keyword={keyword}
+					setKeyword={setKeyword}
 				/>
-				{blogs?.length > 0 ? (
+				{list?.length > 0 ? (
 					<>
 						<ul className="list-group list-group-flush">
-							{blogs?.map((blog) => (
+							{list?.map((blog) => (
 								<Single
 									key={blog._id}
 									object={blog}
 									handleDelete={handleDelete}
-									objects={blogs}
+									objects={list}
 									setObjects={setBlogs}
 									setTotalResults={setTotalResults}
 								/>
@@ -160,17 +180,23 @@ const AdminBlogsIndex = () => {
 							</li>
 						</ul>
 						<ClientNumericPagination
-							totalPages={totalPages || Math.ceil(blogs.length / limit)}
+							totalPages={totalPages || Math.ceil(list.length / limit)}
 							page={page}
 							limit={limit}
 							sortby={sortby}
 							siblings={1}
 							setParams={setParams}
+							postType="blog"
+							router={router}
 						/>
 					</>
 				) : (
-					<div className="alert alert-danger rounded-0 m-0 border-0">
-						Nothing found
+					<div
+						className={`alert alert-${
+							loading ? "primary" : "danger"
+						} rounded-0 m-0 border-0`}
+					>
+						{loading ? "Loading" : "Nothing found"}
 					</div>
 				)}
 			</div>

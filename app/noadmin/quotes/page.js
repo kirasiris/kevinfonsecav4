@@ -9,21 +9,40 @@ import { useContext } from "react";
 import AuthContext from "@/helpers/globalContext";
 import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
 import AdminCardHeaderMenu from "@/components/admin/admincardheadermenu";
+import ClientNumericPagination from "@/layout/clientnumericpagination";
 
 const AdminQuotesIndex = () => {
-	const { totalResults, setTotalResults } = useContext(AuthContext);
+	const {
+		totalPages,
+		setTotalPages,
+		currentResults,
+		setCurrentResults,
+		totalResults,
+		setTotalResults,
+	} = useContext(AuthContext);
 
 	const router = useRouter();
 
 	const [quotes, setQuotes] = useState([]);
-
-	const [params] = useState(`?page=1&limit=10&sort=-createdAt`);
+	const [page, setPage] = useState(1);
+	const [limit] = useState(10);
+	const [sortby] = useState(`-createdAt`);
+	const [params, setParams] = useState(
+		`?page=${page}&limit=${limit}&sort=${sortby}`
+	);
+	const [keyword, setKeyword] = useState("");
+	const [list, setList] = useState([]);
+	const [loading, setLoading] = useState(true);
 
 	const fetchQuotes = async () => {
 		try {
 			const res = await axios.get(`/extras/quotes${params}`);
 			setQuotes(res?.data?.data);
+			setTotalPages(res?.data?.pagination?.totalpages);
+			setCurrentResults(res?.data?.count);
 			setTotalResults({ ...totalResults, quotes: res?.data?.countAll });
+			setPage(res?.data?.pagination?.current);
+			setLoading(false);
 		} catch (err) {
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;
@@ -49,7 +68,7 @@ const AdminQuotesIndex = () => {
 
 	useEffect(() => {
 		fetchQuotes();
-	}, [router]);
+	}, [router, params]);
 
 	const [quoteData, setQuoteData] = useState({
 		text: `No description`,
@@ -98,6 +117,21 @@ const AdminQuotesIndex = () => {
 			return { msg: err?.response?.statusText, status: err?.response?.status };
 		}
 	};
+
+	useEffect(() => {
+		setList(quotes);
+	}, [quotes]);
+
+	useEffect(() => {
+		if (keyword !== "") {
+			const result = quotes.filter((object) => {
+				return object.text.toLowerCase().startsWith(keyword.toLowerCase());
+			});
+			setList(result);
+		} else {
+			setList(quotes);
+		}
+	}, [keyword]);
 
 	const handleDelete = async (id) => {
 		try {
@@ -319,27 +353,48 @@ const AdminQuotesIndex = () => {
 						<AdminCardHeaderMenu
 							allLink={`/noadmin/quotes`}
 							pageText="Quotes"
+							currentResults={currentResults}
 							totalResults={totalResults.quotes}
 							addLink={`/noadmin/quotes/create`}
 							addLinkText={`quote`}
 							handleDeleteAllFunction={handleDeleteAll}
+							keyword={keyword}
+							setKeyword={setKeyword}
 						/>
-						{quotes?.length > 0 ? (
-							<ul className="list-group list-group-flush">
-								{quotes?.map((quote) => (
-									<Single
-										key={quote._id}
-										object={quote}
-										handleDelete={handleDelete}
-										objects={quotes}
-										setObjects={setQuotes}
-										setTotalResults={setTotalResults}
-									/>
-								))}
-							</ul>
+						{list?.length > 0 ? (
+							<>
+								<ul className="list-group list-group-flush">
+									{list?.map((quote) => (
+										<Single
+											key={quote._id}
+											object={quote}
+											handleDelete={handleDelete}
+											objects={list}
+											setObjects={setQuotes}
+											setTotalResults={setTotalResults}
+										/>
+									))}
+									<li className="list-group-item">
+										{page} / {totalPages}
+									</li>
+								</ul>
+								<ClientNumericPagination
+									totalPages={totalPages || Math.ceil(list.length / limit)}
+									page={page}
+									limit={limit}
+									sortby={sortby}
+									siblings={1}
+									setParams={setParams}
+									router={router}
+								/>
+							</>
 						) : (
-							<div className="alert alert-danger rounded-0 m-0 border-0">
-								Nothing found
+							<div
+								className={`alert alert-${
+									loading ? "primary" : "danger"
+								} rounded-0 m-0 border-0`}
+							>
+								{loading ? "Loading" : "Nothing found"}
 							</div>
 						)}
 					</div>

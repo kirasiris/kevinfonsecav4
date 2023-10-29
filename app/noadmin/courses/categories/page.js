@@ -8,24 +8,41 @@ import AuthContext from "@/helpers/globalContext";
 import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
 import AdminCardHeaderMenu from "@/components/admin/admincardheadermenu";
 import MyTextArea from "@/components/global/mytextarea";
+import ClientNumericPagination from "@/layout/clientnumericpagination";
 
 const AdminCourseCategoriesIndex = () => {
-	const { totalResults, setTotalResults } = useContext(AuthContext);
+	const {
+		totalPages,
+		setTotalPages,
+		currentResults,
+		setCurrentResults,
+		totalResults,
+		setTotalResults,
+	} = useContext(AuthContext);
 
 	const router = useRouter();
 
-	const [categories, setCategories] = useState([]);
 	const [isTopLevel, setTopLevel] = useState(true);
-
-	const [params] = useState(
-		`?page=1&limit=50&sort=-createdAt&categoryType=course`
+	const [categories, setCategories] = useState([]);
+	const [page, setPage] = useState(1);
+	const [limit] = useState(50);
+	const [sortby] = useState(`-createdAt`);
+	const [params, setParams] = useState(
+		`?page=${page}&limit=${limit}&sort=${sortby}&categoryType=course`
 	);
+	const [keyword, setKeyword] = useState("");
+	const [list, setList] = useState([]);
+	const [loading, setLoading] = useState(true);
 
 	const fetchCategories = async () => {
 		try {
 			const res = await axios.get(`/categories${params}`);
 			setCategories(res?.data?.data);
-			setTotalResults({ ...totalResults, blogs: res?.data?.countAll });
+			setTotalPages(res?.data?.pagination?.totalpages);
+			setCurrentResults(res?.data?.count);
+			setTotalResults({ ...totalResults, categories: res?.data?.countAll });
+			setPage(res?.data?.pagination?.current);
+			setLoading(false);
 		} catch (err) {
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;
@@ -51,7 +68,7 @@ const AdminCourseCategoriesIndex = () => {
 
 	useEffect(() => {
 		fetchCategories();
-	}, [router]);
+	}, [router, params]);
 
 	const [categoryData, setCategoryData] = useState({
 		title: `Untitled`,
@@ -91,6 +108,21 @@ const AdminCourseCategoriesIndex = () => {
 			return { msg: err?.response?.statusText, status: err?.response?.status };
 		}
 	};
+
+	useEffect(() => {
+		setList(categories);
+	}, [categories]);
+
+	useEffect(() => {
+		if (keyword !== "") {
+			const result = categories.filter((object) => {
+				return object.title.toLowerCase().startsWith(keyword.toLowerCase());
+			});
+			setList(result);
+		} else {
+			setList(categories);
+		}
+	}, [keyword]);
 
 	const handleDelete = async (id) => {
 		try {
@@ -260,28 +292,49 @@ const AdminCourseCategoriesIndex = () => {
 						<AdminCardHeaderMenu
 							allLink={`/noadmin/courses/categories`}
 							pageText="Course Categories"
+							currentResults={currentResults}
 							totalResults={totalResults.categories}
 							addLink={`/noadmin/courses/categories`}
 							addLinkText={`categories`}
 							handleDeleteAllFunction={handleDeleteAll}
+							keyword={keyword}
+							setKeyword={setKeyword}
 						/>
-						{categories?.length > 0 ? (
-							<ul className="list-group list-group-flush">
-								{categories?.map((category) => (
-									<Single
-										key={category._id}
-										linkTo={`/noadmin/categories/update/${category._id}`}
-										object={category}
-										handleDelete={handleDelete}
-										objects={categories}
-										setObjects={setCategories}
-										setTotalResults={setTotalResults}
-									/>
-								))}
-							</ul>
+						{list?.length > 0 ? (
+							<>
+								<ul className="list-group list-group-flush">
+									{list?.map((category) => (
+										<Single
+											key={category._id}
+											linkTo={`/noadmin/categories/update/${category._id}`}
+											object={category}
+											handleDelete={handleDelete}
+											objects={list}
+											setObjects={setCategories}
+											setTotalResults={setTotalResults}
+										/>
+									))}
+									<li className="list-group-item">
+										{page} / {totalPages}
+									</li>
+								</ul>
+								<ClientNumericPagination
+									totalPages={totalPages || Math.ceil(list.length / limit)}
+									page={page}
+									limit={limit}
+									sortby={sortby}
+									siblings={1}
+									setParams={setParams}
+									router={router}
+								/>
+							</>
 						) : (
-							<div className="alert alert-danger rounded-0 m-0 border-0">
-								Nothing found
+							<div
+								className={`alert alert-${
+									loading ? "primary" : "danger"
+								} rounded-0 m-0 border-0`}
+							>
+								{loading ? "Loading" : "Nothing found"}
 							</div>
 						)}
 					</div>

@@ -49,7 +49,7 @@ const Single = ({
 										</svg> */}
 										<time
 											className="blog-relative-time-status__time-text"
-											datetime="2023-07-29T21:55:36-04:00"
+											dateTime={object.createdAt}
 										>
 											{object.createdAt}
 										</time>

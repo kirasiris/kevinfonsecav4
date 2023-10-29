@@ -11,42 +11,30 @@ const ClientNumericPagination = ({
 	postType = "",
 	router,
 }) => {
+	const comesPostType = postType !== "" ? `&postType=${postType}` : "";
+	const newParams = `&sort=${sortby}${comesPostType}`;
 	let pageNo;
 	if (page <= totalPages) {
 		pageNo = page;
 	} else {
-		setParams(
-			`?page=${totalPages}&limit=${limit}&sort=${sortby}&postType=${postType}`
-		);
+		setParams(`?page=${totalPages}&limit=${limit}${newParams}`);
 		pageNo = page;
 	}
 
 	const handlePageChange = (value) => {
 		if (value === "&laquo;") {
-			setParams(`?page=1&limit=${limit}&sort=${sortby}&postType=${postType}`);
+			setParams(`?page=1&limit=${limit}${newParams}`);
 		} else if (value === "&lsaquo;") {
 			if (pageNo !== 1) {
-				setParams(
-					`?page=${
-						pageNo - 1
-					}&limit=${limit}&sort=${sortby}&postType=${postType}`
-				);
+				setParams(`?page=${pageNo - 1}&limit=${limit}${newParams}`);
 			}
 		} else if (value === "&rsaquo;") {
 			if (pageNo !== totalPages)
-				setParams(
-					`?page=${
-						pageNo + 1
-					}&limit=${limit}&sort=${sortby}&postType=${postType}`
-				);
+				setParams(`?page=${pageNo + 1}&limit=${limit}${newParams}`);
 		} else if (value === "&raquo;") {
-			setParams(
-				`?page=${totalPages}&limit=${limit}&sort=${sortby}&postType=${postType}`
-			);
+			setParams(`?page=${totalPages}&limit=${limit}${newParams}`);
 		} else {
-			setParams(
-				`?page=${value}&limit=${limit}&sort=${sortby}&postType=${postType}`
-			);
+			setParams(`?page=${value}&limit=${limit}${newParams}`);
 		}
 	};
 
@@ -82,9 +70,7 @@ const ClientNumericPagination = ({
 	let array = paginationRange(siblings);
 
 	const handlePageLimit = (value) => {
-		setParams(
-			`?page=${pageNo}&limit=${value}&sort=${sortby}&postType=${postType}`
-		);
+		setParams(`?page=${pageNo}&limit=${value}${newParams}`);
 	};
 
 	const selectLimit = () => {
@@ -102,6 +88,10 @@ const ClientNumericPagination = ({
 				<option value={25}>25</option>
 				<option value={50}>50</option>
 				<option value={100}>100</option>
+				<option value={250}>250</option>
+				<option value={500}>500</option>
+				<option value={750}>750</option>
+				<option value={1000}>1000</option>
 			</select>
 		);
 	};

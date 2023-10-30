@@ -12,9 +12,10 @@ const AdminCardHeaderMenu = ({
 	handleDeleteAllFunction,
 	keyword = "",
 	setKeyword,
+	classList = "",
 }) => {
 	return (
-		<div className="card-header">
+		<div className={`card-header ${classList}`}>
 			<div className="float-start objects-quantity-and-search-bar">
 				<Link
 					href={{
@@ -52,7 +53,8 @@ const AdminCardHeaderMenu = ({
 					passHref
 					legacyBehavior
 				>
-					<a className="btn btn-primary btn-sm">Add new {addLinkText}</a>
+					{/* <a className="btn btn-primary btn-sm">Add new {addLinkText}</a> */}
+					<a className="btn btn-primary btn-sm">Add new</a>
 				</Link>
 				<DeleteAllModal action={handleDeleteAllFunction} />
 			</div>

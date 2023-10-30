@@ -12,8 +12,6 @@ import ClientLoadMorePagination from "@/layout/clientloadmorepagination";
 const AdminPostsIndex = () => {
 	const {
 		auth,
-		totalPages,
-		setTotalPages,
 		currentResults,
 		setCurrentResults,
 		totalResults,
@@ -23,11 +21,11 @@ const AdminPostsIndex = () => {
 	const router = useRouter();
 
 	const [posts, setPosts] = useState([]);
-	const [page, setPage] = useState(1);
 	const [limit] = useState(10);
+	const [next, setNext] = useState(0);
 	const [sortby] = useState(`-createdAt`);
 	const [params, setParams] = useState(
-		`?page=${page}&limit=${limit}&sort=${sortby}&postType=post`
+		`?page=1&limit=${limit}&sort=${sortby}&postType=post`
 	);
 	const [keyword, setKeyword] = useState("");
 	const [list, setList] = useState([]);
@@ -36,11 +34,10 @@ const AdminPostsIndex = () => {
 	const fetchPosts = async () => {
 		try {
 			const res = await axios.get(`/posts${params}`);
-			setPosts(res?.data?.data);
-			setTotalPages(res?.data?.pagination?.totalpages);
+			setPosts([...posts, ...res?.data?.data]);
 			setCurrentResults(res?.data?.count);
 			setTotalResults({ ...totalResults, posts: res?.data?.countAll });
-			setPage(res?.data?.pagination?.current);
+			setNext(res?.data?.pagination?.next?.page);
 			setLoading(false);
 		} catch (err) {
 			// const error = err.response.data.message;
@@ -149,7 +146,7 @@ const AdminPostsIndex = () => {
 				scheduledLink="/noadmin/posts/scheduled"
 				trashedLink="/noadmin/posts/trashed"
 			/>
-			<div className="card rounded-0">
+			<div className="card rounded-0 border-0">
 				<AdminCardHeaderMenu
 					allLink={`/noadmin/posts`}
 					pageText="Posts"
@@ -160,6 +157,7 @@ const AdminPostsIndex = () => {
 					handleDeleteAllFunction={handleDeleteAll}
 					keyword={keyword}
 					setKeyword={setKeyword}
+					classList="border rounded-0"
 				/>
 				{list?.length > 0 ? (
 					<>
@@ -176,16 +174,20 @@ const AdminPostsIndex = () => {
 								/>
 							))}
 						</ul>
-						<ClientLoadMorePagination
-							totalPages={totalPages || Math.ceil(list.length / limit)}
-							page={page}
-							limit={limit}
-							sortby={sortby}
-							siblings={1}
-							setParams={setParams}
-							postType="post"
-							router={router}
-						/>
+						{posts.length > 0 &&
+							posts.length >= limit &&
+							next !== undefined &&
+							next !== 0 && (
+								<ClientLoadMorePagination
+									limit={limit}
+									next={next}
+									sortby={sortby}
+									setParams={setParams}
+									postType="post"
+									router={router}
+									classList="border rounded-bottom"
+								/>
+							)}
 					</>
 				) : (
 					<div

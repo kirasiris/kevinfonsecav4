@@ -10,7 +10,7 @@ const AdminMenu = () => {
 	};
 
 	return (
-		<div className="col-lg-1">
+		<div className="col-lg-1 mb-3">
 			<div className="list-group">
 				<Link href={"/noadmin"} passHref legacyBehavior>
 					<a

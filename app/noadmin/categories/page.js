@@ -286,11 +286,11 @@ const AdminCategoriesIndex = () => {
 					<div className="card rounded-0">
 						<AdminCardHeaderMenu
 							allLink={`/noadmin/categories`}
-							pageText="Categoriess"
+							pageText="Categories"
 							currentResults={currentResults}
 							totalResults={totalResults.categories}
 							addLink={`/noadmin/categories`}
-							addLinkText={`categories`}
+							addLinkText={`category`}
 							handleDeleteAllFunction={handleDeleteAll}
 							keyword={keyword}
 							setKeyword={setKeyword}

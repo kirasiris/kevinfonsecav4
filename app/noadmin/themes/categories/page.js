@@ -198,6 +198,7 @@ const AdminThemeCategoriesIndex = () => {
 				scheduledLink="/noadmin/themes/scheduled"
 				trashedLink="/noadmin/themes/trashed"
 				categoriesLink="/noadmin/themes/categories"
+				categoryType="theme"
 			/>
 			<div className="row">
 				<div className="col">

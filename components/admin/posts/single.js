@@ -290,7 +290,7 @@ const Single = ({
 	return (
 		<Suspense fallback={<Loading />}>
 			<article className={`${object?._id} mb-3`}>
-				<div className="card">
+				<div className="card rounded-0">
 					<div className="card-header">
 						<Author
 							user={object?.user}

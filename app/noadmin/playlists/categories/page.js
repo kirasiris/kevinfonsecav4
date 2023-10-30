@@ -198,6 +198,7 @@ const AdminPlaylistCategoriesIndex = () => {
 				scheduledLink="/noadmin/playlists/scheduled"
 				trashedLink="/noadmin/playlists/trashed"
 				categoriesLink="/noadmin/playlists/categories"
+				categoryType="playlist"
 			/>
 			<div className="row">
 				<div className="col">

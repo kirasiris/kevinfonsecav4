@@ -32,7 +32,7 @@ const Single = ({
 						{/* <span className="blog-item__meta-time-status">{object.text}</span> */}
 					</div>
 				</div>
-				<div className="blog-type-list__blog-thumbnail-wrapper has-image">
+				<div className="blog-type-list__blog-thumbnail-wrapper has-image d-none d-md-block d-lg-block d-xl-block d-xxl-block">
 					<Link
 						href={{
 							pathname: `/noadmin/courses/update/${object._id}`,

@@ -198,6 +198,7 @@ const AdminCourseCategoriesIndex = () => {
 				scheduledLink="/noadmin/courses/scheduled"
 				trashedLink="/noadmin/courses/trashed"
 				categoriesLink="/noadmin/courses/categories"
+				categoryType="course"
 			/>
 			<div className="row">
 				<div className="col">

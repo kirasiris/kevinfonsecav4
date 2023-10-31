@@ -133,6 +133,7 @@ export const AuthProvider = ({ children }) => {
 		blogs: 0,
 		categories: 0,
 		changelogs: 0,
+		contacts: 0,
 		comments: 0,
 		courses: 0,
 		emails: 0,

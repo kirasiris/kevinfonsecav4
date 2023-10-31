@@ -35,7 +35,7 @@ const CreateContact = () => {
 		],
 		phones: [
 			{
-				handle: "",
+				number: "",
 				type: "mobile",
 			},
 		],
@@ -43,13 +43,13 @@ const CreateContact = () => {
 		significantDates: [],
 		socials: [
 			{
-				handle: "",
+				url: "",
 				type: "website",
 			},
 		],
 		related: [
 			{
-				handle: "",
+				name: "",
 				type: "relative",
 			},
 		],
@@ -79,13 +79,13 @@ const CreateContact = () => {
 		e.preventDefault();
 		try {
 			console.log(contactData);
-			// await axios.post(`/contacts`, {
-			// 	...contactData,
-			// 	files: { avatar: files?.selected?._id },
-			// });
-			// toast.success(`Item created`);
-			// resetForm();
-			// router.push(`/noadmin/contacts`);
+			await axios.post(`/contacts`, {
+				...contactData,
+				// files: { avatar: files?.selected?._id },
+			});
+			toast.success(`Item created`);
+			resetForm();
+			router.push(`/noadmin/contacts`);
 		} catch (err) {
 			console.log(err);
 			// const error = err.response.data.message;
@@ -132,7 +132,7 @@ const CreateContact = () => {
 			],
 			phones: [
 				{
-					handle: "",
+					number: "",
 					type: "mobile",
 				},
 			],
@@ -140,13 +140,13 @@ const CreateContact = () => {
 			significantDates: [],
 			socials: [
 				{
-					handle: "",
+					url: "",
 					type: "website",
 				},
 			],
 			related: [
 				{
-					handle: "",
+					name: "",
 					type: "relative",
 				},
 			],
@@ -239,7 +239,7 @@ const CreateContact = () => {
 
 		if (index === contactData.phones.length - 1 && e.target.value !== "") {
 			newPhone.push({
-				handle: "",
+				number: "",
 				type: "",
 			});
 		}
@@ -252,7 +252,7 @@ const CreateContact = () => {
 
 	const handleAddPhoneRow = () => {
 		newPhone.push({
-			handle: "",
+			number: "",
 			type: "",
 		});
 	};
@@ -262,6 +262,80 @@ const CreateContact = () => {
 		setContactData({
 			...contactData,
 			phones: newPhone,
+		});
+	};
+
+	/*****************
+	 ******************
+	 * SOCIALS
+	 ******************
+	 ******************/
+	const handleSocialsChange = (index, field) => (e) => {
+		const newSocial = [...socials];
+		newSocial[index][field] = e.target.value;
+
+		if (index === contactData.socials.length - 1 && e.target.value !== "") {
+			newSocial.push({
+				url: "",
+				type: "",
+			});
+		}
+
+		setContactData({
+			...contactData,
+			socials: newSocial,
+		});
+	};
+
+	const handleAddSocialRow = () => {
+		newSocial.push({
+			url: "",
+			type: "",
+		});
+	};
+
+	const handleRemoveSocialRow = (index) => () => {
+		const newSocial = socials.filter((_, i) => i !== index);
+		setContactData({
+			...contactData,
+			socials: newSocial,
+		});
+	};
+
+	/*****************
+	 ******************
+	 * RELATED
+	 ******************
+	 ******************/
+	const handleRelatesChange = (index, field) => (e) => {
+		const newRelated = [...related];
+		newRelated[index][field] = e.target.value;
+
+		if (index === contactData.related.length - 1 && e.target.value !== "") {
+			newRelated.push({
+				name: "",
+				type: "",
+			});
+		}
+
+		setContactData({
+			...contactData,
+			related: newRelated,
+		});
+	};
+
+	const handleAddRelatedRow = () => {
+		newRelated.push({
+			name: "",
+			type: "",
+		});
+	};
+
+	const handleRemoveRelatedRow = (index) => () => {
+		const newRelated = related.filter((_, i) => i !== index);
+		setContactData({
+			...contactData,
+			related: newRelated,
 		});
 	};
 
@@ -390,7 +464,7 @@ const CreateContact = () => {
 				<label htmlFor="occupation" className="form-label">
 					Occupation
 				</label>
-				<table className="table table-striped table-hover">
+				<table className="table table-bordered">
 					<thead>
 						<tr>
 							<th scope="col">#</th>
@@ -474,7 +548,7 @@ const CreateContact = () => {
 				<label htmlFor="emails" className="form-label">
 					Emails
 				</label>
-				<table className="table table-striped table-hover">
+				<table className="table table-bordered">
 					<thead>
 						<tr>
 							<th scope="col">#</th>
@@ -536,6 +610,71 @@ const CreateContact = () => {
 				<label htmlFor="phones" className="form-label">
 					Phones
 				</label>
+				<table className="table table-bordered">
+					<thead>
+						<tr>
+							<th scope="col">#</th>
+							<th scope="col">Number</th>
+							<th scope="col">Type</th>
+							<th scope="col">Action</th>
+						</tr>
+					</thead>
+					<tbody>
+						{phones?.length > 0 &&
+							phones.map((phone, index) => (
+								<tr key={index}>
+									<th>{index + 1}</th>
+									<td>
+										<input
+											id={`phone[${index}].number`}
+											name={`phone[${index}].number`}
+											value={phone.number}
+											onChange={handlePhonesChange(index, "number")}
+											type="text"
+											className="form-control mb-3"
+											placeholder=""
+										/>
+									</td>
+									<td>
+										<select
+											id={`phone[${index}].type`}
+											name={`phone[${index}].type`}
+											value={phone.type}
+											onChange={handlePhonesChange(index, "type")}
+											className="form-control"
+										>
+											<option value="home">Home</option>
+											<option value="work">Work</option>
+											<option value="other">Other</option>
+											<option value="mobile">Mobile</option>
+											<option value="main">Main</option>
+											<option value="home-fax">Home Fax</option>
+											<option value="work-fax">Work Fax</option>
+											<option value="google-voice">Google Voice</option>
+											<option value="pager">Pager</option>
+										</select>
+									</td>
+									<td>
+										{index === phones.length - 1 ? (
+											<button
+												className="btn btn-success"
+												onClick={handleAddPhoneRow}
+											>
+												+
+											</button>
+										) : (
+											<button
+												className="btn btn-danger"
+												onClick={handleRemovePhoneRow(index)}
+											>
+												x
+											</button>
+										)}
+									</td>
+								</tr>
+							))}
+					</tbody>
+				</table>
 				<label htmlFor="birthdate" className="form-label">
 					Birthdate
 				</label>
@@ -559,9 +698,143 @@ const CreateContact = () => {
 				<label htmlFor="socials" className="form-label">
 					Socials
 				</label>
+				<table className="table table-bordered">
+					<thead>
+						<tr>
+							<th scope="col">#</th>
+							<th scope="col">Url</th>
+							<th scope="col">Type</th>
+							<th scope="col">Action</th>
+						</tr>
+					</thead>
+					<tbody>
+						{socials?.length > 0 &&
+							socials.map((social, index) => (
+								<tr key={index}>
+									<th>{index + 1}</th>
+									<td>
+										<input
+											id={`social[${index}].url`}
+											name={`social[${index}].url`}
+											value={social.url}
+											onChange={handleSocialsChange(index, "url")}
+											type="text"
+											className="form-control mb-3"
+											placeholder=""
+										/>
+									</td>
+									<td>
+										<select
+											id={`social[${index}].type`}
+											name={`social[${index}].type`}
+											value={social.type}
+											onChange={handleSocialsChange(index, "type")}
+											className="form-control"
+										>
+											<option value="website">Website</option>
+											<option value="facebook">Facebook</option>
+											<option value="twitter-x">Twitter / X</option>
+											<option value="instagram">Instagram</option>
+											<option value="pinterest">Pinterest</option>
+											<option value="tiktok">TikTok</option>
+											<option value="wordpress">WordPress</option>
+											<option value="github">GitHub</option>
+										</select>
+									</td>
+									<td>
+										{index === socials.length - 1 ? (
+											<button
+												className="btn btn-success"
+												onClick={handleAddSocialRow}
+											>
+												+
+											</button>
+										) : (
+											<button
+												className="btn btn-danger"
+												onClick={handleRemoveSocialRow(index)}
+											>
+												x
+											</button>
+										)}
+									</td>
+								</tr>
+							))}
+					</tbody>
+				</table>
 				<label htmlFor="related" className="form-label">
 					Related
 				</label>
+				<table className="table table-bordered">
+					<thead>
+						<tr>
+							<th scope="col">#</th>
+							<th scope="col">Name</th>
+							<th scope="col">Type</th>
+							<th scope="col">Action</th>
+						</tr>
+					</thead>
+					<tbody>
+						{related?.length > 0 &&
+							related.map((related, index) => (
+								<tr key={index}>
+									<th>{index + 1}</th>
+									<td>
+										<input
+											id={`related[${index}].name`}
+											name={`related[${index}].name`}
+											value={related.name}
+											onChange={handleRelatesChange(index, "name")}
+											type="text"
+											className="form-control mb-3"
+											placeholder=""
+										/>
+									</td>
+									<td>
+										<select
+											id={`related[${index}].type`}
+											name={`related[${index}].type`}
+											value={related.type}
+											onChange={handleRelatesChange(index, "type")}
+											className="form-control"
+										>
+											<option value="spouse">Spouse</option>
+											<option value="child">Child</option>
+											<option value="mother">Mother</option>
+											<option value="father">Father</option>
+											<option value="parent">Parent</option>
+											<option value="brother">Brother</option>
+											<option value="sister">Sister</option>
+											<option value="friend">Friend</option>
+											<option value="relative">Relative</option>
+											<option value="manager">Manager</option>
+											<option value="assistant">Assistant</option>
+											<option value="reference">Reference</option>
+											<option value="partner">Partner</option>
+											<option value="domestic-partner">Domestic Partner</option>
+										</select>
+									</td>
+									<td>
+										{index === related.length - 1 ? (
+											<button
+												className="btn btn-success"
+												onClick={handleAddRelatedRow}
+											>
+												+
+											</button>
+										) : (
+											<button
+												className="btn btn-danger"
+												onClick={handleRemoveRelatedRow(index)}
+											>
+												x
+											</button>
+										)}
+									</td>
+								</tr>
+							))}
+					</tbody>
+				</table>
 				<label htmlFor="text" className="form-label">
 					Text
 				</label>
@@ -572,7 +845,7 @@ const CreateContact = () => {
 					objectData={contactData}
 					setObjectData={setContactData}
 					onModel="Blog"
-					advancedTextEditor={true}
+					advancedTextEditor={false}
 				/>
 				<br />
 				<button

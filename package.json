@@ -27,6 +27,7 @@
     "lodash": "^4.17.21",
     "next": "^14.0.0",
     "next-sitemap": "^4.2.3",
+    "node-geocoder": "^4.2.0",
     "plyr": "^3.7.8",
     "react": "^18.2.0",
     "react-bootstrap": "^2.9.1",

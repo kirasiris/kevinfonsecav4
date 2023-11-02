@@ -40,7 +40,12 @@ const CreateContact = () => {
 			},
 		],
 		birthdate: "",
-		significantDates: [],
+		significantDates: [
+			{
+				date: "",
+				type: "other",
+			},
+		],
 		socials: [
 			{
 				url: "",
@@ -78,13 +83,33 @@ const CreateContact = () => {
 	const addContact = async (e) => {
 		e.preventDefault();
 		try {
-			console.log(contactData);
 			await axios.post(`/contacts`, {
 				...contactData,
 				// files: { avatar: files?.selected?._id },
+				occupation: contactData.occupation.filter(
+					(obj) =>
+						obj.company !== "" &&
+						obj.title !== "" &&
+						obj.department !== "" &&
+						obj.address !== ""
+				),
+				emails: contactData.emails.filter(
+					(obj) => obj.handle !== "" && obj.type !== ""
+				),
+				phones: contactData.phones.filter(
+					(obj) => obj.number !== "" && obj.type !== ""
+				),
+				significantDates: contactData.significantDates.filter(
+					(obj) => obj.date !== "" && obj.type !== ""
+				),
+				socials: contactData.socials.filter(
+					(obj) => obj.url !== "" && obj.type !== ""
+				),
+				related: contactData.related.filter(
+					(obj) => obj.name !== "" && obj.type !== ""
+				),
 			});
 			toast.success(`Item created`);
-			resetForm();
 			router.push(`/noadmin/contacts`);
 		} catch (err) {
 			console.log(err);
@@ -137,7 +162,12 @@ const CreateContact = () => {
 				},
 			],
 			birthdate: "",
-			significantDates: [],
+			significantDates: [
+				{
+					date: "",
+					type: "other",
+				},
+			],
 			socials: [
 				{
 					url: "",
@@ -180,7 +210,7 @@ const CreateContact = () => {
 	};
 
 	const handleAddOccupationRow = () => {
-		occupation.push({ company: "", title: "", department: "", address: "" });
+		newOccupation.push({ company: "", title: "", department: "", address: "" });
 	};
 
 	const handleRemoveOccupationRow = (index) => () => {
@@ -214,6 +244,7 @@ const CreateContact = () => {
 	};
 
 	const handleAddEmailRow = () => {
+		const newEmail = [...emails];
 		newEmail.push({
 			handle: "",
 			type: "",
@@ -262,6 +293,45 @@ const CreateContact = () => {
 		setContactData({
 			...contactData,
 			phones: newPhone,
+		});
+	};
+	/*****************
+	 ******************
+	 * SIGNIFICANT DATES
+	 ******************
+	 ******************/
+	const handleSignificantDatesChange = (index, field) => (e) => {
+		const newSignificantDate = [...significantDates];
+		newSignificantDate[index][field] = e.target.value;
+
+		if (
+			index === contactData.significantDates.length - 1 &&
+			e.target.value !== ""
+		) {
+			newSignificantDate.push({
+				date: "",
+				type: "",
+			});
+		}
+
+		setContactData({
+			...contactData,
+			significantDates: newSignificantDate,
+		});
+	};
+
+	const handleAddSignificantDateRow = () => {
+		newSignificantDate.push({
+			date: "",
+			type: "",
+		});
+	};
+
+	const handleRemoveSignificantDateRow = (index) => () => {
+		const newSignificantDate = significantDates.filter((_, i) => i !== index);
+		setContactData({
+			...contactData,
+			significantDates: newSignificantDate,
 		});
 	};
 
@@ -528,6 +598,7 @@ const CreateContact = () => {
 										{index === occupation.length - 1 ? (
 											<button
 												className="btn btn-success"
+												type="button"
 												onClick={handleAddOccupationRow}
 											>
 												+
@@ -535,6 +606,7 @@ const CreateContact = () => {
 										) : (
 											<button
 												className="btn btn-danger"
+												type="button"
 												onClick={handleRemoveOccupationRow(index)}
 											>
 												x
@@ -590,6 +662,7 @@ const CreateContact = () => {
 										{index === emails.length - 1 ? (
 											<button
 												className="btn btn-success"
+												type="button"
 												onClick={handleAddEmailRow}
 											>
 												+
@@ -597,6 +670,7 @@ const CreateContact = () => {
 										) : (
 											<button
 												className="btn btn-danger"
+												type="button"
 												onClick={handleRemoveEmailRow(index)}
 											>
 												x
@@ -658,6 +732,7 @@ const CreateContact = () => {
 										{index === phones.length - 1 ? (
 											<button
 												className="btn btn-success"
+												type="button"
 												onClick={handleAddPhoneRow}
 											>
 												+
@@ -665,6 +740,7 @@ const CreateContact = () => {
 										) : (
 											<button
 												className="btn btn-danger"
+												type="button"
 												onClick={handleRemovePhoneRow(index)}
 											>
 												x
@@ -695,6 +771,66 @@ const CreateContact = () => {
 				<label htmlFor="significantDates" className="form-label">
 					Significant Dates
 				</label>
+				<table className="table table-bordered">
+					<thead>
+						<tr>
+							<th scope="col">#</th>
+							<th scope="col">Date</th>
+							<th scope="col">Type</th>
+							<th scope="col">Action</th>
+						</tr>
+					</thead>
+					<tbody>
+						{significantDates?.length > 0 &&
+							significantDates.map((significantDate, index) => (
+								<tr key={index}>
+									<th>{index + 1}</th>
+									<td>
+										<input
+											id={`significantDate[${index}].date`}
+											name={`significantDate[${index}].date`}
+											value={significantDate.date}
+											onChange={handleSignificantDatesChange(index, "date")}
+											type="text"
+											className="form-control mb-3"
+											placeholder=""
+										/>
+									</td>
+									<td>
+										<select
+											id={`significantDate[${index}].type`}
+											name={`significantDate[${index}].type`}
+											value={significantDate.type}
+											onChange={handleSignificantDatesChange(index, "type")}
+											className="form-control"
+										>
+											<option value="anniversary">Anniversary</option>
+											<option value="other">Other</option>
+										</select>
+									</td>
+									<td>
+										{index === significantDates.length - 1 ? (
+											<button
+												className="btn btn-success"
+												type="button"
+												onClick={handleAddSignificantDateRow}
+											>
+												+
+											</button>
+										) : (
+											<button
+												className="btn btn-danger"
+												type="button"
+												onClick={handleRemoveSignificantDateRow(index)}
+											>
+												x
+											</button>
+										)}
+									</td>
+								</tr>
+							))}
+					</tbody>
+				</table>
 				<label htmlFor="socials" className="form-label">
 					Socials
 				</label>
@@ -745,6 +881,7 @@ const CreateContact = () => {
 										{index === socials.length - 1 ? (
 											<button
 												className="btn btn-success"
+												type="button"
 												onClick={handleAddSocialRow}
 											>
 												+
@@ -752,6 +889,7 @@ const CreateContact = () => {
 										) : (
 											<button
 												className="btn btn-danger"
+												type="button"
 												onClick={handleRemoveSocialRow(index)}
 											>
 												x
@@ -818,6 +956,7 @@ const CreateContact = () => {
 										{index === related.length - 1 ? (
 											<button
 												className="btn btn-success"
+												type="button"
 												onClick={handleAddRelatedRow}
 											>
 												+
@@ -825,6 +964,7 @@ const CreateContact = () => {
 										) : (
 											<button
 												className="btn btn-danger"
+												type="button"
 												onClick={handleRemoveRelatedRow(index)}
 											>
 												x
@@ -847,6 +987,26 @@ const CreateContact = () => {
 					onModel="Blog"
 					advancedTextEditor={false}
 				/>
+				<label htmlFor="status" className="form-label">
+					Status
+				</label>
+				<select
+					id="status"
+					name="status"
+					value={status}
+					onChange={(e) => {
+						setContactData({
+							...contactData,
+							status: e.target.value,
+						});
+					}}
+					className="form-control"
+				>
+					<option value={`draft`}>Draft</option>
+					<option value={`published`}>Published</option>
+					<option value={`trash`}>Trash</option>
+					<option value={`scheduled`}>Scheduled</option>
+				</select>
 				<br />
 				<button
 					type="submit"

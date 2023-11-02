@@ -19,23 +19,29 @@ const Single = ({
 					<h1 className="blog-item__title">
 						<Link
 							href={{
-								pathname: `/noadmin/blogs/update/${object._id}`,
+								pathname: `/noadmin/contacts/read/${object._id}`,
 								query: {},
 							}}
 							passHref
 							legacyBehavior
 						>
-							<a className="blog-item__title-link">{object.title}</a>
+							<a className="blog-item__title-link">{object.nickname}</a>
 						</Link>
 					</h1>
 					<div className="blog-item__meta">
-						{/* <span className="blog-item__meta-time-status">{object.text}</span> */}
+						<span className="blog-item__meta-time-status">
+							{object.name.first +
+								" " +
+								object.name.middle +
+								" " +
+								object.name.last}
+						</span>
 					</div>
 				</div>
 				<div className="blog-type-list__blog-thumbnail-wrapper has-image d-none d-md-block d-lg-block d-xl-block d-xxl-block">
 					<Link
 						href={{
-							pathname: `/noadmin/blogs/update/${object._id}`,
+							pathname: `/noadmin/contacts/read/${object._id}`,
 							query: {},
 						}}
 						passHref

@@ -18,23 +18,30 @@ const ClientNumericPagination = ({
 		pageNo = page;
 	} else {
 		setParams(`?page=${totalPages}&limit=${limit}${newParams}`);
+		router.push(`?page=${totalPages}&limit=${limit}${newParams}`);
+
 		pageNo = page;
 	}
 
 	const handlePageChange = (value) => {
 		if (value === "&laquo;") {
 			setParams(`?page=1&limit=${limit}${newParams}`);
+			router.push(`?page=1&limit=${limit}${newParams}`);
 		} else if (value === "&lsaquo;") {
 			if (pageNo !== 1) {
 				setParams(`?page=${pageNo - 1}&limit=${limit}${newParams}`);
+				router.push(`?page=${pageNo - 1}&limit=${limit}${newParams}`);
 			}
 		} else if (value === "&rsaquo;") {
 			if (pageNo !== totalPages)
 				setParams(`?page=${pageNo + 1}&limit=${limit}${newParams}`);
+			router.push(`?page=${pageNo + 1}&limit=${limit}${newParams}`);
 		} else if (value === "&raquo;") {
 			setParams(`?page=${totalPages}&limit=${limit}${newParams}`);
+			router.push(`?page=${totalPages}&limit=${limit}${newParams}`);
 		} else {
 			setParams(`?page=${value}&limit=${limit}${newParams}`);
+			router.push(`?page=${value}&limit=${limit}${newParams}`);
 		}
 	};
 
@@ -71,6 +78,7 @@ const ClientNumericPagination = ({
 
 	const handlePageLimit = (value) => {
 		setParams(`?page=${pageNo}&limit=${value}${newParams}`);
+		router.push(`?page=${pageNo}&limit=${value}${newParams}`);
 	};
 
 	const selectLimit = () => {

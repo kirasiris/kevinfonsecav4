@@ -1,7 +1,7 @@
 "use client";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { toast } from "react-toastify";
 import MyTextArea from "@/components/global/mytextarea";
 import AuthContext from "@/helpers/globalContext";

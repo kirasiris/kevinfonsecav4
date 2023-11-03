@@ -9,6 +9,8 @@ import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
 import AdminCardHeaderMenu from "@/components/admin/admincardheadermenu";
 import ClientNumericPagination from "@/layout/clientnumericpagination";
 
+export const dynamic = "force-dynamic";
+
 const AdminBlogsIndex = () => {
 	const {
 		totalPages,

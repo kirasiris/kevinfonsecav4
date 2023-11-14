@@ -85,10 +85,150 @@ const AdminBlogsIndex = () => {
 		}
 	}, [keyword]);
 
+	const draftIt = async (id) => {
+		try {
+			await axios.put(`/blogs/${id}/draftit`);
+			toast.success("Blog drafted");
+			fetchBlogs();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
+	const publishIt = async (id) => {
+		try {
+			await axios.put(`/blogs/${id}/publishit`);
+			toast.success("Blog published");
+			fetchBlogs();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
+	const trashIt = async (id) => {
+		try {
+			await axios.put(`/blogs/${id}/trashit`);
+			toast.success("Blog trashed");
+			fetchBlogs();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
+	const scheduleIt = async (id) => {
+		try {
+			await axios.put(`/blogs/${id}/scheduleit`);
+			toast.success("Blog scheduled");
+			fetchBlogs();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
 	const handleDelete = async (id) => {
 		try {
-			await axios.delete(`/blogs/${id}`);
+			await axios.delete(`/blogs/${id}/permanently`);
 			toast.success("Blog deleted");
+			fetchBlogs();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
+	const handleTrashAll = async () => {
+		try {
+			await axios.put(`/blogs/deleteall`);
+			toast.success("Blogs trashed");
 			fetchBlogs();
 		} catch (err) {
 			// const error = err.response.data.message;
@@ -115,7 +255,7 @@ const AdminBlogsIndex = () => {
 
 	const handleDeleteAll = async () => {
 		try {
-			await axios.delete(`/blogs/deleteall`);
+			await axios.put(`/blogs/deleteall/permanently`);
 			toast.success("Blogs deleted");
 			fetchBlogs();
 		} catch (err) {
@@ -160,6 +300,7 @@ const AdminBlogsIndex = () => {
 					totalResults={totalResults.blogs}
 					addLink={`/noadmin/blogs/create`}
 					addLinkText={`blog`}
+					handleTrashAllFunction={handleTrashAll}
 					handleDeleteAllFunction={handleDeleteAll}
 					keyword={keyword}
 					setKeyword={setKeyword}
@@ -171,6 +312,10 @@ const AdminBlogsIndex = () => {
 								<Single
 									key={blog._id}
 									object={blog}
+									handleDraft={draftIt}
+									handlePublish={publishIt}
+									handleTrash={trashIt}
+									handleSchedule={scheduleIt}
 									handleDelete={handleDelete}
 									objects={list}
 									setObjects={setBlogs}

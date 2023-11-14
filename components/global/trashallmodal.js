@@ -2,14 +2,14 @@
 import { useState } from "react";
 import Modal from "react-bootstrap/Modal";
 
-const DeleteAllModal = ({ action }) => {
-	const [confirmDeleteAllModal, setConfirmDeleteAllModal] = useState(false);
+const TrashAllModal = ({ action }) => {
+	const [confirmTrashAllModal, setConfirmTrashAllModal] = useState(false);
 
 	const deleteObject = async (e) => {
 		e.preventDefault();
 		await action()
 			.then(() => {
-				setConfirmDeleteAllModal(true);
+				setConfirmTrashAllModal(true);
 			})
 			.catch((err) => {
 				console.error(err);
@@ -19,16 +19,16 @@ const DeleteAllModal = ({ action }) => {
 	return (
 		<>
 			<button
-				className="btn btn-danger btn-sm"
+				className="btn btn-dark btn-sm"
 				type="button"
-				onClick={() => setConfirmDeleteAllModal(!confirmDeleteAllModal)}
+				onClick={() => setConfirmTrashAllModal(!confirmTrashAllModal)}
 			>
 				{/* <i className={`fas fa-trash-alt mr-1`} aria-hidden /> */}
-				Delete all permanently
+				Trash all
 			</button>
 			<Modal
-				show={confirmDeleteAllModal}
-				onHide={() => setConfirmDeleteAllModal(!confirmDeleteAllModal)}
+				show={confirmTrashAllModal}
+				onHide={() => setConfirmTrashAllModal(!confirmTrashAllModal)}
 				backdrop={true}
 				animation={true}
 				size={`sm`}
@@ -36,13 +36,11 @@ const DeleteAllModal = ({ action }) => {
 				<Modal.Header closeButton>
 					<Modal.Title>Are you sure about this?</Modal.Title>
 				</Modal.Header>
-				<Modal.Body>
-					You are about to delete everything from this collection!
-				</Modal.Body>
+				<Modal.Body>You are about to move everything to trash!</Modal.Body>
 				<Modal.Footer>
 					<button
 						className="btn btn-secondary btn-sm"
-						onClick={() => setConfirmDeleteAllModal(!confirmDeleteAllModal)}
+						onClick={() => setConfirmTrashAllModal(!confirmTrashAllModal)}
 					>
 						Close
 					</button>
@@ -59,4 +57,4 @@ const DeleteAllModal = ({ action }) => {
 	);
 };
 
-export default DeleteAllModal;
+export default TrashAllModal;

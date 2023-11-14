@@ -11,6 +11,7 @@ import AdminMediaLibraryMenu from "./adminmediamenu";
 import Single from "@/components/admin/files/single";
 import UseDropzone from "@/components/global/dropzone";
 import DeleteAllModal from "../global/deleteallmodal";
+import ClientLoadMorePagination from "@/layout/clientloadmorepagination";
 
 const AdminMediaLibray = ({
 	id = "single",
@@ -18,20 +19,42 @@ const AdminMediaLibray = ({
 	multipleFiles = true,
 	onModel = "Blog",
 }) => {
-	const { files, setFiles, totalResults, setTotalResults } =
-		useContext(AuthContext);
+	const {
+		files,
+		setFiles,
+		totalPages,
+		setTotalPages,
+		currentResults,
+		setCurrentResults,
+		totalResults,
+		setTotalResults,
+	} = useContext(AuthContext);
 
 	const router = useRouter();
 
 	const [showDropzone, setShowDropzone] = useState(false);
-
-	const [params] = useState(`?page=1&sort=-createdAt`);
+	const [page, setPage] = useState(1);
+	const [limit] = useState(11);
+	const [sortby] = useState(`-createdAt`);
+	const [next, setNext] = useState(0);
+	const [params, setParams] = useState(
+		`?page=${page}&limit=${limit}&sort=${sortby}`
+	);
+	const [loading, setLoading] = useState(true);
 
 	const fetchMedia = async () => {
 		try {
 			const res = await axios.get(`/files${params}`);
-			setFiles((prev) => ({ ...prev, media: res?.data?.data }));
+			setFiles({
+				...files,
+				media: [...files.media, ...res?.data?.data],
+			});
+			setTotalPages(res?.data?.pagination?.totalpages);
+			setCurrentResults(res?.data?.count);
 			setTotalResults({ ...totalResults, files: res?.data?.countAll });
+			setPage(res?.data?.pagination?.current);
+			setNext(res?.data?.pagination?.next?.page);
+			setLoading(false);
 		} catch (err) {
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;
@@ -57,7 +80,7 @@ const AdminMediaLibray = ({
 
 	useEffect(() => {
 		fetchMedia();
-	}, [router]);
+	}, [router, params]);
 
 	const handleDelete = async (id, publicId) => {
 		try {
@@ -155,7 +178,7 @@ const AdminMediaLibray = ({
 						legacyBehavior
 					>
 						<a className="btn btn-link btn-sm float-start">
-							Files - ({totalResults.files})
+							Files - ({currentResults} / {totalResults.files})
 						</a>
 					</Link>
 					<div className="btn-group float-end">
@@ -184,55 +207,64 @@ const AdminMediaLibray = ({
 								const format = file.path.split(".")[1];
 								return (
 									<div key={index} className="col mb-3">
-										{format === "png" && (
-											<>
-												<figure>
-													<Image
-														src={file.preview}
-														className={`${index}`}
-														alt={`${index} image preview`}
-														width={`188`}
-														height={`188`}
-													/>
-												</figure>
-												<div className="btn-group">
-													<button
-														className="btn btn-danger btn-sm"
-														onClick={() => handleDeleteFromDom(index)}
-													>
-														Delete
-													</button>
-												</div>
-											</>
-										)}
-										{format === "mp4" && (
-											<>
-												<figure>
-													<FaFileVideo style={{ fontSize: "188px" }} />
-												</figure>
-												<div className="btn-group">
-													<button
-														className="btn btn-danger btn-sm"
-														onClick={() => handleDeleteFromDom(index)}
-													>
-														Delete
-													</button>
-												</div>
-											</>
-										)}
+										<figure>
+											{format === "png" && (
+												<Image
+													src={file.preview}
+													className={`${index}`}
+													alt={`${index} image preview`}
+													width={`188`}
+													height={`188`}
+												/>
+											)}
+											{format === "mp4" && (
+												<FaFileVideo style={{ fontSize: "188px" }} />
+											)}
+										</figure>
+										<div className="btn-group">
+											<button
+												className="btn btn-danger btn-sm"
+												onClick={() => handleDeleteFromDom(index)}
+											>
+												Delete
+											</button>
+										</div>
 									</div>
 								);
 							})}
-						{files?.media?.length > 0 &&
-							files?.media.map((mediaFile) => (
-								<Single
-									key={mediaFile?._id}
-									object={mediaFile}
-									handleDelete={handleDelete}
-									objects={files}
-									setObjects={setFiles}
+						{files?.media?.length > 0 ? (
+							<>
+								{files?.media.map((mediaFile) => (
+									<Single
+										key={mediaFile?._id}
+										object={mediaFile}
+										handleDelete={handleDelete}
+										objects={files}
+										setObjects={setFiles}
+									/>
+								))}
+								<ClientLoadMorePagination
+									limit={limit}
+									next={
+										next !== undefined &&
+										next !== null &&
+										next !== false &&
+										next
+									}
+									sortby={sortby}
+									setParams={setParams}
+									router={router}
 								/>
-							))}
+							</>
+						) : (
+							<div
+								className={`alert alert-${
+									loading ? "primary" : "danger"
+								} rounded-0 m-0 border-0`}
+							>
+								{loading ? "Loading" : "Nothing found"}
+							</div>
+						)}
 					</div>
 				</div>
 			</div>

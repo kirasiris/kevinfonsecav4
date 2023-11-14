@@ -83,10 +83,150 @@ const AdminThemesIndex = () => {
 		}
 	}, [keyword]);
 
+	const draftIt = async (id) => {
+		try {
+			await axios.put(`/themes/${id}/draftit`);
+			toast.success("Theme drafted");
+			fetchThemes();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
+	const publishIt = async (id) => {
+		try {
+			await axios.put(`/themes/${id}/publishit`);
+			toast.success("Theme published");
+			fetchThemes();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
+	const trashIt = async (id) => {
+		try {
+			await axios.put(`/themes/${id}/trashit`);
+			toast.success("Theme trashed");
+			fetchThemes();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
+	const scheduleIt = async (id) => {
+		try {
+			await axios.put(`/themes/${id}/scheduleit`);
+			toast.success("Theme scheduled");
+			fetchThemes();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
 	const handleDelete = async (id) => {
 		try {
-			await axios.delete(`/themes/${id}`);
+			await axios.delete(`/themes/${id}/permanently`);
 			toast.success("Theme deleted");
+			fetchThemes();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
+	const handleTrashAll = async () => {
+		try {
+			await axios.put(`/themes/deleteall`);
+			toast.success("Themes trashed");
 			fetchThemes();
 		} catch (err) {
 			// const error = err.response.data.message;
@@ -113,7 +253,7 @@ const AdminThemesIndex = () => {
 
 	const handleDeleteAll = async () => {
 		try {
-			await axios.delete(`/themes/deleteall`);
+			await axios.delete(`/themes/deleteall/permanently`);
 			toast.success("Themes deleted");
 			fetchThemes();
 		} catch (err) {
@@ -158,6 +298,7 @@ const AdminThemesIndex = () => {
 					totalResults={totalResults.themes}
 					addLink="/noadmin/themes/create"
 					addLinkText="theme"
+					handleTrashAllFunction={handleTrashAll}
 					handleDeleteAllFunction={handleDeleteAll}
 					keyword={keyword}
 					setKeyword={setKeyword}
@@ -169,6 +310,10 @@ const AdminThemesIndex = () => {
 								<Single
 									key={theme._id}
 									object={theme}
+									handleDraft={draftIt}
+									handlePublish={publishIt}
+									handleTrash={trashIt}
+									handleSchedule={scheduleIt}
 									handleDelete={handleDelete}
 									objects={list}
 									setObjects={setThemes}

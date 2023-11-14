@@ -18,7 +18,7 @@ const Single = ({
 	 */
 	const imgObj = ({ object }) => {
 		return (
-			<div className="col-auto mb-3">
+			<div className="col-auto mb-3 text-center">
 				<figure title={object.title}>
 					<Image
 						src={
@@ -67,7 +67,7 @@ const Single = ({
 
 	const pdfObj = ({ object }) => {
 		return (
-			<div className="col-auto mb-3">
+			<div className="col-auto mb-3 text-center">
 				<figure title={object.title}>
 					<FaFilePdf style={{ fontSize: "184px" }} />
 				</figure>
@@ -99,7 +99,7 @@ const Single = ({
 	 */
 	const vidObj = ({ object }) => {
 		return (
-			<div className="col-auto mb-3">
+			<div className="col-auto mb-3 text-center">
 				<figure title={object.title}>
 					<FaFileVideo style={{ fontSize: "184px" }} />
 				</figure>

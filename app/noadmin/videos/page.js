@@ -83,10 +83,150 @@ const AdminVideosIndex = () => {
 		}
 	}, [keyword]);
 
+	const draftIt = async (id) => {
+		try {
+			await axios.put(`/videos/${id}/draftit`);
+			toast.success("Video drafted");
+			fetchVideos();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
+	const publishIt = async (id) => {
+		try {
+			await axios.put(`/videos/${id}/publishit`);
+			toast.success("Video published");
+			fetchVideos();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
+	const trashIt = async (id) => {
+		try {
+			await axios.put(`/videos/${id}/trashit`);
+			toast.success("Video trashed");
+			fetchVideos();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
+	const scheduleIt = async (id) => {
+		try {
+			await axios.put(`/videos/${id}/scheduleit`);
+			toast.success("Video scheduled");
+			fetchVideos();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
 	const handleDelete = async (id) => {
 		try {
-			await axios.delete(`/videos/${id}`);
+			await axios.delete(`/videos/${id}/permanently`);
 			toast.success("Video deleted");
+			fetchVideos();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
+	const handleTrashAll = async () => {
+		try {
+			await axios.put(`/videos/deleteall`);
+			toast.success("Videos trashed");
 			fetchVideos();
 		} catch (err) {
 			// const error = err.response.data.message;
@@ -113,7 +253,7 @@ const AdminVideosIndex = () => {
 
 	const handleDeleteAll = async () => {
 		try {
-			await axios.delete(`/videos/deleteall`);
+			await axios.delete(`/videos/deleteall/permanently`);
 			toast.success("Videos deleted");
 			fetchVideos();
 		} catch (err) {
@@ -156,6 +296,7 @@ const AdminVideosIndex = () => {
 					totalResults={totalResults.videos}
 					addLink={`/noadmin/videos/create`}
 					addLinkText={`video`}
+					handleTrashAllFunction={handleTrashAll}
 					handleDeleteAllFunction={handleDeleteAll}
 					keyword={keyword}
 					setKeyword={setKeyword}
@@ -167,6 +308,10 @@ const AdminVideosIndex = () => {
 								<Single
 									key={video._id}
 									object={video}
+									handleDraft={draftIt}
+									handlePublish={publishIt}
+									handleTrash={trashIt}
+									handleSchedule={scheduleIt}
 									handleDelete={handleDelete}
 									objects={list}
 									setObjects={setVideos}

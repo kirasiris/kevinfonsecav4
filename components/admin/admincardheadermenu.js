@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import DeleteAllModal from "../../components/global/deleteallmodal";
+import TrashAllModal from "../global/trashallmodal";
 
 const AdminCardHeaderMenu = ({
 	allLink = "",
@@ -9,6 +10,7 @@ const AdminCardHeaderMenu = ({
 	totalResults = 0,
 	addLink = "#",
 	addLinkText = "",
+	handleTrashAllFunction,
 	handleDeleteAllFunction,
 	keyword = "",
 	setKeyword,
@@ -56,6 +58,7 @@ const AdminCardHeaderMenu = ({
 					{/* <a className="btn btn-primary btn-sm">Add new {addLinkText}</a> */}
 					<a className="btn btn-primary btn-sm">Add new</a>
 				</Link>
+				<TrashAllModal action={handleTrashAllFunction} />
 				<DeleteAllModal action={handleDeleteAllFunction} />
 			</div>
 		</div>

@@ -55,7 +55,7 @@ const DeleteModal = ({
 				className={classStr}
 			>
 				{/* <i className={`fas fa-trash-alt mr-1`} aria-hidden /> */}
-				Delete
+				Delete permanently
 			</Button>
 			<Modal
 				show={confirmDeleteModal}

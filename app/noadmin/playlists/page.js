@@ -83,6 +83,118 @@ const AdminPlaylistsIndex = () => {
 		}
 	}, [keyword]);
 
+	const draftIt = async (id) => {
+		try {
+			await axios.put(`/playlists/${id}/draftit`);
+			toast.success("Playlist drafted");
+			fetchPlaylists();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
+	const publishIt = async (id) => {
+		try {
+			await axios.put(`/playlists/${id}/publishit`);
+			toast.success("Playlist published");
+			fetchPlaylists();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
+	const trashIt = async (id) => {
+		try {
+			await axios.put(`/playlists/${id}/trashit`);
+			toast.success("Playlist trashed");
+			fetchPlaylists();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
+	const scheduleIt = async (id) => {
+		try {
+			await axios.put(`/playlists/${id}/scheduleit`);
+			toast.success("Playlist scheduled");
+			fetchPlaylists();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
 	const handleDelete = async (id) => {
 		try {
 			await axios.delete(`/playlists/${id}`);
@@ -111,9 +223,37 @@ const AdminPlaylistsIndex = () => {
 		}
 	};
 
+	const handleTrashAll = async () => {
+		try {
+			await axios.put(`/playlists/deleteall`);
+			toast.success("Playlists trashed");
+			fetchPlaylists();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
 	const handleDeleteAll = async () => {
 		try {
-			await axios.delete(`/playlists/deleteall`);
+			await axios.delete(`/playlists/deleteall/permanently`);
 			toast.success("Playlists deleted");
 			fetchPlaylists();
 		} catch (err) {
@@ -158,6 +298,7 @@ const AdminPlaylistsIndex = () => {
 					totalResults={totalResults.playlists}
 					addLink={`/noadmin/playlists/create`}
 					addLinkText={`playlist`}
+					handleTrashAllFunction={handleTrashAll}
 					handleDeleteAllFunction={handleDeleteAll}
 					keyword={keyword}
 					setKeyword={setKeyword}
@@ -169,6 +310,10 @@ const AdminPlaylistsIndex = () => {
 								<Single
 									key={playlist._id}
 									object={playlist}
+									handleDraft={draftIt}
+									handlePublish={publishIt}
+									handleTrash={trashIt}
+									handleSchedule={scheduleIt}
 									handleDelete={handleDelete}
 									objects={list}
 									setObjects={setPlaylists}

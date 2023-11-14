@@ -83,10 +83,150 @@ const AdminCoursesIndex = () => {
 		}
 	}, [keyword]);
 
+	const draftIt = async (id) => {
+		try {
+			await axios.put(`/courses/${id}/draftit`);
+			toast.success("Course drafted");
+			fetchCourses();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
+	const publishIt = async (id) => {
+		try {
+			await axios.put(`/courses/${id}/publishit`);
+			toast.success("Course published");
+			fetchCourses();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
+	const trashIt = async (id) => {
+		try {
+			await axios.put(`/courses/${id}/trashit`);
+			toast.success("Course trashed");
+			fetchCourses();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
+	const scheduleIt = async (id) => {
+		try {
+			await axios.put(`/courses/${id}/scheduleit`);
+			toast.success("Course scheduled");
+			fetchCourses();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
 	const handleDelete = async (id) => {
 		try {
-			await axios.delete(`/courses/${id}`);
-			toast.success("Playlist deleted");
+			await axios.delete(`/courses/${id}/permanently`);
+			toast.success("Course deleted");
+			fetchCourses();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
+	const handleTrashAll = async () => {
+		try {
+			await axios.put(`/courses/deleteall`);
+			toast.success("Courses trashed");
 			fetchCourses();
 		} catch (err) {
 			// const error = err.response.data.message;
@@ -113,7 +253,7 @@ const AdminCoursesIndex = () => {
 
 	const handleDeleteAll = async () => {
 		try {
-			await axios.delete(`/courses/deleteall`);
+			await axios.put(`/courses/deleteall/permanently`);
 			toast.success("Courses deleted");
 			fetchCourses();
 		} catch (err) {
@@ -158,6 +298,7 @@ const AdminCoursesIndex = () => {
 					totalResults={totalResults.courses}
 					addLink={`/noadmin/courses/create`}
 					addLinkText={`course`}
+					handleTrashAllFunction={handleTrashAll}
 					handleDeleteAllFunction={handleDeleteAll}
 					keyword={keyword}
 					setKeyword={setKeyword}
@@ -169,6 +310,10 @@ const AdminCoursesIndex = () => {
 								<Single
 									key={course._id}
 									object={course}
+									handleDraft={draftIt}
+									handlePublish={publishIt}
+									handleTrash={trashIt}
+									handleSchedule={scheduleIt}
 									handleDelete={handleDelete}
 									objects={list}
 									setObjects={setCourses}

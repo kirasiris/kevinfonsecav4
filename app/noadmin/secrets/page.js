@@ -34,7 +34,7 @@ const AdminSecretsIndex = () => {
 
 	const fetchSecrets = async () => {
 		try {
-			const res = await axios.get(`/secrets${params}`);
+			const res = await axios.get(`/extras/secrets${params}`);
 			setSecrets(res?.data?.data);
 			setTotalPages(res?.data?.pagination?.totalpages);
 			setCurrentResults(res?.data?.count);
@@ -83,10 +83,150 @@ const AdminSecretsIndex = () => {
 		}
 	}, [keyword]);
 
+	const draftIt = async (id) => {
+		try {
+			await axios.put(`/extras/secrets/${id}/draftit`);
+			toast.success("Secret drafted");
+			fetchSecrets();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
+	const publishIt = async (id) => {
+		try {
+			await axios.put(`/extras/secrets/${id}/publishit`);
+			toast.success("Secret published");
+			fetchSecrets();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
+	const trashIt = async (id) => {
+		try {
+			await axios.put(`/extras/secrets/${id}/trashit`);
+			toast.success("Secret trashed");
+			fetchSecrets();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
+	const scheduleIt = async (id) => {
+		try {
+			await axios.put(`/extras/secrets/${id}/scheduleit`);
+			toast.success("Secret scheduled");
+			fetchSecrets();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
 	const handleDelete = async (id) => {
 		try {
-			await axios.delete(`/secrets/${id}`);
+			await axios.delete(`/extras/secrets/${id}/permanently`);
 			toast.success("Secret deleted");
+			fetchSecrets();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
+	const handleTrashAll = async () => {
+		try {
+			await axios.put(`/extras/secrets/deleteall`);
+			toast.success("Secrets trashed");
 			fetchSecrets();
 		} catch (err) {
 			// const error = err.response.data.message;
@@ -113,7 +253,7 @@ const AdminSecretsIndex = () => {
 
 	const handleDeleteAll = async () => {
 		try {
-			await axios.delete(`/secrets/deleteall`);
+			await axios.delete(`/extras/secrets/deleteall/permanently`);
 			toast.success("Secrets deleted");
 			fetchSecrets();
 		} catch (err) {
@@ -156,6 +296,7 @@ const AdminSecretsIndex = () => {
 					totalResults={totalResults.secrets}
 					addLink={`/noadmin/secrets/create`}
 					addLinkText={`secret`}
+					handleTrashAllFunction={handleTrashAll}
 					handleDeleteAllFunction={handleDeleteAll}
 					keyword={keyword}
 					setKeyword={setKeyword}
@@ -167,6 +308,10 @@ const AdminSecretsIndex = () => {
 								<Single
 									key={secret._id}
 									object={secret}
+									handleDraft={draftIt}
+									handlePublish={publishIt}
+									handleTrash={trashIt}
+									handleSchedule={scheduleIt}
 									handleDelete={handleDelete}
 									objects={list}
 									setObjects={setSecrets}

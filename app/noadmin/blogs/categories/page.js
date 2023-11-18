@@ -124,10 +124,152 @@ const AdminBlogCategoriesIndex = () => {
 		}
 	}, [keyword]);
 
+	const draftIt = async (id) => {
+		try {
+			await axios.put(`/categories/${id}/draftit`);
+			toast.success("Category drafted");
+			fetchCategories();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
+	const publishIt = async (id) => {
+		try {
+			await axios.put(`/categories/${id}/publishit`);
+			toast.success("Category published");
+			fetchCategories();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
+	const trashIt = async (id) => {
+		try {
+			await axios.put(`/categories/${id}/trashit`);
+			toast.success("Category trashed");
+			fetchCategories();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
+	const scheduleIt = async (id) => {
+		try {
+			await axios.put(`/categories/${id}/scheduleit`);
+			toast.success("Category scheduled");
+			fetchCategories();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
 	const handleDelete = async (id) => {
 		try {
-			await axios.delete(`/categories/${id}`);
+			await axios.delete(`/categories/${id}/permanently`);
 			toast.success("Category deleted");
+			fetchCategories();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
+	const handleTrashAll = async () => {
+		try {
+			await axios.put(`/categories/deleteall`, {
+				categoryType: "blog",
+			});
+			toast.success("Categories trashed");
 			fetchCategories();
 		} catch (err) {
 			// const error = err.response.data.message;
@@ -154,7 +296,9 @@ const AdminBlogCategoriesIndex = () => {
 
 	const handleDeleteAll = async () => {
 		try {
-			await axios.delete(`/categories/deleteall`);
+			await axios.delete(`/categories/deleteall/permanently`, {
+				categoryType: "blog",
+			});
 			toast.success("Categories deleted");
 			fetchCategories();
 		} catch (err) {
@@ -297,6 +441,7 @@ const AdminBlogCategoriesIndex = () => {
 							totalResults={totalResults.categories}
 							addLink={`/noadmin/blogs/categories`}
 							addLinkText={`categories`}
+							handleTrashAllFunction={handleTrashAll}
 							handleDeleteAllFunction={handleDeleteAll}
 							keyword={keyword}
 							setKeyword={setKeyword}
@@ -309,6 +454,10 @@ const AdminBlogCategoriesIndex = () => {
 											key={category._id}
 											linkTo={`/noadmin/categories/update/${category._id}`}
 											object={category}
+											handleDraft={draftIt}
+											handlePublish={publishIt}
+											handleTrash={trashIt}
+											handleSchedule={scheduleIt}
 											handleDelete={handleDelete}
 											objects={list}
 											setObjects={setCategories}

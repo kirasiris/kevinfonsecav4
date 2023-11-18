@@ -197,7 +197,7 @@ const AdminPlaylistsIndex = () => {
 
 	const handleDelete = async (id) => {
 		try {
-			await axios.delete(`/playlists/${id}`);
+			await axios.delete(`/playlists/${id}/permanently`);
 			toast.success("Playlist deleted");
 			fetchPlaylists();
 		} catch (err) {

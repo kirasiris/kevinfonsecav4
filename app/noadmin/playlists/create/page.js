@@ -62,7 +62,7 @@ const CreatePlaylist = () => {
 		try {
 			await axios.post(`/playlists`, {
 				...playlistData,
-				postType: "video",
+				playlistType: "video",
 				files: { avatar: files?.selected?._id },
 			});
 			toast.success(`Item created`);

@@ -225,7 +225,9 @@ const AdminVideosIndex = () => {
 
 	const handleTrashAll = async () => {
 		try {
-			await axios.put(`/videos/deleteall`);
+			await axios.put(`/videos/deleteall`, {
+				onModel: "Playlist",
+			});
 			toast.success("Videos trashed");
 			fetchVideos();
 		} catch (err) {
@@ -253,7 +255,9 @@ const AdminVideosIndex = () => {
 
 	const handleDeleteAll = async () => {
 		try {
-			await axios.delete(`/videos/deleteall/permanently`);
+			await axios.delete(`/videos/deleteall/permanently`, {
+				onModel: "Playlist",
+			});
 			toast.success("Videos deleted");
 			fetchVideos();
 		} catch (err) {

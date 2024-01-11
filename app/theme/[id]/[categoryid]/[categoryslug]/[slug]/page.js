@@ -101,8 +101,12 @@ const ThemeRead = async ({ params }) => {
 					<div className="col-lg-5">
 						<article>
 							<ParseHtml text={theme.data.text} />
-							<h1>ReadMe.md</h1>
-							<ParseHtml text={readme} />
+							<div className="card">
+								<div className="card-header">ReadMe.md</div>
+								<div className="card-body">
+									<ParseHtml text={readme} markdown={true} />
+								</div>
+							</div>
 						</article>
 					</div>
 				</div>

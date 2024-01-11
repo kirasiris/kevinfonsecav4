@@ -39,6 +39,7 @@ const YouTubePage = ({ searchParams, pushTo = true }) => {
 		setVideos([data.data, ...videos]);
 		setButtonText(submitButtonText);
 		resetForm();
+		router.push(`/youtube?_id=${data.data._id}&videoId=${data.data.videoId}`);
 	};
 
 	const resetForm = () => {
@@ -412,7 +413,7 @@ const YouTubePage = ({ searchParams, pushTo = true }) => {
 															type="button"
 														>
 															<i aria-hidden className="fas fa-eye me-1" />
-															{video?.viewCount}
+															{video?.views}
 														</button>
 													</div>
 													<audio

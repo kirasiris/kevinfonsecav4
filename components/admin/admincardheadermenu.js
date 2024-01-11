@@ -46,7 +46,7 @@ const AdminCardHeaderMenu = ({
 					/>
 				</form>
 			</div>
-			<div className="btn-group float-end">
+			<div className="btn-group float-end my-1">
 				<Link
 					href={{
 						pathname: addLink,

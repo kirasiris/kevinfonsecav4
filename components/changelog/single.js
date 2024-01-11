@@ -26,8 +26,14 @@ const Single = ({
 						<Accordion.Body>
 							<ParseHtml text={changelog.text} />
 							<hr />
-							<Link href={`/changelog/${changelog._id}/${changelog.slug}`}>
-								{changelog.title}
+							<Link
+								href={`/changelog/${changelog._id}/${changelog.slug}`}
+								passHref
+								legacyBehavior
+							>
+								<a className="btn btn-link border-secondary">
+									&gt;&gt; {changelog.title}
+								</a>
 							</Link>
 						</Accordion.Body>
 					</Accordion.Item>

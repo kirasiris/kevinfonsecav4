@@ -18,7 +18,7 @@ const AdminCardHeaderMenu = ({
 }) => {
 	return (
 		<div className={`card-header ${classList}`}>
-			<div className="float-start objects-quantity-and-search-bar">
+			<div className="float-start d-flex align-items-center justify-content-end">
 				<Link
 					href={{
 						pathname: allLink,

@@ -62,6 +62,20 @@ const Single = ({
 				<div className="blog-actions-ellipsis-menu">
 					<span className="ellipsis-menu">
 						<DropdownButton title="Options" variant="secondary">
+							<Link
+								href={{
+									pathname: `/blog/${object._id}/${object.category._id}/${object.category.slug}/${object.slug}`,
+									query: {
+										isAdmin: true,
+									},
+								}}
+								passHref
+								legacyBehavior
+							>
+								<a className="dropdown-item btn btn-link" target="_blank">
+									View It
+								</a>
+							</Link>
 							<button
 								className="dropdown-item btn btn-sm"
 								onClick={() => handleDraft(object._id)}

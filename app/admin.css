@@ -106,13 +106,6 @@ a.blog-relative-time-status__link {
 /* ---------------------------------------------------
   PAGINATION
 ----------------------------------------------------- */
-.pagination-container,
-.objects-quantity-and-search-bar {
-	display: flex;
-	justify-content: flex-end;
-	align-items: center;
-}
-
 .pagination-container > select {
 	width: 100px;
 	height: 37px;

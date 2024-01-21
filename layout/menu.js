@@ -16,7 +16,7 @@ const Menu = ({
 				<div className="navbar-header">
 					<Navbar.Toggle aria-controls="responsive-navbar-nav" />
 					<Link href={canonical} passHref legacyBehavior>
-						<a className="navbar-brand">
+						<a className="navbar-brand" target="_blank">
 							<Image
 								alt={title}
 								src={logo}

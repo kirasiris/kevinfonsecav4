@@ -105,7 +105,7 @@ const ClientNumericPagination = ({
 	};
 
 	return (
-		<div className="pagination-container">
+		<div className="pagination-container d-flex align-items-center justify-content-end">
 			{selectLimit()}
 			<ul className="pagination justify-content-end m-0 my-1 mx-1">
 				<li className="page-item">

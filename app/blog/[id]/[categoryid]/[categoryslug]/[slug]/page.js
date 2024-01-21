@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Header from "@/layout/header";
 import Sidebar from "@/layout/sidebar";
@@ -49,6 +50,11 @@ const BlogRead = async ({ params }) => {
 		getCategoriesData,
 		getQuotesData,
 	]);
+
+	if (blog.data.status !== "published") {
+		console.log("Error");
+		return;
+	}
 
 	return (
 		<Suspense fallback={<Loading />}>

@@ -1,6 +1,5 @@
 import { Suspense } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Header from "@/layout/header";
 import Sidebar from "@/layout/sidebar";
@@ -38,7 +37,7 @@ async function getQuotes() {
 	return res.json();
 }
 
-const BlogRead = async ({ params }) => {
+const BlogRead = async ({ params, searchParams }) => {
 	const getBlogsData = getBlog(`/${params.id}`);
 
 	const getCategoriesData = getCategories(`?categoryType=blog`);
@@ -51,12 +50,7 @@ const BlogRead = async ({ params }) => {
 		getQuotesData,
 	]);
 
-	if (blog.data.status !== "published") {
-		console.log("Error");
-		return;
-	}
-
-	return (
+	const BlogDataComponent = () => (
 		<Suspense fallback={<Loading />}>
 			<Header title={blog.data.title} />
 			<div className="container">
@@ -114,13 +108,13 @@ const BlogRead = async ({ params }) => {
 								<div style={{ clear: "both" }} />
 								<AuthorBox author={blog?.data?.user} />
 								{/* <CommentBox
-									user={blog?.data?.user}
-									postId={blog?.data?._id}
-									secondPostId={blog?.data?._id}
-									isVisible={blog?.data?.commented}
-									postType="blog"
-									onModel="Blog"
-								/> */}
+						user={blog?.data?.user}
+						postId={blog?.data?._id}
+						secondPostId={blog?.data?._id}
+						isVisible={blog?.data?.commented}
+						postType="blog"
+						onModel="Blog"
+					/> */}
 							</section>
 						</article>
 					</div>
@@ -133,6 +127,14 @@ const BlogRead = async ({ params }) => {
 			</div>
 		</Suspense>
 	);
+
+	if (blog.data.status !== "published" && searchParams.isAdmin === "true") {
+		return <BlogDataComponent />;
+	} else if (blog.data.status === "published") {
+		return <BlogDataComponent />;
+	} else {
+		return <p>Not visible</p>;
+	}
 };
 
 export default BlogRead;

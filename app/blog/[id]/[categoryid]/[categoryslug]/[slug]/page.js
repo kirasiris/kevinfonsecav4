@@ -50,64 +50,65 @@ const BlogRead = async ({ params, searchParams }) => {
 		getQuotesData,
 	]);
 
-	const BlogDataComponent = () => (
+	return (
 		<Suspense fallback={<Loading />}>
 			<Header title={blog.data.title} />
 			<div className="container">
-				<div className="row">
-					<div className={`col-lg-${blog.data.fullWidth ? "12" : "8"}`}>
-						<article>
-							<header className="mb-4">
-								<h1>{blog.data.title}</h1>
-								<div className="text-muted fst-italic mb-2">
-									Posted on {blog.data.createdAt} by {blog.data.user.username}
-								</div>
-								{blog.data.category && (
-									<Link
-										href={`/blogs?category=${blog.data.category._id}`}
-										passHref
-										legacyBehavior
-									>
-										<a className="badge bg-secondary text-decoration-none link-light">
-											{blog.data.category.title}
-										</a>
-									</Link>
-								)}
-							</header>
-							<figure className="mb-4">
-								<Image
-									className="img-fluid"
-									src={
-										blog?.data?.files?.avatar?.location?.secure_location ||
-										`https://source.unsplash.com/random/1200x900`
-									}
-									alt={`${blog?.data?.files?.avatar?.location?.filename}'s featured image`}
-									width={1200}
-									height={900}
-									priority
-								/>
-							</figure>
-							<section className="mb-5">
-								<ParseHtml text={blog?.data?.text} />
-								<hr />
-								<div className="float-start">
-									{blog?.data?.category && (
-										<ExportModal
-											linkToShare={`localhost:3000/blog/${blog?.data?._id}/${blog?.data?.category?._id}/${blog?.data?.category.slug}/${blog?.data?.slug}`}
-											object={blog?.data}
-										/>
+				{blog.data.status === "published" || searchParams.isAdmin === "true" ? (
+					<div className="row">
+						<div className={`col-lg-${blog.data.fullWidth ? "12" : "8"}`}>
+							<article>
+								<header className="mb-4">
+									<h1>{blog.data.title}</h1>
+									<div className="text-muted fst-italic mb-2">
+										Posted on {blog.data.createdAt} by {blog.data.user.username}
+									</div>
+									{blog.data.category && (
+										<Link
+											href={`/blogs?category=${blog.data.category._id}`}
+											passHref
+											legacyBehavior
+										>
+											<a className="badge bg-secondary text-decoration-none link-light">
+												{blog.data.category.title}
+											</a>
+										</Link>
 									)}
-								</div>
-								<div className="float-end">
-									<ReportModal
-										postId={blog?.data?._id}
-										postType="blog"
-										onModel="Blog"
+								</header>
+								<figure className="mb-4">
+									<Image
+										className="img-fluid"
+										src={
+											blog?.data?.files?.avatar?.location?.secure_location ||
+											`https://source.unsplash.com/random/1200x900`
+										}
+										alt={`${blog?.data?.files?.avatar?.location?.filename}'s featured image`}
+										width={1200}
+										height={900}
+										priority
 									/>
-								</div>
-								<div style={{ clear: "both" }} />
-								<AuthorBox author={blog?.data?.user} />
-								{/* <CommentBox
+								</figure>
+								<section className="mb-5">
+									<ParseHtml text={blog?.data?.text} />
+									<hr />
+									<div className="float-start">
+										{blog?.data?.category && (
+											<ExportModal
+												linkToShare={`localhost:3000/blog/${blog?.data?._id}/${blog?.data?.category?._id}/${blog?.data?.category.slug}/${blog?.data?.slug}`}
+												object={blog?.data}
+											/>
+										)}
+									</div>
+									<div className="float-end">
+										<ReportModal
+											postId={blog?.data?._id}
+											postType="blog"
+											onModel="Blog"
+										/>
+									</div>
+									<div style={{ clear: "both" }} />
+									<AuthorBox author={blog?.data?.user} />
+									{/* <CommentBox
 						user={blog?.data?.user}
 						postId={blog?.data?._id}
 						secondPostId={blog?.data?._id}
@@ -115,26 +116,21 @@ const BlogRead = async ({ params, searchParams }) => {
 						postType="blog"
 						onModel="Blog"
 					/> */}
-							</section>
-						</article>
-					</div>
-					{blog.data.fullWidth !== true && (
-						<div className="col-lg-4">
-							<Sidebar quotes={quotes} categories={categories} />
+								</section>
+							</article>
 						</div>
-					)}
-				</div>
+						{blog.data.fullWidth !== true && (
+							<div className="col-lg-4">
+								<Sidebar quotes={quotes} categories={categories} />
+							</div>
+						)}
+					</div>
+				) : (
+					<p>Not visible</p>
+				)}
 			</div>
 		</Suspense>
 	);
-
-	if (blog.data.status !== "published" && searchParams.isAdmin === "true") {
-		return <BlogDataComponent />;
-	} else if (blog.data.status === "published") {
-		return <BlogDataComponent />;
-	} else {
-		return <p>Not visible</p>;
-	}
 };
 
 export default BlogRead;

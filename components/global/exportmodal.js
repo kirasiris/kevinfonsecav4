@@ -55,8 +55,8 @@ const ExportModal = ({
 						<hr />
 						<pre>
 							<code>
-								&lt;iframe src="{linkToShare}" title="{object?.title}
-								"&gt;&lt;/iframe&gt;
+								&lt;iframe src=&rdquo;{linkToShare}&rdquo; title=&rdquo;
+								{object?.title}&rdquo;&gt;&lt;/iframe&gt;
 							</code>
 						</pre>
 						<hr />

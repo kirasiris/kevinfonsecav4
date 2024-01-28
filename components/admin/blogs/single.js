@@ -62,9 +62,10 @@ const Single = ({
 				<div className="blog-actions-ellipsis-menu">
 					<span className="ellipsis-menu">
 						<DropdownButton title="Options" variant="secondary">
+							{console.log(object.category)}
 							<Link
 								href={{
-									pathname: `/blog/${object._id}/${object.category._id}/${object.category.slug}/${object.slug}`,
+									pathname: `/blog/${object._id}/${object.category?._id}/${object.category?.slug}/${object.slug}`,
 									query: {
 										isAdmin: true,
 									},

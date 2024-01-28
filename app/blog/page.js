@@ -2,6 +2,7 @@ import Single from "@/components/blog/single";
 import Header from "@/layout/header";
 import Sidebar from "@/layout/sidebar";
 import NumericPagination from "@/layout/numericpagination";
+import NothingFoundAlert from "@/layout/nothingfoundalert";
 
 async function getFeaturedBlog(params) {
 	const res = await fetch(`http://localhost:5000/api/v1/blogs${params}`, {
@@ -74,7 +75,7 @@ const BlogIndex = async ({ searchParams }) => {
 							))}
 						{/* Blog list */}
 						<div className="row">
-							{blogs?.data?.length > 0 && (
+							{blogs?.data?.length > 0 ? (
 								<NumericPagination
 									nextParams={`/blog?page=${nextPage}&limit=${limit}`}
 									prevParams={`/blog?page=${prevPage}&limit=${limit}`}
@@ -87,6 +88,8 @@ const BlogIndex = async ({ searchParams }) => {
 										<Single key={blog._id} blog={blog} />
 									))}
 								/>
+							) : (
+								<NothingFoundAlert />
 							)}
 						</div>
 					</div>

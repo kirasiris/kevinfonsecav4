@@ -1,5 +1,7 @@
 "use client";
+import axios from "axios";
 import { useState } from "react";
+import MyTextArea from "../global/mytextarea";
 
 const QuickBlogDraft = () => {
 	const [quickBlogDraftData, setQuickDraftData] = useState({
@@ -11,6 +13,39 @@ const QuickBlogDraft = () => {
 
 	const submitQuickBlogDraft = async (e) => {
 		e.preventDefault();
+		try {
+			await axios.post(`/blogs`, {
+				...quickBlogDraftData,
+				postType: "blog",
+			});
+			toast.success(`Item created`);
+			resetForm();
+		} catch (err) {
+			console.log(err);
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return { msg: err?.response?.statusText, status: err?.response?.status };
+		}
+	};
+
+	const resetForm = () => {
+		setQuickDraftData({
+			title: "untitled",
+			text: "No description",
+		});
 	};
 	return (
 		<div className="card mb-3">
@@ -37,19 +72,14 @@ const QuickBlogDraft = () => {
 					<label htmlFor="blog-text" className="form-label">
 						Text
 					</label>
-					<textarea
-						id="blog-text"
+					<MyTextArea
+						id="text"
 						name="text"
-						className="form-control"
-						placeholder={"Text"}
-						value={text.trim()}
-						onChange={(e) => {
-							setQuickDraftData({
-								...quickBlogDraftData,
-								text: e.target.value,
-							});
-						}}
-						rows="3"
+						value={text}
+						objectData={quickBlogDraftData}
+						setObjectData={setQuickDraftData}
+						onModel="Blog"
+						advancedTextEditor={false}
 					/>
 				</div>
 				<div className="card-footer">
@@ -59,6 +89,13 @@ const QuickBlogDraft = () => {
 						disabled={title.length > 0 && text.length > 0 ? !true : !false}
 					>
 						Save Draft
+					</button>
+					<button
+						type="button"
+						className="btn btn-secondary btn-sm"
+						onClick={resetForm}
+					>
+						Reset
 					</button>
 				</div>
 			</form>

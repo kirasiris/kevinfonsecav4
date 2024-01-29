@@ -34,7 +34,7 @@ async function getQuotes() {
 	return res.json();
 }
 
-const BlogIndex = async ({ searchParams }) => {
+const BlogCategoryIndex = async ({ params, searchParams }) => {
 	const getFeaturedBlogsData = getFeaturedBlog(
 		`?featured=true&postType=blog&status=published`
 	);
@@ -42,7 +42,7 @@ const BlogIndex = async ({ searchParams }) => {
 	const page = searchParams.page || 1;
 
 	const getBlogsData = getBlogs(
-		`?page=${page}&limit=${limit}&sort=-createdAt&postType=blog&status=published`
+		`?page=${page}&limit=${limit}&sort=-createdAt&postType=blog&status=published&category=${params.categoryid}`
 	);
 
 	const getCategoriesData = getCategories(`?categoryType=blog`);
@@ -106,4 +106,4 @@ const BlogIndex = async ({ searchParams }) => {
 	);
 };
 
-export default BlogIndex;
+export default BlogCategoryIndex;

@@ -65,7 +65,13 @@ const BlogRead = async ({ params, searchParams }) => {
 									</div>
 									{blog.data.category && (
 										<Link
-											href={`/blogs?category=${blog.data.category._id}`}
+											href={{
+												pathname: `/blog/category/${blog.data.category._id}/${blog.data.category.slug}`,
+												query: {
+													page: 1,
+													limit: 10,
+												},
+											}}
 											passHref
 											legacyBehavior
 										>

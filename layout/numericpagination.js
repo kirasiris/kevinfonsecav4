@@ -1,149 +1,155 @@
 "use client";
+import _ from "lodash";
 import Link from "next/link";
 
-// ACTIONS
-// HELPERS
 const NumericPagination = ({
-	nextParams = ``,
-	prevParams = ``,
-	next = 0,
-	prev = 0,
-	componentMapping,
-	pagesArrayInfo = {},
-	pagePath = "/",
-	pageParams = {},
+	totalPages,
+	page,
+	limit,
+	sortby,
+	siblings,
+	postType = "",
 }) => {
-	const siblingsCount = 3;
-	const siblingsStart = Math.max(pagesArrayInfo.current, 1);
-	const siblingsEnd = Math.min(
-		pagesArrayInfo.current + siblingsCount,
-		pagesArrayInfo.totalpages
-	);
+	const comesPostType = postType !== "" ? `&postType=${postType}` : "";
+	const newParams = `&sort=${sortby}${comesPostType}`;
+	let pageNo;
+	if (page <= totalPages) {
+		pageNo = page;
+	} else {
+		// setParams(`?page=${totalPages}&limit=${limit}${newParams}`);
+		// router.push(`?page=${totalPages}&limit=${limit}${newParams}`);
+		pageNo = page;
+	}
 
-	const firstItem = () => {
-		return (
-			prev !== undefined &&
-			prev !== 0 && (
-				<li className="page-item">
-					<Link
-						href={{
-							pathname: pagePath,
-							query: {
-								...pageParams,
-								page: pagesArrayInfo.pages[0],
-								limit: pageParams.limit,
-							},
-						}}
-						className="page-link"
-					>
-						First
-					</Link>
-				</li>
-			)
-		);
+	const paginationRange = (siblings) => {
+		let totalPagesNoInArray = 7 + siblings;
+		if (totalPagesNoInArray >= totalPages) {
+			return _.range(1, totalPages + 1);
+		}
+
+		let leftSiblingsIndex = Math.max(pageNo - siblings, 1);
+		let rightSiblingsIndex = Math.min(pageNo + siblings, totalPages);
+
+		let showLeftDots = leftSiblingsIndex > 2;
+		let showRightDots = rightSiblingsIndex < totalPages - 2;
+
+		if (!showLeftDots && showRightDots) {
+			let leftItemsCount = 3 + 2 * siblings;
+			let leftRange = _.range(1, leftItemsCount + 1);
+			return [...leftRange, "...", totalPages];
+		} else if (showLeftDots && !showRightDots) {
+			let rightItemsCount = 3 + 2 * siblings;
+			let rightRange = _.range(
+				totalPages - rightItemsCount + 1,
+				totalPages + 1
+			);
+			return [1, "...", ...rightRange];
+		} else {
+			let middleRange = _.range(leftSiblingsIndex, rightSiblingsIndex + 1);
+			return [1, "...", ...middleRange, "...", totalPages];
+		}
 	};
 
-	const lastItem = () => {
-		return (
-			next !== undefined &&
-			next !== 0 && (
-				<li className="page-item">
-					<Link
-						href={{
-							pathname: pagePath,
-							query: {
-								...pageParams,
-								page: pagesArrayInfo.pages.length,
-								limit: pageParams.limit,
-							},
-						}}
-						className="page-link"
-					>
-						Last
-					</Link>
-				</li>
-			)
-		);
-	};
-
-	const nextButton = () => {
-		return (
-			next !== "undefined" &&
-			next !== 0 && (
-				<li className={`page-item next-item`}>
-					<Link href={nextParams} className={`page-link rounded-0`}>
-						Next
-					</Link>
-				</li>
-			)
-		);
-	};
-
-	const prevButton = () => {
-		return (
-			prev !== undefined &&
-			prev !== 0 && (
-				<li className="page-item previous-item">
-					<Link href={prevParams} className={`page-link rounded-0`}>
-						Previous
-					</Link>
-				</li>
-			)
-		);
-	};
-
-	const numericPagination = () => {
-		return (
-			<nav aria-label="pagination">
-				<ul className="pagination justify-content-center my-4">
-					{/* FIRST/PREVIOUS */}
-					{firstItem()}
-					{prevButton()}
-					{/* NUMERIC PAGINATION */}
-					{pagesArrayInfo.pages
-						.slice(siblingsStart - 1, siblingsEnd)
-						.map((p, index) => {
-							return (
-								<li
-									key={p}
-									id={p}
-									className={`page-item number-item page-${
-										pagesArrayInfo.pages[index]
-									} ${
-										pagesArrayInfo.pages[index] === pageParams.page
-											? "active"
-											: ""
-									}`}
-								>
-									<Link
-										href={{
-											pathname: pagePath,
-											query: {
-												...pageParams,
-												page: p,
-												limit: pageParams.limit,
-											},
-										}}
-										className={`page-link`}
-									>
-										{p}
-									</Link>
-								</li>
-							);
-						})}
-					{/* LAST/NEXT */}
-					{nextButton()}
-					{lastItem()}
-				</ul>
-			</nav>
-		);
-	};
+	let array = paginationRange(siblings);
 
 	return (
-		<>
-			{componentMapping}
-			{pagesArrayInfo.pages?.length >= pageParams.limit && numericPagination()}
-		</>
+		<div className="pagination-container d-flex align-items-center justify-content-end">
+			<ul className="pagination justify-content-end m-0 my-1 mx-1">
+				<li className="page-item">
+					<Link
+						href={`?page=1&limit=${limit}${newParams}`}
+						passHref
+						legacyBehavior
+					>
+						<a className="page-link">&laquo;</a>
+					</Link>
+				</li>
+				<li className="page-item">
+					<Link
+						href={`?page=${Number(pageNo) - 1}&limit=${limit}${newParams}`}
+						passHref
+						legacyBehavior
+					>
+						<a className="page-link">&lsaquo;</a>
+					</Link>
+				</li>
+
+				{array.map((index) => {
+					return (
+						<li
+							key={index}
+							className={`page-item ${
+								Number(index) === Number(pageNo) ? "active" : ""
+							}`}
+						>
+							{index === "&laquo;" ? (
+								<Link
+									href={`?page=1&limit=${limit}${newParams}`}
+									passHref
+									legacyBehavior
+								>
+									<a className="page-link">{index}</a>
+								</Link>
+							) : index === "&lsaquo;" ? (
+								pageNo !== 1 && (
+									<Link
+										href={`?page=${pageNo - 1}&limit=${limit}${newParams}`}
+										passHref
+										legacyBehavior
+									>
+										<a className="page-link">{index}</a>
+									</Link>
+								)
+							) : index === "&rsaquo;" ? (
+								pageNo !== totalPages && (
+									<Link
+										href={`?page=${pageNo + 1}&limit=${limit}${newParams}`}
+										passHref
+										legacyBehavior
+									>
+										<a className="page-link">{index}</a>
+									</Link>
+								)
+							) : index === "&raquo;" ? (
+								<Link
+									href={`?page=${totalPages}&limit=${limit}${newParams}`}
+									passHref
+									legacyBehavior
+								>
+									<a className="page-link">{index}</a>
+								</Link>
+							) : (
+								<Link
+									href={`?page=${index}&limit=${limit}${newParams}`}
+									passHref
+									legacyBehavior
+								>
+									<a className="page-link">{index}</a>
+								</Link>
+							)}
+						</li>
+					);
+				})}
+				<li className="page-item">
+					<Link
+						href={`?page=${Number(pageNo) + 1}&limit=${limit}${newParams}`}
+						passHref
+						legacyBehavior
+					>
+						<a className="page-link">&rsaquo;</a>
+					</Link>
+				</li>
+				<li className="page-item">
+					<Link
+						href={`?page=${totalPages}&limit=${limit}${newParams}`}
+						passHref
+						legacyBehavior
+					>
+						<a className="page-link">&raquo;</a>
+					</Link>
+				</li>
+			</ul>
+		</div>
 	);
 };
 

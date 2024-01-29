@@ -74,7 +74,13 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 										className={`list-group-item ${category._id + "-" + index}`}
 									>
 										<Link
-											href={`/blogs?category=${category._id}`}
+											href={{
+												pathname: `/blog/category/${category._id}/${category.slug}`,
+												query: {
+													page: 1,
+													limit: 10,
+												},
+											}}
 											passHref
 											legacyBehavior
 										>
@@ -94,7 +100,13 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 														}`}
 													>
 														<Link
-															href={`/blogs?category=${childC._id}`}
+															href={{
+																pathname: `/blog/category/${childC._id}/${childC.slug}`,
+																query: {
+																	page: 1,
+																	limit: 10,
+																},
+															}}
 															passHref
 															legacyBehavior
 														>

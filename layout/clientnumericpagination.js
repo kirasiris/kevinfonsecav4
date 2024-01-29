@@ -19,7 +19,6 @@ const ClientNumericPagination = ({
 	} else {
 		setParams(`?page=${totalPages}&limit=${limit}${newParams}`);
 		router.push(`?page=${totalPages}&limit=${limit}${newParams}`);
-
 		pageNo = page;
 	}
 
@@ -128,7 +127,9 @@ const ClientNumericPagination = ({
 					return (
 						<li
 							key={index}
-							className={`page-item ${index === pageNo ? "active" : ""}`}
+							className={`page-item ${
+								Number(index) === Number(pageNo) ? "active" : ""
+							}`}
 						>
 							<span
 								onClick={() => handlePageChange(index)}

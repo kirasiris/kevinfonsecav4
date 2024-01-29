@@ -12,7 +12,7 @@ async function getChangelogs(params) {
 }
 
 const ChangelogIndex = async ({ searchParams }) => {
-	const limit = searchParams.limit || 10;
+	const limit = searchParams.limit || 1000;
 	const page = searchParams.page || 1;
 
 	const getChangelogsData = getChangelogs(
@@ -48,24 +48,24 @@ const ChangelogIndex = async ({ searchParams }) => {
 					<div className="col-lg-12">
 						{/* Changelog list */}
 						<div className="row">
+							{Object.entries(groupByDate).map(([date, changelogs]) => (
+								<div key={date}>
+									<p className="text-center my-3">{date}</p>
+									{changelogs.map((changelog) => (
+										<Single key={changelog._id} changelog={changelog} />
+									))}
+								</div>
+							))}
 							<NumericPagination
-								nextParams={`/changelog?page=${nextPage}&limit=${limit}`}
-								prevParams={`/changelog?page=${prevPage}&limit=${limit}`}
-								next={nextPage}
-								prev={prevPage}
-								pagesArrayInfo={changelogs?.pagination}
-								pagePath="/changelog"
-								searchParams={searchParams}
-								componentMapping={Object.entries(groupByDate).map(
-									([date, changelogs]) => (
-										<div key={date}>
-											<p className="text-center my-3">{date}</p>
-											{changelogs.map((changelog) => (
-												<Single key={changelog._id} changelog={changelog} />
-											))}
-										</div>
-									)
-								)}
+								totalPages={
+									changelogs?.pagination?.totalpages ||
+									Math.ceil(changelogs?.data?.length / searchParams.limit)
+								}
+								page={searchParams.page}
+								limit={searchParams.limit}
+								sortby="-createdAt"
+								siblings={1}
+								postType="blog"
 							/>
 						</div>
 					</div>

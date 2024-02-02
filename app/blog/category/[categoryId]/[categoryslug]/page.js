@@ -1,3 +1,4 @@
+import { fetchurl } from "@/helpers/setTokenOnServer";
 import Single from "@/components/blog/single";
 import Header from "@/layout/header";
 import Sidebar from "@/layout/sidebar";
@@ -5,32 +6,26 @@ import NumericPagination from "@/layout/numericpagination";
 import NothingFoundAlert from "@/layout/nothingfoundalert";
 
 async function getFeaturedBlog(params) {
-	const res = await fetch(`http://localhost:5000/api/v1/blogs${params}`, {
-		cache: "no-store",
-	});
-
+	const res = await fetchurl(`http://localhost:5000/api/v1/blogs${params}`);
 	return res.json();
 }
 
 async function getBlogs(params) {
-	const res = await fetch(`http://localhost:5000/api/v1/blogs${params}`, {
-		cache: "no-store",
-	});
-
+	const res = await fetchurl(`http://localhost:5000/api/v1/blogs${params}`);
 	return res.json();
 }
 
 async function getCategories(params) {
-	const res = await fetch(`http://localhost:5000/api/v1/categories${params}`);
-
+	const res = await fetchurl(
+		`http://localhost:5000/api/v1/categories${params}`
+	);
 	return res.json();
 }
 
 async function getQuotes() {
-	const res = await fetch(`http://localhost:5000/api/v1/extras/quotes/random`, {
-		cache: "no-store",
-	});
-
+	const res = await fetchurl(
+		`http://localhost:5000/api/v1/extras/quotes/random`
+	);
 	return res.json();
 }
 

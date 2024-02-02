@@ -9,11 +9,15 @@ import AuthorBox from "@/components/global/authorbox";
 import CommentBox from "@/components/global/commentbox";
 import ParseHtml from "@/layout/parseHtml";
 import ReportModal from "@/components/global/reportmodal";
+import { fetchurl } from "@/helpers/setTokenOnServer";
+
+async function getAuthenticatedUser() {
+	const res = await fetchurl(`http://localhost:5000/api/v1/auth/me`);
+	return res.json();
+}
 
 async function getBlog(params) {
-	const res = await fetch(`http://localhost:5000/api/v1/blogs${params}`, {
-		cache: "no-store",
-	});
+	const res = await fetchurl(`http://localhost:5000/api/v1/blogs${params}`);
 
 	if (!res.ok) {
 		// This will activate the closest `error.js` Error Boundary
@@ -24,20 +28,24 @@ async function getBlog(params) {
 }
 
 async function getCategories(params) {
-	const res = await fetch(`http://localhost:5000/api/v1/categories${params}`);
+	const res = await fetchurl(
+		`http://localhost:5000/api/v1/categories${params}`
+	);
 
 	return res.json();
 }
 
 async function getQuotes() {
-	const res = await fetch(`http://localhost:5000/api/v1/extras/quotes/random`, {
-		cache: "no-store",
-	});
+	const res = await fetchurl(
+		`http://localhost:5000/api/v1/extras/quotes/random`
+	);
 
 	return res.json();
 }
 
 const BlogRead = async ({ params, searchParams }) => {
+	const auth = await getAuthenticatedUser();
+
 	const getBlogsData = getBlog(`/${params.id}`);
 
 	const getCategoriesData = getCategories(`?categoryType=blog`);
@@ -114,14 +122,15 @@ const BlogRead = async ({ params, searchParams }) => {
 									</div>
 									<div style={{ clear: "both" }} />
 									<AuthorBox author={blog?.data?.user} />
-									{/* <CommentBox
-						user={blog?.data?.user}
-						postId={blog?.data?._id}
-						secondPostId={blog?.data?._id}
-						isVisible={blog?.data?.commented}
-						postType="blog"
-						onModel="Blog"
-					/> */}
+									<CommentBox
+										auth={auth.data}
+										user={blog?.data?.user}
+										postId={blog?.data?._id}
+										secondPostId={blog?.data?._id}
+										isVisible={blog?.data?.commented}
+										postType="blog"
+										onModel="Blog"
+									/>
 								</section>
 							</article>
 						</div>

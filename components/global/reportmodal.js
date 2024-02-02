@@ -44,7 +44,7 @@ const ReportModal = ({ postId = null, postType = ``, onModel = `` }) => {
 				type="button"
 				onClick={() => setReportModal(!reportModal)}
 			>
-				<i className={`fas fa-exclamation-triangle mr-1`} aria-hidden />
+				<i className={`fas fa-exclamation-triangle me-1`} aria-hidden />
 				Report Item
 			</button>
 			<Modal

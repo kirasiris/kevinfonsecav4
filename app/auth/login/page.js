@@ -1,5 +1,6 @@
 "use client";
 import AuthContext from "@/helpers/globalContext";
+import { fetchurl, setAuthTokenOnServer } from "@/helpers/setTokenOnServer";
 import { setAuthToken } from "@/helpers/utilities";
 import axios from "axios";
 import { useRouter } from "next/navigation";
@@ -41,17 +42,29 @@ const Login = ({}) => {
 			localStorage.removeItem("email");
 			localStorage.removeItem("password");
 		}
-		// await login(loginData, router)();
+
 		const res = await axios.post(
 			`http://localhost:5000/api/v1/auth/login`,
 			loginData
 		);
 
+		// const res = await fetchurl(
+		// 	`http://localhost:5000/api/v1/auth/login`,
+		// 	"POST",
+		// 	loginData
+		// );
+
 		if (res?.data?.data) {
 			router.push(`/auth/validatetwofactorauth/${res?.data?.data?._id}`);
 			return res.data;
 		}
+
+		// If not success stop
+		if (!res?.data?.success) return;
+
+		// Else continue
 		setAuthToken(res?.data?.token);
+		setAuthTokenOnServer(res?.data?.token);
 		await loadUser();
 		router.push(`/noadmin`);
 	};

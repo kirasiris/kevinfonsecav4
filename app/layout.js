@@ -5,11 +5,10 @@ import "./app.css";
 import Head from "@/app/head";
 import Menu from "@/layout/menu";
 import Footer from "@/layout/footer";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 
 async function getSetting(params) {
-	const res = await fetch(`http://localhost:5000/api/v1/settings/${params}`, {
-		cache: "no-store",
-	});
+	const res = await fetchurl(`http://localhost:5000/api/v1/settings/${params}`);
 
 	return res.json();
 }

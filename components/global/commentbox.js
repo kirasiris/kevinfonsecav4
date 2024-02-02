@@ -1,10 +1,11 @@
 "use client";
-import axios from "axios";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 import React, { useEffect, useState } from "react";
 import Single from "../comment/single";
 import MyTextArea from "@/components/global/mytextarea";
 
 const CommentBox = ({
+	auth = {},
 	user = {},
 	postId = null,
 	secondPostId = null,
@@ -30,10 +31,12 @@ const CommentBox = ({
 
 	useEffect(() => {
 		const getComments = async () => {
-			const res = await axios.get(
-				`http://localhost:5000/api/v1/comments${params}`
+			const res = await fetchurl(
+				`http://localhost:5000/api/v1/comments${params}`,
+				"GET"
 			);
-			setComments(res?.data?.data);
+			console.log(res);
+			// setComments(res?.data?.data);
 		};
 		getComments();
 	}, [postId]);
@@ -53,12 +56,14 @@ const CommentBox = ({
 	const newComment = async (e) => {
 		e.preventDefault();
 		try {
-			const res = await axios.post(
+			const res = await fetchurl(
 				`http://localhost:5000/api/v1/comments/${postId}`,
+				"POST",
 				commentData
 			);
-			setComments([res?.data?.data, ...comments]);
-			resetForm();
+			console.log(res?.data);
+			// setComments([res?.data?.data, ...comments]);
+			// resetForm();
 		} catch (err) {
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;
@@ -114,6 +119,7 @@ const CommentBox = ({
 								/>
 								<br />
 								<MyTextArea
+									auth={auth}
 									name="text"
 									id="text"
 									value={text}

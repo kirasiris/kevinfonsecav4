@@ -7,6 +7,11 @@ import Menu from "@/layout/menu";
 import Footer from "@/layout/footer";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 
+async function getAuthenticatedUser() {
+	const res = await fetchurl(`http://localhost:5000/api/v1/auth/me`);
+	return res.json();
+}
+
 async function getSetting(params) {
 	const res = await fetchurl(`http://localhost:5000/api/v1/settings/${params}`);
 
@@ -14,11 +19,13 @@ async function getSetting(params) {
 }
 
 export default async function RootLayout({ children }) {
+	const auth = await getAuthenticatedUser();
 	const settings = await getSetting(`6519d7b34d26360354527e9a`);
 
 	return (
 		<html lang="en">
 			<Head
+				auth={auth}
 				title={settings.data.title}
 				description={settings.data.text}
 				favicon={settings.data.favicon}
@@ -26,12 +33,13 @@ export default async function RootLayout({ children }) {
 			/>
 			<body>
 				<Menu
+					auth={auth}
 					title={settings.data.title}
 					logo={settings.data.logo}
 					canonical={settings.data.site_url}
 				/>
 				<main>{children}</main>
-				<Footer />
+				<Footer auth={auth} />
 			</body>
 		</html>
 	);

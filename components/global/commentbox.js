@@ -1,5 +1,6 @@
 "use client";
 import { fetchurl } from "@/helpers/setTokenOnServer";
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import Single from "../comment/single";
 import MyTextArea from "@/components/global/mytextarea";
@@ -31,12 +32,14 @@ const CommentBox = ({
 
 	useEffect(() => {
 		const getComments = async () => {
-			const res = await fetchurl(
-				`http://localhost:5000/api/v1/comments${params}`,
-				"GET"
+			// const res = await fetchurl(
+			// 	`http://localhost:5000/api/v1/comments${params}`,
+			// 	"GET"
+			// );
+			const res = await axios.get(
+				`http://localhost:5000/api/v1/comments${params}`
 			);
-			console.log(res);
-			// setComments(res?.data?.data);
+			setComments(res?.data?.data);
 		};
 		getComments();
 	}, [postId]);
@@ -56,14 +59,18 @@ const CommentBox = ({
 	const newComment = async (e) => {
 		e.preventDefault();
 		try {
-			const res = await fetchurl(
+			// const res = await fetchurl(
+			// 	`http://localhost:5000/api/v1/comments/${postId}`,
+			// 	"POST",
+			// 	commentData
+			// );
+			const res = await axios.post(
 				`http://localhost:5000/api/v1/comments/${postId}`,
-				"POST",
 				commentData
 			);
 			console.log(res?.data);
-			// setComments([res?.data?.data, ...comments]);
-			// resetForm();
+			setComments([res?.data?.data, ...comments]);
+			resetForm();
 		} catch (err) {
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;
@@ -98,7 +105,7 @@ const CommentBox = ({
 			{isVisible ? (
 				<>
 					<form className="mb-3" onSubmit={newComment}>
-						<div className="card">
+						<div className="card mb-3">
 							<div className="card-body">
 								<input
 									type={`text`}
@@ -132,7 +139,7 @@ const CommentBox = ({
 						</div>
 						<button
 							type="submit"
-							className="btn btn-sm btn-secondary"
+							className="btn btn-sm btn-secondary me-1"
 							disabled={title?.length > 0 && text?.length > 0 ? !true : !false}
 						>
 							Submit
@@ -145,11 +152,11 @@ const CommentBox = ({
 							Reset
 						</button>
 					</form>
-					{comments?.data?.length > 0 && (
+					{comments?.length > 0 && (
 						<>
 							<hr />
-							<h5>Comments: {comments?.data?.length}</h5>
-							{comments?.data?.map((comment) => (
+							<h5>Comments: {comments?.length}</h5>
+							{comments?.map((comment) => (
 								<Single key={comment._id} author={user} comment={comment} />
 							))}
 						</>

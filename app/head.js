@@ -1,6 +1,7 @@
 import Script from "next/script";
 
 export default function Head({
+	auth = {},
 	title = ``,
 	description = ``,
 	favicon = "",

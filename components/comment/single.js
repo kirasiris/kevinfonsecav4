@@ -25,7 +25,7 @@ const Single = ({
 						>
 							<Image
 								src={
-									comment.user.avatar?.location.secure_location ||
+									comment.user.files?.avatar?.location.secure_location ||
 									`https://source.unsplash.com/random/64x64`
 								}
 								alt={`${comment.user.username}'s featured image`}
@@ -35,7 +35,8 @@ const Single = ({
 						</Link>
 					</div>
 					<div className="flex-grow-1 ms-3">
-						<p>{comment.text}</p>
+						{/* <p>{comment.text}</p> */}
+						<p>texto</p>
 					</div>
 				</div>
 			</article>

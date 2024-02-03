@@ -23,7 +23,7 @@ export const fetchurl = async (url, method, bodyData) => {
 		method: method,
 		headers: {
 			"Content-Type": "application/json",
-			Authorization: `Bearer ${token.value}`,
+			Authorization: `Bearer ${token?.value}`,
 		},
 		body: JSON.stringify(bodyData),
 	});

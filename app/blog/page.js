@@ -1,9 +1,6 @@
 import { fetchurl } from "@/helpers/setTokenOnServer";
-import Single from "@/components/blog/single";
 import Header from "@/layout/header";
-import Sidebar from "@/layout/sidebar";
-import NumericPagination from "@/layout/numericpagination";
-import NothingFoundAlert from "@/layout/nothingfoundalert";
+import List from "@/components/blog/list";
 
 async function getFeaturedBlog(params) {
 	const res = await fetchurl(`http://localhost:5000/api/v1/blogs${params}`);
@@ -57,43 +54,13 @@ const BlogIndex = async ({ searchParams }) => {
 				title="Welcome to my Blog"
 				description="Learn everything about my programming and life journey"
 			/>
-			<div className="container">
-				<div className="row">
-					<div className="col-lg-8">
-						{/* Featured list */}
-						{featured?.data?.length > 0 &&
-							featured.data.map((featured) => (
-								<Single key={featured._id} blog={featured} fullWidth={true} />
-							))}
-						{/* Blog list */}
-						<div className="row">
-							{blogs?.data?.length > 0 ? (
-								<>
-									{blogs.data?.map((blog) => (
-										<Single key={blog._id} blog={blog} />
-									))}
-									<NumericPagination
-										totalPages={
-											blogs?.pagination?.totalpages ||
-											Math.ceil(blogs?.data?.length / searchParams.limit)
-										}
-										page={searchParams.page}
-										limit={searchParams.limit}
-										sortby="-createdAt"
-										siblings={1}
-										postType="blog"
-									/>
-								</>
-							) : (
-								<NothingFoundAlert />
-							)}
-						</div>
-					</div>
-					<div className="col-lg-4 d-none d-sm-none d-md-none d-lg-block dm-xl-block">
-						<Sidebar quotes={quotes} categories={categories} />
-					</div>
-				</div>
-			</div>
+			<List
+				featured={featured}
+				objects={blogs}
+				searchParams={searchParams}
+				categories={categories}
+				quotes={quotes}
+			/>
 		</>
 	);
 };

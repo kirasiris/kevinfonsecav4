@@ -6,6 +6,7 @@ import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 
 const Menu = ({
+	auth = {},
 	title = "",
 	logo = "https://getbootstrap.com/docs/5.3/assets/brand/bootstrap-logo.svg",
 	canonical = "",
@@ -28,7 +29,7 @@ const Menu = ({
 					</Link>
 				</div>
 				<Navbar.Collapse id="responsive-navbar-nav">
-					<Nav as="ul">
+					<Nav as="ul" className="me-auto">
 						<li className="nav-item mx-1">
 							<Link href={canonical} passHref legacyBehavior>
 								<a className="nav-link" aria-current="page">
@@ -93,6 +94,22 @@ const Menu = ({
 							</Link>
 						</li>
 					</Nav>
+					{auth.data.isOnline ? (
+						<button type="button" className="btn btn-light">
+							Logout {auth.data.username}
+						</button>
+					) : (
+						<Link
+							href={{
+								pathname: `auth/login`,
+								query: {},
+							}}
+							passHref
+							legacyBehavior
+						>
+							<a className="nav-link">Log In</a>
+						</Link>
+					)}
 				</Navbar.Collapse>
 			</Container>
 		</Navbar>

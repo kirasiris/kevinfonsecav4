@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Loading from "@/app/blog/loading";
+import ParseHtml from "@/layout/parseHtml";
 
 const Single = ({
 	blog = {},
@@ -39,7 +40,11 @@ const Single = ({
 							</Link>
 						</h2>
 						<p className="card-text">
-							TEXT IS EITHER ENCRYPTED OR PASSWORD PROTECTED
+							{typeof blog.text === "object" ? (
+								"TEXT IS EITHER ENCRYPTED OR PASSWORD PROTECTED"
+							) : (
+								<ParseHtml text={JSON.stringify(blog.text)} />
+							)}
 						</p>
 						<Link
 							href={`/blog/${blog._id}/${blog?.category?._id}/${blog?.category?.slug}/${blog.slug}`}

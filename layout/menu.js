@@ -94,7 +94,7 @@ const Menu = ({
 							</Link>
 						</li>
 					</Nav>
-					{auth.data.isOnline ? (
+					{auth?.data?.isOnline ? (
 						<button type="button" className="btn btn-light">
 							Logout {auth.data.username}
 						</button>

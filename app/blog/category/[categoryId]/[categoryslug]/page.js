@@ -27,14 +27,16 @@ async function getQuotes() {
 }
 
 const BlogCategoryIndex = async ({ params, searchParams }) => {
-	const getFeaturedBlogsData = getFeaturedBlog(
-		`?featured=true&postType=blog&status=published`
-	);
 	const limit = searchParams.limit || 10;
 	const page = searchParams.page || 1;
+	const decrypt = searchParams.decrypt === "true" ? "&decrypt=true" : "";
+
+	const getFeaturedBlogsData = getFeaturedBlog(
+		`?featured=true&postType=blog&status=published${decrypt}`
+	);
 
 	const getBlogsData = getBlogs(
-		`?page=${page}&limit=${limit}&sort=-createdAt&postType=blog&status=published&category=${params.categoryid}`
+		`?page=${page}&limit=${limit}&sort=-createdAt&postType=blog&status=published&category=${params.categoryid}${decrypt}`
 	);
 
 	const getCategoriesData = getCategories(`?categoryType=blog`);

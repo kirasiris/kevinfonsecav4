@@ -6,7 +6,6 @@ const Footer = ({ auth = {}, classes = "", styles = {} }) => {
 	return (
 		<footer className={`py-5 mt-4 bg-dark ${classes}`} style={styles}>
 			<div className="container">
-				<pre>{JSON.stringify({ auth }, null, 4)}</pre>
 				<p className="m-0 text-center text-white d-flex align-items-center justify-content-center">
 					Made with &#10084; &#38; &#9749; by KEVIN URIEL <ToggleTheme />
 				</p>

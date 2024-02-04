@@ -48,48 +48,6 @@ const Menu = ({
 						<li className="nav-item mx-1">
 							<Link
 								href={{
-									pathname: `${canonical}/profile`,
-									query: { page: 1, limit: 10 },
-								}}
-								passHref
-								legacyBehavior
-							>
-								<a className="nav-link" aria-current="page">
-									Me
-								</a>
-							</Link>
-						</li>
-						<li className="nav-item mx-1">
-							<Link
-								href={{
-									pathname: `${canonical}/blog`,
-									query: { page: 1, limit: 10 },
-								}}
-								passHref
-								legacyBehavior
-							>
-								<a className="nav-link" aria-current="page">
-									Blog
-								</a>
-							</Link>
-						</li>
-						<li className="nav-item mx-1">
-							<Link
-								href={{
-									pathname: `${canonical}/theme`,
-									query: { page: 1, limit: 10 },
-								}}
-								passHref
-								legacyBehavior
-							>
-								<a className="nav-link" aria-current="page">
-									Themes
-								</a>
-							</Link>
-						</li>
-						<li className="nav-item mx-1">
-							<Link
-								href={{
 									pathname: `${canonical}/quizz`,
 									query: { page: 1, limit: 10 },
 								}}

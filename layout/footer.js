@@ -2,7 +2,7 @@
 import Link from "next/link";
 import ToggleTheme from "./toggletheme";
 
-const Footer = ({ auth = {}, classes = "", styles = {} }) => {
+const Footer = ({ auth = {}, classes = "", styles = {}, canonical = "" }) => {
 	return (
 		<footer className={`py-5 mt-4 bg-dark ${classes}`} style={styles}>
 			<div className="container">
@@ -20,55 +20,49 @@ const Footer = ({ auth = {}, classes = "", styles = {} }) => {
 						<h5>Menu</h5>
 						<ul className="nav flex-column">
 							<li className="nav-item mb-2">
-								<p>
-									<Link
-										href={{
-											pathname: "/openai/generateimage",
-											query: {
-												page: undefined,
-												limit: undefined,
-											},
-										}}
-										passHref
-										legacyBehavior
-									>
-										Generate AI Image
-									</Link>
-								</p>
+								<Link
+									href={{
+										pathname: "/openai/generateimage",
+										query: {
+											page: undefined,
+											limit: undefined,
+										},
+									}}
+									passHref
+									legacyBehavior
+								>
+									Generate AI Image
+								</Link>
 							</li>
 							<li className="nav-item mb-2">
-								<p>
-									<Link
-										href={{
-											pathname: "/openai/generatecode",
-											query: {
-												page: undefined,
-												limit: undefined,
-											},
-										}}
-										passHref
-										legacyBehavior
-									>
-										Generate AI Code
-									</Link>
-								</p>
+								<Link
+									href={{
+										pathname: "/openai/generatecode",
+										query: {
+											page: undefined,
+											limit: undefined,
+										},
+									}}
+									passHref
+									legacyBehavior
+								>
+									Generate AI Code
+								</Link>
 							</li>
 							<li className="nav-item mb-2">
-								<p>
-									<Link
-										href={{
-											pathname: "/changelog",
-											query: {
-												page: undefined,
-												limit: undefined,
-											},
-										}}
-										passHref
-										legacyBehavior
-									>
-										Changelog
-									</Link>
-								</p>
+								<Link
+									href={{
+										pathname: "/changelog",
+										query: {
+											page: undefined,
+											limit: undefined,
+										},
+									}}
+									passHref
+									legacyBehavior
+								>
+									Changelog
+								</Link>
 							</li>
 						</ul>
 					</div>
@@ -76,89 +70,79 @@ const Footer = ({ auth = {}, classes = "", styles = {} }) => {
 						<h5>Tools</h5>
 						<ul className="nav flex-column">
 							<li className="nav-item mb-2">
-								<p>
-									<Link
-										href={{
-											pathname: "/youtube",
-											query: {
-												page: undefined,
-												limit: undefined,
-											},
-										}}
-										passHref
-										legacyBehavior
-									>
-										YouTube
-									</Link>
-								</p>
+								<Link
+									href={{
+										pathname: "/youtube",
+										query: {
+											page: undefined,
+											limit: undefined,
+										},
+									}}
+									passHref
+									legacyBehavior
+								>
+									YouTube
+								</Link>
 							</li>
 							<li className="nav-item mb-2">
-								<p>
-									<Link
-										href={{
-											pathname: "/restful",
-											query: {
-												page: undefined,
-												limit: undefined,
-											},
-										}}
-										passHref
-										legacyBehavior
-									>
-										RESTFUL Tester
-									</Link>
-								</p>
+								<Link
+									href={{
+										pathname: "/restful",
+										query: {
+											page: undefined,
+											limit: undefined,
+										},
+									}}
+									passHref
+									legacyBehavior
+								>
+									RESTFUL Tester
+								</Link>
 							</li>
 							<li className="nav-item mb-2">
-								<p>
-									<Link
-										href={{
-											pathname: "/opengraphviewer",
-											query: {
-												page: undefined,
-												limit: undefined,
-											},
-										}}
-										passHref
-										legacyBehavior
-									>
-										OpenGraph Viewer
-									</Link>
-								</p>
+								<Link
+									href={{
+										pathname: "/opengraphviewer",
+										query: {
+											page: undefined,
+											limit: undefined,
+										},
+									}}
+									passHref
+									legacyBehavior
+								>
+									OpenGraph Viewer
+								</Link>
 							</li>
 							<li className="nav-item mb-2">
-								<p>
-									<Link
-										href={{
-											pathname: "/livecode",
-											query: {
-												page: undefined,
-												limit: undefined,
-											},
-										}}
-										passHref
-										legacyBehavior
-									>
-										HTML, CSS and JS Viewer
-									</Link>
-								</p>
+								<Link
+									href={{
+										pathname: "/livecode",
+										query: {
+											page: undefined,
+											limit: undefined,
+										},
+									}}
+									passHref
+									legacyBehavior
+								>
+									HTML, CSS and JS Viewer
+								</Link>
 							</li>
 							<li className="nav-item mb-2">
-								<p>
-									<Link
-										href={{
-											pathname: "/mongodbcompiler",
-											query: {
-												page: undefined,
-												limit: undefined,
-											},
-										}}
-										passHref
-										legacyBehavior
-									>
-										MongoDB Compiler
-									</Link>
-								</p>
+								<Link
+									href={{
+										pathname: `${canonical}/mongodbcompiler`,
+										query: {
+											page: undefined,
+											limit: undefined,
+										},
+									}}
+									passHref
+									legacyBehavior
+								>
+									MongoDB Compiler
+								</Link>
 							</li>
 						</ul>
 					</div>
@@ -166,48 +150,89 @@ const Footer = ({ auth = {}, classes = "", styles = {} }) => {
 						<h5>Mind to donate?</h5>
 						<ul className="nav flex-column">
 							<li className="nav-item mb-2">
-								<p>
-									<a
-										rel="noreferrer noopener"
-										href="https://www.paypal.com/paypalme/kirasiris"
-										target="_blank"
-									>
-										https://www.paypal.com/paypalme/kirasiris
-									</a>
-								</p>
+								<a
+									rel="noreferrer noopener"
+									href="https://www.paypal.com/paypalme/kirasiris"
+									target="_blank"
+								>
+									<i className="fa fa-paypal me-1" aria-hidden />
+									PayPal
+								</a>
 							</li>
 							<li className="nav-item mb-2">
-								<p>
-									<a
-										href="https://wordpress.com/refer-a-friend/AgJ8XA6iNz1XmnGwkWYQ/"
-										target="_blank"
-										rel="noreferrer noopener"
-									>
-										https://wordpress.com/refer-a-friend/AgJ8XA6iNz1XmnGwkWYQ/
-									</a>
-								</p>
+								<a
+									href="https://wordpress.com/refer-a-friend/AgJ8XA6iNz1XmnGwkWYQ/"
+									target="_blank"
+									rel="noreferrer noopener"
+								>
+									<i className="fa fa-wordpress me-1" aria-hidden />
+									WordPress
+								</a>
 							</li>
 							<li className="nav-item mb-2">
-								<p>
-									<a
-										href="https://cash.app/$kirasiris"
-										target="_blank"
-										rel="noreferrer noopener"
-									>
-										https://cash.app/$kirasiris
-									</a>
-								</p>
+								<a
+									href="https://cash.app/$kirasiris"
+									target="_blank"
+									rel="noreferrer noopener"
+								>
+									<i className="fa fa-dollar-sign me-1" aria-hidden />
+									CashApp
+								</a>
 							</li>
 						</ul>
 					</div>
 					<div className="col-lg-3">
-						<h5>Calendar</h5>
+						<h5>About</h5>
 						<ul className="nav flex-column">
-							<li className="nav-item mb-2">fgfdgfd</li>
+							<li className="nav-item mb-2">
+								<Link
+									href={{
+										pathname: `${canonical}/profile//62ec7926a554425c9e03782d/kirasiris`,
+										query: {
+											page: 1,
+											limit: 10,
+										},
+									}}
+									passHref
+									legacyBehavior
+								>
+									<a aria-current="page">Kevin?</a>
+								</Link>
+							</li>
+							<li className="nav-item mb-2">
+								<Link
+									href={{
+										pathname: `${canonical}/blog`,
+										query: {
+											page: 1,
+											limit: 10,
+										},
+									}}
+									passHref
+									legacyBehavior
+								>
+									<a aria-current="page">Blog</a>
+								</Link>
+							</li>
+							<li className="nav-item mb-2">
+								<Link
+									href={{
+										pathname: `${canonical}/theme`,
+										query: {
+											page: 1,
+											limit: 10,
+										},
+									}}
+									passHref
+									legacyBehavior
+								>
+									<a aria-current="page">Themes</a>
+								</Link>
+							</li>
 						</ul>
 					</div>
 					<div className="col-lg-12">
-						<h5>About</h5>
+						<h5>Disclaimer</h5>
 						<ul className="nav flex-column">
 							<li className="nav-item mb-2">
 								<p>

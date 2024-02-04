@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import Loading from "@/app/blog/loading";
+import Loading from "@/app/video/loading";
 import ParseHtml from "@/layout/parseHtml";
 
 const Single = ({
@@ -15,7 +15,7 @@ const Single = ({
 			<article className={`${object._id} ${fullWidth ? "col" : "col-lg-6"}`}>
 				<div className={`card ${object.featured && "text-bg-primary"} mb-4`}>
 					<Link
-						href={`/blog/${object._id}/${object?.category?._id}/${object?.category?.slug}/${object.slug}`}
+						href={`/object/${object._id}/${object?.category?._id}/${object?.category?.slug}/${object.slug}`}
 						passHref
 						legacyBehavior
 					>
@@ -34,7 +34,7 @@ const Single = ({
 						<div className="small text-muted">{object.createdAt}</div>
 						<h2 className="card-title">
 							<Link
-								href={`/blog/${object._id}/${object?.category?._id}/${object?.category?.slug}/${object.slug}`}
+								href={`/object/${object._id}/${object?.category?._id}/${object?.category?.slug}/${object.slug}`}
 							>
 								{object.title}
 							</Link>
@@ -47,7 +47,7 @@ const Single = ({
 							)}
 						</p>
 						<Link
-							href={`/blog/${object._id}/${object?.category?._id}/${object?.category?.slug}/${object.slug}`}
+							href={`/object/${object._id}/${object?.category?._id}/${object?.category?.slug}/${object.slug}`}
 							passHref
 							legacyBehavior
 						>

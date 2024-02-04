@@ -24,7 +24,7 @@ const List = ({
 						{objects?.data?.length > 0 ? (
 							<>
 								{objects.data?.map((blog) => (
-									<Single key={blog._id} blog={blog} />
+									<Single key={blog._id} object={blog} />
 								))}
 								<NumericPagination
 									totalPages={

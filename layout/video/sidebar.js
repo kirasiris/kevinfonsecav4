@@ -13,7 +13,7 @@ const Sidebar = ({ categories = [] }) => {
 
 	const searchData = async (e) => {
 		e.preventDefault();
-		router.push(`/blog/search?keyword=${keyword}&page=1&limit=10`);
+		router.push(`/video/search?keyword=${keyword}&page=1&limit=10`);
 	};
 
 	return (

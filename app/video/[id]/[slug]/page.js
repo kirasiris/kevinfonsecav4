@@ -3,7 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 // import Plyr from "plyr";
 import Header from "@/layout/header";
-import Sidebar from "@/layout/sidebar";
+import Sidebar from "@/layout/video/sidebar";
 import Loading from "@/app/blog/loading";
 import ExportModal from "@/components/global/exportmodal";
 import AuthorBox from "@/components/global/authorbox";

@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import Header from "@/layout/header";
-import Sidebar from "@/layout/sidebar";
+import Sidebar from "@/layout/blog/sidebar";
 import Loading from "@/app/blog/loading";
 import ExportModal from "@/components/global/exportmodal";
 import AuthorBox from "@/components/global/authorbox";

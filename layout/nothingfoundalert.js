@@ -1,7 +1,11 @@
 "use client";
 
-const NothingFoundAlert = ({}) => {
-	return <div className="alert alert-dark">Nothing found</div>;
+const NothingFoundAlert = ({
+	loading = false,
+	classNames = "alert-dark",
+	text = "Nothing found",
+}) => {
+	return <div className={`alert ${classNames}`}>{text}</div>;
 };
 
 export default NothingFoundAlert;

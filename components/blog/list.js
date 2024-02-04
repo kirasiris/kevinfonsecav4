@@ -17,14 +17,14 @@ const List = ({
 					{/* Featured list */}
 					{featured?.data?.length > 0 &&
 						featured.data.map((featured) => (
-							<Single key={featured._id} blog={featured} fullWidth={true} />
+							<Single key={featured._id} object={featured} fullWidth={true} />
 						))}
 					{/* Blog list */}
 					<div className="row">
 						{objects?.data?.length > 0 ? (
 							<>
 								{objects.data?.map((blog) => (
-									<Single key={blog._id} blog={blog} />
+									<Single key={blog._id} object={blog} />
 								))}
 								<NumericPagination
 									totalPages={

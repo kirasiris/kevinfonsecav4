@@ -4,55 +4,49 @@ import Link from "next/link";
 import Loading from "@/app/video/loading";
 import ParseHtml from "@/layout/parseHtml";
 
-const Single = ({
-	object = {},
-	fullWidth = false,
-	imageWidth = "415",
-	imageHeight = "207",
-}) => {
+const Single = ({ object = {}, imageWidth = "415", imageHeight = "207" }) => {
 	return (
 		<Suspense fallback={<Loading />}>
-			<article className={`${object._id} ${fullWidth ? "col" : "col-lg-6"}`}>
-				<div className={`card ${object.featured && "text-bg-primary"} mb-4`}>
+			<article
+				className={`${object._id}`}
+				style={{
+					width: "213.5px",
+				}}
+			>
+				<div
+					className={`card ${object.featured && "text-bg-primary"} rounded-0`}
+					style={{
+						width: "213.5",
+						height: "262px",
+					}}
+				>
 					<Link
-						href={`/object/${object._id}/${object?.category?._id}/${object?.category?.slug}/${object.slug}`}
+						href={`/video/index/${object._id}/${object?.category?._id}/${object?.category?.slug}/${object.slug}`}
 						passHref
 						legacyBehavior
 					>
 						<Image
 							src={
 								object.files?.avatar?.location.secure_location ||
-								`https://source.unsplash.com/random/415x207`
+								`https://source.unsplash.com/random/213.5x262`
 							}
-							className="card-img-top"
+							className="card-img-top rounded-0"
 							alt={`${object.title}'s featured image`}
 							width={imageWidth}
 							height={imageHeight}
+							style={{
+								width: "213.5px",
+							}}
 						/>
 					</Link>
-					<div className="card-body">
-						<div className="small text-muted">{object.createdAt}</div>
-						<h2 className="card-title">
+					<div className="card-body text-center">
+						<h6 className="card-title">
 							<Link
-								href={`/object/${object._id}/${object?.category?._id}/${object?.category?.slug}/${object.slug}`}
+								href={`/video/index/${object._id}/${object?.category?._id}/${object?.category?.slug}/${object.slug}`}
 							>
 								{object.title}
 							</Link>
-						</h2>
-						<p className="card-text">
-							{typeof object.text === "object" ? (
-								"TEXT IS EITHER ENCRYPTED OR PASSWORD PROTECTED"
-							) : (
-								<ParseHtml text={JSON.stringify(object.text)} />
-							)}
-						</p>
-						<Link
-							href={`/object/${object._id}/${object?.category?._id}/${object?.category?.slug}/${object.slug}`}
-							passHref
-							legacyBehavior
-						>
-							<a className="btn btn-sm btn-secondary">Read more</a>
-						</Link>
+						</h6>
 					</div>
 				</div>
 			</article>

@@ -1,51 +1,46 @@
 import Single from "./single";
 import NumericPagination from "@/layout/numericpagination";
 import NothingFoundAlert from "@/layout/nothingfoundalert";
-import Sidebar from "@/layout/blog/sidebar";
+import Sidebar from "@/layout/video/sidebar";
 
-const List = ({
-	featured = {},
-	objects = [],
-	searchParams = {},
-	categories = [],
-	quotes = [],
-}) => {
+const List = ({ objects = [], searchParams = {}, categories = [] }) => {
 	return (
 		<div className="container">
 			<div className="row">
 				<div className="col-lg-8">
-					{/* Featured list */}
-					{featured?.data?.length > 0 &&
-						featured.data.map((featured) => (
-							<Single key={featured._id} blog={featured} fullWidth={true} />
-						))}
-					{/* Blog list */}
-					<div className="row">
-						{objects?.data?.length > 0 ? (
-							<>
-								{objects.data?.map((blog) => (
+					<div className="card">
+						<div className="card-header">Animes</div>
+						<div className="card-body d-flex flex-wrap p-0 rounded-0">
+							{/* Blog list */}
+							{objects?.data?.length > 0 ? (
+								objects.data?.map((blog) => (
 									<Single key={blog._id} object={blog} />
-								))}
-								<NumericPagination
-									totalPages={
-										objects?.pagination?.totalpages ||
-										Math.ceil(objects?.data?.length / searchParams.limit)
-									}
-									page={searchParams.page}
-									limit={searchParams.limit}
-									keyword={searchParams.keyword}
-									sortby="-createdAt"
-									siblings={1}
-									postType="blog"
+								))
+							) : (
+								<NothingFoundAlert
+									loading={false}
+									classNames="alert-dark w-100 rounded-0 m-0 border-0"
+									text={`Nothing found`}
 								/>
-							</>
-						) : (
-							<NothingFoundAlert />
-						)}
+							)}
+						</div>
+						<hr className="mt-0 mb-0" />
+						<NumericPagination
+							totalPages={
+								objects?.pagination?.totalpages ||
+								Math.ceil(objects?.data?.length / searchParams.limit)
+							}
+							page={searchParams.page}
+							limit={searchParams.limit}
+							keyword={searchParams.keyword}
+							sortby="-createdAt"
+							siblings={1}
+							postType="playlist"
+						/>
 					</div>
 				</div>
 				<div className="col-lg-4 d-none d-sm-none d-md-none d-lg-block dm-xl-block">
-					<Sidebar quotes={quotes} categories={categories} />
+					<Sidebar categories={categories} />
 				</div>
 			</div>
 		</div>

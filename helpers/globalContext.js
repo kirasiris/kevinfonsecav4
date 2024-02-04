@@ -3,6 +3,7 @@ import { useState, createContext, useEffect, useCallback } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { setAuthToken } from "./utilities";
+import { getAuthTokenOnServer } from "./setTokenOnServer";
 
 export const AuthContext = createContext();
 
@@ -74,11 +75,14 @@ export const AuthProvider = ({ children }) => {
 	};
 
 	const token = auth && auth.token ? auth.token : "";
+	const secondarytoken = getAuthTokenOnServer();
 	axios.defaults.baseURL = `${API_URL}/api/v1/`;
 	axios.defaults.headers.common["Content-Type"] = `application/json`;
 	axios.defaults.headers.common["Accept"] = `application/json`;
 	axios.defaults.headers["Authorization"] = `Bearer ${token}`;
-	axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+	axios.defaults.headers.common["Authorization"] = `Bearer ${
+		token ? token : secondarytoken.value
+	}`;
 
 	axios.interceptors.response.use(
 		async (res) => {

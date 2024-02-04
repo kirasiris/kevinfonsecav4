@@ -1,32 +1,5 @@
 "use client";
 import axios from "axios";
-// import { useEffect, useState } from "react";
-
-// export const useScript = (
-// 	name = ``,
-// 	url = ``,
-// 	origin = ``,
-// 	position = `head`,
-// 	async = false
-// ) => {
-// 	const [lib, setLib] = useState({});
-// 	useEffect(() => {
-// 		const placement = document.querySelector(position);
-// 		const script = document.createElement("script");
-
-// 		script.src = url;
-// 		script.referrerPolicy = origin;
-// 		script.async = typeof async === "undefined" ? true : async;
-// 		script.onload = () => setLib({ [name]: window[name] });
-
-// 		placement.appendChild(script);
-
-// 		return () => {
-// 			placement.removeChild(script);
-// 		};
-// 	}, [url]);
-// 	return lib;
-// };
 
 const getCookie = (name) => {
 	if (typeof window !== "undefined") {

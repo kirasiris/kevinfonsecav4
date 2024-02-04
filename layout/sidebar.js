@@ -1,29 +1,52 @@
 "use client";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 const Sidebar = ({ quotes = [], categories = [] }) => {
+	const router = useRouter();
+	const [searchParams, setSearchParams] = useState({
+		keyword: "",
+	});
+
+	const { keyword } = searchParams;
+
+	const searchData = async (e) => {
+		e.preventDefault();
+		router.push(`/blog/search?keyword=${keyword}&page=1&limit=10`);
+	};
+
 	return (
 		<>
 			{/* Search box */}
 			<div className="card mb-4">
 				<div className="card-header">Search</div>
 				<div className="card-body">
-					<div className="input-group">
-						<input
-							className="form-control"
-							type="text"
-							placeholder="Enter search term..."
-							aria-label="Enter search term..."
-							aria-describedby="button-search"
-						/>
-						<button
-							className="btn btn-secondary"
-							id="button-search"
-							type="button"
-						>
-							Go!
-						</button>
-					</div>
+					<form onSubmit={searchData}>
+						<div className="input-group">
+							<input
+								id="keyword"
+								name="keyword"
+								value={keyword}
+								onChange={(e) => {
+									setSearchParams({
+										...searchParams,
+										keyword: e.target.value,
+									});
+								}}
+								type="text"
+								className="form-control"
+								placeholder="Enter search term..."
+							/>
+							<button
+								type="submit"
+								className="btn btn-secondary"
+								disabled={keyword.length > 0 ? !true : !false}
+							>
+								Go!
+							</button>
+						</div>
+					</form>
 				</div>
 			</div>
 			{/* Random quote box */}

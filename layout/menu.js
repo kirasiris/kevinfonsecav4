@@ -4,6 +4,7 @@ import Link from "next/link";
 import Navbar from "react-bootstrap/Navbar";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
+import { deleteAuthTokenOnServer } from "@/helpers/setTokenOnServer";
 
 const Menu = ({
 	auth = {},
@@ -15,9 +16,16 @@ const Menu = ({
 		<Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
 			<Container>
 				<div className="navbar-header">
-					<Navbar.Toggle aria-controls="responsive-navbar-nav" />
+					<Navbar.Toggle
+						aria-controls="responsive-navbar-nav"
+						className="me-1"
+					/>
 					<Link href={canonical} passHref legacyBehavior>
-						<a className="navbar-brand" target="_blank">
+						<a
+							className="navbar-brand"
+							target="_blank"
+							style={{ verticalAlign: "middle" }}
+						>
 							<Image
 								alt={title}
 								src={logo}
@@ -94,22 +102,45 @@ const Menu = ({
 							</Link>
 						</li>
 					</Nav>
-					{auth?.data?.isOnline ? (
-						<button type="button" className="btn btn-light">
-							Logout {auth.data.username}
-						</button>
-					) : (
-						<Link
-							href={{
-								pathname: `auth/login`,
-								query: {},
-							}}
-							passHref
-							legacyBehavior
-						>
-							<a className="nav-link">Log In</a>
-						</Link>
-					)}
+					<Nav as="ul">
+						{auth?.data?.isOnline ? (
+							<>
+								<li className="nav-item">
+									<Link
+										href={{
+											pathname: `/profile/${auth?.data?._id}/${auth?.data?.username}`,
+											query: {},
+										}}
+										passHref
+										legacyBehavior
+									>
+										<a className="nav-link" aria-current="page">
+											{auth.data.username}
+										</a>
+									</Link>
+								</li>
+								<li className="nav-item">
+									<button
+										className="btn btn-link"
+										onClick={() => deleteAuthTokenOnServer("xAuthToken")}
+									>
+										Log Out
+									</button>
+								</li>
+							</>
+						) : (
+							<Link
+								href={{
+									pathname: `auth/login`,
+									query: {},
+								}}
+								passHref
+								legacyBehavior
+							>
+								<a className="nav-link">Log In</a>
+							</Link>
+						)}
+					</Nav>
 				</Navbar.Collapse>
 			</Container>
 		</Navbar>

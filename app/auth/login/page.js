@@ -64,7 +64,7 @@ const Login = ({}) => {
 
 		// Else continue
 		setAuthToken(res?.data?.token);
-		setAuthTokenOnServer(res?.data?.token);
+		await setAuthTokenOnServer(res?.data?.token);
 		await loadUser();
 		router.push(`/noadmin`);
 	};
@@ -88,57 +88,61 @@ const Login = ({}) => {
 	return (
 		<div className="container">
 			<div className="row">
-				<form onSubmit={loginAccount}>
-					<label htmlFor="email" className="form-label">
-						Email
-					</label>
-					<input
-						id="email"
-						name="email"
-						value={email}
-						onChange={(e) => {
-							setLoginData({
-								...loginData,
-								email: e.target.value,
-							});
-						}}
-						type="email"
-						className="form-control mb-3"
-						placeholder="john@doe.com"
-					/>
-					<label htmlFor="password" className="form-label">
-						Password
-					</label>
-					<input
-						id="password"
-						name="password"
-						value={password}
-						onChange={(e) => {
-							setLoginData({
-								...loginData,
-								password: e.target.value,
-							});
-						}}
-						type="password"
-						className="form-control mb-3"
-						placeholder="******"
-					/>
-					<br />
-					<button
-						type="submit"
-						className="btn btn-secondary btn-sm float-start"
-						disabled={email.length > 0 && password.length > 0 ? !true : !false}
-					>
-						Submit
-					</button>
-					<button
-						type="button"
-						className="btn btn-secondary btn-sm float-end"
-						onClick={resetForm}
-					>
-						Reset
-					</button>
-				</form>
+				<div className="col-lg-12">
+					<form onSubmit={loginAccount}>
+						<label htmlFor="email" className="form-label">
+							Email
+						</label>
+						<input
+							id="email"
+							name="email"
+							value={email}
+							onChange={(e) => {
+								setLoginData({
+									...loginData,
+									email: e.target.value,
+								});
+							}}
+							type="email"
+							className="form-control mb-3"
+							placeholder="john@doe.com"
+						/>
+						<label htmlFor="password" className="form-label">
+							Password
+						</label>
+						<input
+							id="password"
+							name="password"
+							value={password}
+							onChange={(e) => {
+								setLoginData({
+									...loginData,
+									password: e.target.value,
+								});
+							}}
+							type="password"
+							className="form-control mb-3"
+							placeholder="******"
+						/>
+						<br />
+						<button
+							type="submit"
+							className="btn btn-secondary btn-sm float-start"
+							disabled={
+								email.length > 0 && password.length > 0 ? !true : !false
+							}
+						>
+							Submit
+						</button>
+						<button
+							type="button"
+							className="btn btn-secondary btn-sm float-end"
+							onClick={resetForm}
+						>
+							Reset
+						</button>
+					</form>
+				</div>
 			</div>
 		</div>
 	);

@@ -2,11 +2,19 @@ import { Suspense } from "react";
 import Header from "@/layout/header";
 import Loading from "@/app/blog/loading";
 import ParseHtml from "@/layout/parseHtml";
+// import CommentBox from "@/components/global/commentbox";
+import { fetchurl } from "@/helpers/setTokenOnServer";
+import AuthorBox from "@/components/global/authorbox";
+
+async function getAuthenticatedUser() {
+	const res = await fetchurl(`http://localhost:5000/api/v1/auth/me`);
+	return res.json();
+}
 
 async function getChangelog(params) {
-	const res = await fetch(`http://localhost:5000/api/v1/changelogs${params}`, {
-		cache: "no-store",
-	});
+	const res = await fetchurl(
+		`http://localhost:5000/api/v1/changelogs${params}`
+	);
 
 	if (!res.ok) {
 		// This will activate the closest `error.js` Error Boundary
@@ -17,6 +25,7 @@ async function getChangelog(params) {
 }
 
 const ChangelogRead = async ({ params }) => {
+	const auth = await getAuthenticatedUser();
 	const getChangelogsData = getChangelog(`/${params.id}`);
 
 	const [changelog] = await Promise.all([getChangelogsData]);
@@ -37,6 +46,16 @@ const ChangelogRead = async ({ params }) => {
 							</header>
 							<section className="mb-5">
 								<ParseHtml text={changelog?.data?.text} />
+								<AuthorBox author={changelog?.data?.user} />
+								{/* <CommentBox
+									auth={auth.data}
+									user={changelog?.data?.user}
+									postId={changelog?.data?._id}
+									secondPostId={changelog?.data?._id}
+									isVisible={changelog?.data?.commented}
+									postType="changelog"
+									onModel="Changelog"
+								/> */}
 							</section>
 						</article>
 					</div>

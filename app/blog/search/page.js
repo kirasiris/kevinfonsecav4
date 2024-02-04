@@ -53,8 +53,8 @@ const BlogSearchIndex = async ({ params, searchParams }) => {
 	return (
 		<>
 			<Header
-				title="Welcome to my Blog"
-				description="Learn everything about my programming and life journey"
+				title={`${searchParams.keyword}`}
+				description="Search results..."
 			/>
 			<List
 				featured={featured}

@@ -33,6 +33,7 @@ const List = ({
 									}
 									page={searchParams.page}
 									limit={searchParams.limit}
+									keyword={searchParams.keyword}
 									sortby="-createdAt"
 									siblings={1}
 									postType="blog"

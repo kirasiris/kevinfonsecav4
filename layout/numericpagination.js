@@ -6,12 +6,16 @@ const NumericPagination = ({
 	totalPages,
 	page,
 	limit,
+	keyword,
 	sortby,
 	siblings,
 	postType = "",
 }) => {
-	const comesPostType = postType !== "" ? `&postType=${postType}` : "";
-	const newParams = `&sort=${sortby}${comesPostType}`;
+	const comesPostType =
+		postType !== "" && postType !== undefined ? `&postType=${postType}` : "";
+	const myKeyword =
+		keyword !== "" && keyword !== undefined ? `&keyword=${keyword}` : "";
+	const newParams = `&sort=${sortby}${comesPostType}${myKeyword}`;
 	let pageNo;
 	if (page <= totalPages) {
 		pageNo = page;

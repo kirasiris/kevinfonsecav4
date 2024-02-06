@@ -29,7 +29,9 @@ const Single = ({
 							passHref
 							legacyBehavior
 						>
-							<a className="blog-item__title-link">{object.title}</a>
+							<a className="blog-item__title-link">
+								{object.title}({object.onairtype.toUpperCase()})
+							</a>
 						</Link>
 					</h1>
 					<div className="blog-item__meta">

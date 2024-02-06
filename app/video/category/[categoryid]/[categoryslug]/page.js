@@ -20,7 +20,7 @@ const PlaylistIndex = async ({ params, searchParams }) => {
 	const decrypt = searchParams.decrypt === "true" ? "&decrypt=true" : "";
 
 	const getPlaylistsData = getPlaylists(
-		`?page=${page}&limit=${limit}&sort=-createdAt&playlistType=video&status=published&keyword=${searchParams.keyword}${decrypt}`
+		`?page=${page}&limit=${limit}&sort=-createdAt&playlistType=video&status=published&category=${params.categoryid}${decrypt}`
 	);
 
 	const getCategoriesData = getCategories(`?categoryType=playlist`);
@@ -33,8 +33,8 @@ const PlaylistIndex = async ({ params, searchParams }) => {
 	return (
 		<>
 			<Header
-				title={`${searchParams.keyword}`}
-				description="Search results..."
+				title={`Welcome to my Movies`}
+				description="Here you will see everything I'm currently watching!"
 			/>
 			<List
 				objects={playlists}

@@ -26,7 +26,7 @@ const AdminLessonsIndex = () => {
 	const [limit] = useState(10);
 	const [sortby] = useState(`-createdAt`);
 	const [params, setParams] = useState(
-		`?page=${page}&limit=${limit}&sort=${sortby}&onModel=Playlist`
+		`?page=${page}&limit=${limit}&sort=${sortby}&onModel=Course`
 	);
 	const [keyword, setKeyword] = useState("");
 	const [list, setList] = useState([]);

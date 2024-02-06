@@ -75,7 +75,7 @@ const CreateLesson = () => {
 	};
 
 	useEffect(() => {
-		fetchCourses(`?page=1&limit=10&sort=-createdAt`);
+		fetchCourses(`?page=1&sort=-createdAt`);
 	}, []);
 
 	const [lessonData, setLessonData] = useState({

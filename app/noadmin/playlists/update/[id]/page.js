@@ -53,6 +53,8 @@ const UpdatePlaylist = () => {
 		category: undefined,
 		commented: false,
 		password: ``,
+		onairstatus: `finished`,
+		onairtype: `tv`,
 		status: `draft`,
 	});
 	const {
@@ -63,6 +65,8 @@ const UpdatePlaylist = () => {
 		category,
 		commented,
 		password,
+		onairstatus,
+		onairtype,
 		status,
 	} = playlistData;
 
@@ -86,6 +90,8 @@ const UpdatePlaylist = () => {
 					category: res?.data?.data?.category,
 					commented: res?.data?.data?.commented,
 					// password: res?.data?.data?.password,
+					onairstatus: res?.data?.data?.onairstatus,
+					onairtype: res?.data?.data?.onairtype,
 					status: res?.data?.data?.status,
 				});
 				setLoading(false);
@@ -156,7 +162,8 @@ const UpdatePlaylist = () => {
 			category: undefined,
 			commented: false,
 			password: ``,
-			tags: [],
+			onairstatus: `finished`,
+			onairtype: `tv`,
 			status: `draft`,
 		});
 	};
@@ -199,6 +206,51 @@ const UpdatePlaylist = () => {
 					onModel="Playlist"
 					advancedTextEditor={true}
 				/>
+				<div className="row">
+					<div className="col">
+						<label htmlFor="onairstatus" className="form-label">
+							On Air Status
+						</label>
+						<select
+							id="onairstatus"
+							name="onairstatus"
+							value={onairstatus}
+							onChange={(e) => {
+								setObjectData({
+									...objectData,
+									onairstatus: e.target.value,
+								});
+							}}
+							className="form-control"
+						>
+							<option value={`onair`}>On Air</option>
+							<option value={`finished`}>Finished</option>
+							<option value={`soon`}>Soon</option>
+						</select>
+					</div>
+					<div className="col">
+						<label htmlFor="onairtype" className="form-label">
+							On Air Type
+						</label>
+						<select
+							id="onairtype"
+							name="onairtype"
+							value={onairtype}
+							onChange={(e) => {
+								setObjectData({
+									...objectData,
+									onairtype: e.target.value,
+								});
+							}}
+							className="form-control"
+						>
+							<option value={`tv`}>TV</option>
+							<option value={`movie`}>Movie</option>
+							<option value={`special`}>Special</option>
+							<option value={`ova`}>Ova</option>
+						</select>
+					</div>
+				</div>
 			</div>
 			<div className="col-lg-3">
 				<AdminSidebar

@@ -172,24 +172,28 @@ const AdminSidebar = ({
 				<option value={true}>Yes</option>
 				<option value={false}>No</option>
 			</select>
-			<label htmlFor="embedding" className="form-label">
-				Embedding
-			</label>
-			<select
-				id="embedding"
-				name="embedding"
-				value={embedding}
-				onChange={(e) => {
-					setObjectData({
-						...objectData,
-						embedding: e.target.value,
-					});
-				}}
-				className="form-control"
-			>
-				<option value={true}>Yes</option>
-				<option value={false}>No</option>
-			</select>
+			{embedding && (
+				<>
+					<label htmlFor="embedding" className="form-label">
+						Embedding
+					</label>
+					<select
+						id="embedding"
+						name="embedding"
+						value={embedding}
+						onChange={(e) => {
+							setObjectData({
+								...objectData,
+								embedding: e.target.value,
+							});
+						}}
+						className="form-control"
+					>
+						<option value={true}>Yes</option>
+						<option value={false}>No</option>
+					</select>
+				</>
+			)}
 			{/* HERE GOES THE CATEGORIES SELECT */}
 			{displayCategoryField && (
 				<>

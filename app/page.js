@@ -4,35 +4,40 @@ import SingleBlog from "@/components/blog/single";
 import SingleTheme from "@/components/theme/single";
 import NewsletterForm from "@/layout/newsletter";
 import ErrorPage from "@/layout/errorpage";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 
 async function getSetting(params) {
-	const res = await fetch(`http://localhost:5000/api/v1/settings/${params}`, {
-		cache: "no-store",
-	});
+	const res = await fetchurl(
+		`http://localhost:5000/api/v1/settings/${params}`,
+		"GET"
+	);
 
 	return res.json();
 }
 
 async function getNewsletters(params) {
-	const res = await fetch(`http://localhost:5000/api/v1/newsletters${params}`, {
-		cache: "no-store",
-	});
+	const res = await fetchurl(
+		`http://localhost:5000/api/v1/newsletters${params}`,
+		"GET"
+	);
 
 	return res.json();
 }
 
 async function getBlogs(params) {
-	const res = await fetch(`http://localhost:5000/api/v1/blogs${params}`, {
-		cache: "no-store",
-	});
+	const res = await fetchurl(
+		`http://localhost:5000/api/v1/blogs${params}`,
+		"GET"
+	);
 
 	return res.json();
 }
 
 async function getThemes(params) {
-	const res = await fetch(`http://localhost:5000/api/v1/themes${params}`, {
-		cache: "no-store",
-	});
+	const res = await fetch(
+		`http://localhost:5000/api/v1/themes${params}`,
+		"GET"
+	);
 
 	return res.json();
 }
@@ -92,7 +97,7 @@ const HomeIndex = async () => {
 							{blogs.data.map((blog) => (
 								<SingleBlog
 									key={blog._id}
-									blog={blog}
+									object={blog}
 									imageWidth={`415`}
 									imageHeight={`207`}
 								/>

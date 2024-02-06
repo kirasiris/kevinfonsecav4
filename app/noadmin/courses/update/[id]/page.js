@@ -1,13 +1,13 @@
 "use client";
 import axios from "axios";
-import { useRouter } from "next/navigation";
-import { useContext, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import AdminSidebar from "@/components/admin/adminsidebar";
 import MyTextArea from "@/components/global/mytextarea";
 import AuthContext from "@/helpers/globalContext";
 
-const CreateCourse = () => {
+const UpdateCourse = () => {
 	const { files } = useContext(AuthContext);
 
 	const router = useRouter();
@@ -45,14 +45,72 @@ const CreateCourse = () => {
 		status,
 	} = courseData;
 
-	const addCourse = async (e) => {
+	const [course, setCourse] = useState(null);
+	const [loading, setLoading] = useState(false);
+	const [error, setError] = useState(false);
+
+	const { id } = useParams();
+	const courseId = id;
+
+	useEffect(() => {
+		const fetchCourse = async () => {
+			try {
+				const res = await axios.get(`/courses/${courseId}`);
+				setCourse(res?.data?.data);
+				setCourseData({
+					avatar: res?.data?.data?.files?.avatar,
+					title: res?.data?.data?.title,
+					sub_title: res?.data?.data?.sub_title,
+					text: res?.data?.data?.text,
+					price: res?.data?.data?.price,
+					featured: res?.data?.data?.featured,
+					embedding: res?.data?.data?.embedding,
+					category: res?.data?.data?.category,
+					sub_category: res?.data?.data?.sub_category,
+					isFree: res?.data?.data?.isFree.toString(),
+					language: res?.data?.data?.language,
+					difficulty: res?.data?.data?.difficulty,
+					commented: res?.data?.data?.commented,
+					// password: res?.data?.data?.password,
+					status: res?.data?.data?.status,
+				});
+				setLoading(false);
+			} catch (err) {
+				console.log(err);
+				// const error = err.response.data.message;
+				const error = err?.response?.data?.error?.errors;
+				const errors = err?.response?.data?.errors;
+
+				if (error) {
+					// dispatch(setAlert(error, 'danger'));
+					error &&
+						Object.entries(error).map(([, value]) =>
+							toast.error(value.message)
+						);
+				}
+
+				if (errors) {
+					errors.forEach((error) => toast.error(error.msg));
+				}
+
+				toast.error(err?.response?.statusText);
+				return {
+					msg: err?.response?.statusText,
+					status: err?.response?.status,
+				};
+			}
+		};
+		fetchCourse();
+	}, [courseId]);
+
+	const upgradeCourse = async (e) => {
 		e.preventDefault();
 		try {
-			console.log(courseData);
-			await axios.post(`/courses`, {
+			await axios.put(`/courses/${blog._id}`, {
 				...courseData,
 				files: { avatar: files?.selected?._id },
 			});
+			toast.success(`Item updated`);
 			router.push(`/noadmin/courses`);
 		} catch (err) {
 			console.log(err);
@@ -95,7 +153,7 @@ const CreateCourse = () => {
 	};
 
 	return (
-		<form className="row" onSubmit={addCourse}>
+		<form className="row" onSubmit={upgradeCourse}>
 			<div className="col">
 				<label htmlFor="blog-title" className="form-label">
 					Title
@@ -461,4 +519,4 @@ const CreateCourse = () => {
 	);
 };
 
-export default CreateCourse;
+export default UpdateCourse;

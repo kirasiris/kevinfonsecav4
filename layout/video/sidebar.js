@@ -64,7 +64,7 @@ const Sidebar = ({ categories = [] }) => {
 									>
 										<Link
 											href={{
-												pathname: `/blog/category/${category._id}/${category.slug}`,
+												pathname: `/video/category/${category._id}/${category.slug}`,
 												query: {
 													page: 1,
 													limit: 10,
@@ -90,7 +90,7 @@ const Sidebar = ({ categories = [] }) => {
 													>
 														<Link
 															href={{
-																pathname: `/blog/category/${childC._id}/${childC.slug}`,
+																pathname: `/video/category/${childC._id}/${childC.slug}`,
 																query: {
 																	page: 1,
 																	limit: 10,

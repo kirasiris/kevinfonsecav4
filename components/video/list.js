@@ -13,8 +13,8 @@ const List = ({ objects = [], searchParams = {}, categories = [] }) => {
 						<div className="card-body d-flex flex-wrap p-0 rounded-0">
 							{/* Blog list */}
 							{objects?.data?.length > 0 ? (
-								objects.data?.map((blog) => (
-									<Single key={blog._id} object={blog} />
+								objects.data?.map((video) => (
+									<Single key={video._id} object={video} />
 								))
 							) : (
 								<NothingFoundAlert

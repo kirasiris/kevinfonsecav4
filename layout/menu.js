@@ -89,7 +89,7 @@ const Menu = ({
 						) : (
 							<Link
 								href={{
-									pathname: `auth/login`,
+									pathname: `/auth/login`,
 									query: {},
 								}}
 								passHref

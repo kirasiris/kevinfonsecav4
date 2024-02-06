@@ -222,7 +222,7 @@ const CreateVideo = () => {
 				>
 					{playlists.map((playlist) => (
 						<option key={playlist._id} value={playlist._id}>
-							{playlist.title}
+							{playlist.title} - {playlist.onairtype.toUpperCase()}
 						</option>
 					))}
 				</select>

@@ -101,9 +101,9 @@ const VideoMain = async ({ params, searchParams }) => {
 								priority
 							/>
 						</figure>
-						{playlist.data.onair && (
-							<button className="btn btn-success w-100">On Air</button>
-						)}
+						<button className="btn btn-success w-100">
+							{playlist?.data?.onairstatus.toUpperCase()}
+						</button>
 					</div>
 				</div>
 			</div>

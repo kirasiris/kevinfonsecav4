@@ -80,7 +80,7 @@ const CreateVideo = () => {
 	}, []);
 
 	const [videoData, setVideoData] = useState({
-		playlist: "",
+		resourceId: 0,
 		title: `Untitled`,
 		avatar: files?.selected?._id,
 		text: `No description`,
@@ -91,8 +91,6 @@ const CreateVideo = () => {
 		password: ``,
 		status: `draft`,
 		cast: [auth?.user?._id],
-		video_url: ``,
-		free_preview: false,
 		language: "english",
 		captionCert: 1,
 		recordingDate: new Date(),
@@ -100,7 +98,7 @@ const CreateVideo = () => {
 		license: 0,
 	});
 	const {
-		playlist,
+		resourceId,
 		title,
 		avatar,
 		text,
@@ -111,8 +109,6 @@ const CreateVideo = () => {
 		password,
 		status,
 		cast,
-		video_url,
-		free_preview,
 		language,
 		captionCert,
 		recordingDate,
@@ -152,7 +148,7 @@ const CreateVideo = () => {
 
 	const resetForm = () => {
 		setVideoData({
-			playlist: "",
+			resourceId: 0,
 			title: `Untitled`,
 			avatar: files?.selected?._id,
 			text: `No description`,
@@ -163,8 +159,6 @@ const CreateVideo = () => {
 			password: ``,
 			status: `draft`,
 			cast: [auth?.user?._id],
-			video_url: ``,
-			free_preview: false,
 			language: "english",
 			captionCert: 1,
 			recordingDate: new Date(),
@@ -205,17 +199,17 @@ const CreateVideo = () => {
 					onModel="video"
 					advancedTextEditor={true}
 				/>
-				<label htmlFor="playlist" className="form-label">
+				<label htmlFor="resourceId" className="form-label">
 					Playlist
 				</label>
 				<select
-					id="playlist"
-					name="playlist"
-					value={playlist}
+					id="resourceId"
+					name="resourceId"
+					value={resourceId}
 					onChange={(e) => {
 						setVideoData({
 							...videoData,
-							playlist: e.target.value,
+							resourceId: e.target.value,
 						});
 					}}
 					className="form-control"

@@ -331,6 +331,7 @@ const MyTextArea = ({
 			}}
 			className="form-control"
 			defaultValue={value}
+			rows="5"
 		/>
 	);
 };

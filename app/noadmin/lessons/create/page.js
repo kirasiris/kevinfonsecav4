@@ -79,9 +79,8 @@ const CreateLesson = () => {
 	}, []);
 
 	const [lessonData, setLessonData] = useState({
-		course: "",
+		resourceId: 0,
 		title: `Untitled`,
-		avatar: files?.selected?._id,
 		text: `No description`,
 		featured: false,
 		commented: false,
@@ -89,17 +88,13 @@ const CreateLesson = () => {
 		category: undefined,
 		password: ``,
 		status: `draft`,
-		cast: [auth?.user?._id],
 		video_url: ``,
-		free_preview: ``,
+		free_preview: false,
 		language: "english",
-		captionCert: undefined,
-		recordingDate: ``,
-		address: ``,
-		license: undefined,
+		duration: 0,
 	});
 	const {
-		course,
+		resourceId,
 		title,
 		avatar,
 		text,
@@ -109,14 +104,10 @@ const CreateLesson = () => {
 		category,
 		password,
 		status,
-		cast,
 		video_url,
 		free_preview,
 		language,
-		captionCert,
-		recordingDate,
-		address,
-		license,
+		duration,
 	} = lessonData;
 
 	const addLesson = async (e) => {
@@ -151,9 +142,8 @@ const CreateLesson = () => {
 
 	const resetForm = () => {
 		setLessonData({
-			course: "",
+			resourceId: 0,
 			title: `Untitled`,
-			avatar: files?.selected?._id,
 			text: `No description`,
 			featured: false,
 			commented: false,
@@ -161,14 +151,10 @@ const CreateLesson = () => {
 			category: undefined,
 			password: ``,
 			status: `draft`,
-			cast: [auth?.user?._id],
 			video_url: ``,
-			free_preview: ``,
+			free_preview: false,
 			language: "english",
-			captionCert: undefined,
-			recordingDate: ``,
-			address: ``,
-			license: undefined,
+			duration: 0,
 		});
 	};
 
@@ -202,19 +188,19 @@ const CreateLesson = () => {
 					objectData={lessonData}
 					setObjectData={setLessonData}
 					onModel="video"
-					advancedTextEditor={true}
+					advancedTextEditor={false}
 				/>
-				<label htmlFor="course" className="form-label">
+				<label htmlFor="resourceId" className="form-label">
 					Course
 				</label>
 				<select
-					id="course"
-					name="course"
-					value={course}
+					id="resourceId"
+					name="resourceId"
+					value={resourceId}
 					onChange={(e) => {
 						setLessonData({
 							...lessonData,
-							course: e.target.value,
+							resourceId: e.target.value,
 						});
 					}}
 					className="form-control"
@@ -228,6 +214,8 @@ const CreateLesson = () => {
 			</div>
 			<div className="col-lg-3">
 				<AdminSidebar
+					displayCategoryField={false}
+					displayAvatar={true}
 					avatar={files?.selected?._id}
 					status={status}
 					fullWidth={false}
@@ -241,7 +229,7 @@ const CreateLesson = () => {
 					objectData={lessonData}
 					setObjectData={setLessonData}
 					multipleFiles={false}
-					onModel={"Video"}
+					onModel={"Lesson"}
 				/>
 				<br />
 				<button

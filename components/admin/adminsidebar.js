@@ -38,19 +38,34 @@ const AdminSidebar = ({
 					>
 						Featured Image
 					</button>
-					<Image
-						src={
-							files?.selected?.location?.secure_location ||
-							avatar?.location?.secure_location ||
-							"https://static.vecteezy.com/system/resources/previews/005/337/799/original/icon-image-not-found-free-vector.jpg"
-						}
-						alt="xD"
-						width="558"
-						height="558"
-						style={{ maxWidth: "1920px", maxHeight: "1920px" }}
-						onClick={() => setFiles({ ...files, showMediaModal: true })}
-						priority={true}
-					/>
+					{files?.selected?.location?.secure_location.includes(".jpg") &&
+					avatar?.location?.secure_location.includes(".jpg") &&
+					"https://static.vecteezy.com/system/resources/previews/005/337/799/original/icon-image-not-found-free-vector.jpg".includes(
+						".jpg"
+					) ? (
+						<Image
+							src={
+								files?.selected?.location?.secure_location ||
+								avatar?.location?.secure_location ||
+								"https://static.vecteezy.com/system/resources/previews/005/337/799/original/icon-image-not-found-free-vector.jpg"
+							}
+							alt="xD"
+							width="558"
+							height="558"
+							style={{ maxWidth: "1920px", maxHeight: "1920px" }}
+							onClick={() => setFiles({ ...files, showMediaModal: true })}
+							priority={true}
+						/>
+					) : (
+						<video title="" controls>
+							<source
+								src={
+									files?.selected?.location?.secure_location ||
+									avatar?.location?.secure_location
+								}
+							></source>
+						</video>
+					)}
 				</div>
 			)}
 			<label htmlFor="status" className="form-label">

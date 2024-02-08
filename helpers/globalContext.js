@@ -79,7 +79,9 @@ export const AuthProvider = ({ children }) => {
 	axios.defaults.baseURL = `${API_URL}/api/v1/`;
 	axios.defaults.headers.common["Content-Type"] = `application/json`;
 	axios.defaults.headers.common["Accept"] = `application/json`;
-	axios.defaults.headers["Authorization"] = `Bearer ${token}`;
+	axios.defaults.headers["Authorization"] = `Bearer ${
+		token ? token : secondarytoken.value
+	}`;
 	axios.defaults.headers.common["Authorization"] = `Bearer ${
 		token ? token : secondarytoken.value
 	}`;

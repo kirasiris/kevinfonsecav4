@@ -19,7 +19,16 @@ const Single = ({
 	const imgObj = ({ object }) => {
 		return (
 			<div className="col-auto mb-3 text-center">
-				<figure title={object.title}>
+				<figure
+					title={object.title}
+					onClick={() => {
+						setObjects({
+							...objects,
+							selected: object,
+							showMediaModal: false,
+						});
+					}}
+				>
 					<Image
 						src={
 							object?.location?.secure_location ||
@@ -28,13 +37,6 @@ const Single = ({
 						alt={object.title}
 						width={`184`}
 						height={`184`}
-						onClick={() => {
-							setObjects({
-								...objects,
-								selected: object,
-								showMediaModal: false,
-							});
-						}}
 					/>
 				</figure>
 				<div className="btn-group">
@@ -68,7 +70,16 @@ const Single = ({
 	const pdfObj = ({ object }) => {
 		return (
 			<div className="col-auto mb-3 text-center">
-				<figure title={object.title}>
+				<figure
+					title={object.title}
+					onClick={() => {
+						setObjects({
+							...objects,
+							selected: object,
+							showMediaModal: false,
+						});
+					}}
+				>
 					<FaFilePdf style={{ fontSize: "184px" }} />
 				</figure>
 				<div className="btn-group">
@@ -100,7 +111,16 @@ const Single = ({
 	const vidObj = ({ object }) => {
 		return (
 			<div className="col-auto mb-3 text-center">
-				<figure title={object.title}>
+				<figure
+					title={object.title}
+					onClick={() => {
+						setObjects({
+							...objects,
+							selected: object,
+							showMediaModal: false,
+						});
+					}}
+				>
 					<FaFileVideo style={{ fontSize: "184px" }} />
 				</figure>
 				<div className="btn-group">

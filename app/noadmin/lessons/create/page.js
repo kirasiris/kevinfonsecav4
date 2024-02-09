@@ -12,40 +12,7 @@ const CreateLesson = () => {
 
 	const router = useRouter();
 
-	const [categories, setCategories] = useState([]);
-
 	const [courses, setCourses] = useState([]);
-
-	const fetchCategories = async (params = "") => {
-		try {
-			const res = await axios.get(`/categories${params}`);
-			setCategories(res?.data?.data);
-		} catch (err) {
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
-
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return {
-				msg: err?.response?.statusText,
-				status: err?.response?.status,
-			};
-		}
-	};
-
-	useEffect(() => {
-		fetchCategories(`?categoryType=lesson`);
-	}, []);
 
 	const fetchCourses = async (params = "") => {
 		try {
@@ -88,15 +55,12 @@ const CreateLesson = () => {
 		category: undefined,
 		password: ``,
 		status: `draft`,
-		video_url: ``,
 		free_preview: false,
-		language: "english",
 		duration: 0,
 	});
 	const {
 		resourceId,
 		title,
-		avatar,
 		text,
 		featured,
 		commented,
@@ -104,9 +68,7 @@ const CreateLesson = () => {
 		category,
 		password,
 		status,
-		video_url,
 		free_preview,
-		language,
 		duration,
 	} = lessonData;
 
@@ -115,7 +77,7 @@ const CreateLesson = () => {
 		try {
 			await axios.post(`/videos`, {
 				...lessonData,
-				files: { avatar: files?.selected?._id },
+				files: { video_url: files?.selected?._id },
 				onModel: "Course",
 			});
 			router.push(`/noadmin/lessons`);
@@ -151,9 +113,7 @@ const CreateLesson = () => {
 			category: undefined,
 			password: ``,
 			status: `draft`,
-			video_url: ``,
 			free_preview: false,
-			language: "english",
 			duration: 0,
 		});
 	};
@@ -224,8 +184,8 @@ const CreateLesson = () => {
 					commented={commented}
 					embedding={embedding}
 					github={false}
-					category={category}
-					categories={categories}
+					category={undefined}
+					categories={[]}
 					objectData={lessonData}
 					setObjectData={setLessonData}
 					multipleFiles={false}

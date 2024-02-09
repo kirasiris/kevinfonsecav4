@@ -52,7 +52,9 @@ const ReadCourse = () => {
 
 		const fetchLessons = async (id) => {
 			try {
-				const res = await axios.get(`/videos?resourceId=${courseId}`);
+				const res = await axios.get(
+					`/videos?resourceId=${courseId}&sort=-orderingNumber`
+				);
 				setLessons(res?.data?.data);
 			} catch (err) {
 				console.log(err);
@@ -83,13 +85,6 @@ const ReadCourse = () => {
 		fetchLessons();
 	}, [courseId]);
 
-	const randomArray = [
-		{
-			_id: 0,
-			title: "Hola",
-		},
-	];
-
 	return loading || course === null || course === undefined ? (
 		error ? (
 			<>Not found</>
@@ -107,24 +102,30 @@ const ReadCourse = () => {
 				</div>
 				<div className="card">
 					<div className="card-header">Episodes</div>
-					<ul
-						className="list-group list-group-flush overflow-x-hidden"
-						style={{ maxHeight: "1000px" }}
-					>
-						{Array(100)
-							.fill(randomArray)
-							.map((i, index) => (
-								<li key={index} className="list-group-item">
+					{lessons?.length > 0 ? (
+						<ul
+							className="list-group list-group-flush overflow-x-hidden"
+							style={{ maxHeight: "1000px" }}
+						>
+							{lessons.map((lesson, index) => (
+								<li key={lesson._id} className="list-group-item">
 									<Link
-										href={`/video/${index}/hola-${index}`}
+										href={`/video/${lesson._id}/${lesson.slug}`}
 										passHref
 										legacyBehavior
 									>
-										<a>{index}</a>
+										<a target="_blank">
+											{index} - {lesson.title}
+										</a>
 									</Link>
 								</li>
 							))}
-					</ul>
+						</ul>
+					) : (
+						<div className="alert alert-danger rounded-0  m-0 border-0">
+							Nothing found
+						</div>
+					)}
 				</div>
 				<hr />
 				{/* <CommentBox

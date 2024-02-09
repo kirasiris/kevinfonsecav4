@@ -43,28 +43,31 @@ const AdminSidebar = ({
 					"https://static.vecteezy.com/system/resources/previews/005/337/799/original/icon-image-not-found-free-vector.jpg".includes(
 						".jpg"
 					) ? (
-						<Image
-							src={
-								files?.selected?.location?.secure_location ||
-								avatar?.location?.secure_location ||
-								"https://static.vecteezy.com/system/resources/previews/005/337/799/original/icon-image-not-found-free-vector.jpg"
-							}
-							alt="xD"
-							width="558"
-							height="558"
-							style={{ maxWidth: "1920px", maxHeight: "1920px" }}
-							onClick={() => setFiles({ ...files, showMediaModal: true })}
-							priority={true}
-						/>
-					) : (
-						<video title="" controls>
-							<source
+						<figure>
+							<Image
 								src={
 									files?.selected?.location?.secure_location ||
-									avatar?.location?.secure_location
+									avatar?.location?.secure_location ||
+									"https://static.vecteezy.com/system/resources/previews/005/337/799/original/icon-image-not-found-free-vector.jpg"
 								}
-							></source>
-						</video>
+								alt="xD"
+								width="558"
+								height="558"
+								style={{ maxWidth: "1920px", maxHeight: "1920px" }}
+								priority={true}
+							/>
+						</figure>
+					) : (
+						<figure>
+							<video title="" controls style={{ maxWidth: "100%" }}>
+								<source
+									src={
+										files?.selected?.location?.secure_location ||
+										avatar?.location?.secure_location
+									}
+								></source>
+							</video>
+						</figure>
 					)}
 				</div>
 			)}

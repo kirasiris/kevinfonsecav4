@@ -27,8 +27,10 @@ async function getCourse(params) {
 	return res.json();
 }
 
-async function getCourseMaterial(params) {
-	const res = await fetchurl(`http://localhost:5000/api/v1/videos${params}`);
+async function getCourseLessons(params) {
+	const res = await fetchurl(
+		`http://localhost:5000/api/v1/videos${params}&sort=-orderingNumber`
+	);
 
 	return res.json();
 }
@@ -37,21 +39,14 @@ const CourseRead = async ({ params, searchParams }) => {
 	const auth = await getAuthenticatedUser();
 
 	const getCoursesData = getCourse(`/${params.id}`);
-	const getCourseMaterialsData = getCourseMaterial(
+	const getCourseLessonsData = getCourseLessons(
 		`?resourceId=${params.id}&onModel=Course`
 	);
 
-	const [course, materials] = await Promise.all([
+	const [course, lessons] = await Promise.all([
 		getCoursesData,
-		getCourseMaterialsData,
+		getCourseLessonsData,
 	]);
-
-	const randomArray = [
-		{
-			_id: 0,
-			title: "Hola",
-		},
-	];
 
 	return (
 		<Suspense fallback={<Loading />}>
@@ -69,24 +64,30 @@ const CourseRead = async ({ params, searchParams }) => {
 							</div>
 							<div className="card">
 								<div className="card-header">Episodes</div>
-								<ul
-									className="list-group list-group-flush overflow-x-hidden"
-									style={{ maxHeight: "1000px" }}
-								>
-									{Array(100)
-										.fill(randomArray)
-										.map((i, index) => (
-											<li key={index} className="list-group-item">
+								{lessons?.data?.length > 0 ? (
+									<ul
+										className="list-group list-group-flush overflow-x-hidden"
+										style={{ maxHeight: "1000px" }}
+									>
+										{lessons.data.map((lesson, index) => (
+											<li key={lesson._id} className="list-group-item">
 												<Link
-													href={`/video/${index}/hola-${index}`}
+													href={`/video/${lesson._id}/${lesson.slug}`}
 													passHref
 													legacyBehavior
 												>
-													<a>{index}</a>
+													<a>
+														{index} - {lesson.title}
+													</a>
 												</Link>
 											</li>
 										))}
-								</ul>
+									</ul>
+								) : (
+									<div className="alert alert-danger rounded-0  m-0 border-0">
+										Nothing found
+									</div>
+								)}
 							</div>
 							<hr />
 							{/* <CommentBox

@@ -53,7 +53,7 @@ const ReadCourse = () => {
 		const fetchLessons = async (id) => {
 			try {
 				const res = await axios.get(
-					`/videos?resourceId=${courseId}&sort=-orderingNumber`
+					`/videos?resourceId=${courseId}&sort=orderingNumber`
 				);
 				setLessons(res?.data?.data);
 			} catch (err) {
@@ -85,6 +85,37 @@ const ReadCourse = () => {
 		fetchLessons();
 	}, [courseId]);
 
+	const updateOrder = async (e, index) => {
+		e.dataTransfer.setData("itemIndex", index.toString());
+	};
+
+	const updateDrop = async (e, index) => {
+		const movingItemIndex = e.dataTransfer.getData("itemIndex");
+
+		const targetItemIndex = index;
+
+		let allLessons = lessons;
+
+		let movingItem = allLessons[movingItemIndex];
+		let targetItem = allLessons[targetItemIndex];
+
+		if (movingItem.orderingNumber === targetItem.orderingNumber) {
+			// Switch the ordering numbers of the moving item and the target item
+			const tempOrderingNumber = movingItem.orderingNumber;
+			movingItem.orderingNumber = targetItem.orderingNumber;
+			targetItem.orderingNumber = tempOrderingNumber;
+		}
+
+		allLessons.splice(movingItemIndex, 1); // remove one item from the given index
+		allLessons.splice(targetItemIndex, 0, movingItem); // Push item after target item index
+
+		setLessons([...lessons], allLessons);
+
+		await axios.put(`/videos/${movingItem._id}/updateorder`, {
+			index: targetItemIndex,
+		});
+	};
+
 	return loading || course === null || course === undefined ? (
 		error ? (
 			<>Not found</>
@@ -106,16 +137,24 @@ const ReadCourse = () => {
 						<ul
 							className="list-group list-group-flush overflow-x-hidden"
 							style={{ maxHeight: "1000px" }}
+							onDragOver={(e) => e.preventDefault()}
 						>
 							{lessons.map((lesson, index) => (
-								<li key={lesson._id} className="list-group-item">
+								<li
+									key={lesson._id}
+									className={`list-group-item ${lesson.orderingNumber}`}
+									draggable={true}
+									onDragStart={(e) => updateOrder(e, index)}
+									onDrop={(e) => updateDrop(e, index)}
+								>
 									<Link
 										href={`/video/${lesson._id}/${lesson.slug}`}
 										passHref
 										legacyBehavior
 									>
 										<a target="_blank">
-											{index} - {lesson.title}
+											<span className="badge bg-secondary">{index}</span> -
+											{lesson.title}
 										</a>
 									</Link>
 								</li>

@@ -18,48 +18,52 @@ const AdminCardHeaderMenu = ({
 }) => {
 	return (
 		<div className={`card-header ${classList}`}>
-			<div className="float-start d-flex align-items-center justify-content-end">
-				<Link
-					href={{
-						pathname: allLink,
-						query: { page: 1, limit: 10 },
-					}}
-					passHref
-					legacyBehavior
-				>
-					<a className="btn btn-link btn-sm">
-						{pageText} - ({currentResults} / {totalResults})
-					</a>
-				</Link>
-				<form className="d-none d-md-block d-lg-block d-xl-block d-xxl-block">
-					<input
-						id="keyword"
-						name="keyword"
-						value={keyword}
-						onChange={(e) => {
-							e.preventDefault();
-							setKeyword(e.target.value);
+			<div className="float-start">
+				<div className="d-flex align-items-center">
+					<Link
+						href={{
+							pathname: allLink,
+							query: { page: 1, limit: 10 },
 						}}
-						type="text"
-						className="form-control"
-						placeholder="Search title of object (EXACT MATCH)"
-					/>
-				</form>
+						passHref
+						legacyBehavior
+					>
+						<a className="btn btn-link btn-sm">
+							{pageText} - ({currentResults} / {totalResults})
+						</a>
+					</Link>
+					<form className="d-none d-md-block d-lg-block d-xl-block d-xxl-block">
+						<input
+							id="keyword"
+							name="keyword"
+							value={keyword}
+							onChange={(e) => {
+								e.preventDefault();
+								setKeyword(e.target.value);
+							}}
+							type="text"
+							className="form-control"
+							placeholder="Search title of object (EXACT MATCH)"
+						/>
+					</form>
+				</div>
 			</div>
-			<div className="btn-group float-end my-1">
-				<Link
-					href={{
-						pathname: addLink,
-						query: {},
-					}}
-					passHref
-					legacyBehavior
-				>
-					{/* <a className="btn btn-primary btn-sm">Add new {addLinkText}</a> */}
-					<a className="btn btn-primary btn-sm">Add new</a>
-				</Link>
-				<TrashAllModal action={handleTrashAllFunction} />
-				<DeleteAllModal action={handleDeleteAllFunction} />
+			<div className="float-end my-1">
+				<div className="btn-group">
+					<Link
+						href={{
+							pathname: addLink,
+							query: {},
+						}}
+						passHref
+						legacyBehavior
+					>
+						{/* <a className="btn btn-primary btn-sm">Add new {addLinkText}</a> */}
+						<a className="btn btn-primary btn-sm">Add new</a>
+					</Link>
+					<TrashAllModal action={handleTrashAllFunction} />
+					<DeleteAllModal action={handleDeleteAllFunction} />
+				</div>
 			</div>
 		</div>
 	);

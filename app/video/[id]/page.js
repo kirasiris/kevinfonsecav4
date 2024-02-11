@@ -63,7 +63,7 @@ const VideoRead = async ({ params, searchParams }) => {
 						style={{ marginBottom: "-8px", maxWidth: "100%" }}
 					>
 						<source
-							src={video.data.files.video_url.location.secure_location}
+							src={video.data.files?.video_url?.location?.secure_location}
 							type="video/mp4"
 						/>
 						{/* TRACK FOR CAPTIONS - OPTIONAL */}
@@ -133,9 +133,7 @@ const VideoRead = async ({ params, searchParams }) => {
 									passHref
 									legacyBehavior
 								>
-									<a className="btn btn-dark btn-sm me-1">
-										{console.log(video.data)}
-									</a>
+									<a className="btn btn-dark btn-sm me-1">Category</a>
 								</Link>
 								<hr />
 								<div className="clearfix">

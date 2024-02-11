@@ -20,7 +20,7 @@ const Single = ({ object = {}, imageWidth = "415", imageHeight = "207" }) => {
 					}}
 				>
 					<Link
-						href={`/video/index/${object._id}/${object?.category?._id}/${object?.category?.slug}/${object.slug}`}
+						href={`/video/${object._id}/${object?.category?._id}/${object?.category?.slug}/${object.slug}/index`}
 						passHref
 						legacyBehavior
 					>
@@ -41,7 +41,7 @@ const Single = ({ object = {}, imageWidth = "415", imageHeight = "207" }) => {
 					<div className="card-body text-center">
 						<h6 className="card-title">
 							<Link
-								href={`/video/index/${object._id}/${object?.category?._id}/${object?.category?.slug}/${object.slug}`}
+								href={`/video/${object._id}/${object?.category?._id}/${object?.category?.slug}/${object.slug}/index`}
 							>
 								{object.title}
 							</Link>

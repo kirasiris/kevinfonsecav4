@@ -12,7 +12,7 @@ const Single = ({ object = {}, imageWidth = "415", imageHeight = "207" }) => {
 					<div className="course-image"></div>
 					<div className="course-content"></div>
 					<Link
-						href={`/course/${object._id}/${object?.category}/${object?.sub_category}/${object.slug}`}
+						href={`/course/${object._id}/${object?.category}/${object?.sub_category}/${object.slug}/index`}
 						passHref
 						legacyBehavior
 					>
@@ -31,13 +31,13 @@ const Single = ({ object = {}, imageWidth = "415", imageHeight = "207" }) => {
 						<div className="small text-muted">{object.createdAt}</div>
 						<h2 className="card-title">
 							<Link
-								href={`/course/${object._id}/${object?.category}/${object?.sub_category}/${object.slug}`}
+								href={`/course/${object._id}/${object?.category}/${object?.sub_category}/${object.slug}/index`}
 							>
 								{object.title}
 							</Link>
 						</h2>
 						<Link
-							href={`/course/${object._id}/${object?.category}/${object?.sub_category}/${object.slug}`}
+							href={`/course/${object._id}/${object?.category}/${object?.sub_category}/${object.slug}/index`}
 							passHref
 							legacyBehavior
 						>

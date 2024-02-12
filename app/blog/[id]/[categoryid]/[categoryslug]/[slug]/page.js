@@ -66,10 +66,11 @@ const BlogRead = async ({ params, searchParams }) => {
 					<div className="row">
 						<div className={`col-lg-${blog.data.fullWidth ? "12" : "8"}`}>
 							<article>
-								<header className="mb-4">
+								<div className="mb-3">
 									<h1>{blog.data.title}</h1>
 									<div className="text-muted fst-italic mb-2">
-										Posted on {blog.data.createdAt} by {blog.data.user.username}
+										Posted&nbsp;on&nbsp;{blog.data.createdAt}&nbsp;by&nbsp;
+										{blog.data.user.username}
 									</div>
 									{blog.data.category && (
 										<Link
@@ -88,7 +89,7 @@ const BlogRead = async ({ params, searchParams }) => {
 											</a>
 										</Link>
 									)}
-								</header>
+								</div>
 								<figure className="mb-4">
 									<Image
 										className="img-fluid"
@@ -135,7 +136,7 @@ const BlogRead = async ({ params, searchParams }) => {
 							</article>
 						</div>
 						{blog.data.fullWidth !== true && (
-							<div className="col-lg-4">
+							<div className="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-xs-12 d-none d-sm-none d-md-none d-lg-block dm-xl-block">
 								<Sidebar quotes={quotes} categories={categories} />
 							</div>
 						)}

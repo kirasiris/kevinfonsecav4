@@ -152,7 +152,13 @@ const UpdateCourse = () => {
 		});
 	};
 
-	return (
+	return loading || course === null || course === undefined ? (
+		error ? (
+			<>Not found</>
+		) : (
+			<>Loading</>
+		)
+	) : (
 		<form className="row" onSubmit={upgradeCourse}>
 			<div className="col">
 				<label htmlFor="blog-title" className="form-label">
@@ -199,7 +205,7 @@ const UpdateCourse = () => {
 					objectData={courseData}
 					setObjectData={setCourseData}
 					onModel="Course"
-					advancedTextEditor={true}
+					advancedTextEditor={false}
 				/>
 				<div className="row">
 					<div className="col">

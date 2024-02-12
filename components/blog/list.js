@@ -44,7 +44,7 @@ const List = ({
 						)}
 					</div>
 				</div>
-				<div className="col-lg-4 d-none d-sm-none d-md-none d-lg-block dm-xl-block">
+				<div className="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-xs-12 d-none d-sm-none d-md-none d-lg-block dm-xl-block">
 					<Sidebar quotes={quotes} categories={categories} />
 				</div>
 			</div>

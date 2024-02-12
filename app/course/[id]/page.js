@@ -41,6 +41,11 @@ const CourseRead = async ({ params, searchParams }) => {
 		getCourseLessonsData,
 	]);
 
+	const myParams = {
+		category: course.data.category,
+		subcategory: course.data.sub_category,
+	};
+
 	return (
 		<Suspense fallback={<Loading />}>
 			<Header title={course.data.title} description={course.data.sub_title} />
@@ -48,8 +53,12 @@ const CourseRead = async ({ params, searchParams }) => {
 				object={course}
 				objects={lessons}
 				isAdmin={false}
+				params={myParams}
 				searchParams={searchParams}
-				isIndex={false}
+				isIndex={true}
+				linkToShare={`localhost:3000/course/${course?.data?._id}`}
+				postType="course"
+				onModel="Course"
 			/>
 		</Suspense>
 	);

@@ -7,7 +7,8 @@ const Footer = ({ auth = {}, classes = "", styles = {}, canonical = "" }) => {
 		<footer className={`py-5 mt-4 bg-dark ${classes}`} style={styles}>
 			<div className="container">
 				<p className="m-0 text-center text-white d-flex align-items-center justify-content-center">
-					Made with &#10084; &#38; &#9749; by KEVIN URIEL <ToggleTheme />
+					Made&nbsp;with&nbsp;&#10084;&nbsp;&#38;&nbsp;&#9749;&nbsp;by&nbsp;KEVIN&nbsp;URIEL&nbsp;
+					<ToggleTheme />
 				</p>
 				<hr />
 				<div
@@ -31,7 +32,7 @@ const Footer = ({ auth = {}, classes = "", styles = {}, canonical = "" }) => {
 									passHref
 									legacyBehavior
 								>
-									Generate AI Image
+									Generate&nbsp;AI&nbsp;Image
 								</Link>
 							</li>
 							<li className="nav-item mb-2">
@@ -46,7 +47,7 @@ const Footer = ({ auth = {}, classes = "", styles = {}, canonical = "" }) => {
 									passHref
 									legacyBehavior
 								>
-									Generate AI Code
+									Generate&nbsp;AI&nbsp;Code
 								</Link>
 							</li>
 							<li className="nav-item mb-2">
@@ -96,7 +97,7 @@ const Footer = ({ auth = {}, classes = "", styles = {}, canonical = "" }) => {
 									passHref
 									legacyBehavior
 								>
-									RESTFUL Tester
+									RESTFUL&nbsp;Tester
 								</Link>
 							</li>
 							<li className="nav-item mb-2">
@@ -111,7 +112,7 @@ const Footer = ({ auth = {}, classes = "", styles = {}, canonical = "" }) => {
 									passHref
 									legacyBehavior
 								>
-									OpenGraph Viewer
+									OpenGraph&nbsp;Viewer
 								</Link>
 							</li>
 							<li className="nav-item mb-2">
@@ -126,7 +127,7 @@ const Footer = ({ auth = {}, classes = "", styles = {}, canonical = "" }) => {
 									passHref
 									legacyBehavior
 								>
-									HTML, CSS and JS Viewer
+									HTML,&nbsp;CSS&nbsp;and&nbsp;JS&nbsp;Viewer
 								</Link>
 							</li>
 							<li className="nav-item mb-2">
@@ -141,13 +142,13 @@ const Footer = ({ auth = {}, classes = "", styles = {}, canonical = "" }) => {
 									passHref
 									legacyBehavior
 								>
-									MongoDB Compiler
+									MongoDB&nbsp;Compiler
 								</Link>
 							</li>
 						</ul>
 					</div>
 					<div className="col-lg-3">
-						<h5>Mind to donate?</h5>
+						<h5>Mind&nbsp;to&nbsp;donate?</h5>
 						<ul className="nav flex-column">
 							<li className="nav-item mb-2">
 								<a
@@ -266,12 +267,12 @@ const Footer = ({ auth = {}, classes = "", styles = {}, canonical = "" }) => {
 						<ul className="nav flex-column">
 							<li className="nav-item mb-2">
 								<p>
-									All of the articles found on this website are owned by me.
+									All&nbsp;of&nbsp;the&nbsp;articles&nbsp;found&nbsp;on&nbsp;this&nbsp;website&nbsp;are&nbsp;owned&nbsp;by&nbsp;me.
 								</p>
 								<p>
-									Every opinion, though, say,etc is said by me, myself and I;
-									not a single company or any other individual other than me
-									should be held accountable
+									Every&nbsp;opinion,&nbsp;though,&nbsp;say,etc&nbsp;is&nbsp;said&nbsp;by&nbsp;me,&nbsp;myself&nbsp;and&nbsp;I;
+									not&nbsp;a&nbsp;single&nbsp;company&nbsp;or&nbsp;any&nbsp;other&nbsp;individual&nbsp;other&nbsp;than&nbsp;me
+									should&nbsp;be&nbsp;held&nbsp;accountable
 								</p>
 							</li>
 						</ul>

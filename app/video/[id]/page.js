@@ -1,13 +1,7 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import Image from "next/image";
-// import Plyr from "plyr";
-import Header from "@/layout/header";
-import Sidebar from "@/layout/video/sidebar";
 import Loading from "@/app/blog/loading";
-import ExportModal from "@/components/global/exportmodal";
-import AuthorBox from "@/components/global/authorbox";
-import CommentBox from "@/components/global/commentbox";
 import ParseHtml from "@/layout/parseHtml";
 import ReportModal from "@/components/global/reportmodal";
 import { fetchurl } from "@/helpers/setTokenOnServer";
@@ -18,7 +12,7 @@ async function getAuthenticatedUser() {
 }
 
 async function getVideo(params) {
-	const res = await fetchurl(`http://localhost:5000/api/v1/videos${params}`);
+	const res = await fetchurl(`http://localhost:5000/api/v1/playlists${params}`);
 
 	if (!res.ok) {
 		// This will activate the closest `error.js` Error Boundary
@@ -34,11 +28,6 @@ async function getViews(params) {
 		"PUT"
 	);
 
-	if (!res.ok) {
-		// This will activate the closest `error.js` Error Boundary
-		throw new Error("Failed to fetch data");
-	}
-
 	return res.json();
 }
 
@@ -50,10 +39,9 @@ const VideoRead = async ({ params, searchParams }) => {
 
 	const [video] = await Promise.all([getVideosData]);
 
-	// const player = new Plyr("#player");
 	return (
 		<Suspense fallback={<Loading />}>
-			<div className="bg-secondary border-0 rounded-0 p-0">
+			<div className="bg-secondary border-0 rounded-0 p-0 mb-3">
 				<div className="container">
 					<video
 						id="player"
@@ -63,7 +51,7 @@ const VideoRead = async ({ params, searchParams }) => {
 						style={{ marginBottom: "-8px", maxWidth: "100%" }}
 					>
 						<source
-							src={video.data.files?.video_url?.location?.secure_location}
+							src={video?.data?.files?.video_url?.location?.secure_location}
 							type="video/mp4"
 						/>
 						{/* TRACK FOR CAPTIONS - OPTIONAL */}
@@ -80,7 +68,7 @@ const VideoRead = async ({ params, searchParams }) => {
 			<div className="container">
 				<div className="row">
 					<div className="col-lg-8">
-						<div className="card my-1">
+						<div className="card mb-3">
 							<div className="card-body">
 								<div className="clearfix">
 									<button

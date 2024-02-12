@@ -141,7 +141,7 @@ const CreateCourse = () => {
 					objectData={courseData}
 					setObjectData={setCourseData}
 					onModel="Course"
-					advancedTextEditor={true}
+					advancedTextEditor={false}
 				/>
 				<div className="row">
 					<div className="col">

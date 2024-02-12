@@ -12,7 +12,7 @@ async function getCourses(params) {
 	return res.json();
 }
 
-const CourseIndex = async ({ params, searchParams }) => {
+const CourseCategoryIndex = async ({ params, searchParams }) => {
 	const limit = searchParams.limit || 32;
 	const page = searchParams.page || 1;
 	const decrypt = searchParams.decrypt === "true" ? "&decrypt=true" : "";
@@ -22,7 +22,7 @@ const CourseIndex = async ({ params, searchParams }) => {
 	);
 
 	const getCoursesData = getCourses(
-		`?page=${page}&limit=${limit}&sort=-createdAt&status=published${decrypt}`
+		`?page=${page}&limit=${limit}&sort=-createdAt&status=published&category=${params.category}${decrypt}`
 	);
 
 	const [featured, courses] = await Promise.all([
@@ -41,4 +41,4 @@ const CourseIndex = async ({ params, searchParams }) => {
 	);
 };
 
-export default CourseIndex;
+export default CourseCategoryIndex;

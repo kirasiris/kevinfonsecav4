@@ -35,6 +35,13 @@ const VideoIndex = async ({ params, searchParams }) => {
 		getPlaylistChaptersData,
 	]);
 
+	const myParams = {
+		category: playlist.data.category,
+	};
+
+	console.log(params);
+	console.log(playlist.data);
+
 	return (
 		<Suspense fallback={<Loading />}>
 			<Header title={playlist.data.title} />
@@ -42,7 +49,12 @@ const VideoIndex = async ({ params, searchParams }) => {
 				object={playlist}
 				objects={chapters}
 				isAdmin={false}
+				// params={myParams}
 				searchParams={searchParams}
+				isIndex={true}
+				linkToShare={`localhost:3000/video/${playlist?.data?._id}`}
+				postType="playlist"
+				onModel="Playlist"
 			/>
 		</Suspense>
 	);

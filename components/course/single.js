@@ -7,7 +7,7 @@ import ParseHtml from "@/layout/parseHtml";
 const Single = ({ object = {}, imageWidth = "415", imageHeight = "207" }) => {
 	return (
 		<Suspense fallback={<Loading />}>
-			<article className={`${object._id} col-lg-3`}>
+			<article className={`${object._id} col`}>
 				<div className={`card ${object.featured && "text-bg-primary"} mb-4`}>
 					<div className="course-image"></div>
 					<div className="course-content"></div>

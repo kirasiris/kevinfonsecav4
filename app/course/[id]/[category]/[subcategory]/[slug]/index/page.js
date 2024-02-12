@@ -28,7 +28,7 @@ async function getCourseLessons(params) {
 	return res.json();
 }
 
-const CourseIndex = async ({ params, searchParams }) => {
+const CourseLessonsIndex = async ({ params, searchParams }) => {
 	const auth = await getAuthenticatedUser();
 
 	const getCoursesData = getCourse(`/${params.id}`);
@@ -48,10 +48,15 @@ const CourseIndex = async ({ params, searchParams }) => {
 				object={course}
 				objects={lessons}
 				isAdmin={false}
+				params={params}
 				searchParams={searchParams}
+				isIndex={true}
+				linkToShare={`localhost:3000/course/${course?.data?._id}/${params.category}/${params.subcategory}/${course?.data?.slug}/index`}
+				postType="course"
+				onModel="Course"
 			/>
 		</Suspense>
 	);
 };
 
-export default CourseIndex;
+export default CourseLessonsIndex;

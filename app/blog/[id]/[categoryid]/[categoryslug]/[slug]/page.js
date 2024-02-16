@@ -11,6 +11,7 @@ import ParseHtml from "@/layout/parseHtml";
 import ReportModal from "@/components/global/reportmodal";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import Globalcontent from "@/layout/content";
+import ArticleHeader from "@/components/global/articleheader";
 
 async function getAuthenticatedUser() {
 	const res = await fetchurl(`http://localhost:5000/api/v1/auth/me`);
@@ -69,30 +70,10 @@ const BlogRead = async ({ params, searchParams }) => {
 							containerClasses={`col-lg-${blog.data.fullWidth ? "12" : "8"}`}
 						>
 							<article>
-								<div className="mb-3">
-									<h1>{blog.data.title}</h1>
-									<div className="text-muted fst-italic mb-2">
-										Posted&nbsp;on&nbsp;{blog.data.createdAt}&nbsp;by&nbsp;
-										{blog.data.user.username}
-									</div>
-									{blog.data.category && (
-										<Link
-											href={{
-												pathname: `/blog/category/${blog.data.category._id}/${blog.data.category.slug}`,
-												query: {
-													page: 1,
-													limit: 10,
-												},
-											}}
-											passHref
-											legacyBehavior
-										>
-											<a className="badge bg-secondary text-decoration-none link-light">
-												{blog.data.category.title}
-											</a>
-										</Link>
-									)}
-								</div>
+								<ArticleHeader
+									object={blog}
+									url={`/blog/category/${blog.data.category._id}/${blog.data.category.slug}`}
+								/>
 								<figure className="mb-4">
 									<Image
 										className="img-fluid"

@@ -42,10 +42,14 @@ const ThemeCategoryIndex = async ({ params, searchParams }) => {
 		getCategoriesData,
 	]);
 
+	const capitalizeWord = params.categoryslug;
+
 	return (
 		<>
 			<Header
-				title="Welcome to my Portfolio"
+				title={`Welcome to my ${
+					capitalizeWord.charAt(0).toUpperCase() + capitalizeWord.slice(1)
+				} Portfolios`}
 				description="Check my projects out and tell me what you think!"
 			/>
 			<List

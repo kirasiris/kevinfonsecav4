@@ -92,6 +92,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 						<ul className="list-group list-group-flush">
 							{categories.data
 								?.filter((c) => c.parentCategory === undefined)
+								.filter((c) => c.timesUsed >= 1)
 								.map((category, index) => (
 									<li
 										key={category._id}

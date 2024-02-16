@@ -6,6 +6,7 @@ import ExportModal from "@/components/global/exportmodal";
 import ReportModal from "@/components/global/reportmodal";
 import Globalcontent from "@/layout/content";
 import Globalsidebar from "@/layout/sidebar";
+import ArticleHeader from "../global/articleheader";
 
 const List = ({
 	object,
@@ -24,47 +25,12 @@ const List = ({
 				<div className="row">
 					<Globalcontent>
 						<article>
-							<div className="mb-3">
-								<h1>{object.data.title}</h1>
-								<div className="text-muted fst-italic mb-2">
-									Posted&nbsp;on&nbsp;{object.data.createdAt}&nbsp;by&nbsp;
-									{object.data.user.username}
-								</div>
-								{params.category && (
-									<Link
-										href={{
-											pathname: `/course/category/${params.category}`,
-											query: {
-												page: 1,
-												limit: 32,
-											},
-										}}
-										passHref
-										legacyBehavior
-									>
-										<a className="badge bg-secondary text-decoration-none link-light me-1">
-											{params.category}
-										</a>
-									</Link>
-								)}
-								{params.subcategory && (
-									<Link
-										href={{
-											pathname: `/course/subcategory/${params.subcategory}`,
-											query: {
-												page: 1,
-												limit: 32,
-											},
-										}}
-										passHref
-										legacyBehavior
-									>
-										<a className="badge bg-secondary text-decoration-none link-light">
-											{params.subcategory}
-										</a>
-									</Link>
-								)}
-							</div>
+							<ArticleHeader
+								object={object}
+								url={`/video/category/${object?.data?.category?._id}/${object?.data?.category?.slug}`}
+								params={params}
+								isCourse={true}
+							/>
 							<div className="card mb-3">
 								<div className="card-header">{object.data.title}</div>
 								<div className="card-body">

@@ -12,7 +12,7 @@ async function getAuthenticatedUser() {
 }
 
 async function getVideo(params) {
-	const res = await fetchurl(`http://localhost:5000/api/v1/playlists${params}`);
+	const res = await fetchurl(`http://localhost:5000/api/v1/videos${params}`);
 
 	if (!res.ok) {
 		// This will activate the closest `error.js` Error Boundary

@@ -30,10 +30,14 @@ const CourseCategoryIndex = async ({ params, searchParams }) => {
 		getCoursesData,
 	]);
 
+	const capitalizeWord = params.category;
+
 	return (
 		<>
 			<Header
-				title="Welcome to my Courses"
+				title={`Welcome to my ${
+					capitalizeWord.charAt(0).toUpperCase() + capitalizeWord.slice(1)
+				} Courses`}
 				description="Learn everything about my programming and life journey"
 			/>
 			<List featured={featured} objects={courses} searchParams={searchParams} />

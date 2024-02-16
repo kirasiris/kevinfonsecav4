@@ -50,10 +50,14 @@ const BlogCategoryIndex = async ({ params, searchParams }) => {
 		getQuotesData,
 	]);
 
+	const capitalizeWord = params.categoryslug;
+
 	return (
 		<>
 			<Header
-				title="Welcome to my Blog"
+				title={`Welcome to my ${
+					capitalizeWord.charAt(0).toUpperCase() + capitalizeWord.slice(1)
+				} Blogs`}
 				description="Learn everything about my programming and life journey"
 			/>
 			<List

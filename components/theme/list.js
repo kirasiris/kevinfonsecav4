@@ -13,7 +13,7 @@ const List = ({
 	return (
 		<div className="container">
 			<div className="row">
-				<div className="col-lg-12" style={{ marginBottom: "25px" }}>
+				<div className="col-lg-12" style={{ marginBottom: "24px" }}>
 					<Link
 						href={{
 							pathname: `/theme`,
@@ -25,7 +25,12 @@ const List = ({
 						passHref
 						legacyBehavior
 					>
-						<a className="btn btn-secondary btn-sm me-1">All</a>
+						<a
+							className="btn btn-secondary btn-sm me-1"
+							style={{ marginBottom: "4px" }}
+						>
+							All
+						</a>
 					</Link>
 					{categories.data.length > 0 &&
 						categories.data
@@ -43,7 +48,10 @@ const List = ({
 									passHref
 									legacyBehavior
 								>
-									<a className="btn btn-primary btn-sm me-1">
+									<a
+										className="btn btn-primary btn-sm me-1"
+										style={{ marginBottom: "4px" }}
+									>
 										{category.title}
 									</a>
 								</Link>

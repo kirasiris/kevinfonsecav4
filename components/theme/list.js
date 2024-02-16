@@ -1,7 +1,7 @@
+import Link from "next/link";
 import Single from "./single";
 import NumericPagination from "@/layout/numericpagination";
 import NothingFoundAlert from "@/layout/nothingfoundalert";
-import Sidebar from "@/layout/blog/sidebar";
 import Globalcontent from "@/layout/content";
 
 const List = ({
@@ -9,12 +9,47 @@ const List = ({
 	objects = [],
 	searchParams = {},
 	categories = [],
-	quotes = [],
 }) => {
 	return (
 		<div className="container">
 			<div className="row">
-				<Globalcontent>
+				<div className="col-lg-12" style={{ marginBottom: "25px" }}>
+					<Link
+						href={{
+							pathname: `/theme`,
+							query: {
+								page: 1,
+								limit: 10,
+							},
+						}}
+						passHref
+						legacyBehavior
+					>
+						<a className="btn btn-secondary btn-sm me-1">All</a>
+					</Link>
+					{categories.data.length > 0 &&
+						categories.data
+							.filter((c) => c.timesUsed >= 1)
+							.map((category, index) => (
+								<Link
+									key={category._id}
+									href={{
+										pathname: `/theme/category/${category._id}/${category.slug}`,
+										query: {
+											page: 1,
+											limit: 10,
+										},
+									}}
+									passHref
+									legacyBehavior
+								>
+									<a className="btn btn-primary btn-sm me-1">
+										{category.title}
+									</a>
+								</Link>
+							))}
+				</div>
+				<Globalcontent containerClasses={`col-lg-12`}>
 					{/* Featured list */}
 					{featured?.data?.length > 0 &&
 						featured.data.map((featured) => (
@@ -24,9 +59,10 @@ const List = ({
 					<div className="row">
 						{objects?.data?.length > 0 ? (
 							<>
-								{objects.data?.map((blog) => (
-									<Single key={blog._id} object={blog} />
-								))}
+								{objects?.data?.length > 0 &&
+									objects.data?.map((theme) => (
+										<Single key={theme._id} theme={theme} />
+									))}
 								<NumericPagination
 									totalPages={
 										objects?.pagination?.totalpages ||
@@ -37,7 +73,7 @@ const List = ({
 									keyword={searchParams.keyword}
 									sortby="-createdAt"
 									siblings={1}
-									postType="blog"
+									postType="theme"
 								/>
 							</>
 						) : (
@@ -45,7 +81,6 @@ const List = ({
 						)}
 					</div>
 				</Globalcontent>
-				<Sidebar quotes={quotes} categories={categories} />
 			</div>
 		</div>
 	);

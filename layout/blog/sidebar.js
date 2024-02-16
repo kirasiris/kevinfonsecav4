@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import Globalsidebar from "../sidebar";
 
 const Sidebar = ({ quotes = [], categories = [] }) => {
 	const router = useRouter();
@@ -17,7 +18,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 	};
 
 	return (
-		<>
+		<Globalsidebar>
 			{/* Search box */}
 			<div className="card mb-4">
 				<div className="card-header">Search</div>
@@ -149,7 +150,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 					</div>
 				</div>
 			)}
-		</>
+		</Globalsidebar>
 	);
 };
 

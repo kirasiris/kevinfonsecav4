@@ -2,12 +2,13 @@ import Single from "./single";
 import NumericPagination from "@/layout/numericpagination";
 import NothingFoundAlert from "@/layout/nothingfoundalert";
 import Sidebar from "@/layout/course/sidebar";
+import Globalcontent from "@/layout/content";
 
 const List = ({ featured = {}, objects = [], searchParams = {} }) => {
 	return (
 		<div className="container">
 			<div className="row">
-				<div className="col-lg-8">
+				<Globalcontent>
 					{/* Featured list */}
 					{featured?.data?.length > 0 &&
 						featured.data.map((featured) => (
@@ -37,10 +38,8 @@ const List = ({ featured = {}, objects = [], searchParams = {} }) => {
 							<NothingFoundAlert />
 						)}
 					</div>
-				</div>
-				<div className="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-xs-12 d-none d-sm-none d-md-none d-lg-block dm-xl-block">
-					<Sidebar />
-				</div>
+				</Globalcontent>
+				<Sidebar />
 			</div>
 		</div>
 	);

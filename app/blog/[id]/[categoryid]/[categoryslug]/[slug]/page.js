@@ -10,6 +10,7 @@ import AuthorBox from "@/components/global/authorbox";
 import ParseHtml from "@/layout/parseHtml";
 import ReportModal from "@/components/global/reportmodal";
 import { fetchurl } from "@/helpers/setTokenOnServer";
+import Globalcontent from "@/layout/content";
 
 async function getAuthenticatedUser() {
 	const res = await fetchurl(`http://localhost:5000/api/v1/auth/me`);
@@ -64,7 +65,9 @@ const BlogRead = async ({ params, searchParams }) => {
 			<div className="container">
 				{blog.data.status === "published" || searchParams.isAdmin === "true" ? (
 					<div className="row">
-						<div className={`col-lg-${blog.data.fullWidth ? "12" : "8"}`}>
+						<Globalcontent
+							containerClasses={`col-lg-${blog.data.fullWidth ? "12" : "8"}`}
+						>
 							<article>
 								<div className="mb-3">
 									<h1>{blog.data.title}</h1>
@@ -134,11 +137,9 @@ const BlogRead = async ({ params, searchParams }) => {
 									/> */}
 								</section>
 							</article>
-						</div>
+						</Globalcontent>
 						{blog.data.fullWidth !== true && (
-							<div className="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-xs-12 d-none d-sm-none d-md-none d-lg-block dm-xl-block">
-								<Sidebar quotes={quotes} categories={categories} />
-							</div>
+							<Sidebar quotes={quotes} categories={categories} />
 						)}
 					</div>
 				) : (

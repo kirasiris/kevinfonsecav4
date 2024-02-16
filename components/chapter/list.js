@@ -4,6 +4,8 @@ import ParseHtml from "@/layout/parseHtml";
 import AuthorBox from "@/components/global/authorbox";
 import ExportModal from "@/components/global/exportmodal";
 import ReportModal from "@/components/global/reportmodal";
+import Globalcontent from "@/layout/content";
+import Globalsidebar from "@/layout/sidebar";
 
 const List = ({
 	object,
@@ -20,7 +22,7 @@ const List = ({
 		<div className="container">
 			{object.data.status === "published" || searchParams.isAdmin === true ? (
 				<div className="row">
-					<div className="col-lg-8">
+					<Globalcontent>
 						<article>
 							<div className="mb-3">
 								<h1>{object.data.title}</h1>
@@ -167,8 +169,8 @@ const List = ({
 								</>
 							)}
 						</article>
-					</div>
-					<div className="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-xs-12 d-none d-sm-none d-md-none d-lg-block dm-xl-block">
+					</Globalcontent>
+					<Globalsidebar>
 						<figure className="mb-3 bg-dark">
 							<Image
 								className="img-fluid p-3"
@@ -182,7 +184,7 @@ const List = ({
 								priority
 							/>
 						</figure>
-					</div>
+					</Globalsidebar>
 				</div>
 			) : (
 				<p>Nothing found</p>

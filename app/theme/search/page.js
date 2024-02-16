@@ -21,7 +21,7 @@ async function getCategories(params) {
 	return res.json();
 }
 
-const ThemeIndex = async ({ params, searchParams }) => {
+const ThemeSearchIndex = async ({ params, searchParams }) => {
 	const limit = searchParams.limit || 10;
 	const page = searchParams.page || 1;
 	const decrypt = searchParams.decrypt === "true" ? "&decrypt=true" : "";
@@ -31,7 +31,7 @@ const ThemeIndex = async ({ params, searchParams }) => {
 	);
 
 	const getThemesData = getThemes(
-		`?page=${page}&limit=${limit}&sort=-createdAt&postType=theme&status=published${decrypt}`
+		`?page=${page}&limit=${limit}&sort=-createdAt&postType=theme&status=published&keyword=${searchParams.keyword}${decrypt}`
 	);
 
 	const getCategoriesData = getCategories(`?categoryType=theme`);
@@ -45,8 +45,8 @@ const ThemeIndex = async ({ params, searchParams }) => {
 	return (
 		<>
 			<Header
-				title="Welcome to my Portfolio"
-				description="Check my projects out and tell me what you think!"
+				title={`${searchParams.keyword}`}
+				description="Search results..."
 			/>
 			<List
 				featured={featured}
@@ -58,4 +58,4 @@ const ThemeIndex = async ({ params, searchParams }) => {
 	);
 };
 
-export default ThemeIndex;
+export default ThemeSearchIndex;

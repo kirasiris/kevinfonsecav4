@@ -248,6 +248,21 @@ const Footer = ({ auth = {}, classes = "", styles = {}, canonical = "" }) => {
 							<li className="nav-item mb-2">
 								<Link
 									href={{
+										pathname: `${canonical}/anime`,
+										query: {
+											page: 1,
+											limit: 24,
+										},
+									}}
+									passHref
+									legacyBehavior
+								>
+									<a aria-current="page">Animes</a>
+								</Link>
+							</li>
+							<li className="nav-item mb-2">
+								<Link
+									href={{
 										pathname: `${canonical}/course`,
 										query: {
 											page: 1,

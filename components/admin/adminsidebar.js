@@ -154,42 +154,50 @@ const AdminSidebar = ({
 						/>
 					</>
 				)}
-			<label htmlFor="featured" className="form-label">
-				Featured
-			</label>
-			<select
-				id="featured"
-				name="featured"
-				value={featured}
-				onChange={(e) => {
-					setObjectData({
-						...objectData,
-						featured: e.target.value,
-					});
-				}}
-				className="form-control"
-			>
-				<option value={true}>Yes</option>
-				<option value={false}>No</option>
-			</select>
-			<label htmlFor="commented" className="form-label">
-				Commented
-			</label>
-			<select
-				id="commented"
-				name="commented"
-				value={commented}
-				onChange={(e) => {
-					setObjectData({
-						...objectData,
-						commented: e.target.value,
-					});
-				}}
-				className="form-control"
-			>
-				<option value={true}>Yes</option>
-				<option value={false}>No</option>
-			</select>
+			{featured && (
+				<>
+					<label htmlFor="featured" className="form-label">
+						Featured
+					</label>
+					<select
+						id="featured"
+						name="featured"
+						value={featured}
+						onChange={(e) => {
+							setObjectData({
+								...objectData,
+								featured: e.target.value,
+							});
+						}}
+						className="form-control"
+					>
+						<option value={true}>Yes</option>
+						<option value={false}>No</option>
+					</select>
+				</>
+			)}
+			{commented && (
+				<>
+					<label htmlFor="commented" className="form-label">
+						Commented
+					</label>
+					<select
+						id="commented"
+						name="commented"
+						value={commented}
+						onChange={(e) => {
+							setObjectData({
+								...objectData,
+								commented: e.target.value,
+							});
+						}}
+						className="form-control"
+					>
+						<option value={true}>Yes</option>
+						<option value={false}>No</option>
+					</select>
+				</>
+			)}
 			{embedding && (
 				<>
 					<label htmlFor="embedding" className="form-label">

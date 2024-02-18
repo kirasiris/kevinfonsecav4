@@ -13,9 +13,24 @@ const List = ({ objects = [], searchParams = {}, categories = [] }) => {
 						<div className="card-body d-flex flex-wrap p-0 rounded-0">
 							{/* Blog list */}
 							{objects?.data?.length > 0 ? (
-								objects.data?.map((video) => (
-									<Single key={video._id} object={video} />
-								))
+								<>
+									{objects.data?.map((video) => (
+										<Single key={video._id} object={video} />
+									))}
+									<hr className="mt-0 mb-0" />
+									<NumericPagination
+										totalPages={
+											objects?.pagination?.totalpages ||
+											Math.ceil(objects?.data?.length / searchParams.limit)
+										}
+										page={searchParams.page}
+										limit={searchParams.limit}
+										keyword={searchParams.keyword}
+										sortby="-createdAt"
+										siblings={1}
+										postType="playlist"
+									/>
+								</>
 							) : (
 								<NothingFoundAlert
 									loading={false}
@@ -24,19 +39,6 @@ const List = ({ objects = [], searchParams = {}, categories = [] }) => {
 								/>
 							)}
 						</div>
-						<hr className="mt-0 mb-0" />
-						<NumericPagination
-							totalPages={
-								objects?.pagination?.totalpages ||
-								Math.ceil(objects?.data?.length / searchParams.limit)
-							}
-							page={searchParams.page}
-							limit={searchParams.limit}
-							keyword={searchParams.keyword}
-							sortby="-createdAt"
-							siblings={1}
-							postType="playlist"
-						/>
 					</div>
 				</div>
 				<div className="col-lg-4 d-none d-sm-none d-md-none d-lg-block dm-xl-block">

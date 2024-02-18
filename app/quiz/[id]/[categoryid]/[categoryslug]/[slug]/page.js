@@ -6,7 +6,7 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 import Header from "@/layout/header";
-import Loading from "@/app/quizz/loading";
+import Loading from "@/app/quiz/loading";
 import NumericPagination from "@/layout/numericpagination";
 import Single from "@/components/question/single";
 

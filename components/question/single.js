@@ -1,7 +1,7 @@
 "use client";
 import { Suspense } from "react";
 import Image from "next/image";
-import Loading from "@/app/quizz/loading";
+import Loading from "@/app/quiz/loading";
 
 const Single = ({
 	question = {},

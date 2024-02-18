@@ -9,7 +9,7 @@ import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
 import AdminCardHeaderMenu from "@/components/admin/admincardheadermenu";
 import ClientNumericPagination from "@/layout/clientnumericpagination";
 
-const AdminContactsIndex = () => {
+const AdminContactsDraftIndex = () => {
 	const {
 		totalPages,
 		setTotalPages,
@@ -26,7 +26,7 @@ const AdminContactsIndex = () => {
 	const [limit] = useState(10);
 	const [sortby] = useState(`-createdAt`);
 	const [params, setParams] = useState(
-		`?page=${page}&limit=${limit}&sort=${sortby}`
+		`?page=${page}&limit=${limit}&sort=${sortby}&status=draft`
 	);
 	const [keyword, setKeyword] = useState("");
 	const [list, setList] = useState([]);
@@ -201,4 +201,4 @@ const AdminContactsIndex = () => {
 	);
 };
 
-export default AdminContactsIndex;
+export default AdminContactsDraftIndex;

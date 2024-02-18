@@ -48,7 +48,7 @@ const Menu = ({
 						<li className="nav-item mx-1">
 							<Link
 								href={{
-									pathname: `${canonical}/quizz`,
+									pathname: `${canonical}/quiz`,
 									query: { page: 1, limit: 10 },
 								}}
 								passHref

@@ -37,8 +37,6 @@ const CreateLesson = ({ params }) => {
 		duration,
 	} = lessonData;
 
-	console.log(params.id);
-
 	const addLesson = async (e) => {
 		e.preventDefault();
 		try {

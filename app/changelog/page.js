@@ -7,7 +7,6 @@ async function getChangelogs(params) {
 	const res = await fetchurl(
 		`http://localhost:5000/api/v1/changelogs${params}`
 	);
-
 	return res.json();
 }
 

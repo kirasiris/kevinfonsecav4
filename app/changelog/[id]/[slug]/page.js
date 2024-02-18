@@ -15,12 +15,6 @@ async function getChangelog(params) {
 	const res = await fetchurl(
 		`http://localhost:5000/api/v1/changelogs${params}`
 	);
-
-	if (!res.ok) {
-		// This will activate the closest `error.js` Error Boundary
-		throw new Error("Failed to fetch data");
-	}
-
 	return res.json();
 }
 

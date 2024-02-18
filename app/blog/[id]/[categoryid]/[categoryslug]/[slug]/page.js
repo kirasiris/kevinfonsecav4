@@ -20,12 +20,6 @@ async function getAuthenticatedUser() {
 
 async function getBlog(params) {
 	const res = await fetchurl(`http://localhost:5000/api/v1/blogs${params}`);
-
-	if (!res.ok) {
-		// This will activate the closest `error.js` Error Boundary
-		throw new Error("Failed to fetch data");
-	}
-
 	return res.json();
 }
 
@@ -33,7 +27,6 @@ async function getCategories(params) {
 	const res = await fetchurl(
 		`http://localhost:5000/api/v1/categories${params}`
 	);
-
 	return res.json();
 }
 
@@ -72,7 +65,7 @@ const BlogRead = async ({ params, searchParams }) => {
 							<article>
 								<ArticleHeader
 									object={blog}
-									url={`/blog/category/${blog.data.category._id}/${blog.data.category.slug}`}
+									url={`/blog/category/${blog?.data?.category?._id}/${blog?.data?.category?.slug}`}
 								/>
 								<figure className="mb-4">
 									<Image

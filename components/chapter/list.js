@@ -1,4 +1,4 @@
-import Image from "next/image";
+// import Image from "next/image";
 import Link from "next/link";
 import ParseHtml from "@/layout/parseHtml";
 import AuthorBox from "@/components/global/authorbox";
@@ -6,13 +6,11 @@ import ExportModal from "@/components/global/exportmodal";
 import ReportModal from "@/components/global/reportmodal";
 import Globalcontent from "@/layout/content";
 import Globalsidebar from "@/layout/sidebar";
-import ArticleHeader from "../global/articleheader";
 
 const List = ({
 	object,
 	objects = [],
 	isAdmin = false,
-	params = {},
 	searchParams = {},
 	isIndex = true,
 	linkToShare = "",
@@ -25,12 +23,6 @@ const List = ({
 				<div className="row">
 					<Globalcontent>
 						<article>
-							<ArticleHeader
-								object={object}
-								url={`/video/category/${object?.data?.category?._id}/${object?.data?.category?.slug}`}
-								params={params}
-								isCourse={true}
-							/>
 							<div className="card mb-3">
 								<div className="card-header">{object.data.title}</div>
 								<div className="card-body">
@@ -137,19 +129,20 @@ const List = ({
 						</article>
 					</Globalcontent>
 					<Globalsidebar>
-						<figure className="mb-3 bg-dark">
+						ENROLLED USERS
+						{/* <figure className="mb-4 bg-dark">
 							<Image
 								className="img-fluid p-3"
 								src={
 									object?.data?.files?.avatar?.location?.secure_location ||
-									`https://source.unsplash.com/random/260x370`
+									`https://source.unsplash.com/random/440x570`
 								}
 								alt={`${object?.data?.files?.avatar?.location?.filename}'s featured image`}
 								width={440}
 								height={570}
 								priority
 							/>
-						</figure>
+						</figure> */}
 					</Globalsidebar>
 				</div>
 			) : (

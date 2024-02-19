@@ -1,8 +1,8 @@
+"use client";
 import { Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Loading from "@/app/course/loading";
-import ParseHtml from "@/layout/parseHtml";
 
 const Single = ({ object = {}, imageWidth = "415", imageHeight = "207" }) => {
 	return (

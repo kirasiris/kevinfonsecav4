@@ -65,3 +65,10 @@ export const calculateTimeSincePublished = (createdAt) => {
 		return `${seconds} second${seconds > 1 ? "s" : ""} ago`;
 	}
 };
+
+export const currencyFormatter = (amount, currency) => {
+	return ((amount * 100) / 100).toLocaleString(currency, {
+		style: "currency",
+		currency: currency,
+	});
+};

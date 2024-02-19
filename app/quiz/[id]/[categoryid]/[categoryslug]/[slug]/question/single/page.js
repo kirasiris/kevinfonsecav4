@@ -34,7 +34,7 @@ const QuizSinglePageRead = async ({ params, searchParams }) => {
 	const getQuizzesData = getQuiz(`/${params.id}`);
 
 	const getQuestionsData = getQuestions(
-		`?resourceId=${params.id}&page=${params.page}&sort=-createdAt&status=published`
+		`?resourceId=${params.id}&page=${searchParams.page}&sort=-createdAt&status=published`
 	);
 
 	const [quiz, questions] = await Promise.all([

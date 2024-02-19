@@ -1,12 +1,7 @@
 "use client";
 import Link from "next/link";
 
-const ArticleHeader = ({
-	object = {},
-	url = `#!`,
-	params = {},
-	isCourse = false,
-}) => {
+const ArticleHeader = ({ object = {}, url = `#!` }) => {
 	return (
 		<div className="mb-3">
 			<h1>{object.data.title}</h1>
@@ -28,40 +23,6 @@ const ArticleHeader = ({
 				>
 					<a className="badge bg-secondary text-decoration-none link-light">
 						{object.data.category.title}
-					</a>
-				</Link>
-			)}
-			{isCourse && params.category && (
-				<Link
-					href={{
-						pathname: `/course/category/${params.category}`,
-						query: {
-							page: 1,
-							limit: 32,
-						},
-					}}
-					passHref
-					legacyBehavior
-				>
-					<a className="badge bg-secondary text-decoration-none link-light me-1">
-						{params.category}
-					</a>
-				</Link>
-			)}
-			{isCourse && params.subcategory && (
-				<Link
-					href={{
-						pathname: `/course/subcategory/${params.subcategory}`,
-						query: {
-							page: 1,
-							limit: 32,
-						},
-					}}
-					passHref
-					legacyBehavior
-				>
-					<a className="badge bg-secondary text-decoration-none link-light">
-						{params.subcategory}
 					</a>
 				</Link>
 			)}

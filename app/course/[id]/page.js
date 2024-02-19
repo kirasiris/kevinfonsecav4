@@ -1,8 +1,8 @@
 import { Suspense } from "react";
-import Header from "@/layout/header";
 import Loading from "@/app/blog/loading";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import List from "@/components/chapter/list";
+import Jumbotron from "@/components/course/jumbotron";
 
 async function getAuthenticatedUser() {
 	const res = await fetchurl(`http://localhost:5000/api/v1/auth/me`);
@@ -15,9 +15,7 @@ async function getCourse(params) {
 }
 
 async function getCourseLessons(params) {
-	const res = await fetchurl(
-		`http://localhost:5000/api/v1/videos${params}&sort=-orderingNumber`
-	);
+	const res = await fetchurl(`http://localhost:5000/api/v1/videos${params}`);
 
 	return res.json();
 }
@@ -27,7 +25,7 @@ const CourseRead = async ({ params, searchParams }) => {
 
 	const getCoursesData = getCourse(`/${params.id}`);
 	const getCourseLessonsData = getCourseLessons(
-		`?resourceId=${params.id}&onModel=Course`
+		`?resourceId=${params.id}&sort=-orderingNumber&onModel=Course`
 	);
 
 	const [course, lessons] = await Promise.all([
@@ -36,18 +34,22 @@ const CourseRead = async ({ params, searchParams }) => {
 	]);
 
 	const myParams = {
-		category: course.data.category,
-		subcategory: course.data.sub_category,
+		category: course?.data?.category,
+		subcategory: course?.data?.sub_category,
 	};
 
 	return (
 		<Suspense fallback={<Loading />}>
-			<Header title={course.data.title} description={course.data.sub_title} />
+			<Jumbotron
+				object={course}
+				params={myParams}
+				imageWidth="440"
+				imageHeight="570"
+			/>
 			<List
 				object={course}
 				objects={lessons}
 				isAdmin={false}
-				params={myParams}
 				searchParams={searchParams}
 				isIndex={true}
 				linkToShare={`localhost:3000/course/${course?.data?._id}`}

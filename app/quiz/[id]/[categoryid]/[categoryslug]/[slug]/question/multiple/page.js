@@ -1,52 +1,41 @@
 import { Suspense } from "react";
-import Link from "next/link";
+// import Link from "next/link";
 import Image from "next/image";
 import Header from "@/layout/header";
 import Loading from "@/app/quiz/loading";
 import ExportModal from "@/components/global/exportmodal";
 import AuthorBox from "@/components/global/authorbox";
 // import CommentBox from "@/components/global/commentbox";
-import ParseHtml from "@/layout/parseHtml";
+// import ParseHtml from "@/layout/parseHtml";
 import ReportModal from "@/components/global/reportmodal";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import Globalcontent from "@/layout/content";
-import ArticleHeader from "@/components/global/articleheader";
-import Single from "@/components/question/single";
+import NumericPagination from "@/layout/numericpagination";
+// import ArticleHeader from "@/components/global/articleheader";
+// import Single from "@/components/question/single";
 
-async function getQuizz(params) {
-	const res = await fetch(`http://localhost:5000/api/v1/quizzes${params}`, {
-		cache: "force-cache",
-	});
+async function getAuthenticatedUser() {
+	const res = await fetchurl(`http://localhost:5000/api/v1/auth/me`);
+	return res.json();
+}
 
-	if (!res.ok) {
-		// This will activate the closest `error.js` Error Boundary
-		throw new Error("Failed to fetch data");
-	}
-
+async function getQuiz(params) {
+	const res = await fetchurl(`http://localhost:5000/api/v1/quizzes${params}`);
 	return res.json();
 }
 
 async function getQuestions(params) {
-	const res = await fetch(`http://localhost:5000/api/v1/questions${params}`, {
-		cache: "no-store",
-	});
-
-	if (!res.ok) {
-		// This will activate the closest `error.js` Error Boundary
-		throw new Error("Failed to fetch data");
-	}
-
+	const res = await fetchurl(`http://localhost:5000/api/v1/questions${params}`);
 	return res.json();
 }
 
 const QuizMultiplePageRead = async ({ params, searchParams }) => {
-	const limit = searchParams.limit;
-	const page = searchParams.page || 1;
+	const auth = await getAuthenticatedUser();
 
-	const getQuizzesData = getQuizz(`/${params.id}`);
+	const getQuizzesData = getQuiz(`/${params.id}`);
 
 	const getQuestionsData = getQuestions(
-		`?resourceId=${params.id}&page=${page}&limit=${limit}&sort=-createdAt&status=published`
+		`?resourceId=${params.id}&page=${searchParams.page}&limit=${searchParams.limit}&sort=-createdAt&status=published`
 	);
 
 	const [quiz, questions] = await Promise.all([
@@ -54,158 +43,105 @@ const QuizMultiplePageRead = async ({ params, searchParams }) => {
 		getQuestionsData,
 	]);
 
-	const nextPage = questions?.pagination?.next?.page || 0;
-	const prevPage = questions?.pagination?.prev?.page || 0;
-
-	const selectedAnswers = [];
-	// const setSelectedAnswers = () => {};
-
-	// const [quiz, setQuiz] = useState(null);
-	// const [loading, setLoading] = useState(true);
-	// const [questions, setQuestions] = useState([]);
-	// const [limit, setLimit] = useState(searchParams.limit);
-	// const [page, setPage] = useState(searchParams.page || limit);
-	// const [nextPage, setNextPage] = useState(0);
-	// const [prevPage, setPrevPage] = useState(0);
-	// const [selectedAnswers, setSelectedAnswers] = useState([]);
-
-	// useEffect(() => {
-	// 	const fetchQuiz = async () => {
-	// 		const res = await fetch(
-	// 			`http://localhost:5000/api/v1/quizzes/${params.id}`
-	// 		);
-	// 		const data = await res.json();
-	// 		setQuiz(data);
-	// 		setLoading(false);
-	// 	};
-	// 	fetchQuiz();
-
-	// 	const fetchQuestions = async () => {
-	// 		const res = await fetch(
-	// 			`http://localhost:5000/api/v1/questions?resourceId=${params.id}&page=${page}&limit=${limit}&sort=-createdAt&status=published`
-	// 		);
-	// 		const data = await res.json();
-	// 		setQuestions(data);
-	// 	};
-	// 	fetchQuestions();
-	// 	setLimit(searchParams.limit);
-	// 	setPage(searchParams.page || limit);
-	// 	setNextPage(questions?.pagination?.next?.page || 0);
-	// 	setPrevPage(questions?.pagination?.prev?.page || 0);
-	// }, [params.id, searchParams.page]);
-
-	// if (loading) {
-	// 	return <>Loading...</>;
-	// }
-
-	const startTextButton = () => {
-		return (
-			<div className="d-grid gap-2 col-12 mt-3 mb-3">
-				<Link
-					href={{
-						pathname: `/quizz/${quiz.data._id}/${quiz?.data.category?._id}/${quiz?.data.category?.slug}/${quiz.data.slug}`,
-						query: {
-							start: true,
-							singlePage: quiz.data.singlePage,
-							page: page,
-							limit:
-								quiz.data.singlePage === false && questions.data?.length > 0
-									? 1
-									: limit,
-						},
-					}}
-					passHref
-					legacyBehavior
-				>
-					<a className="btn btn-secondary btn-lg">Start test</a>
-				</Link>
-			</div>
-		);
-	};
-
 	return (
 		<Suspense fallback={<Loading />}>
 			<Header title={quiz.data.title} />
 			<div className="container">
-				<div className="row">
-					{searchParams.start !== undefined ? (
-						searchParams.singlePage === "false" ? (
-							<NumericPagination
-								nextParams={`/quizz/${params.id}/${params.categoryid}/${params.categoryslug}/${params.slug}?start=${searchParams.start}&singlePage=${searchParams.singlePage}&page=${nextPage}&limit=${limit}`}
-								prevParams={`/quizz/${params.id}/${params.categoryid}/${params.categoryslug}/${params.slug}?start=${searchParams.start}&singlePage=${searchParams.singlePage}&page=${prevPage}&limit=${limit}`}
-								next={nextPage}
-								prev={prevPage}
-								pagesArrayInfo={questions?.pagination}
-								pagePath={`/quizz/${params.id}/${params.categoryid}/${params.categoryslug}/${params.slug}`}
-								pageParams={searchParams}
-								componentMapping={questions.data?.map((question) => (
-									<Single
-										key={question._id}
-										question={question}
-										selectedAnswers={selectedAnswers}
-										// setSelectedAnswers={setSelectedAnswers}
-									/>
-								))}
-							/>
-						) : (
-							questions.data?.map((question) => (
-								<Single
-									key={question._id}
-									question={question}
-									selectedAnswers={selectedAnswers}
-									// setSelectedAnswers={setSelectedAnswers}
-								/>
-							))
-						)
-					) : (
-						<div className="col-lg-12">
-							<Image
-								src={
-									quiz.data.avatar?.location?.secure_location ||
-									`https://source.unsplash.com/random/300x200`
-								}
-								className="img-fluid w-100 rounded-0"
-								alt={`${quiz?.data.title}'s featured image`}
-								width={`300`}
-								height={`200`}
-								priority
-							/>
-							{startTextButton()}
-							<h2>Instructions</h2>
-							<p>{quiz.data.text}</p>
-							<ul className="list-group">
-								<li className="list-group-item">
-									<p className="m-0">
-										Number of questions: {questions.data?.length || "0"}
-									</p>
-								</li>
-								<li className="list-group-item">
-									<p className="m-0">
-										Category: {quiz.data.category?.title || "No category"}
-									</p>
-								</li>
-								<li className="list-group-item">
-									<p className="m-0">Duration: {quiz.data.duration}</p>
-								</li>
-								<li className="list-group-item">
-									<p className="m-0">Minimum score: {quiz.data.minimumSocre}</p>
-								</li>
-								<li className="list-group-item">
-									<p className="m-0">Maximum score: {quiz.data.maximumScore}</p>
-								</li>
-								<li className="list-group-item">
-									<p className="m-0">Attempts allowed: {quiz.data.attempts}</p>
-								</li>
-								<li className="list-group-item">
-									<p className="m-0">
-										{quiz.data.singlePage ? "Single page" : "Multiple pages"}
-									</p>
-								</li>
-							</ul>
-							{startTextButton()}
-						</div>
-					)}
-				</div>
+				{quiz.data.status === "published" || searchParams.isAdmin === "true" ? (
+					<div className="row">
+						<Globalcontent containerClasses="col-lg-12">
+							<article>
+								<section className="mb-5">
+									{questions?.data?.length > 0 && (
+										<>
+											{questions?.data?.map((question, index) => (
+												<div key={question._id} className="row">
+													<div className={`col ${index}`}>
+														<figure>
+															<Image
+																src={
+																	question.files?.avatar?.location
+																		?.secure_location ||
+																	`https://source.unsplash.com/random/300x200`
+																}
+																className="img-fluid w-100 rounded-0"
+																alt={`${question.title}'s featured image`}
+																width={`300`}
+																height={`200`}
+															/>
+														</figure>
+														{/* <ParseHtml text={question.text} /> */}
+													</div>
+													<div className="col-lg-8">
+														<h2>{question.title}</h2>
+														{Object.entries(question.answers).map(
+															([key, value]) => (
+																<div key={question.answers[key]}>
+																	<input
+																		id={`${question.answers[key]}`}
+																		type="radio"
+																		name={`correctAnswer_${question._id}`}
+																	/>
+																	<label htmlFor={`${question.answers[key]}`}>
+																		{question.answers[key]}
+																	</label>
+																</div>
+															)
+														)}
+													</div>
+												</div>
+											))}
+											<NumericPagination
+												totalPages={
+													questions?.pagination?.totalPages ||
+													Math.ceil(
+														questions?.data?.length / searchParams.limit
+													)
+												}
+												page={searchParams.page}
+												limit={searchParams.limit}
+												keyword={searchParams.keyword}
+												sortby="-createdAt"
+												siblings={1}
+												postType="question"
+											/>
+										</>
+									)}
+
+									<hr />
+									<div className="float-start">
+										{quiz?.data?.category && (
+											<ExportModal
+												linkToShare={`localhost:3000/quiz/${quiz?.data?._id}/${quiz?.data?.category?._id}/${quiz?.data?.category.slug}/${quiz?.data?.slug}`}
+												object={quiz?.data}
+											/>
+										)}
+									</div>
+									<div className="float-end">
+										<ReportModal
+											postId={quiz?.data?._id}
+											postType="quiz"
+											onModel="Quiz"
+										/>
+									</div>
+									<div style={{ clear: "both" }} />
+									<AuthorBox author={quiz?.data?.user} />
+									{/* <CommentBox
+										auth={auth.data}
+										user={quiz?.data?.user}
+										postId={quiz?.data?._id}
+										secondPostId={quiz?.data?._id}
+										isVisible={quiz?.data?.commented}
+										postType="quiz"
+										onModel="Quiz"
+									/> */}
+								</section>
+							</article>
+						</Globalcontent>
+					</div>
+				) : (
+					<p>Not visible</p>
+				)}
 			</div>
 		</Suspense>
 	);

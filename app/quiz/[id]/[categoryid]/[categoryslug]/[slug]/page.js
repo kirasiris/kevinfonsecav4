@@ -52,7 +52,7 @@ const QuizRead = async ({ params, searchParams }) => {
 					passHref
 					legacyBehavior
 				>
-					<a className="btn btn-secondary btn-lg">Start test</a>
+					<a className="btn btn-secondary btn-sm">Start test</a>
 				</Link>
 			</div>
 		);
@@ -72,7 +72,7 @@ const QuizRead = async ({ params, searchParams }) => {
 					passHref
 					legacyBehavior
 				>
-					<a className="btn btn-secondary btn-lg">Start test</a>
+					<a className="btn btn-secondary btn-sm">Start test</a>
 				</Link>
 			</div>
 		);

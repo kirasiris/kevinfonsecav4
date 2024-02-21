@@ -35,7 +35,6 @@ const List = ({ objects = [], searchParams = {}, categories = [] }) => {
 								<NothingFoundAlert
 									loading={false}
 									classNames="alert-dark w-100 rounded-0 m-0 border-0"
-									text={`Nothing found`}
 								/>
 							)}
 						</div>

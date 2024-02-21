@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import Header from "@/layout/header";
 import Loading from "@/app/profile/loading";
-import List from "@/components/profile/list";
+import PicturesList from "@/components/profile/pictureslist";
 import Sidebar from "@/components/profile/sidebar";
 
 async function getAuthenticatedUser() {
@@ -15,49 +15,31 @@ async function getProfile(params) {
 	return res.json();
 }
 
-async function getFeaturedPosts(params) {
-	const res = await fetchurl(`http://localhost:5000/api/v1/posts${params}`);
-	return res.json();
-}
-
-async function getPosts(params) {
-	const res = await fetchurl(`http://localhost:5000/api/v1/posts${params}`);
-	return res.json();
-}
-
 async function getMedias(params) {
 	const res = await fetchurl(`http://localhost:5000/api/v1/files${params}`);
 	return res.json();
 }
 
-const ProfileRead = async ({ params, searchParams }) => {
+const ProfilePhotoCoversIndex = async ({ params, searchParams }) => {
 	const auth = await getAuthenticatedUser();
 
 	const getProfilesData = getProfile(`/${params.id}`);
 
-	const limit = searchParams.limit || 10;
+	const limit = searchParams.limit || 50;
 	const page = searchParams.page || 1;
 	const decrypt = searchParams.decrypt === "true" ? "&decrypt=true" : "";
 
-	const getStoriesData = getPosts(
-		`?user${params.id}&page=${page}&limit=${limit}&sort=-createdAt&status=published&postType=story`
+	const getSidebarMediasData = getMedias(
+		`?user=${params.id}&page=1&limit=9&sort=-createdAt&album=posts`
 	);
 
-	const getFeaturedPostsData = getFeaturedPosts(
-		`?user${params.id}&featured=true&status=published`
+	const getMediasData = getMedias(
+		`?user=${params.id}&page=${page}&limit=${limit}&sort=-createdAt&album=profile-covers`
 	);
 
-	const getPostsData = getPosts(
-		`?user=${params.id}&page=${page}&limit=${limit}&sort=-createdAt&status=published&postType=post`
-	);
-
-	const getMediasData = getMedias(`?user=${params.id}&limit=9&album=posts`);
-
-	const [profile, stories, featured, posts, photos] = await Promise.all([
+	const [profile, sidebarphotos, files] = await Promise.all([
 		getProfilesData,
-		getStoriesData,
-		getFeaturedPostsData,
-		getPostsData,
+		getSidebarMediasData,
 		getMediasData,
 	]);
 
@@ -77,12 +59,11 @@ const ProfileRead = async ({ params, searchParams }) => {
 			/>
 			<div className="container">
 				<div className="row">
-					<Sidebar object={profile} objects={photos} />
-					<List
+					<Sidebar object={profile} objects={sidebarphotos} />
+					<PicturesList
 						object={profile}
-						stories={stories}
-						featured={featured}
-						objects={posts}
+						objects={files}
+						searchParams={searchParams}
 					/>
 				</div>
 			</div>
@@ -90,4 +71,4 @@ const ProfileRead = async ({ params, searchParams }) => {
 	);
 };
 
-export default ProfileRead;
+export default ProfilePhotoCoversIndex;

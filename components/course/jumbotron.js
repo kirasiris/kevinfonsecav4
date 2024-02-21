@@ -37,7 +37,7 @@ const Jumbotron = ({
 										{params.category}
 									</a>
 								</Link>
-								&nbsp;|&nbsp;
+								&nbsp;/&nbsp;
 								<Link
 									href={{
 										pathname: `/course/subcategory/${params.subcategory}`,
@@ -72,7 +72,9 @@ const Jumbotron = ({
 						{object?.data?.files?.avatar?.location?.secure_location.includes(
 							".mp4"
 						) ? (
-							<p>VIDEO</p>
+							<figure className="mb-4 bg-dark">
+								<p>VIDEO</p>
+							</figure>
 						) : (
 							<figure className="mb-4 bg-dark">
 								<Image

@@ -7,13 +7,13 @@ async function getProfiles(params) {
 	return res.json();
 }
 
-const ProfileIndex = async ({ params, searchParams }) => {
+const ProfileSearchIndex = async ({ params, searchParams }) => {
 	const limit = searchParams.limit || 10;
 	const page = searchParams.page || 1;
 	const decrypt = searchParams.decrypt === "true" ? "&decrypt=true" : "";
 
 	const getProfilesData = getProfiles(
-		`?page=${page}&limit=${limit}&sort=-createdAt&isEmailConfirmed=true${decrypt}`
+		`?page=${page}&limit=${limit}&sort=-createdAt&isEmailConfirmed=true&keyword=${searchParams.keyword}${decrypt}`
 	);
 
 	const [profiles] = await Promise.all([getProfilesData]);
@@ -29,4 +29,4 @@ const ProfileIndex = async ({ params, searchParams }) => {
 	);
 };
 
-export default ProfileIndex;
+export default ProfileSearchIndex;

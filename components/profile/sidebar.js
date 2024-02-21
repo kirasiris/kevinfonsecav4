@@ -1,17 +1,20 @@
-import Image from "next/image";
+"use client";
 import Link from "next/link";
-const Sidebar = ({ profile = {}, photos = [] }) => {
+import Image from "next/image";
+import Globalsidebar from "@/layout/sidebar";
+
+const Sidebar = ({ object = {}, objects = [] }) => {
 	return (
-		<>
+		<Globalsidebar>
 			<div className="card mb-3">
 				<div className="card-header">About</div>
 				<div className="card-body p-0">
 					<ul className="list-group list-group-flush">
-						{profile.data?.isOnline && (
+						{object.data?.isOnline && (
 							<li className="list-group-item">
 								<p className="m-0">
-									<strong className="text-success">Is Online</strong>
-									{profile.data?.isLive && (
+									<strong className="text-success">Is&nbsp;Online</strong>
+									{object.data?.isLive && (
 										<>
 											&nbsp;&amp;&nbsp;<strong>Is Live</strong>
 										</>
@@ -19,74 +22,74 @@ const Sidebar = ({ profile = {}, photos = [] }) => {
 								</p>
 							</li>
 						)}
-						{profile.data?.bio && (
+						{object.data?.bio && (
 							<li className="list-group-item">
-								<p className="m-0">{profile.data?.bio}</p>
+								<p className="m-0">{object.data?.bio}</p>
 							</li>
 						)}
-						{profile.data?.sex && (
+						{object.data?.sex && (
 							<li className="list-group-item">
 								<p className="m-0">
-									{profile.data?.sex.charAt(0).toUpperCase() +
-										profile.data?.sex.slice(1)}
+									{object.data?.sex.charAt(0).toUpperCase() +
+										object.data?.sex.slice(1)}
 								</p>
 							</li>
 						)}
-						{profile.data?.gender && (
+						{object.data?.gender && (
 							<li className="list-group-item">
 								<p className="m-0">
-									{profile.data?.gender.charAt(0).toUpperCase() +
-										profile.data?.gender.slice(1)}
+									{object.data?.gender.charAt(0).toUpperCase() +
+										object.data?.gender.slice(1)}
 								</p>
 							</li>
 						)}
-						{profile.data?.age && (
+						{object.data?.age && (
 							<li className="list-group-item">
-								<p className="m-0">{profile.data?.age}</p>
+								<p className="m-0">{object.data?.age}</p>
 							</li>
 						)}
-						{profile.data?.company && (
+						{object.data?.company && (
 							<li className="list-group-item">
-								<p className="m-0">{profile.data?.company}</p>
+								<p className="m-0">{object.data?.company}</p>
 							</li>
 						)}
-						{profile.data?.workstatus && (
+						{object.data?.workstatus && (
 							<li className="list-group-item">
 								<p className="m-0">
-									{profile.data?.workstatus.charAt(0).toUpperCase() +
-										profile.data?.workstatus.slice(1)}
+									{object.data?.workstatus.charAt(0).toUpperCase() +
+										object.data?.workstatus.slice(1)}
 								</p>
 							</li>
 						)}
-						{profile.data?.email && (
+						{object.data?.email && (
 							<li className="list-group-item">
-								<p className="m-0">{profile.data?.email}</p>
+								<p className="m-0">{object.data?.email}</p>
 							</li>
 						)}
-						{profile.data?.relationshipStatus && (
+						{object.data?.relationshipStatus && (
 							<li className="list-group-item">
 								<p className="m-0">
-									{profile.data?.relationshipStatus.charAt(0).toUpperCase() +
-										profile.data?.relationshipStatus.slice(1)}
+									{object.data?.relationshipStatus.charAt(0).toUpperCase() +
+										object.data?.relationshipStatus.slice(1)}
 								</p>
 							</li>
 						)}
-						{profile.data?.inRelationshipWith && (
+						{object.data?.inRelationshipWith && (
 							<li className="list-group-item border-0 pb-1">
 								<Image
 									src={
-										profile.data?.inRelationshipWith.avatar ||
+										object.data?.inRelationshipWith.avatar ||
 										`https://source.unsplash.com/random/1200x900`
 									}
 									className="mr-3"
 									width={30}
 									height={30}
-									alt={`${profile.data?.inRelationshipWith}'s  profile avatar`}
+									alt={`${object.data?.inRelationshipWith}'s  profile avatar`}
 									style={{ objectFit: "cover" }}
 								/>
 								<Link
 									href={{
-										pathname: `/profiles/${profile.data?._id}/${profile.data?.username}`,
+										pathname: `/profile/${object.data?.inRelationshipWith?._id}/${object.data?.inRelationshipWith?.username}`,
 										query: {
 											page: 1,
 											limit: 10,
@@ -94,28 +97,28 @@ const Sidebar = ({ profile = {}, photos = [] }) => {
 										},
 									}}
 								>
-									{profile.data?.inRelationshipWith.username}
+									{object.data?.inRelationshipWith.username}
 								</Link>
 							</li>
 						)}
 					</ul>
 				</div>
 				<div className="card-footer">
-					{profile.data?.role.length > 0 &&
-						profile.data?.role.map((r, i) => (
+					{object.data?.role.length > 0 &&
+						object.data?.role.map((r, i) => (
 							<div key={i} className="badge bg-secondary">
 								{r.charAt(0).toUpperCase() + r.slice(1)}
 							</div>
 						))}
 				</div>
 			</div>
-			{photos.data?.length > 0 && (
+			{objects?.data?.length > 0 && (
 				<div className="card mb-3">
 					<div className="card-header">
 						Photos
 						<Link
 							href={{
-								pathname: `/profiles/${profile.data?._id}/${profile.data?.username}/photos`,
+								pathname: `/profile/${object.data?._id}/${object.data?.username}/photos`,
 								query: {
 									page: 1,
 									limit: 50,
@@ -126,35 +129,34 @@ const Sidebar = ({ profile = {}, photos = [] }) => {
 							passHref
 							legacyBehavior
 						>
-							<a className="float-end">View all</a>
+							<a className="float-end">View&nbsp;all</a>
 						</Link>
 					</div>
-					<div className="card-body p-0">
-						{photos.data?.map((photo, index) => (
+					<div className="card-body row g-2 p-0">
+						{objects.data.map((photo, index) => (
 							<Link
-								key={index}
+								key={photo._id}
 								href={{
-									pathname: `/profiles/${photo.user._id}/${photo.user.username}/photos/${photo._id}`,
-									query: {
-										page: 1,
-										limit: 50,
-										sort: `-createdAt`,
-									},
+									pathname: `/profile/${photo.user._id}/${photo.user.username}/photos/${photo._id}`,
+									query: {},
 								}}
 								passHref
 								legacyBehavior
 							>
-								<a>
+								<a className="col">
 									<Image
 										src={
 											photo.location.secure_location ||
-											`https://source.unsplash.com/random/1200x900`
+											`https://source.unsplash.com/random/150x150`
 										}
-										className="mr-3"
-										width={168}
-										height={168}
+										className={`${index}`}
+										width={130}
+										height={130}
 										alt={`${photo.user.username}'s profile avatars`}
-										style={{ objectFit: "cover", marginBottom: "4px" }}
+										style={{
+											objectFit: "cover",
+											margin: "1px",
+										}}
 									/>
 								</a>
 							</Link>
@@ -162,11 +164,11 @@ const Sidebar = ({ profile = {}, photos = [] }) => {
 					</div>
 				</div>
 			)}
-			{profile.data?.tags.length > 0 && (
+			{object.data?.tags.length > 0 && (
 				<div className="card mb-3">
 					<div className="card-header">Interests</div>
 					<div className="card-body">
-						{profile.data?.tags.map((tag, index) => (
+						{object.data?.tags.map((tag, index) => (
 							<div key={index} className="badge bg-secondary">
 								<Link
 									href={{
@@ -186,7 +188,7 @@ const Sidebar = ({ profile = {}, photos = [] }) => {
 					</div>
 				</div>
 			)}
-		</>
+		</Globalsidebar>
 	);
 };
 

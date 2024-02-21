@@ -34,7 +34,6 @@ async function getQuotes() {
 	const res = await fetchurl(
 		`http://localhost:5000/api/v1/extras/quotes/random`
 	);
-
 	return res.json();
 }
 

@@ -1,46 +1,56 @@
 import { Suspense } from "react";
-import Single from "@/components/media/single";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 import Header from "@/layout/header";
 import Loading from "@/app/profile/loading";
+import PicturesList from "@/components/profile/pictureslist";
+import Sidebar from "@/components/profile/sidebar";
 
-async function getMe(params) {
-	const res = await fetch(`http://localhost:5000/api/v1/users${params}`);
+async function getAuthenticatedUser() {
+	const res = await fetchurl(`http://localhost:5000/api/v1/auth/me`);
+	return res.json();
+}
+
+async function getProfile(params) {
+	const res = await fetchurl(`http://localhost:5000/api/v1/users${params}`);
 	return res.json();
 }
 
 async function getMedias(params) {
-	const res = await fetch(`http://localhost:5000/api/v1/medias${params}`, {
-		cache: "no-store",
-	});
-
+	const res = await fetchurl(`http://localhost:5000/api/v1/files${params}`);
 	return res.json();
 }
 
-const MePhotosIndex = async ({ params, searchParams }) => {
-	const getMeData = getMe(`/${params.id}`);
+const ProfilePhotosRead = async ({ params, searchParams }) => {
+	const auth = await getAuthenticatedUser();
 
-	const limit = searchParams.limit || 10;
+	const getProfilesData = getProfile(`/${params.id}`);
+
+	const limit = searchParams.limit || 50;
 	const page = searchParams.page || 1;
+	const decrypt = searchParams.decrypt === "true" ? "&decrypt=true" : "";
 
-	const getMediasData = getMedias(`?limit=9&album=posts`);
+	const getSidebarMediasData = getMedias(
+		`?user=${params.id}&page=1&limit=9&sort=-createdAt&album=posts`
+	);
 
-	const me = await getMeData;
-	const photos = await getMediasData;
+	const getMediasData = getMedias(
+		`?user=${params.id}&page=${page}&limit=${limit}&sort=-createdAt&album=posts`
+	);
 
-	const nextPage = photos?.pagination?.next?.page || 0;
-	const prevPage = photos?.pagination?.prev?.page || 0;
-
-	let images = {
-		id: 1234,
-		src: "https://source.unsplash.com/random/168x168",
-	};
+	const [profile, sidebarphotos, files] = await Promise.all([
+		getProfilesData,
+		getSidebarMediasData,
+		getMediasData,
+	]);
 
 	return (
 		<Suspense fallback={<Loading />}>
 			<Header
+				title={profile.data.username}
+				description={profile.data.bio}
 				headerStyle={{
 					background: `linear-gradient(to bottom, rgba(0,0,0,0.7) 0%,rgba(0,0,0,0.7) 100%), url(${
-						me.data[0].cover?.location.secure_location ||
+						profile.data?.files?.cover?.location.secure_location ||
 						`https://befreebucket-for-outputs.s3.amazonaws.com/2023/02/map-image.png`
 					})`,
 					backgroundPosition: "center",
@@ -49,20 +59,16 @@ const MePhotosIndex = async ({ params, searchParams }) => {
 			/>
 			<div className="container">
 				<div className="row">
-					<div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 profile-pictures">
-						{photos?.data?.length > 0 && (
-							<>
-								<h2>Photos</h2>
-								{photos.data?.map((media) => (
-									<Single key={media._id} media={media} />
-								))}
-							</>
-						)}
-					</div>
+					<Sidebar object={profile} objects={sidebarphotos} />
+					<PicturesList
+						object={profile}
+						objects={files}
+						searchParams={searchParams}
+					/>
 				</div>
 			</div>
 		</Suspense>
 	);
 };
 
-export default MePhotosIndex;
+export default ProfilePhotosRead;

@@ -50,7 +50,31 @@ ACCORDION
 /*****************************
 PROFILE PICTURES
 *****************************/
-.profile-pictures {
+.widget-header {
+	width: auto;
+	height: 125px;
+	background-position: center !important;
+	background-size: cover !important;
+}
+
+.widget-body {
+	padding: 50px 15px 15px;
+	position: relative;
+}
+
+.widget-img {
+	position: absolute;
+	width: 64px;
+	height: 64px;
+	left: 50%;
+	margin-left: -32px;
+	top: -32px;
+}
+
+.img-border {
+	box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.1);
+}
+/*.profile-pictures {
 	display: flex;
 	flex-direction: row;
 	flex-wrap: wrap;
@@ -72,7 +96,7 @@ PROFILE PICTURES
 	border-radius: 8px;
 	box-sizing: border-box;
 	height: 100%;
-}
+}*/
 
 /*****************************
 PREVIEWER

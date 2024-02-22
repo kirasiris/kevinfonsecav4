@@ -30,11 +30,11 @@ const ProfilePhotoAvatarsIndex = async ({ params, searchParams }) => {
 	const decrypt = searchParams.decrypt === "true" ? "&decrypt=true" : "";
 
 	const getSidebarMediasData = getMedias(
-		`?user=${params.id}&page=1&limit=9&sort=-createdAt&album=posts`
+		`?user=${params.id}&page=1&limit=9&sort=-createdAt&album=posts${decrypt}`
 	);
 
 	const getMediasData = getMedias(
-		`?user=${params.id}&page=${page}&limit=${limit}&sort=-createdAt&album=profile-pictures`
+		`?user=${params.id}&page=${page}&limit=${limit}&sort=-createdAt&album=profile-pictures${decrypt}`
 	);
 
 	const [profile, sidebarphotos, files] = await Promise.all([

@@ -44,11 +44,11 @@ const ProfileRead = async ({ params, searchParams }) => {
 	);
 
 	const getFeaturedPostsData = getFeaturedPosts(
-		`?user${params.id}&featured=true&status=published`
+		`?user${params.id}&featured=true&status=published${decrypt}`
 	);
 
 	const getPostsData = getPosts(
-		`?user=${params.id}&page=${page}&limit=${limit}&sort=-createdAt&status=published&postType=post`
+		`?user=${params.id}&page=${page}&limit=${limit}&sort=-createdAt&status=published&postType=post${decrypt}`
 	);
 
 	const getMediasData = getMedias(`?user=${params.id}&limit=9&album=posts`);

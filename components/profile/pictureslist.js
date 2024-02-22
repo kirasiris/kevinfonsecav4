@@ -11,37 +11,56 @@ const PicturesList = ({ object = {}, objects = [], searchParams = {} }) => {
 				<div className="card-header">
 					<div className="clear-both">
 						<div className="float-start">
-							<Link
-								href={{
-									pathname: `/profile/${object.data._id}/${object.data.username}/photos/avatars`,
-									query: {
-										page: 1,
-										limit: 50,
-										sort: `-createdAt`,
-									},
-								}}
-								passHref
-								legacyBehavior
-							>
-								Avatars
-							</Link>
-							|
-							<Link
-								href={{
-									pathname: `/profile/${object.data._id}/${object.data.username}/photos/covers`,
-									query: {
-										page: 1,
-										limit: 50,
-										sort: `-createdAt`,
-									},
-								}}
-								passHref
-								legacyBehavior
-							>
-								Covers
-							</Link>
+							<div className="d-flex align-items-center">
+								<div className="btn-group">
+									<Link
+										href={{
+											pathname: `/profile/${object.data._id}/${object.data.username}/photos`,
+											query: {
+												page: 1,
+												limit: 50,
+												sort: `-createdAt`,
+											},
+										}}
+										passHref
+										legacyBehavior
+									>
+										<a className="btn btn-link btn-sm">All</a>
+									</Link>
+									<Link
+										href={{
+											pathname: `/profile/${object.data._id}/${object.data.username}/photos/avatars`,
+											query: {
+												page: 1,
+												limit: 50,
+												sort: `-createdAt`,
+											},
+										}}
+										passHref
+										legacyBehavior
+									>
+										<a className="btn btn-link btn-sm">Avatars</a>
+									</Link>
+									<Link
+										href={{
+											pathname: `/profile/${object.data._id}/${object.data.username}/photos/covers`,
+											query: {
+												page: 1,
+												limit: 50,
+												sort: `-createdAt`,
+											},
+										}}
+										passHref
+										legacyBehavior
+									>
+										<a className="btn btn-link btn-sm">Covers</a>
+									</Link>
+								</div>
+							</div>
 						</div>
-						<div className="float-end">END</div>
+						<div className="float-end">
+							<div className="d-flex align-items-center">END</div>
+						</div>
 					</div>
 				</div>
 				<div

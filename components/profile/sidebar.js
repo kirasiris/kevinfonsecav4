@@ -78,13 +78,14 @@ const Sidebar = ({ object = {}, objects = [] }) => {
 							<li className="list-group-item border-0 pb-1">
 								<Image
 									src={
-										object.data?.inRelationshipWith.avatar ||
+										object.data?.inRelationshipWith.files?.avatar?.location
+											?.secure_location ||
 										`https://source.unsplash.com/random/1200x900`
 									}
 									className="mr-3"
-									width={30}
-									height={30}
-									alt={`${object.data?.inRelationshipWith}'s  profile avatar`}
+									width={45}
+									height={45}
+									alt={`${object.data?.inRelationshipWith?.username}'s profile avatar`}
 									style={{ objectFit: "cover" }}
 								/>
 								<Link
@@ -106,7 +107,7 @@ const Sidebar = ({ object = {}, objects = [] }) => {
 				<div className="card-footer">
 					{object.data?.role.length > 0 &&
 						object.data?.role.map((r, i) => (
-							<div key={i} className="badge bg-secondary">
+							<div key={i} className="badge bg-secondary me-1">
 								{r.charAt(0).toUpperCase() + r.slice(1)}
 							</div>
 						))}
@@ -168,7 +169,7 @@ const Sidebar = ({ object = {}, objects = [] }) => {
 				<div className="card mb-3">
 					<div className="card-header">Interests</div>
 					<div className="card-body">
-						{object.data?.tags.map((tag, index) => (
+						{object.data.tags.map((tag, index) => (
 							<div key={index} className="badge bg-secondary">
 								<Link
 									href={{

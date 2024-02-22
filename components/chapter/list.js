@@ -6,10 +6,12 @@ import ExportModal from "@/components/global/exportmodal";
 import ReportModal from "@/components/global/reportmodal";
 import Globalcontent from "@/layout/content";
 import Globalsidebar from "@/layout/sidebar";
+import Image from "next/image";
 
 const List = ({
 	object,
 	objects = [],
+	students = [],
 	isAdmin = false,
 	searchParams = {},
 	isIndex = true,
@@ -49,7 +51,7 @@ const List = ({
 														legacyBehavior
 													>
 														<a className="btn btn-outline-secondary btn-sm">
-															Add lesson
+															Add&nbsp;lesson
 														</a>
 													</Link>
 												</div>
@@ -78,13 +80,18 @@ const List = ({
 																	{lesson.title}
 																</a>
 															</Link>
+															{lesson.free_preview && (
+																<span className="badge bg-info me-1">
+																	Free&nbsp;Preview
+																</span>
+															)}
 														</div>
 														<div className="float-end">
 															<span className="badge bg-info me-1">
 																{lesson.duration}
 															</span>
 															<span className="badge bg-secondary me-1">
-																{lesson.views} Views
+																{lesson.views}&nbsp;Views
 															</span>
 															<span className="badge bg-dark me-1">
 																{lesson.language.toUpperCase()}
@@ -95,7 +102,7 @@ const List = ({
 											</ul>
 										) : (
 											<div className="alert alert-danger rounded-0  m-0 border-0">
-												Nothing found
+												Nothing&nbsp;found
 											</div>
 										)}
 									</div>
@@ -129,20 +136,59 @@ const List = ({
 						</article>
 					</Globalcontent>
 					<Globalsidebar>
-						ENROLLED USERS
-						{/* <figure className="mb-4 bg-dark">
-							<Image
-								className="img-fluid p-3"
-								src={
-									object?.data?.files?.avatar?.location?.secure_location ||
-									`https://source.unsplash.com/random/440x570`
-								}
-								alt={`${object?.data?.files?.avatar?.location?.filename}'s featured image`}
-								width={440}
-								height={570}
-								priority
-							/>
-						</figure> */}
+						{students?.data?.length > 0 && (
+							<div className="card mb-3">
+								<div className="card-header">
+									Enrolled&nbsp;Students
+									<Link
+										href={{
+											pathname: `/course/${object.data?._id}/students`,
+											query: {
+												page: 1,
+												limit: 10,
+												sort: `-createdAt`,
+											},
+										}}
+										passHref
+										legacyBehavior
+									>
+										<a className="float-end">View&nbsp;all</a>
+									</Link>
+								</div>
+								<div className="card-body row g-2 p-0">
+									{students.data.map((student, index) => (
+										<Link
+											key={student._id}
+											href={{
+												pathname: `/profile/${student.user._id}/${student.user.username}`,
+												query: {
+													page: 1,
+													limit: 50,
+												},
+											}}
+											passHref
+											legacyBehavior
+										>
+											<a className="col">
+												<Image
+													src={
+														student.user.files.avatar.location.secure_location
+													}
+													className={`${index}`}
+													width={130}
+													height={130}
+													alt={`${student.user.username}'s profile avatars`}
+													style={{
+														objectFit: "cover",
+														margin: "1px",
+													}}
+												/>
+											</a>
+										</Link>
+									))}
+								</div>
+							</div>
+						)}
 					</Globalsidebar>
 				</div>
 			) : (

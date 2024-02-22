@@ -11,6 +11,7 @@ import ParseHtml from "@/layout/parseHtml";
 import ReportModal from "@/components/global/reportmodal";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import Globalcontent from "@/layout/content";
+import ArticleHeader from "@/components/global/articleheader";
 
 async function getAuthenticatedUser() {
 	const res = await fetchurl(`http://localhost:5000/api/v1/auth/me`);
@@ -44,8 +45,6 @@ const ProfilePictureRead = async ({ params, searchParams }) => {
 		getSidebarMediasData,
 	]);
 
-	console.log(file);
-
 	return (
 		<Suspense fallback={<Loading />}>
 			<Header
@@ -65,6 +64,7 @@ const ProfilePictureRead = async ({ params, searchParams }) => {
 					<Sidebar object={profile} objects={sidebarphotos} />
 					<Globalcontent>
 						<article>
+							<ArticleHeader object={file} />
 							<figure className="mb-4">
 								<Image
 									src={file.data.location.secure_location}
@@ -79,6 +79,8 @@ const ProfilePictureRead = async ({ params, searchParams }) => {
 								/>
 							</figure>
 							<section className="mb-5">
+								<ParseHtml text={file?.data?.text} />
+								<hr />
 								<div className="float-start">
 									<ExportModal
 										linkToShare={`localhost:3000/profile/${profile?.data?._id}/${profile?.data?.username}/photos/${file?.data?._id}`}
@@ -96,12 +98,12 @@ const ProfilePictureRead = async ({ params, searchParams }) => {
 								<AuthorBox author={profile?.data} />
 								{/* <CommentBox
 										auth={auth.data}
-										user={blog?.data?.user}
-										postId={blog?.data?._id}
-										secondPostId={blog?.data?._id}
-										isVisible={blog?.data?.commented}
-										postType="blog"
-										onModel="Blog"
+										user={file?.data?.user}
+										postId={file?.data?._id}
+										secondPostId={file?.data?._id}
+										isVisible={file?.data?.commented}
+										postType="file"
+										onModel="File"
 									/> */}
 							</section>
 						</article>

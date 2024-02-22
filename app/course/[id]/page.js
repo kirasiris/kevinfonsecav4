@@ -16,7 +16,13 @@ async function getCourse(params) {
 
 async function getCourseLessons(params) {
 	const res = await fetchurl(`http://localhost:5000/api/v1/videos${params}`);
+	return res.json();
+}
 
+async function getCourseStudentsEnrolled(params) {
+	const res = await fetchurl(
+		`http://localhost:5000/api/v1/subscribers${params}`
+	);
 	return res.json();
 }
 
@@ -28,9 +34,14 @@ const CourseRead = async ({ params, searchParams }) => {
 		`?resourceId=${params.id}&sort=-orderingNumber&onModel=Course`
 	);
 
-	const [course, lessons] = await Promise.all([
+	const getCourseStudentsEnrolledData = getCourseStudentsEnrolled(
+		`?resourceId=${params.id}&onModel=Course`
+	);
+
+	const [course, lessons, enrolledstudents] = await Promise.all([
 		getCoursesData,
 		getCourseLessonsData,
+		getCourseStudentsEnrolledData,
 	]);
 
 	const myParams = {
@@ -49,6 +60,7 @@ const CourseRead = async ({ params, searchParams }) => {
 			<List
 				object={course}
 				objects={lessons}
+				students={enrolledstudents}
 				isAdmin={false}
 				searchParams={searchParams}
 				isIndex={true}

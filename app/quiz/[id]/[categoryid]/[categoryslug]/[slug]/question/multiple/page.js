@@ -93,7 +93,7 @@ const QuizMultiplePageRead = async ({ params, searchParams }) => {
 											))}
 											<NumericPagination
 												totalPages={
-													questions?.pagination?.totalPages ||
+													questions?.pagination?.totalpages ||
 													Math.ceil(
 														questions?.data?.length / searchParams.limit
 													)

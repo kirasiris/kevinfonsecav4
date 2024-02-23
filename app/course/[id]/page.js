@@ -31,7 +31,7 @@ const CourseRead = async ({ params, searchParams }) => {
 
 	const getCoursesData = getCourse(`/${params.id}`);
 	const getCourseLessonsData = getCourseLessons(
-		`?resourceId=${params.id}&sort=-orderingNumber&onModel=Course`
+		`?resourceId=${params.id}&sort=orderingNumber&onModel=Course`
 	);
 
 	const getCourseStudentsEnrolledData = getCourseStudentsEnrolled(

@@ -174,11 +174,7 @@ const ReadCourse = () => {
 									onDrop={(e) => updateDrop(e, index)}
 								>
 									<div className="float-start">
-										<Link
-											href={`/video/${lesson._id}/${lesson.slug}`}
-											passHref
-											legacyBehavior
-										>
+										<Link href={`/video/${lesson._id}`} passHref legacyBehavior>
 											<a target="_blank">
 												<span className="badge bg-secondary me-1">
 													{lesson.orderingNumber}
@@ -188,11 +184,16 @@ const ReadCourse = () => {
 										</Link>
 									</div>
 									<div className="float-end">
+										{lesson.free_preview && (
+											<span className="badge bg-info me-1">
+												Free&nbsp;Preview
+											</span>
+										)}
 										<span className="badge bg-info me-1">
 											{lesson.duration}
 										</span>
 										<span className="badge bg-secondary me-1">
-											{lesson.views} Views
+											{lesson.views}&nbsp;Views
 										</span>
 										<span className="badge bg-dark me-1">
 											{lesson.language.toUpperCase()}
@@ -203,7 +204,7 @@ const ReadCourse = () => {
 						</ul>
 					) : (
 						<div className="alert alert-danger rounded-0  m-0 border-0">
-							Nothing found
+							Nothing&nbsp;found
 						</div>
 					)}
 				</div>

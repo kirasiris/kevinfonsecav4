@@ -7,6 +7,7 @@ import ReportModal from "@/components/global/reportmodal";
 import Globalcontent from "@/layout/content";
 import Globalsidebar from "@/layout/sidebar";
 import Image from "next/image";
+import PreviewModal from "./previewmodal";
 
 const List = ({
 	object,
@@ -80,13 +81,11 @@ const List = ({
 																	{lesson.title}
 																</a>
 															</Link>
-															{lesson.free_preview && (
-																<span className="badge bg-info me-1">
-																	Free&nbsp;Preview
-																</span>
-															)}
 														</div>
 														<div className="float-end">
+															{lesson.free_preview && (
+																<PreviewModal object={lesson} />
+															)}
 															<span className="badge bg-info me-1">
 																{lesson.duration}
 															</span>

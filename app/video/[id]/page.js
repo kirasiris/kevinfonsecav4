@@ -13,12 +13,6 @@ async function getAuthenticatedUser() {
 
 async function getVideo(params) {
 	const res = await fetchurl(`http://localhost:5000/api/v1/videos${params}`);
-
-	if (!res.ok) {
-		// This will activate the closest `error.js` Error Boundary
-		throw new Error("Failed to fetch data");
-	}
-
 	return res.json();
 }
 
@@ -27,7 +21,6 @@ async function getViews(params) {
 		`http://localhost:5000/api/v1/videos${params}/addview`,
 		"PUT"
 	);
-
 	return res.json();
 }
 
@@ -109,7 +102,6 @@ const VideoRead = async ({ params, searchParams }) => {
 								<hr />
 								<ParseHtml text={video.data.text} />
 								<hr />
-
 								<Link
 									href={{
 										pathname: `/videos/category/`,

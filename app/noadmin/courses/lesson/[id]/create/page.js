@@ -115,6 +115,47 @@ const CreateLesson = ({ params }) => {
 					onModel="video"
 					advancedTextEditor={false}
 				/>
+				<div className="row">
+					<div className="col">
+						<label htmlFor="free_preview" className="form-label">
+							Free Preview
+						</label>
+						<select
+							id="free_preview"
+							name="free_preview"
+							value={free_preview}
+							onChange={(e) => {
+								setLessonData({
+									...lessonData,
+									free_preview: e.target.value,
+								});
+							}}
+							className="form-control"
+						>
+							<option value={true}>Yes</option>
+							<option value={false}>No</option>
+						</select>
+					</div>
+					<div className="col">
+						<label htmlFor="duration" className="form-label">
+							Duration
+						</label>
+						<input
+							id="duration"
+							name="duration"
+							value={duration}
+							onChange={(e) => {
+								setLessonData({
+									...lessonData,
+									duration: e.target.value,
+								});
+							}}
+							type="text"
+							className="form-control mb-3"
+							placeholder=""
+						/>
+					</div>
+				</div>
 			</div>
 			<div className="col-lg-3">
 				<AdminSidebar

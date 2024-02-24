@@ -7,6 +7,7 @@ import ParseHtml from "@/layout/parseHtml";
 import Image from "next/image";
 import Link from "next/link";
 import List from "@/components/chapter/list";
+import PreviewModal from "@/components/chapter/previewmodal";
 
 const ReadCourse = () => {
 	const router = useRouter();
@@ -184,11 +185,7 @@ const ReadCourse = () => {
 										</Link>
 									</div>
 									<div className="float-end">
-										{lesson.free_preview && (
-											<span className="badge bg-info me-1">
-												Free&nbsp;Preview
-											</span>
-										)}
+										{lesson.free_preview && <PreviewModal object={lesson} />}
 										<span className="badge bg-info me-1">
 											{lesson.duration}
 										</span>

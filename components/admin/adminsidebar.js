@@ -15,7 +15,6 @@ const AdminSidebar = ({
 	featured = false,
 	commented = false,
 	embedding = false,
-	github = false,
 	github_readme = "",
 	category = undefined,
 	categories = [],
@@ -113,27 +112,30 @@ const AdminSidebar = ({
 					</select>
 				</>
 			)}
-			<label htmlFor="password" className="form-label">
-				Password
-			</label>
-			<input
-				id="password"
-				name="password"
-				value={password}
-				onChange={(e) => {
-					setObjectData({
-						...objectData,
-						password: e.target.value,
-					});
-				}}
-				type="password"
-				className="form-control mb-3"
-				placeholder="******"
-			/>
-			{github &&
-				(github_readme !== "" ||
-					github_readme !== null ||
-					github_readme !== undefined) && (
+			{password !== "" && password !== undefined && password !== null && (
+				<>
+					<label htmlFor="password" className="form-label">
+						Password
+					</label>
+					<input
+						id="password"
+						name="password"
+						value={password}
+						onChange={(e) => {
+							setObjectData({
+								...objectData,
+								password: e.target.value,
+							});
+						}}
+						type="password"
+						className="form-control mb-3"
+						placeholder="******"
+					/>
+				</>
+			)}
+			{github_readme !== "" &&
+				github_readme !== null &&
+				github_readme !== undefined && (
 					<>
 						<label htmlFor="github_readme" className="form-label">
 							GitHub readME

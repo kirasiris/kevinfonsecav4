@@ -15,14 +15,15 @@ const CreateLesson = ({ params }) => {
 	const [lessonData, setLessonData] = useState({
 		title: `Untitled`,
 		text: `No description`,
-		featured: false,
-		commented: false,
-		embedding: false,
+		featured: true,
+		commented: true,
+		embedding: true,
 		category: undefined,
 		password: ``,
 		status: `draft`,
-		free_preview: false,
+		free_preview: true,
 		duration: 0,
+		orderingNumber: 1,
 	});
 	const {
 		title,
@@ -35,6 +36,7 @@ const CreateLesson = ({ params }) => {
 		status,
 		free_preview,
 		duration,
+		orderingNumber,
 	} = lessonData;
 
 	const addLesson = async (e) => {
@@ -72,14 +74,15 @@ const CreateLesson = ({ params }) => {
 		setLessonData({
 			title: `Untitled`,
 			text: `No description`,
-			featured: false,
-			commented: false,
-			embedding: false,
+			featured: true,
+			commented: true,
+			embedding: true,
 			category: undefined,
 			password: ``,
 			status: `draft`,
-			free_preview: false,
+			free_preview: true,
 			duration: 0,
+			orderingNumber: 1,
 		});
 	};
 
@@ -153,6 +156,25 @@ const CreateLesson = ({ params }) => {
 							type="text"
 							className="form-control mb-3"
 							placeholder=""
+						/>
+					</div>
+					<div className="col">
+						<label htmlFor="orderingNumber" className="form-label">
+							Order
+						</label>
+						<input
+							id="orderingNumber"
+							name="orderingNumber"
+							value={orderingNumber}
+							onChange={(e) => {
+								setLessonData({
+									...lessonData,
+									orderingNumber: e.target.value,
+								});
+							}}
+							type="text"
+							className="form-control mb-3"
+							placeholder="Here goes the #number of object within list"
 						/>
 					</div>
 				</div>

@@ -4,11 +4,11 @@ import Modal from "react-bootstrap/Modal";
 
 const PreviewModal = ({ object }) => {
 	const [previewModal, setPreviewModal] = useState(false);
-	console.log("Preview", object);
+
 	return (
 		<>
 			<span
-				className="badge bg-info me-1"
+				className="badge bg-info div-hover me-1"
 				onClick={() => setPreviewModal(!previewModal)}
 			>
 				Preview

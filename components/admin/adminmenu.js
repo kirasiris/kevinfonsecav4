@@ -210,6 +210,15 @@ const AdminMenu = () => {
 						Shortened Urls
 					</a>
 				</Link>
+				<Link href={"/noadmin/subscribers"} passHref legacyBehavior>
+					<a
+						className={`list-group-item list-group-item-action ${isActive(
+							"/noadmin/subscribers"
+						)}`}
+					>
+						Subscribers
+					</a>
+				</Link>
 				<Link href={"/noadmin/logs"} passHref legacyBehavior>
 					<a
 						className={`list-group-item list-group-item-action ${isActive(

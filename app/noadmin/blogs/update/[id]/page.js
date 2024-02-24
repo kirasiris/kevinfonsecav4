@@ -50,13 +50,13 @@ const UpdateBlog = () => {
 		title: `Untitled`,
 		avatar: files?.selected?._id,
 		text: `No description`,
-		featured: false,
-		embedding: false,
+		featured: true,
+		embedding: true,
 		category: undefined,
-		commented: false,
+		commented: true,
 		password: ``,
 		status: `draft`,
-		fullWidth: false,
+		fullWidth: true,
 	});
 	const {
 		title,
@@ -159,14 +159,14 @@ const UpdateBlog = () => {
 			title: `Untitled`,
 			avatar: files?.selected?._id,
 			text: `No description`,
-			featured: false,
-			embedding: false,
+			featured: true,
+			embedding: true,
 			category: undefined,
-			commented: false,
+			commented: true,
 			password: ``,
 			tags: [],
 			status: `draft`,
-			fullWidth: false,
+			fullWidth: true,
 		});
 	};
 

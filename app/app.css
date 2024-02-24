@@ -26,6 +26,10 @@ p > img {
 	width: 100%;
 }
 
+.div-hover {
+	cursor: pointer;
+}
+
 /*****************************
 SHORTS/STORIES
 *****************************/

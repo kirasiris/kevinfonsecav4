@@ -13,7 +13,7 @@ const CreateSecret = () => {
 		sex: "non-binary",
 		password: "",
 		text: `No description`,
-		nsfw: false,
+		nsfw: true,
 		status: `draft`,
 	});
 	const { age, sex, password, text, nsfw, status } = secretData;
@@ -51,7 +51,7 @@ const CreateSecret = () => {
 			sex: "non-binary",
 			password: "",
 			text: `No description`,
-			nsfw: false,
+			nsfw: true,
 			status: `draft`,
 		});
 	};

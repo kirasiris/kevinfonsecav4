@@ -52,14 +52,14 @@ const UpdateQuiz = () => {
 		duration: 0,
 		minimumScore: 3,
 		maximumScore: 100,
-		featured: false,
-		embedding: false,
+		featured: true,
+		embedding: true,
 		category: undefined,
-		commented: false,
+		commented: true,
 		password: ``,
 		status: `draft`,
 		attempts: 1,
-		singlePage: false,
+		singlePage: true,
 	});
 	const {
 		title,
@@ -174,14 +174,14 @@ const UpdateQuiz = () => {
 			duration: 0,
 			minimumScore: 3,
 			maximumScore: 100,
-			featured: false,
-			embedding: false,
+			featured: true,
+			embedding: true,
 			category: undefined,
-			commented: false,
+			commented: true,
 			password: ``,
 			status: `draft`,
 			attempts: 1,
-			singlePage: false,
+			singlePage: true,
 		});
 	};
 

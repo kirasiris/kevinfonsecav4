@@ -48,9 +48,9 @@ const CreatePlaylist = () => {
 	const [playlistData, setPlaylistData] = useState({
 		title: `Untitled`,
 		text: `No description`,
-		featured: false,
+		featured: true,
 		category: undefined,
-		commented: false,
+		commented: true,
 		password: ``,
 		onairstatus: `finished`,
 		onairtype: `tv`,
@@ -104,9 +104,9 @@ const CreatePlaylist = () => {
 		setPlaylistData({
 			title: `Untitled`,
 			text: `No description`,
-			featured: false,
+			featured: true,
 			category: undefined,
-			commented: false,
+			commented: true,
 			password: ``,
 			onairstatus: `finished`,
 			onairtype: `tv`,

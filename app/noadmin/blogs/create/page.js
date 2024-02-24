@@ -48,13 +48,13 @@ const CreateBlog = () => {
 	const [blogData, setBlogData] = useState({
 		title: `Untitled`,
 		text: `No description`,
-		featured: false,
-		embedding: false,
+		featured: true,
+		embedding: true,
 		category: undefined,
-		commented: false,
+		commented: true,
 		password: ``,
 		status: `draft`,
-		fullWidth: false,
+		fullWidth: true,
 	});
 	const {
 		title,
@@ -104,14 +104,14 @@ const CreateBlog = () => {
 		setBlogData({
 			title: `Untitled`,
 			text: `No description`,
-			featured: false,
-			embedding: false,
+			featured: true,
+			embedding: true,
 			category: undefined,
-			commented: false,
+			commented: true,
 			password: ``,
 			tags: [],
 			status: `draft`,
-			fullWidth: false,
+			fullWidth: true,
 		});
 	};
 

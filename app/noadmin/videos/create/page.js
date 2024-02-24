@@ -80,13 +80,13 @@ const CreateVideo = () => {
 	}, []);
 
 	const [videoData, setVideoData] = useState({
-		resourceId: 0,
+		resourceId: undefined,
 		title: `Untitled`,
 		avatar: files?.selected?._id,
 		text: `No description`,
-		featured: false,
-		commented: false,
-		embedding: false,
+		featured: true,
+		commented: true,
+		embedding: true,
 		category: undefined,
 		password: ``,
 		status: `draft`,
@@ -148,13 +148,13 @@ const CreateVideo = () => {
 
 	const resetForm = () => {
 		setVideoData({
-			resourceId: 0,
+			resourceId: undefined,
 			title: `Untitled`,
 			avatar: files?.selected?._id,
 			text: `No description`,
-			featured: false,
-			commented: false,
-			embedding: false,
+			featured: true,
+			commented: true,
+			embedding: true,
 			category: undefined,
 			password: ``,
 			status: `draft`,
@@ -199,27 +199,32 @@ const CreateVideo = () => {
 					onModel="video"
 					advancedTextEditor={true}
 				/>
-				<label htmlFor="resourceId" className="form-label">
-					Playlist
-				</label>
-				<select
-					id="resourceId"
-					name="resourceId"
-					value={resourceId}
-					onChange={(e) => {
-						setVideoData({
-							...videoData,
-							resourceId: e.target.value,
-						});
-					}}
-					className="form-control"
-				>
-					{playlists.map((playlist) => (
-						<option key={playlist._id} value={playlist._id}>
-							{playlist.title} - {playlist.onairtype.toUpperCase()}
-						</option>
-					))}
-				</select>
+				{playlists?.length > 0 && (
+					<>
+						<label htmlFor="resourceId" className="form-label">
+							Playlist
+						</label>
+						<select
+							id="resourceId"
+							name="resourceId"
+							value={resourceId}
+							onChange={(e) => {
+								setVideoData({
+									...videoData,
+									resourceId: e.target.value,
+								});
+							}}
+							className="form-control"
+						>
+							{playlists?.map((playlist) => (
+								<option key={playlist._id} value={playlist._id}>
+									{playlist.title} - {playlist.onairtype.toUpperCase()}
+								</option>
+							))}
+						</select>
+					</>
+				)}
+
 				{/* CAST */}
 				<label htmlFor="address" className="form-label">
 					Address

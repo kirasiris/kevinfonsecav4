@@ -222,7 +222,6 @@ const UpdateTheme = () => {
 					featured={featured}
 					commented={commented}
 					embedding={embedding}
-					github={true}
 					github_readme={github_readme}
 					category={category}
 					categories={categories}

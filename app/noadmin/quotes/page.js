@@ -77,7 +77,7 @@ const AdminQuotesIndex = () => {
 		sourceWebsite: ``,
 		sourceUrl: `#`,
 		status: `draft`,
-		embedding: false,
+		embedding: true,
 	});
 
 	const {
@@ -197,7 +197,7 @@ const AdminQuotesIndex = () => {
 			sourceWebsite: ``,
 			sourceUrl: `#`,
 			status: `draft`,
-			embedding: false,
+			embedding: true,
 		});
 	};
 

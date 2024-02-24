@@ -7,26 +7,26 @@ async function getCourse(params) {
 	return res.json();
 }
 
-async function getCourseStudentsEnrolled(params) {
+async function getCourseComments(params) {
 	const res = await fetchurl(
 		`http://localhost:5000/api/v1/subscribers${params}`
 	);
 	return res.json();
 }
 
-const CourseStudentsIndex = async ({ params, searchParams }) => {
+const CourseCommentsIndex = async ({ params, searchParams }) => {
 	const limit = searchParams.limit || 10;
 	const page = searchParams.page || 1;
 	const decrypt = searchParams.decrypt === "true" ? "&decrypt=true" : "";
 
 	const getCoursesData = getCourse(`/${params.id}`);
-	const getCourseStudentsEnrolledData = getCourseStudentsEnrolled(
+	const getCourseCommentsData = getCourseComments(
 		`?resourceId=${params.id}&page=${page}&limit=${limit}&sort=-createdAt&onModel=Course${decrypt}`
 	);
 
 	const [course, enrolledstudents] = await Promise.all([
 		getCoursesData,
-		getCourseStudentsEnrolledData,
+		getCourseCommentsData,
 	]);
 
 	const myParams = {
@@ -42,9 +42,14 @@ const CourseStudentsIndex = async ({ params, searchParams }) => {
 				imageWidth="440"
 				imageHeight="570"
 			/>
-			<List objects={enrolledstudents} searchParams={searchParams} />
+			<div className="container">
+				<div className="row">
+					<div className="col-lg-12">HERE ARE SUPPOSED TO BE THE COMMENTS</div>
+				</div>
+			</div>
+			{/* <List objects={enrolledstudents} searchParams={searchParams} /> */}
 		</>
 	);
 };
 
-export default CourseStudentsIndex;
+export default CourseCommentsIndex;

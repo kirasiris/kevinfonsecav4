@@ -49,14 +49,15 @@ const CreateLesson = () => {
 		resourceId: 0,
 		title: `Untitled`,
 		text: `No description`,
-		featured: false,
-		commented: false,
-		embedding: false,
+		featured: true,
+		commented: true,
+		embedding: true,
 		category: undefined,
 		password: ``,
 		status: `draft`,
-		free_preview: false,
+		free_preview: true,
 		duration: 0,
+		orderingNumber: 1,
 	});
 	const {
 		resourceId,
@@ -70,6 +71,7 @@ const CreateLesson = () => {
 		status,
 		free_preview,
 		duration,
+		orderingNumber,
 	} = lessonData;
 
 	const addLesson = async (e) => {
@@ -107,14 +109,15 @@ const CreateLesson = () => {
 			resourceId: 0,
 			title: `Untitled`,
 			text: `No description`,
-			featured: false,
-			commented: false,
-			embedding: false,
+			featured: true,
+			commented: true,
+			embedding: true,
 			category: undefined,
 			password: ``,
 			status: `draft`,
-			free_preview: false,
+			free_preview: true,
 			duration: 0,
+			orderingNumber: 1,
 		});
 	};
 
@@ -171,6 +174,66 @@ const CreateLesson = () => {
 						</option>
 					))}
 				</select>
+				<div className="row">
+					<div className="col">
+						<label htmlFor="free_preview" className="form-label">
+							Free Preview
+						</label>
+						<select
+							id="free_preview"
+							name="free_preview"
+							value={free_preview}
+							onChange={(e) => {
+								setLessonData({
+									...lessonData,
+									free_preview: e.target.value,
+								});
+							}}
+							className="form-control"
+						>
+							<option value={true}>Yes</option>
+							<option value={false}>No</option>
+						</select>
+					</div>
+					<div className="col">
+						<label htmlFor="duration" className="form-label">
+							Duration
+						</label>
+						<input
+							id="duration"
+							name="duration"
+							value={duration}
+							onChange={(e) => {
+								setLessonData({
+									...lessonData,
+									duration: e.target.value,
+								});
+							}}
+							type="text"
+							className="form-control mb-3"
+							placeholder=""
+						/>
+					</div>
+					<div className="col">
+						<label htmlFor="orderingNumber" className="form-label">
+							Order
+						</label>
+						<input
+							id="orderingNumber"
+							name="orderingNumber"
+							value={orderingNumber}
+							onChange={(e) => {
+								setLessonData({
+									...lessonData,
+									orderingNumber: e.target.value,
+								});
+							}}
+							type="text"
+							className="form-control mb-3"
+							placeholder="Here goes the #number of object within list"
+						/>
+					</div>
+				</div>
 			</div>
 			<div className="col-lg-3">
 				<AdminSidebar

@@ -6,9 +6,25 @@ import Link from "next/link";
 const Jumbotron = ({
 	object = {},
 	params = {},
+	enrollmentVerification = {},
 	imageWidth = "1200",
 	imageHeight = "900",
 }) => {
+	if (enrollmentVerification?.success) {
+		console.log(
+			"Hola, this is coming from the single course jumbotron. Is enrolled",
+			enrollmentVerification
+		);
+	} else if (!enrollmentVerification?.success) {
+		console.log(
+			"Hola, this is coming from the single course jumbotron. Is not enrolled"
+		);
+	} else {
+		console.log(
+			"Hola, this is coming from the single course jumbotron. There was an error with the server"
+		);
+	}
+
 	return (
 		<>
 			<header className="bg-secondary border-bottom py-5">
@@ -93,13 +109,23 @@ const Jumbotron = ({
 							)}
 							{/* enroll button */}
 							<div className="d-grid gap-2 col-12 mt-3 mb-3">
-								{object.data.isFree ? (
+								{/* If free and not enrolled */}
+								{object?.data?.isFree && !enrollmentVerification?.success && (
 									<button className="btn btn-dark btn-sm">
 										Enroll for Free
 									</button>
-								) : (
+								)}
+								{/* If not free and not enrolled */}
+								{!object?.data?.isFree && !enrollmentVerification?.success && (
 									<button className="btn btn-dark btn-sm">Pay to Enroll</button>
 								)}
+								{/* If free/not free and already enrolled */}
+								{(object?.data?.isFree || !object?.data?.isFree) &&
+									enrollmentVerification?.success && (
+										<button className="btn btn-dark btn-sm">
+											Already enrolled
+										</button>
+									)}
 							</div>
 						</div>
 					</div>

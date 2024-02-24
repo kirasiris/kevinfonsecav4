@@ -38,11 +38,17 @@ const CourseRead = async ({ params, searchParams }) => {
 		`?resourceId=${params.id}&onModel=Course`
 	);
 
-	const [course, lessons, enrolledstudents] = await Promise.all([
-		getCoursesData,
-		getCourseLessonsData,
-		getCourseStudentsEnrolledData,
-	]);
+	const verifyUserEnrollment = getCourseStudentsEnrolled(
+		`?user=${auth?.data?._id}&resourceId=${params.id}&onModel=Course`
+	);
+
+	const [course, lessons, enrolledstudents, verifyAuthEnrollment] =
+		await Promise.all([
+			getCoursesData,
+			getCourseLessonsData,
+			getCourseStudentsEnrolledData,
+			verifyUserEnrollment,
+		]);
 
 	const myParams = {
 		category: course?.data?.category,
@@ -54,6 +60,7 @@ const CourseRead = async ({ params, searchParams }) => {
 			<Jumbotron
 				object={course}
 				params={myParams}
+				enrollmentVerification={verifyAuthEnrollment}
 				imageWidth="440"
 				imageHeight="570"
 			/>

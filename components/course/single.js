@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Loading from "@/app/course/loading";
+import { formatDateWithoutTime } from "@/helpers/utilities";
 
 const Single = ({ object = {}, imageWidth = "415", imageHeight = "207" }) => {
 	return (
@@ -28,7 +29,9 @@ const Single = ({ object = {}, imageWidth = "415", imageHeight = "207" }) => {
 						/>
 					</Link>
 					<div className="card-body">
-						<div className="small text-muted">{object.createdAt}</div>
+						<div className="small text-muted">
+							{formatDateWithoutTime(object.createdAt)}
+						</div>
 						<h2 className="card-title">
 							<Link
 								href={`/course/${object._id}/${object?.category}/${object?.sub_category}/${object.slug}/index`}

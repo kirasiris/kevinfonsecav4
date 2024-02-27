@@ -48,7 +48,6 @@ const CreateCourse = () => {
 	const addCourse = async (e) => {
 		e.preventDefault();
 		try {
-			console.log(courseData);
 			await axios.post(`/courses`, {
 				...courseData,
 				files: { avatar: files?.selected?._id },

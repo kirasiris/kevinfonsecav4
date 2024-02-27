@@ -58,6 +58,7 @@ const CourseRead = async ({ params, searchParams }) => {
 	return (
 		<Suspense fallback={<Loading />}>
 			<Jumbotron
+				authenticatedUser={auth}
 				object={course}
 				params={myParams}
 				enrollmentVerification={verifyAuthEnrollment}

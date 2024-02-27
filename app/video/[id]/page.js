@@ -5,6 +5,7 @@ import Loading from "@/app/blog/loading";
 import ParseHtml from "@/layout/parseHtml";
 import ReportModal from "@/components/global/reportmodal";
 import { fetchurl } from "@/helpers/setTokenOnServer";
+import { formatDateWithoutTime } from "@/helpers/utilities";
 
 async function getAuthenticatedUser() {
 	const res = await fetchurl(`http://localhost:5000/api/v1/auth/me`);
@@ -141,7 +142,7 @@ const VideoRead = async ({ params, searchParams }) => {
 									<div className="float-end">
 										<button className="btn btn-light btn-sm me-1">Date</button>
 										<button className="btn btn-dark btn-sm">
-											{video.data.createdAt}
+											{formatDateWithoutTime(video.data.createdAt)}
 										</button>
 									</div>
 								</div>

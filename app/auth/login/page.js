@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { useContext } from "react";
 import { useState, useEffect } from "react";
 
-const Login = ({}) => {
+const Login = ({ params, searchParams }) => {
 	const router = useRouter();
 	const { auth, loadUser } = useContext(AuthContext);
 
@@ -66,7 +66,9 @@ const Login = ({}) => {
 		setAuthToken(res?.data?.token);
 		await setAuthTokenOnServer(res?.data?.token);
 		await loadUser();
-		router.push(`/noadmin`);
+		searchParams?.returnpage
+			? router.push(searchParams.returnpage)
+			: router.push(`/noadmin`);
 	};
 
 	const [passwordShown, setPasswordShown] = useState(false);

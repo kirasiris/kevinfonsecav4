@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Loading from "@/app/blog/loading";
 import ParseHtml from "@/layout/parseHtml";
+import { formatDateWithoutTime } from "@/helpers/utilities";
 
 const Single = ({
 	object = {},
@@ -31,7 +32,9 @@ const Single = ({
 						/>
 					</Link>
 					<div className="card-body">
-						<div className="small text-muted">{object.createdAt}</div>
+						<div className="small text-muted">
+							{formatDateWithoutTime(object.createdAt)}
+						</div>
 						<h2 className="card-title">
 							<Link
 								href={`/blog/${object._id}/${object?.category?._id}/${object?.category?.slug}/${object.slug}`}

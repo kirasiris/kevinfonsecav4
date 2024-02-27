@@ -3,13 +3,13 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useContext } from "react";
 import { toast } from "react-toastify";
-import Single from "@/components/admin/users/single";
+import Single from "@/components/admin/comments/single";
 import AuthContext from "@/helpers/globalContext";
 import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
 import AdminCardHeaderMenu from "@/components/admin/admincardheadermenu";
 import ClientNumericPagination from "@/layout/clientnumericpagination";
 
-const AdminUsersIndex = () => {
+const AdminCommentsIndex = () => {
 	const {
 		totalPages,
 		setTotalPages,
@@ -21,24 +21,24 @@ const AdminUsersIndex = () => {
 
 	const router = useRouter();
 
-	const [users, setUsers] = useState([]);
+	const [comments, setComments] = useState([]);
 	const [page, setPage] = useState(1);
 	const [limit] = useState(10);
 	const [sortby] = useState(`-createdAt`);
 	const [params, setParams] = useState(
-		`?page=${page}&limit=${limit}&sort=${sortby}`
+		`?page=${page}&limit=${limit}&sort=${sortby}&decrypt=true`
 	);
 	const [keyword, setKeyword] = useState("");
 	const [list, setList] = useState([]);
 	const [loading, setLoading] = useState(true);
 
-	const fetchUsers = async () => {
+	const fetchComments = async () => {
 		try {
-			const res = await axios.get(`/users${params}`);
-			setUsers(res?.data?.data);
+			const res = await axios.get(`/comments${params}`);
+			setComments(res?.data?.data);
 			setTotalPages(res?.data?.pagination?.totalpages);
 			setCurrentResults(res?.data?.count);
-			setTotalResults({ ...totalResults, users: res?.data?.countAll });
+			setTotalResults({ ...totalResults, comments: res?.data?.countAll });
 			setPage(res?.data?.pagination?.current);
 			setLoading(false);
 		} catch (err) {
@@ -65,29 +65,113 @@ const AdminUsersIndex = () => {
 	};
 
 	useEffect(() => {
-		fetchUsers();
+		fetchComments();
 	}, [router, params]);
 
 	useEffect(() => {
-		setList(users);
-	}, [users]);
+		setList(comments);
+	}, [comments]);
 
 	useEffect(() => {
 		if (keyword !== "") {
-			const result = users.filter((object) => {
-				return object.username.toLowerCase().startsWith(keyword.toLowerCase());
+			const result = comments.filter((object) => {
+				return object.title.toLowerCase().startsWith(keyword.toLowerCase());
 			});
 			setList(result);
 		} else {
-			setList(users);
+			setList(comments);
 		}
 	}, [keyword]);
 
-	const assignStripeId = async (id) => {
+	const draftIt = async (id) => {
 		try {
-			await axios.put(`/users/${id}/assignstripeid`);
-			toast.success("User updated");
-			fetchUsers();
+			await axios.put(`/comments/${id}/draftit`);
+			toast.success("Comment drafted");
+			fetchComments();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
+	const publishIt = async (id) => {
+		try {
+			await axios.put(`/comments/${id}/publishit`);
+			toast.success("Comment published");
+			fetchComments();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
+	const trashIt = async (id) => {
+		try {
+			await axios.put(`/comments/${id}/trashit`);
+			toast.success("Comment trashed");
+			fetchComments();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
+	const scheduleIt = async (id) => {
+		try {
+			await axios.put(`/comments/${id}/scheduleit`);
+			toast.success("Comment scheduled");
+			fetchComments();
 		} catch (err) {
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;
@@ -113,9 +197,37 @@ const AdminUsersIndex = () => {
 
 	const handleDelete = async (id) => {
 		try {
-			await axios.delete(`/users/${id}`);
-			toast.success("User deleted");
-			fetchUsers();
+			await axios.delete(`/comments/${id}/permanently`);
+			toast.success("Comment deleted");
+			fetchComments();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
+	const handleTrashAll = async () => {
+		try {
+			await axios.put(`/comments/deleteall`);
+			toast.success("Comments trashed");
+			fetchComments();
 		} catch (err) {
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;
@@ -141,9 +253,9 @@ const AdminUsersIndex = () => {
 
 	const handleDeleteAll = async () => {
 		try {
-			await axios.delete(`/users/deleteall`);
-			toast.success("Users deleted");
-			fetchUsers();
+			await axios.put(`/comments/deleteall/permanently`);
+			toast.success("Comments deleted");
+			fetchComments();
 		} catch (err) {
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;
@@ -170,20 +282,21 @@ const AdminUsersIndex = () => {
 	return (
 		<>
 			<AdminStatusesMenu
-				allLink="/noadmin/users"
-				publishedLink="/noadmin/users/published"
-				draftLink="/noadmin/users/draft"
-				scheduledLink="/noadmin/users/scheduled"
-				trashedLink="/noadmin/users/trashed"
+				allLink="/noadmin/comments"
+				publishedLink="/noadmin/comments/published"
+				draftLink="/noadmin/comments/draft"
+				scheduledLink="/noadmin/comments/scheduled"
+				trashedLink="/noadmin/comments/trashed"
 			/>
 			<div className="card rounded-0">
 				<AdminCardHeaderMenu
-					allLink={`/noadmin/users`}
-					pageText="Users"
+					allLink={`/noadmin/comments`}
+					pageText="Comments"
 					currentResults={currentResults}
-					totalResults={totalResults.users}
-					addLink={`/noadmin/users/create`}
-					addLinkText={`user`}
+					totalResults={totalResults.comments}
+					addLink={`/noadmin/comments/create`}
+					addLinkText={`membership`}
+					handleTrashAllFunction={handleTrashAll}
 					handleDeleteAllFunction={handleDeleteAll}
 					keyword={keyword}
 					setKeyword={setKeyword}
@@ -191,14 +304,17 @@ const AdminUsersIndex = () => {
 				{list?.length > 0 ? (
 					<>
 						<ul className="list-group list-group-flush">
-							{list?.map((user) => (
+							{list?.map((membership) => (
 								<Single
-									key={user._id}
-									object={user}
-									handleStripeId={assignStripeId}
+									key={membership._id}
+									object={membership}
+									handleDraft={draftIt}
+									handlePublish={publishIt}
+									handleTrash={trashIt}
+									handleSchedule={scheduleIt}
 									handleDelete={handleDelete}
 									objects={list}
-									setObjects={setUsers}
+									setObjects={setComments}
 									setTotalResults={setTotalResults}
 								/>
 							))}
@@ -230,4 +346,4 @@ const AdminUsersIndex = () => {
 	);
 };
 
-export default AdminUsersIndex;
+export default AdminCommentsIndex;

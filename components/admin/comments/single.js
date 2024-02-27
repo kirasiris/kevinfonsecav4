@@ -3,10 +3,14 @@ import Image from "next/image";
 import Link from "next/link";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import DeleteModal from "@/components/global/deletemodal";
+import ParseHtml from "@/layout/parseHtml";
 
 const Single = ({
 	object = {},
-	handleStripeId,
+	handleDraft,
+	handlePublish,
+	handleTrash,
+	handleSchedule,
 	handleDelete,
 	objects,
 	setObjects,
@@ -20,23 +24,25 @@ const Single = ({
 					<h1 className="blog-item__title">
 						<Link
 							href={{
-								pathname: `/noadmin/users/update/${object._id}`,
+								pathname: `/noadmin/comments/update/${object._id}`,
 								query: {},
 							}}
 							passHref
 							legacyBehavior
 						>
-							<a className="blog-item__title-link">{object.username}</a>
+							<a className="blog-item__title-link">{object.title}</a>
 						</Link>
 					</h1>
 					<div className="blog-item__meta">
-						<span className="blog-item__meta-time-status">{object.name}</span>
+						<span className="blog-item__meta-time-status">
+							<ParseHtml text={object.text} />
+						</span>
 					</div>
 				</div>
 				<div className="blog-type-list__blog-thumbnail-wrapper has-image d-none d-md-block d-lg-block d-xl-block d-xxl-block">
 					<Link
 						href={{
-							pathname: `/noadmin/users/update/${object._id}`,
+							pathname: `/noadmin/comments/update/${object._id}`,
 							query: {},
 						}}
 						passHref
@@ -45,7 +51,7 @@ const Single = ({
 						<a className="blog-type-list__blog-thumbnail-link">
 							<Image
 								src={
-									object.files?.avatar?.location.secure_location ||
+									object.user?.files?.avatar?.location.secure_location ||
 									`https://source.unsplash.com/random/83x63`
 								}
 								className="blog-type-list__blog-thumbnail"
@@ -59,17 +65,44 @@ const Single = ({
 				<div className="blog-actions-ellipsis-menu">
 					<span className="ellipsis-menu">
 						<DropdownButton title="Options" variant="secondary">
-							{(object?.stripeCustomerId === `` ||
-								object?.stripeCustomerId === undefined ||
-								object?.stripeCustomerId === null) && (
-								<button
-									className="dropdown-item btn btn-sm"
-									onClick={() => handleStripeId(object._id)}
-								>
-									Assign Stripe Account Id
-								</button>
-							)}
-							{console.log(object)}
+							<Link
+								href={{
+									pathname: `/blog/${object._id}/${object.category?._id}/${object.category?.slug}/${object.slug}`,
+									query: {
+										isAdmin: true,
+									},
+								}}
+								passHref
+								legacyBehavior
+							>
+								<a className="dropdown-item btn btn-link" target="_blank">
+									View It
+								</a>
+							</Link>
+							<button
+								className="dropdown-item btn btn-sm"
+								onClick={() => handleDraft(object._id)}
+							>
+								Draft It
+							</button>
+							<button
+								className="dropdown-item btn btn-sm"
+								onClick={() => handlePublish(object._id)}
+							>
+								Publish It
+							</button>
+							<button
+								className="dropdown-item btn btn-sm"
+								onClick={() => handleTrash(object._id)}
+							>
+								Trash It
+							</button>
+							<button
+								className="dropdown-item btn btn-sm"
+								onClick={() => handleSchedule(object._id)}
+							>
+								Schedule It
+							</button>
 							<DeleteModal
 								id={object._id ? object._id : object._id}
 								action={handleDelete}

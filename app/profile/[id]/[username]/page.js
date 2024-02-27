@@ -1,9 +1,9 @@
 import { Suspense } from "react";
 import { fetchurl } from "@/helpers/setTokenOnServer";
-import Header from "@/layout/header";
 import Loading from "@/app/profile/loading";
 import List from "@/components/profile/list";
 import Sidebar from "@/components/profile/sidebar";
+import Jumbotron from "@/components/profile/jumbotron";
 
 async function getAuthenticatedUser() {
 	const res = await fetchurl(`http://localhost:5000/api/v1/auth/me`);
@@ -63,9 +63,8 @@ const ProfileRead = async ({ params, searchParams }) => {
 
 	return (
 		<Suspense fallback={<Loading />}>
-			<Header
-				title={profile.data.username}
-				description={profile.data.bio}
+			<Jumbotron
+				object={profile}
 				headerStyle={{
 					background: `linear-gradient(to bottom, rgba(0,0,0,0.7) 0%,rgba(0,0,0,0.7) 100%), url(${
 						profile.data?.files?.cover?.location.secure_location ||

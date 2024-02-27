@@ -1,4 +1,3 @@
-"use client";
 import axios from "axios";
 
 const getCookie = (name) => {
@@ -71,4 +70,8 @@ export const currencyFormatter = (amount, currency) => {
 		style: "currency",
 		currency: currency,
 	});
+};
+
+export const formatDateWithoutTime = (createdAt) => {
+	return new Date(createdAt).toLocaleDateString();
 };

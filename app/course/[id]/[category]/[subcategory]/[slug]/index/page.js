@@ -39,7 +39,9 @@ const CourseLessonsIndex = async ({ params, searchParams }) => {
 	);
 
 	const verifyUserEnrollment = getCourseStudentsEnrolled(
-		`?user=${auth?.data?._id}&resourceId=${params.id}&onModel=Course`
+		`?user=${
+			auth?.data ? auth.data._id : `62ec7926a554425c9e03782d`
+		}&resourceId=${params.id}&onModel=Course`
 	);
 
 	const [course, lessons, enrolledstudents, verifyAuthEnrollment] =
@@ -53,6 +55,7 @@ const CourseLessonsIndex = async ({ params, searchParams }) => {
 	return (
 		<Suspense fallback={<Loading />}>
 			<Jumbotron
+				authenticatedUser={auth}
 				object={course}
 				params={params}
 				enrollmentVerification={verifyAuthEnrollment}

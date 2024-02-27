@@ -22,7 +22,7 @@ const AdminStatusesMenu = ({
 			<Link
 				href={{
 					pathname: allLink,
-					query: { page: 1, limit: 10 },
+					query: { page: 1, limit: 10, sort: `-createdAt` },
 				}}
 				passHref
 				legacyBehavior
@@ -32,7 +32,7 @@ const AdminStatusesMenu = ({
 			<Link
 				href={{
 					pathname: publishedLink,
-					query: { page: 1, limit: 10 },
+					query: { page: 1, limit: 10, sort: `-createdAt` },
 				}}
 				passHref
 				legacyBehavior
@@ -42,7 +42,7 @@ const AdminStatusesMenu = ({
 			<Link
 				href={{
 					pathname: draftLink,
-					query: { page: 1, limit: 10 },
+					query: { page: 1, limit: 10, sort: `-createdAt` },
 				}}
 				passHref
 				legacyBehavior
@@ -52,7 +52,7 @@ const AdminStatusesMenu = ({
 			<Link
 				href={{
 					pathname: scheduledLink,
-					query: { page: 1, limit: 10 },
+					query: { page: 1, limit: 10, sort: `-createdAt` },
 				}}
 				passHref
 				legacyBehavior
@@ -62,7 +62,7 @@ const AdminStatusesMenu = ({
 			<Link
 				href={{
 					pathname: trashedLink,
-					query: { page: 1, limit: 10 },
+					query: { page: 1, limit: 10, sort: `-createdAt` },
 				}}
 				passHref
 				legacyBehavior

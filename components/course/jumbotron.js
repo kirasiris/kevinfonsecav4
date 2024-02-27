@@ -1,9 +1,10 @@
 "use client";
-import { currencyFormatter } from "@/helpers/utilities";
+import { currencyFormatter, formatDateWithoutTime } from "@/helpers/utilities";
 import Image from "next/image";
 import Link from "next/link";
 
 const Jumbotron = ({
+	authenticatedUser = {},
 	object = {},
 	params = {},
 	enrollmentVerification = {},
@@ -74,7 +75,10 @@ const Jumbotron = ({
 								{/* author */}
 								<p>Created&nbsp;by&nbsp;{object.data.user.name}</p>
 								{/* updatedAt */}
-								<p>Last&nbsp;updated&nbsp;{object.data.updatedAt}</p>
+								<p>
+									Last&nbsp;updated&nbsp;
+									{formatDateWithoutTime(object.data.updatedAt)}
+								</p>
 								{/* price */}
 								<p className="fs-4 fw-bolder">
 									Price&nbsp;
@@ -109,23 +113,41 @@ const Jumbotron = ({
 							)}
 							{/* enroll button */}
 							<div className="d-grid gap-2 col-12 mt-3 mb-3">
-								{/* If free and not enrolled */}
-								{object?.data?.isFree && !enrollmentVerification?.success && (
-									<button className="btn btn-dark btn-sm">
-										Enroll for Free
-									</button>
-								)}
-								{/* If not free and not enrolled */}
-								{!object?.data?.isFree && !enrollmentVerification?.success && (
-									<button className="btn btn-dark btn-sm">Pay to Enroll</button>
-								)}
-								{/* If free/not free and already enrolled */}
-								{(object?.data?.isFree || !object?.data?.isFree) &&
-									enrollmentVerification?.success && (
+								{authenticatedUser?.data?.isOnline ? (
+									// If free and not enrolled
+									(object?.data?.isFree && !enrollmentVerification?.success && (
 										<button className="btn btn-dark btn-sm">
-											Already enrolled
+											Enroll for Free
 										</button>
-									)}
+									)) ||
+									// If not free and not enrolled
+									(!object?.data?.isFree &&
+										!enrollmentVerification?.success && (
+											<button className="btn btn-dark btn-sm">
+												Pay to Enroll
+											</button>
+										)) ||
+									// If free/not free and already enrolled
+									((object?.data?.isFree || !object?.data?.isFree) &&
+										enrollmentVerification?.success && (
+											<button className="btn btn-dark btn-sm">
+												Already enrolled
+											</button>
+										))
+								) : (
+									<Link
+										href={{
+											pathname: `/auth/login`,
+											query: {
+												returnpage: `/course/${object.data._id}/${object.data.category}/${object.data.sub_category}/${object.data.slug}/index`,
+											},
+										}}
+										passHref
+										legacyBehavior
+									>
+										<a className="btn btn-dark btn-sm">Login to Enroll</a>
+									</Link>
+								)}
 							</div>
 						</div>
 					</div>

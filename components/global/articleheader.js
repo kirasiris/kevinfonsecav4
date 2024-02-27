@@ -1,4 +1,5 @@
 "use client";
+import { formatDateWithoutTime } from "@/helpers/utilities";
 import Link from "next/link";
 
 const ArticleHeader = ({ object = {}, url = `#!` }) => {
@@ -6,7 +7,8 @@ const ArticleHeader = ({ object = {}, url = `#!` }) => {
 		<div className="mb-3">
 			<h1>{object.data.title}</h1>
 			<div className="text-muted fst-italic mb-2">
-				Posted&nbsp;on&nbsp;{object.data.createdAt}&nbsp;by&nbsp;
+				Posted&nbsp;on&nbsp;{formatDateWithoutTime(object.data.createdAt)}
+				&nbsp;by&nbsp;
 				{object.data.user.username}
 			</div>
 			{object.data.category && (

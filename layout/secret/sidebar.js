@@ -51,10 +51,13 @@ const Sidebar = ({}) => {
 							name="age"
 							value={age}
 							onChange={(e) => {
-								setSearchParams({
-									...searchParams,
-									age: e.target.value,
-								});
+								const inputValue = e.target.value;
+								if (/^\d+$/.test(inputValue) && parseInt(inputValue) >= 13) {
+									setSearchParams({
+										...searchParams,
+										age: inputValue,
+									});
+								}
 							}}
 							type="number"
 							className="form-control mb-3"

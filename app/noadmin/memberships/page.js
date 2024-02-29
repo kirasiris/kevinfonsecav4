@@ -83,10 +83,10 @@ const AdminMembershipsIndex = () => {
 		}
 	}, [keyword]);
 
-	const draftIt = async (id) => {
+	const activateIt = async (id) => {
 		try {
-			await axios.put(`/memberships/${id}/draftit`);
-			toast.success("Membership drafted");
+			await axios.put(`/memberships/${id}/activateit`);
+			toast.success("Membership activated");
 			fetchMemberships();
 		} catch (err) {
 			// const error = err.response.data.message;
@@ -111,66 +111,10 @@ const AdminMembershipsIndex = () => {
 		}
 	};
 
-	const publishIt = async (id) => {
+	const disactivateIt = async (id) => {
 		try {
-			await axios.put(`/memberships/${id}/publishit`);
-			toast.success("Membership published");
-			fetchMemberships();
-		} catch (err) {
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
-
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return {
-				msg: err?.response?.statusText,
-				status: err?.response?.status,
-			};
-		}
-	};
-
-	const trashIt = async (id) => {
-		try {
-			await axios.put(`/memberships/${id}/trashit`);
-			toast.success("Membership trashed");
-			fetchMemberships();
-		} catch (err) {
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
-
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return {
-				msg: err?.response?.statusText,
-				status: err?.response?.status,
-			};
-		}
-	};
-
-	const scheduleIt = async (id) => {
-		try {
-			await axios.put(`/memberships/${id}/scheduleit`);
-			toast.success("Membership scheduled");
+			await axios.put(`/memberships/${id}/disactivateit`);
+			toast.success("Membership disactivated");
 			fetchMemberships();
 		} catch (err) {
 			// const error = err.response.data.message;
@@ -287,8 +231,6 @@ const AdminMembershipsIndex = () => {
 				draftLink="/noadmin/memberships/draft"
 				scheduledLink="/noadmin/memberships/scheduled"
 				trashedLink="/noadmin/memberships/trashed"
-				categoriesLink="/noadmin/memberships/categories"
-				categoryType="membership"
 			/>
 			<div className="card rounded-0">
 				<AdminCardHeaderMenu
@@ -310,10 +252,8 @@ const AdminMembershipsIndex = () => {
 								<Single
 									key={membership._id}
 									object={membership}
-									handleDraft={draftIt}
-									handlePublish={publishIt}
-									handleTrash={trashIt}
-									handleSchedule={scheduleIt}
+									handleActivate={activateIt}
+									handleDisactivate={disactivateIt}
 									handleDelete={handleDelete}
 									objects={list}
 									setObjects={setMemberships}

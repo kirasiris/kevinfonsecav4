@@ -52,10 +52,13 @@ const CreateSecret = ({ params, searchParams }) => {
 								name="age"
 								value={age}
 								onChange={(e) => {
-									setSecretData({
-										...secretData,
-										age: e.target.value,
-									});
+									const inputValue = e.target.value;
+									if (/^\d+$/.test(inputValue) && parseInt(inputValue) >= 13) {
+										setSecretData({
+											...secretData,
+											age: inputValue,
+										});
+									}
 								}}
 								type="number"
 								className="form-control mb-3"

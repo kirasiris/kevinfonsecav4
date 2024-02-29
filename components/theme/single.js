@@ -19,7 +19,7 @@ const Single = ({ theme = {} }) => {
 							theme.files?.avatar?.location.secure_location ||
 							`https://source.unsplash.com/random/1200x900`
 						}
-						className="card-img-top"
+						className="card-img-top div-hover"
 						alt={`${theme.title}'s featured image`}
 						width={`850`}
 						height={`350`}

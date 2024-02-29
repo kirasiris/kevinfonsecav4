@@ -3,13 +3,12 @@ import Image from "next/image";
 import Link from "next/link";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import DeleteModal from "@/components/global/deletemodal";
+import { currencyFormatter } from "@/helpers/utilities";
 
 const Single = ({
 	object = {},
-	handleDraft,
-	handlePublish,
-	handleTrash,
-	handleSchedule,
+	handleActivate,
+	handleDisactivate,
 	handleDelete,
 	objects,
 	setObjects,
@@ -23,7 +22,7 @@ const Single = ({
 					<h1 className="blog-item__title">
 						<Link
 							href={{
-								pathname: `/noadmin/blogs/update/${object._id}`,
+								pathname: `/noadmin/memberships/update/${object._id}`,
 								query: {},
 							}}
 							passHref
@@ -33,13 +32,15 @@ const Single = ({
 						</Link>
 					</h1>
 					<div className="blog-item__meta">
-						{/* <span className="blog-item__meta-time-status">{object.text}</span> */}
+						<span className="blog-item__meta-time-status">
+							{currencyFormatter(object.default_price_data.unit_amount, "USD")}
+						</span>
 					</div>
 				</div>
 				<div className="blog-type-list__blog-thumbnail-wrapper has-image d-none d-md-block d-lg-block d-xl-block d-xxl-block">
 					<Link
 						href={{
-							pathname: `/noadmin/blogs/update/${object._id}`,
+							pathname: `/noadmin/memberships/update/${object._id}`,
 							query: {},
 						}}
 						passHref
@@ -64,7 +65,7 @@ const Single = ({
 						<DropdownButton title="Options" variant="secondary">
 							<Link
 								href={{
-									pathname: `/blog/${object._id}/${object.category?._id}/${object.category?.slug}/${object.slug}`,
+									pathname: `/membership/read/${object._id}`,
 									query: {
 										isAdmin: true,
 									},
@@ -76,38 +77,32 @@ const Single = ({
 									View It
 								</a>
 							</Link>
-							<button
-								className="dropdown-item btn btn-sm"
-								onClick={() => handleDraft(object._id)}
-							>
-								Draft It
-							</button>
-							<button
-								className="dropdown-item btn btn-sm"
-								onClick={() => handlePublish(object._id)}
-							>
-								Publish It
-							</button>
-							<button
-								className="dropdown-item btn btn-sm"
-								onClick={() => handleTrash(object._id)}
-							>
-								Trash It
-							</button>
-							<button
-								className="dropdown-item btn btn-sm"
-								onClick={() => handleSchedule(object._id)}
-							>
-								Schedule It
-							</button>
-							<DeleteModal
-								id={object._id ? object._id : object._id}
-								action={handleDelete}
-								classStr={`dropdown-item`}
-								objects={objects}
-								setObjects={setObjects}
-								setTotalResults={setTotalResults}
-							/>
+							{!object.active && (
+								<button
+									className="dropdown-item btn btn-sm"
+									onClick={() => handleActivate(object._id)}
+								>
+									Activate It
+								</button>
+							)}
+							{object.active && (
+								<button
+									className="dropdown-item btn btn-sm"
+									onClick={() => handleDisactivate(object._id)}
+								>
+									Desactivate It
+								</button>
+							)}
+							{!object.active && (
+								<DeleteModal
+									id={object._id ? object._id : object._id}
+									action={handleDelete}
+									classStr={`dropdown-item`}
+									objects={objects}
+									setObjects={setObjects}
+									setTotalResults={setTotalResults}
+								/>
+							)}
 						</DropdownButton>
 					</span>
 				</div>

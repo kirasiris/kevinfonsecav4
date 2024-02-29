@@ -24,10 +24,7 @@ const Footer = ({ auth = {}, classes = "", styles = {}, canonical = "" }) => {
 								<Link
 									href={{
 										pathname: "/openai/generateimage",
-										query: {
-											page: undefined,
-											limit: undefined,
-										},
+										query: {},
 									}}
 									passHref
 									legacyBehavior
@@ -39,10 +36,7 @@ const Footer = ({ auth = {}, classes = "", styles = {}, canonical = "" }) => {
 								<Link
 									href={{
 										pathname: "/openai/generatecode",
-										query: {
-											page: undefined,
-											limit: undefined,
-										},
+										query: {},
 									}}
 									passHref
 									legacyBehavior
@@ -55,8 +49,9 @@ const Footer = ({ auth = {}, classes = "", styles = {}, canonical = "" }) => {
 									href={{
 										pathname: "/changelog",
 										query: {
-											page: undefined,
-											limit: undefined,
+											page: 1,
+											limit: 10,
+											sort: `-createdAt`,
 										},
 									}}
 									passHref
@@ -74,10 +69,7 @@ const Footer = ({ auth = {}, classes = "", styles = {}, canonical = "" }) => {
 								<Link
 									href={{
 										pathname: "/youtube",
-										query: {
-											page: undefined,
-											limit: undefined,
-										},
+										query: {},
 									}}
 									passHref
 									legacyBehavior
@@ -89,10 +81,7 @@ const Footer = ({ auth = {}, classes = "", styles = {}, canonical = "" }) => {
 								<Link
 									href={{
 										pathname: "/restful",
-										query: {
-											page: undefined,
-											limit: undefined,
-										},
+										query: {},
 									}}
 									passHref
 									legacyBehavior
@@ -104,10 +93,7 @@ const Footer = ({ auth = {}, classes = "", styles = {}, canonical = "" }) => {
 								<Link
 									href={{
 										pathname: "/opengraphviewer",
-										query: {
-											page: undefined,
-											limit: undefined,
-										},
+										query: {},
 									}}
 									passHref
 									legacyBehavior
@@ -119,10 +105,7 @@ const Footer = ({ auth = {}, classes = "", styles = {}, canonical = "" }) => {
 								<Link
 									href={{
 										pathname: "/livecode",
-										query: {
-											page: undefined,
-											limit: undefined,
-										},
+										query: {},
 									}}
 									passHref
 									legacyBehavior
@@ -134,10 +117,7 @@ const Footer = ({ auth = {}, classes = "", styles = {}, canonical = "" }) => {
 								<Link
 									href={{
 										pathname: `${canonical}/mongodbcompiler`,
-										query: {
-											page: undefined,
-											limit: undefined,
-										},
+										query: {},
 									}}
 									passHref
 									legacyBehavior
@@ -192,6 +172,7 @@ const Footer = ({ auth = {}, classes = "", styles = {}, canonical = "" }) => {
 										query: {
 											page: 1,
 											limit: 10,
+											sort: `-createdAt`,
 										},
 									}}
 									passHref
@@ -207,6 +188,7 @@ const Footer = ({ auth = {}, classes = "", styles = {}, canonical = "" }) => {
 										query: {
 											page: 1,
 											limit: 10,
+											sort: `-createdAt`,
 										},
 									}}
 									passHref
@@ -222,6 +204,7 @@ const Footer = ({ auth = {}, classes = "", styles = {}, canonical = "" }) => {
 										query: {
 											page: 1,
 											limit: 10,
+											sort: `-createdAt`,
 										},
 									}}
 									passHref
@@ -237,6 +220,7 @@ const Footer = ({ auth = {}, classes = "", styles = {}, canonical = "" }) => {
 										query: {
 											page: 1,
 											limit: 32,
+											sort: `-createdAt`,
 										},
 									}}
 									passHref
@@ -252,6 +236,7 @@ const Footer = ({ auth = {}, classes = "", styles = {}, canonical = "" }) => {
 										query: {
 											page: 1,
 											limit: 24,
+											sort: `-createdAt`,
 										},
 									}}
 									passHref
@@ -267,6 +252,7 @@ const Footer = ({ auth = {}, classes = "", styles = {}, canonical = "" }) => {
 										query: {
 											page: 1,
 											limit: 32,
+											sort: `-createdAt`,
 										},
 									}}
 									passHref

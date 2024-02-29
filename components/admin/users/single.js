@@ -69,7 +69,6 @@ const Single = ({
 									Assign Stripe Account Id
 								</button>
 							)}
-							{console.log(object)}
 							<DeleteModal
 								id={object._id ? object._id : object._id}
 								action={handleDelete}

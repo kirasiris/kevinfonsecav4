@@ -49,7 +49,11 @@ const Menu = ({
 							<Link
 								href={{
 									pathname: `${canonical}/quiz`,
-									query: { page: 1, limit: 10 },
+									query: {
+										page: 1,
+										limit: 10,
+										sort: `-createdAt`,
+									},
 								}}
 								passHref
 								legacyBehavior

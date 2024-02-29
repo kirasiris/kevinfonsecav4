@@ -1,7 +1,6 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import Header from "@/layout/header";
 import Sidebar from "@/components/profile/sidebar";
 import Loading from "@/app/profile/loading";
 import ExportModal from "@/components/global/exportmodal";
@@ -12,6 +11,7 @@ import ReportModal from "@/components/global/reportmodal";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import Globalcontent from "@/layout/content";
 import ArticleHeader from "@/components/global/articleheader";
+import Jumbotron from "@/components/profile/jumbotron";
 
 async function getAuthenticatedUser() {
 	const res = await fetchurl(`http://localhost:5000/api/v1/auth/me`);
@@ -28,7 +28,7 @@ async function getMedias(params) {
 	return res.json();
 }
 
-const ProfilePictureRead = async ({ params, searchParams }) => {
+const ProfilePhotoRead = async ({ params, searchParams }) => {
 	const auth = await getAuthenticatedUser();
 
 	const getProfilesData = getProfile(`/${params.id}`);
@@ -47,9 +47,8 @@ const ProfilePictureRead = async ({ params, searchParams }) => {
 
 	return (
 		<Suspense fallback={<Loading />}>
-			<Header
-				title={profile.data.username}
-				description={profile.data.bio}
+			<Jumbotron
+				object={profile}
 				headerStyle={{
 					background: `linear-gradient(to bottom, rgba(0,0,0,0.7) 0%,rgba(0,0,0,0.7) 100%), url(${
 						profile.data?.files?.cover?.location.secure_location ||
@@ -114,4 +113,4 @@ const ProfilePictureRead = async ({ params, searchParams }) => {
 	);
 };
 
-export default ProfilePictureRead;
+export default ProfilePhotoRead;

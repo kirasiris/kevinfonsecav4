@@ -19,10 +19,18 @@ const AuthorBox = ({ author = {}, imageWidth = "64", imageHeight = "64" }) => {
 						alt={`${author.username}'s featured image`}
 						width={imageWidth}
 						height={imageHeight}
+						className="img-hover"
 					/>
 				</Link>
 			</div>
 			<div className="flex-grow-1 ms-3">
+				<Link
+					href={`/profile/${author._id}/${author.username}`}
+					passHref
+					legacyBehavior
+				>
+					{author.username}
+				</Link>
 				<p>{author.bio}</p>
 			</div>
 		</div>

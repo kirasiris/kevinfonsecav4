@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import Loading from "@/app/profile/loading";
-import PicturesList from "@/components/profile/pictureslist";
+import FriendsList from "@/components/profile/friendslist";
 import Sidebar from "@/components/profile/sidebar";
 import Jumbotron from "@/components/profile/jumbotron";
 
@@ -20,7 +20,12 @@ async function getMedias(params) {
 	return res.json();
 }
 
-const ProfilePhotoCoversIndex = async ({ params, searchParams }) => {
+async function getFriends(params) {
+	const res = await fetchurl(`http://localhost:5000/api/v1/files${params}`);
+	return res.json();
+}
+
+const ProfileFriendsIndex = async ({ params, searchParams }) => {
 	const auth = await getAuthenticatedUser();
 
 	const getProfilesData = getProfile(`/${params.id}`);
@@ -33,14 +38,14 @@ const ProfilePhotoCoversIndex = async ({ params, searchParams }) => {
 		`?user=${params.id}&page=1&limit=9&sort=-createdAt&album=posts${decrypt}`
 	);
 
-	const getMediasData = getMedias(
-		`?user=${params.id}&page=${page}&limit=${limit}&sort=-createdAt&album=profile-covers${decrypt}`
+	const getFriendsData = getFriends(
+		`?user=${params.id}&page=${page}&limit=${limit}&sort=-createdAt`
 	);
 
-	const [profile, sidebarphotos, files] = await Promise.all([
+	const [profile, sidebarphotos, friends] = await Promise.all([
 		getProfilesData,
 		getSidebarMediasData,
-		getMediasData,
+		getFriendsData,
 	]);
 
 	return (
@@ -59,9 +64,9 @@ const ProfilePhotoCoversIndex = async ({ params, searchParams }) => {
 			<div className="container">
 				<div className="row">
 					<Sidebar object={profile} objects={sidebarphotos} />
-					<PicturesList
+					<FriendsList
 						object={profile}
-						objects={files}
+						objects={friends}
 						searchParams={searchParams}
 					/>
 				</div>
@@ -70,4 +75,4 @@ const ProfilePhotoCoversIndex = async ({ params, searchParams }) => {
 	);
 };
 
-export default ProfilePhotoCoversIndex;
+export default ProfileFriendsIndex;

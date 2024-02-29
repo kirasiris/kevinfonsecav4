@@ -8,11 +8,35 @@ const Jumbotron = ({
 	object = {},
 	params = {},
 	headerStyle = {},
+	imageWidth = "168",
+	imageHeight = "168",
 }) => {
 	return (
 		<>
 			<header className={`bg-secondary border-bottom py-5`} style={headerStyle}>
-				<div className={`container`}>Profile Jumbotron</div>
+				<div className={`container`}>
+					<div className="row my-5">
+						<div className="col">
+							<figure className="mb-4 bg-dark">
+								<Image
+									className="img-fluid p-3"
+									src={
+										object?.data?.files?.avatar?.location?.secure_location ||
+										`https://source.unsplash.com/random/168x168`
+									}
+									alt={`profile image`}
+									width={imageWidth}
+									height={imageHeight}
+									priority
+								/>
+							</figure>
+						</div>
+						<div className="col-lg-6">
+							<h1 className="fw-bolder">{object?.data?.name}</h1>
+							<p className="lead">{object?.data?.bio}</p>
+						</div>
+					</div>
+				</div>
 			</header>
 			<div className="bg-light mb-4">
 				<div className="container">
@@ -45,7 +69,7 @@ const Jumbotron = ({
 								</Link>
 								<Link
 									href={{
-										pathname: `/profile/${object?.data?._id}/${object?.data?.username}/friends`,
+										pathname: `/profile/${object?.data?._id}/${object?.data?.username}/socials/friends`,
 										query: {
 											page: 1,
 											limit: 10,
@@ -55,7 +79,7 @@ const Jumbotron = ({
 									passHref
 									legacyBehavior
 								>
-									<a className="nav-link active">Friends</a>
+									<a className="nav-link active">Socials</a>
 								</Link>
 								<Link
 									href={{

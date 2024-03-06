@@ -14,7 +14,9 @@ const List = ({ objects = [], searchParams = {} }) => {
 						<Link
 							href={{
 								pathname: `/secret/create`,
-								query: { returnpage: `/secret?page=1&limit=10` },
+								query: {
+									returnpage: `/secret?page=1&limit=10&sort=-createdAt`,
+								},
 							}}
 							passHref
 							legacyBehavior

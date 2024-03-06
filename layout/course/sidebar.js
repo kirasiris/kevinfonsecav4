@@ -14,7 +14,9 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 
 	const searchData = async (e) => {
 		e.preventDefault();
-		router.push(`/course/search?keyword=${keyword}&page=1&limit=32`);
+		router.push(
+			`/course/search?keyword=${keyword}&page=1&limit=32&sort=-createdAt`
+		);
 	};
 
 	return (
@@ -60,6 +62,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 									query: {
 										page: 1,
 										limit: 32,
+										sort: `-createdAt`,
 									},
 								}}
 								passHref
@@ -75,6 +78,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 											query: {
 												page: 1,
 												limit: 32,
+												sort: `-createdAt`,
 											},
 										}}
 										passHref
@@ -90,6 +94,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 											query: {
 												page: 1,
 												limit: 32,
+												sort: `-createdAt`,
 											},
 										}}
 										passHref
@@ -105,6 +110,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 											query: {
 												page: 1,
 												limit: 32,
+												sort: `-createdAt`,
 											},
 										}}
 										passHref
@@ -120,6 +126,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 											query: {
 												page: 1,
 												limit: 32,
+												sort: `-createdAt`,
 											},
 										}}
 										passHref
@@ -135,6 +142,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 											query: {
 												page: 1,
 												limit: 32,
+												sort: `-createdAt`,
 											},
 										}}
 										passHref
@@ -152,6 +160,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 											query: {
 												page: 1,
 												limit: 32,
+												sort: `-createdAt`,
 											},
 										}}
 										passHref
@@ -169,6 +178,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 									query: {
 										page: 1,
 										limit: 32,
+										sort: `-createdAt`,
 									},
 								}}
 								passHref
@@ -184,6 +194,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 											query: {
 												page: 1,
 												limit: 32,
+												sort: `-createdAt`,
 											},
 										}}
 										passHref
@@ -199,6 +210,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 											query: {
 												page: 1,
 												limit: 32,
+												sort: `-createdAt`,
 											},
 										}}
 										passHref
@@ -214,6 +226,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 											query: {
 												page: 1,
 												limit: 32,
+												sort: `-createdAt`,
 											},
 										}}
 										passHref
@@ -229,6 +242,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 											query: {
 												page: 1,
 												limit: 32,
+												sort: `-createdAt`,
 											},
 										}}
 										passHref
@@ -244,6 +258,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 											query: {
 												page: 1,
 												limit: 32,
+												sort: `-createdAt`,
 											},
 										}}
 										passHref
@@ -261,6 +276,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 									query: {
 										page: 1,
 										limit: 32,
+										sort: `-createdAt`,
 									},
 								}}
 								passHref
@@ -276,6 +292,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 											query: {
 												page: 1,
 												limit: 32,
+												sort: `-createdAt`,
 											},
 										}}
 										passHref
@@ -293,6 +310,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 											query: {
 												page: 1,
 												limit: 32,
+												sort: `-createdAt`,
 											},
 										}}
 										passHref
@@ -310,6 +328,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 											query: {
 												page: 1,
 												limit: 32,
+												sort: `-createdAt`,
 											},
 										}}
 										passHref
@@ -325,6 +344,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 											query: {
 												page: 1,
 												limit: 32,
+												sort: `-createdAt`,
 											},
 										}}
 										passHref
@@ -342,6 +362,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 											query: {
 												page: 1,
 												limit: 32,
+												sort: `-createdAt`,
 											},
 										}}
 										passHref
@@ -359,6 +380,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 									query: {
 										page: 1,
 										limit: 32,
+										sort: `-createdAt`,
 									},
 								}}
 								passHref
@@ -374,6 +396,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 											query: {
 												page: 1,
 												limit: 32,
+												sort: `-createdAt`,
 											},
 										}}
 										passHref
@@ -389,6 +412,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 											query: {
 												page: 1,
 												limit: 32,
+												sort: `-createdAt`,
 											},
 										}}
 										passHref
@@ -404,6 +428,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 											query: {
 												page: 1,
 												limit: 32,
+												sort: `-createdAt`,
 											},
 										}}
 										passHref
@@ -419,6 +444,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 											query: {
 												page: 1,
 												limit: 32,
+												sort: `-createdAt`,
 											},
 										}}
 										passHref
@@ -436,6 +462,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 											query: {
 												page: 1,
 												limit: 32,
+												sort: `-createdAt`,
 											},
 										}}
 										passHref
@@ -453,6 +480,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 									query: {
 										page: 1,
 										limit: 32,
+										sort: `-createdAt`,
 									},
 								}}
 								passHref
@@ -468,6 +496,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 											query: {
 												page: 1,
 												limit: 32,
+												sort: `-createdAt`,
 											},
 										}}
 										passHref
@@ -483,6 +512,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 											query: {
 												page: 1,
 												limit: 32,
+												sort: `-createdAt`,
 											},
 										}}
 										passHref
@@ -498,6 +528,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 											query: {
 												page: 1,
 												limit: 32,
+												sort: `-createdAt`,
 											},
 										}}
 										passHref
@@ -513,6 +544,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 											query: {
 												page: 1,
 												limit: 32,
+												sort: `-createdAt`,
 											},
 										}}
 										passHref
@@ -528,6 +560,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 											query: {
 												page: 1,
 												limit: 32,
+												sort: `-createdAt`,
 											},
 										}}
 										passHref
@@ -543,6 +576,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 											query: {
 												page: 1,
 												limit: 32,
+												sort: `-createdAt`,
 											},
 										}}
 										passHref
@@ -562,6 +596,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 									query: {
 										page: 1,
 										limit: 32,
+										sort: `-createdAt`,
 									},
 								}}
 								passHref
@@ -577,6 +612,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 											query: {
 												page: 1,
 												limit: 32,
+												sort: `-createdAt`,
 											},
 										}}
 										passHref
@@ -594,6 +630,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 											query: {
 												page: 1,
 												limit: 32,
+												sort: `-createdAt`,
 											},
 										}}
 										passHref
@@ -609,6 +646,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 											query: {
 												page: 1,
 												limit: 32,
+												sort: `-createdAt`,
 											},
 										}}
 										passHref
@@ -624,6 +662,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 											query: {
 												page: 1,
 												limit: 32,
+												sort: `-createdAt`,
 											},
 										}}
 										passHref
@@ -639,6 +678,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 											query: {
 												page: 1,
 												limit: 32,
+												sort: `-createdAt`,
 											},
 										}}
 										passHref
@@ -658,6 +698,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 									query: {
 										page: 1,
 										limit: 32,
+										sort: `-createdAt`,
 									},
 								}}
 								passHref
@@ -673,6 +714,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 											query: {
 												page: 1,
 												limit: 32,
+												sort: `-createdAt`,
 											},
 										}}
 										passHref
@@ -688,6 +730,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 											query: {
 												page: 1,
 												limit: 32,
+												sort: `-createdAt`,
 											},
 										}}
 										passHref
@@ -705,6 +748,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 											query: {
 												page: 1,
 												limit: 32,
+												sort: `-createdAt`,
 											},
 										}}
 										passHref
@@ -720,6 +764,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 											query: {
 												page: 1,
 												limit: 32,
+												sort: `-createdAt`,
 											},
 										}}
 										passHref
@@ -737,6 +782,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 											query: {
 												page: 1,
 												limit: 32,
+												sort: `-createdAt`,
 											},
 										}}
 										passHref
@@ -752,6 +798,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 											query: {
 												page: 1,
 												limit: 32,
+												sort: `-createdAt`,
 											},
 										}}
 										passHref
@@ -769,6 +816,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 									query: {
 										page: 1,
 										limit: 32,
+										sort: `-createdAt`,
 									},
 								}}
 								passHref
@@ -784,6 +832,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 											query: {
 												page: 1,
 												limit: 32,
+												sort: `-createdAt`,
 											},
 										}}
 										passHref
@@ -799,6 +848,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 											query: {
 												page: 1,
 												limit: 32,
+												sort: `-createdAt`,
 											},
 										}}
 										passHref
@@ -816,6 +866,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 											query: {
 												page: 1,
 												limit: 32,
+												sort: `-createdAt`,
 											},
 										}}
 										passHref
@@ -833,6 +884,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 											query: {
 												page: 1,
 												limit: 32,
+												sort: `-createdAt`,
 											},
 										}}
 										passHref
@@ -848,6 +900,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 											query: {
 												page: 1,
 												limit: 32,
+												sort: `-createdAt`,
 											},
 										}}
 										passHref
@@ -865,6 +918,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 											query: {
 												page: 1,
 												limit: 32,
+												sort: `-createdAt`,
 											},
 										}}
 										passHref
@@ -884,6 +938,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 									query: {
 										page: 1,
 										limit: 32,
+										sort: `-createdAt`,
 									},
 								}}
 								passHref
@@ -899,6 +954,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 											query: {
 												page: 1,
 												limit: 32,
+												sort: `-createdAt`,
 											},
 										}}
 										passHref
@@ -914,6 +970,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 											query: {
 												page: 1,
 												limit: 32,
+												sort: `-createdAt`,
 											},
 										}}
 										passHref
@@ -929,6 +986,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 											query: {
 												page: 1,
 												limit: 32,
+												sort: `-createdAt`,
 											},
 										}}
 										passHref
@@ -944,6 +1002,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 											query: {
 												page: 1,
 												limit: 32,
+												sort: `-createdAt`,
 											},
 										}}
 										passHref
@@ -959,6 +1018,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 											query: {
 												page: 1,
 												limit: 32,
+												sort: `-createdAt`,
 											},
 										}}
 										passHref
@@ -974,6 +1034,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 											query: {
 												page: 1,
 												limit: 32,
+												sort: `-createdAt`,
 											},
 										}}
 										passHref
@@ -991,6 +1052,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 									query: {
 										page: 1,
 										limit: 32,
+										sort: `-createdAt`,
 									},
 								}}
 								passHref
@@ -1006,6 +1068,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 											query: {
 												page: 1,
 												limit: 32,
+												sort: `-createdAt`,
 											},
 										}}
 										passHref
@@ -1021,6 +1084,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 											query: {
 												page: 1,
 												limit: 32,
+												sort: `-createdAt`,
 											},
 										}}
 										passHref
@@ -1036,6 +1100,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 											query: {
 												page: 1,
 												limit: 32,
+												sort: `-createdAt`,
 											},
 										}}
 										passHref
@@ -1051,6 +1116,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 											query: {
 												page: 1,
 												limit: 32,
+												sort: `-createdAt`,
 											},
 										}}
 										passHref
@@ -1066,6 +1132,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 											query: {
 												page: 1,
 												limit: 32,
+												sort: `-createdAt`,
 											},
 										}}
 										passHref
@@ -1081,6 +1148,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 											query: {
 												page: 1,
 												limit: 32,
+												sort: `-createdAt`,
 											},
 										}}
 										passHref

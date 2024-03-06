@@ -34,7 +34,7 @@ const AdminMembershipsIndex = () => {
 
 	const fetchMemberships = async () => {
 		try {
-			const res = await axios.get(`/memberships${params}`);
+			const res = await axios.get(`/extras/stripe/memberships${params}`);
 			setMemberships(res?.data?.data);
 			setTotalPages(res?.data?.pagination?.totalpages);
 			setCurrentResults(res?.data?.count);
@@ -85,7 +85,7 @@ const AdminMembershipsIndex = () => {
 
 	const activateIt = async (id) => {
 		try {
-			await axios.put(`/memberships/${id}/activateit`);
+			await axios.put(`/extras/stripe/memberships/${id}/activateit`);
 			toast.success("Membership activated");
 			fetchMemberships();
 		} catch (err) {
@@ -113,7 +113,7 @@ const AdminMembershipsIndex = () => {
 
 	const disactivateIt = async (id) => {
 		try {
-			await axios.put(`/memberships/${id}/disactivateit`);
+			await axios.put(`/extras/stripe/memberships/${id}/disactivateit`);
 			toast.success("Membership disactivated");
 			fetchMemberships();
 		} catch (err) {
@@ -141,7 +141,7 @@ const AdminMembershipsIndex = () => {
 
 	const handleDelete = async (id) => {
 		try {
-			await axios.delete(`/memberships/${id}/permanently`);
+			await axios.delete(`/extras/stripe/memberships/${id}/permanently`);
 			toast.success("Membership deleted");
 			fetchMemberships();
 		} catch (err) {
@@ -169,7 +169,7 @@ const AdminMembershipsIndex = () => {
 
 	const handleTrashAll = async () => {
 		try {
-			await axios.put(`/memberships/deleteall`);
+			await axios.put(`/extras/stripe/memberships/deleteall`);
 			toast.success("Memberships trashed");
 			fetchMemberships();
 		} catch (err) {
@@ -197,7 +197,7 @@ const AdminMembershipsIndex = () => {
 
 	const handleDeleteAll = async () => {
 		try {
-			await axios.put(`/memberships/deleteall/permanently`);
+			await axios.put(`/extras/stripe/memberships/deleteall/permanently`);
 			toast.success("Memberships deleted");
 			fetchMemberships();
 		} catch (err) {

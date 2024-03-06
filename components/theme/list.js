@@ -20,6 +20,7 @@ const List = ({
 							query: {
 								page: 1,
 								limit: 10,
+								sort: `-createdAt`,
 							},
 						}}
 						passHref
@@ -43,6 +44,7 @@ const List = ({
 										query: {
 											page: 1,
 											limit: 10,
+											sort: `-createdAt`,
 										},
 									}}
 									passHref

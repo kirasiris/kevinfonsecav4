@@ -32,7 +32,6 @@ const List = ({ featured = {}, objects = [], searchParams = {} }) => {
 									keyword={searchParams.keyword}
 									sortby="-createdAt"
 									siblings={1}
-									postType="course"
 								/>
 							</>
 						) : (

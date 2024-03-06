@@ -33,11 +33,9 @@ const CourseLessonsIndex = async ({ params, searchParams }) => {
 	const getCourseLessonsData = getCourseLessons(
 		`?resourceId=${params.id}&sort=orderingNumber&onModel=Course`
 	);
-
 	const getCourseStudentsEnrolledData = getCourseStudentsEnrolled(
 		`?resourceId=${params.id}&onModel=Course`
 	);
-
 	const verifyUserEnrollment = getCourseStudentsEnrolled(
 		`?user=${
 			auth?.data ? auth.data._id : `62ec7926a554425c9e03782d`
@@ -63,6 +61,8 @@ const CourseLessonsIndex = async ({ params, searchParams }) => {
 				imageHeight="570"
 			/>
 			<List
+				authenticatedUser={auth}
+				enrollmentVerification={verifyAuthEnrollment}
 				object={course}
 				objects={lessons}
 				students={enrolledstudents}

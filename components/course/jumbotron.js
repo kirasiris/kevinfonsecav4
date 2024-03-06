@@ -2,6 +2,7 @@
 import { currencyFormatter, formatDateWithoutTime } from "@/helpers/utilities";
 import Image from "next/image";
 import Link from "next/link";
+import Menu from "./menu";
 
 const Jumbotron = ({
 	authenticatedUser = {},
@@ -11,21 +12,6 @@ const Jumbotron = ({
 	imageWidth = "1200",
 	imageHeight = "900",
 }) => {
-	if (enrollmentVerification?.success) {
-		console.log(
-			"Hola, this is coming from the single course jumbotron. Is enrolled",
-			enrollmentVerification
-		);
-	} else if (!enrollmentVerification?.success) {
-		console.log(
-			"Hola, this is coming from the single course jumbotron. Is not enrolled"
-		);
-	} else {
-		console.log(
-			"Hola, this is coming from the single course jumbotron. There was an error with the server"
-		);
-	}
-
 	return (
 		<>
 			<header className="bg-secondary border-bottom py-5">
@@ -153,58 +139,7 @@ const Jumbotron = ({
 					</div>
 				</div>
 			</header>
-			<div className="bg-light mb-4">
-				<div className="container">
-					<div className="row">
-						<div className="col-lg-12">
-							<nav className="nav">
-								<Link
-									href={{
-										pathname: `/course/${object?.data?._id}/${object?.data?.category}/${object?.data?.sub_category}/${object?.data?.slug}/index`,
-										query: {
-											page: 1,
-											limit: 50,
-											sort: `-createdAt`,
-										},
-									}}
-									passHref
-									legacyBehavior
-								>
-									<a className="nav-link active">Overview</a>
-								</Link>
-								<Link
-									href={{
-										pathname: `/course/${object?.data?._id}/students`,
-										query: {
-											page: 1,
-											limit: 10,
-											sort: `-createdAt`,
-										},
-									}}
-									passHref
-									legacyBehavior
-								>
-									<a className="nav-link">Students</a>
-								</Link>
-								<Link
-									href={{
-										pathname: `/course/${object?.data?._id}/comments`,
-										query: {
-											page: 1,
-											limit: 10,
-											sort: `-createdAt`,
-										},
-									}}
-									passHref
-									legacyBehavior
-								>
-									<a className="nav-link">Comments</a>
-								</Link>
-							</nav>
-						</div>
-					</div>
-				</div>
-			</div>
+			<Menu object={object} />
 		</>
 	);
 };

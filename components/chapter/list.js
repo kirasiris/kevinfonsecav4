@@ -10,6 +10,8 @@ import Image from "next/image";
 import PreviewModal from "./previewmodal";
 
 const List = ({
+	authenticatedUser = {},
+	enrollmentVerification = {},
 	object,
 	objects = [],
 	students = [],
@@ -70,7 +72,7 @@ const List = ({
 													>
 														<div className="float-start">
 															<Link
-																href={`/video/${lesson._id}`}
+																href={`/course/${object.data._id}/${object.data.category}/${object.data.sub_category}/${object.data.slug}/video/${lesson._id}`}
 																passHref
 																legacyBehavior
 															>

@@ -37,7 +37,7 @@ const Single = ({
 						</span>
 					</div>
 				</div>
-				<div className="blog-type-list__blog-thumbnail-wrapper has-image d-none d-md-block d-lg-block d-xl-block d-xxl-block">
+				{/* <div className="blog-type-list__blog-thumbnail-wrapper has-image d-none d-md-block d-lg-block d-xl-block d-xxl-block">
 					<Link
 						href={{
 							pathname: `/noadmin/memberships/update/${object._id}`,
@@ -59,7 +59,7 @@ const Single = ({
 							/>
 						</a>
 					</Link>
-				</div>
+				</div> */}
 				<div className="blog-actions-ellipsis-menu">
 					<span className="ellipsis-menu">
 						<DropdownButton title="Options" variant="secondary">

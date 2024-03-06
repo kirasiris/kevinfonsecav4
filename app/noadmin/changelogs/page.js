@@ -85,7 +85,7 @@ const AdminChangelogsIndex = () => {
 
 	const handleDelete = async (id) => {
 		try {
-			await axios.delete(`/changelogs/${id}`);
+			await axios.delete(`/changelogs/${id}/permanently`);
 			toast.success("Changelog deleted");
 			fetchChangelogs();
 		} catch (err) {

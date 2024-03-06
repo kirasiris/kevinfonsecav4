@@ -13,7 +13,9 @@ const Sidebar = ({ categories = [] }) => {
 
 	const searchData = async (e) => {
 		e.preventDefault();
-		router.push(`/video/search?keyword=${keyword}&page=1&limit=10`);
+		router.push(
+			`/video/search?keyword=${keyword}&page=1&limit=10&sort=-createdAt`
+		);
 	};
 
 	return (
@@ -68,6 +70,7 @@ const Sidebar = ({ categories = [] }) => {
 												query: {
 													page: 1,
 													limit: 10,
+													sort: `-createdAt`,
 												},
 											}}
 											passHref
@@ -94,6 +97,7 @@ const Sidebar = ({ categories = [] }) => {
 																query: {
 																	page: 1,
 																	limit: 10,
+																	sort: `-createdAt`,
 																},
 															}}
 															passHref

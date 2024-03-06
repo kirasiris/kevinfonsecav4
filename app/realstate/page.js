@@ -12,7 +12,7 @@ async function getHouses(params) {
 	return res.json();
 }
 
-const AnimeIndex = async ({ params, searchParams }) => {
+const RealStateIndex = async ({ params, searchParams }) => {
 	const limit = searchParams.limit || 10;
 	const page = searchParams.page || 1;
 	const decrypt = searchParams.decrypt === "true" ? "&decrypt=true" : "";
@@ -33,12 +33,12 @@ const AnimeIndex = async ({ params, searchParams }) => {
 	return (
 		<>
 			<Header
-				title="Welcome to my Blog"
-				description="Learn everything about my programming and life journey"
+				title="Welcome to my Real State Listing"
+				description="Houses, Studios, Business Buildings and More!"
 			/>
 			HERE GOES THE LIST
 		</>
 	);
 };
 
-export default AnimeIndex;
+export default RealStateIndex;

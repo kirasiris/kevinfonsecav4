@@ -1,13 +1,13 @@
 "use client";
 import axios from "axios";
-import { useRouter } from "next/navigation";
-import { useContext, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import AdminSidebar from "@/components/admin/adminsidebar";
 import MyTextArea from "@/components/global/mytextarea";
 import AuthContext from "@/helpers/globalContext";
 
-const CreateMembership = () => {
+const UpdateMembership = () => {
 	const { files } = useContext(AuthContext);
 
 	const router = useRouter();
@@ -55,12 +55,77 @@ const CreateMembership = () => {
 		status,
 	} = membershipData;
 
-	const addMembership = async (e) => {
+	const [membership, setMembership] = useState(null);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState(false);
+
+	const { id } = useParams();
+	const membershipId = id;
+
+	useEffect(() => {
+		const fetchMembership = async () => {
+			try {
+				const res = await axios.get(
+					`/extras/stripe/memberships/${membershipId}`
+				);
+				setMembership(res?.data?.data);
+				setMembershipData({
+					title: res?.data?.data?.title,
+					text: res?.data?.data?.text,
+					active: res?.data?.data?.active,
+					currency: res?.data?.data?.default_price_data?.currency,
+					interval: res?.data?.data?.default_price_data?.recurring?.interval,
+					interval_count:
+						res?.data?.data?.default_price_data?.recurring?.interval_count,
+					tax_behavior: res?.data?.data?.default_price_data?.tax_behavior,
+					unit_amount: res?.data?.data?.default_price_data?.unit_amount,
+					features: res?.data?.data?.features,
+					width: res?.data?.data?.package_dimensions?.width,
+					height: res?.data?.data?.package_dimensions?.height,
+					length: res?.data?.data?.package_dimensions?.length,
+					weight: res?.data?.data?.package_dimensions?.weight,
+					shippable: res?.data?.data?.shippable,
+					statement_descriptor: res?.data?.data?.statement_descriptor,
+					unit_label: res?.data?.data?.unit_label,
+					url: res?.data?.data?.url,
+					livemode: res?.data?.data?.livemode,
+					status: res?.data?.data?.status,
+				});
+				setLoading(false);
+			} catch (err) {
+				console.log(err);
+				// const error = err.response.data.message;
+				const error = err?.response?.data?.error?.errors;
+				const errors = err?.response?.data?.errors;
+
+				if (error) {
+					// dispatch(setAlert(error, 'danger'));
+					error &&
+						Object.entries(error).map(([, value]) =>
+							toast.error(value.message)
+						);
+				}
+
+				if (errors) {
+					errors.forEach((error) => toast.error(error.msg));
+				}
+
+				toast.error(err?.response?.statusText);
+				return {
+					msg: err?.response?.statusText,
+					status: err?.response?.status,
+				};
+			}
+		};
+		fetchMembership();
+	}, [membershipId]);
+
+	const upgradeMembership = async (e) => {
 		e.preventDefault();
 		try {
-			await axios.post(`/memberships`, {
+			await axios.put(`/extras/stripe/memberships/${membership._id}`, {
 				...membershipData,
-				files: { avatar: files?.selected?._id },
+				// files: { avatar: files?.selected?._id },
 				default_price_data: {
 					currency: currency,
 					recurring: {
@@ -124,8 +189,14 @@ const CreateMembership = () => {
 		});
 	};
 
-	return (
-		<form className="row" onSubmit={addMembership}>
+	return loading || membership === null || membership === undefined ? (
+		error ? (
+			<>Not found</>
+		) : (
+			<>Loading...</>
+		)
+	) : (
+		<form className="row" onSubmit={upgradeMembership}>
 			<div className="col">
 				<label htmlFor="blog-title" className="form-label">
 					Title
@@ -185,10 +256,13 @@ const CreateMembership = () => {
 							name="unit_amount"
 							value={unit_amount}
 							onChange={(e) => {
-								setMembershipData({
-									...membershipData,
-									unit_amount: e.target.value,
-								});
+								const inputValue = e.target.value;
+								if (/^\d+$/.test(inputValue) && parseInt(inputValue) >= 0) {
+									setMembershipData({
+										...membershipData,
+										unit_amount: inputValue,
+									});
+								}
 							}}
 							type="number"
 							className="form-control mb-3"
@@ -249,12 +323,15 @@ const CreateMembership = () => {
 							name="width"
 							value={width}
 							onChange={(e) => {
-								setMembershipData({
-									...membershipData,
-									width: e.target.value,
-								});
+								const inputValue = e.target.value;
+								if (/^\d+$/.test(inputValue) && parseInt(inputValue) >= 0) {
+									setMembershipData({
+										...membershipData,
+										width: inputValue,
+									});
+								}
 							}}
-							type="text"
+							type="number"
 							className="form-control mb-3"
 							placeholder="In inches"
 						/>
@@ -268,12 +345,15 @@ const CreateMembership = () => {
 							name="height"
 							value={height}
 							onChange={(e) => {
-								setMembershipData({
-									...membershipData,
-									height: e.target.value,
-								});
+								const inputValue = e.target.value;
+								if (/^\d+$/.test(inputValue) && parseInt(inputValue) >= 0) {
+									setMembershipData({
+										...membershipData,
+										height: inputValue,
+									});
+								}
 							}}
-							type="text"
+							type="number"
 							className="form-control mb-3"
 							placeholder="In inches"
 						/>
@@ -287,12 +367,15 @@ const CreateMembership = () => {
 							name="length"
 							value={length}
 							onChange={(e) => {
-								setMembershipData({
-									...membershipData,
-									length: e.target.value,
-								});
+								const inputValue = e.target.value;
+								if (/^\d+$/.test(inputValue) && parseInt(inputValue) >= 0) {
+									setMembershipData({
+										...membershipData,
+										length: inputValue,
+									});
+								}
 							}}
-							type="text"
+							type="number"
 							className="form-control mb-3"
 							placeholder="In inches"
 						/>
@@ -306,12 +389,15 @@ const CreateMembership = () => {
 							name="weight"
 							value={weight}
 							onChange={(e) => {
-								setMembershipData({
-									...membershipData,
-									weight: e.target.value,
-								});
+								const inputValue = e.target.value;
+								if (/^\d+$/.test(inputValue) && parseInt(inputValue) >= 0) {
+									setMembershipData({
+										...membershipData,
+										weight: inputValue,
+									});
+								}
 							}}
-							type="text"
+							type="number"
 							className="form-control mb-3"
 							placeholder="In ounces"
 						/>
@@ -475,8 +561,8 @@ const CreateMembership = () => {
 			<div className="col-lg-3">
 				<AdminSidebar
 					displayCategoryField={false}
-					displayAvatar={true}
-					avatar={files?.selected?._id}
+					displayAvatar={false}
+					avatar={""}
 					status={status}
 					fullWidth={false}
 					password={""}
@@ -511,4 +597,4 @@ const CreateMembership = () => {
 	);
 };
 
-export default CreateMembership;
+export default UpdateMembership;

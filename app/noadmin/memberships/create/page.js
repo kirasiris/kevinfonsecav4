@@ -58,9 +58,9 @@ const CreateMembership = () => {
 	const addMembership = async (e) => {
 		e.preventDefault();
 		try {
-			await axios.post(`/memberships`, {
+			await axios.post(`/extras/stripe/memberships`, {
 				...membershipData,
-				files: { avatar: files?.selected?._id },
+				// files: { avatar: files?.selected?._id },
 				default_price_data: {
 					currency: currency,
 					recurring: {
@@ -185,10 +185,13 @@ const CreateMembership = () => {
 							name="unit_amount"
 							value={unit_amount}
 							onChange={(e) => {
-								setMembershipData({
-									...membershipData,
-									unit_amount: e.target.value,
-								});
+								const inputValue = e.target.value;
+								if (/^\d+$/.test(inputValue) && parseInt(inputValue) >= 0) {
+									setMembershipData({
+										...membershipData,
+										unit_amount: inputValue,
+									});
+								}
 							}}
 							type="number"
 							className="form-control mb-3"
@@ -249,12 +252,15 @@ const CreateMembership = () => {
 							name="width"
 							value={width}
 							onChange={(e) => {
-								setMembershipData({
-									...membershipData,
-									width: e.target.value,
-								});
+								const inputValue = e.target.value;
+								if (/^\d+$/.test(inputValue) && parseInt(inputValue) >= 0) {
+									setMembershipData({
+										...membershipData,
+										width: inputValue,
+									});
+								}
 							}}
-							type="text"
+							type="number"
 							className="form-control mb-3"
 							placeholder="In inches"
 						/>
@@ -268,12 +274,15 @@ const CreateMembership = () => {
 							name="height"
 							value={height}
 							onChange={(e) => {
-								setMembershipData({
-									...membershipData,
-									height: e.target.value,
-								});
+								const inputValue = e.target.value;
+								if (/^\d+$/.test(inputValue) && parseInt(inputValue) >= 0) {
+									setMembershipData({
+										...membershipData,
+										height: inputValue,
+									});
+								}
 							}}
-							type="text"
+							type="number"
 							className="form-control mb-3"
 							placeholder="In inches"
 						/>
@@ -287,12 +296,15 @@ const CreateMembership = () => {
 							name="length"
 							value={length}
 							onChange={(e) => {
-								setMembershipData({
-									...membershipData,
-									length: e.target.value,
-								});
+								const inputValue = e.target.value;
+								if (/^\d+$/.test(inputValue) && parseInt(inputValue) >= 0) {
+									setMembershipData({
+										...membershipData,
+										length: inputValue,
+									});
+								}
 							}}
-							type="text"
+							type="number"
 							className="form-control mb-3"
 							placeholder="In inches"
 						/>
@@ -306,12 +318,15 @@ const CreateMembership = () => {
 							name="weight"
 							value={weight}
 							onChange={(e) => {
-								setMembershipData({
-									...membershipData,
-									weight: e.target.value,
-								});
+								const inputValue = e.target.value;
+								if (/^\d+$/.test(inputValue) && parseInt(inputValue) >= 0) {
+									setMembershipData({
+										...membershipData,
+										weight: inputValue,
+									});
+								}
 							}}
-							type="text"
+							type="number"
 							className="form-control mb-3"
 							placeholder="In ounces"
 						/>
@@ -475,8 +490,8 @@ const CreateMembership = () => {
 			<div className="col-lg-3">
 				<AdminSidebar
 					displayCategoryField={false}
-					displayAvatar={true}
-					avatar={files?.selected?._id}
+					displayAvatar={false}
+					avatar={""}
 					status={status}
 					fullWidth={false}
 					password={""}

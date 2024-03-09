@@ -66,9 +66,23 @@ const Single = ({
 									className="dropdown-item btn btn-sm"
 									onClick={() => handleStripeId(object._id)}
 								>
-									Assign Stripe Account Id
+									Assign&nbsp;Stripe&nbsp;Account&nbsp;Id
 								</button>
 							)}
+							<Link
+								href={{
+									pathname: `/noadmin/users/read/${object._id}`,
+									query: {
+										isAdmin: true,
+									},
+								}}
+								passHref
+								legacyBehavior
+							>
+								<a className="dropdown-item btn btn-link" target="_blank">
+									View&nbsp;It
+								</a>
+							</Link>
 							<DeleteModal
 								id={object._id ? object._id : object._id}
 								action={handleDelete}

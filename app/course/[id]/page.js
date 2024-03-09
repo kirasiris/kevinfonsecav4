@@ -19,7 +19,7 @@ async function getCourseLessons(params) {
 	return res.json();
 }
 
-async function getCourseStudentsEnrolled(params) {
+async function getCourseStudents(params) {
 	const res = await fetchurl(
 		`http://localhost:5000/api/v1/subscribers${params}`
 	);
@@ -28,19 +28,22 @@ async function getCourseStudentsEnrolled(params) {
 
 const CourseRead = async ({ params, searchParams }) => {
 	const auth = await getAuthenticatedUser();
+	const limit = searchParams.limit || 10;
+	const page = searchParams.page || 1;
+	const decrypt = searchParams.decrypt === "true" ? "&decrypt=true" : "";
 
 	const getCoursesData = getCourse(`/${params.id}`);
 	const getCourseLessonsData = getCourseLessons(
 		`?resourceId=${params.id}&sort=orderingNumber&onModel=Course`
 	);
 
-	const getCourseStudentsEnrolledData = getCourseStudentsEnrolled(
-		`?resourceId=${params.id}&onModel=Course`
+	const getCourseStudentsData = getCourseStudents(
+		`?resourceId=${params.id}&page=${page}&limit=${limit}&sort=-createdAt&onModel=Course${decrypt}`
 	);
 
-	const verifyUserEnrollment = getCourseStudentsEnrolled(
+	const verifyUserEnrollment = getCourseStudents(
 		`?user=${
-			auth?.data ? auth.data._id : `62ec7926a554425c9e03782d`
+			auth?.data ? auth.data?._id : `62ec7926a554425c9e03782d`
 		}&resourceId=${params.id}&onModel=Course`
 	);
 
@@ -48,26 +51,22 @@ const CourseRead = async ({ params, searchParams }) => {
 		await Promise.all([
 			getCoursesData,
 			getCourseLessonsData,
-			getCourseStudentsEnrolledData,
+			getCourseStudentsData,
 			verifyUserEnrollment,
 		]);
-
-	const myParams = {
-		category: course?.data?.category,
-		subcategory: course?.data?.sub_category,
-	};
 
 	return (
 		<Suspense fallback={<Loading />}>
 			<Jumbotron
-				authenticatedUser={auth}
+				auth={auth}
 				object={course}
-				params={myParams}
 				enrollmentVerification={verifyAuthEnrollment}
 				imageWidth="440"
 				imageHeight="570"
 			/>
 			<List
+				auth={auth}
+				enrollmentVerification={verifyAuthEnrollment}
 				object={course}
 				objects={lessons}
 				students={enrolledstudents}

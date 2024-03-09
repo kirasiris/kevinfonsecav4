@@ -1,4 +1,5 @@
 "use client";
+import ParseHtml from "@/layout/parseHtml";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -31,7 +32,7 @@ const AuthorBox = ({ author = {}, imageWidth = "64", imageHeight = "64" }) => {
 				>
 					{author.username}
 				</Link>
-				<p>{author.bio}</p>
+				<ParseHtml text={author?.text} />
 			</div>
 		</div>
 	);

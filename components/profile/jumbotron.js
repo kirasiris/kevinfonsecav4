@@ -1,7 +1,7 @@
 "use client";
-import { currencyFormatter, formatDateWithoutTime } from "@/helpers/utilities";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const Jumbotron = ({
 	authenticatedUser = {},
@@ -11,9 +11,15 @@ const Jumbotron = ({
 	imageWidth = "168",
 	imageHeight = "168",
 }) => {
+	const pathname = usePathname();
+	const isActive = (path = "") => {
+		console.log(pathname, path);
+		return pathname === path ? "active text-bg-secondary" : "text-bg-dark";
+	};
+
 	return (
 		<>
-			<header className={`bg-secondary border-bottom py-5`} style={headerStyle}>
+			<header className={`bg-secondary py-5`} style={headerStyle}>
 				<div className={`container`}>
 					<div className="row my-5">
 						<div className="col">
@@ -38,7 +44,7 @@ const Jumbotron = ({
 					</div>
 				</div>
 			</header>
-			<div className="bg-light mb-4">
+			<div className="bg-dark mb-4">
 				<div className="container">
 					<div className="row">
 						<div className="col-lg-12">
@@ -55,7 +61,13 @@ const Jumbotron = ({
 									passHref
 									legacyBehavior
 								>
-									<a className="nav-link active">Posts</a>
+									<a
+										className={`nav-link ${isActive(
+											`/profile/${object?.data?._id}/${object?.data?.username}`
+										)}`}
+									>
+										Posts
+									</a>
 								</Link>
 								<Link
 									href={{
@@ -65,7 +77,13 @@ const Jumbotron = ({
 									passHref
 									legacyBehavior
 								>
-									<a className="nav-link active">Information</a>
+									<a
+										className={`nav-link ${isActive(
+											`/profile/${object?.data?._id}/${object?.data?.username}/information`
+										)}`}
+									>
+										Information
+									</a>
 								</Link>
 								<Link
 									href={{
@@ -79,7 +97,13 @@ const Jumbotron = ({
 									passHref
 									legacyBehavior
 								>
-									<a className="nav-link active">Socials</a>
+									<a
+										className={`nav-link ${isActive(
+											`/profile/${object?.data?._id}/${object?.data?.username}/social/friends`
+										)}`}
+									>
+										Socials
+									</a>
 								</Link>
 								<Link
 									href={{
@@ -94,7 +118,13 @@ const Jumbotron = ({
 									passHref
 									legacyBehavior
 								>
-									<a className="nav-link active">Photos</a>
+									<a
+										className={`nav-link ${isActive(
+											`/profile/${object?.data?._id}/${object?.data?.username}/photos`
+										)}`}
+									>
+										Photos
+									</a>
 								</Link>
 								<Link
 									href={{
@@ -108,7 +138,13 @@ const Jumbotron = ({
 									passHref
 									legacyBehavior
 								>
-									<a className="nav-link active">Videos</a>
+									<a
+										className={`nav-link ${isActive(
+											`/profile/${object?.data?._id}/${object?.data?.username}/videos`
+										)}`}
+									>
+										Videos
+									</a>
 								</Link>
 								<Link
 									href={{
@@ -122,7 +158,13 @@ const Jumbotron = ({
 									passHref
 									legacyBehavior
 								>
-									<a className="nav-link active">Visit Registrations</a>
+									<a
+										className={`nav-link ${isActive(
+											`/profile/${object?.data?._id}/${object?.data?.username}/map`
+										)}`}
+									>
+										Visit Registrations
+									</a>
 								</Link>
 							</nav>
 						</div>

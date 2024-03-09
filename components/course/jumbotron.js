@@ -1,20 +1,58 @@
 "use client";
-import { currencyFormatter, formatDateWithoutTime } from "@/helpers/utilities";
+import axios from "axios";
+import { toast } from "react-toastify";
 import Image from "next/image";
 import Link from "next/link";
+import { currencyFormatter, formatDateWithoutTime } from "@/helpers/utilities";
 import Menu from "./menu";
 
 const Jumbotron = ({
-	authenticatedUser = {},
+	auth = {},
 	object = {},
-	params = {},
 	enrollmentVerification = {},
 	imageWidth = "1200",
 	imageHeight = "900",
 }) => {
+	const handleEnrollment = async () => {
+		try {
+			await axios.post(
+				`http://localhost:5000/api/v1/subscribers`,
+				{
+					resourceId: object.data._id,
+					user: auth._id,
+					onModel: "Course",
+				},
+				{
+					headers: {
+						Authorization: auth.authorizationTokens.bearer,
+					},
+				}
+			);
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
 	return (
 		<>
-			<header className="bg-secondary border-bottom py-5">
+			<header className="bg-secondary py-5">
 				<div className="container">
 					<div className="row my-5">
 						<div className="col-lg-8">
@@ -28,7 +66,7 @@ const Jumbotron = ({
 									Category&nbsp;
 									<Link
 										href={{
-											pathname: `/course/category/${params.category}`,
+											pathname: `/course/category/${object.data.category}`,
 											query: {
 												page: 1,
 												limit: 32,
@@ -38,13 +76,13 @@ const Jumbotron = ({
 										legacyBehavior
 									>
 										<a className="badge bg-dark text-decoration-none">
-											{params.category}
+											{object.data.category}
 										</a>
 									</Link>
 									&nbsp;/&nbsp;
 									<Link
 										href={{
-											pathname: `/course/subcategory/${params.subcategory}`,
+											pathname: `/course/subcategory/${object.data.sub_category}`,
 											query: {
 												page: 1,
 												limit: 32,
@@ -54,7 +92,7 @@ const Jumbotron = ({
 										legacyBehavior
 									>
 										<a className="badge bg-dark text-decoration-none">
-											{params.subcategory}
+											{object.data.sub_category}
 										</a>
 									</Link>
 								</p>
@@ -99,26 +137,32 @@ const Jumbotron = ({
 							)}
 							{/* enroll button */}
 							<div className="d-grid gap-2 col-12 mt-3 mb-3">
-								{authenticatedUser?.data?.isOnline ? (
+								{auth?.data?.isOnline ? (
 									// If free and not enrolled
 									(object?.data?.isFree && !enrollmentVerification?.success && (
-										<button className="btn btn-dark btn-sm">
+										<button
+											className="btn btn-dark btn-sm"
+											onClick={() => handleEnrollment()}
+										>
 											Enroll for Free
 										</button>
 									)) ||
 									// If not free and not enrolled
 									(!object?.data?.isFree &&
 										!enrollmentVerification?.success && (
-											<button className="btn btn-dark btn-sm">
+											<button
+												className="btn btn-dark btn-sm"
+												onClick={() => handleEnrollment()}
+											>
 												Pay to Enroll
 											</button>
 										)) ||
 									// If free/not free and already enrolled
 									((object?.data?.isFree || !object?.data?.isFree) &&
 										enrollmentVerification?.success && (
-											<button className="btn btn-dark btn-sm">
+											<p className="bg-dark text-bg-dark rounded text-center m-0 p-2">
 												Already enrolled
-											</button>
+											</p>
 										))
 								) : (
 									<Link

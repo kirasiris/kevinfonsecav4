@@ -24,7 +24,7 @@ async function getCourseLessons(params) {
 	return res.json();
 }
 
-async function getCourseStudentsEnrolled(params) {
+async function getCourseStudents(params) {
 	const res = await fetchurl(
 		`http://localhost:5000/api/v1/subscribers${params}`
 	);
@@ -58,9 +58,9 @@ const VideoRead = async ({ params, searchParams }) => {
 		`?resourceId=${params.id}&sort=orderingNumber&onModel=Course`
 	);
 	// Verify if user is enrolled (it means if course is not free, user should have paid already)
-	const verifyUserEnrollment = getCourseStudentsEnrolled(
+	const verifyUserEnrollment = getCourseStudents(
 		`?user=${
-			auth?.data ? auth.data._id : `62ec7926a554425c9e03782d`
+			auth?.data ? auth.data?._id : `62ec7926a554425c9e03782d`
 		}&resourceId=${params.id}&onModel=Course`
 	);
 

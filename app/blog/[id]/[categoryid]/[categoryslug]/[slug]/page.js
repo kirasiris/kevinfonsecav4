@@ -6,7 +6,7 @@ import Sidebar from "@/layout/blog/sidebar";
 import Loading from "@/app/blog/loading";
 import ExportModal from "@/components/global/exportmodal";
 import AuthorBox from "@/components/global/authorbox";
-// import CommentBox from "@/components/global/commentbox";
+import CommentBox from "@/components/global/commentbox";
 import ParseHtml from "@/layout/parseHtml";
 import ReportModal from "@/components/global/reportmodal";
 import { fetchurl } from "@/helpers/setTokenOnServer";
@@ -99,15 +99,15 @@ const BlogRead = async ({ params, searchParams }) => {
 									</div>
 									<div style={{ clear: "both" }} />
 									<AuthorBox author={blog?.data?.user} />
-									{/* <CommentBox
+									<CommentBox
 										auth={auth.data}
+										authorization={auth.authorizationTokens}
 										user={blog?.data?.user}
 										postId={blog?.data?._id}
 										secondPostId={blog?.data?._id}
 										isVisible={blog?.data?.commented}
-										postType="blog"
 										onModel="Blog"
-									/> */}
+									/>
 								</section>
 							</article>
 						</Globalcontent>

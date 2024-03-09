@@ -19,7 +19,7 @@ async function getCourseLessons(params) {
 	return res.json();
 }
 
-async function getCourseStudentsEnrolled(params) {
+async function getCourseStudents(params) {
 	const res = await fetchurl(
 		`http://localhost:5000/api/v1/subscribers${params}`
 	);
@@ -28,17 +28,23 @@ async function getCourseStudentsEnrolled(params) {
 
 const CourseLessonsIndex = async ({ params, searchParams }) => {
 	const auth = await getAuthenticatedUser();
+	const limit = searchParams.limit || 10;
+	const page = searchParams.page || 1;
+	const decrypt = searchParams.decrypt === "true" ? "&decrypt=true" : "";
 
 	const getCoursesData = getCourse(`/${params.id}`);
+
 	const getCourseLessonsData = getCourseLessons(
 		`?resourceId=${params.id}&sort=orderingNumber&onModel=Course`
 	);
-	const getCourseStudentsEnrolledData = getCourseStudentsEnrolled(
-		`?resourceId=${params.id}&onModel=Course`
+
+	const getCourseStudentsData = getCourseStudents(
+		`?resourceId=${params.id}&page=${page}&limit=${limit}&sort=-createdAt&onModel=Course${decrypt}`
 	);
-	const verifyUserEnrollment = getCourseStudentsEnrolled(
+
+	const verifyUserEnrollment = getCourseStudents(
 		`?user=${
-			auth?.data ? auth.data._id : `62ec7926a554425c9e03782d`
+			auth?.data ? auth.data?._id : `62ec7926a554425c9e03782d`
 		}&resourceId=${params.id}&onModel=Course`
 	);
 
@@ -46,22 +52,21 @@ const CourseLessonsIndex = async ({ params, searchParams }) => {
 		await Promise.all([
 			getCoursesData,
 			getCourseLessonsData,
-			getCourseStudentsEnrolledData,
+			getCourseStudentsData,
 			verifyUserEnrollment,
 		]);
 
 	return (
 		<Suspense fallback={<Loading />}>
 			<Jumbotron
-				authenticatedUser={auth}
+				auth={auth}
 				object={course}
-				params={params}
 				enrollmentVerification={verifyAuthEnrollment}
 				imageWidth="440"
 				imageHeight="570"
 			/>
 			<List
-				authenticatedUser={auth}
+				auth={auth}
 				enrollmentVerification={verifyAuthEnrollment}
 				object={course}
 				objects={lessons}
@@ -69,7 +74,7 @@ const CourseLessonsIndex = async ({ params, searchParams }) => {
 				isAdmin={false}
 				searchParams={searchParams}
 				isIndex={true}
-				linkToShare={`localhost:3000/course/${course?.data?._id}/${params.category}/${params.subcategory}/${course?.data?.slug}/index`}
+				linkToShare={`localhost:3000/course/${course?.data?._id}/${course?.data?.category}/${course?.data?.sub_category}/${course?.data?.slug}/index`}
 				postType="course"
 				onModel="Course"
 			/>

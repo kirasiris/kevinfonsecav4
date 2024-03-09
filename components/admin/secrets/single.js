@@ -22,14 +22,14 @@ const Single = ({
 					<h1 className="blog-item__title">
 						<Link
 							href={{
-								pathname: `/noadmin/secrets/read/${object._id}`,
+								pathname: `/noadmin/secrets/update/${object._id}`,
 								query: {},
 							}}
 							passHref
 							legacyBehavior
 						>
 							<a className="blog-item__title-link">
-								{object.sex} - {object.age} year&apos;s old
+								{object.sex}&nbsp;-&nbsp;{object.age}&nbsp;year&apos;s&nbsp;old
 							</a>
 						</Link>
 					</h1>
@@ -42,29 +42,43 @@ const Single = ({
 				<div className="blog-actions-ellipsis-menu">
 					<span className="ellipsis-menu">
 						<DropdownButton title="Options" variant="secondary">
+							<Link
+								href={{
+									pathname: `/noadmin/secrets/read/${object._id}`,
+									query: {
+										isAdmin: true,
+									},
+								}}
+								passHref
+								legacyBehavior
+							>
+								<a className="dropdown-item btn btn-link" target="_blank">
+									View&nbsp;It
+								</a>
+							</Link>
 							<button
 								className="dropdown-item btn btn-sm"
 								onClick={() => handleDraft(object._id)}
 							>
-								Draft It
+								Draft&nbsp;It
 							</button>
 							<button
 								className="dropdown-item btn btn-sm"
 								onClick={() => handlePublish(object._id)}
 							>
-								Publish It
+								Publish&nbsp;It
 							</button>
 							<button
 								className="dropdown-item btn btn-sm"
 								onClick={() => handleTrash(object._id)}
 							>
-								Trash It
+								Trash&nbsp;It
 							</button>
 							<button
 								className="dropdown-item btn btn-sm"
 								onClick={() => handleSchedule(object._id)}
 							>
-								Schedule It
+								Schedule&nbsp;It
 							</button>
 							<DeleteModal
 								id={object._id ? object._id : object._id}

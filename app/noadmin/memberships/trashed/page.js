@@ -3,13 +3,13 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useContext } from "react";
 import { toast } from "react-toastify";
-import Single from "@/components/admin/users/single";
+import Single from "@/components/admin/memberships/single";
 import AuthContext from "@/helpers/globalContext";
 import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
 import AdminCardHeaderMenu from "@/components/admin/admincardheadermenu";
 import ClientNumericPagination from "@/layout/clientnumericpagination";
 
-const AdminUsersIndex = () => {
+const AdminMembershipsTrashedIndex = () => {
 	const {
 		totalPages,
 		setTotalPages,
@@ -21,24 +21,24 @@ const AdminUsersIndex = () => {
 
 	const router = useRouter();
 
-	const [users, setUsers] = useState([]);
+	const [memberships, setMemberships] = useState([]);
 	const [page, setPage] = useState(1);
 	const [limit] = useState(10);
 	const [sortby] = useState(`-createdAt`);
 	const [params, setParams] = useState(
-		`?page=${page}&limit=${limit}&sort=${sortby}`
+		`?page=${page}&limit=${limit}&sort=${sortby}&status=trash`
 	);
 	const [keyword, setKeyword] = useState("");
 	const [list, setList] = useState([]);
 	const [loading, setLoading] = useState(true);
 
-	const fetchUsers = async () => {
+	const fetchMemberships = async () => {
 		try {
-			const res = await axios.get(`/users${params}`);
-			setUsers(res?.data?.data);
+			const res = await axios.get(`/extras/stripe/memberships${params}`);
+			setMemberships(res?.data?.data);
 			setTotalPages(res?.data?.pagination?.totalpages);
 			setCurrentResults(res?.data?.count);
-			setTotalResults({ ...totalResults, users: res?.data?.countAll });
+			setTotalResults({ ...totalResults, memberships: res?.data?.countAll });
 			setPage(res?.data?.pagination?.current);
 			setLoading(false);
 		} catch (err) {
@@ -65,29 +65,57 @@ const AdminUsersIndex = () => {
 	};
 
 	useEffect(() => {
-		fetchUsers();
+		fetchMemberships();
 	}, [router, params]);
 
 	useEffect(() => {
-		setList(users);
-	}, [users]);
+		setList(memberships);
+	}, [memberships]);
 
 	useEffect(() => {
 		if (keyword !== "") {
-			const result = users.filter((object) => {
-				return object.username.toLowerCase().startsWith(keyword.toLowerCase());
+			const result = memberships.filter((object) => {
+				return object.title.toLowerCase().startsWith(keyword.toLowerCase());
 			});
 			setList(result);
 		} else {
-			setList(users);
+			setList(memberships);
 		}
 	}, [keyword]);
 
-	const assignStripeId = async (id) => {
+	const activateIt = async (id) => {
 		try {
-			await axios.put(`/users/${id}/assignstripeid`);
-			toast.success("User updated");
-			fetchUsers();
+			await axios.put(`/extras/stripe/memberships/${id}/activateit`);
+			toast.success("Membership activated");
+			fetchMemberships();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
+	const disactivateIt = async (id) => {
+		try {
+			await axios.put(`/extras/stripe/memberships/${id}/disactivateit`);
+			toast.success("Membership disactivated");
+			fetchMemberships();
 		} catch (err) {
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;
@@ -113,9 +141,37 @@ const AdminUsersIndex = () => {
 
 	const handleDelete = async (id) => {
 		try {
-			await axios.delete(`/users/${id}/permanently`);
-			toast.success("User deleted");
-			fetchUsers();
+			await axios.delete(`/extras/stripe/memberships/${id}/permanently`);
+			toast.success("Membership deleted");
+			fetchMemberships();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
+	const handleTrashAll = async () => {
+		try {
+			await axios.put(`/extras/stripe/memberships/deleteall`);
+			toast.success("Memberships trashed");
+			fetchMemberships();
 		} catch (err) {
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;
@@ -141,9 +197,9 @@ const AdminUsersIndex = () => {
 
 	const handleDeleteAll = async () => {
 		try {
-			await axios.delete(`/users/deleteall`);
-			toast.success("Users deleted");
-			fetchUsers();
+			await axios.put(`/extras/stripe/memberships/deleteall/permanently`);
+			toast.success("Memberships deleted");
+			fetchMemberships();
 		} catch (err) {
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;
@@ -170,20 +226,21 @@ const AdminUsersIndex = () => {
 	return (
 		<>
 			<AdminStatusesMenu
-				allLink="/noadmin/users"
-				publishedLink="/noadmin/users/published"
-				draftLink="/noadmin/users/draft"
-				scheduledLink="/noadmin/users/scheduled"
-				trashedLink="/noadmin/users/trashed"
+				allLink="/noadmin/memberships"
+				publishedLink="/noadmin/memberships/published"
+				draftLink="/noadmin/memberships/draft"
+				scheduledLink="/noadmin/memberships/scheduled"
+				trashedLink="/noadmin/memberships/trashed"
 			/>
 			<div className="card rounded-0">
 				<AdminCardHeaderMenu
-					allLink={`/noadmin/users`}
-					pageText="Users"
+					allLink={`/noadmin/memberships`}
+					pageText="Memberships"
 					currentResults={currentResults}
-					totalResults={totalResults.users}
-					addLink={`/noadmin/users/create`}
-					addLinkText={`user`}
+					totalResults={totalResults.memberships}
+					addLink={`/noadmin/memberships/create`}
+					addLinkText={`membership`}
+					handleTrashAllFunction={handleTrashAll}
 					handleDeleteAllFunction={handleDeleteAll}
 					keyword={keyword}
 					setKeyword={setKeyword}
@@ -191,14 +248,15 @@ const AdminUsersIndex = () => {
 				{list?.length > 0 ? (
 					<>
 						<ul className="list-group list-group-flush">
-							{list?.map((user) => (
+							{list?.map((membership) => (
 								<Single
-									key={user._id}
-									object={user}
-									handleStripeId={assignStripeId}
+									key={membership._id}
+									object={membership}
+									handleActivate={activateIt}
+									handleDisactivate={disactivateIt}
 									handleDelete={handleDelete}
 									objects={list}
-									setObjects={setUsers}
+									setObjects={setMemberships}
 									setTotalResults={setTotalResults}
 								/>
 							))}
@@ -230,4 +288,4 @@ const AdminUsersIndex = () => {
 	);
 };
 
-export default AdminUsersIndex;
+export default AdminMembershipsTrashedIndex;

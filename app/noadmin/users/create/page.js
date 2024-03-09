@@ -347,40 +347,42 @@ const CreateUser = () => {
 						</select>
 					</div>
 					<div className="row">
-						<label htmlFor="role" className="form-label">
-							Role
-						</label>
-						<select
-							id="role"
-							name="role"
-							value={role}
-							onChange={(e) => {
-								const selectedOptions = Array.from(
-									e.target.selectedOptions
-								).map((option) => option.value);
-								setUserData({
-									...userData,
-									role: selectedOptions,
-								});
-							}}
-							className="form-control"
-							multiple
-						>
-							<option value={`founder`}>Founder</option>
-							<option value={`editor`}>Editor</option>
-							<option value={`author`}>Author</option>
-							<option value={`contributor`}>Contributor</option>
-							<option value={`subscriber`}>Subscriber</option>
-							<option value={`banned`}>Banned</option>
-							<option value={`suspended`}>Suspended</option>
-							<option value={`realtor`}>Realtor</option>
-							<option value={`renter`}>Renter</option>
-							<option value={`house-seller`}>House Seller</option>
-							<option value={`car-owner`}>Car Owner</option>
-							<option value={`teacher`}>Teacher</option>
-							<option value={`student`}>Student</option>
-							<option value={`producer`}>Producer</option>
-						</select>
+						<div className="col">
+							<label htmlFor="role" className="form-label">
+								Role
+							</label>
+							<select
+								id="role"
+								name="role"
+								value={role}
+								onChange={(e) => {
+									const selectedOptions = Array.from(
+										e.target.selectedOptions
+									).map((option) => option.value);
+									setUserData({
+										...userData,
+										role: selectedOptions,
+									});
+								}}
+								className="form-control"
+								multiple
+							>
+								<option value={`founder`}>Founder</option>
+								<option value={`editor`}>Editor</option>
+								<option value={`author`}>Author</option>
+								<option value={`contributor`}>Contributor</option>
+								<option value={`subscriber`}>Subscriber</option>
+								<option value={`banned`}>Banned</option>
+								<option value={`suspended`}>Suspended</option>
+								<option value={`realtor`}>Realtor</option>
+								<option value={`renter`}>Renter</option>
+								<option value={`house-seller`}>House Seller</option>
+								<option value={`car-owner`}>Car Owner</option>
+								<option value={`teacher`}>Teacher</option>
+								<option value={`student`}>Student</option>
+								<option value={`producer`}>Producer</option>
+							</select>
+						</div>
 						<div className="col">
 							<label htmlFor="sex" className="form-label">
 								Sex
@@ -434,25 +436,32 @@ const CreateUser = () => {
 							</select>
 						</div>
 					</div>
-					<label htmlFor="age" className="form-label">
-						Age
-					</label>
-					<input
-						id="age"
-						name="age"
-						value={age}
-						onChange={(e) => {
-							setUserData({
-								...userData,
-								age: e.target.value,
-							});
-						}}
-						type="number"
-						className="form-control mb-3"
-						placeholder="18"
-						min={18}
-						max={99}
-					/>
+					<div className="row">
+						<div className="col">
+							<label htmlFor="age" className="form-label">
+								Age
+							</label>
+							<input
+								id="age"
+								name="age"
+								value={age}
+								onChange={(e) => {
+									const inputValue = e.target.value;
+									if (/^\d+$/.test(inputValue) && parseInt(inputValue) >= 18) {
+										setUserData({
+											...userData,
+											age: inputValue,
+										});
+									}
+								}}
+								type="number"
+								className="form-control mb-3"
+								placeholder="18"
+								min={18}
+								max={99}
+							/>
+						</div>
+					</div>
 					<div className="row">
 						<div className="col">
 							<label htmlFor="relationshipStatus" className="form-label">
@@ -546,18 +555,22 @@ const CreateUser = () => {
 							</select>
 						</div>
 					</div>
-					<label htmlFor="text" className="form-label">
-						Biography
-					</label>
-					<MyTextArea
-						id="text"
-						name="bio"
-						value={bio}
-						objectData={userData}
-						setObjectData={setUserData}
-						onModel="User"
-						advancedTextEditor={false}
-					/>
+					<div className="row">
+						<div className="col">
+							<label htmlFor="text" className="form-label">
+								Biography
+							</label>
+							<MyTextArea
+								id="text"
+								name="text"
+								value={bio}
+								objectData={userData}
+								setObjectData={setUserData}
+								onModel="User"
+								advancedTextEditor={false}
+							/>
+						</div>
+					</div>
 					<div className="row">
 						<div className="col">
 							<label htmlFor="website" className="form-label">

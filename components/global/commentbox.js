@@ -8,6 +8,7 @@ import MyTextArea from "@/components/global/mytextarea";
 
 const CommentBox = ({
 	auth = {},
+	authorization = {},
 	user = {},
 	postId = null,
 	secondPostId = null,
@@ -29,7 +30,7 @@ const CommentBox = ({
 	const [, setError] = useState(false); // Done
 	const [, setIsBlocking] = useState(false);
 
-	const params = `?resourceId=${postId}&page=${page}&limit=15&sort=-createdAt&status=published`;
+	const params = `?resourceId=${postId}&page=${page}&limit=15&sort=-createdAt&status=published&decrypt=true`;
 
 	useEffect(() => {
 		const getComments = async () => {
@@ -67,7 +68,12 @@ const CommentBox = ({
 			// );
 			const res = await axios.post(
 				`http://localhost:5000/api/v1/comments/${postId}`,
-				commentData
+				commentData,
+				{
+					headers: {
+						Authorization: authorization.bearer,
+					},
+				}
 			);
 			console.log(res?.data);
 			setComments([res?.data?.data, ...comments]);
@@ -105,60 +111,69 @@ const CommentBox = ({
 		<div className="comments">
 			{isVisible ? (
 				<>
-					<form className="mb-3" onSubmit={newComment}>
-						<div className="card mb-3">
-							<div className="card-body">
-								<input
-									type={`text`}
-									placeholder={`Title *`}
-									aria-label={`title`}
-									aria-describedby={`title-text`}
-									autoComplete={`title`}
-									name={`title`}
-									id={`title`}
-									className="form-control"
-									onChange={(e) => {
-										setCommentData({
-											...commentData,
-											title: e.target.value,
-										});
-									}}
-									value={title}
-								/>
-								<br />
-								<MyTextArea
-									auth={auth}
-									name="text"
-									id="text"
-									value={text}
-									objectData={commentData}
-									setObjectData={setCommentData}
-									onModel="Comment"
-									advancedTextEditor={false}
-								/>
+					{auth?.user?.isOnline && (
+						<form className="mb-3" onSubmit={newComment}>
+							<div className="card mb-3">
+								<div className="card-body">
+									<input
+										type={`text`}
+										placeholder={`Title *`}
+										aria-label={`title`}
+										aria-describedby={`title-text`}
+										autoComplete={`title`}
+										name={`title`}
+										id={`title`}
+										className="form-control"
+										onChange={(e) => {
+											setCommentData({
+												...commentData,
+												title: e.target.value,
+											});
+										}}
+										value={title}
+									/>
+									<br />
+									<MyTextArea
+										auth={auth}
+										name="text"
+										id="text"
+										value={text}
+										objectData={commentData}
+										setObjectData={setCommentData}
+										onModel="Comment"
+										advancedTextEditor={false}
+									/>
+								</div>
 							</div>
-						</div>
-						<button
-							type="submit"
-							className="btn btn-sm btn-secondary me-1"
-							disabled={title?.length > 0 && text?.length > 0 ? !true : !false}
-						>
-							Submit
-						</button>
-						<button
-							type="reset"
-							className="btn btn-sm btn-secondary"
-							onClick={resetForm}
-						>
-							Reset
-						</button>
-					</form>
+							<button
+								type="submit"
+								className="btn btn-sm btn-secondary me-1"
+								disabled={
+									title?.length > 0 && text?.length > 0 ? !true : !false
+								}
+							>
+								Submit
+							</button>
+							<button
+								type="reset"
+								className="btn btn-sm btn-secondary"
+								onClick={resetForm}
+							>
+								Reset
+							</button>
+						</form>
+					)}
 					{comments?.length > 0 && (
 						<>
 							<hr />
 							<h5>Comments: {comments?.length}</h5>
 							{comments?.map((comment) => (
-								<Single key={comment._id} author={user} comment={comment} />
+								<Single
+									key={comment._id}
+									auth={auth}
+									author={user}
+									object={comment}
+								/>
 							))}
 						</>
 					)}

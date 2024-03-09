@@ -2,41 +2,55 @@ import { Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Loading from "@/app/comment/loading";
+import ParseHtml from "@/layout/parseHtml";
+import CommentBox from "../global/commentbox";
 
 const Single = ({
+	auth = {},
 	author = {},
-	comment = {},
+	object = {},
 	commentId = null,
 	imageWidth = "64",
 	imageHeight = "64",
 }) => {
 	return (
 		<Suspense fallback={<Loading />}>
-			<article className={`${comment._id || commentId}`}>
+			<article className={`${object._id || commentId}`}>
 				<div
 					className="d-flex my-4"
-					id={`media comment-${comment._id || commentId}`}
+					id={`media comment-${object._id || commentId}`}
 				>
 					<div className="flex-shrink-0">
 						<Link
-							href={`/profile/${comment.user._id}/${comment.user.username}`}
+							href={`/profile/${object.user._id}/${object.user.username}`}
 							passHref
 							legacyBehavior
 						>
 							<Image
 								src={
-									comment.user.files?.avatar?.location.secure_location ||
+									object.user.files?.avatar?.location.secure_location ||
 									`https://source.unsplash.com/random/64x64`
 								}
-								alt={`${comment.user.username}'s featured image`}
+								alt={`${object.user.username}'s featured image`}
 								width={imageWidth}
 								height={imageHeight}
+								className="div-hover"
 							/>
 						</Link>
 					</div>
 					<div className="flex-grow-1 ms-3">
-						{/* <p>{comment.text}</p> */}
-						<p>texto</p>
+						<p>{author.username}</p>
+						<ParseHtml text={object.text} />
+						{/* <CommentBox
+							auth={auth.data}
+							authorization={auth.authorizationTokens}
+							user={object?.user}
+							postId={object?._id}
+							secondPostId={object?._id}
+							parentId={object._id}
+							isVisible={true}
+							onModel="Comment"
+						/> */}
 					</div>
 				</div>
 			</article>

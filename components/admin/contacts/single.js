@@ -6,6 +6,10 @@ import DeleteModal from "@/components/global/deletemodal";
 
 const Single = ({
 	object = {},
+	handleDraft,
+	handlePublish,
+	handleTrash,
+	handleSchedule,
 	handleDelete,
 	objects,
 	setObjects,
@@ -19,7 +23,7 @@ const Single = ({
 					<h1 className="blog-item__title">
 						<Link
 							href={{
-								pathname: `/noadmin/contacts/read/${object._id}`,
+								pathname: `/noadmin/contacts/update/${object._id}`,
 								query: {},
 							}}
 							passHref
@@ -30,18 +34,15 @@ const Single = ({
 					</h1>
 					<div className="blog-item__meta">
 						<span className="blog-item__meta-time-status">
-							{object.name.first +
-								" " +
-								object.name.middle +
-								" " +
-								object.name.last}
+							{object.name.first}&nbsp;{object.name.middle}&nbsp;
+							{object.name.last}
 						</span>
 					</div>
 				</div>
 				<div className="blog-type-list__blog-thumbnail-wrapper has-image d-none d-md-block d-lg-block d-xl-block d-xxl-block">
 					<Link
 						href={{
-							pathname: `/noadmin/contacts/read/${object._id}`,
+							pathname: `/noadmin/contacts/update/${object._id}`,
 							query: {},
 						}}
 						passHref
@@ -64,6 +65,44 @@ const Single = ({
 				<div className="blog-actions-ellipsis-menu">
 					<span className="ellipsis-menu">
 						<DropdownButton title="Options" variant="secondary">
+							<Link
+								href={{
+									pathname: `/noadmin/contacts/read/${object._id}`,
+									query: {
+										isAdmin: true,
+									},
+								}}
+								passHref
+								legacyBehavior
+							>
+								<a className="dropdown-item btn btn-link" target="_blank">
+									View&nbsp;It
+								</a>
+							</Link>
+							<button
+								className="dropdown-item btn btn-sm"
+								onClick={() => handleDraft(object._id)}
+							>
+								Draft&nbsp;It
+							</button>
+							<button
+								className="dropdown-item btn btn-sm"
+								onClick={() => handlePublish(object._id)}
+							>
+								Publish&nbsp;It
+							</button>
+							<button
+								className="dropdown-item btn btn-sm"
+								onClick={() => handleTrash(object._id)}
+							>
+								Trash&nbsp;It
+							</button>
+							<button
+								className="dropdown-item btn btn-sm"
+								onClick={() => handleSchedule(object._id)}
+							>
+								Schedule&nbsp;It
+							</button>
 							<DeleteModal
 								id={object._id ? object._id : object._id}
 								action={handleDelete}

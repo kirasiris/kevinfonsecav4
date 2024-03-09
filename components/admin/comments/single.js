@@ -1,5 +1,4 @@
 "use client";
-import Image from "next/image";
 import Link from "next/link";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import DeleteModal from "@/components/global/deletemodal";
@@ -39,35 +38,12 @@ const Single = ({
 						</span>
 					</div>
 				</div>
-				<div className="blog-type-list__blog-thumbnail-wrapper has-image d-none d-md-block d-lg-block d-xl-block d-xxl-block">
-					<Link
-						href={{
-							pathname: `/noadmin/comments/update/${object._id}`,
-							query: {},
-						}}
-						passHref
-						legacyBehavior
-					>
-						<a className="blog-type-list__blog-thumbnail-link">
-							<Image
-								src={
-									object.user?.files?.avatar?.location.secure_location ||
-									`https://source.unsplash.com/random/83x63`
-								}
-								className="blog-type-list__blog-thumbnail"
-								alt="Blog titles image"
-								width="83"
-								height="63"
-							/>
-						</a>
-					</Link>
-				</div>
 				<div className="blog-actions-ellipsis-menu">
 					<span className="ellipsis-menu">
 						<DropdownButton title="Options" variant="secondary">
 							<Link
 								href={{
-									pathname: `/blog/${object._id}/${object.category?._id}/${object.category?.slug}/${object.slug}`,
+									pathname: `/noadmin/comments/read/${object._id}`,
 									query: {
 										isAdmin: true,
 									},
@@ -76,32 +52,32 @@ const Single = ({
 								legacyBehavior
 							>
 								<a className="dropdown-item btn btn-link" target="_blank">
-									View It
+									View&nbsp;It
 								</a>
 							</Link>
 							<button
 								className="dropdown-item btn btn-sm"
 								onClick={() => handleDraft(object._id)}
 							>
-								Draft It
+								Draft&nbsp;It
 							</button>
 							<button
 								className="dropdown-item btn btn-sm"
 								onClick={() => handlePublish(object._id)}
 							>
-								Publish It
+								Publish&nbsp;It
 							</button>
 							<button
 								className="dropdown-item btn btn-sm"
 								onClick={() => handleTrash(object._id)}
 							>
-								Trash It
+								Trash&nbsp;It
 							</button>
 							<button
 								className="dropdown-item btn btn-sm"
 								onClick={() => handleSchedule(object._id)}
 							>
-								Schedule It
+								Schedule&nbsp;It
 							</button>
 							<DeleteModal
 								id={object._id ? object._id : object._id}

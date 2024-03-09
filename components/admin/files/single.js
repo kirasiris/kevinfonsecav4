@@ -47,7 +47,7 @@ const Single = ({
 						passHref
 						legacyBehavior
 					>
-						<a className="btn btn-secondary btn-sm">Read more</a>
+						<a className="btn btn-secondary btn-sm">Read&nbsp;more</a>
 					</Link>
 					<DeleteModal
 						id={object._id ? object._id : object._id}
@@ -90,7 +90,7 @@ const Single = ({
 						passHref
 						legacyBehavior
 					>
-						<a className="btn btn-secondary btn-sm">Read more</a>
+						<a className="btn btn-secondary btn-sm">Read&nbsp;more</a>
 					</Link>
 					<DeleteModal
 						id={object._id ? object._id : object._id}
@@ -131,7 +131,7 @@ const Single = ({
 						passHref
 						legacyBehavior
 					>
-						<a className="btn btn-secondary btn-sm">Read more</a>
+						<a className="btn btn-secondary btn-sm">Read&nbsp;more</a>
 					</Link>
 					<DeleteModal
 						id={object._id ? object._id : object._id}

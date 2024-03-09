@@ -16,7 +16,7 @@ const MyTextArea = ({
 	name = "",
 	value = "",
 	objectData,
-	setObjectData = () => {},
+	setObjectData,
 	onModel = "Blog",
 	advancedTextEditor = true,
 }) => {

@@ -68,13 +68,13 @@ const Single = ({
 				>
 					<a className="me-1">{object.user.username}</a>
 				</Link>
-				is playing
+				is&nbsp;playing
 				<a href="#!" className="mx-1">
-					Ghost Recon Breakpoint
+					Ghost&nbsp;Recon&nbsp;Breakpoint
 				</a>
 				{object.postedto !== undefined && (
 					<>
-						posted to
+						posted&nbsp;to
 						<Link
 							href={{
 								pathname: `/profiles/${object.postedto._id}/${object.postedto.username}/posts`,
@@ -131,7 +131,7 @@ const Single = ({
 								type={`button`}
 							>
 								{/* <i className={`${featuredIcon} mr-1`} aria-hidden /> */}
-								Only me
+								Only&nbsp;me
 							</Button>
 							<Button
 								// onClick={!hiden ? hidePost : unhidePost}
@@ -139,7 +139,7 @@ const Single = ({
 								type={`button`}
 							>
 								{/* <i className={`${hiddenIcon} mr-1`} aria-hidden /> */}
-								Everyone can see
+								Everyone&nbsp;can&nbsp;see
 							</Button>
 							<Button
 								// onClick={!openEditor ? editorOpen : editorClosed}
@@ -147,7 +147,7 @@ const Single = ({
 								type={`button`}
 							>
 								<i className={`fas fa-edit mr-1`} aria-hidden />
-								People I follow
+								People&nbsp;I&nbsp;follow
 							</Button>
 							<Button
 								// onClick={!openEditor ? editorOpen : editorClosed}
@@ -155,7 +155,7 @@ const Single = ({
 								type={`button`}
 							>
 								<i className={`fas fa-edit mr-1`} aria-hidden />
-								People following me
+								People&nbsp;following&nbsp;me
 							</Button>
 							<Button
 								// onClick={!openEditor ? editorOpen : editorClosed}
@@ -184,7 +184,7 @@ const Single = ({
 							type={`button`}
 						>
 							{/* <i className={`${featuredIcon} mr-1`} aria-hidden /> */}
-							Pin post
+							Pin&nbsp;post
 						</Button>
 						<Button
 							// onClick={!hiden ? hidePost : unhidePost}
@@ -192,7 +192,7 @@ const Single = ({
 							type={`button`}
 						>
 							{/* <i className={`${hiddenIcon} mr-1`} aria-hidden /> */}
-							Hide post
+							Hide&nbsp;post
 						</Button>
 						<Button
 							// onClick={!openEditor ? editorOpen : editorClosed}
@@ -200,7 +200,7 @@ const Single = ({
 							type={`button`}
 						>
 							<i className={`fas fa-edit mr-1`} aria-hidden />
-							Update post
+							Update&nbsp;post
 						</Button>
 						<Button
 							// onClick={!openEditor ? editorOpen : editorClosed}
@@ -208,7 +208,7 @@ const Single = ({
 							type={`button`}
 						>
 							<i className={`fas fa-edit mr-1`} aria-hidden />
-							Disable comments
+							Disable&nbsp;comments
 						</Button>
 						<DeleteModal
 							id={object._id ? object._id : object._id}

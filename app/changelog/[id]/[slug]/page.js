@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import Header from "@/layout/header";
 import Loading from "@/app/blog/loading";
 import ParseHtml from "@/layout/parseHtml";
-// import CommentBox from "@/components/global/commentbox";
+import CommentBox from "@/components/global/commentbox";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import AuthorBox from "@/components/global/authorbox";
 
@@ -41,15 +41,16 @@ const ChangelogRead = async ({ params }) => {
 							<section className="mb-5">
 								<ParseHtml text={changelog?.data?.text} />
 								<AuthorBox author={changelog?.data?.user} />
-								{/* <CommentBox
+								<CommentBox
 									auth={auth.data}
+									authorization={auth.authorizationTokens}
 									user={changelog?.data?.user}
 									postId={changelog?.data?._id}
 									secondPostId={changelog?.data?._id}
 									isVisible={changelog?.data?.commented}
 									postType="changelog"
 									onModel="Changelog"
-								/> */}
+								/>
 							</section>
 						</article>
 					</div>

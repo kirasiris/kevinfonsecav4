@@ -1,9 +1,15 @@
 "use client";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const Menu = ({ object = {} }) => {
+	const pathname = usePathname();
+	const isActive = (path = "") => {
+		return pathname === path ? "active text-bg-secondary" : "text-bg-dark";
+	};
+
 	return (
-		<div className="bg-light mb-4">
+		<div className="bg-dark mb-4">
 			<div className="container">
 				<div className="row">
 					<div className="col-lg-12">
@@ -16,7 +22,13 @@ const Menu = ({ object = {} }) => {
 								passHref
 								legacyBehavior
 							>
-								<a className="nav-link active">Overview</a>
+								<a
+									className={`nav-link ${isActive(
+										`/course/${object?.data?._id}/${object?.data?.category}/${object?.data?.sub_category}/${object?.data?.slug}/index`
+									)}`}
+								>
+									Overview
+								</a>
 							</Link>
 							<Link
 								href={{
@@ -30,7 +42,13 @@ const Menu = ({ object = {} }) => {
 								passHref
 								legacyBehavior
 							>
-								<a className="nav-link">Students</a>
+								<a
+									className={`nav-link ${isActive(
+										`/course/${object?.data?._id}/students`
+									)}`}
+								>
+									Students
+								</a>
 							</Link>
 							<Link
 								href={{
@@ -44,7 +62,13 @@ const Menu = ({ object = {} }) => {
 								passHref
 								legacyBehavior
 							>
-								<a className="nav-link">Comments</a>
+								<a
+									className={`nav-link ${isActive(
+										`/course/${object?.data?._id}/comments`
+									)}`}
+								>
+									Comments
+								</a>
 							</Link>
 						</nav>
 					</div>

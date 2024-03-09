@@ -2,6 +2,7 @@
 import Link from "next/link";
 import ParseHtml from "@/layout/parseHtml";
 import AuthorBox from "@/components/global/authorbox";
+import CommentBox from "@/components/global/commentbox";
 import ExportModal from "@/components/global/exportmodal";
 import ReportModal from "@/components/global/reportmodal";
 import Globalcontent from "@/layout/content";
@@ -10,7 +11,7 @@ import Image from "next/image";
 import PreviewModal from "./previewmodal";
 
 const List = ({
-	authenticatedUser = {},
+	auth = {},
 	enrollmentVerification = {},
 	object,
 	objects = [],
@@ -31,7 +32,7 @@ const List = ({
 							<div className="card mb-3">
 								<div className="card-header">{object.data.title}</div>
 								<div className="card-body">
-									<ParseHtml text={object.data.text} />
+									<ParseHtml text={object.data?.text} />
 								</div>
 							</div>
 							{isIndex && (
@@ -124,14 +125,15 @@ const List = ({
 
 									<div style={{ clear: "both" }} />
 									<AuthorBox author={object?.data?.user} />
-									{/* <CommentBox
-							user={blog?.data?.user}
-							postId={blog?.data?._id}
-							secondPostId={blog?.data?._id}
-							isVisible={blog?.data?.commented}
-							postType="blog"
-							onModel="Blog"
-						/> */}
+									<CommentBox
+										auth={auth.data}
+										authorization={auth.authorizationTokens}
+										user={object?.data?.user}
+										postId={object?.data?._id}
+										secondPostId={object?.data?._id}
+										isVisible={object?.data?.commented}
+										onModel="Course"
+									/>
 								</>
 							)}
 						</article>

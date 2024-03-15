@@ -85,7 +85,35 @@ const AdminUsersIndex = () => {
 
 	const assignStripeId = async (id) => {
 		try {
-			await axios.put(`/users/${id}/assignstripeid`);
+			await axios.put(`/users/${id}/assignstripeid`, { website: "beFree" });
+			toast.success("User updated");
+			fetchUsers();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
+	const updateStripeSellerAccount = async (id) => {
+		try {
+			await axios.put(`/extras/stripe/subscriptions/updatestripedata/${id}`);
 			toast.success("User updated");
 			fetchUsers();
 		} catch (err) {
@@ -196,6 +224,7 @@ const AdminUsersIndex = () => {
 									key={user._id}
 									object={user}
 									handleStripeId={assignStripeId}
+									handleSellerAccount={updateStripeSellerAccount}
 									handleDelete={handleDelete}
 									objects={list}
 									setObjects={setUsers}

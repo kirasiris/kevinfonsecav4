@@ -7,6 +7,7 @@ import DeleteModal from "@/components/global/deletemodal";
 const Single = ({
 	object = {},
 	handleStripeId,
+	handleSellerAccount,
 	handleDelete,
 	objects,
 	setObjects,
@@ -59,9 +60,9 @@ const Single = ({
 				<div className="blog-actions-ellipsis-menu">
 					<span className="ellipsis-menu">
 						<DropdownButton title="Options" variant="secondary">
-							{(object?.stripeCustomerId === `` ||
-								object?.stripeCustomerId === undefined ||
-								object?.stripeCustomerId === null) && (
+							{(object?.stripeAccountId === `` ||
+								object?.stripeAccountId === undefined ||
+								object?.stripeAccountId === null) && (
 								<button
 									className="dropdown-item btn btn-sm"
 									onClick={() => handleStripeId(object._id)}
@@ -69,6 +70,12 @@ const Single = ({
 									Assign&nbsp;Stripe&nbsp;Account&nbsp;Id
 								</button>
 							)}
+							<button
+								className="dropdown-item btn btn-sm"
+								onClick={() => handleSellerAccount(object._id)}
+							>
+								Update&nbsp;Stripe&nbsp;Seller&nbsp;Account
+							</button>
 							<Link
 								href={{
 									pathname: `/noadmin/users/read/${object._id}`,

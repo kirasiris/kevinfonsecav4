@@ -108,6 +108,7 @@ const CreateUser = () => {
 			await axios.post(`/users`, {
 				...userData,
 				files: { avatar: files?.selected?._id },
+				website: "beFree",
 			});
 			toast.success(`Item created`);
 			resetForm();

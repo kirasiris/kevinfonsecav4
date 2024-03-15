@@ -3,6 +3,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import Image from "next/image";
 import Link from "next/link";
+// import stripe from "stripe";
 import { currencyFormatter, formatDateWithoutTime } from "@/helpers/utilities";
 import Menu from "./menu";
 
@@ -21,6 +22,7 @@ const Jumbotron = ({
 					resourceId: object.data._id,
 					user: auth._id,
 					onModel: "Course",
+					website: "beFree",
 				},
 				{
 					headers: {
@@ -28,6 +30,7 @@ const Jumbotron = ({
 					},
 				}
 			);
+			// stripe.redirectToCheckout({});
 		} catch (err) {
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;
@@ -136,49 +139,49 @@ const Jumbotron = ({
 								</figure>
 							)}
 							{/* enroll button */}
-							<div className="d-grid gap-2 col-12 mt-3 mb-3">
-								{auth?.data?.isOnline ? (
-									// If free and not enrolled
-									(object?.data?.isFree && !enrollmentVerification?.success && (
-										<button
-											className="btn btn-dark btn-sm"
-											onClick={() => handleEnrollment()}
-										>
-											Enroll for Free
-										</button>
-									)) ||
-									// If not free and not enrolled
-									(!object?.data?.isFree &&
-										!enrollmentVerification?.success && (
-											<button
-												className="btn btn-dark btn-sm"
-												onClick={() => handleEnrollment()}
-											>
-												Pay to Enroll
-											</button>
-										)) ||
-									// If free/not free and already enrolled
-									((object?.data?.isFree || !object?.data?.isFree) &&
-										enrollmentVerification?.success && (
-											<p className="bg-dark text-bg-dark rounded text-center m-0 p-2">
-												Already enrolled
-											</p>
-										))
-								) : (
-									<Link
-										href={{
-											pathname: `/auth/login`,
-											query: {
-												returnpage: `/course/${object.data._id}/${object.data.category}/${object.data.sub_category}/${object.data.slug}/index`,
-											},
-										}}
-										passHref
-										legacyBehavior
+
+							{auth?.data?.isOnline ? (
+								// If free and not enrolled
+								(object?.data?.isFree && !enrollmentVerification?.success && (
+									<button
+										className="btn btn-dark btn-sm w-100 mb-3"
+										onClick={() => handleEnrollment()}
 									>
-										<a className="btn btn-dark btn-sm">Login to Enroll</a>
-									</Link>
-								)}
-							</div>
+										Enroll for Free
+									</button>
+								)) ||
+								// If not free and not enrolled
+								(!object?.data?.isFree && !enrollmentVerification?.success && (
+									<button
+										className="btn btn-dark btn-sm w-100 mb-3"
+										onClick={() => handleEnrollment()}
+									>
+										Pay to Enroll
+									</button>
+								)) ||
+								// If free/not free and already enrolled
+								((object?.data?.isFree || !object?.data?.isFree) &&
+									enrollmentVerification?.success && (
+										<p className="bg-dark text-bg-dark rounded text-center m-0 p-2">
+											Already enrolled
+										</p>
+									))
+							) : (
+								<Link
+									href={{
+										pathname: `/auth/login`,
+										query: {
+											returnpage: `/course/${object.data._id}/${object.data.category}/${object.data.sub_category}/${object.data.slug}/index`,
+										},
+									}}
+									passHref
+									legacyBehavior
+								>
+									<a className="btn btn-dark btn-sm w-100 mb-3">
+										Login to Enroll
+									</a>
+								</Link>
+							)}
 						</div>
 					</div>
 				</div>

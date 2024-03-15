@@ -1,13 +1,13 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { redirect } from "next/navigation";
 import Loading from "@/app/blog/loading";
 import ParseHtml from "@/layout/parseHtml";
 import ReportModal from "@/components/global/reportmodal";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import { formatDateWithoutTime } from "@/helpers/utilities";
 import Menu from "@/components/course/menu";
-import { redirect } from "next/navigation";
 
 async function getAuthenticatedUser() {
 	const res = await fetchurl(`http://localhost:5000/api/v1/auth/me`);

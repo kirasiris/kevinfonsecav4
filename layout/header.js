@@ -13,9 +13,13 @@ const Header = ({
 			style={headerStyle}
 		>
 			<div className={`container ${headerContainerClasses}`}>
-				<div className="text-white text-center my-5">
-					{title && <h1 className="fw-bolder display-1">{title}</h1>}
-					{description && <p className="lead mb-0">{description}</p>}
+				<div className="row my-5">
+					<div className="col-lg-12">
+						<div className="text-white text-center">
+							{title && <h1 className="fw-bolder display-1">{title}</h1>}
+							{description && <p className="lead mb-0">{description}</p>}
+						</div>
+					</div>
 				</div>
 			</div>
 		</header>

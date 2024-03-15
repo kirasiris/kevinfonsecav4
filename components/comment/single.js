@@ -37,16 +37,14 @@ const Single = ({
 						</Link>
 					</div>
 					<div className="flex-grow-1 ms-3">
-						<p>
-							<Link
-								href={`/comment/${object._id}/${object.slug}`}
-								passHref
-								legacyBehavior
-							>
-								{object.title}
-							</Link>
-							&nbsp;by&nbsp;{object.user.username}
-						</p>
+						<Link
+							href={`/comment/${object._id}/${object.slug}`}
+							passHref
+							legacyBehavior
+						>
+							{object.title}
+						</Link>
+						&nbsp;by&nbsp;{object.user.username}
 						<ParseHtml text={object.text} />
 					</div>
 				</div>

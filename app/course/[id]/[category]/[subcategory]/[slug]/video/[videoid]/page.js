@@ -57,7 +57,7 @@ const VideoRead = async ({ params, searchParams }) => {
 	const getCourseLessonsData = getCourseLessons(
 		`?resourceId=${params.id}&sort=orderingNumber&onModel=Course`
 	);
-	// Verify if user is enrolled (it means if course is not free, user should have paid already)
+	// Verify if user is enrolled (it means if course is not free, user should have paid and/or enrolled already)
 	const verifyUserEnrollment = getCourseStudents(
 		`?user=${
 			auth?.data ? auth.data?._id : `62ec7926a554425c9e03782d`
@@ -73,6 +73,14 @@ const VideoRead = async ({ params, searchParams }) => {
 		verifyUserEnrollment,
 		getVideosData,
 	]);
+
+	// If course is free or not free and otherwise enrolled, let user access to video.
+	// If not, then redirect user to course overview page
+	(course?.data?.isFree ||
+		(!course?.data?.isFree && !verifyAuthEnrollment?.success)) &&
+		redirect(
+			`/course/${course?.data._id}/${course?.data?.category}/${course?.data?.sub_category}/${course?.data?.slug}/index`
+		);
 
 	return (
 		<Suspense fallback={<Loading />}>

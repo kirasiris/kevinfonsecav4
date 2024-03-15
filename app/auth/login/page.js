@@ -11,6 +11,8 @@ const Login = ({ params, searchParams }) => {
 	const router = useRouter();
 	const { auth, loadUser } = useContext(AuthContext);
 
+	auth.isAuthenticated && router.push("/");
+
 	const [loginData, setLoginData] = useState({
 		email: "",
 		password: "",
@@ -84,8 +86,6 @@ const Login = ({ params, searchParams }) => {
 			rememberMe: false,
 		});
 	};
-
-	auth.isAuthenticated && router.push("/");
 
 	return (
 		<div className="container">

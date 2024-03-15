@@ -8,15 +8,18 @@ const getCookie = (name) => {
 	}
 };
 
-const deleteCookie = (name, path, domain) => {
+export const deleteCookie = async (name, path, domain) => {
 	if (getCookie(name)) {
+		await axios.get(`http://localhost:5000/api/v1/auth/logout`);
+		localStorage.removeItem("xAuthToken");
 		document.cookie =
 			name +
 			"=" +
-			(path ? ";path=" + path : "") +
-			(domain ? ";domain=" + domain : "") +
+			(path ? `;path=${path}` : "") +
+			(domain ? `;domain=${domain}` : "") +
 			";expires=Thu, 01 Jan 1970 00:00:01 GMT";
 	}
+	console.log("1.- Deleting cookie from front-end");
 };
 
 export const setAuthToken = (token) => {

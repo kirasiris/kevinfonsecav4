@@ -5,6 +5,7 @@ import Navbar from "react-bootstrap/Navbar";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import { deleteAuthTokenOnServer } from "@/helpers/setTokenOnServer";
+import { deleteCookie } from "@/helpers/utilities";
 
 const Menu = ({
 	auth = {},
@@ -84,7 +85,10 @@ const Menu = ({
 								<li className="nav-item">
 									<button
 										className="btn btn-link"
-										onClick={() => deleteAuthTokenOnServer("xAuthToken")}
+										onClick={async () => {
+											await deleteCookie("xAuthToken", "/");
+											await deleteAuthTokenOnServer("xAuthToken");
+										}}
 									>
 										Log Out
 									</button>

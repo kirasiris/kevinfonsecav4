@@ -8,7 +8,7 @@ import Sidebar from "@/layout/theme/sidebar";
 import Loading from "@/app/theme/loading";
 import ExportModal from "@/components/global/exportmodal";
 import AuthorBox from "@/components/global/authorbox";
-// import CommentBox from "@/components/global/commentbox";
+import CommentBox from "@/components/global/commentbox";
 import ParseHtml from "@/layout/parseHtml";
 import ReportModal from "@/components/global/reportmodal";
 import { fetchurl } from "@/helpers/setTokenOnServer";
@@ -113,15 +113,16 @@ const ThemeRead = async ({ params, searchParams }) => {
 									</div>
 									<div style={{ clear: "both" }} />
 									<AuthorBox author={theme?.data?.user} />
-									{/* <CommentBox
+									<CommentBox
 										auth={auth.data}
+										authorization={auth.authorizationTokens}
 										user={theme?.data?.user}
 										postId={theme?.data?._id}
 										secondPostId={theme?.data?._id}
 										isVisible={theme?.data?.commented}
 										postType="theme"
 										onModel="Blog"
-									/> */}
+									/>
 								</section>
 							</article>
 						</Globalcontent>

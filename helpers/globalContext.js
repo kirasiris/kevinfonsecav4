@@ -1,9 +1,12 @@
 "use client";
-import { useState, createContext, useEffect, useCallback } from "react";
+import { useState, createContext, useEffect } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { setAuthToken } from "./utilities";
-import { getAuthTokenOnServer } from "./setTokenOnServer";
+import { setAuthToken, deleteCookie } from "./utilities";
+import {
+	getAuthTokenOnServer,
+	deleteAuthTokenOnServer,
+} from "./setTokenOnServer";
 
 export const AuthContext = createContext();
 
@@ -14,11 +17,10 @@ export const AuthProvider = ({ children }) => {
 		token: ``,
 		isAuthenticated: false,
 		user: null,
-		role: null,
 	});
 
 	const resetSetAuth = () => {
-		setAuth({ token: ``, isAuthenticated: false, user: null, role: null });
+		setAuth({ token: ``, isAuthenticated: false, user: null });
 	};
 
 	const loadUser = async () => {
@@ -46,14 +48,25 @@ export const AuthProvider = ({ children }) => {
 		}
 	};
 
+	const token = auth && auth.token ? auth.token : "";
+	const secondarytoken = getAuthTokenOnServer();
+	const defineToken = token ? token : secondarytoken.value;
+	axios.defaults.baseURL = `${API_URL}/api/v1/`;
+	axios.defaults.headers.common["Content-Type"] = `application/json`;
+	axios.defaults.headers.common["Accept"] = `application/json`;
+	axios.defaults.headers["Authorization"] = `Bearer ${defineToken}`;
+	axios.defaults.headers.common["Authorization"] = `Bearer ${defineToken}`;
+
 	const logout = async () => {
 		try {
-			// localStorage.removeItem("xAuthToken");
-			// document.cookie = `xAuthToken='';expires=Thu, 01 Jan 1970 00:00:01 GMT`;
-			// await axios.get(`/auth/logout`);
-			// resetSetAuth();
-			// router.push(`/auth/login`);
-			console.log("Loging out from globalContext...");
+			await deleteCookie("xAuthToken", "/");
+			await deleteAuthTokenOnServer("xAuthToken");
+			resetSetAuth();
+			router.push(`/auth/login`);
+			console.log("Loging out from globalContext file...");
+			console.log(
+				"By this point logout functionality should have ran front-end first, then back-end"
+			);
 		} catch (err) {
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;
@@ -74,18 +87,6 @@ export const AuthProvider = ({ children }) => {
 		}
 	};
 
-	const token = auth && auth.token ? auth.token : "";
-	const secondarytoken = getAuthTokenOnServer();
-	axios.defaults.baseURL = `${API_URL}/api/v1/`;
-	axios.defaults.headers.common["Content-Type"] = `application/json`;
-	axios.defaults.headers.common["Accept"] = `application/json`;
-	axios.defaults.headers["Authorization"] = `Bearer ${
-		token ? token : secondarytoken.value
-	}`;
-	axios.defaults.headers.common["Authorization"] = `Bearer ${
-		token ? token : secondarytoken.value
-	}`;
-
 	axios.interceptors.response.use(
 		async (res) => {
 			return res;
@@ -95,7 +96,6 @@ export const AuthProvider = ({ children }) => {
 
 			if (res?.status === 401 && res?.config && !res?.config?._isRetryRequest) {
 				await logout();
-				resetSetAuth();
 			}
 		}
 	);
@@ -112,10 +112,6 @@ export const AuthProvider = ({ children }) => {
 							token: token,
 							isAuthenticated: true,
 							user: res.data.data,
-							role: localStorage.setItem(
-								"isFounder",
-								res.data.data.role.includes("founder")
-							),
 						});
 					})
 					.catch((err) => {

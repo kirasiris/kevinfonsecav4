@@ -32,18 +32,37 @@ const CommentBox = ({
 
 	const params = `?resourceId=${postId}&page=${page}&limit=15&sort=-createdAt&status=published&decrypt=true`;
 
-	useEffect(() => {
-		const getComments = async () => {
-			// const res = await fetchurl(
-			// 	`http://localhost:5000/api/v1/comments${params}`,
-			// 	"GET"
-			// );
+	const fetchComments = async () => {
+		try {
 			const res = await axios.get(
 				`http://localhost:5000/api/v1/comments${params}`
 			);
 			setComments(res?.data?.data);
-		};
-		getComments();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
+	useEffect(() => {
+		fetchComments();
 	}, [postId]);
 
 	// COMMENT BOX DATA
@@ -61,12 +80,7 @@ const CommentBox = ({
 	const newComment = async (e) => {
 		e.preventDefault();
 		try {
-			// const res = await fetchurl(
-			// 	`http://localhost:5000/api/v1/comments/${postId}`,
-			// 	"POST",
-			// 	commentData
-			// );
-			const res = await axios.post(
+			await axios.post(
 				`http://localhost:5000/api/v1/comments/${postId}`,
 				commentData,
 				{
@@ -75,9 +89,9 @@ const CommentBox = ({
 					},
 				}
 			);
-			console.log(res?.data);
-			setComments([res?.data?.data, ...comments]);
+			// setComments([res?.data?.data, ...comments]);
 			resetForm();
+			fetchComments();
 		} catch (err) {
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;
@@ -100,10 +114,12 @@ const CommentBox = ({
 
 	const resetForm = () => {
 		setCommentData({
-			title: ``,
-			text: ``,
+			title: "",
+			text: "",
 			parentId: parentId,
 			secondResourceId: secondPostId,
+			postType: postType,
+			onModel: onModel,
 		});
 	};
 
@@ -111,7 +127,7 @@ const CommentBox = ({
 		<div className="comments">
 			{isVisible ? (
 				<>
-					{auth?.user?.isOnline && (
+					{auth?.isOnline && (
 						<form className="mb-3" onSubmit={newComment}>
 							<div className="card mb-3">
 								<div className="card-body">
@@ -168,12 +184,7 @@ const CommentBox = ({
 							<hr />
 							<h5>Comments: {comments?.length}</h5>
 							{comments?.map((comment) => (
-								<Single
-									key={comment._id}
-									auth={auth}
-									author={user}
-									object={comment}
-								/>
+								<Single key={comment._id} auth={auth} object={comment} />
 							))}
 						</>
 					)}

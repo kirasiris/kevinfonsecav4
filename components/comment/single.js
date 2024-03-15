@@ -3,11 +3,9 @@ import Image from "next/image";
 import Link from "next/link";
 import Loading from "@/app/comment/loading";
 import ParseHtml from "@/layout/parseHtml";
-import CommentBox from "../global/commentbox";
 
 const Single = ({
 	auth = {},
-	author = {},
 	object = {},
 	commentId = null,
 	imageWidth = "64",
@@ -39,18 +37,17 @@ const Single = ({
 						</Link>
 					</div>
 					<div className="flex-grow-1 ms-3">
-						<p>{author.username}</p>
+						<p>
+							<Link
+								href={`/comment/${object._id}/${object.slug}`}
+								passHref
+								legacyBehavior
+							>
+								{object.title}
+							</Link>
+							&nbsp;by&nbsp;{object.user.username}
+						</p>
 						<ParseHtml text={object.text} />
-						{/* <CommentBox
-							auth={auth.data}
-							authorization={auth.authorizationTokens}
-							user={object?.user}
-							postId={object?._id}
-							secondPostId={object?._id}
-							parentId={object._id}
-							isVisible={true}
-							onModel="Comment"
-						/> */}
 					</div>
 				</div>
 			</article>

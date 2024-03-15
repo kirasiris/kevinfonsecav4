@@ -16,7 +16,7 @@ const Jumbotron = ({
 	const handleEnrollment = async () => {
 		try {
 			await axios.post(
-				`http://localhost:5000/api/v1/subscribers`,
+				`http://localhost:5000/api/v1/extras/stripe/subscriptions/${object.data._id}/course`,
 				{
 					resourceId: object.data._id,
 					user: auth._id,

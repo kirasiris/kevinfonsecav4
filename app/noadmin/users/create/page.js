@@ -44,7 +44,7 @@ const CreateUser = () => {
 	};
 
 	useEffect(() => {
-		fetchUsers();
+		fetchUsers(`?isEmailConfirmed=true`);
 	}, []);
 
 	const [userData, setUserData] = useState({
@@ -185,7 +185,7 @@ const CreateUser = () => {
 								alt="xD"
 								width="558"
 								height="558"
-								style={{ maxWidth: "1920px", maxHeight: "1920px" }}
+								style={{ maxWidth: "100%", maxHeight: "1920px" }}
 								onClick={() => setFiles({ ...files, showMediaModal: true })}
 								priority={true}
 							/>
@@ -486,31 +486,40 @@ const CreateUser = () => {
 								<option value={`divorced`}>Divorced</option>
 							</select>
 						</div>
-						<div className="col">
-							<label htmlFor="inRelationshipWith" className="form-label">
-								In Relationship With?
-							</label>
-							<select
-								id="inRelationshipWith"
-								name="inRelationshipWith"
-								value={inRelationshipWith}
-								onChange={(e) => {
-									setUserData({
-										...userData,
-										inRelationshipWith: e.target.value,
-									});
-								}}
-								className="form-control"
-							>
-								{users
-									.filter((excludedUser) => excludedUser._id !== auth.user._id)
-									.map((user) => (
-										<option key={user._id} value={user._id}>
-											{user.username}
-										</option>
-									))}
-							</select>
-						</div>
+						{relationshipStatus !== "" &&
+							relationshipStatus !== "single" &&
+							relationshipStatus !== "widowed" &&
+							relationshipStatus !== "divorced" &&
+							relationshipStatus !== undefined &&
+							relationshipStatus !== null && (
+								<div className="col">
+									<label htmlFor="inRelationshipWith" className="form-label">
+										In Relationship With?
+									</label>
+									<select
+										id="inRelationshipWith"
+										name="inRelationshipWith"
+										value={inRelationshipWith}
+										onChange={(e) => {
+											setUserData({
+												...userData,
+												inRelationshipWith: e.target.value,
+											});
+										}}
+										className="form-control"
+									>
+										{users
+											.filter(
+												(excludedUser) => excludedUser._id !== auth.user._id
+											)
+											.map((user) => (
+												<option key={user._id} value={user._id}>
+													{user.username}
+												</option>
+											))}
+									</select>
+								</div>
+							)}
 					</div>
 					<div className="row">
 						<div className="col">

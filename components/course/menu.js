@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 const Menu = ({ object = {} }) => {
 	const pathname = usePathname();
 	const isActive = (path = "") => {
-		return pathname === path ? "active text-bg-secondary" : "text-bg-dark";
+		return pathname === path ? " active text-bg-secondary" : " text-bg-dark";
 	};
 
 	return (
@@ -23,7 +23,7 @@ const Menu = ({ object = {} }) => {
 								legacyBehavior
 							>
 								<a
-									className={`nav-link ${isActive(
+									className={`nav-link${isActive(
 										`/course/${object?.data?._id}/${object?.data?.category}/${object?.data?.sub_category}/${object?.data?.slug}/index`
 									)}`}
 								>
@@ -43,7 +43,7 @@ const Menu = ({ object = {} }) => {
 								legacyBehavior
 							>
 								<a
-									className={`nav-link ${isActive(
+									className={`nav-link${isActive(
 										`/course/${object?.data?._id}/students`
 									)}`}
 								>
@@ -63,7 +63,7 @@ const Menu = ({ object = {} }) => {
 								legacyBehavior
 							>
 								<a
-									className={`nav-link ${isActive(
+									className={`nav-link${isActive(
 										`/course/${object?.data?._id}/comments`
 									)}`}
 								>

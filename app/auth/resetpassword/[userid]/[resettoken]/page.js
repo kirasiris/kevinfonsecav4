@@ -10,6 +10,8 @@ const ResetPassword = ({ params, searchParams }) => {
 	const router = useRouter();
 	const { auth } = useContext(AuthContext);
 
+	auth.isAuthenticated && router.push("/");
+
 	const [resetPasswordData, setResetPasswordData] = useState({
 		password: "",
 		password2: "",
@@ -59,8 +61,6 @@ const ResetPassword = ({ params, searchParams }) => {
 			password2: "",
 		});
 	};
-
-	auth.isAuthenticated && router.push("/");
 
 	return (
 		<div className="container">

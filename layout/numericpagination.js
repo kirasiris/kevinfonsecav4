@@ -8,14 +8,20 @@ const NumericPagination = ({
 	limit,
 	keyword,
 	sortby,
+	decrypt = false,
 	siblings,
 	postType = "",
 }) => {
+	// If query postType is found
 	const comesPostType =
 		postType !== "" && postType !== undefined ? `&postType=${postType}` : "";
+	// If query keyword is found
 	const myKeyword =
 		keyword !== "" && keyword !== undefined ? `&keyword=${keyword}` : "";
-	const newParams = `&sort=${sortby}${comesPostType}${myKeyword}`;
+	// If query decrypt is found
+	const myDecrypt = decrypt ? "&decrypt=true" : "";
+	// Add them all together
+	const newParams = `&sort=${sortby}${comesPostType}${myKeyword}${myDecrypt}`;
 	let pageNo;
 	if (page <= totalPages) {
 		pageNo = page;

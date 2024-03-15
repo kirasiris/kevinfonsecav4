@@ -2,13 +2,11 @@
 import axios from "axios";
 import FroalaEditorComponent from "react-froala-wysiwyg";
 import Tribute from "tributejs";
-import { useContext } from "react";
 // Require Editor CSS files.
 import "froala-editor/css/froala_style.min.css";
 import "froala-editor/css/froala_editor.pkgd.min.css";
 // Import all Froala Editor plugins;
 import "froala-editor/js/plugins.pkgd.min.js";
-// import AuthContext from "@/helpers/globalContext";
 
 const MyTextArea = ({
 	auth = {},
@@ -20,8 +18,6 @@ const MyTextArea = ({
 	onModel = "Blog",
 	advancedTextEditor = true,
 }) => {
-	// const { auth } = useContext(AuthContext);
-
 	const userSearch = (text, cb) => {
 		var URL = `http://localhost:5000/api/v1/users`;
 		const xhr = new XMLHttpRequest();

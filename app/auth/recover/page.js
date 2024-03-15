@@ -10,6 +10,8 @@ const Login = ({ params, searchParams }) => {
 	const router = useRouter();
 	const { auth } = useContext(AuthContext);
 
+	auth.isAuthenticated && router.push("/");
+
 	const [recoverData, setRecoverData] = useState({
 		email: "",
 	});
@@ -40,8 +42,6 @@ const Login = ({ params, searchParams }) => {
 			email: "",
 		});
 	};
-
-	auth.isAuthenticated && router.push("/");
 
 	return (
 		<div className="container">

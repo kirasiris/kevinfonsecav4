@@ -85,7 +85,9 @@ const AdminUsersIndex = () => {
 
 	const assignStripeId = async (id) => {
 		try {
-			await axios.put(`/users/${id}/assignstripeid`, { website: "beFree" });
+			await axios.put(`/extras/stripe/accounts/${id}/assignstripeid`, {
+				website: "beFree",
+			});
 			toast.success("User updated");
 			fetchUsers();
 		} catch (err) {
@@ -113,7 +115,7 @@ const AdminUsersIndex = () => {
 
 	const updateStripeSellerAccount = async (id) => {
 		try {
-			await axios.put(`/extras/stripe/subscriptions/updatestripedata/${id}`);
+			await axios.put(`/extras/stripe/accounts/updateseller/${id}`);
 			toast.success("User updated");
 			fetchUsers();
 		} catch (err) {

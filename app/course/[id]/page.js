@@ -5,24 +5,22 @@ import List from "@/components/chapter/list";
 import Jumbotron from "@/components/course/jumbotron";
 
 async function getAuthenticatedUser() {
-	const res = await fetchurl(`http://localhost:5000/api/v1/auth/me`);
+	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
 	return res.json();
 }
 
 async function getCourse(params) {
-	const res = await fetchurl(`http://localhost:5000/api/v1/courses${params}`);
+	const res = await fetchurl(`/courses${params}`, "GET", "no-cache");
 	return res.json();
 }
 
 async function getCourseLessons(params) {
-	const res = await fetchurl(`http://localhost:5000/api/v1/videos${params}`);
+	const res = await fetchurl(`/videos${params}`, "GET", "no-cache");
 	return res.json();
 }
 
 async function getCourseStudents(params) {
-	const res = await fetchurl(
-		`http://localhost:5000/api/v1/subscribers${params}`
-	);
+	const res = await fetchurl(`/subscribers${params}`, "GET", "no-cache");
 	return res.json();
 }
 

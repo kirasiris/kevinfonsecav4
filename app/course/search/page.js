@@ -3,12 +3,12 @@ import Header from "@/layout/header";
 import List from "@/components/course/list";
 
 async function getFeaturedCourse(params) {
-	const res = await fetchurl(`http://localhost:5000/api/v1/courses${params}`);
+	const res = await fetchurl(`/courses${params}`, "GET", "no-cache");
 	return res.json();
 }
 
 async function getCourses(params) {
-	const res = await fetchurl(`http://localhost:5000/api/v1/courses${params}`);
+	const res = await fetchurl(`/courses${params}`, "GET", "no-cache");
 	return res.json();
 }
 

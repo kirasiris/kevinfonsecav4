@@ -7,38 +7,22 @@ import ErrorPage from "@/layout/errorpage";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 
 async function getSetting(params) {
-	const res = await fetchurl(
-		`http://localhost:5000/api/v1/settings/${params}`,
-		"GET"
-	);
-
+	const res = await fetchurl(`/settings/${params}`, "GET", "no-cache");
 	return res.json();
 }
 
 async function getNewsletters(params) {
-	const res = await fetchurl(
-		`http://localhost:5000/api/v1/newsletters${params}`,
-		"GET"
-	);
-
+	const res = await fetchurl(`/newsletters${params}`, "GET", "no-cache");
 	return res.json();
 }
 
 async function getBlogs(params) {
-	const res = await fetchurl(
-		`http://localhost:5000/api/v1/blogs${params}`,
-		"GET"
-	);
-
+	const res = await fetchurl(`/blogs${params}`, "GET", "no-cache");
 	return res.json();
 }
 
 async function getThemes(params) {
-	const res = await fetch(
-		`http://localhost:5000/api/v1/themes${params}`,
-		"GET"
-	);
-
+	const res = await fetchurl(`/themes${params}`, "GET", "no-cache");
 	return res.json();
 }
 

@@ -6,7 +6,7 @@ import ErrorPage from "@/layout/errorpage";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 
 async function getSetting(params) {
-	const res = await fetchurl(`http://localhost:5000/api/v1/settings/${params}`);
+	const res = await fetchurl(`/settings/${params}`, "GET", "no-cache");
 
 	return res.json();
 }

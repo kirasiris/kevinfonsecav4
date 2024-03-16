@@ -71,6 +71,20 @@ const Menu = ({
 								<li className="nav-item">
 									<Link
 										href={{
+											pathname: `/dashboard`,
+											query: {},
+										}}
+										passHref
+										legacyBehavior
+									>
+										<a className="nav-link" aria-current="page">
+											Dashboard
+										</a>
+									</Link>
+								</li>
+								<li className="nav-item">
+									<Link
+										href={{
 											pathname: `/profile/${auth?.data?._id}/${auth?.data?.username}`,
 											query: {},
 										}}

@@ -3,26 +3,22 @@ import Header from "@/layout/header";
 import List from "@/components/blog/list";
 
 async function getFeaturedBlog(params) {
-	const res = await fetchurl(`http://localhost:5000/api/v1/blogs${params}`);
+	const res = await fetchurl(`/blogs${params}`, "GET", "no-cache");
 	return res.json();
 }
 
 async function getBlogs(params) {
-	const res = await fetchurl(`http://localhost:5000/api/v1/blogs${params}`);
+	const res = await fetchurl(`/blogs${params}`, "GET", "no-cache");
 	return res.json();
 }
 
 async function getCategories(params) {
-	const res = await fetchurl(
-		`http://localhost:5000/api/v1/categories${params}`
-	);
+	const res = await fetchurl(`/categories${params}`, "GET", "no-cache");
 	return res.json();
 }
 
 async function getQuotes() {
-	const res = await fetchurl(
-		`http://localhost:5000/api/v1/extras/quotes/random`
-	);
+	const res = await fetchurl(`/extras/quotes/random`, "GET", "no-cache");
 	return res.json();
 }
 

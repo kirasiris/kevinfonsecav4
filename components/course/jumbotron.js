@@ -3,7 +3,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import Image from "next/image";
 import Link from "next/link";
-// import stripe from "stripe";
+import { loadStripe } from "@stripe/stripe-js";
 import { currencyFormatter, formatDateWithoutTime } from "@/helpers/utilities";
 import Menu from "./menu";
 
@@ -16,7 +16,7 @@ const Jumbotron = ({
 }) => {
 	const handleEnrollment = async () => {
 		try {
-			await axios.post(
+			const res = await axios.post(
 				`http://localhost:5000/api/v1/extras/stripe/subscriptions/${object.data._id}/course`,
 				{
 					resourceId: object.data._id,
@@ -30,7 +30,11 @@ const Jumbotron = ({
 					},
 				}
 			);
-			// stripe.redirectToCheckout({});
+			// console.log(res?.data?.stripe.url);
+			const stripe = await loadStripe(
+				"pk_test_4Dk6bq2sILbKjTN6C1lQil0K00oosTHzg5"
+			);
+			stripe.redirectToCheckout({ sessionId: res?.data?.stripe.id });
 		} catch (err) {
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;

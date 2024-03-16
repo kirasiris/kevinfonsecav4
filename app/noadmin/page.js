@@ -12,7 +12,7 @@ const AdminHome = ({}) => {
 	return (
 		<>
 			<Header
-				title={`Welcome back ${auth?.user?.username}`}
+				title={`Welcome back, ${auth?.user?.username}`}
 				description="This is the place where you have the full control of your website. Feel free to play with it as you like!"
 			/>
 			<div className="row">

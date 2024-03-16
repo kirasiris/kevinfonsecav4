@@ -10,37 +10,32 @@ import { formatDateWithoutTime } from "@/helpers/utilities";
 import Menu from "@/components/course/menu";
 
 async function getAuthenticatedUser() {
-	const res = await fetchurl(`http://localhost:5000/api/v1/auth/me`);
+	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
 	return res.json();
 }
 
 async function getCourse(params) {
-	const res = await fetchurl(`http://localhost:5000/api/v1/courses${params}`);
+	const res = await fetchurl(`/courses${params}`, "GET", "no-cache");
 	return res.json();
 }
 
 async function getCourseLessons(params) {
-	const res = await fetchurl(`http://localhost:5000/api/v1/videos${params}`);
+	const res = await fetchurl(`/videos${params}`, "GET", "no-cache");
 	return res.json();
 }
 
 async function getCourseStudents(params) {
-	const res = await fetchurl(
-		`http://localhost:5000/api/v1/subscribers${params}`
-	);
+	const res = await fetchurl(`/subscribers${params}`, "GET", "no-cache");
 	return res.json();
 }
 
 async function getVideo(params) {
-	const res = await fetchurl(`http://localhost:5000/api/v1/videos${params}`);
+	const res = await fetchurl(`/videos${params}`, "GET", "no-cache");
 	return res.json();
 }
 
-async function getViews(params) {
-	const res = await fetchurl(
-		`http://localhost:5000/api/v1/videos${params}/addview`,
-		"PUT"
-	);
+async function updateViews(params) {
+	const res = await fetchurl(`/videos${params}/addview`, "PUT", "no-cache");
 	return res.json();
 }
 
@@ -65,7 +60,7 @@ const VideoRead = async ({ params, searchParams }) => {
 	);
 
 	const getVideosData = getVideo(`/${params.videoid}`);
-	await getViews(`/${params.videoid}`);
+	await updateViews(`/${params.videoid}`);
 
 	const [course, lessons, verifyAuthEnrollment, video] = await Promise.all([
 		getCoursesData,

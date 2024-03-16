@@ -3,20 +3,17 @@ import Header from "@/layout/header";
 import List from "@/components/quiz/list";
 
 async function getFeaturedQuiz(params) {
-	const res = await fetchurl(`http://localhost:5000/api/v1/quizzes${params}`);
+	const res = await fetchurl(`/quizzes${params}`, "GET", "no-cache");
 	return res.json();
 }
 
 async function getQuizzes(params) {
-	const res = await fetchurl(`http://localhost:5000/api/v1/quizzes${params}`);
-
+	const res = await fetchurl(`/quizzes${params}`, "GET", "no-cache");
 	return res.json();
 }
 
 async function getCategories(params) {
-	const res = await fetchurl(
-		`http://localhost:5000/api/v1/categories${params}`
-	);
+	const res = await fetchurl(`/categories${params}`, "GET", "no-cache");
 	return res.json();
 }
 

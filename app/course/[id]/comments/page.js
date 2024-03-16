@@ -1,26 +1,24 @@
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import Jumbotron from "@/components/course/jumbotron";
-// import List from "@/components/course/commentslist";
+import List from "@/components/course/commentlist";
 
 async function getAuthenticatedUser() {
-	const res = await fetchurl(`http://localhost:5000/api/v1/auth/me`);
+	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
 	return res.json();
 }
 
 async function getCourse(params) {
-	const res = await fetchurl(`http://localhost:5000/api/v1/courses${params}`);
+	const res = await fetchurl(`/courses${params}`, "GET", "no-cache");
 	return res.json();
 }
 
 async function getCourseStudents(params) {
-	const res = await fetchurl(
-		`http://localhost:5000/api/v1/subscribers${params}`
-	);
+	const res = await fetchurl(`/subscribers${params}`, "GET", "no-cache");
 	return res.json();
 }
 
 async function getCourseComments(params) {
-	const res = await fetchurl(`http://localhost:5000/api/v1/comments${params}`);
+	const res = await fetchurl(`/comments${params}`, "GET", "no-cache");
 	return res.json();
 }
 
@@ -57,12 +55,7 @@ const CourseCommentsIndex = async ({ params, searchParams }) => {
 				imageWidth="440"
 				imageHeight="570"
 			/>
-			<div className="container">
-				<div className="row">
-					<div className="col-lg-12">HERE ARE SUPPOSED TO BE THE COMMENTS</div>
-				</div>
-			</div>
-			{/* <List objects={comments} searchParams={searchParams} /> */}
+			<List objects={comments} searchParams={searchParams} />
 		</>
 	);
 };

@@ -60,9 +60,9 @@ const Single = ({
 				<div className="blog-actions-ellipsis-menu">
 					<span className="ellipsis-menu">
 						<DropdownButton title="Options" variant="secondary">
-							{(object?.stripeAccountId === `` ||
-								object?.stripeAccountId === undefined ||
-								object?.stripeAccountId === null) && (
+							{(object?.stripe?.stripeAccountId === `` ||
+								object?.stripe?.stripeAccountId === undefined ||
+								object?.stripe?.stripeAccountId === null) && (
 								<button
 									className="dropdown-item btn btn-sm"
 									onClick={() => handleStripeId(object._id)}

@@ -3,12 +3,10 @@ import "../bootstrap.css";
 import "../global.css";
 import "../app.css";
 import ErrorPage from "@/layout/errorpage";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 
 async function getSetting(params) {
-	const res = await fetch(`http://localhost:5000/api/v1/settings/${params}`, {
-		cache: "no-store",
-	});
-
+	const res = await fetchurl(`/settings/${params}`, "GET", "no-cache");
 	return res.json();
 }
 

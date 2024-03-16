@@ -1,13 +1,7 @@
+import { fetchurl } from "@/helpers/setTokenOnServer";
+
 async function getBlog(params) {
-	const res = await fetch(`http://localhost:5000/api/v1/blogs${params}`, {
-		cache: "no-store",
-	});
-
-	if (!res.ok) {
-		// This will activate the closest `error.js` Error Boundary
-		throw new Error("Failed to fetch data");
-	}
-
+	const res = await fetchurl(`/blogs${params}`, "GET", "no-cache");
 	return res.json();
 }
 

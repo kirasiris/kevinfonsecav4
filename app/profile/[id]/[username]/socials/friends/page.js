@@ -6,22 +6,22 @@ import Sidebar from "@/components/profile/sidebar";
 import Jumbotron from "@/components/profile/jumbotron";
 
 async function getAuthenticatedUser() {
-	const res = await fetchurl(`http://localhost:5000/api/v1/auth/me`);
+	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
 	return res.json();
 }
 
 async function getProfile(params) {
-	const res = await fetchurl(`http://localhost:5000/api/v1/users${params}`);
+	const res = await fetchurl(`/users${params}`, "GET", "no-cache");
 	return res.json();
 }
 
 async function getMedias(params) {
-	const res = await fetchurl(`http://localhost:5000/api/v1/files${params}`);
+	const res = await fetchurl(`/files${params}`, "GET", "no-cache");
 	return res.json();
 }
 
 async function getFriends(params) {
-	const res = await fetchurl(`http://localhost:5000/api/v1/files${params}`);
+	const res = await fetchurl(`/files${params}`, "GET", "no-cache");
 	return res.json();
 }
 

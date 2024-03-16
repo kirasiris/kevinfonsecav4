@@ -14,12 +14,12 @@ import Globalcontent from "@/layout/content";
 import ArticleHeader from "@/components/global/articleheader";
 
 async function getAuthenticatedUser() {
-	const res = await fetchurl(`http://localhost:5000/api/v1/auth/me`);
+	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
 	return res.json();
 }
 
 async function getComment(params) {
-	const res = await fetchurl(`http://localhost:5000/api/v1/comments${params}`);
+	const res = await fetchurl(`/comments${params}`, "GET", "no-cache");
 	return res.json();
 }
 

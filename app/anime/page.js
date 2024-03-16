@@ -3,12 +3,12 @@ import Header from "@/layout/header";
 import List from "@/components/realstate/list";
 
 async function getFeaturedHouse(params) {
-	const res = await fetchurl(`http://localhost:5000/api/v1/realstate${params}`);
+	const res = await fetchurl(`/realstate${params}`, "GET", "no-cache");
 	return res.json();
 }
 
 async function getHouses(params) {
-	const res = await fetchurl(`http://localhost:5000/api/v1/realstate${params}`);
+	const res = await fetchurl(`/realstate${params}`, "GET", "no-cache");
 	return res.json();
 }
 

@@ -5,20 +5,21 @@ import { fetchurl } from "@/helpers/setTokenOnServer";
 import List from "@/components/chapter/list";
 
 async function getAuthenticatedUser() {
-	const res = await fetchurl(`http://localhost:5000/api/v1/auth/me`);
+	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
 	return res.json();
 }
 
 async function getPlaylists(params) {
-	const res = await fetchurl(`http://localhost:5000/api/v1/playlists${params}`);
+	const res = await fetchurl(`/playlists${params}`, "GET", "no-cache");
 	return res.json();
 }
 
 async function getPlaylistChapters(params) {
 	const res = await fetchurl(
-		`http://localhost:5000/api/v1/videos${params}&sort=-orderingNumber`
+		`/videos${params}&sort=-orderingNumber`,
+		"GET",
+		"no-cache"
 	);
-
 	return res.json();
 }
 

@@ -16,20 +16,12 @@ import Globalcontent from "@/layout/content";
 import ArticleHeader from "@/components/global/articleheader";
 
 async function getAuthenticatedUser() {
-	const res = await fetchurl(`http://localhost:5000/api/v1/auth/me`);
+	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
 	return res.json();
 }
 
 async function getTheme(params) {
-	const res = await fetch(`http://localhost:5000/api/v1/themes${params}`, {
-		cache: "no-store",
-	});
-
-	if (!res.ok) {
-		// This will activate the closest `error.js` Error Boundary
-		throw new Error("Failed to fetch data");
-	}
-
+	const res = await fetchurl(`/themes${params}`, "GET", "no-cache");
 	return res.json();
 }
 
@@ -44,11 +36,6 @@ async function getReadMe(repoName) {
 			cache: "no-store",
 		}
 	);
-	if (!res.ok) {
-		// This will activate the closest `error.js` Error Boundary
-		throw new Error("Failed to fetch data");
-	}
-
 	return res.json();
 }
 

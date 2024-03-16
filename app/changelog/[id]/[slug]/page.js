@@ -7,14 +7,12 @@ import { fetchurl } from "@/helpers/setTokenOnServer";
 import AuthorBox from "@/components/global/authorbox";
 
 async function getAuthenticatedUser() {
-	const res = await fetchurl(`http://localhost:5000/api/v1/auth/me`);
+	const res = await fetchurl(`/v1/auth/me`, "GET", "no-cache");
 	return res.json();
 }
 
 async function getChangelog(params) {
-	const res = await fetchurl(
-		`http://localhost:5000/api/v1/changelogs${params}`
-	);
+	const res = await fetchurl(`/v1/changelogs${params}`, "GET", "no-cache");
 	return res.json();
 }
 

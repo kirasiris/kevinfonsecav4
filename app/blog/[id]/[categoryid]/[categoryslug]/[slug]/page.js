@@ -14,26 +14,22 @@ import Globalcontent from "@/layout/content";
 import ArticleHeader from "@/components/global/articleheader";
 
 async function getAuthenticatedUser() {
-	const res = await fetchurl(`http://localhost:5000/api/v1/auth/me`);
+	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
 	return res.json();
 }
 
 async function getBlog(params) {
-	const res = await fetchurl(`http://localhost:5000/api/v1/blogs${params}`);
+	const res = await fetchurl(`/blogs${params}`, "GET", "no-cache");
 	return res.json();
 }
 
 async function getCategories(params) {
-	const res = await fetchurl(
-		`http://localhost:5000/api/v1/categories${params}`
-	);
+	const res = await fetchurl(`/categories${params}`, "GET", "no-cache");
 	return res.json();
 }
 
 async function getQuotes() {
-	const res = await fetchurl(
-		`http://localhost:5000/api/v1/extras/quotes/random`
-	);
+	const res = await fetchurl(`/extras/quotes/random`, "GET", "no-cache");
 	return res.json();
 }
 

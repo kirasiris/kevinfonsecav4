@@ -3,19 +3,17 @@ import Jumbotron from "@/components/course/jumbotron";
 import List from "@/components/course/profileslist";
 
 async function getAuthenticatedUser() {
-	const res = await fetchurl(`http://localhost:5000/api/v1/auth/me`);
+	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
 	return res.json();
 }
 
 async function getCourse(params) {
-	const res = await fetchurl(`http://localhost:5000/api/v1/courses${params}`);
+	const res = await fetchurl(`/courses${params}`, "GET", "no-cache");
 	return res.json();
 }
 
 async function getCourseStudents(params) {
-	const res = await fetchurl(
-		`http://localhost:5000/api/v1/subscribers${params}`
-	);
+	const res = await fetchurl(`/subscribers${params}`, "GET", "no-cache");
 	return res.json();
 }
 

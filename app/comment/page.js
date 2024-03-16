@@ -3,7 +3,7 @@ import Header from "@/layout/header";
 import List from "@/components/comment/list";
 
 async function getComments(params) {
-	const res = await fetchurl(`http://localhost:5000/api/v1/comments${params}`);
+	const res = await fetchurl(`/comments${params}`, "GET", "no-cache");
 	return res.json();
 }
 

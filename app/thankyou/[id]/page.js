@@ -5,14 +5,15 @@ import Loading from "@/app/blog/loading";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 
 async function getAuthenticatedUser() {
-	const res = await fetchurl(`http://localhost:5000/api/v1/auth/me`);
+	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
 	return res.json();
 }
 
 async function getVerification(params) {
 	const res = await fetchurl(
-		`http://localhost:5000/api/v1/extras/stripe/subscriptions/verification${params}`,
-		"PUT"
+		`/extras/stripe/accounts/verification${params}`,
+		"PUT",
+		"no-cache"
 	);
 	return res.json();
 }

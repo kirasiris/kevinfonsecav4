@@ -3,9 +3,7 @@ import Header from "@/layout/header";
 import List from "@/components/secret/list";
 
 async function getSecrets(params) {
-	const res = await fetchurl(
-		`http://localhost:5000/api/v1/extras/secrets${params}`
-	);
+	const res = await fetchurl(`/extras/secrets${params}`, "GET", "no-cache");
 	return res.json();
 }
 

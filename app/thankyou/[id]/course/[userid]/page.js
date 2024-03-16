@@ -5,7 +5,24 @@ import Loading from "@/app/blog/loading";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 
 async function getAuthenticatedUser() {
-	const res = await fetchurl(`http://localhost:5000/api/v1/auth/me`);
+	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
+	return res.json();
+}
+
+async function getUserAndSubscribeToCourse(id = "", userId) {
+	const res = await fetchurl(
+		`/extras/stripe/subscriptions/${id}/course`,
+		"PUT",
+		"no-cache",
+		{
+			resourceId: id,
+			user: userId,
+			status: "published",
+			isPaid: true,
+			onModel: "Course",
+			website: "beFree",
+		}
+	);
 	return res.json();
 }
 
@@ -15,8 +32,10 @@ const ThankYouRead = async ({ params, searchParams }) => {
 	// Redirect if user is not loggedIn
 	(auth?.error?.statusCode === 401 || !auth?.data?.isOnline) &&
 		redirect(
-			`/auth/login?returnpage=/thankyou/course?returnpage=${searchParams.returnpage}`
+			`/auth/login?returnpage=/thankyou/${params.id}/course/${params.userid}?returnpage=${searchParams.returnpage}`
 		);
+
+	await getUserAndSubscribeToCourse(params.id, auth.data._id);
 
 	return (
 		<Suspense fallback={<Loading />}>

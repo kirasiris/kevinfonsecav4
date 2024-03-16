@@ -1,4 +1,5 @@
 "use client";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 import { useState } from "react";
 // import Header from "@/layout/header";
 
@@ -16,13 +17,7 @@ const ContactIndex = () => {
 
 	const createContact = async (e) => {
 		e.preventDefault();
-		const res = await fetch(`http://localhost:5000/api/v1/emails`, {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify(contactData),
-		});
+		const res = await fetchurl(`/emails`, "POST", "no-cache", contactData);
 		const data = await res.json();
 		setAlert(true);
 		setEmailSent(data.data);

@@ -5,10 +5,7 @@ import "../app.css";
 import ErrorPage from "@/layout/errorpage";
 
 async function getSetting(params) {
-	const res = await fetch(`http://localhost:5000/api/v1/settings/${params}`, {
-		cache: "no-store",
-	});
-
+	const res = await fetch(`/settings/${params}`, "GET", "no-cache");
 	return res.json();
 }
 

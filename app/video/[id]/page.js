@@ -8,20 +8,17 @@ import { fetchurl } from "@/helpers/setTokenOnServer";
 import { formatDateWithoutTime } from "@/helpers/utilities";
 
 async function getAuthenticatedUser() {
-	const res = await fetchurl(`http://localhost:5000/api/v1/auth/me`);
+	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
 	return res.json();
 }
 
 async function getVideo(params) {
-	const res = await fetchurl(`http://localhost:5000/api/v1/videos${params}`);
+	const res = await fetchurl(`/videos${params}`, "GET", "no-cache");
 	return res.json();
 }
 
-async function getViews(params) {
-	const res = await fetchurl(
-		`http://localhost:5000/api/v1/videos${params}/addview`,
-		"PUT"
-	);
+async function updateViews(params) {
+	const res = await fetchurl(`/videos${params}/addview`, "PUT", "no-cache");
 	return res.json();
 }
 
@@ -29,7 +26,7 @@ const VideoRead = async ({ params, searchParams }) => {
 	const auth = await getAuthenticatedUser();
 
 	const getVideosData = getVideo(`/${params.id}`);
-	await getViews(`/${params.id}`);
+	await updateViews(`/${params.id}`);
 
 	const [video] = await Promise.all([getVideosData]);
 

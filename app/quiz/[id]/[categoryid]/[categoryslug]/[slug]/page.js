@@ -13,17 +13,17 @@ import Globalcontent from "@/layout/content";
 import ArticleHeader from "@/components/global/articleheader";
 
 async function getAuthenticatedUser() {
-	const res = await fetchurl(`http://localhost:5000/api/v1/auth/me`);
+	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
 	return res.json();
 }
 
 async function getQuiz(params) {
-	const res = await fetchurl(`http://localhost:5000/api/v1/quizzes${params}`);
+	const res = await fetchurl(`/quizzes${params}`, "GET", "no-cache");
 	return res.json();
 }
 
 async function getQuestions(params) {
-	const res = await fetchurl(`http://localhost:5000/api/v1/questions${params}`);
+	const res = await fetchurl(`/questions${params}`, "GET", "no-cache");
 	return res.json();
 }
 

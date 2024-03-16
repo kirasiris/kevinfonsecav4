@@ -24,17 +24,23 @@ export const setAuthTokenOnServer = async (token) => {
 	}
 };
 
-export const fetchurl = async (url, method, bodyData) => {
+export const fetchurl = async (
+	url = `http://localhost:5000/api/v1`,
+	method,
+	cache = "default",
+	bodyData
+) => {
 	const myCookies = cookies();
 	const token = myCookies.get("xAuthToken");
 
-	const data = await fetch(url, {
+	const data = await fetch(`http://localhost:5000/api/v1${url}`, {
 		method: method,
 		headers: {
 			"Content-Type": "application/json",
 			Authorization: `Bearer ${token?.value}`,
 		},
 		body: JSON.stringify(bodyData),
+		cache: cache,
 	});
 
 	return data;

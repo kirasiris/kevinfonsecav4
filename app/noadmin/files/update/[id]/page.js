@@ -1,14 +1,21 @@
 "use client";
 import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useContext } from "react";
 import { toast } from "react-toastify";
 import Image from "next/image";
 import MyTextArea from "@/components/global/mytextarea";
 import Plyr from "plyr";
+import AuthContext from "@/helpers/globalContext";
 
 const UpdateFile = () => {
+	const { auth } = useContext(AuthContext);
 	const router = useRouter();
+
+	// Redirec if not founder
+	auth.isAuthenticated &&
+		!auth.user.role.includes("founder") &&
+		router.push("/dashboard");
 
 	const [fileData, setFileData] = useState({
 		title: `Untitled`,

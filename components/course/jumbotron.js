@@ -6,6 +6,7 @@ import Link from "next/link";
 import { loadStripe } from "@stripe/stripe-js";
 import { currencyFormatter, formatDateWithoutTime } from "@/helpers/utilities";
 import Menu from "./menu";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 
 const Jumbotron = ({
 	auth = {},
@@ -14,7 +15,8 @@ const Jumbotron = ({
 	imageWidth = "1200",
 	imageHeight = "900",
 }) => {
-	const handleEnrollment = async () => {
+	const handleEnrollment = async (e) => {
+		e.preventDefault();
 		try {
 			const res = await axios.post(
 				`http://localhost:5000/api/v1/extras/stripe/subscriptions/${object.data._id}/course`,
@@ -30,11 +32,42 @@ const Jumbotron = ({
 					},
 				}
 			);
-			// console.log(res?.data?.stripe.url);
 			const stripe = await loadStripe(
 				"pk_test_4Dk6bq2sILbKjTN6C1lQil0K00oosTHzg5"
 			);
 			stripe.redirectToCheckout({ sessionId: res?.data?.stripe.id });
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
+	const handleCancellation = async (e) => {
+		e.preventDefault();
+		try {
+			await fetchurl(
+				`/extras/stripe/subscriptions/${object.data._id}/course/cancel`,
+				"PUT",
+				"no-cache"
+			);
+			return res.json();
 		} catch (err) {
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;
@@ -155,14 +188,38 @@ const Jumbotron = ({
 									</button>
 								)) ||
 								// If not free and not enrolled
-								(!object?.data?.isFree && !enrollmentVerification?.success && (
-									<button
-										className="btn btn-dark btn-sm w-100 mb-3"
-										onClick={() => handleEnrollment()}
-									>
-										Pay to Enroll
-									</button>
-								)) ||
+								(!object?.data?.isFree &&
+									!enrollmentVerification?.success &&
+									(auth.data.stripe.latestStripeCheckoutLink === null ||
+									auth.data.stripe.latestStripeCheckoutLink === undefined ? (
+										<button
+											className="btn btn-dark btn-sm w-100 mb-3"
+											onClick={() => handleEnrollment()}
+										>
+											Pay to Enroll
+										</button>
+									) : (
+										<div className="btn-group">
+											<a
+												href={auth.data.stripe.latestStripeCheckoutLink}
+												target="_blank"
+												className="btn btn-dark btn-sm w-100 mb-3"
+											>
+												There is a checkout session in your account!
+											</a>
+											<button
+												className="btn btn-danger btn-sm w-100 mb-3"
+												onClick={() => {
+													handleCancellation().then(() => {
+														// Reload page
+														window.location.reload();
+													});
+												}}
+											>
+												Cancel Payment and Enrollment to Course
+											</button>
+										</div>
+									))) ||
 								// If free/not free and already enrolled
 								((object?.data?.isFree || !object?.data?.isFree) &&
 									enrollmentVerification?.success && (

@@ -12,6 +12,7 @@ import ClientNumericPagination from "@/layout/clientnumericpagination";
 
 const AdminCategoriesIndex = () => {
 	const {
+		auth,
 		totalPages,
 		setTotalPages,
 		currentResults,
@@ -19,8 +20,12 @@ const AdminCategoriesIndex = () => {
 		totalResults,
 		setTotalResults,
 	} = useContext(AuthContext);
-
 	const router = useRouter();
+
+	// Redirec if not founder
+	auth.isAuthenticated &&
+		!auth.user.role.includes("founder") &&
+		router.push("/dashboard");
 
 	const [isTopLevel, setTopLevel] = useState(true);
 	const [categories, setCategories] = useState([]);

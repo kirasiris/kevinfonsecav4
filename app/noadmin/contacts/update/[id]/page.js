@@ -7,9 +7,13 @@ import MyTextArea from "@/components/global/mytextarea";
 import AuthContext from "@/helpers/globalContext";
 
 const UpdateContact = () => {
-	const { files } = useContext(AuthContext);
-
+	const { auth, files } = useContext(AuthContext);
 	const router = useRouter();
+
+	// Redirec if not founder
+	auth.isAuthenticated &&
+		!auth.user.role.includes("founder") &&
+		router.push("/dashboard");
 
 	const [contactData, setContactData] = useState({
 		firstName: "",

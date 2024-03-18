@@ -1,13 +1,20 @@
 "use client";
 import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import AdminSidebar from "@/components/admin/adminsidebar";
 import MyTextArea from "@/components/global/mytextarea";
+import AuthContext from "@/helpers/globalContext";
 
 const UpdateComment = () => {
+	const { auth } = useContext(AuthContext);
 	const router = useRouter();
+
+	// Redirec if not founder
+	auth.isAuthenticated &&
+		!auth.user.role.includes("founder") &&
+		router.push("/dashboard");
 
 	const [commentData, setCommentData] = useState({
 		title: `Untitled`,

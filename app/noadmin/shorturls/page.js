@@ -11,6 +11,7 @@ import ClientNumericPagination from "@/layout/clientnumericpagination";
 
 const AdminShortUrlsIndex = () => {
 	const {
+		auth,
 		totalPages,
 		setTotalPages,
 		currentResults,
@@ -18,8 +19,12 @@ const AdminShortUrlsIndex = () => {
 		totalResults,
 		setTotalResults,
 	} = useContext(AuthContext);
-
 	const router = useRouter();
+
+	// Redirec if not founder
+	auth.isAuthenticated &&
+		!auth.user.role.includes("founder") &&
+		router.push("/dashboard");
 
 	const [shorturls, setShortUrls] = useState([]);
 	const [page, setPage] = useState(1);

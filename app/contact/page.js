@@ -1,6 +1,7 @@
 "use client";
-import { fetchurl } from "@/helpers/setTokenOnServer";
 import { useState } from "react";
+import { toast } from "react-toastify";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 // import Header from "@/layout/header";
 
 const ContactIndex = () => {
@@ -17,10 +18,34 @@ const ContactIndex = () => {
 
 	const createContact = async (e) => {
 		e.preventDefault();
-		const res = await fetchurl(`/emails`, "POST", "no-cache", contactData);
-		const data = await res.json();
-		setAlert(true);
-		setEmailSent(data.data);
+		try {
+			const res = await fetchurl(`/emails`, "POST", "no-cache", contactData);
+			const data = res.json();
+			console.log("Data from contact form data", data);
+			setAlert(true);
+			// setEmailSent(data.data);
+			// resetForm();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
 	};
 
 	const resetForm = () => {

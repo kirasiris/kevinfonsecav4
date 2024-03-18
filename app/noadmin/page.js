@@ -5,14 +5,23 @@ import AuthContext from "@/helpers/globalContext";
 import DynamicCards from "@/components/global/dynamiccards";
 import Header from "@/layout/header";
 import { useContext } from "react";
+import { useRouter } from "next/navigation";
 
-const AdminHome = ({}) => {
+const AdminHome = ({ params, searchParams }) => {
 	const { auth, totalResults } = useContext(AuthContext);
+	const router = useRouter();
+
+	// Redirec if not founder
+	auth.isAuthenticated &&
+		!auth.user.role.includes("founder") &&
+		router.push("/dashboard");
 
 	return (
 		<>
 			<Header
-				title={`Welcome back, ${auth?.user?.username}`}
+				title={`Welcome back, ${
+					auth.loading ? "loading..." : auth.user.username
+				}`}
 				description="This is the place where you have the full control of your website. Feel free to play with it as you like!"
 			/>
 			<div className="row">

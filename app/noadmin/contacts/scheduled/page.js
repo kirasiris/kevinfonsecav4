@@ -11,6 +11,7 @@ import ClientNumericPagination from "@/layout/clientnumericpagination";
 
 const AdminContactsScheduledIndex = () => {
 	const {
+		auth,
 		totalPages,
 		setTotalPages,
 		currentResults,
@@ -18,8 +19,12 @@ const AdminContactsScheduledIndex = () => {
 		totalResults,
 		setTotalResults,
 	} = useContext(AuthContext);
-
 	const router = useRouter();
+
+	// Redirec if not founder
+	auth.isAuthenticated &&
+		!auth.user.role.includes("founder") &&
+		router.push("/dashboard");
 
 	const [contacts, setContacts] = useState([]);
 	const [page, setPage] = useState(1);

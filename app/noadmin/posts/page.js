@@ -17,8 +17,12 @@ const AdminPostsIndex = () => {
 		totalResults,
 		setTotalResults,
 	} = useContext(AuthContext);
-
 	const router = useRouter();
+
+	// Redirec if not founder
+	auth.isAuthenticated &&
+		!auth.user.role.includes("founder") &&
+		router.push("/dashboard");
 
 	const [posts, setPosts] = useState([]);
 	const [limit] = useState(10);

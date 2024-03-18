@@ -6,6 +6,7 @@ import { setAuthToken, deleteCookie } from "./utilities";
 import {
 	getAuthTokenOnServer,
 	deleteAuthTokenOnServer,
+	setAuthTokenOnServer,
 } from "./setTokenOnServer";
 
 export const AuthContext = createContext();
@@ -17,6 +18,7 @@ export const AuthProvider = ({ children }) => {
 		token: ``,
 		isAuthenticated: false,
 		user: null,
+		loading: true,
 	});
 
 	const resetSetAuth = () => {
@@ -103,20 +105,29 @@ export const AuthProvider = ({ children }) => {
 	useEffect(() => {
 		const localToken = async () => {
 			let token = localStorage.getItem("xAuthToken");
+			// Don't delete nothing from this line above
+			// furthermore, setAuthTokenOnServer needs to be prior to setAuthToken (client version)
+			await setAuthTokenOnServer(token);
 			setAuthToken(token);
 			if (token) {
 				await axios
 					.get(`/auth/me`)
 					.then((res) => {
+						console.log("userEffect within globalContext", res?.data?.data);
 						return setAuth({
 							token: token,
 							isAuthenticated: true,
 							user: res.data.data,
+							loading: false,
 						});
 					})
 					.catch((err) => {
 						// resetSetAuth();
 					});
+				await setAuthTokenOnServer(token);
+				setAuthToken(token);
+				// Don't delete nothing from this line above
+				// furthermore, setAuthTokenOnServer needs to be prior to setAuthToken (client version)
 			}
 		};
 		localToken();

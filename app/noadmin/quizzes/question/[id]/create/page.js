@@ -9,8 +9,12 @@ import AuthContext from "@/helpers/globalContext";
 
 const CreateQuestion = ({ params }) => {
 	const { auth, files } = useContext(AuthContext);
-
 	const router = useRouter();
+
+	// Redirec if not founder
+	auth.isAuthenticated &&
+		!auth.user.role.includes("founder") &&
+		router.push("/dashboard");
 
 	const [questionData, setQuestionData] = useState({
 		title: `Untitled`,

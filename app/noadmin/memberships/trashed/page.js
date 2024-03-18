@@ -11,6 +11,7 @@ import ClientNumericPagination from "@/layout/clientnumericpagination";
 
 const AdminMembershipsTrashedIndex = () => {
 	const {
+		auth,
 		totalPages,
 		setTotalPages,
 		currentResults,
@@ -18,8 +19,12 @@ const AdminMembershipsTrashedIndex = () => {
 		totalResults,
 		setTotalResults,
 	} = useContext(AuthContext);
-
 	const router = useRouter();
+
+	// Redirec if not founder
+	auth.isAuthenticated &&
+		!auth.user.role.includes("founder") &&
+		router.push("/dashboard");
 
 	const [memberships, setMemberships] = useState([]);
 	const [page, setPage] = useState(1);

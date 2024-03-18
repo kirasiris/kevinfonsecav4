@@ -8,9 +8,13 @@ import MyTextArea from "@/components/global/mytextarea";
 import AuthContext from "@/helpers/globalContext";
 
 const UpdateMembership = () => {
-	const { files } = useContext(AuthContext);
-
+	const { auth, files } = useContext(AuthContext);
 	const router = useRouter();
+
+	// Redirec if not founder
+	auth.isAuthenticated &&
+		!auth.user.role.includes("founder") &&
+		router.push("/dashboard");
 
 	const [membershipData, setMembershipData] = useState({
 		title: `Untitled`,

@@ -1,12 +1,19 @@
 "use client";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import AdminSidebar from "@/components/admin/adminsidebar";
+import AuthContext from "@/helpers/globalContext";
 
 const CreateSubscriber = () => {
+	const { auth } = useContext(AuthContext);
 	const router = useRouter();
+
+	// Redirec if not founder
+	auth.isAuthenticated &&
+		!auth.user.role.includes("founder") &&
+		router.push("/dashboard");
 
 	const [users, setUsers] = useState([]);
 	const [courses, setCourses] = useState([]);

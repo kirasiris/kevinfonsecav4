@@ -33,13 +33,24 @@ export const fetchurl = async (
 	const myCookies = cookies();
 	const token = myCookies.get("xAuthToken");
 
+	let requestBody = null;
+	if (
+		bodyData &&
+		typeof bodyData === "object" &&
+		!Array.isArray(bodyData) &&
+		bodyData !== null
+	) {
+		// Check if bodyData is a plain object before stringifying
+		requestBody = JSON.stringify(bodyData);
+	}
+
 	const data = await fetch(`http://localhost:5000/api/v1${url}`, {
 		method: method,
 		headers: {
 			"Content-Type": "application/json",
 			Authorization: `Bearer ${token?.value}`,
 		},
-		body: JSON.stringify(bodyData),
+		body: method !== "GET" && method !== "HEAD" ? requestBody : null,
 		cache: cache,
 	});
 

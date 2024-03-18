@@ -10,8 +10,12 @@ import AuthContext from "@/helpers/globalContext";
 
 const CreateVideo = () => {
 	const { auth, files } = useContext(AuthContext);
-
 	const router = useRouter();
+
+	// Redirec if not founder
+	auth.isAuthenticated &&
+		!auth.user.role.includes("founder") &&
+		router.push("/dashboard");
 
 	const [categories, setCategories] = useState([]);
 

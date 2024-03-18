@@ -14,8 +14,12 @@ import UseDropzone from "@/components/global/dropzone";
 
 const CreatePost = () => {
 	const { auth, files, setFiles } = useContext(AuthContext);
-
 	const router = useRouter();
+
+	// Redirec if not founder
+	auth.isAuthenticated &&
+		!auth.user.role.includes("founder") &&
+		router.push("/dashboard");
 
 	const [users, setUsers] = useState([]);
 

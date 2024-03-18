@@ -1,4 +1,5 @@
 import axios from "axios";
+import { setAuthTokenOnServer } from "./setTokenOnServer";
 
 const getCookie = (name) => {
 	if (typeof window !== "undefined") {
@@ -29,6 +30,10 @@ export const setAuthToken = (token) => {
 			axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 			axios.defaults.headers["Authorization"] = `Bearer ${token}`;
 			window?.localStorage.setItem("xAuthToken", token);
+			// There's no setAuthTokenOnServer because said functions get called whenever it needs to be triggered
+			// and has to be await and this utility, sethAuthToken is not asynchronous
+			// so far, sethAuthTokenOnServer is being called when loging in in the login page
+			// and the globalContext file
 		}
 	} else {
 		console.log("Token does not gets to setAuthToken function", token);

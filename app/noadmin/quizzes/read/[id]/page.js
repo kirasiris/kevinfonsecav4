@@ -1,14 +1,21 @@
 "use client";
 import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import ParseHtml from "@/layout/parseHtml";
 import Image from "next/image";
 import Link from "next/link";
+import AuthContext from "@/helpers/globalContext";
 
 const ReadQuiz = () => {
+	const { auth } = useContext(AuthContext);
 	const router = useRouter();
+
+	// Redirec if not founder
+	auth.isAuthenticated &&
+		!auth.user.role.includes("founder") &&
+		router.push("/dashboard");
 
 	const [quiz, setQuiz] = useState(null);
 	const [questions, setQuestions] = useState([]);

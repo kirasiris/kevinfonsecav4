@@ -12,6 +12,7 @@ const Login = ({ params, searchParams }) => {
 	const { auth, loadUser } = useContext(AuthContext);
 
 	auth.isAuthenticated && router.push("/");
+	console.log("auth in lging page", auth);
 
 	const [loginData, setLoginData] = useState({
 		email: "",
@@ -64,9 +65,10 @@ const Login = ({ params, searchParams }) => {
 		// If not success stop
 		if (!res?.data?.success) return;
 
-		// Else continue
-		setAuthToken(res?.data?.token);
+		// Else continue,
+		// furthermore, setAuthTokenOnServer needs to be prior to setAuthToken (client version)
 		await setAuthTokenOnServer(res?.data?.token);
+		setAuthToken(res?.data?.token);
 		await loadUser();
 		searchParams?.returnpage
 			? router.push(searchParams.returnpage)

@@ -1,12 +1,19 @@
 "use client";
 import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import MyTextArea from "@/components/global/mytextarea";
+import AuthContext from "@/helpers/globalContext";
 
 const UpdateSetting = () => {
+	const { auth } = useContext(AuthContext);
 	const router = useRouter();
+
+	// Redirec if not founder
+	auth.isAuthenticated &&
+		!auth.user.role.includes("founder") &&
+		router.push("/dashboard");
 
 	const [settingData, setSettingData] = useState({
 		author: "Kevin Uriel Fonseca",

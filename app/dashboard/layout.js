@@ -4,14 +4,19 @@ import "../global.css";
 import "../admin.css";
 import "../app.css";
 import AdminMenu from "@/components/dashboard/adminmenu";
+import { AuthProvider } from "@/helpers/globalContext";
 
-export default function AdminLayout({ children }) {
+const AdminLayout = ({ children }) => {
 	return (
-		<div className="container-fluid my-4">
-			<div className="row">
-				<AdminMenu />
-				<div className="col-lg-11">{children}</div>
+		<AuthProvider>
+			<div className="container-fluid my-4">
+				<div className="row">
+					<AdminMenu />
+					<div className="col-lg-11">{children}</div>
+				</div>
 			</div>
-		</div>
+		</AuthProvider>
 	);
-}
+};
+
+export default AdminLayout;

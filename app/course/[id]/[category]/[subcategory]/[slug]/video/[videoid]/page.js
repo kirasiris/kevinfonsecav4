@@ -11,32 +11,32 @@ import Menu from "@/components/course/menu";
 
 async function getAuthenticatedUser() {
 	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
-	return res.json();
+	return res;
 }
 
 async function getCourse(params) {
 	const res = await fetchurl(`/courses${params}`, "GET", "no-cache");
-	return res.json();
+	return res;
 }
 
 async function getCourseLessons(params) {
 	const res = await fetchurl(`/videos${params}`, "GET", "no-cache");
-	return res.json();
+	return res;
 }
 
 async function getCourseStudents(params) {
 	const res = await fetchurl(`/subscribers${params}`, "GET", "no-cache");
-	return res.json();
+	return res;
 }
 
 async function getVideo(params) {
 	const res = await fetchurl(`/videos${params}`, "GET", "no-cache");
-	return res.json();
+	return res;
 }
 
 async function updateViews(params) {
 	const res = await fetchurl(`/videos${params}/addview`, "PUT", "no-cache");
-	return res.json();
+	return res;
 }
 
 const VideoRead = async ({ params, searchParams }) => {

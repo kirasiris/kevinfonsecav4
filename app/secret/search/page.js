@@ -4,7 +4,7 @@ import List from "@/components/secret/list";
 
 async function getSecrets(params) {
 	const res = await fetchurl(`/extras/secrets${params}`, "GET", "no-cache");
-	return res.json();
+	return res;
 }
 
 const SecretSearchIndex = async ({ params, searchParams }) => {

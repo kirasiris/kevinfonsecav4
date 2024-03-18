@@ -8,22 +8,22 @@ import { fetchurl } from "@/helpers/setTokenOnServer";
 
 async function getSetting(params) {
 	const res = await fetchurl(`/settings/${params}`, "GET", "no-cache");
-	return res.json();
+	return res;
 }
 
 async function getNewsletters(params) {
 	const res = await fetchurl(`/newsletters${params}`, "GET", "no-cache");
-	return res.json();
+	return res;
 }
 
 async function getBlogs(params) {
 	const res = await fetchurl(`/blogs${params}`, "GET", "no-cache");
-	return res.json();
+	return res;
 }
 
 async function getThemes(params) {
 	const res = await fetchurl(`/themes${params}`, "GET", "no-cache");
-	return res.json();
+	return res;
 }
 
 const HomeIndex = async () => {

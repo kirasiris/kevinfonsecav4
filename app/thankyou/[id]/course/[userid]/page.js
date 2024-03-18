@@ -9,17 +9,16 @@ async function getAuthenticatedUser() {
 	return res.json();
 }
 
-async function getUserAndSubscribeToCourse(id = "", userId) {
+async function getUserAndSubscribeToCourse(id = "") {
 	const res = await fetchurl(
-		`/extras/stripe/subscriptions/${id}/course`,
+		`/extras/stripe/subscriptions/${id}/course/paymentverified`,
 		"PUT",
 		"no-cache",
 		{
 			resourceId: id,
-			user: userId,
 			status: "published",
-			isPaid: true,
 			onModel: "Course",
+			isPaid: true,
 			website: "beFree",
 		}
 	);
@@ -35,7 +34,7 @@ const ThankYouRead = async ({ params, searchParams }) => {
 			`/auth/login?returnpage=/thankyou/${params.id}/course/${params.userid}?returnpage=${searchParams.returnpage}`
 		);
 
-	await getUserAndSubscribeToCourse(params.id, auth.data._id);
+	await getUserAndSubscribeToCourse(params.id);
 
 	return (
 		<Suspense fallback={<Loading />}>

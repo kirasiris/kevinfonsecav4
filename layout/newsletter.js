@@ -1,5 +1,5 @@
 "use client";
-
+import { fetchurl } from "@/helpers/setTokenOnServer";
 import { useState } from "react";
 
 const NewsletterForm = ({ newsletters = {} }) => {
@@ -15,18 +15,12 @@ const NewsletterForm = ({ newsletters = {} }) => {
 		e.preventDefault();
 		try {
 			setEmailBtnTxt("...");
-			const res = await fetch(`http://localhost:5000/api/v1/newsletters`, {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({
-					...newsletterData,
-					email: email,
-					website: "Personal Website",
-				}),
+			await fetchurl(`/newsletters`, "POST", "no-cache", {
+				...newsletterData,
+				email: email,
+				website: "beFree",
 			});
-			await res.json();
+			newsletters = 1;
 			setEmailBtnTxt(emailBtnTxt);
 			resetForm();
 		} catch (err) {
@@ -42,7 +36,7 @@ const NewsletterForm = ({ newsletters = {} }) => {
 
 	return (
 		<form onSubmit={subscribeToNewsletter}>
-			<p>Join {newsletters.data?.length} other subscribers!</p>
+			<p>Join&nbsp;other&nbsp;subscribers!</p>
 			<div className="input-group">
 				<input
 					id="email"

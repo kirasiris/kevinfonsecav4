@@ -4,17 +4,17 @@ import List from "@/components/course/profileslist";
 
 async function getAuthenticatedUser() {
 	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
-	return res.json();
+	return res;
 }
 
 async function getCourse(params) {
 	const res = await fetchurl(`/courses${params}`, "GET", "no-cache");
-	return res.json();
+	return res;
 }
 
 async function getCourseStudents(params) {
 	const res = await fetchurl(`/subscribers${params}`, "GET", "no-cache");
-	return res.json();
+	return res;
 }
 
 const CourseStudentsIndex = async ({ params, searchParams }) => {

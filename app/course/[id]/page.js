@@ -6,22 +6,22 @@ import Jumbotron from "@/components/course/jumbotron";
 
 async function getAuthenticatedUser() {
 	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
-	return res.json();
+	return res;
 }
 
 async function getCourse(params) {
 	const res = await fetchurl(`/courses${params}`, "GET", "no-cache");
-	return res.json();
+	return res;
 }
 
 async function getCourseLessons(params) {
 	const res = await fetchurl(`/videos${params}`, "GET", "no-cache");
-	return res.json();
+	return res;
 }
 
 async function getCourseStudents(params) {
 	const res = await fetchurl(`/subscribers${params}`, "GET", "no-cache");
-	return res.json();
+	return res;
 }
 
 const CourseRead = async ({ params, searchParams }) => {

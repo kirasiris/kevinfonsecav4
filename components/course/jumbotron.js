@@ -15,27 +15,66 @@ const Jumbotron = ({
 	imageWidth = "1200",
 	imageHeight = "900",
 }) => {
-	const handleEnrollment = async (e) => {
-		e.preventDefault();
+	const handleFreeEnrollment = async () => {
 		try {
-			const res = await axios.post(
-				`http://localhost:5000/api/v1/extras/stripe/subscriptions/${object.data._id}/course`,
+			await fetchurl(
+				`/extras/stripe/subscriptions/${object.data._id}/course/free`,
+				"PUT",
+				"no-cache",
 				{
 					resourceId: object.data._id,
-					user: auth._id,
+					status: "published",
 					onModel: "Course",
+					isPaid: true,
 					website: "beFree",
-				},
-				{
-					headers: {
-						Authorization: auth.authorizationTokens.bearer,
-					},
 				}
 			);
+
+			// Reload entire page
+			window.location.reload();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
+	const handlePaidEnrollment = async () => {
+		try {
+			const res = await fetchurl(
+				`/extras/stripe/subscriptions/${object.data._id}/course/payment`,
+				"POST",
+				"no-cache",
+				{
+					resourceId: object.data._id,
+					status: "published",
+					onModel: "Course",
+					isPaid: false,
+					website: "beFree",
+				}
+			);
+
+			// Redirect to stripe
 			const stripe = await loadStripe(
 				"pk_test_4Dk6bq2sILbKjTN6C1lQil0K00oosTHzg5"
 			);
-			stripe.redirectToCheckout({ sessionId: res?.data?.stripe.id });
+			stripe.redirectToCheckout({ sessionId: res?.stripe.id });
 		} catch (err) {
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;
@@ -60,14 +99,15 @@ const Jumbotron = ({
 	};
 
 	const handleCancellation = async (e) => {
-		e.preventDefault();
 		try {
 			await fetchurl(
 				`/extras/stripe/subscriptions/${object.data._id}/course/cancel`,
 				"PUT",
 				"no-cache"
 			);
-			return res.json();
+
+			// Reload page
+			window.location.reload();
 		} catch (err) {
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;
@@ -182,7 +222,7 @@ const Jumbotron = ({
 								(object?.data?.isFree && !enrollmentVerification?.success && (
 									<button
 										className="btn btn-dark btn-sm w-100 mb-3"
-										onClick={() => handleEnrollment()}
+										onClick={() => handleFreeEnrollment()}
 									>
 										Enroll for Free
 									</button>
@@ -194,7 +234,7 @@ const Jumbotron = ({
 									auth.data.stripe.latestStripeCheckoutLink === undefined ? (
 										<button
 											className="btn btn-dark btn-sm w-100 mb-3"
-											onClick={() => handleEnrollment()}
+											onClick={() => handlePaidEnrollment()}
 										>
 											Pay to Enroll
 										</button>
@@ -209,12 +249,7 @@ const Jumbotron = ({
 											</a>
 											<button
 												className="btn btn-danger btn-sm w-100 mb-3"
-												onClick={() => {
-													handleCancellation().then(() => {
-														// Reload page
-														window.location.reload();
-													});
-												}}
+												onClick={() => handleCancellation()}
 											>
 												Cancel Payment and Enrollment to Course
 											</button>

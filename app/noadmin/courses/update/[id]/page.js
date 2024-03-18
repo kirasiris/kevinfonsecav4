@@ -110,7 +110,7 @@ const UpdateCourse = () => {
 	const upgradeCourse = async (e) => {
 		e.preventDefault();
 		try {
-			await axios.put(`/courses/${blog._id}`, {
+			await axios.put(`/courses/${course._id}`, {
 				...courseData,
 				files: { avatar: files?.selected?._id },
 			});

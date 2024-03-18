@@ -2,7 +2,7 @@
 import Link from "next/link";
 import ParseHtml from "@/layout/parseHtml";
 import AuthorBox from "@/components/global/authorbox";
-import CommentBox from "@/components/global/commentbox";
+// import CommentBox from "@/components/global/commentbox";
 import ExportModal from "@/components/global/exportmodal";
 import ReportModal from "@/components/global/reportmodal";
 import Globalcontent from "@/layout/content";
@@ -125,7 +125,7 @@ const List = ({
 
 									<div style={{ clear: "both" }} />
 									<AuthorBox author={object?.data?.user} />
-									<CommentBox
+									{/* <CommentBox
 										auth={auth.data}
 										authorization={auth.authorizationTokens}
 										user={object?.data?.user}
@@ -133,7 +133,7 @@ const List = ({
 										secondPostId={object?.data?._id}
 										isVisible={object?.data?.commented}
 										onModel="Course"
-									/>
+									/> */}
 								</>
 							)}
 						</article>

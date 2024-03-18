@@ -44,7 +44,7 @@ export const fetchurl = async (
 		requestBody = JSON.stringify(bodyData);
 	}
 
-	const data = await fetch(`http://localhost:5000/api/v1${url}`, {
+	const response = await fetch(`http://localhost:5000/api/v1${url}`, {
 		method: method,
 		headers: {
 			"Content-Type": "application/json",
@@ -54,5 +54,14 @@ export const fetchurl = async (
 		cache: cache,
 	});
 
+	if (!response.ok) {
+		// throw new Error("Failed to fetch data");
+		console.log(
+			"The line below is coming from the setTokenOnSever file withing the fetchurl() function!"
+		);
+		console.log("There was an error fetching the data");
+	}
+
+	const data = response.json();
 	return data;
 };

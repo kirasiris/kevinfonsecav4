@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Globalcontent from "@/layout/content";
 import Sidebar from "@/layout/secret/sidebar";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 
 const CreateSecret = ({ params, searchParams }) => {
 	const router = useRouter();
@@ -11,20 +12,14 @@ const CreateSecret = ({ params, searchParams }) => {
 		sex: "male",
 		nsfw: false,
 		text: ``,
+		status: "published",
 	});
 
 	const { age, sex, nsfw, text } = secretData;
 
 	const createContact = async (e) => {
 		e.preventDefault();
-		const res = await fetch(`http://localhost:5000/api/v1/extras/secrets`, {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify({ ...secretData, status: "published" }),
-		});
-		await res.json();
+		await fetchurl(`/extras/secrets`, "POST", "no-cache", secretData);
 		searchParams?.returnpage
 			? router.push(searchParams.returnpage)
 			: router.push(`/secret`);

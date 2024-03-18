@@ -4,12 +4,12 @@ import List from "@/components/course/list";
 
 async function getFeaturedCourse(params) {
 	const res = await fetchurl(`/courses${params}`, "GET", "no-cache");
-	return res.json();
+	return res;
 }
 
 async function getCourses(params) {
 	const res = await fetchurl(`/courses${params}`, "GET", "no-cache");
-	return res.json();
+	return res;
 }
 
 const CourseSubCategoryIndex = async ({ params, searchParams }) => {

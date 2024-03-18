@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { fetchurl } from "@/helpers/setTokenOnServer";
-// import Header from "@/layout/header";
+import Header from "@/layout/header";
 
 const ContactIndex = () => {
 	const [alert, setAlert] = useState(false);
@@ -20,11 +20,9 @@ const ContactIndex = () => {
 		e.preventDefault();
 		try {
 			const res = await fetchurl(`/emails`, "POST", "no-cache", contactData);
-			const data = res.json();
-			console.log("Data from contact form data", data);
 			setAlert(true);
-			// setEmailSent(data.data);
-			// resetForm();
+			setEmailSent(res.data);
+			resetForm();
 		} catch (err) {
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;
@@ -58,10 +56,10 @@ const ContactIndex = () => {
 	};
 	return (
 		<>
-			{/* <Header
-				title="Kevin Uriel"
-				description="Programmer, Geek, Gamer and now Soldier"
-			/> */}
+			<Header
+				title="Contact Page"
+				description="Do not hesitate to contact me!"
+			/>
 			<div className="container">
 				<div className="row">
 					<form onSubmit={createContact}>
@@ -160,7 +158,9 @@ const ContactIndex = () => {
 				{alert && (
 					<>
 						<br />
-						<div className="alert alert-success">Email sent</div>
+						<div className="alert alert-success">
+							Email sent with message encrypted!
+						</div>
 						<pre>{JSON.stringify({ emailSent }, null, 4)}</pre>
 					</>
 				)}

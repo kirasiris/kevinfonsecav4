@@ -15,12 +15,12 @@ import ArticleHeader from "@/components/global/articleheader";
 
 async function getAuthenticatedUser() {
 	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
-	return res.json();
+	return res;
 }
 
 async function getSecret(params) {
 	const res = await fetchurl(`/extras/secrets${params}`, "GET", "no-cache");
-	return res.json();
+	return res;
 }
 
 const SecretRead = async ({ params, searchParams }) => {

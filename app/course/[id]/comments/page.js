@@ -4,34 +4,34 @@ import List from "@/components/course/commentlist";
 
 async function getAuthenticatedUser() {
 	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
-	return res.json();
+	return res;
 }
 
 async function getCourse(params) {
 	const res = await fetchurl(`/courses${params}`, "GET", "no-cache");
-	return res.json();
+	return res;
 }
 
 async function getCourseStudents(params) {
 	const res = await fetchurl(`/subscribers${params}`, "GET", "no-cache");
-	return res.json();
+	return res;
 }
 
 async function getCourseComments(params) {
 	const res = await fetchurl(`/comments${params}`, "GET", "no-cache");
-	return res.json();
+	return res;
 }
 
 const CourseCommentsIndex = async ({ params, searchParams }) => {
 	const auth = await getAuthenticatedUser();
 	const limit = searchParams.limit || 10;
 	const page = searchParams.page || 1;
-	const decrypt = searchParams.decrypt === "true" ? "&decrypt=true" : "";
+	// const decrypt = searchParams.decrypt === "true" ? "&decrypt=true" : "";
 
 	const getCoursesData = getCourse(`/${params.id}`);
 
 	const getCourseCommentsData = getCourseComments(
-		`?resourceId=${params.id}&page=${page}&limit=${limit}&sort=-createdAt&onModel=Course${decrypt}`
+		`?resourceId=${params.id}&page=${page}&limit=${limit}&sort=-createdAt&onModel=Course&decrypt=true`
 	);
 
 	const verifyUserEnrollment = getCourseStudents(

@@ -92,7 +92,7 @@ const HomeIndex = async () => {
 			)}
 			{/* THEMES */}
 			{themes?.data?.length > 0 && (
-				<section id="themes" className="border-bottom py-5">
+				<section id="themes" className="py-5" style={{ marginBottom: "-24px" }}>
 					<div className="container">
 						<h2 className="page-section-heading display-5 text-uppercase text-secondary my-5">
 							<Link href={`/theme`}>Latest Themes</Link>
@@ -105,43 +105,6 @@ const HomeIndex = async () => {
 					</div>
 				</section>
 			)}
-			{/* WHAT PEOPLE SAY ABOUT ME */}
-			<section id="testimonials" className="border-bottom py-5">
-				<div className="container">
-					<h2 className="page-section-heading display-5 text-uppercase my-5">
-						Get to Know Me
-					</h2>
-					<div className="row">
-						<div className="col-lg-4">
-							<p className="fs-4">
-								Customers are Awesome. Check what our clients are saying about
-								us.
-							</p>
-						</div>
-						<div className="col-lg-8">
-							<div className="card">
-								<div className="card-body">
-									<figure>
-										<blockquote className="blockquote">
-											<p>
-												Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-												Nunc et metus id ligula malesuada placerat sit amet quis
-												enim. Aliquam erat volutpat. In pellentesque scelerisque
-												auctor.
-											</p>
-										</blockquote>
-										<figcaption className="blockquote-footer">
-											AUTHOR NAME&nbsp;-&nbsp;
-											<cite title="SOURCE WEBSITE">SOURCE WEBSITE</cite>
-										</figcaption>
-									</figure>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</section>
-			{/* CONTACT ME */}
 		</>
 	) : (
 		<ErrorPage />

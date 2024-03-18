@@ -1,6 +1,7 @@
 {
   "name": "kevinfonseca-next",
-  "version": "0.1.0",
+  "version": "4.0.0",
+  "description": "The Open Minded Social Network",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -9,6 +10,34 @@
     "lint": "next lint",
     "postbuild": "next-sitemap"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kirasiris/kevinfonsecav4.git"
+  },
+  "keywords": [
+    "nodejs",
+    "mongodb",
+    "social-network",
+    "reactjs",
+    "nextjs",
+    "mongoose",
+    "react-bootstrap",
+    "mern",
+    "node-js",
+    "express-js",
+    "mern-stack",
+    "webrtc",
+    "wrtc",
+    "job-board",
+    "code-snippets"
+  ],
+  "author": "Kevin Uriel Fonseca",
+  "license": "MIT",
+  "bugs": {
+    "email": "kebin1421@hotmail.com",
+    "url": "https://github.com/kirasiris/kevinfonsecav4/issues"
+  },
+  "homepage": "https://github.com/kirasiris/kevinfonsecav4#readme",
   "dependencies": {
     "@codemirror/lang-css": "^6.2.1",
     "@codemirror/lang-html": "^6.4.7",

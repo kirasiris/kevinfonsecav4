@@ -6,7 +6,7 @@ import { fetchurl } from "@/helpers/setTokenOnServer";
 
 async function getAuthenticatedUser() {
 	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
-	return res.json();
+	return res;
 }
 
 const CancelOrderRead = async ({ params, searchParams }) => {

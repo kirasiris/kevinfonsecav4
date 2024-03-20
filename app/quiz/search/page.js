@@ -4,17 +4,17 @@ import List from "@/components/quiz/list";
 
 async function getFeaturedQuiz(params) {
 	const res = await fetchurl(`/quizzes${params}`, "GET", "no-cache");
-	return res.json();
+	return res;
 }
 
 async function getQuizzes(params) {
 	const res = await fetchurl(`/quizzes${params}`, "GET", "no-cache");
-	return res.json();
+	return res;
 }
 
 async function getCategories(params) {
 	const res = await fetchurl(`/categories${params}`, "GET", "no-cache");
-	return res.json();
+	return res;
 }
 
 const QuizSearchIndex = async ({ params, searchParams }) => {

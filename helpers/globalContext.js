@@ -7,6 +7,7 @@ import {
 	getAuthTokenOnServer,
 	deleteAuthTokenOnServer,
 	setAuthTokenOnServer,
+	fetchurl,
 } from "./setTokenOnServer";
 
 export const AuthContext = createContext();
@@ -27,9 +28,9 @@ export const AuthProvider = ({ children }) => {
 
 	const loadUser = async () => {
 		try {
-			const res = await axios.get(`/auth/me`);
-			console.log("Holas from loadUser function call", res?.data?.data);
-			return res?.data;
+			const res = await fetchurl(`/auth/me`, "GET", "no-cache");
+			console.log("Holas from loadUser function call", res);
+			return res;
 		} catch (err) {
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;
@@ -53,7 +54,7 @@ export const AuthProvider = ({ children }) => {
 	const token = auth && auth.token ? auth.token : "";
 	const secondarytoken = getAuthTokenOnServer();
 	const defineToken = token ? token : secondarytoken.value;
-	axios.defaults.baseURL = `${API_URL}/api/v1/`;
+	axios.defaults.baseURL = `${API_URL}/api/v1`;
 	axios.defaults.headers.common["Content-Type"] = `application/json`;
 	axios.defaults.headers.common["Accept"] = `application/json`;
 	axios.defaults.headers["Authorization"] = `Bearer ${defineToken}`;
@@ -110,14 +111,13 @@ export const AuthProvider = ({ children }) => {
 			await setAuthTokenOnServer(token);
 			setAuthToken(token);
 			if (token) {
-				await axios
-					.get(`/auth/me`)
+				await fetchurl(`/auth/me`, "GET", "default")
 					.then((res) => {
-						console.log("userEffect within globalContext", res?.data?.data);
+						console.log("Auth within useEffect in globalContext file", res);
 						return setAuth({
 							token: token,
 							isAuthenticated: true,
-							user: res.data.data,
+							user: res.data,
 							loading: false,
 						});
 					})
@@ -131,6 +131,7 @@ export const AuthProvider = ({ children }) => {
 			}
 		};
 		localToken();
+		return () => clearInterval(localToken());
 	}, []);
 
 	/*
@@ -182,11 +183,11 @@ export const AuthProvider = ({ children }) => {
 
 	const fetchCategories = async (params = "") => {
 		try {
-			const res = await axios.get(`/categories${params}`);
-			setCategories(res?.data?.data);
+			const res = await fetchurl(`/categories${params}`, "GET", "no-cache");
+			setCategories(res?.data);
 			setTotalResults({
 				...totalResults,
-				categories: res?.data?.countAll,
+				categories: res?.countAll,
 			});
 		} catch (err) {
 			// const error = err.response.data.message;

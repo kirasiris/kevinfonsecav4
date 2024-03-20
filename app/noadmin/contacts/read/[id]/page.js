@@ -10,6 +10,9 @@ const ReadContact = () => {
 	const { auth } = useContext(AuthContext);
 	const router = useRouter();
 
+	// Redirect if not authenticated
+	!auth.isAuthenticated && router.push("/auth/login");
+
 	// Redirec if not founder
 	auth.isAuthenticated &&
 		!auth.user.role.includes("founder") &&

@@ -15,17 +15,17 @@ import Globalcontent from "@/layout/content";
 
 async function getAuthenticatedUser() {
 	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
-	return res.json();
+	return res;
 }
 
 async function getQuiz(params) {
 	const res = await fetchurl(`/quizzes${params}`, "GET", "no-cache");
-	return res.json();
+	return res;
 }
 
 async function getQuestions(params) {
 	const res = await fetchurl(`/questions${params}`, "GET", "no-cache");
-	return res.json();
+	return res;
 }
 
 const QuizSinglePageRead = async ({ params, searchParams }) => {

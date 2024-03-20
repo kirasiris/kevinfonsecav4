@@ -6,12 +6,12 @@ import List from "@/components/chapter/list";
 
 async function getAuthenticatedUser() {
 	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
-	return res.json();
+	return res;
 }
 
 async function getPlaylists(params) {
 	const res = await fetchurl(`/playlists${params}`, "GET", "no-cache");
-	return res.json();
+	return res;
 }
 
 async function getPlaylistChapters(params) {
@@ -20,7 +20,7 @@ async function getPlaylistChapters(params) {
 		"GET",
 		"no-cache"
 	);
-	return res.json();
+	return res;
 }
 
 const VideoIndex = async ({ params, searchParams }) => {

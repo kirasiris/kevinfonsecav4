@@ -5,7 +5,7 @@ import { fetchurl } from "@/helpers/setTokenOnServer";
 
 async function getChangelogs(params) {
 	const res = await fetchurl(`/changelogs${params}`, "GET", "no-cache");
-	return res.json();
+	return res;
 }
 
 const ChangelogIndex = async ({ params, searchParams }) => {

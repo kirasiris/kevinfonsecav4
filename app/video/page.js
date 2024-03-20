@@ -4,12 +4,12 @@ import List from "@/components/video/list";
 
 async function getPlaylists(params) {
 	const res = await fetchurl(`/playlists${params}`, "GET", "no-cache");
-	return res.json();
+	return res;
 }
 
 async function getCategories(params) {
 	const res = await fetchurl(`/categories${params}`, "GET", "no-cache");
-	return res.json();
+	return res;
 }
 
 const PlaylistIndex = async ({ params, searchParams }) => {

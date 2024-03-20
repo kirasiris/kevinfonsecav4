@@ -17,12 +17,12 @@ import ArticleHeader from "@/components/global/articleheader";
 
 async function getAuthenticatedUser() {
 	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
-	return res.json();
+	return res;
 }
 
 async function getTheme(params) {
 	const res = await fetchurl(`/themes${params}`, "GET", "no-cache");
-	return res.json();
+	return res;
 }
 
 async function getReadMe(repoName) {
@@ -36,7 +36,7 @@ async function getReadMe(repoName) {
 			cache: "no-store",
 		}
 	);
-	return res.json();
+	return res;
 }
 
 const ThemeRead = async ({ params, searchParams }) => {

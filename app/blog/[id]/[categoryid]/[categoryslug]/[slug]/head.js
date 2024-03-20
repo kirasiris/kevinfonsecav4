@@ -2,7 +2,7 @@ import { fetchurl } from "@/helpers/setTokenOnServer";
 
 async function getBlog(params) {
 	const res = await fetchurl(`/blogs${params}`, "GET", "no-cache");
-	return res.json();
+	return res;
 }
 
 const Head = async ({

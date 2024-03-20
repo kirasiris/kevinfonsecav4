@@ -1,7 +1,6 @@
 "use client";
 import AuthContext from "@/helpers/globalContext";
-import { fetchurl, setAuthTokenOnServer } from "@/helpers/setTokenOnServer";
-import axios from "axios";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 import { useRouter } from "next/navigation";
 import { useContext } from "react";
 import { useState } from "react";
@@ -21,16 +20,10 @@ const Login = ({ params, searchParams }) => {
 	const recoverAccount = async (e) => {
 		e.preventDefault();
 
-		await axios.post(`http://localhost:5000/api/v1/auth/forgotpassword`, {
+		await fetchurl(`/auth/forgotpassword`, "POST", "no-cache", {
 			...recoverData,
-			website: "http://localhost:3000",
+			website: "beFree",
 		});
-
-		// await fetchurl(
-		// 	`http://localhost:5000/api/v1/auth/forgotpassword`,
-		// 	"POST",
-		// 	recoverData
-		// );
 
 		searchParams?.returnpage
 			? router.push(searchParams.returnpage)

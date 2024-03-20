@@ -3,7 +3,7 @@ import "react-calendar/dist/Calendar.css";
 import "../global.css";
 import "../admin.css";
 import "../app.css";
-import AdminMenu from "@/components/dashboard/adminmenu";
+import AdminMenu from "@/layout/dashboard/sidebar";
 import { AuthProvider } from "@/helpers/globalContext";
 
 const AdminLayout = ({ children }) => {

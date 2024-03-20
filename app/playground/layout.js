@@ -6,7 +6,7 @@ import ErrorPage from "@/layout/errorpage";
 
 async function getSetting(params) {
 	const res = await fetch(`/settings/${params}`, "GET", "no-cache");
-	return res.json();
+	return res;
 }
 
 export default async function Layout({ children }) {

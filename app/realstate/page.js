@@ -4,12 +4,12 @@ import List from "@/components/realstate/list";
 
 async function getFeaturedHouse(params) {
 	const res = await fetchurl(`/realstate${params}`, "GET", "no-cache");
-	return res.json();
+	return res;
 }
 
 async function getHouses(params) {
 	const res = await fetchurl(`/realstate${params}`, "GET", "no-cache");
-	return res.json();
+	return res;
 }
 
 const RealStateIndex = async ({ params, searchParams }) => {

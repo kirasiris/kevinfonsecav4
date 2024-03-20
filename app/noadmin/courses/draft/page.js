@@ -8,6 +8,7 @@ import AuthContext from "@/helpers/globalContext";
 import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
 import AdminCardHeaderMenu from "@/components/admin/admincardheadermenu";
 import ClientNumericPagination from "@/layout/clientnumericpagination";
+import OnboardingLink from "@/components/dashboard/courses/onboardinglink";
 
 const AdminCoursesDraftedIndex = () => {
 	const {
@@ -20,6 +21,9 @@ const AdminCoursesDraftedIndex = () => {
 		setTotalResults,
 	} = useContext(AuthContext);
 	const router = useRouter();
+
+	// Redirect if not authenticated
+	!auth.isAuthenticated && router.push("/auth/login");
 
 	// Redirec if not founder
 	auth.isAuthenticated &&
@@ -307,36 +311,42 @@ const AdminCoursesDraftedIndex = () => {
 					setKeyword={setKeyword}
 				/>
 				{list?.length > 0 ? (
-					<>
-						<ul className="list-group list-group-flush">
-							{list?.map((course) => (
-								<Single
-									key={course._id}
-									object={course}
-									handleDraft={draftIt}
-									handlePublish={publishIt}
-									handleTrash={trashIt}
-									handleSchedule={scheduleIt}
-									handleDelete={handleDelete}
-									objects={list}
-									setObjects={setCourses}
-									setTotalResults={setTotalResults}
-								/>
-							))}
-							<li className="list-group-item">
-								{page} / {totalPages}
-							</li>
-						</ul>
-						<ClientNumericPagination
-							totalPages={totalPages || Math.ceil(list.length / limit)}
-							page={page}
-							limit={limit}
-							sortby={sortby}
-							siblings={1}
-							setParams={setParams}
-							router={router}
-						/>
-					</>
+					auth?.user?.stripe?.stripeOnboardingLink === "" &&
+					auth?.user?.stripe?.stripeOnboardingLink === null &&
+					auth?.user?.stripe?.stripeOnboardingLink === undefined ? (
+						<>
+							<ul className="list-group list-group-flush">
+								{list?.map((course) => (
+									<Single
+										key={course._id}
+										object={course}
+										handleDraft={draftIt}
+										handlePublish={publishIt}
+										handleTrash={trashIt}
+										handleSchedule={scheduleIt}
+										handleDelete={handleDelete}
+										objects={list}
+										setObjects={setCourses}
+										setTotalResults={setTotalResults}
+									/>
+								))}
+								<li className="list-group-item">
+									{page} / {totalPages}
+								</li>
+							</ul>
+							<ClientNumericPagination
+								totalPages={totalPages || Math.ceil(list.length / limit)}
+								page={page}
+								limit={limit}
+								sortby={sortby}
+								siblings={1}
+								setParams={setParams}
+								router={router}
+							/>
+						</>
+					) : (
+						<OnboardingLink auth={auth} />
+					)
 				) : (
 					<div
 						className={`alert alert-${

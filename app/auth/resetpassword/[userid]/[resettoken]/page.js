@@ -1,7 +1,6 @@
 "use client";
 import AuthContext from "@/helpers/globalContext";
-import { fetchurl, setAuthTokenOnServer } from "@/helpers/setTokenOnServer";
-import axios from "axios";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 import { useRouter } from "next/navigation";
 import { useContext } from "react";
 import { useState } from "react";
@@ -33,16 +32,16 @@ const ResetPassword = ({ params, searchParams }) => {
 			console.log("There was an error, please try again");
 			return;
 		}
-		await axios.put(
-			`http://localhost:5000/api/v1/auth/resetpassword/${userid}/${resettoken}`,
-			{ ...resetPasswordData, website: "http://localhost:3000" }
-		);
 
-		// await fetchurl(
-		// 	`http://localhost:5000/api/v1/auth/resetpassword/${userid}/${resettoken}`,
-		// 	"PUT",
-		// 	resetPasswordData
-		// );
+		await fetchurl(
+			`/auth/resetpassword/${userid}/${resettoken}`,
+			"PUT",
+			"no-cache",
+			{
+				...resetPasswordData,
+				website: "beFree",
+			}
+		);
 
 		searchParams?.returnpage
 			? router.push(searchParams.returnpage)

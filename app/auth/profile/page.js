@@ -6,8 +6,8 @@ import Globalcontent from "@/layout/content";
 import Loading from "@/app/blog/loading";
 
 async function getAuthenticatedUser() {
-	const res = await fetchurl(`http://localhost:5000/api/v1/auth/me`);
-	return res.json();
+	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
+	return res;
 }
 
 const AuthIndex = async ({ params, searchParams }) => {

@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import DeleteAllModal from "../../components/global/deleteallmodal";
+import DeleteAllModal from "../global/deleteallmodal";
 import TrashAllModal from "../global/trashallmodal";
 
 const AdminCardHeaderMenu = ({

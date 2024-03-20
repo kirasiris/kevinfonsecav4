@@ -8,12 +8,12 @@ import AuthorBox from "@/components/global/authorbox";
 
 async function getAuthenticatedUser() {
 	const res = await fetchurl(`/v1/auth/me`, "GET", "no-cache");
-	return res.json();
+	return res;
 }
 
 async function getChangelog(params) {
 	const res = await fetchurl(`/v1/changelogs${params}`, "GET", "no-cache");
-	return res.json();
+	return res;
 }
 
 const ChangelogRead = async ({ params }) => {

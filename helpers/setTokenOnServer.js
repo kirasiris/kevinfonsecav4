@@ -8,7 +8,7 @@ export const getAuthTokenOnServer = () => {
 };
 
 export const deleteAuthTokenOnServer = async (token) => {
-	await fetchurl(`http://localhost:5000/api/v1/auth/logout`, "GET");
+	await fetchurl(`/auth/logout`, "GET");
 	cookies().delete(token);
 	console.log("2.- Deleting cookie from back-end");
 	redirect(`/auth/login`);

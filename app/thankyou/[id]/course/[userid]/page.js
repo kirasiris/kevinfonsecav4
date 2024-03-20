@@ -6,7 +6,7 @@ import { fetchurl } from "@/helpers/setTokenOnServer";
 
 async function getAuthenticatedUser() {
 	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
-	return res.json();
+	return res;
 }
 
 async function getUserAndSubscribeToCourse(id = "") {
@@ -22,7 +22,7 @@ async function getUserAndSubscribeToCourse(id = "") {
 			website: "beFree",
 		}
 	);
-	return res.json();
+	return res;
 }
 
 const ThankYouRead = async ({ params, searchParams }) => {

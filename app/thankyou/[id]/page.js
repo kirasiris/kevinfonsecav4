@@ -6,7 +6,7 @@ import { fetchurl } from "@/helpers/setTokenOnServer";
 
 async function getAuthenticatedUser() {
 	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
-	return res.json();
+	return res;
 }
 
 async function getVerification(params) {
@@ -15,7 +15,7 @@ async function getVerification(params) {
 		"PUT",
 		"no-cache"
 	);
-	return res.json();
+	return res;
 }
 
 const ThankYouRead = async ({ params, searchParams }) => {

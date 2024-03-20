@@ -7,27 +7,27 @@ import Jumbotron from "@/components/profile/jumbotron";
 
 async function getAuthenticatedUser() {
 	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
-	return res.json();
+	return res;
 }
 
 async function getProfile(params) {
 	const res = await fetchurl(`/users${params}`, "GET", "no-cache");
-	return res.json();
+	return res;
 }
 
 async function getFeaturedPosts(params) {
 	const res = await fetchurl(`/posts${params}`, "GET", "no-cache");
-	return res.json();
+	return res;
 }
 
 async function getPosts(params) {
 	const res = await fetchurl(`/posts${params}`, "GET", "no-cache");
-	return res.json();
+	return res;
 }
 
 async function getMedias(params) {
 	const res = await fetchurl(`/files${params}`, "GET", "no-cache");
-	return res.json();
+	return res;
 }
 
 const ProfileRead = async ({ params, searchParams }) => {

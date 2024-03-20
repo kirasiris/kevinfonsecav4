@@ -1,9 +1,9 @@
 "use client";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
 import DeleteAllModal from "../../components/global/deleteallmodal";
-import TrashAllModal from "../global/trashallmodal";
+import TrashAllModal from "../../components/global/trashallmodal";
+import { useContext } from "react";
+import AuthContext from "@/helpers/globalContext";
 
 const DashboardCardHeaderMenu = ({
 	allLink = "",
@@ -14,23 +14,11 @@ const DashboardCardHeaderMenu = ({
 	addLinkText = "",
 	handleTrashAllFunction,
 	handleDeleteAllFunction,
+	keyword = "",
 	setKeyword,
 	classList = "",
 }) => {
-	const router = useRouter();
-	const [searchParams, setSearchParams] = useState({
-		keyword: "",
-	});
-
-	const { keyword } = searchParams;
-
-	const searchData = async (e) => {
-		e.preventDefault();
-		router.push(
-			`${allLink}/search?keyword=${keyword}&page=1&limit=10&sort=-createdAt`
-		);
-	};
-
+	const { auth } = useContext(AuthContext);
 	return (
 		<div className={`card-header ${classList}`}>
 			<div className="float-start">
@@ -47,20 +35,15 @@ const DashboardCardHeaderMenu = ({
 							{pageText} - ({currentResults} / {totalResults})
 						</a>
 					</Link>
-					<form
-						onSubmit={searchData}
-						className="d-none d-md-block d-lg-block d-xl-block d-xxl-block"
-					>
+					<form className="d-none d-md-block d-lg-block d-xl-block d-xxl-block">
 						<div className="input-group">
 							<input
 								id="keyword"
 								name="keyword"
 								value={keyword}
 								onChange={(e) => {
-									setSearchParams({
-										...searchParams,
-										keyword: e.target.value,
-									});
+									e.preventDefault();
+									setKeyword(e.target.value);
 								}}
 								type="text"
 								className="form-control"
@@ -79,17 +62,20 @@ const DashboardCardHeaderMenu = ({
 			</div>
 			<div className="float-end my-1">
 				<div className="btn-group">
-					<Link
-						href={{
-							pathname: addLink,
-							query: {},
-						}}
-						passHref
-						legacyBehavior
-					>
-						{/* <a className="btn btn-primary btn-sm">Add new {addLinkText}</a> */}
-						<a className="btn btn-primary btn-sm">Add new</a>
-					</Link>
+					{auth?.user?.stripe?.stripeOnboardingLink === "" &&
+						auth?.user?.stripe?.stripeOnboardingLink === null &&
+						auth?.user?.stripe?.stripeOnboardingLink === undefined && (
+							<Link
+								href={{
+									pathname: addLink,
+									query: {},
+								}}
+								passHref
+								legacyBehavior
+							>
+								<a className="btn btn-primary btn-sm">Add new</a>
+							</Link>
+						)}
 					<TrashAllModal action={handleTrashAllFunction} />
 					<DeleteAllModal action={handleDeleteAllFunction} />
 				</div>

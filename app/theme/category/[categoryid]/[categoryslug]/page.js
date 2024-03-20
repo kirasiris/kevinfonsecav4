@@ -4,17 +4,17 @@ import List from "@/components/theme/list";
 
 async function getFeaturedTheme(params) {
 	const res = await fetchurl(`/themes${params}`, "GET", "no-cache");
-	return res.json();
+	return res;
 }
 
 async function getThemes(params) {
 	const res = await fetchurl(`/themes${params}`, "GET", "no-cache");
-	return res.json();
+	return res;
 }
 
 async function getCategories(params) {
 	const res = await fetchurl(`/categories${params}`, "GET", "no-cache");
-	return res.json();
+	return res;
 }
 
 const ThemeCategoryIndex = async ({ params, searchParams }) => {

@@ -2,7 +2,6 @@
 import AuthContext from "@/helpers/globalContext";
 import { fetchurl, setAuthTokenOnServer } from "@/helpers/setTokenOnServer";
 import { setAuthToken } from "@/helpers/utilities";
-import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useContext } from "react";
 import { useState, useEffect } from "react";
@@ -12,7 +11,6 @@ const Login = ({ params, searchParams }) => {
 	const { auth, loadUser } = useContext(AuthContext);
 
 	auth.isAuthenticated && router.push("/");
-	console.log("auth in lging page", auth);
 
 	const [loginData, setLoginData] = useState({
 		email: "",
@@ -46,29 +44,20 @@ const Login = ({ params, searchParams }) => {
 			localStorage.removeItem("password");
 		}
 
-		const res = await axios.post(
-			`http://localhost:5000/api/v1/auth/login`,
-			loginData
-		);
+		const res = await fetchurl(`/auth/login`, "POST", "no-cache", loginData);
 
-		// const res = await fetchurl(
-		// 	`http://localhost:5000/api/v1/auth/login`,
-		// 	"POST",
-		// 	loginData
-		// );
-
-		if (res?.data?.data) {
-			router.push(`/auth/validatetwofactorauth/${res?.data?.data?._id}`);
-			return res.data;
+		if (res?.data) {
+			router.push(`/auth/validatetwofactorauth/${res?.data?._id}`);
+			return res;
 		}
 
 		// If not success stop
-		if (!res?.data?.success) return;
+		if (!res?.success) return;
 
 		// Else continue,
 		// furthermore, setAuthTokenOnServer needs to be prior to setAuthToken (client version)
-		await setAuthTokenOnServer(res?.data?.token);
-		setAuthToken(res?.data?.token);
+		await setAuthTokenOnServer(res?.token);
+		setAuthToken(res?.token);
 		await loadUser();
 		searchParams?.returnpage
 			? router.push(searchParams.returnpage)

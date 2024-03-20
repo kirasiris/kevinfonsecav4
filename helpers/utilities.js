@@ -1,5 +1,5 @@
 import axios from "axios";
-import { setAuthTokenOnServer } from "./setTokenOnServer";
+import { fetchurl } from "./setTokenOnServer";
 
 const getCookie = (name) => {
 	if (typeof window !== "undefined") {
@@ -11,7 +11,7 @@ const getCookie = (name) => {
 
 export const deleteCookie = async (name, path, domain) => {
 	if (getCookie(name)) {
-		await axios.get(`http://localhost:5000/api/v1/auth/logout`);
+		await fetchurl(`auth/logout`, "GET", "no-cache");
 		localStorage.removeItem("xAuthToken");
 		document.cookie =
 			name +
@@ -31,7 +31,7 @@ export const setAuthToken = (token) => {
 			axios.defaults.headers["Authorization"] = `Bearer ${token}`;
 			window?.localStorage.setItem("xAuthToken", token);
 			// There's no setAuthTokenOnServer because said functions get called whenever it needs to be triggered
-			// and has to be await and this utility, sethAuthToken is not asynchronous
+			// and has to be awaited and this utility, sethAuthToken is not asynchronous
 			// so far, sethAuthTokenOnServer is being called when loging in in the login page
 			// and the globalContext file
 		}
@@ -75,6 +75,13 @@ export const calculateTimeSincePublished = (createdAt) => {
 
 export const currencyFormatter = (amount, currency) => {
 	return ((amount * 100) / 100).toLocaleString(currency, {
+		style: "currency",
+		currency: currency,
+	});
+};
+
+export const stripeCurrencyFormatter = (amount, currency) => {
+	return (amount / 100).toLocaleString(currency, {
 		style: "currency",
 		currency: currency,
 	});

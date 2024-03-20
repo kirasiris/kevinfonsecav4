@@ -4,22 +4,22 @@ import List from "@/components/blog/list";
 
 async function getFeaturedBlog(params) {
 	const res = await fetchurl(`/blogs${params}`, "GET", "no-cache");
-	return res.json();
+	return res;
 }
 
 async function getBlogs(params) {
 	const res = await fetchurl(`/blogs${params}`, "GET", "no-cache");
-	return res.json();
+	return res;
 }
 
 async function getCategories(params) {
 	const res = await fetchurl(`/categories${params}`, "GET", "no-cache");
-	return res.json();
+	return res;
 }
 
 async function getQuotes() {
 	const res = await fetchurl(`/extras/quotes/random`, "GET", "no-cache");
-	return res.json();
+	return res;
 }
 
 const BlogSearchIndex = async ({ params, searchParams }) => {

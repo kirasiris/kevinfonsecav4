@@ -7,17 +7,17 @@ import Jumbotron from "@/components/profile/jumbotron";
 
 async function getAuthenticatedUser() {
 	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
-	return res.json();
+	return res;
 }
 
 async function getProfile(params) {
 	const res = await fetchurl(`/users${params}`, "GET", "no-cache");
-	return res.json();
+	return res;
 }
 
 async function getMedias(params) {
 	const res = await fetchurl(`/files${params}`, "GET", "no-cache");
-	return res.json();
+	return res;
 }
 
 const ProfilePhotoCoversIndex = async ({ params, searchParams }) => {

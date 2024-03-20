@@ -4,62 +4,26 @@ import { Suspense, useContext, useEffect, useState } from "react";
 import { redirect, useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import Sidebar from "@/layout/auth/sidebar";
-// import { fetchurl } from "@/helpers/setTokenOnServer";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 import Globalcontent from "@/layout/content";
 import Loading from "@/app/blog/loading";
 import AuthContext from "@/helpers/globalContext";
 import MyTextArea from "@/components/global/mytextarea";
 
-// async function getAuthenticatedUser() {
-// 	const res = await fetchurl(`http://localhost:5000/api/v1/auth/me`);
-// 	return res.json();
-// }
-
-// async function getProfiles() {
-// 	const res = await fetchurl(`http://localhost:5000/api/v1/users`);
-// 	return res.json();
-// }
-
 const UpdateAbout = ({ params, searchParams }) => {
-	// const auth = await getAuthenticatedUser();
-
-	// // Redirect if user is not logged in
-	// (auth?.error?.statusCode === 401 || !auth?.data?.isOnline) &&
-	// 	redirect(`/auth/login`);
-
-	// const getProfilesData = getProfiles(`?isEmailConfirmed=true`);
-
-	// const [profiles] = await Promise.all([getProfilesData]);
-
-	// async function upgradeAbout(formData) {
-	// 	"use server";
-	// 	const rawFormData = Object.fromEntries(formData);
-	// 	const res = await fetch(`http://localhost:5000/api/v1/auth/updateabout`, {
-	// 		method: "PUT",
-	// 		headers: {
-	// 			"Content-Type": "application/json",
-	// 			Authorization: `${auth?.authorizationTokens.bearer}`,
-	// 		},
-	// 		body: JSON.stringify(rawFormData),
-	// 	});
-	// 	console.log(res);
-	// 	// redirect(`/auth/profile`);
-	// }
-
+	const { auth } = useContext(AuthContext);
 	const router = useRouter();
 
-	const { auth } = useContext(AuthContext);
-
-	// Redirect if user is not loggedIn
-	console.log("Auth,", auth);
-	// !auth.isAuthenticated && router.push(`/auth/login`);
+	// Redirec if not authenticated
+	!auth.isAuthenticated && router.push("/auth/login");
 
 	const [profiles, setProfiles] = useState([]);
 
 	const fetchUsers = async (params = "") => {
 		try {
-			const res = await axios.get(`/users${params}`);
-			setProfiles(res?.data?.data);
+			/// const res = await axios.get(`/users${params}`);
+			const res = await fetchurl(`/users${params}`, "GET", "no-cache");
+			setProfiles(res?.data);
 		} catch (err) {
 			console.log(err);
 			// const error = err.response.data.message;
@@ -119,17 +83,22 @@ const UpdateAbout = ({ params, searchParams }) => {
 	useEffect(() => {
 		const fetchUser = async () => {
 			try {
-				const res = await axios.get(`/users?_id=${auth?.user?._id}`);
-				setProfile(res?.data?.data);
+				// const res = await axios.get(`/users?_id=${auth?.user?._id}`);
+				const res = await fetchurl(
+					`/users?_id=${auth?.user?._id}`,
+					"GET",
+					"no-cache"
+				);
+				setProfile(res?.data);
 				setAboutData({
-					name: res?.data?.data.name,
-					sex: res?.data?.data.sex,
-					relationshipStatus: res?.data?.data.relationshipStatus,
-					inRelationshipWith: res?.data?.data.inRelationshipWith,
-					company: res?.data?.data.company,
-					age: res?.data?.data.age,
-					bio: res?.data?.data.bio,
-					tags: res?.data?.data.tags,
+					name: res?.data?.name,
+					sex: res?.data?.sex,
+					relationshipStatus: res?.data?.relationshipStatus,
+					inRelationshipWith: res?.data?.inRelationshipWith,
+					company: res?.data?.company,
+					age: res?.data?.age,
+					bio: res?.data?.bio,
+					tags: res?.data?.tags,
 				});
 				setLoading(false);
 			} catch (err) {

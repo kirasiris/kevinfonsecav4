@@ -4,7 +4,7 @@ import ProfilesList from "@/components/profile/profileslist";
 
 async function getProfiles(params) {
 	const res = await fetchurl(`/users${params}`, "GET", "no-cache");
-	return res.json();
+	return res;
 }
 
 const ProfileSearchIndex = async ({ params, searchParams }) => {

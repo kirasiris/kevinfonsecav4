@@ -17,6 +17,18 @@ const AdminMenu = () => {
 						<a>Dashboard</a>
 					</Link>
 				</li>
+				<li className={`list-group-item ${isActive(`/dashboard/revenue`)}`}>
+					<Link
+						href={{
+							pathname: "/dashboard/revenue",
+							query: {},
+						}}
+						passHref
+						legacyBehavior
+					>
+						<a>Revenue</a>
+					</Link>
+				</li>
 				<li className={`list-group-item ${isActive(`/dashboard/courses`)}`}>
 					<Link
 						href={{
@@ -30,7 +42,27 @@ const AdminMenu = () => {
 						passHref
 						legacyBehavior
 					>
-						<a>Courses</a>
+						<a>Courses Published</a>
+					</Link>
+				</li>
+				<li
+					className={`list-group-item ${isActive(
+						`/dashboard/courses/enrolled`
+					)}`}
+				>
+					<Link
+						href={{
+							pathname: "/dashboard/courses/enrolled",
+							query: {
+								page: 1,
+								limit: 10,
+								sortby: "-createdAt",
+							},
+						}}
+						passHref
+						legacyBehavior
+					>
+						<a>Courses Enrolled</a>
 					</Link>
 				</li>
 			</ul>

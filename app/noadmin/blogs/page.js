@@ -1,5 +1,4 @@
 "use client";
-import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useContext } from "react";
 import { toast } from "react-toastify";
@@ -8,6 +7,7 @@ import AuthContext from "@/helpers/globalContext";
 import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
 import AdminCardHeaderMenu from "@/components/admin/admincardheadermenu";
 import ClientNumericPagination from "@/layout/clientnumericpagination";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 
 const AdminBlogsIndex = () => {
 	const {
@@ -20,6 +20,9 @@ const AdminBlogsIndex = () => {
 		setTotalResults,
 	} = useContext(AuthContext);
 	const router = useRouter();
+
+	// Redirect if not authenticated
+	!auth.isAuthenticated && router.push("/auth/login");
 
 	// Redirec if not founder
 	auth.isAuthenticated &&
@@ -39,12 +42,12 @@ const AdminBlogsIndex = () => {
 
 	const fetchBlogs = async () => {
 		try {
-			const res = await axios.get(`/blogs${params}`);
-			setBlogs(res?.data?.data);
-			setTotalPages(res?.data?.pagination?.totalpages);
-			setCurrentResults(res?.data?.count);
-			setTotalResults({ ...totalResults, blogs: res?.data?.countAll });
-			setPage(res?.data?.pagination?.current);
+			const res = await fetchurl(`/blogs${params}`);
+			setBlogs(res?.data);
+			setTotalPages(res?.pagination?.totalpages);
+			setCurrentResults(res?.count);
+			setTotalResults({ ...totalResults, blogs: res?.countAll });
+			setPage(res?.pagination?.current);
 			setLoading(false);
 		} catch (err) {
 			// const error = err.response.data.message;
@@ -90,7 +93,7 @@ const AdminBlogsIndex = () => {
 
 	const draftIt = async (id) => {
 		try {
-			await axios.put(`/blogs/${id}/draftit`);
+			await fetchurl(`/blogs/${id}/draftit`, "PUT", "no-cache");
 			toast.success("Blog drafted");
 			fetchBlogs();
 		} catch (err) {
@@ -118,7 +121,7 @@ const AdminBlogsIndex = () => {
 
 	const publishIt = async (id) => {
 		try {
-			await axios.put(`/blogs/${id}/publishit`);
+			await fetchurl(`/blogs/${id}/publishit`, "PUT", "no-cache");
 			toast.success("Blog published");
 			fetchBlogs();
 		} catch (err) {
@@ -146,7 +149,7 @@ const AdminBlogsIndex = () => {
 
 	const trashIt = async (id) => {
 		try {
-			await axios.put(`/blogs/${id}/trashit`);
+			await fetchurl(`/blogs/${id}/trashit`, "PUT", "no-cache");
 			toast.success("Blog trashed");
 			fetchBlogs();
 		} catch (err) {
@@ -174,7 +177,7 @@ const AdminBlogsIndex = () => {
 
 	const scheduleIt = async (id) => {
 		try {
-			await axios.put(`/blogs/${id}/scheduleit`);
+			await fetchurl(`/blogs/${id}/scheduleit`, "PUT", "no-cache");
 			toast.success("Blog scheduled");
 			fetchBlogs();
 		} catch (err) {
@@ -202,7 +205,7 @@ const AdminBlogsIndex = () => {
 
 	const handleDelete = async (id) => {
 		try {
-			await axios.delete(`/blogs/${id}/permanently`);
+			await fetchurl(`/blogs/${id}/permanently`, "DELETE", "no-cache");
 			toast.success("Blog deleted");
 			fetchBlogs();
 		} catch (err) {
@@ -230,7 +233,7 @@ const AdminBlogsIndex = () => {
 
 	const handleTrashAll = async () => {
 		try {
-			await axios.put(`/blogs/deleteall`);
+			await fetchurl(`/blogs/deleteall`, "PUT", "no-cache");
 			toast.success("Blogs trashed");
 			fetchBlogs();
 		} catch (err) {
@@ -258,7 +261,7 @@ const AdminBlogsIndex = () => {
 
 	const handleDeleteAll = async () => {
 		try {
-			await axios.put(`/blogs/deleteall/permanently`);
+			await fetchurl(`/blogs/deleteall/permanently`, "PUT", "no-cache");
 			toast.success("Blogs deleted");
 			fetchBlogs();
 		} catch (err) {

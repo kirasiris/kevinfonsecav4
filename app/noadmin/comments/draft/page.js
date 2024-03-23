@@ -1,5 +1,5 @@
 "use client";
-import axios from "axios";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useContext } from "react";
 import { toast } from "react-toastify";
@@ -42,12 +42,12 @@ const AdminCommentsDraftIndex = () => {
 
 	const fetchComments = async () => {
 		try {
-			const res = await axios.get(`/comments${params}`);
-			setComments(res?.data?.data);
-			setTotalPages(res?.data?.pagination?.totalpages);
-			setCurrentResults(res?.data?.count);
-			setTotalResults({ ...totalResults, comments: res?.data?.countAll });
-			setPage(res?.data?.pagination?.current);
+			const res = await fetchurl(`/comments${params}`, "GET", "no-cache");
+			setComments(res?.data);
+			setTotalPages(res?.pagination?.totalpages);
+			setCurrentResults(res?.count);
+			setTotalResults({ ...totalResults, comments: res?.countAll });
+			setPage(res?.pagination?.current);
 			setLoading(false);
 		} catch (err) {
 			// const error = err.response.data.message;
@@ -93,7 +93,7 @@ const AdminCommentsDraftIndex = () => {
 
 	const draftIt = async (id) => {
 		try {
-			await axios.put(`/comments/${id}/draftit`);
+			await fetchurl(`/comments/${id}/draftit`, "PUT", "no-cache");
 			toast.success("Comment drafted");
 			fetchComments();
 		} catch (err) {
@@ -121,7 +121,7 @@ const AdminCommentsDraftIndex = () => {
 
 	const publishIt = async (id) => {
 		try {
-			await axios.put(`/comments/${id}/publishit`);
+			await fetchurl(`/comments/${id}/publishit`, "PUT", "no-cache");
 			toast.success("Comment published");
 			fetchComments();
 		} catch (err) {
@@ -149,7 +149,7 @@ const AdminCommentsDraftIndex = () => {
 
 	const trashIt = async (id) => {
 		try {
-			await axios.put(`/comments/${id}/trashit`);
+			await fetchurl(`/comments/${id}/trashit`, "PUT", "no-cache");
 			toast.success("Comment trashed");
 			fetchComments();
 		} catch (err) {
@@ -177,7 +177,7 @@ const AdminCommentsDraftIndex = () => {
 
 	const scheduleIt = async (id) => {
 		try {
-			await axios.put(`/comments/${id}/scheduleit`);
+			await fetchurl(`/comments/${id}/scheduleit`, "PUT", "no-cache");
 			toast.success("Comment scheduled");
 			fetchComments();
 		} catch (err) {
@@ -205,7 +205,7 @@ const AdminCommentsDraftIndex = () => {
 
 	const handleDelete = async (id) => {
 		try {
-			await axios.delete(`/comments/${id}/permanently`);
+			await fetchurl(`/comments/${id}/permanently`, "DELETE", "no-cache");
 			toast.success("Comment deleted");
 			fetchComments();
 		} catch (err) {
@@ -233,7 +233,7 @@ const AdminCommentsDraftIndex = () => {
 
 	const handleTrashAll = async () => {
 		try {
-			await axios.put(`/comments/deleteall`);
+			await fetchurl(`/comments/deleteall`, "PUT", "no-cache");
 			toast.success("Comments trashed");
 			fetchComments();
 		} catch (err) {
@@ -261,7 +261,7 @@ const AdminCommentsDraftIndex = () => {
 
 	const handleDeleteAll = async () => {
 		try {
-			await axios.put(`/comments/deleteall/permanently`);
+			await fetchurl(`/comments/deleteall/permanently`, "DELETE", "no-cache");
 			toast.success("Comments deleted");
 			fetchComments();
 		} catch (err) {

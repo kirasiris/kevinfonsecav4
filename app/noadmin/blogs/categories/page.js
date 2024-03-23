@@ -1,5 +1,5 @@
 "use client";
-import axios from "axios";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useContext } from "react";
 import { toast } from "react-toastify";
@@ -44,12 +44,12 @@ const AdminBlogCategoriesIndex = () => {
 
 	const fetchCategories = async () => {
 		try {
-			const res = await axios.get(`/categories${params}`);
-			setCategories(res?.data?.data);
-			setTotalPages(res?.data?.pagination?.totalpages);
-			setCurrentResults(res?.data?.count);
-			setTotalResults({ ...totalResults, categories: res?.data?.countAll });
-			setPage(res?.data?.pagination?.current);
+			const res = await fetchurl(`/categories${params}`, "GET", "no-cache");
+			setCategories(res?.data);
+			setTotalPages(res?.pagination?.totalpages);
+			setCurrentResults(res?.count);
+			setTotalResults({ ...totalResults, categories: res?.countAll });
+			setPage(res?.pagination?.current);
 			setLoading(false);
 		} catch (err) {
 			// const error = err.response.data.message;
@@ -89,11 +89,11 @@ const AdminBlogCategoriesIndex = () => {
 	const createCategory = async (e) => {
 		e.preventDefault();
 		try {
-			const res = await axios.post(`/categories`, {
+			const res = await fetchurl(`/categories`, "POST", "no-cache", {
 				...categoryData,
 				categoryType: "blog",
 			});
-			setCategories([res?.data?.data, ...categories]);
+			setCategories([res?.data, ...categories]);
 			setTotalResults({ ...totalResults, categories: categories.length + 1 });
 			toast.success(`Item created`);
 			resetForm();
@@ -134,7 +134,7 @@ const AdminBlogCategoriesIndex = () => {
 
 	const draftIt = async (id) => {
 		try {
-			await axios.put(`/categories/${id}/draftit`);
+			await fetchurl(`/categories/${id}/draftit`, "PUT", "no-cache");
 			toast.success("Category drafted");
 			fetchCategories();
 		} catch (err) {
@@ -162,7 +162,7 @@ const AdminBlogCategoriesIndex = () => {
 
 	const publishIt = async (id) => {
 		try {
-			await axios.put(`/categories/${id}/publishit`);
+			await fetchurl(`/categories/${id}/publishit`, "PUT", "no-cache");
 			toast.success("Category published");
 			fetchCategories();
 		} catch (err) {
@@ -190,7 +190,7 @@ const AdminBlogCategoriesIndex = () => {
 
 	const trashIt = async (id) => {
 		try {
-			await axios.put(`/categories/${id}/trashit`);
+			await fetchurl(`/categories/${id}/trashit`, "PUT", "no-cache");
 			toast.success("Category trashed");
 			fetchCategories();
 		} catch (err) {
@@ -218,7 +218,7 @@ const AdminBlogCategoriesIndex = () => {
 
 	const scheduleIt = async (id) => {
 		try {
-			await axios.put(`/categories/${id}/scheduleit`);
+			await fetchurl(`/categories/${id}/scheduleit`, "PUT", "no-cache");
 			toast.success("Category scheduled");
 			fetchCategories();
 		} catch (err) {
@@ -246,7 +246,7 @@ const AdminBlogCategoriesIndex = () => {
 
 	const handleDelete = async (id) => {
 		try {
-			await axios.delete(`/categories/${id}/permanently`);
+			await fetchurl(`/categories/${id}/permanently`, "DELETE", "no-cache");
 			toast.success("Category deleted");
 			fetchCategories();
 		} catch (err) {
@@ -274,7 +274,7 @@ const AdminBlogCategoriesIndex = () => {
 
 	const handleTrashAll = async () => {
 		try {
-			await axios.put(`/categories/deleteall`, {
+			await fetchurl(`/categories/deleteall`, "PUT", "no-cache", {
 				categoryType: "blog",
 			});
 			toast.success("Categories trashed");
@@ -304,9 +304,14 @@ const AdminBlogCategoriesIndex = () => {
 
 	const handleDeleteAll = async () => {
 		try {
-			await axios.delete(`/categories/deleteall/permanently`, {
-				categoryType: "blog",
-			});
+			await fetchurl(
+				`/categories/deleteall/permanently`,
+				"DELETE",
+				"no-cache",
+				{
+					categoryType: "blog",
+				}
+			);
 			toast.success("Categories deleted");
 			fetchCategories();
 		} catch (err) {

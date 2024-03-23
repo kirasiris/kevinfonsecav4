@@ -1,5 +1,5 @@
 "use client";
-import axios from "axios";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useContext } from "react";
 import { toast } from "react-toastify";
@@ -40,11 +40,11 @@ const AdminPostsIndex = () => {
 
 	const fetchPosts = async () => {
 		try {
-			const res = await axios.get(`/posts${params}`);
-			setPosts([...posts, ...res?.data?.data]);
-			setCurrentResults(res?.data?.count);
-			setTotalResults({ ...totalResults, posts: res?.data?.countAll });
-			setNext(res?.data?.pagination?.next?.page);
+			const res = await fetchurl(`/posts${params}`, "GET", "no-cache");
+			setPosts([...posts, ...res?.data]);
+			setCurrentResults(res?.count);
+			setTotalResults({ ...totalResults, posts: res?.countAll });
+			setNext(res?.pagination?.next?.page);
 			setLoading(false);
 		} catch (err) {
 			// const error = err.response.data.message;
@@ -88,10 +88,150 @@ const AdminPostsIndex = () => {
 		}
 	}, [keyword]);
 
+	const draftIt = async (id) => {
+		try {
+			await fetchurl(`/posts/${id}/draftit`, "PUT", "no-cache");
+			toast.success("Post drafted");
+			fetchPosts();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
+	const publishIt = async (id) => {
+		try {
+			await fetchurl(`/posts/${id}/publishit`, "PUT", "no-cache");
+			toast.success("Post published");
+			fetchPosts();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
+	const trashIt = async (id) => {
+		try {
+			await fetchurl(`/posts/${id}/trashit`, "PUT", "no-cache");
+			toast.success("Post trashed");
+			fetchPosts();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
+	const scheduleIt = async (id) => {
+		try {
+			await fetchurl(`/posts/${id}/scheduleit`, "PUT", "no-cache");
+			toast.success("Post scheduled");
+			fetchPosts();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
 	const handleDelete = async (id) => {
 		try {
-			await axios.delete(`/posts/${id}`);
+			await fetchurl(`/posts/${id}/permanently`, "DELETE", "no-cache");
 			toast.success("Post deleted");
+			fetchPosts();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
+	const handleTrashAll = async () => {
+		try {
+			await fetchurl(`/posts/deleteall`, "PUT", "no-cache");
+			toast.success("Posts trashed");
 			fetchPosts();
 		} catch (err) {
 			// const error = err.response.data.message;
@@ -118,7 +258,7 @@ const AdminPostsIndex = () => {
 
 	const handleDeleteAll = async () => {
 		try {
-			await axios.delete(`/posts/deleteall`);
+			await fetchurl(`/posts/deleteall/permanently`, "DELETE", "no-cache");
 			toast.success("Posts deleted");
 			fetchPosts();
 		} catch (err) {
@@ -161,6 +301,7 @@ const AdminPostsIndex = () => {
 					totalResults={totalResults.posts}
 					addLink={`/noadmin/posts/create`}
 					addLinkText={`post`}
+					handleTrashAllFunction={handleTrashAll}
 					handleDeleteAllFunction={handleDeleteAll}
 					keyword={keyword}
 					setKeyword={setKeyword}
@@ -173,6 +314,10 @@ const AdminPostsIndex = () => {
 								<Single
 									key={post._id}
 									object={post}
+									handleDraft={draftIt}
+									handlePublish={publishIt}
+									handleTrash={trashIt}
+									handleSchedule={scheduleIt}
 									handleDelete={handleDelete}
 									objects={list}
 									setObjects={setPosts}

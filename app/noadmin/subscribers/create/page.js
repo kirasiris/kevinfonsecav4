@@ -1,10 +1,10 @@
 "use client";
-import axios from "axios";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 import { useRouter } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
+import { useState, useEffect, useContext } from "react";
 import { toast } from "react-toastify";
-import AdminSidebar from "@/components/admin/adminsidebar";
 import AuthContext from "@/helpers/globalContext";
+import AdminSidebar from "@/components/admin/adminsidebar";
 
 const CreateSubscriber = () => {
 	const { auth } = useContext(AuthContext);
@@ -23,8 +23,8 @@ const CreateSubscriber = () => {
 
 	const fetchUsers = async (params = "") => {
 		try {
-			const res = await axios.get(`/users${params}`);
-			setUsers(res?.data?.data);
+			const res = await fetchurl(`/users${params}`, "GET", "no-cache");
+			setUsers(res?.data);
 		} catch (err) {
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;
@@ -54,8 +54,8 @@ const CreateSubscriber = () => {
 
 	const fetchCourses = async (params = "") => {
 		try {
-			const res = await axios.get(`/courses${params}`);
-			setCourses(res?.data?.data);
+			const res = await fetchurl(`/courses${params}`, "GET", "no-cache");
+			setCourses(res?.data);
 		} catch (err) {
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;
@@ -94,7 +94,7 @@ const CreateSubscriber = () => {
 	const addSubscriber = async (e) => {
 		e.preventDefault();
 		try {
-			await axios.post(`/subscribers`, subscriberData);
+			await fetchurl(`/subscribers`, "POST", "no-cache", subscriberData);
 			toast.success(`Item created`);
 			resetForm();
 			router.push(`/noadmin/subscribers`);

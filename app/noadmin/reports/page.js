@@ -1,5 +1,5 @@
 "use client";
-import axios from "axios";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useContext } from "react";
 import { toast } from "react-toastify";
@@ -42,12 +42,12 @@ const AdminReportsIndex = () => {
 
 	const fetchReports = async () => {
 		try {
-			const res = await axios.get(`/reports${params}`);
-			setReports(res?.data?.data);
-			setTotalPages(res?.data?.pagination?.totalpages);
-			setCurrentResults(res?.data?.count);
-			setTotalResults({ ...totalResults, reports: res?.data?.countAll });
-			setPage(res?.data?.pagination?.current);
+			const res = await fetchurl(`/reports${params}`, "GET", "no-cache");
+			setReports(res?.data);
+			setTotalPages(res?.pagination?.totalpages);
+			setCurrentResults(res?.count);
+			setTotalResults({ ...totalResults, reports: res?.countAll });
+			setPage(res?.pagination?.current);
 			setLoading(false);
 		} catch (err) {
 			// const error = err.response.data.message;
@@ -91,10 +91,150 @@ const AdminReportsIndex = () => {
 		}
 	}, [keyword]);
 
+	const draftIt = async (id) => {
+		try {
+			await fetchurl(`/reports/${id}/draftit`, "PUT", "no-cache");
+			toast.success("Report drafted");
+			fetchReports();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
+	const publishIt = async (id) => {
+		try {
+			await fetchurl(`/reports/${id}/publishit`, "PUT", "no-cache");
+			toast.success("Report published");
+			fetchReports();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
+	const trashIt = async (id) => {
+		try {
+			await fetchurl(`/reports/${id}/trashit`, "PUT", "no-cache");
+			toast.success("Report trashed");
+			fetchReports();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
+	const scheduleIt = async (id) => {
+		try {
+			await fetchurl(`/reports/${id}/scheduleit`, "PUT", "no-cache");
+			toast.success("Report scheduled");
+			fetchReports();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
 	const handleDelete = async (id) => {
 		try {
-			await axios.delete(`/reports/${id}`);
+			await fetchurl(`/reports/${id}`, "DELETE", "no-cache");
 			toast.success("Report deleted");
+			fetchReports();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
+	const handleTrashAll = async () => {
+		try {
+			await fetchurl(`/reports/deleteall`, "PUT", "no-cache");
+			toast.success("Reports trashed");
 			fetchReports();
 		} catch (err) {
 			// const error = err.response.data.message;
@@ -121,7 +261,7 @@ const AdminReportsIndex = () => {
 
 	const handleDeleteAll = async () => {
 		try {
-			await axios.delete(`/reports/deleteall`);
+			await fetchurl(`/reports/deleteall/permanently`, "DELETE", "no-cache");
 			toast.success("Reports deleted");
 			fetchReports();
 		} catch (err) {
@@ -164,6 +304,7 @@ const AdminReportsIndex = () => {
 					totalResults={totalResults.reports}
 					addLink={`/noadmin/reports/create`}
 					addLinkText={`report`}
+					handleTrashAllFunction={handleTrashAll}
 					handleDeleteAllFunction={handleDeleteAll}
 					keyword={keyword}
 					setKeyword={setKeyword}
@@ -175,6 +316,10 @@ const AdminReportsIndex = () => {
 								<Single
 									key={report._id}
 									object={report}
+									handleDraft={draftIt}
+									handlePublish={publishIt}
+									handleTrash={trashIt}
+									handleSchedule={scheduleIt}
 									handleDelete={handleDelete}
 									objects={list}
 									setObjects={setReports}

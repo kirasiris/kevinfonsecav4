@@ -6,6 +6,7 @@ import { loadLanguage } from "@uiw/codemirror-extensions-langs";
 import { vscodeDark } from "@uiw/codemirror-theme-vscode";
 import Image from "next/image";
 import { useEffect } from "react";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 
 const OpenGraphViewerPage = ({ searchParams }) => {
 	const router = useRouter();
@@ -26,37 +27,35 @@ const OpenGraphViewerPage = ({ searchParams }) => {
 	const checkWebsite = async (e) => {
 		e.preventDefault();
 		setCheckWebsiteBtnText("...");
-		const res = await fetch(
-			`http://localhost:5000/api/v1/extras/tools/opengraphs`,
-			{
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify(openGraphData),
-			}
+		const res = await fetchurl(
+			`/extras/tools/opengraphs`,
+			"POST",
+			"no-cache",
+			openGraphData
 		);
-		const data = await res.json();
+
 		setCheckWebsiteBtnText(checkWebsiteBtnText);
 		setOpenGraphData({
 			...openGraphData,
-			title: data.data["og:title"],
-			text: data.data["og:description"],
-			image: data.data["og:image"],
-			type: data.data["og:type"],
-			domain: new URL(data.data["og:url"]).hostname,
+			title: res.data["og:title"],
+			text: res.data["og:description"],
+			image: res.data["og:image"],
+			type: res.data["og:type"],
+			domain: new URL(res.data["og:url"]).hostname,
 		});
 
-		router.push(`/opengraphviewer?_id=${data.data._id}`);
+		router.push(`/opengraphviewer?_id=${res.data._id}`);
 	};
 
 	useEffect(() => {
 		if (searchParams._id) {
 			const fetchOpenGraphObject = async (params) => {
-				const res = await fetch(
-					`http://localhost:5000/api/v1/extras/tools/opengraphs/${params}`
+				const res = await fetchurl(
+					`/extras/tools/opengraphs/${params}`,
+					"GET",
+					"no-cache"
 				);
-				return res.json();
+				return res;
 			};
 			fetchOpenGraphObject(searchParams._id).then((result) => {
 				setOpenGraphData({

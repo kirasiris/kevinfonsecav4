@@ -1,10 +1,10 @@
 "use client";
-import axios from "axios";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 import { useRouter } from "next/navigation";
-import { useContext, useState } from "react";
+import { useState, useContext } from "react";
 import { toast } from "react-toastify";
-import MyTextArea from "@/components/global/mytextarea";
 import AuthContext from "@/helpers/globalContext";
+import MyTextArea from "@/components/global/mytextarea";
 
 const CreateSecret = () => {
 	const { auth } = useContext(AuthContext);
@@ -31,7 +31,7 @@ const CreateSecret = () => {
 	const addSecret = async (e) => {
 		e.preventDefault();
 		try {
-			await axios.post(`/extras/secrets`, secretData);
+			await fetchurl(`/extras/secrets`, "POST", "no-cache", secretData);
 			toast.success(`Item created`);
 			router.push(`/noadmin/secrets`);
 		} catch (err) {

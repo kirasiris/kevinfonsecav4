@@ -1,5 +1,5 @@
 "use client";
-import axios from "axios";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useContext } from "react";
 import { toast } from "react-toastify";
@@ -42,12 +42,12 @@ const AdminNewslettersIndex = () => {
 
 	const fetchNewsletters = async () => {
 		try {
-			const res = await axios.get(`/newsletters${params}`);
-			setNewsletters(res?.data?.data);
-			setTotalPages(res?.data?.pagination?.totalpages);
-			setCurrentResults(res?.data?.count);
-			setTotalResults({ ...totalResults, newsletters: res?.data?.countAll });
-			setPage(res?.data?.pagination?.current);
+			const res = await fetchurl(`/newsletters${params}`, "GET", "no-cache");
+			setNewsletters(res?.data);
+			setTotalPages(res?.pagination?.totalpages);
+			setCurrentResults(res?.count);
+			setTotalResults({ ...totalResults, newsletters: res?.countAll });
+			setPage(res?.pagination?.current);
 			setLoading(false);
 		} catch (err) {
 			// const error = err.response.data.message;
@@ -91,10 +91,150 @@ const AdminNewslettersIndex = () => {
 		}
 	}, [keyword]);
 
+	const draftIt = async (id) => {
+		try {
+			await fetchurl(`/newsletters/${id}/draftit`, "PUT", "no-cache");
+			toast.success("Newsletter drafted");
+			fetchNewsletters();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
+	const publishIt = async (id) => {
+		try {
+			await fetchurl(`/newsletters/${id}/publishit`, "PUT", "no-cache");
+			toast.success("Newsletter published");
+			fetchNewsletters();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
+	const trashIt = async (id) => {
+		try {
+			await fetchurl(`/newsletters/${id}/trashit`, "PUT", "no-cache");
+			toast.success("Newsletter trashed");
+			fetchNewsletters();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
+	const scheduleIt = async (id) => {
+		try {
+			await fetchurl(`/newsletters/${id}/scheduleit`, "PUT", "no-cache");
+			toast.success("Newsletter scheduled");
+			fetchNewsletters();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
 	const handleDelete = async (id) => {
 		try {
-			await axios.delete(`/newsletters/${id}`);
+			await fetchurl(`/newsletters/${id}`, "DELETE", "no-cache");
 			toast.success("Newsletter deleted");
+			fetchNewsletters();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
+	const handleTrashAll = async () => {
+		try {
+			await fetchurl(`/newsletters/deleteall`, "PUT", "no-cache");
+			toast.success("Newsletters trashed");
 			fetchNewsletters();
 		} catch (err) {
 			// const error = err.response.data.message;
@@ -121,7 +261,11 @@ const AdminNewslettersIndex = () => {
 
 	const handleDeleteAll = async () => {
 		try {
-			await axios.delete(`/newsletters/deleteall`);
+			await fetchurl(
+				`/newsletters/deleteall/permanently`,
+				"DELETE",
+				"no-cache"
+			);
 			toast.success("Newsletters deleted");
 			fetchNewsletters();
 		} catch (err) {
@@ -164,6 +308,7 @@ const AdminNewslettersIndex = () => {
 					totalResults={totalResults.newsletters}
 					addLink={`/noadmin/newsletters/create`}
 					addLinkText={`newsletter subscriber`}
+					handleTrashAllFunction={handleTrashAll}
 					handleDeleteAllFunction={handleDeleteAll}
 					keyword={keyword}
 					setKeyword={setKeyword}
@@ -171,10 +316,14 @@ const AdminNewslettersIndex = () => {
 				{list?.length > 0 ? (
 					<>
 						<ul className="list-group list-group-flush">
-							{list?.map((blog) => (
+							{list?.map((newsletter) => (
 								<Single
-									key={blog._id}
-									object={blog}
+									key={newsletter._id}
+									object={newsletter}
+									handleDraft={draftIt}
+									handlePublish={publishIt}
+									handleTrash={trashIt}
+									handleSchedule={scheduleIt}
 									handleDelete={handleDelete}
 									objects={list}
 									setObjects={setNewsletters}

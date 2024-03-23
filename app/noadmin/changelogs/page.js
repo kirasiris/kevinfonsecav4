@@ -1,5 +1,5 @@
 "use client";
-import axios from "axios";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useContext } from "react";
 import { toast } from "react-toastify";
@@ -42,12 +42,12 @@ const AdminChangelogsIndex = () => {
 
 	const fetchChangelogs = async () => {
 		try {
-			const res = await axios.get(`/changelogs${params}`);
-			setChangelogs(res?.data?.data);
-			setTotalPages(res?.data?.pagination?.totalpages);
-			setCurrentResults(res?.data?.count);
-			setTotalResults({ ...totalResults, changelogs: res?.data?.countAll });
-			setPage(res?.data?.pagination?.current);
+			const res = await fetchurl(`/changelogs${params}`, "GET", "no-cache");
+			setChangelogs(res?.data);
+			setTotalPages(res?.pagination?.totalpages);
+			setCurrentResults(res?.count);
+			setTotalResults({ ...totalResults, changelogs: res?.countAll });
+			setPage(res?.pagination?.current);
 			setLoading(false);
 		} catch (err) {
 			// const error = err.response.data.message;
@@ -93,8 +93,36 @@ const AdminChangelogsIndex = () => {
 
 	const handleDelete = async (id) => {
 		try {
-			await axios.delete(`/changelogs/${id}/permanently`);
+			await fetchurl(`/changelogs/${id}/permanently`, "DELETE", "no-cache");
 			toast.success("Changelog deleted");
+			fetchChangelogs();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
+	const handleTrashAll = async () => {
+		try {
+			await fetchurl(`/changelogs/deleteall`, "PUT", "no-cache");
+			toast.success("Changelogs trashed");
 			fetchChangelogs();
 		} catch (err) {
 			// const error = err.response.data.message;
@@ -121,7 +149,7 @@ const AdminChangelogsIndex = () => {
 
 	const handleDeleteAll = async () => {
 		try {
-			await axios.delete(`/changelogs/deleteall`);
+			await fetchurl(`/changelogs/deleteall/permanently`, "DELETE", "no-cache");
 			toast.success("Changelogs deleted");
 			fetchChangelogs();
 		} catch (err) {
@@ -173,6 +201,7 @@ const AdminChangelogsIndex = () => {
 					totalResults={totalResults.changelogs}
 					addLink={`/noadmin/changelogs/create`}
 					addLinkText={`changelog`}
+					handleTrashAllFunction={handleTrashAll}
 					handleDeleteAllFunction={handleDeleteAll}
 					keyword={keyword}
 					setKeyword={setKeyword}

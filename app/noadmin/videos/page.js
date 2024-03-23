@@ -1,5 +1,5 @@
 "use client";
-import axios from "axios";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useContext } from "react";
 import { toast } from "react-toastify";
@@ -42,12 +42,12 @@ const AdminVideosIndex = () => {
 
 	const fetchVideos = async () => {
 		try {
-			const res = await axios.get(`/videos${params}`);
-			setVideos(res?.data?.data);
-			setTotalPages(res?.data?.pagination?.totalpages);
-			setCurrentResults(res?.data?.count);
-			setTotalResults({ ...totalResults, videos: res?.data?.countAll });
-			setPage(res?.data?.pagination?.current);
+			const res = await fetchurl(`/videos${params}`, "GET", "no-cache");
+			setVideos(res?.data);
+			setTotalPages(res?.pagination?.totalpages);
+			setCurrentResults(res?.count);
+			setTotalResults({ ...totalResults, videos: res?.countAll });
+			setPage(res?.pagination?.current);
 			setLoading(false);
 		} catch (err) {
 			// const error = err.response.data.message;
@@ -93,7 +93,7 @@ const AdminVideosIndex = () => {
 
 	const draftIt = async (id) => {
 		try {
-			await axios.put(`/videos/${id}/draftit`);
+			await fetchurl(`/videos/${id}/draftit`, "PUT", "no-cache");
 			toast.success("Video drafted");
 			fetchVideos();
 		} catch (err) {
@@ -121,7 +121,7 @@ const AdminVideosIndex = () => {
 
 	const publishIt = async (id) => {
 		try {
-			await axios.put(`/videos/${id}/publishit`);
+			await fetchurl(`/videos/${id}/publishit`, "PUT", "no-cache");
 			toast.success("Video published");
 			fetchVideos();
 		} catch (err) {
@@ -149,7 +149,7 @@ const AdminVideosIndex = () => {
 
 	const trashIt = async (id) => {
 		try {
-			await axios.put(`/videos/${id}/trashit`);
+			await fetchurl(`/videos/${id}/trashit`, "PUT", "no-cache");
 			toast.success("Video trashed");
 			fetchVideos();
 		} catch (err) {
@@ -177,7 +177,7 @@ const AdminVideosIndex = () => {
 
 	const scheduleIt = async (id) => {
 		try {
-			await axios.put(`/videos/${id}/scheduleit`);
+			await fetchurl(`/videos/${id}/scheduleit`, "PUT", "no-cache");
 			toast.success("Video scheduled");
 			fetchVideos();
 		} catch (err) {
@@ -205,7 +205,7 @@ const AdminVideosIndex = () => {
 
 	const handleDelete = async (id) => {
 		try {
-			await axios.delete(`/videos/${id}/permanently`);
+			await fetchurl(`/videos/${id}/permanently`, "DELETE", "no-cache");
 			toast.success("Video deleted");
 			fetchVideos();
 		} catch (err) {
@@ -233,7 +233,7 @@ const AdminVideosIndex = () => {
 
 	const handleTrashAll = async () => {
 		try {
-			await axios.put(`/videos/deleteall`, {
+			await fetchurl(`/videos/deleteall`, "PUT", "no-cache", {
 				onModel: "Playlist",
 			});
 			toast.success("Videos trashed");
@@ -263,7 +263,7 @@ const AdminVideosIndex = () => {
 
 	const handleDeleteAll = async () => {
 		try {
-			await axios.delete(`/videos/deleteall/permanently`, {
+			await fetchurl(`/videos/deleteall/permanently`, "DELETE", "no-cache", {
 				onModel: "Playlist",
 			});
 			toast.success("Videos deleted");

@@ -1,8 +1,8 @@
 "use client";
+import { useContext } from "react";
 import Link from "next/link";
 import DeleteAllModal from "../../components/global/deleteallmodal";
 import TrashAllModal from "../../components/global/trashallmodal";
-import { useContext } from "react";
 import AuthContext from "@/helpers/globalContext";
 
 const DashboardCardHeaderMenu = ({
@@ -62,20 +62,18 @@ const DashboardCardHeaderMenu = ({
 			</div>
 			<div className="float-end my-1">
 				<div className="btn-group">
-					{auth?.user?.stripe?.stripeOnboardingLink === "" &&
-						auth?.user?.stripe?.stripeOnboardingLink === null &&
-						auth?.user?.stripe?.stripeOnboardingLink === undefined && (
-							<Link
-								href={{
-									pathname: addLink,
-									query: {},
-								}}
-								passHref
-								legacyBehavior
-							>
-								<a className="btn btn-primary btn-sm">Add new</a>
-							</Link>
-						)}
+					{auth?.user?.stripe.stripeChargesEnabled && (
+						<Link
+							href={{
+								pathname: addLink,
+								query: {},
+							}}
+							passHref
+							legacyBehavior
+						>
+							<a className="btn btn-primary btn-sm">Add new</a>
+						</Link>
+					)}
 					<TrashAllModal action={handleTrashAllFunction} />
 					<DeleteAllModal action={handleDeleteAllFunction} />
 				</div>

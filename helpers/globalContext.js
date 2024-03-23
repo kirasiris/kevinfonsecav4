@@ -104,6 +104,8 @@ export const AuthProvider = ({ children }) => {
 	);
 
 	useEffect(() => {
+		const controller = new AbortController();
+		const signal = controller.signal;
 		const localToken = async () => {
 			let token = localStorage.getItem("xAuthToken");
 			// Don't delete nothing from this line above
@@ -111,7 +113,7 @@ export const AuthProvider = ({ children }) => {
 			await setAuthTokenOnServer(token);
 			setAuthToken(token);
 			if (token) {
-				await fetchurl(`/auth/me`, "GET", "default")
+				await fetchurl(`/auth/me`, "GET", "default", undefined, signal)
 					.then((res) => {
 						console.log("Auth within useEffect in globalContext file", res);
 						return setAuth({
@@ -131,7 +133,10 @@ export const AuthProvider = ({ children }) => {
 			}
 		};
 		localToken();
-		return () => clearInterval(localToken());
+		// return () => {
+		// 	// cancel the request before component unmounts
+		// 	controller.abort();
+		// };
 	}, []);
 
 	/*
@@ -181,9 +186,15 @@ export const AuthProvider = ({ children }) => {
 		playlist: [],
 	});
 
-	const fetchCategories = async (params = "") => {
+	const fetchCategories = async (signal) => {
 		try {
-			const res = await fetchurl(`/categories${params}`, "GET", "no-cache");
+			const res = await fetchurl(
+				`/categories`,
+				"GET",
+				"no-cache",
+				undefined,
+				signal
+			);
 			setCategories(res?.data);
 			setTotalResults({
 				...totalResults,
@@ -213,7 +224,12 @@ export const AuthProvider = ({ children }) => {
 	};
 
 	useEffect(() => {
-		fetchCategories();
+		const controller = new AbortController();
+		const signal = controller.signal;
+		fetchCategories(signal);
+		return () => {
+			controller.abort();
+		};
 	}, [setCategories]);
 
 	return (

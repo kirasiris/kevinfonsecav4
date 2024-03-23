@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState, useEffect, useContext } from "react";
 import { toast } from "react-toastify";
 // SINGLE
-import { AuthContext } from "@/helpers/globalContext";
+import AuthContext from "@/helpers/globalContext";
 import { stripeCurrencyFormatter } from "@/helpers/utilities";
 
 const RevenueIndex = ({ params, searchParams }) => {

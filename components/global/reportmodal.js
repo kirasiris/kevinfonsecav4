@@ -2,6 +2,7 @@
 import { useState } from "react";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 
 const ReportModal = ({ postId = null, postType = ``, onModel = `` }) => {
 	const [reportModal, setReportModal] = useState(false);
@@ -22,16 +23,10 @@ const ReportModal = ({ postId = null, postType = ``, onModel = `` }) => {
 
 	const sendReport = async (e) => {
 		e.preventDefault();
-		await fetch(`http://localhost:5000/api/v1/reports/${postId}`, {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify({
-				...reportData,
-				type: postType,
-				onModel: onModel,
-			}),
+		await fetchurl(`/reports/${postId}`, "POST", "no-cache", {
+			...reportData,
+			type: postType,
+			onModel: onModel,
 		});
 		setReportModal(false);
 		resetForm();

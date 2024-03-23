@@ -1,13 +1,13 @@
 "use client";
-import axios from "axios";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 import { useRouter } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
+import { useState, useEffect, useContext } from "react";
 import { toast } from "react-toastify";
+import AuthContext from "@/helpers/globalContext";
+import MyTextArea from "@/components/global/mytextarea";
 import Image from "next/image";
 import { Modal } from "react-bootstrap";
 import AdminMediaLibray from "@/components/admin/adminmedialibray";
-import MyTextArea from "@/components/global/mytextarea";
-import AuthContext from "@/helpers/globalContext";
 
 const CreateUser = () => {
 	const { auth, files, setFiles } = useContext(AuthContext);
@@ -25,8 +25,8 @@ const CreateUser = () => {
 
 	const fetchUsers = async (params = "") => {
 		try {
-			const res = await axios.get(`/users${params}`);
-			setUsers(res?.data?.data);
+			const res = await fetchurl(`/users${params}`, "GET", "no-cache");
+			setUsers(res?.data);
 		} catch (err) {
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;
@@ -112,7 +112,7 @@ const CreateUser = () => {
 	const addUser = async (e) => {
 		e.preventDefault();
 		try {
-			await axios.post(`/users`, {
+			await fetchurl(`/users`, "POST", "no-cache", {
 				...userData,
 				files: { avatar: files?.selected?._id },
 				website: "beFree",

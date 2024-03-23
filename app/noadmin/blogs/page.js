@@ -1,4 +1,5 @@
 "use client";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useContext } from "react";
 import { toast } from "react-toastify";
@@ -7,7 +8,6 @@ import AuthContext from "@/helpers/globalContext";
 import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
 import AdminCardHeaderMenu from "@/components/admin/admincardheadermenu";
 import ClientNumericPagination from "@/layout/clientnumericpagination";
-import { fetchurl } from "@/helpers/setTokenOnServer";
 
 const AdminBlogsIndex = () => {
 	const {
@@ -261,7 +261,7 @@ const AdminBlogsIndex = () => {
 
 	const handleDeleteAll = async () => {
 		try {
-			await fetchurl(`/blogs/deleteall/permanently`, "PUT", "no-cache");
+			await fetchurl(`/blogs/deleteall/permanently`, "DELETE", "no-cache");
 			toast.success("Blogs deleted");
 			fetchBlogs();
 		} catch (err) {

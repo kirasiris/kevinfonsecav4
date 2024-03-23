@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 // import { redirect } from "next/navigation";
 // import { fetchurl } from "@/helpers/setTokenOnServer";
 import Header from "@/layout/header";
-import { AuthContext } from "@/helpers/globalContext";
+import AuthContext from "@/helpers/globalContext";
 
 const DashboardIndex = ({ params, searchParams }) => {
 	const { auth } = useContext(AuthContext);

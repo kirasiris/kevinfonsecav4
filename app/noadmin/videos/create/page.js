@@ -1,12 +1,12 @@
 "use client";
-import axios from "axios";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 import { useRouter } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
+import { useState, useEffect, useContext } from "react";
 import { toast } from "react-toastify";
-import Calendar from "react-calendar";
+import AuthContext from "@/helpers/globalContext";
 import AdminSidebar from "@/components/admin/adminsidebar";
 import MyTextArea from "@/components/global/mytextarea";
-import AuthContext from "@/helpers/globalContext";
+import Calendar from "react-calendar";
 
 const CreateVideo = () => {
 	const { auth, files } = useContext(AuthContext);
@@ -26,8 +26,8 @@ const CreateVideo = () => {
 
 	const fetchCategories = async (params = "") => {
 		try {
-			const res = await axios.get(`/categories${params}`);
-			setCategories(res?.data?.data);
+			const res = await fetchurl(`/categories${params}`, "GET", "no-cache");
+			setCategories(res?.data);
 		} catch (err) {
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;
@@ -57,8 +57,8 @@ const CreateVideo = () => {
 
 	const fetchPlaylists = async (params = "") => {
 		try {
-			const res = await axios.get(`/playlists${params}`);
-			setPlaylists(res?.data?.data);
+			const res = await fetchurl(`/playlists${params}`, "GET", "no-cache");
+			setPlaylists(res?.data);
 		} catch (err) {
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;
@@ -126,7 +126,7 @@ const CreateVideo = () => {
 	const addVideo = async (e) => {
 		e.preventDefault();
 		try {
-			await axios.post(`/videos`, {
+			await fetchurl(`/videos`, "POST", "no-cache", {
 				...videoData,
 				files: { avatar: files?.selected?._id },
 				onModel: "Playlist",

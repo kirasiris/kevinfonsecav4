@@ -1,11 +1,11 @@
 "use client";
-import axios from "axios";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 import { useRouter } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
+import { useState, useEffect, useContext } from "react";
 import { toast } from "react-toastify";
+import AuthContext from "@/helpers/globalContext";
 import AdminSidebar from "@/components/admin/adminsidebar";
 import MyTextArea from "@/components/global/mytextarea";
-import AuthContext from "@/helpers/globalContext";
 
 const CreateLesson = () => {
 	const { auth, files } = useContext(AuthContext);
@@ -23,8 +23,8 @@ const CreateLesson = () => {
 
 	const fetchCourses = async (params = "") => {
 		try {
-			const res = await axios.get(`/courses${params}`);
-			setCourses(res?.data?.data);
+			const res = await fetchurl(`/courses${params}`, "GET", "no-cache");
+			setCourses(res?.data);
 		} catch (err) {
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;
@@ -84,7 +84,7 @@ const CreateLesson = () => {
 	const addLesson = async (e) => {
 		e.preventDefault();
 		try {
-			await axios.post(`/videos`, {
+			await fetchurl(`/videos`, "POST", "no-cache", {
 				...lessonData,
 				files: { video_url: files?.selected?._id },
 				onModel: "Course",

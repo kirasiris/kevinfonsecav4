@@ -1,5 +1,5 @@
 "use client";
-import axios from "axios";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useContext } from "react";
 import { toast } from "react-toastify";
@@ -42,12 +42,12 @@ const AdminPlaylistsIndex = () => {
 
 	const fetchPlaylists = async () => {
 		try {
-			const res = await axios.get(`/playlists${params}`);
-			setPlaylists(res?.data?.data);
-			setTotalPages(res?.data?.pagination?.totalpages);
-			setCurrentResults(res?.data?.count);
-			setTotalResults({ ...totalResults, playlists: res?.data?.countAll });
-			setPage(res?.data?.pagination?.current);
+			const res = await fetchurl(`/playlists${params}`, "GET", "no-cache");
+			setPlaylists(res?.data);
+			setTotalPages(res?.pagination?.totalpages);
+			setCurrentResults(res?.count);
+			setTotalResults({ ...totalResults, playlists: res?.countAll });
+			setPage(res?.pagination?.current);
 			setLoading(false);
 		} catch (err) {
 			// const error = err.response.data.message;
@@ -93,7 +93,7 @@ const AdminPlaylistsIndex = () => {
 
 	const draftIt = async (id) => {
 		try {
-			await axios.put(`/playlists/${id}/draftit`);
+			await fetchurl(`/playlists/${id}/draftit`, "PUT", "no-cache");
 			toast.success("Playlist drafted");
 			fetchPlaylists();
 		} catch (err) {
@@ -121,7 +121,7 @@ const AdminPlaylistsIndex = () => {
 
 	const publishIt = async (id) => {
 		try {
-			await axios.put(`/playlists/${id}/publishit`);
+			await fetchurl(`/playlists/${id}/publishit`, "PUT", "no-cache");
 			toast.success("Playlist published");
 			fetchPlaylists();
 		} catch (err) {
@@ -149,7 +149,7 @@ const AdminPlaylistsIndex = () => {
 
 	const trashIt = async (id) => {
 		try {
-			await axios.put(`/playlists/${id}/trashit`);
+			await fetchurl(`/playlists/${id}/trashit`, "PUT", "no-cache");
 			toast.success("Playlist trashed");
 			fetchPlaylists();
 		} catch (err) {
@@ -177,7 +177,7 @@ const AdminPlaylistsIndex = () => {
 
 	const scheduleIt = async (id) => {
 		try {
-			await axios.put(`/playlists/${id}/scheduleit`);
+			await fetchurl(`/playlists/${id}/scheduleit`, "PUT", "no-cache");
 			toast.success("Playlist scheduled");
 			fetchPlaylists();
 		} catch (err) {
@@ -205,7 +205,7 @@ const AdminPlaylistsIndex = () => {
 
 	const handleDelete = async (id) => {
 		try {
-			await axios.delete(`/playlists/${id}/permanently`);
+			await fetchurl(`/playlists/${id}/permanently`, "DELETE", "no-cache");
 			toast.success("Playlist deleted");
 			fetchPlaylists();
 		} catch (err) {
@@ -233,7 +233,7 @@ const AdminPlaylistsIndex = () => {
 
 	const handleTrashAll = async () => {
 		try {
-			await axios.put(`/playlists/deleteall`);
+			await fetchurl(`/playlists/deleteall`, "PUT", "no-cache");
 			toast.success("Playlists trashed");
 			fetchPlaylists();
 		} catch (err) {
@@ -261,7 +261,7 @@ const AdminPlaylistsIndex = () => {
 
 	const handleDeleteAll = async () => {
 		try {
-			await axios.delete(`/playlists/deleteall/permanently`);
+			await fetchurl(`/playlists/deleteall/permanently`, "DELETE", "no-cache");
 			toast.success("Playlists deleted");
 			fetchPlaylists();
 		} catch (err) {

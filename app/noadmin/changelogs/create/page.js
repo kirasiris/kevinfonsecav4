@@ -1,10 +1,10 @@
 "use client";
-import axios from "axios";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 import { useRouter } from "next/navigation";
-import { useContext, useState } from "react";
+import { useState, useContext } from "react";
 import { toast } from "react-toastify";
-import MyTextArea from "@/components/global/mytextarea";
 import AuthContext from "@/helpers/globalContext";
+import MyTextArea from "@/components/global/mytextarea";
 
 const CreateChangelog = () => {
 	const { auth } = useContext(AuthContext);
@@ -31,7 +31,7 @@ const CreateChangelog = () => {
 	const addChangelog = async (e) => {
 		e.preventDefault();
 		try {
-			await axios.post(`/changelogs`, changelogData);
+			await fetchurl(`/changelogs`, "POST", "no-cache", changelogData);
 			toast.success(`Item created`);
 			resetForm();
 			router.push(`/noadmin/changelogs`);

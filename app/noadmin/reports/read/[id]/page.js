@@ -1,10 +1,10 @@
 "use client";
-import axios from "axios";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 import { useParams, useRouter } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
+import { useState, useEffect, useContext } from "react";
 import { toast } from "react-toastify";
-import ParseHtml from "@/layout/parseHtml";
 import AuthContext from "@/helpers/globalContext";
+import ParseHtml from "@/layout/parseHtml";
 
 const ReadReport = () => {
 	const { auth } = useContext(AuthContext);
@@ -28,8 +28,8 @@ const ReadReport = () => {
 	useEffect(() => {
 		const fetchReport = async () => {
 			try {
-				const res = await axios.get(`/reports/${reportId}`);
-				setReport(res?.data?.data);
+				const res = await fetchurl(`/reports/${reportId}`, "GET", "no-cache");
+				setReport(res?.data);
 				setLoading(false);
 			} catch (err) {
 				console.log(err);

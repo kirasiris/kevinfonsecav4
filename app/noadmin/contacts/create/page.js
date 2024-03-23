@@ -1,13 +1,13 @@
 "use client";
-import axios from "axios";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 import { useRouter } from "next/navigation";
-import { useContext, useState } from "react";
+import { useState, useContext } from "react";
 import { toast } from "react-toastify";
-import MyTextArea from "@/components/global/mytextarea";
 import AuthContext from "@/helpers/globalContext";
+import MyTextArea from "@/components/global/mytextarea";
 
 const CreateContact = () => {
-	const { auth, files } = useContext(AuthContext);
+	const { auth } = useContext(AuthContext);
 	const router = useRouter();
 
 	// Redirect if not authenticated
@@ -90,7 +90,7 @@ const CreateContact = () => {
 	const addContact = async (e) => {
 		e.preventDefault();
 		try {
-			await axios.post(`/contacts`, {
+			await fetchurl(`/contacts`, "POST", "no-cache", {
 				...contactData,
 				// files: { avatar: files?.selected?._id },
 				occupation: contactData.occupation.filter(

@@ -1,14 +1,13 @@
 "use client";
-import axios from "axios";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 import { useParams, useRouter } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
+import { useState, useEffect, useContext } from "react";
 import { toast } from "react-toastify";
+import AuthContext from "@/helpers/globalContext";
 import ParseHtml from "@/layout/parseHtml";
 import Image from "next/image";
 import Link from "next/link";
-import List from "@/components/chapter/list";
 import PreviewModal from "@/components/chapter/previewmodal";
-import AuthContext from "@/helpers/globalContext";
 
 const ReadCourse = () => {
 	const { auth } = useContext(AuthContext);
@@ -33,8 +32,8 @@ const ReadCourse = () => {
 	useEffect(() => {
 		const fetchCourse = async () => {
 			try {
-				const res = await axios.get(`/courses/${courseId}`);
-				setCourse(res?.data?.data);
+				const res = await fetchurl(`/courses/${courseId}`, "GET", "no-cache");
+				setCourse(res?.data);
 				setLoading(false);
 			} catch (err) {
 				console.log(err);
@@ -64,10 +63,12 @@ const ReadCourse = () => {
 
 		const fetchLessons = async () => {
 			try {
-				const res = await axios.get(
-					`/videos?resourceId=${courseId}&sort=orderingNumber`
+				const res = await fetchurl(
+					`/videos?resourceId=${courseId}&sort=orderingNumber`,
+					"GET",
+					"no-cache"
 				);
-				setLessons(res?.data?.data);
+				setLessons(res?.data);
 			} catch (err) {
 				console.log(err);
 				// const error = err.response.data.message;
@@ -119,12 +120,22 @@ const ReadCourse = () => {
 			targetItem.orderingNumber = tempOrderingNumber;
 
 			// Update the ordering numbers in the backend
-			await axios.put(`/videos/${movingItem._id}/updateorder`, {
-				index: movingItem.orderingNumber, // Update the moving item's ordering number
-			});
-			await axios.put(`/videos/${targetItem._id}/updateorder`, {
-				index: targetItem.orderingNumber, // Update the target item's ordering number
-			});
+			await fetchurl(
+				`/videos/${movingItem._id}/updateorder`,
+				"PUT",
+				"no-cache",
+				{
+					index: movingItem.orderingNumber, // Update the moving item's ordering number
+				}
+			);
+			await fetchurl(
+				`/videos/${targetItem._id}/updateorder`,
+				"PUT",
+				"no-cache",
+				{
+					index: targetItem.orderingNumber, // Update the target item's ordering number
+				}
+			);
 		}
 
 		allLessons.splice(movingItemIndex, 1); // Remove the moving item from the original position

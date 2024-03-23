@@ -1,14 +1,14 @@
 "use client";
-import axios from "axios";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 import { useRouter } from "next/navigation";
-import { useContext, useState } from "react";
+import { useState, useContext } from "react";
 import { toast } from "react-toastify";
+import AuthContext from "@/helpers/globalContext";
 import AdminSidebar from "@/components/admin/adminsidebar";
 import MyTextArea from "@/components/global/mytextarea";
-import AuthContext from "@/helpers/globalContext";
 
 const CreateMembership = () => {
-	const { auth, files } = useContext(AuthContext);
+	const { auth } = useContext(AuthContext);
 	const router = useRouter();
 
 	// Redirect if not authenticated
@@ -65,7 +65,7 @@ const CreateMembership = () => {
 	const addMembership = async (e) => {
 		e.preventDefault();
 		try {
-			await axios.post(`/extras/stripe/memberships`, {
+			await fetchurl(`/extras/stripe/memberships`, "POST", "no-cache", {
 				...membershipData,
 				// files: { avatar: files?.selected?._id },
 				default_price_data: {

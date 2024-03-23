@@ -1,14 +1,13 @@
 "use client";
-import axios from "axios";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 import { useRouter } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
+import { useState, useContext } from "react";
 import { toast } from "react-toastify";
-import AdminSidebar from "@/components/admin/adminsidebar";
-import MyTextArea from "@/components/global/mytextarea";
 import AuthContext from "@/helpers/globalContext";
+import MyTextArea from "@/components/global/mytextarea";
 
 const CreateShortUrl = () => {
-	const { auth, files } = useContext(AuthContext);
+	const { auth } = useContext(AuthContext);
 	const router = useRouter();
 
 	// Redirect if not authenticated
@@ -27,12 +26,16 @@ const CreateShortUrl = () => {
 	const { title, longUrl, text } = shotUrlData;
 
 	const params = auth?.user?._id ? `?user=${auth?.user?._id}` : ``;
-	console.log(params);
 
 	const addShortUrl = async (e) => {
 		e.preventDefault();
 		try {
-			await axios.post(`/extras/shorturls/shorten${params}`, shotUrlData);
+			await fetchurl(
+				`/extras/shorturls/shorten${params}`,
+				"POST",
+				"no-cache",
+				shotUrlData
+			);
 			toast.success(`Item created`);
 			router.push(`/noadmin/shorturls`);
 		} catch (err) {

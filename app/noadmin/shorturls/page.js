@@ -1,5 +1,5 @@
 "use client";
-import axios from "axios";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useContext } from "react";
 import { toast } from "react-toastify";
@@ -42,12 +42,16 @@ const AdminShortUrlsIndex = () => {
 
 	const fetchShortUrls = async () => {
 		try {
-			const res = await axios.get(`/extras/shorturls${params}`);
-			setShortUrls(res?.data?.data);
-			setTotalPages(res?.data?.pagination?.totalpages);
-			setCurrentResults(res?.data?.count);
-			setTotalResults({ ...totalResults, shorturls: res?.data?.countAll });
-			setPage(res?.data?.pagination?.current);
+			const res = await fetchurl(
+				`/extras/shorturls${params}`,
+				"GET",
+				"no-cache"
+			);
+			setShortUrls(res?.data);
+			setTotalPages(res?.pagination?.totalpages);
+			setCurrentResults(res?.count);
+			setTotalResults({ ...totalResults, shorturls: res?.countAll });
+			setPage(res?.pagination?.current);
 			setLoading(false);
 		} catch (err) {
 			// const error = err.response.data.message;
@@ -91,10 +95,154 @@ const AdminShortUrlsIndex = () => {
 		}
 	}, [keyword]);
 
+	const draftIt = async (id) => {
+		try {
+			await fetchurl(`/extras/shorturls/${id}/draftit`, "PUT", "no-cache");
+			toast.success("Short Url drafted");
+			fetchShortUrls();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
+	const publishIt = async (id) => {
+		try {
+			await fetchurl(`/extras/shorturls/${id}/publishit`, "PUT", "no-cache");
+			toast.success("Short Url published");
+			fetchShortUrls();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
+	const trashIt = async (id) => {
+		try {
+			await fetchurl(`/extras/shorturls/${id}/trashit`, "PUT", "no-cache");
+			toast.success("Short Url trashed");
+			fetchShortUrls();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
+	const scheduleIt = async (id) => {
+		try {
+			await fetchurl(`/extras/shorturls/${id}/scheduleit`, "PUT", "no-cache");
+			toast.success("Short Url scheduled");
+			fetchShortUrls();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
 	const handleDelete = async (id) => {
 		try {
-			await axios.delete(`/extras/shorturls/${id}`);
-			toast.success("Shorturl deleted");
+			await fetchurl(
+				`/extras/shorturls/${id}/permanently`,
+				"DELETE",
+				"no-cache"
+			);
+			toast.success("Short Url deleted");
+			fetchShortUrls();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
+	const handleTrashAll = async () => {
+		try {
+			await fetchurl(`/extras/shorturls/deleteall`, "PUT", "no-cache");
+			toast.success("Short Urls trashed");
 			fetchShortUrls();
 		} catch (err) {
 			// const error = err.response.data.message;
@@ -121,8 +269,12 @@ const AdminShortUrlsIndex = () => {
 
 	const handleDeleteAll = async () => {
 		try {
-			await axios.delete(`/extras/shorturls/deleteall`);
-			toast.success("Shorturls deleted");
+			await fetchurl(
+				`/extras/shorturls/deleteall/permanently`,
+				"DELETE",
+				"no-cache"
+			);
+			toast.success("Short Urls deleted");
 			fetchShortUrls();
 		} catch (err) {
 			// const error = err.response.data.message;

@@ -1,12 +1,12 @@
 "use client";
-import axios from "axios";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 import { useParams, useRouter } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
+import { useState, useEffect, useContext } from "react";
 import { toast } from "react-toastify";
+import AuthContext from "@/helpers/globalContext";
 import ParseHtml from "@/layout/parseHtml";
 import Image from "next/image";
 import Link from "next/link";
-import AuthContext from "@/helpers/globalContext";
 
 const ReadQuiz = () => {
 	const { auth } = useContext(AuthContext);
@@ -31,8 +31,8 @@ const ReadQuiz = () => {
 	useEffect(() => {
 		const fetchQuiz = async () => {
 			try {
-				const res = await axios.get(`/quizzes/${quizId}`);
-				setQuiz(res?.data?.data);
+				const res = await fetchurl(`/quizzes/${quizId}`, "GET", "no-cache");
+				setQuiz(res?.data);
 				setLoading(false);
 			} catch (err) {
 				console.log(err);
@@ -62,10 +62,12 @@ const ReadQuiz = () => {
 
 		const fetchQuestions = async () => {
 			try {
-				const res = await axios.get(
-					`/questions?resourceId=${quizId}&sort=orderingNumber`
+				const res = await fetchurl(
+					`/questions?resourceId=${quizId}&sort=orderingNumber`,
+					"GET",
+					"no-cache"
 				);
-				setQuestions(res?.data?.data);
+				setQuestions(res?.data);
 			} catch (err) {
 				console.log(err);
 				// const error = err.response.data.message;
@@ -117,12 +119,22 @@ const ReadQuiz = () => {
 			targetItem.orderingNumber = tempOrderingNumber;
 
 			// Update the ordering numbers in the backend
-			await axios.put(`/questions/${movingItem._id}/updateorder`, {
-				index: movingItem.orderingNumber, // Update the moving item's ordering number
-			});
-			await axios.put(`/questions/${targetItem._id}/updateorder`, {
-				index: targetItem.orderingNumber, // Update the target item's ordering number
-			});
+			await fetchurl(
+				`/questions/${movingItem._id}/updateorder`,
+				"PUT",
+				"no-cache",
+				{
+					index: movingItem.orderingNumber, // Update the moving item's ordering number
+				}
+			);
+			await fetchurl(
+				`/questions/${targetItem._id}/updateorder`,
+				"PUT",
+				"no-cache",
+				{
+					index: targetItem.orderingNumber, // Update the target item's ordering number
+				}
+			);
 		}
 
 		allQuestions.splice(movingItemIndex, 1); // Remove the moving item from the original position

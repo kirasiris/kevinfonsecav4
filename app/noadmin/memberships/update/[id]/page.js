@@ -1,14 +1,14 @@
 "use client";
-import axios from "axios";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 import { useParams, useRouter } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
+import { useState, useEffect, useContext } from "react";
 import { toast } from "react-toastify";
+import AuthContext from "@/helpers/globalContext";
 import AdminSidebar from "@/components/admin/adminsidebar";
 import MyTextArea from "@/components/global/mytextarea";
-import AuthContext from "@/helpers/globalContext";
 
 const UpdateMembership = () => {
-	const { auth, files } = useContext(AuthContext);
+	const { auth } = useContext(AuthContext);
 	const router = useRouter();
 
 	// Redirect if not authenticated
@@ -72,31 +72,33 @@ const UpdateMembership = () => {
 	useEffect(() => {
 		const fetchMembership = async () => {
 			try {
-				const res = await axios.get(
-					`/extras/stripe/memberships/${membershipId}`
+				const res = await fetchurl(
+					`/extras/stripe/memberships/${membershipId}`,
+					"GET",
+					"no-cache"
 				);
-				setMembership(res?.data?.data);
+				setMembership(res?.data);
 				setMembershipData({
-					title: res?.data?.data?.title,
-					text: res?.data?.data?.text,
-					active: res?.data?.data?.active,
-					currency: res?.data?.data?.default_price_data?.currency,
-					interval: res?.data?.data?.default_price_data?.recurring?.interval,
+					title: res?.data?.title,
+					text: res?.data?.text,
+					active: res?.data?.active,
+					currency: res?.data?.default_price_data?.currency,
+					interval: res?.data?.default_price_data?.recurring?.interval,
 					interval_count:
-						res?.data?.data?.default_price_data?.recurring?.interval_count,
-					tax_behavior: res?.data?.data?.default_price_data?.tax_behavior,
-					unit_amount: res?.data?.data?.default_price_data?.unit_amount,
-					features: res?.data?.data?.features,
-					width: res?.data?.data?.package_dimensions?.width,
-					height: res?.data?.data?.package_dimensions?.height,
-					length: res?.data?.data?.package_dimensions?.length,
-					weight: res?.data?.data?.package_dimensions?.weight,
-					shippable: res?.data?.data?.shippable,
-					statement_descriptor: res?.data?.data?.statement_descriptor,
-					unit_label: res?.data?.data?.unit_label,
-					url: res?.data?.data?.url,
-					livemode: res?.data?.data?.livemode,
-					status: res?.data?.data?.status,
+						res?.data?.default_price_data?.recurring?.interval_count,
+					tax_behavior: res?.data?.default_price_data?.tax_behavior,
+					unit_amount: res?.data?.default_price_data?.unit_amount,
+					features: res?.data?.features,
+					width: res?.data?.package_dimensions?.width,
+					height: res?.data?.package_dimensions?.height,
+					length: res?.data?.package_dimensions?.length,
+					weight: res?.data?.package_dimensions?.weight,
+					shippable: res?.data?.shippable,
+					statement_descriptor: res?.data?.statement_descriptor,
+					unit_label: res?.data?.unit_label,
+					url: res?.data?.url,
+					livemode: res?.data?.livemode,
+					status: res?.data?.status,
 				});
 				setLoading(false);
 			} catch (err) {
@@ -130,25 +132,30 @@ const UpdateMembership = () => {
 	const upgradeMembership = async (e) => {
 		e.preventDefault();
 		try {
-			await axios.put(`/extras/stripe/memberships/${membership._id}`, {
-				...membershipData,
-				// files: { avatar: files?.selected?._id },
-				default_price_data: {
-					currency: currency,
-					recurring: {
-						interval: interval,
-						interval_count: interval_count,
+			await fetchurl(
+				`/extras/stripe/memberships/${membership._id}`,
+				"PUT",
+				"no-cache",
+				{
+					...membershipData,
+					// files: { avatar: files?.selected?._id },
+					default_price_data: {
+						currency: currency,
+						recurring: {
+							interval: interval,
+							interval_count: interval_count,
+						},
+						tax_behavior: tax_behavior,
+						unit_amount: unit_amount,
 					},
-					tax_behavior: tax_behavior,
-					unit_amount: unit_amount,
-				},
-				package_dimensions: {
-					width: width,
-					height: height,
-					length: length,
-					weight: weight,
-				},
-			});
+					package_dimensions: {
+						width: width,
+						height: height,
+						length: length,
+						weight: weight,
+					},
+				}
+			);
 			toast.success(`Item created`);
 			router.push(`/noadmin/memberships`);
 		} catch (err) {

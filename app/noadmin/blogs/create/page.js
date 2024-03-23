@@ -1,11 +1,11 @@
 "use client";
-import axios from "axios";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 import { useRouter } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
+import { useState, useEffect, useContext } from "react";
 import { toast } from "react-toastify";
+import AuthContext from "@/helpers/globalContext";
 import AdminSidebar from "@/components/admin/adminsidebar";
 import MyTextArea from "@/components/global/mytextarea";
-import AuthContext from "@/helpers/globalContext";
 
 const CreateBlog = () => {
 	const { auth, files } = useContext(AuthContext);
@@ -23,8 +23,8 @@ const CreateBlog = () => {
 
 	const fetchCategories = async (params = "") => {
 		try {
-			const res = await axios.get(`/categories${params}`);
-			setCategories(res?.data?.data);
+			const res = await fetchurl(`/categories${params}`, "GET", "no-cache");
+			setCategories(res?.data);
 		} catch (err) {
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;
@@ -78,7 +78,7 @@ const CreateBlog = () => {
 	const addBlog = async (e) => {
 		e.preventDefault();
 		try {
-			await axios.post(`/blogs`, {
+			await fetchurl(`/blogs`, "POST", "no-cache", {
 				...blogData,
 				postType: "blog",
 				files: { avatar: files?.selected?._id },

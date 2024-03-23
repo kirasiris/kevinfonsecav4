@@ -1,5 +1,5 @@
 "use client";
-import axios from "axios";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useContext } from "react";
 import { toast } from "react-toastify";
@@ -42,12 +42,12 @@ const AdminQuizzesPublishedIndex = () => {
 
 	const fetchQuizzes = async () => {
 		try {
-			const res = await axios.get(`/quizzes${params}`);
-			setQuizzes(res?.data?.data);
-			setTotalPages(res?.data?.pagination?.totalpages);
-			setCurrentResults(res?.data?.count);
-			setTotalResults({ ...totalResults, quizzes: res?.data?.countAll });
-			setPage(res?.data?.pagination?.current);
+			const res = await fetchurl(`/quizzes${params}`, "GET", "no-cache");
+			setQuizzes(res?.data);
+			setTotalPages(res?.pagination?.totalpages);
+			setCurrentResults(res?.count);
+			setTotalResults({ ...totalResults, quizzes: res?.countAll });
+			setPage(res?.pagination?.current);
 			setLoading(false);
 		} catch (err) {
 			// const error = err.response.data.message;
@@ -93,7 +93,7 @@ const AdminQuizzesPublishedIndex = () => {
 
 	const draftIt = async (id) => {
 		try {
-			await axios.put(`/quizzes/${id}/draftit`);
+			await fetchurl(`/quizzes/${id}/draftit`, "PUT", "no-cache");
 			toast.success("Quiz drafted");
 			fetchQuizzes();
 		} catch (err) {
@@ -121,7 +121,7 @@ const AdminQuizzesPublishedIndex = () => {
 
 	const publishIt = async (id) => {
 		try {
-			await axios.put(`/quizzes/${id}/publishit`);
+			await fetchurl(`/quizzes/${id}/publishit`, "PUT", "no-cache");
 			toast.success("Quiz published");
 			fetchQuizzes();
 		} catch (err) {
@@ -149,7 +149,7 @@ const AdminQuizzesPublishedIndex = () => {
 
 	const trashIt = async (id) => {
 		try {
-			await axios.put(`/quizzes/${id}/trashit`);
+			await fetchurl(`/quizzes/${id}/trashit`, "PUT", "no-cache");
 			toast.success("Quiz trashed");
 			fetchQuizzes();
 		} catch (err) {
@@ -177,7 +177,7 @@ const AdminQuizzesPublishedIndex = () => {
 
 	const scheduleIt = async (id) => {
 		try {
-			await axios.put(`/quizzes/${id}/scheduleit`);
+			await fetchurl(`/quizzes/${id}/scheduleit`, "PUT", "no-cache");
 			toast.success("Quiz scheduled");
 			fetchQuizzes();
 		} catch (err) {
@@ -205,7 +205,7 @@ const AdminQuizzesPublishedIndex = () => {
 
 	const handleDelete = async (id) => {
 		try {
-			await axios.delete(`/quizzes/${id}/permanently`);
+			await fetchurl(`/quizzes/${id}/permanently`, "DELETE", "no-cache");
 			toast.success("Quiz deleted");
 			fetchQuizzes();
 		} catch (err) {
@@ -233,7 +233,7 @@ const AdminQuizzesPublishedIndex = () => {
 
 	const handleTrashAll = async () => {
 		try {
-			await axios.put(`/quizzes/deleteall`);
+			await fetchurl(`/quizzes/deleteall`, "PUT", "no-cache");
 			toast.success("Quizzes trashed");
 			fetchQuizzes();
 		} catch (err) {
@@ -261,7 +261,7 @@ const AdminQuizzesPublishedIndex = () => {
 
 	const handleDeleteAll = async () => {
 		try {
-			await axios.put(`/quizzes/deleteall/permanently`);
+			await fetchurl(`/quizzes/deleteall/permanently`, "DELETE", "no-cache");
 			toast.success("Quizzes deleted");
 			fetchQuizzes();
 		} catch (err) {

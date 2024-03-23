@@ -1,13 +1,13 @@
 "use client";
-import axios from "axios";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
-import Link from "next/link";
 import { toast } from "react-toastify";
+import AuthContext from "@/helpers/globalContext";
+import MyTextArea from "@/components/global/mytextarea";
+import Link from "next/link";
 import Image from "next/image";
 import { FaFileVideo } from "react-icons/fa";
-import MyTextArea from "@/components/global/mytextarea";
-import AuthContext from "@/helpers/globalContext";
 import RecordAudioModal from "@/components/global/recordaudiomodal";
 import Waveform from "@/layout/waveform";
 import UseDropzone from "@/components/global/dropzone";
@@ -28,8 +28,8 @@ const CreatePost = () => {
 
 	const fetchUsers = async (params = "") => {
 		try {
-			const res = await axios.get(`/users${params}`);
-			setUsers(res?.data?.data);
+			const res = await fetchurl(`/users${params}`, "GET", "no-cache");
+			setUsers(res?.data);
 		} catch (err) {
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;
@@ -96,7 +96,7 @@ const CreatePost = () => {
 		console.log(postData);
 		console.log(files.uploaded);
 		try {
-			// await axios.post(`/posts`, {
+			// await fetchurl(`/posts`,"POST", "no-cache", {
 			// 	...postData,
 			// 	postType: "post",
 			// 	// files: files.uploaded.map((file) => file._id)

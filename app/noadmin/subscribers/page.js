@@ -1,5 +1,5 @@
 "use client";
-import axios from "axios";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useContext } from "react";
 import { toast } from "react-toastify";
@@ -42,12 +42,12 @@ const AdminSubscribersIndex = () => {
 
 	const fetchSubscribers = async () => {
 		try {
-			const res = await axios.get(`/subscribers${params}`);
-			setSubscribers(res?.data?.data);
-			setTotalPages(res?.data?.pagination?.totalpages);
-			setCurrentResults(res?.data?.count);
-			setTotalResults({ ...totalResults, subscribers: res?.data?.countAll });
-			setPage(res?.data?.pagination?.current);
+			const res = await fetchurl(`/subscribers${params}`, "GET", "no-cache");
+			setSubscribers(res?.data);
+			setTotalPages(res?.pagination?.totalpages);
+			setCurrentResults(res?.count);
+			setTotalResults({ ...totalResults, subscribers: res?.countAll });
+			setPage(res?.pagination?.current);
 			setLoading(false);
 		} catch (err) {
 			// const error = err.response.data.message;
@@ -93,7 +93,7 @@ const AdminSubscribersIndex = () => {
 
 	const draftIt = async (id) => {
 		try {
-			await axios.put(`/subscribers/${id}/draftit`);
+			await fetchurl(`/subscribers/${id}/draftit`, "PUT", "no-cache");
 			toast.success("Subscriber drafted");
 			fetchSubscribers();
 		} catch (err) {
@@ -121,7 +121,7 @@ const AdminSubscribersIndex = () => {
 
 	const publishIt = async (id) => {
 		try {
-			await axios.put(`/subscribers/${id}/publishit`);
+			await fetchurl(`/subscribers/${id}/publishit`, "PUT", "no-cache");
 			toast.success("Subscriber published");
 			fetchSubscribers();
 		} catch (err) {
@@ -149,7 +149,7 @@ const AdminSubscribersIndex = () => {
 
 	const trashIt = async (id) => {
 		try {
-			await axios.put(`/subscribers/${id}/trashit`);
+			await fetchurl(`/subscribers/${id}/trashit`, "PUT", "no-cache");
 			toast.success("Subscriber trashed");
 			fetchSubscribers();
 		} catch (err) {
@@ -177,7 +177,7 @@ const AdminSubscribersIndex = () => {
 
 	const scheduleIt = async (id) => {
 		try {
-			await axios.put(`/subscribers/${id}/scheduleit`);
+			await fetchurl(`/subscribers/${id}/scheduleit`, "PUT", "no-cache");
 			toast.success("Subscriber scheduled");
 			fetchSubscribers();
 		} catch (err) {
@@ -205,7 +205,7 @@ const AdminSubscribersIndex = () => {
 
 	const handleDelete = async (id) => {
 		try {
-			await axios.delete(`/subscribers/${id}/permanently`);
+			await fetchurl(`/subscribers/${id}/permanently`, "DELETE", "no-cache");
 			toast.success("Subscriber deleted");
 			fetchSubscribers();
 		} catch (err) {
@@ -233,7 +233,7 @@ const AdminSubscribersIndex = () => {
 
 	const handleTrashAll = async () => {
 		try {
-			await axios.put(`/subscribers/deleteall`);
+			await fetchurl(`/subscribers/deleteall`, "PUT", "no-cache");
 			toast.success("Subscribers trashed");
 			fetchSubscribers();
 		} catch (err) {
@@ -261,7 +261,11 @@ const AdminSubscribersIndex = () => {
 
 	const handleDeleteAll = async () => {
 		try {
-			await axios.put(`/subscribers/deleteall/permanently`);
+			await fetchurl(
+				`/subscribers/deleteall/permanently`,
+				"DELETE",
+				"no-cache"
+			);
 			toast.success("Subscribers deleted");
 			fetchSubscribers();
 		} catch (err) {

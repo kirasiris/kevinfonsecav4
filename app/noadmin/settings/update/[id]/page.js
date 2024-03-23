@@ -1,10 +1,10 @@
 "use client";
-import axios from "axios";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 import { useParams, useRouter } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
+import { useState, useEffect, useContext } from "react";
 import { toast } from "react-toastify";
-import MyTextArea from "@/components/global/mytextarea";
 import AuthContext from "@/helpers/globalContext";
+import MyTextArea from "@/components/global/mytextarea";
 
 const UpdateSetting = () => {
 	const { auth } = useContext(AuthContext);
@@ -81,33 +81,33 @@ const UpdateSetting = () => {
 	useEffect(() => {
 		const fetchSetting = async () => {
 			try {
-				const res = await axios.get(`/settings/${settingId}`);
-				setSetting(res?.data?.data);
+				const res = await fetchurl(`/settings/${settingId}`, "GET", "no-cache");
+				setSetting(res?.data);
 				setSettingData({
-					author: res?.data?.data?.author,
-					author_email: res?.data?.data?.author_email,
-					site_url: res?.data?.data?.site_url,
-					home_url: res?.data?.data?.home_url,
-					favicon: res?.data?.data?.favicon,
-					logo: res?.data?.data?.logo,
-					charset: res?.data?.data?.charset,
-					title: res?.data?.data?.title,
-					text: res?.data?.data?.text,
-					showcase_image: res?.data?.data?.showcase_image,
-					maintenance: res?.data?.data?.maintenance,
-					address: res?.data?.data?.address,
-					language: res?.data?.data?.language,
-					facebook: res?.data?.data?.social?.facebook,
-					twitter: res?.data?.data?.social?.twitter,
-					youtube: res?.data?.data?.social?.youtube,
-					instagram: res?.data?.data?.social?.instagram,
-					google_api: res?.data?.data?.google_api,
-					first_ad: res?.data?.data?.ads?.first_ad,
-					second_ad: res?.data?.data?.ads?.second_ad,
-					third_ad: res?.data?.data?.ads?.third_ad,
-					fourth_ad: res?.data?.data?.ads?.fourth_ad,
-					script_head: res?.data?.data?.scripts?.head,
-					script_footer: res?.data?.data?.scripts?.footer,
+					author: res?.data?.author,
+					author_email: res?.data?.author_email,
+					site_url: res?.data?.site_url,
+					home_url: res?.data?.home_url,
+					favicon: res?.data?.favicon,
+					logo: res?.data?.logo,
+					charset: res?.data?.charset,
+					title: res?.data?.title,
+					text: res?.data?.text,
+					showcase_image: res?.data?.showcase_image,
+					maintenance: res?.data?.maintenance,
+					address: res?.data?.address,
+					language: res?.data?.language,
+					facebook: res?.data?.social?.facebook,
+					twitter: res?.data?.social?.twitter,
+					youtube: res?.data?.social?.youtube,
+					instagram: res?.data?.social?.instagram,
+					google_api: res?.data?.google_api,
+					first_ad: res?.data?.ads?.first_ad,
+					second_ad: res?.data?.ads?.second_ad,
+					third_ad: res?.data?.ads?.third_ad,
+					fourth_ad: res?.data?.ads?.fourth_ad,
+					script_head: res?.data?.scripts?.head,
+					script_footer: res?.data?.scripts?.footer,
 				});
 				setLoading(false);
 			} catch (err) {
@@ -141,7 +141,12 @@ const UpdateSetting = () => {
 	const upgradeSetting = async (e) => {
 		e.preventDefault();
 		try {
-			await axios.put(`/settings/${setting._id}`, settingData);
+			await fetchurl(
+				`/settings/${setting._id}`,
+				"PUT",
+				"no-cache",
+				settingData
+			);
 			router.push(`/noadmin/settings`);
 		} catch (err) {
 			console.log(err);

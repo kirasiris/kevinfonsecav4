@@ -1,5 +1,5 @@
 "use client";
-import axios from "axios";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 import Link from "next/link";
 import { useContext, useState, useEffect } from "react";
 import { toast } from "react-toastify";
@@ -7,10 +7,10 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { FaFileVideo } from "react-icons/fa";
 import AuthContext from "@/helpers/globalContext";
-import AdminMediaLibraryMenu from "./adminmediamenu";
+import AdminMediaLibraryMenu from "@/components/admin/adminmediamenu";
 import Single from "@/components/admin/files/single";
 import UseDropzone from "@/components/global/dropzone";
-import DeleteAllModal from "../global/deleteallmodal";
+import DeleteAllModal from "@/components/global/deleteallmodal";
 import ClientLoadMorePagination from "@/layout/clientloadmorepagination";
 
 const AdminMediaLibray = ({
@@ -44,16 +44,16 @@ const AdminMediaLibray = ({
 
 	const fetchMedia = async () => {
 		try {
-			const res = await axios.get(`/files${params}`);
+			const res = await fetchurl(`/files${params}`, "GET", "no-cache");
 			setFiles({
 				...files,
-				media: [...files.media, ...res?.data?.data],
+				media: [...files.media, ...res?.data],
 			});
-			setTotalPages(res?.data?.pagination?.totalpages);
-			setCurrentResults(res?.data?.count);
-			setTotalResults({ ...totalResults, files: res?.data?.countAll });
-			setPage(res?.data?.pagination?.current);
-			setNext(res?.data?.pagination?.next?.page);
+			setTotalPages(res?.pagination?.totalpages);
+			setCurrentResults(res?.count);
+			setTotalResults({ ...totalResults, files: res?.countAll });
+			setPage(res?.pagination?.current);
+			setNext(res?.pagination?.next?.page);
 			setLoading(false);
 		} catch (err) {
 			// const error = err.response.data.message;
@@ -84,8 +84,12 @@ const AdminMediaLibray = ({
 
 	const handleDelete = async (id, publicId) => {
 		try {
-			await axios.delete(`/files/${id}`);
-			await axios.delete(`/uploads/deleteObject?publicId=${publicId}`);
+			await fetchurl(`/files/${id}`, "DELETE", "no-cache");
+			await fetchurl(
+				`/uploads/deleteObject?publicId=${publicId}`,
+				"DELETE",
+				"no-cache"
+			);
 			toast.success("File deleted");
 			setFiles({
 				...files,
@@ -117,9 +121,37 @@ const AdminMediaLibray = ({
 		}
 	};
 
+	const handleTrashAll = async () => {
+		try {
+			await fetchurl(`/files/deleteall`, "PUT", "no-cache");
+			toast.success("Contacts trashed");
+			fetchMedia();
+		} catch (err) {
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
+	};
+
 	const handleDeleteAll = async () => {
 		try {
-			await axios.delete(`/files/deleteall`);
+			await fetchurl(`/files/deleteall/permanently`, "DELETE", "no-cache");
 			toast.success("Files deleted");
 			fetchMedia();
 		} catch (err) {

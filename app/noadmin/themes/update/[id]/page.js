@@ -1,11 +1,11 @@
 "use client";
-import axios from "axios";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 import { useParams, useRouter } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
+import { useState, useEffect, useContext } from "react";
 import { toast } from "react-toastify";
+import AuthContext from "@/helpers/globalContext";
 import AdminSidebar from "@/components/admin/adminsidebar";
 import MyTextArea from "@/components/global/mytextarea";
-import AuthContext from "@/helpers/globalContext";
 
 const UpdateTheme = () => {
 	const { auth, files } = useContext(AuthContext);
@@ -23,8 +23,8 @@ const UpdateTheme = () => {
 
 	const fetchCategories = async (params = "") => {
 		try {
-			const res = await axios.get(`/categories${params}`);
-			setCategories(res?.data?.data);
+			const res = await fetchurl(`/categories${params}`, "GET", "no-cache");
+			setCategories(res?.data);
 		} catch (err) {
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;
@@ -90,20 +90,20 @@ const UpdateTheme = () => {
 	useEffect(() => {
 		const fetchTheme = async () => {
 			try {
-				const res = await axios.get(`/themes/${themeId}`);
-				setTheme(res?.data?.data);
+				const res = await fetchurl(`/themes/${themeId}`, "GET", "no-cache");
+				setTheme(res?.data);
 				setThemeData({
-					title: res?.data?.data?.title,
-					avatar: res?.data?.data?.files?.avatar,
-					text: res?.data?.data?.text,
-					featured: res?.data?.data?.featured,
-					embedding: res?.data?.data?.embedding,
-					category: res?.data?.data?.category,
-					commented: res?.data?.data?.commented,
-					// password: res?.data?.data?.password,
-					status: res?.data?.data?.status,
-					fullWidth: res?.data?.data?.fullWidth,
-					github_readme: res?.data?.data?.github_readme,
+					title: res?.data?.title,
+					avatar: res?.data?.files?.avatar,
+					text: res?.data?.text,
+					featured: res?.data?.featured,
+					embedding: res?.data?.embedding,
+					category: res?.data?.category,
+					commented: res?.data?.commented,
+					// password: res?.data?.password,
+					status: res?.data?.status,
+					fullWidth: res?.data?.fullWidth,
+					github_readme: res?.data?.github_readme,
 				});
 				setLoading(false);
 			} catch (err) {
@@ -137,7 +137,7 @@ const UpdateTheme = () => {
 	const upgradeTheme = async (e) => {
 		e.preventDefault();
 		try {
-			await axios.put(`/themes/${theme._id}`, {
+			await fetchurl(`/themes/${theme._id}`, "PUT", "no-cache", {
 				...themeData,
 				files: { avatar: files?.selected?._id },
 			});

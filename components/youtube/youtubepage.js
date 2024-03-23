@@ -1,10 +1,11 @@
 "use client";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import Carousel from "react-bootstrap/Carousel";
-import Modal from "react-bootstrap/Modal";
 import RelatedCarousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
+import DisplayYoutubeInfoModal from "./displayyoutubeinfomodal";
 
 const YouTubePage = ({ searchParams, pushTo = true }) => {
 	const [video, setVideo] = useState({});
@@ -24,22 +25,17 @@ const YouTubePage = ({ searchParams, pushTo = true }) => {
 	const initLookout = async (e) => {
 		e.preventDefault();
 		setButtonText("...");
-		const res = await fetch(
-			`http://localhost:5000/api/v1/extras/youtube/getinfo`,
-			{
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify(videoData),
-			}
+		const res = await fetchurl(
+			`/extras/youtube/getinfo`,
+			"POST",
+			"no-cache",
+			videoData
 		);
-		const data = await res.json();
-		setVideo(data.data);
-		setVideos([data.data, ...videos]);
+		setVideo(res.data);
+		setVideos([res.data, ...videos]);
 		setButtonText(submitButtonText);
 		resetForm();
-		router.push(`/youtube?_id=${data.data._id}&videoId=${data.data.videoId}`);
+		router.push(`/youtube?_id=${res.data._id}&videoId=${res.data.videoId}`);
 	};
 
 	const resetForm = () => {
@@ -90,11 +86,8 @@ const YouTubePage = ({ searchParams, pushTo = true }) => {
 	useEffect(() => {
 		if (searchParams._id && searchParams.videoId) {
 			const fetchYouTube = async (id, videoId) => {
-				const res = await fetch(
-					`http://localhost:5000/api/v1/extras/youtube/${id}/${videoId}`
-				);
-				const data = await res.json();
-				setVideo(data.data);
+				const res = await fetchurl(`/extras/youtube/${id}/${videoId}`);
+				setVideo(res.data);
 			};
 			fetchYouTube(searchParams._id, searchParams.videoId).then((result) => {
 				setVideoData({
@@ -109,33 +102,25 @@ const YouTubePage = ({ searchParams, pushTo = true }) => {
 
 	useEffect(() => {
 		const fetchYouTubes = async (id, videoId) => {
-			const res = await fetch(`http://localhost:5000/api/v1/extras/youtube`);
-			const data = await res.json();
-			// !id && !videoId && setVideo(data?.data[0]);
-			setVideo(data.data[0]); // Display the most recent video
-			setVideos(data.data); // The set rest of them
+			const res = await fetchurl(`/extras/youtube`);
+			// !id && !videoId && setVideo(res?.data[0]);
+			setVideo(res.data[0]); // Display the most recent video
+			setVideos(res.data); // The set rest of them
 		};
 		fetchYouTubes(searchParams._id, searchParams.videoId);
 		// fetchYouTubes();
 	}, []);
 
 	const loadVideo = async (id, videoId) => {
-		const res = await fetch(
-			`http://localhost:5000/api/v1/extras/youtube/${id}/${videoId}`
-		);
-		const data = await res.json();
-		setVideo(data.data);
-		if (pushTo) {
-			router.push(`/youtube?_id=${id}&videoId=${videoId}`);
-		}
+		const res = await fetchurl(`/extras/youtube/${id}/${videoId}`);
+		setVideo(res.data);
+		pushTo && router.push(`/youtube?_id=${id}&videoId=${videoId}`);
 	};
 
 	const [activeTab, setActiveTab] = useState({
 		video: true,
 		gallery: false,
 	});
-
-	const [activeModal, setActiveModal] = useState(false);
 
 	return (
 		<>
@@ -433,60 +418,7 @@ const YouTubePage = ({ searchParams, pushTo = true }) => {
 													>
 														Download Video
 													</a>
-													<button
-														className="btn btn-secondary btn-sm m-1"
-														type="button"
-														onClick={() => setActiveModal(true)}
-													>
-														More
-													</button>
-													<Modal
-														show={activeModal}
-														onHide={() => setActiveModal(false)}
-														size="xl"
-														aria-labelledby="contained-modal-title-vcenter"
-														centered
-													>
-														<Modal.Header closeButton>
-															<h1 className="display-6">Download Options</h1>
-														</Modal.Header>
-														<Modal.Body>
-															{video?.text}
-															<hr />
-															<h2 className="display-6">
-																More downloading options below:
-															</h2>
-															<div className="btn-group">
-																<>
-																	<a
-																		href={`${video?.videoOnly?.url}`}
-																		className={`btn btn-sm btn-dark`}
-																		download
-																		rel="noopener noreferrer"
-																	>
-																		Download Video ONLY
-																	</a>
-																	<a
-																		href={`${video?.audioOnly?.url}`}
-																		className={`btn btn-sm btn-dark`}
-																		download
-																		rel="noopener noreferrer"
-																	>
-																		Download Audio ONLY
-																	</a>
-																</>
-															</div>
-														</Modal.Body>
-														<Modal.Footer>
-															<button
-																className="btn btn-secondary btn-sm"
-																type="button"
-																onClick={() => setActiveModal(false)}
-															>
-																Close
-															</button>
-														</Modal.Footer>
-													</Modal>
+													<DisplayYoutubeInfoModal object={video} />
 												</li>
 											)
 									)}

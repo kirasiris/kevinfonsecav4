@@ -1,13 +1,13 @@
 "use client";
-import axios from "axios";
-import { useParams, useRouter } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
+import { fetchurl } from "@/helpers/setTokenOnServer";
+import { useRouter } from "next/navigation";
+import { useState, useEffect, useContext } from "react";
 import { toast } from "react-toastify";
+import AuthContext from "@/helpers/globalContext";
+import MyTextArea from "@/components/global/mytextarea";
 import Image from "next/image";
 import { Modal } from "react-bootstrap";
 import AdminMediaLibray from "@/components/admin/adminmedialibray";
-import MyTextArea from "@/components/global/mytextarea";
-import AuthContext from "@/helpers/globalContext";
 
 const UpdateUser = () => {
 	const { auth, files, setFiles } = useContext(AuthContext);
@@ -25,8 +25,8 @@ const UpdateUser = () => {
 
 	const fetchUsers = async (params = "") => {
 		try {
-			const res = await axios.get(`/users${params}`);
-			setUsers(res?.data?.data);
+			const res = await fetchurl(`/users${params}`, "GET", "no-cache");
+			setUsers(res?.data);
 		} catch (err) {
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;
@@ -121,35 +121,35 @@ const UpdateUser = () => {
 	useEffect(() => {
 		const fetchUser = async () => {
 			try {
-				const res = await axios.get(`/users/${userId}`);
-				setUser(res?.data?.data);
+				const res = await fetchurl(`/users/${userId}`, "GET", "no-cache");
+				setUser(res?.data);
 				setUserData({
-					username: res?.data?.data?.username,
-					avatar: res?.data?.data?.files?.avatar,
-					name: res?.data?.data?.name,
-					email: res?.data?.data?.email,
-					secondaryEmail: res?.data?.data?.secondaryEmail,
-					phoneNumber: res?.data?.data?.phoneNumber,
-					password: res?.data?.data?.password,
-					password2: res?.data?.data?.password,
-					isEmailConfirmed: res?.data?.data?.isEmailConfirmed,
-					role: res?.data?.data?.role,
-					sex: res?.data?.data?.sex,
-					gender: res?.data?.data?.gender,
-					age: res?.data?.data?.age,
-					relationshipStatus: res?.data?.data?.relationshipStatus,
-					inRelationshipWith: res?.data?.data?.inRelationshipWith,
-					company: res?.data?.data?.company,
-					workstatus: res?.data?.data?.workstatus,
-					bio: res?.data?.data?.bio,
-					website: res?.data?.data?.website,
-					twitter: res?.data?.data?.social?.twitter,
-					facebook: res?.data?.data?.social?.facebook,
-					youtube: res?.data?.data?.social?.youtube,
-					instagram: res?.data?.data?.social?.instagram,
-					linkedin: res?.data?.data?.social?.linkedin,
-					steamId: res?.data?.data?.social?.steamId,
-					xboxId: res?.data?.data?.social?.xboxId,
+					username: res?.data?.username,
+					avatar: res?.data?.files?.avatar,
+					name: res?.data?.name,
+					email: res?.data?.email,
+					secondaryEmail: res?.data?.secondaryEmail,
+					phoneNumber: res?.data?.phoneNumber,
+					password: res?.data?.password,
+					password2: res?.data?.password,
+					isEmailConfirmed: res?.data?.isEmailConfirmed,
+					role: res?.data?.role,
+					sex: res?.data?.sex,
+					gender: res?.data?.gender,
+					age: res?.data?.age,
+					relationshipStatus: res?.data?.relationshipStatus,
+					inRelationshipWith: res?.data?.inRelationshipWith,
+					company: res?.data?.company,
+					workstatus: res?.data?.workstatus,
+					bio: res?.data?.bio,
+					website: res?.data?.website,
+					twitter: res?.data?.social?.twitter,
+					facebook: res?.data?.social?.facebook,
+					youtube: res?.data?.social?.youtube,
+					instagram: res?.data?.social?.instagram,
+					linkedin: res?.data?.social?.linkedin,
+					steamId: res?.data?.social?.steamId,
+					xboxId: res?.data?.social?.xboxId,
 				});
 				setLoading(false);
 			} catch (err) {
@@ -183,7 +183,7 @@ const UpdateUser = () => {
 	const upgradeUser = async (e) => {
 		e.preventDefault();
 		try {
-			await axios.put(`/users/${user._id}`, {
+			await fetchurl(`/users/${user._id}`, "PUT", "no-cache", {
 				...userData,
 				files: { avatar: files?.selected?._id },
 			});

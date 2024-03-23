@@ -1,5 +1,5 @@
 "use client";
-import axios from "axios";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useContext } from "react";
 import { toast } from "react-toastify";
@@ -42,12 +42,12 @@ const AdminThemesIndex = () => {
 
 	const fetchThemes = async () => {
 		try {
-			const res = await axios.get(`/themes${params}`);
-			setThemes(res?.data?.data);
-			setTotalPages(res?.data?.pagination?.totalpages);
-			setCurrentResults(res?.data?.count);
-			setTotalResults({ ...totalResults, themes: res?.data?.countAll });
-			setPage(res?.data?.pagination?.current);
+			const res = await fetchurl(`/themes${params}`, "GET", "no-cache");
+			setThemes(res?.data);
+			setTotalPages(res?.pagination?.totalpages);
+			setCurrentResults(res?.count);
+			setTotalResults({ ...totalResults, blogs: res?.countAll });
+			setPage(res?.pagination?.current);
 			setLoading(false);
 		} catch (err) {
 			// const error = err.response.data.message;
@@ -93,7 +93,7 @@ const AdminThemesIndex = () => {
 
 	const draftIt = async (id) => {
 		try {
-			await axios.put(`/themes/${id}/draftit`);
+			await fetchurl(`/themes/${id}/draftit`, "PUT", "no-cache");
 			toast.success("Theme drafted");
 			fetchThemes();
 		} catch (err) {
@@ -121,7 +121,7 @@ const AdminThemesIndex = () => {
 
 	const publishIt = async (id) => {
 		try {
-			await axios.put(`/themes/${id}/publishit`);
+			await fetchurl(`/themes/${id}/publishit`, "PUT", "no-cache");
 			toast.success("Theme published");
 			fetchThemes();
 		} catch (err) {
@@ -149,7 +149,7 @@ const AdminThemesIndex = () => {
 
 	const trashIt = async (id) => {
 		try {
-			await axios.put(`/themes/${id}/trashit`);
+			await fetchurl(`/themes/${id}/trashit`, "PUT", "no-cache");
 			toast.success("Theme trashed");
 			fetchThemes();
 		} catch (err) {
@@ -177,7 +177,7 @@ const AdminThemesIndex = () => {
 
 	const scheduleIt = async (id) => {
 		try {
-			await axios.put(`/themes/${id}/scheduleit`);
+			await fetchurl(`/themes/${id}/scheduleit`, "PUT", "no-cache");
 			toast.success("Theme scheduled");
 			fetchThemes();
 		} catch (err) {
@@ -205,7 +205,7 @@ const AdminThemesIndex = () => {
 
 	const handleDelete = async (id) => {
 		try {
-			await axios.delete(`/themes/${id}/permanently`);
+			await fetchurl(`/themes/${id}/permanently`, "DELETE", "no-cache");
 			toast.success("Theme deleted");
 			fetchThemes();
 		} catch (err) {
@@ -233,7 +233,7 @@ const AdminThemesIndex = () => {
 
 	const handleTrashAll = async () => {
 		try {
-			await axios.put(`/themes/deleteall`);
+			await fetchurl(`/themes/deleteall`, "PUT", "no-cache");
 			toast.success("Themes trashed");
 			fetchThemes();
 		} catch (err) {
@@ -261,7 +261,7 @@ const AdminThemesIndex = () => {
 
 	const handleDeleteAll = async () => {
 		try {
-			await axios.delete(`/themes/deleteall/permanently`);
+			await fetchurl(`/themes/deleteall/permanently`, "DELETE", "no-cache");
 			toast.success("Themes deleted");
 			fetchThemes();
 		} catch (err) {

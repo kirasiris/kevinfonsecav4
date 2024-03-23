@@ -1,12 +1,11 @@
 "use client";
-import axios from "axios";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { toast } from "react-toastify";
 import Single from "@/components/admin/quotes/single";
-import MyTextArea from "@/components/global/mytextarea";
-import { useContext } from "react";
 import AuthContext from "@/helpers/globalContext";
+import MyTextArea from "@/components/global/mytextarea";
 import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
 import AdminCardHeaderMenu from "@/components/admin/admincardheadermenu";
 import ClientNumericPagination from "@/layout/clientnumericpagination";
@@ -44,12 +43,12 @@ const AdminQuotesIndex = () => {
 
 	const fetchQuotes = async () => {
 		try {
-			const res = await axios.get(`/extras/quotes${params}`);
-			setQuotes(res?.data?.data);
-			setTotalPages(res?.data?.pagination?.totalpages);
-			setCurrentResults(res?.data?.count);
-			setTotalResults({ ...totalResults, quotes: res?.data?.countAll });
-			setPage(res?.data?.pagination?.current);
+			const res = await fetchurl(`/extras/quotes${params}`, "GET", "no-cache");
+			setQuotes(res?.data);
+			setTotalPages(res?.pagination?.totalpages);
+			setCurrentResults(res?.count);
+			setTotalResults({ ...totalResults, quotes: res?.countAll });
+			setPage(res?.pagination?.current);
 			setLoading(false);
 		} catch (err) {
 			// const error = err.response.data.message;
@@ -101,8 +100,13 @@ const AdminQuotesIndex = () => {
 	const createQuote = async (e) => {
 		e.preventDefault();
 		try {
-			const res = await axios.post(`/extras/quotes`, quoteData);
-			setQuotes([res?.data?.data, ...quotes]);
+			const res = await fetchurl(
+				`/extras/quotes`,
+				"POST",
+				"no-cache",
+				quoteData
+			);
+			setQuotes([res?.data, ...quotes]);
 			setTotalResults({ ...totalResults, quotes: quotes.length + 1 });
 			toast.success(`Item created`);
 			resetForm();
@@ -143,7 +147,7 @@ const AdminQuotesIndex = () => {
 
 	const handleDelete = async (id) => {
 		try {
-			await axios.delete(`/extras/quotes/${id}`);
+			await fetchurl(`/extras/quotes/${id}`, "DELETE", "no-cache");
 			toast.success("Quote deleted");
 			fetchQuotes();
 		} catch (err) {
@@ -171,7 +175,7 @@ const AdminQuotesIndex = () => {
 
 	const handleDeleteAll = async () => {
 		try {
-			await axios.delete(`/extras/quotes/deleteall`);
+			await fetchurl(`/extras/quotes/deleteall`, "DELETE", "no-cache");
 			toast.success("Quotes deleted");
 			fetchQuotes();
 		} catch (err) {

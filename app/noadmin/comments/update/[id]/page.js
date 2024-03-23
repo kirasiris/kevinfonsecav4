@@ -1,11 +1,11 @@
 "use client";
-import axios from "axios";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 import { useParams, useRouter } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
+import { useState, useEffect, useContext } from "react";
 import { toast } from "react-toastify";
+import AuthContext from "@/helpers/globalContext";
 import AdminSidebar from "@/components/admin/adminsidebar";
 import MyTextArea from "@/components/global/mytextarea";
-import AuthContext from "@/helpers/globalContext";
 
 const UpdateComment = () => {
 	const { auth } = useContext(AuthContext);
@@ -36,12 +36,12 @@ const UpdateComment = () => {
 	useEffect(() => {
 		const fetchComment = async () => {
 			try {
-				const res = await axios.get(`/comments/${commentId}`);
-				setComment(res?.data?.data);
+				const res = await fetchurl(`/comments/${commentId}`, "GET", "no-cache");
+				setComment(res?.data);
 				setCommentData({
-					title: res?.data?.data?.title,
-					text: res?.data?.data?.text,
-					status: res?.data?.data?.status,
+					title: res?.data?.title,
+					text: res?.data?.text,
+					status: res?.data?.status,
 				});
 				setLoading(false);
 			} catch (err) {
@@ -75,7 +75,12 @@ const UpdateComment = () => {
 	const upgradeComment = async (e) => {
 		e.preventDefault();
 		try {
-			await axios.put(`/comments/${comment._id}`, commentData);
+			await fetchurl(
+				`/comments/${comment._id}`,
+				"PUT",
+				"no-cache",
+				commentData
+			);
 			toast.success(`Item updated`);
 			router.push(`/noadmin/comments`);
 		} catch (err) {

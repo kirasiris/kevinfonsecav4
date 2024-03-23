@@ -1,11 +1,11 @@
 "use client";
-import axios from "axios";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 import { useRouter } from "next/navigation";
-import { useContext, useState } from "react";
+import { useState, useContext } from "react";
 import { toast } from "react-toastify";
+import AuthContext from "@/helpers/globalContext";
 import AdminSidebar from "@/components/admin/adminsidebar";
 import MyTextArea from "@/components/global/mytextarea";
-import AuthContext from "@/helpers/globalContext";
 
 const CreateCourse = () => {
 	const { auth, files } = useContext(AuthContext);
@@ -55,7 +55,7 @@ const CreateCourse = () => {
 	const addCourse = async (e) => {
 		e.preventDefault();
 		try {
-			await axios.post(`/courses`, {
+			await fetchurl(`/courses`, "POST", "no-cache", {
 				...courseData,
 				files: { avatar: files?.selected?._id },
 			});

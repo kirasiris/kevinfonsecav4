@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState, useEffect, useContext } from "react";
 import { toast } from "react-toastify";
 import Single from "@/components/dashboard/courses/single";
-import { AuthContext } from "@/helpers/globalContext";
+import AuthContext from "@/helpers/globalContext";
 import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
 import DashboardCardHeaderMenu from "@/layout/dashboard/dashboardcardheadermenu";
 import ClientNumericPagination from "@/layout/clientnumericpagination";

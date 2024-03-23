@@ -1,11 +1,11 @@
 "use client";
-import axios from "axios";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 import { useParams, useRouter } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
+import { useState, useEffect, useContext } from "react";
 import { toast } from "react-toastify";
+import AuthContext from "@/helpers/globalContext";
 import AdminSidebar from "@/components/admin/adminsidebar";
 import MyTextArea from "@/components/global/mytextarea";
-import AuthContext from "@/helpers/globalContext";
 
 const UpdateQuiz = () => {
 	const { auth, files } = useContext(AuthContext);
@@ -23,8 +23,8 @@ const UpdateQuiz = () => {
 
 	const fetchCategories = async (params = "") => {
 		try {
-			const res = await axios.get(`/categories${params}`);
-			setCategories(res?.data?.data);
+			const res = await fetchurl(`/categories${params}`, "GET", "no-cache");
+			setCategories(res?.data);
 		} catch (err) {
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;
@@ -95,23 +95,23 @@ const UpdateQuiz = () => {
 	useEffect(() => {
 		const fetchQuiz = async () => {
 			try {
-				const res = await axios.get(`/quizzes/${quizId}`);
-				setQuiz(res?.data?.data);
+				const res = await fetchurl(`/quizzes/${quizId}`, "GET", "no-cache");
+				setQuiz(res?.data);
 				setQuizData({
-					title: res?.data?.data?.title,
-					avatar: res?.data?.data?.files?.avatar,
-					text: res?.data?.data?.text,
-					duration: res?.data?.data?.duration,
-					minimumScore: res?.data?.data?.minimumScore,
-					maximumScore: res?.data?.data?.maximumScore,
-					featured: res?.data?.data?.featured,
-					embedding: res?.data?.data?.embedding,
-					category: res?.data?.data?.category,
-					commented: res?.data?.data?.commented,
-					// password: res?.data?.data?.password,
-					status: res?.data?.data?.status,
-					attempts: res?.data?.data?.attempts,
-					singlePage: res?.data?.data?.singlePage,
+					title: res?.data?.title,
+					avatar: res?.data?.files?.avatar,
+					text: res?.data?.text,
+					duration: res?.data?.duration,
+					minimumScore: res?.data?.minimumScore,
+					maximumScore: res?.data?.maximumScore,
+					featured: res?.data?.featured,
+					embedding: res?.data?.embedding,
+					category: res?.data?.category,
+					commented: res?.data?.commented,
+					// password: res?.data?.password,
+					status: res?.data?.status,
+					attempts: res?.data?.attempts,
+					singlePage: res?.data?.singlePage,
 				});
 				setLoading(false);
 			} catch (err) {
@@ -145,7 +145,7 @@ const UpdateQuiz = () => {
 	const upgradeQuiz = async (e) => {
 		e.preventDefault();
 		try {
-			await axios.put(`/quizzes/${quiz._id}`, {
+			await fetchurl(`/quizzes/${quiz._id}`, "PUT", "no-cache", {
 				...quizData,
 				files: { avatar: files?.selected?._id },
 			});

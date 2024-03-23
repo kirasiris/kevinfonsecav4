@@ -1,12 +1,12 @@
 "use client";
-import axios from "axios";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 import { useParams, useRouter } from "next/navigation";
-import { useEffect, useState, useRef, useContext } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import { toast } from "react-toastify";
-import Image from "next/image";
-import MyTextArea from "@/components/global/mytextarea";
-import Plyr from "plyr";
 import AuthContext from "@/helpers/globalContext";
+import MyTextArea from "@/components/global/mytextarea";
+import Image from "next/image";
+import Plyr from "plyr";
 
 const UpdateFile = () => {
 	const { auth } = useContext(AuthContext);
@@ -38,13 +38,13 @@ const UpdateFile = () => {
 	useEffect(() => {
 		const fetchFile = async () => {
 			try {
-				const res = await axios.get(`/files/${fileId}`);
-				setFile(res?.data?.data);
+				const res = await fetchurl(`/files/${fileId}`, "GET", "no-cache");
+				setFile(res?.data);
 				setFileData({
-					title: res?.data?.data?.title,
-					caption: res?.data?.data?.caption,
-					altText: res?.data?.data?.altText,
-					text: res?.data?.data?.text,
+					title: res?.data?.title,
+					caption: res?.data?.caption,
+					altText: res?.data?.altText,
+					text: res?.data?.text,
 				});
 				setLoading(false);
 			} catch (err) {
@@ -78,7 +78,7 @@ const UpdateFile = () => {
 	const upgradeFile = async (e) => {
 		e.preventDefault();
 		try {
-			await axios.put(`/files/${file._id}`, fileData);
+			await fetchurl(`/files/${file._id}`, "PUT", "no-cache", fileData);
 			toast.success(`Item updated`);
 			router.push(`/noadmin/files`);
 		} catch (err) {

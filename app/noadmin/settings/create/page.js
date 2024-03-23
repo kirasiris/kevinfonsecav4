@@ -1,10 +1,10 @@
 "use client";
-import axios from "axios";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 import { useRouter } from "next/navigation";
-import { useContext, useState } from "react";
+import { useState, useContext } from "react";
 import { toast } from "react-toastify";
-import MyTextArea from "@/components/global/mytextarea";
 import AuthContext from "@/helpers/globalContext";
+import MyTextArea from "@/components/global/mytextarea";
 
 const CreateSetting = () => {
 	const { auth } = useContext(AuthContext);
@@ -74,7 +74,7 @@ const CreateSetting = () => {
 	const addSetting = async (e) => {
 		e.preventDefault();
 		try {
-			await axios.post(`/settings`, settingData);
+			await fetchurl(`/settings`, "POST", "no-cache", settingData);
 			router.push(`/noadmin/settings`);
 		} catch (err) {
 			console.log(err);

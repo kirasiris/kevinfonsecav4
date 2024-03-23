@@ -1,10 +1,10 @@
 "use client";
-import axios from "axios";
-import { useParams, useRouter } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
+import { fetchurl } from "@/helpers/setTokenOnServer";
+import { useRouter } from "next/navigation";
+import { useState, useEffect, useContext } from "react";
 import { toast } from "react-toastify";
-import MyTextArea from "@/components/global/mytextarea";
 import AuthContext from "@/helpers/globalContext";
+import MyTextArea from "@/components/global/mytextarea";
 
 const UpdateContact = () => {
 	const { auth, files } = useContext(AuthContext);
@@ -97,25 +97,25 @@ const UpdateContact = () => {
 	useEffect(() => {
 		const fetchContact = async () => {
 			try {
-				const res = await axios.get(`/contacts/${contactId}`);
-				setContact(res?.data?.data);
+				const res = await fetchurl(`/contacts/${contactId}`, "GET", "no-cache");
+				setContact(res?.data);
 				setContactData({
-					firstName: res?.data?.data?.name.first,
-					middleName: res?.data?.data?.name.middle,
-					lastName: res?.data?.data?.name.last,
-					phoneticFirst: res?.data?.data?.phonetic.first,
-					phoneticMiddle: res?.data?.data?.phonetic.middle,
-					phoneticLast: res?.data?.data?.phonetic.last,
-					nickname: res?.data?.data?.nickname,
-					occupation: res?.data?.data?.occupation,
-					emails: res?.data?.data?.emails,
-					phones: res?.data?.data?.phones,
-					birthdate: res?.data?.data?.dates?.birthdate,
-					significantDates: res?.data?.data?.dates.significantDates,
-					socials: res?.data?.data?.socials,
-					related: res?.data?.data?.related,
-					text: res?.data?.data?.text,
-					status: res?.data?.data?.status,
+					firstName: res?.data?.name.first,
+					middleName: res?.data?.name.middle,
+					lastName: res?.data?.name.last,
+					phoneticFirst: res?.data?.phonetic.first,
+					phoneticMiddle: res?.data?.phonetic.middle,
+					phoneticLast: res?.data?.phonetic.last,
+					nickname: res?.data?.nickname,
+					occupation: res?.data?.occupation,
+					emails: res?.data?.emails,
+					phones: res?.data?.phones,
+					birthdate: res?.data?.dates?.birthdate,
+					significantDates: res?.data?.dates.significantDates,
+					socials: res?.data?.socials,
+					related: res?.data?.related,
+					text: res?.data?.text,
+					status: res?.data?.status,
 				});
 				setLoading(false);
 			} catch (err) {
@@ -149,7 +149,7 @@ const UpdateContact = () => {
 	const upgradeContact = async (e) => {
 		e.preventDefault();
 		try {
-			await axios.put(`/contacts`, {
+			await fetchurl(`/contacts`, "PUT", "no-cache", {
 				...contactData,
 				// files: { avatar: files?.selected?._id },
 				occupation: contactData.occupation.filter(

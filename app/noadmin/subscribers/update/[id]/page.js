@@ -1,10 +1,11 @@
 "use client";
-import axios from "axios";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 import { useParams, useRouter } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
+import { useState, useEffect, useContext } from "react";
 import { toast } from "react-toastify";
-import AdminSidebar from "@/components/admin/adminsidebar";
 import AuthContext from "@/helpers/globalContext";
+import AdminSidebar from "@/components/admin/adminsidebar";
+import MyTextArea from "@/components/global/mytextarea";
 
 const CreateSubscriber = () => {
 	const { auth } = useContext(AuthContext);
@@ -23,8 +24,8 @@ const CreateSubscriber = () => {
 
 	const fetchUsers = async (params = "") => {
 		try {
-			const res = await axios.get(`/users${params}`);
-			setUsers(res?.data?.data);
+			const res = await fetchurl(`/users${params}`, "GET", "no-cache");
+			setUsers(res?.data);
 		} catch (err) {
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;
@@ -54,8 +55,8 @@ const CreateSubscriber = () => {
 
 	const fetchCourses = async (params = "") => {
 		try {
-			const res = await axios.get(`/courses${params}`);
-			setCourses(res?.data?.data);
+			const res = await fetchurl(`/courses${params}`, "GET", "no-cache");
+			setCourses(res?.data);
 		} catch (err) {
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;
@@ -101,13 +102,17 @@ const CreateSubscriber = () => {
 	useEffect(() => {
 		const fetchSubscriber = async () => {
 			try {
-				const res = await axios.get(`/subscribers/${subscriberId}`);
-				setSubscriber(res?.data?.data);
+				const res = await fetchurl(
+					`/subscribers/${subscriberId}`,
+					"GET",
+					"no-cache"
+				);
+				setSubscriber(res?.data);
 				setSubscriberData({
-					resourceId: res?.data?.data?.resourceId._id,
-					user: res?.data?.data?.user._id,
-					onModel: res?.data?.data?.onModel,
-					status: res?.data?.data?.status,
+					resourceId: res?.data?.resourceId._id,
+					user: res?.data?.user._id,
+					onModel: res?.data?.onModel,
+					status: res?.data?.status,
 				});
 				setLoading(false);
 			} catch (err) {
@@ -141,7 +146,12 @@ const CreateSubscriber = () => {
 	const upgradeSubscriber = async (e) => {
 		e.preventDefault();
 		try {
-			await axios.put(`/subscribers/${subscriber._id}`, subscriberData);
+			await fetchurl(
+				`/subscribers/${subscriber._id}`,
+				"PUT",
+				"no-cache",
+				subscriberData
+			);
 			toast.success(`Item updated`);
 			router.push(`/noadmin/subscribers`);
 		} catch (err) {

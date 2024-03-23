@@ -1,5 +1,5 @@
 "use client";
-import axios from "axios";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useContext } from "react";
 import { toast } from "react-toastify";
@@ -42,12 +42,12 @@ const AdminSecretsIndex = () => {
 
 	const fetchSecrets = async () => {
 		try {
-			const res = await axios.get(`/extras/secrets${params}`);
-			setSecrets(res?.data?.data);
-			setTotalPages(res?.data?.pagination?.totalpages);
-			setCurrentResults(res?.data?.count);
-			setTotalResults({ ...totalResults, secrets: res?.data?.countAll });
-			setPage(res?.data?.pagination?.current);
+			const res = await fetchurl(`/extras/secrets${params}`, "GET", "no-cache");
+			setSecrets(res?.data);
+			setTotalPages(res?.pagination?.totalpages);
+			setCurrentResults(res?.count);
+			setTotalResults({ ...totalResults, secrets: res?.countAll });
+			setPage(res?.pagination?.current);
 			setLoading(false);
 		} catch (err) {
 			// const error = err.response.data.message;
@@ -93,7 +93,7 @@ const AdminSecretsIndex = () => {
 
 	const draftIt = async (id) => {
 		try {
-			await axios.put(`/extras/secrets/${id}/draftit`);
+			await fetchurl(`/extras/secrets/${id}/draftit`, "PUT", "no-cache");
 			toast.success("Secret drafted");
 			fetchSecrets();
 		} catch (err) {
@@ -121,7 +121,7 @@ const AdminSecretsIndex = () => {
 
 	const publishIt = async (id) => {
 		try {
-			await axios.put(`/extras/secrets/${id}/publishit`);
+			await fetchurl(`/extras/secrets/${id}/publishit`, "PUT", "no-cache");
 			toast.success("Secret published");
 			fetchSecrets();
 		} catch (err) {
@@ -149,7 +149,7 @@ const AdminSecretsIndex = () => {
 
 	const trashIt = async (id) => {
 		try {
-			await axios.put(`/extras/secrets/${id}/trashit`);
+			await fetchurl(`/extras/secrets/${id}/trashit`, "PUT", "no-cache");
 			toast.success("Secret trashed");
 			fetchSecrets();
 		} catch (err) {
@@ -177,7 +177,7 @@ const AdminSecretsIndex = () => {
 
 	const scheduleIt = async (id) => {
 		try {
-			await axios.put(`/extras/secrets/${id}/scheduleit`);
+			await fetchurl(`/extras/secrets/${id}/scheduleit`, "PUT", "no-cache");
 			toast.success("Secret scheduled");
 			fetchSecrets();
 		} catch (err) {
@@ -205,7 +205,7 @@ const AdminSecretsIndex = () => {
 
 	const handleDelete = async (id) => {
 		try {
-			await axios.delete(`/extras/secrets/${id}/permanently`);
+			await fetchurl(`/extras/secrets/${id}/permanently`, "DELETE", "no-cache");
 			toast.success("Secret deleted");
 			fetchSecrets();
 		} catch (err) {
@@ -233,7 +233,7 @@ const AdminSecretsIndex = () => {
 
 	const handleTrashAll = async () => {
 		try {
-			await axios.put(`/extras/secrets/deleteall`);
+			await fetchurl(`/extras/secrets/deleteall`, "PUT", "no-cache");
 			toast.success("Secrets trashed");
 			fetchSecrets();
 		} catch (err) {
@@ -261,7 +261,11 @@ const AdminSecretsIndex = () => {
 
 	const handleDeleteAll = async () => {
 		try {
-			await axios.delete(`/extras/secrets/deleteall/permanently`);
+			await fetchurl(
+				`/extras/secrets/deleteall/permanently`,
+				"DELETE",
+				"no-cache"
+			);
 			toast.success("Secrets deleted");
 			fetchSecrets();
 		} catch (err) {

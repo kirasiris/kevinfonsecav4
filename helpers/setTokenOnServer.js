@@ -28,7 +28,8 @@ export const fetchurl = async (
 	url = `http://localhost:5000/api/v1`,
 	method,
 	cache = "default",
-	bodyData
+	bodyData,
+	signal = undefined
 ) => {
 	const myCookies = cookies();
 	const token = myCookies.get("xAuthToken");
@@ -52,16 +53,19 @@ export const fetchurl = async (
 		},
 		body: method !== "GET" && method !== "HEAD" ? requestBody : null,
 		cache: cache,
-	});
+		signal: signal,
+	})
+		.then(async (res) => await res.json())
+		.then((response) => response)
+		.catch((err) => {
+			console.log(err);
+			if (err.name === "AbortError") {
+				console.log("successfully aborted");
+			} else {
+				// handle error
+				console.log("Error coming from setTokenOnServer file", err);
+			}
+		});
 
-	if (!response.ok) {
-		// throw new Error("Failed to fetch data");
-		console.log(
-			"The line below is coming from the setTokenOnSever file withing the fetchurl() function!"
-		);
-		console.log("There was an error fetching the data");
-	}
-
-	const data = response.json();
-	return data;
+	return response;
 };

@@ -1,4 +1,5 @@
 "use client";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
@@ -31,20 +32,18 @@ const AImagePage = ({ searchParams }) => {
 		e.preventDefault();
 		try {
 			setButtonText("...");
-			const res = await fetch(
-				`http://localhost:5000/api/v1/extras/tools/openai/generate-image`,
+			const res = await fetchurl(
+				`/extras/tools/openai/generate-image`,
+				"POST",
+				"no-cache",
 				{
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
-					},
-					body: JSON.stringify({ ...openAiData, email: email }),
+					...openAiData,
+					email: email,
 				}
 			);
-			const data = await res.json();
-			console.log("Images", data);
-			setImages([data.data, ...images]);
-			setButtonText(submitButtonText);
+			console.log("Images", res);
+			// setImages([res.data, ...images]);
+			// setButtonText(submitButtonText);
 		} catch (err) {
 			console.log(err);
 		}

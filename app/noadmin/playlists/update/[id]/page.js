@@ -1,11 +1,11 @@
 "use client";
-import axios from "axios";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 import { useParams, useRouter } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
+import { useState, useEffect, useContext } from "react";
 import { toast } from "react-toastify";
+import AuthContext from "@/helpers/globalContext";
 import AdminSidebar from "@/components/admin/adminsidebar";
 import MyTextArea from "@/components/global/mytextarea";
-import AuthContext from "@/helpers/globalContext";
 
 const UpdatePlaylist = () => {
 	const { auth, files } = useContext(AuthContext);
@@ -23,8 +23,8 @@ const UpdatePlaylist = () => {
 
 	const fetchCategories = async (params = "") => {
 		try {
-			const res = await axios.get(`/categories${params}`);
-			setCategories(res?.data?.data);
+			const res = await fetchurl(`/categories${params}`, "GET", "no-cache");
+			setCategories(res?.data);
 		} catch (err) {
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;
@@ -87,19 +87,23 @@ const UpdatePlaylist = () => {
 	useEffect(() => {
 		const fetchPlaylist = async () => {
 			try {
-				const res = await axios.get(`/playlists/${playlistId}`);
-				setPlaylist(res?.data?.data);
+				const res = await fetchurl(
+					`/playlists/${playlistId}`,
+					"GET",
+					"no-cache"
+				);
+				setPlaylist(res?.data);
 				setPlaylistData({
-					title: res?.data?.data?.title,
-					avatar: res?.data?.data?.files?.avatar,
-					text: res?.data?.data?.text,
-					featured: res?.data?.data?.featured,
-					category: res?.data?.data?.category,
-					commented: res?.data?.data?.commented,
-					// password: res?.data?.data?.password,
-					onairstatus: res?.data?.data?.onairstatus,
-					onairtype: res?.data?.data?.onairtype,
-					status: res?.data?.data?.status,
+					title: res?.data?.title,
+					avatar: res?.data?.files?.avatar,
+					text: res?.data?.text,
+					featured: res?.data?.featured,
+					category: res?.data?.category,
+					commented: res?.data?.commented,
+					// password: res?.data?.password,
+					onairstatus: res?.data?.onairstatus,
+					onairtype: res?.data?.onairtype,
+					status: res?.data?.status,
 				});
 				setLoading(false);
 			} catch (err) {
@@ -133,7 +137,7 @@ const UpdatePlaylist = () => {
 	const upgradePlaylist = async (e) => {
 		e.preventDefault();
 		try {
-			await axios.put(`/playlists/${playlist._id}`, {
+			await fetchurl(`/playlists/${playlist._id}`, "PUT", "no-cache", {
 				...playlistData,
 				files: { avatar: files?.selected?._id },
 			});

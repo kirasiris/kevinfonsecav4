@@ -1,11 +1,11 @@
 "use client";
-import axios from "axios";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 import { useParams, useRouter } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
+import { useState, useEffect, useContext } from "react";
 import { toast } from "react-toastify";
+import AuthContext from "@/helpers/globalContext";
 import AdminSidebar from "@/components/admin/adminsidebar";
 import MyTextArea from "@/components/global/mytextarea";
-import AuthContext from "@/helpers/globalContext";
 
 const UpdateCourse = () => {
 	const { auth, files } = useContext(AuthContext);
@@ -62,24 +62,24 @@ const UpdateCourse = () => {
 	useEffect(() => {
 		const fetchCourse = async () => {
 			try {
-				const res = await axios.get(`/courses/${courseId}`);
-				setCourse(res?.data?.data);
+				const res = await fetchurl(`/courses/${courseId}`, "GET", "no-cache");
+				setCourse(res?.data);
 				setCourseData({
-					avatar: res?.data?.data?.files?.avatar,
-					title: res?.data?.data?.title,
-					sub_title: res?.data?.data?.sub_title,
-					text: res?.data?.data?.text,
-					price: res?.data?.data?.price,
-					featured: res?.data?.data?.featured,
-					embedding: res?.data?.data?.embedding,
-					category: res?.data?.data?.category,
-					sub_category: res?.data?.data?.sub_category,
-					isFree: res?.data?.data?.isFree.toString(),
-					language: res?.data?.data?.language,
-					difficulty: res?.data?.data?.difficulty,
-					commented: res?.data?.data?.commented,
-					// password: res?.data?.data?.password,
-					status: res?.data?.data?.status,
+					avatar: res?.data?.files?.avatar,
+					title: res?.data?.title,
+					sub_title: res?.data?.sub_title,
+					text: res?.data?.text,
+					price: res?.data?.price,
+					featured: res?.data?.featured,
+					embedding: res?.data?.embedding,
+					category: res?.data?.category,
+					sub_category: res?.data?.sub_category,
+					isFree: res?.data?.isFree.toString(),
+					language: res?.data?.language,
+					difficulty: res?.data?.difficulty,
+					commented: res?.data?.commented,
+					// password: res?.data?.password,
+					status: res?.data?.status,
 				});
 				setLoading(false);
 			} catch (err) {
@@ -113,7 +113,7 @@ const UpdateCourse = () => {
 	const upgradeCourse = async (e) => {
 		e.preventDefault();
 		try {
-			await axios.put(`/courses/${course._id}`, {
+			await fetchurl(`/courses/${course._id}`, "PUT", "no-cache", {
 				...courseData,
 				files: { avatar: files?.selected?._id },
 			});

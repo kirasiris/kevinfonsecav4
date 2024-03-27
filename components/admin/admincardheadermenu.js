@@ -17,6 +17,7 @@ const AdminCardHeaderMenu = ({
 	keyword = "",
 	setKeyword,
 	classList = "",
+	stripeEnabled = false,
 }) => {
 	const { auth } = useContext(AuthContext);
 	return (
@@ -62,7 +63,6 @@ const AdminCardHeaderMenu = ({
 							passHref
 							legacyBehavior
 						>
-							{/* <a className="btn btn-primary btn-sm">Add new {addLinkText}</a> */}
 							<a className="btn btn-primary btn-sm">Add new</a>
 						</Link>
 					)}

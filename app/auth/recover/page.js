@@ -19,7 +19,6 @@ const Login = ({ params, searchParams }) => {
 
 	const recoverAccount = async (e) => {
 		e.preventDefault();
-
 		await fetchurl(`/auth/forgotpassword`, "POST", "no-cache", {
 			...recoverData,
 			website: "beFree",

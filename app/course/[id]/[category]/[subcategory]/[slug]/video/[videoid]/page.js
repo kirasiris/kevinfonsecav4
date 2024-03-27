@@ -40,20 +40,6 @@ async function updateViews(params) {
 }
 
 const VideoRead = async ({ params, searchParams }) => {
-	// Redirect if not authenticated
-	!auth.isAuthenticated &&
-		router.push(
-			`/auth/login?returnpage=/course/${params.id}/${params.category}/${params.subcategory}/${params.slug}/video/${params.videoid}`
-		);
-
-	// If course is free or not free and otherwise enrolled, let user access to video.
-	// If not, then redirect user to course overview page
-	(course?.data?.isFree ||
-		(!course?.data?.isFree && !verifyAuthEnrollment?.success)) &&
-		redirect(
-			`/course/${course?.data._id}/${course?.data?.category}/${course?.data?.sub_category}/${course?.data?.slug}/index`
-		);
-
 	const auth = await getAuthenticatedUser();
 
 	// Redirect if user is not loggedIn

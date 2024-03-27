@@ -1,6 +1,7 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import Navbar from "react-bootstrap/Navbar";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
@@ -11,8 +12,12 @@ const Menu = ({
 	auth = {},
 	title = "",
 	logo = "https://getbootstrap.com/docs/5.3/assets/brand/bootstrap-logo.svg",
-	canonical = "",
+	canonical = "/",
 }) => {
+	const pathname = usePathname();
+	const isActive = (path = "") => {
+		return pathname === path ? "active" : "";
+	};
 	return (
 		<Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
 			<Container>
@@ -23,7 +28,7 @@ const Menu = ({
 					/>
 					<Link href={canonical} passHref legacyBehavior>
 						<a
-							className="navbar-brand"
+							className={`navbar-brand`}
 							target="_blank"
 							style={{ verticalAlign: "middle" }}
 						>
@@ -41,7 +46,7 @@ const Menu = ({
 					<Nav as="ul" className="me-auto">
 						<li className="nav-item mx-1">
 							<Link href={canonical} passHref legacyBehavior>
-								<a className="nav-link" aria-current="page">
+								<a className={`nav-link ${isActive(`/`)}`} aria-current="page">
 									Home
 								</a>
 							</Link>
@@ -59,7 +64,10 @@ const Menu = ({
 								passHref
 								legacyBehavior
 							>
-								<a className="nav-link" aria-current="page">
+								<a
+									className={`nav-link ${isActive(`/quiz`)}`}
+									aria-current="page"
+								>
 									Quizzes
 								</a>
 							</Link>
@@ -77,8 +85,28 @@ const Menu = ({
 										passHref
 										legacyBehavior
 									>
-										<a className="nav-link" aria-current="page">
+										<a
+											className={`nav-link ${isActive(`/dashboard`)}`}
+											aria-current="page"
+										>
 											Dashboard
+										</a>
+									</Link>
+								</li>
+								<li className="nav-item">
+									<Link
+										href={{
+											pathname: `/auth/profile`,
+											query: {},
+										}}
+										passHref
+										legacyBehavior
+									>
+										<a
+											className={`nav-link ${isActive(`/auth/profile`)}`}
+											aria-current="page"
+										>
+											Account
 										</a>
 									</Link>
 								</li>
@@ -91,7 +119,12 @@ const Menu = ({
 										passHref
 										legacyBehavior
 									>
-										<a className="nav-link" aria-current="page">
+										<a
+											className={`nav-link ${isActive(
+												`/profile/${auth?.data?._id}/${auth?.data?.username}`
+											)}`}
+											aria-current="page"
+										>
 											{auth.data.username}
 										</a>
 									</Link>
@@ -117,7 +150,7 @@ const Menu = ({
 								passHref
 								legacyBehavior
 							>
-								<a className="nav-link">Log In</a>
+								<a className={`nav-link ${isActive(`/auth/login`)}`}>Log In</a>
 							</Link>
 						)}
 					</Nav>

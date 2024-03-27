@@ -31,11 +31,6 @@ const Sidebar = () => {
 						<a>About</a>
 					</Link>
 				</li>
-				<li className={`list-group-item ${isActive(`/auth/editappearance`)}`}>
-					<Link href={`/auth/editappearance`} passHref legacyBehavior>
-						<a>Appearance</a>
-					</Link>
-				</li>
 				<li
 					className={`list-group-item ${isActive(`/auth/editnotifications`)}`}
 				>
@@ -70,7 +65,11 @@ const Sidebar = () => {
 						<a>Passwords</a>
 					</Link>
 				</li>
-				<li className={`list-group-item ${isActive(`/auth/deleteaccount`)}`}>
+				<li
+					className={`list-group-item list-group-item-danger ${isActive(
+						`/auth/deleteaccount`
+					)}`}
+				>
 					<Link href={`/auth/deleteaccount`} passHref legacyBehavior>
 						<a>Delete&nbsp;Account</a>
 					</Link>

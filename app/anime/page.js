@@ -1,6 +1,6 @@
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import Header from "@/layout/header";
-import List from "@/components/realstate/list";
+/// import List from "@/components/realstate/list";
 
 async function getFeaturedHouse(params) {
 	const res = await fetchurl(`/realstate${params}`, "GET", "no-cache");

@@ -3,8 +3,7 @@ import AuthContext from "@/helpers/globalContext";
 import { fetchurl, setAuthTokenOnServer } from "@/helpers/setTokenOnServer";
 import { setAuthToken } from "@/helpers/utilities";
 import { useRouter } from "next/navigation";
-import { useContext } from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 
 const Login = ({ params, searchParams }) => {
 	const router = useRouter();
@@ -61,7 +60,7 @@ const Login = ({ params, searchParams }) => {
 		await loadUser();
 		searchParams?.returnpage
 			? router.push(searchParams.returnpage)
-			: router.push(`/noadmin`);
+			: router.push(`/auth/profile`);
 	};
 
 	const [passwordShown, setPasswordShown] = useState(false);

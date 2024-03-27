@@ -1,12 +1,10 @@
 "use client";
-import axios from "axios";
-import { Suspense, useContext, useEffect, useState } from "react";
-import { redirect, useRouter } from "next/navigation";
+import { useContext, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import Sidebar from "@/layout/auth/sidebar";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import Globalcontent from "@/layout/content";
-import Loading from "@/app/blog/loading";
 import AuthContext from "@/helpers/globalContext";
 import MyTextArea from "@/components/global/mytextarea";
 
@@ -21,7 +19,6 @@ const UpdateAbout = ({ params, searchParams }) => {
 
 	const fetchUsers = async (params = "") => {
 		try {
-			/// const res = await axios.get(`/users${params}`);
 			const res = await fetchurl(`/users${params}`, "GET", "no-cache");
 			setProfiles(res?.data);
 		} catch (err) {
@@ -83,26 +80,22 @@ const UpdateAbout = ({ params, searchParams }) => {
 	useEffect(() => {
 		const fetchUser = async () => {
 			try {
-				// const res = await axios.get(`/users?_id=${auth?.user?._id}`);
-				const res = await fetchurl(
-					`/users?_id=${auth?.user?._id}`,
-					"GET",
-					"no-cache"
-				);
+				const res = await fetchurl(`/auth/me`, "GET", "no-cache");
 				setProfile(res?.data);
 				setAboutData({
-					name: res?.data?.name,
-					sex: res?.data?.sex,
-					relationshipStatus: res?.data?.relationshipStatus,
-					inRelationshipWith: res?.data?.inRelationshipWith,
-					company: res?.data?.company,
-					age: res?.data?.age,
-					bio: res?.data?.bio,
-					tags: res?.data?.tags,
+					name: res.data.name,
+					sex: res.data.sex,
+					relationshipStatus: res.data.relationshipStatus,
+					inRelationshipWith: res.data.inRelationshipWith,
+					company: res.data.company,
+					age: res.data.age,
+					bio: res.data.bio,
+					tags: res.data.tags,
 				});
 				setLoading(false);
 			} catch (err) {
 				console.log(err);
+				setError(true);
 				// const error = err.response.data.message;
 				const error = err?.response?.data?.error?.errors;
 				const errors = err?.response?.data?.errors;
@@ -131,6 +124,13 @@ const UpdateAbout = ({ params, searchParams }) => {
 
 	const upgradeAbout = async (e) => {
 		e.preventDefault();
+		const res = await fetchurl(
+			`/auth/updateabout`,
+			"PUT",
+			"no-cache",
+			aboutData
+		);
+		router.push(`/auth/profile`);
 	};
 
 	const resetForm = () => {
@@ -159,7 +159,7 @@ const UpdateAbout = ({ params, searchParams }) => {
 				<Sidebar />
 				<Globalcontent>
 					<div className="card">
-						<div className="card-header">Edit About</div>
+						<div className="card-header">Edit&nbsp;About</div>
 						<div className="card-body">
 							<form onSubmit={upgradeAbout}>
 								<label htmlFor="name" className="form-label">
@@ -177,7 +177,7 @@ const UpdateAbout = ({ params, searchParams }) => {
 									}}
 									type="text"
 									className="form-control mb-3"
-									placeholder={`${auth.user.name}`}
+									placeholder={`${profile.name}`}
 								/>
 								<label htmlFor="sex" className="form-label">
 									Sex
@@ -194,7 +194,7 @@ const UpdateAbout = ({ params, searchParams }) => {
 									}}
 									type="text"
 									className="form-control mb-3"
-									placeholder={`${auth.user.sex}`}
+									placeholder={`${profile.sex}`}
 								/>
 								<label htmlFor="gender" className="form-label">
 									Gender
@@ -211,18 +211,20 @@ const UpdateAbout = ({ params, searchParams }) => {
 									}}
 									className="form-control mb-3"
 								>
-									<option value={`non-binary`}>Non binary</option>
+									<option value={`non-binary`}>Non&nbsp;binary</option>
 									<option value={`intersex`}>Intersex</option>
-									<option value={`gender-variance`}>Gender variance</option>
+									<option value={`gender-variance`}>
+										Gender&nbsp;variance
+									</option>
 									<option value={`male`}>Male</option>
 									<option value={`butch`}>Butch</option>
 									<option value={`transgender`}>Transgender</option>
 									<option value={`agender`}>Agender</option>
 									<option value={`pangender`}>Pangender</option>
 									<option value={`demigender`}>Demigender</option>
-									<option value={`female`}>Cis woman</option>
-									<option value={`cisgender`}>Cis gender</option>
-									<option value={`bigender`}>Bi gender</option>
+									<option value={`female`}>Cis&nbsp;woman</option>
+									<option value={`cisgender`}>Cis&nbsp;gender</option>
+									<option value={`bigender`}>Bi&nbsp;gender</option>
 									<option value={`androgyne`}>Androgyne</option>
 									<option value={`trigender`}>Trigender</option>
 									<option value={`neutral`}>Neutral</option>
@@ -230,7 +232,7 @@ const UpdateAbout = ({ params, searchParams }) => {
 								<div className="row">
 									<div className="col">
 										<label htmlFor="relationshipStatus" className="form-label">
-											Relationship Status
+											Relationship&nbsp;Status
 										</label>
 										<select
 											id="relationshipStatus"
@@ -263,7 +265,7 @@ const UpdateAbout = ({ params, searchParams }) => {
 													htmlFor="inRelationshipWith"
 													className="form-label"
 												>
-													In Relationship With?
+													In&nbsp;Relationship&nbsp;With?
 												</label>
 												<select
 													id="inRelationshipWith"
@@ -279,8 +281,7 @@ const UpdateAbout = ({ params, searchParams }) => {
 												>
 													{profiles
 														.filter(
-															(excludedUser) =>
-																excludedUser._id !== auth?.user?._id
+															(excludedUser) => excludedUser._id !== profile._id
 														)
 														.map((user) => (
 															<option key={user._id} value={user._id}>
@@ -306,7 +307,7 @@ const UpdateAbout = ({ params, searchParams }) => {
 									}}
 									type="text"
 									className="form-control mb-3"
-									placeholder={`${auth.user.company}`}
+									placeholder={`${profile.company}`}
 								/>
 								<label htmlFor="age" className="form-label">
 									Age
@@ -331,7 +332,7 @@ const UpdateAbout = ({ params, searchParams }) => {
 									className="form-control mb-3"
 									min={18}
 									max={99}
-									placeholder={`${auth.user.age}`}
+									placeholder={`${profile.age}`}
 								/>
 								<label htmlFor="bio" className="form-label">
 									Bio
@@ -360,7 +361,7 @@ const UpdateAbout = ({ params, searchParams }) => {
 									}}
 									type="text"
 									className="form-control mb-3"
-									placeholder={`${auth.user.tags}`}
+									placeholder={`${profile.tags}`}
 								/>
 								<button
 									type="submit"

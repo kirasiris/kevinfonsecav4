@@ -170,7 +170,7 @@ const Sidebar = ({ object = {}, objects = [] }) => {
 					<div className="card-header">Interests</div>
 					<div className="card-body">
 						{object.data.tags.map((tag, index) => (
-							<div key={index} className="badge bg-secondary">
+							<div key={index} className="badge bg-secondary me-1">
 								<Link
 									href={{
 										pathname: `/search/profiles`,

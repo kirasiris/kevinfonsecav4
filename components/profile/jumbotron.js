@@ -13,7 +13,6 @@ const Jumbotron = ({
 }) => {
 	const pathname = usePathname();
 	const isActive = (path = "") => {
-		console.log(pathname, path);
 		return pathname === path ? "active text-bg-secondary" : "text-bg-dark";
 	};
 

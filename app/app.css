@@ -461,6 +461,7 @@ body.dark-mode footer {
 
 body.dark-mode .list-group-item {
 	background-color: #212529;
+	color: #00cc00;
 }
 
 body.dark-mode .accordion-button {

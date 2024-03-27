@@ -113,7 +113,7 @@ export const AuthProvider = ({ children }) => {
 			await setAuthTokenOnServer(token);
 			setAuthToken(token);
 			if (token) {
-				await fetchurl(`/auth/me`, "GET", "default", undefined, signal)
+				await fetchurl(`/auth/me`, "GET", "default")
 					.then((res) => {
 						console.log("Auth within useEffect in globalContext file", res);
 						return setAuth({

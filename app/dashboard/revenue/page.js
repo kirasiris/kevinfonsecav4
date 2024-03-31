@@ -89,32 +89,30 @@ const RevenueIndex = ({ params, searchParams }) => {
 	return (
 		<div className="card">
 			<div className="card-header">Revenue</div>
-			<div className="card-body">
-				<p className="lead mb-0">
-					You get paid directly from Stripe to your bank account every 48hrs.
-				</p>
-				<ul className="list-group list-group-flush">
-					<li className="list-group-item d-flex justify-content-between align-items-center">
-						<p className="m-0">Pending Balance</p>
-						{!loading &&
-							balance.pending &&
-							balance.pending.map((bp, i) => (
-								<span key={i}>{stripeCurrencyFormatter(bp, "USD")}</span>
-							))}
-					</li>
-					<li className="list-group-item d-flex justify-content-between align-items-center">
-						<p className="m-0">
-							Update your Stripe account details or view your previous payouts.
-						</p>
-						<button
-							className="btn btn-link btn-sm"
-							onClick={() => fetchStripeAccountSettings()}
-						>
-							Payout settings
-						</button>
-					</li>
-				</ul>
-			</div>
+			<p className="lead p-within-card-without-body mb-0">
+				You get paid directly from Stripe to your bank account every 48hrs.
+			</p>
+			<ul className="list-group list-group-flush">
+				<li className="list-group-item d-flex justify-content-between align-items-center">
+					<p className="m-0">Pending Balance</p>
+					{!loading &&
+						balance.pending &&
+						balance.pending.map((bp, i) => (
+							<span key={i}>{stripeCurrencyFormatter(bp, "USD")}</span>
+						))}
+				</li>
+				<li className="list-group-item d-flex justify-content-between align-items-center">
+					<p className="m-0">
+						Update your Stripe account details or view your previous payouts.
+					</p>
+					<button
+						className="btn btn-link btn-sm"
+						onClick={() => fetchStripeAccountSettings()}
+					>
+						Payout settings
+					</button>
+				</li>
+			</ul>
 		</div>
 	);
 };

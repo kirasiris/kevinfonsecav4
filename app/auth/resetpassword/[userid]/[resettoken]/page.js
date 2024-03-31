@@ -1,9 +1,9 @@
 "use client";
-import AuthContext from "@/helpers/globalContext";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import { useRouter } from "next/navigation";
-import { useContext } from "react";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { toast } from "react-toastify";
+import AuthContext from "@/helpers/globalContext";
 
 const ResetPassword = ({ params, searchParams }) => {
 	const router = useRouter();
@@ -18,34 +18,66 @@ const ResetPassword = ({ params, searchParams }) => {
 
 	const { password, password2 } = resetPasswordData;
 
+	const [error, setError] = useState(false);
+	const [btnText, setBtnTxt] = useState("Submit");
+
 	const resetPasswordAccount = async (e) => {
 		e.preventDefault();
-		if (password !== password2) {
-			console.log("Passwords do not match");
-			return;
-		}
-
-		const userid = params.userid;
-		const resettoken = params.resettoken;
-
-		if (!userid || !resettoken) {
-			console.log("There was an error, please try again");
-			return;
-		}
-
-		await fetchurl(
-			`/auth/resetpassword/${userid}/${resettoken}`,
-			"PUT",
-			"no-cache",
-			{
-				...resetPasswordData,
-				website: "beFree",
+		try {
+			setBtnTxt("Submit...");
+			if (password !== password2) {
+				console.log("Passwords do not match");
+				return;
 			}
-		);
 
-		searchParams?.returnpage
-			? router.push(searchParams.returnpage)
-			: router.push(`/auth/login`);
+			const userid = params.userid;
+			const resettoken = params.resettoken;
+
+			if (!userid || !resettoken) {
+				console.log(
+					"There was an error with the credentials given, please try again"
+				);
+				return;
+			}
+
+			await fetchurl(
+				`/auth/resetpassword/${userid}/${resettoken}`,
+				"PUT",
+				"no-cache",
+				{
+					...resetPasswordData,
+					website: "beFree",
+				}
+			);
+			resetForm();
+			toast.success(`New password has been created`);
+			setBtnTxt(btnText);
+			searchParams?.returnpage
+				? router.push(searchParams.returnpage)
+				: router.push(`/auth/login`);
+		} catch (err) {
+			console.log(err);
+			setError(true);
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
 	};
 
 	const [passwordShown, setPasswordShown] = useState(false);
@@ -108,7 +140,7 @@ const ResetPassword = ({ params, searchParams }) => {
 								password.length > 0 && password2.length > 0 ? !true : !false
 							}
 						>
-							Submit
+							{btnText}
 						</button>
 						<button
 							type="button"

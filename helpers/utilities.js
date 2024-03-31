@@ -90,3 +90,13 @@ export const stripeCurrencyFormatter = (amount, currency) => {
 export const formatDateWithoutTime = (createdAt) => {
 	return new Date(createdAt).toLocaleDateString();
 };
+
+export const checkEmptyObject = (obj = {}) => {
+	for (var prop in obj) {
+		if (Object.prototype.hasOwnProperty.call(obj, prop)) {
+			return false;
+		}
+	}
+
+	return true;
+};

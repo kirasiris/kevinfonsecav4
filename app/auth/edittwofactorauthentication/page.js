@@ -1,11 +1,11 @@
 "use client";
-import { useContext, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { toast } from "react-toastify";
-import Sidebar from "@/layout/auth/sidebar";
 import { fetchurl } from "@/helpers/setTokenOnServer";
-import Globalcontent from "@/layout/content";
+import { useRouter } from "next/navigation";
+import { useContext, useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import AuthContext from "@/helpers/globalContext";
+import Sidebar from "@/layout/auth/sidebar";
+import Globalcontent from "@/layout/content";
 import QRCode from "qrcode.react";
 
 const UpdateTwoFactorAuthentication = ({ params, searchParams }) => {
@@ -73,7 +73,9 @@ const UpdateTwoFactorAuthentication = ({ params, searchParams }) => {
 
 	const activate = async (e) => {
 		try {
-			const res = await fetchurl(`/auth/2fa/enable`, "PUT", "no-cache");
+			const res = await fetchurl(`/auth/2fa/enable`, "PUT", "no-cache", {
+				website: "beFree",
+			});
 			setEnabled(res.data.twoFactorTokenEnabled);
 			setEnabledStr(`Enabled`);
 			setRecoveryToken(res.data.twoFactorRecoveryToken);
@@ -109,7 +111,9 @@ const UpdateTwoFactorAuthentication = ({ params, searchParams }) => {
 
 	const disactivate = async (e) => {
 		try {
-			const res = await fetchurl(`/auth/2fa/disable`, "PUT", "no-cache");
+			const res = await fetchurl(`/auth/2fa/disable`, "PUT", "no-cache", {
+				website: "beFree",
+			});
 			setEnabled(res.data.twoFactorTokenEnabled);
 			setEnabledStr(`Disabled`);
 			setRecoveryToken(null);
@@ -154,41 +158,45 @@ const UpdateTwoFactorAuthentication = ({ params, searchParams }) => {
 				<Sidebar />
 				<Globalcontent>
 					<div className="card">
-						<div className="card-header">Edit 2FA</div>
+						<div className="card-header">Edit&nbsp;2FA</div>
 						<div className="card-body">
 							<h6>Instructions</h6>
 							<ol className={`mx-3`}>
-								<li>On your phone, go to the app store</li>
 								<li>
-									Search for <i>Google Authenticator</i>
+									On&nbsp;your&nbsp;phone,&nbsp;go&nbsp;to&nbsp;the&nbsp;app&nbsp;store
 								</li>
 								<li>
-									Download and Install the{" "}
+									Search&nbsp;for&nbsp;<i>Google&nbsp;Authenticator</i>
+								</li>
+								<li>
+									Download&nbsp;and&nbsp;Install&nbsp;the&nbsp;
 									<a
 										href={`https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=en_US&gl=US`}
 										target={`_blank`}
 										rel={`noopener noreferrer`}
 									>
 										<b className="text-bg-primary text-decoration-underline">
-											Google Authenticator App
+											Google&nbsp;Authenticator&nbsp;App
 										</b>
 									</a>
 								</li>
 							</ol>
-							<h6>Open and Configure the Google Authenticator App</h6>
+							<h6>
+								Open&nbsp;and&nbsp;Configure&nbsp;the&nbsp;Google&nbsp;Authenticator&nbsp;App
+							</h6>
 							<ol className={`mx-3`}>
 								<li>
-									In Google Authenticator, touch the{" "}
+									In&nbsp;Google&nbsp;Authenticator,&nbsp;touch&nbsp;the&nbsp;
 									<i className={`fas fa-plus me-1`} />
-									and select any of the following options:
+									&nbsp;and&nbsp;select&nbsp;any&nbsp;of&nbsp;the&nbsp;following&nbsp;options:
 									<ul className={`mx-4`}>
 										<li>
 											<i className={`fas fa-camera me-1`} />
-											Scan a QR Code
+											Scan&nbsp;a&nbsp;QR&nbsp;Code
 										</li>
 										<li>
 											<i className={`fas fa-keyboard me-1`} />
-											Enter a setup key
+											Enter&nbsp;a&nbsp;setup&nbsp;key
 										</li>
 									</ul>
 								</li>
@@ -214,24 +222,24 @@ const UpdateTwoFactorAuthentication = ({ params, searchParams }) => {
 									{recoveryToken && (
 										<>
 											<p>
-												Please keep this code in a safe but accessible area.
-												This is your <b>BACKUP</b> code:
+												Please&nbsp;keep&nbsp;this&nbsp;code&nbsp;in&nbsp;a&nbsp;safe&nbsp;but&nbsp;accessible&nbsp;area.
+												This&nbsp;is&nbsp;your&nbsp;<b>BACKUP</b>&nbsp;code:
 												<br />
 												<code>{recoveryToken}</code>
-												<br />
-												You can now close this window
 											</p>
 										</>
 									)}
 									<p>
-										Copy this to <i>Enter a setup key</i> to your authenticator
-										app:
+										Copy&nbsp;this&nbsp;to&nbsp;
+										<i>Enter&nbsp;a&nbsp;setup&nbsp;key</i>
+										&nbsp;to&nbsp;your&nbsp;authenticator app:
 										<br />
 										<code>{base32}</code>
 									</p>
 									<p>
-										This is the string used for the <i>QR Code</i>.
-										<b>You can ignore it!. </b>
+										This&nbsp;is&nbsp;the&nbsp;string&nbsp;used&nbsp;for&nbsp;the&nbsp;
+										<i>QR&nbsp;Code</i>.
+										<b>You&nbsp;can&nbsp;ignore&nbsp;it!.&nbsp;</b>
 										<br />
 										<code>{otpauth_url}</code>
 									</p>

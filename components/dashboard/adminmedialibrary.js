@@ -20,6 +20,7 @@ const AdminMediaLibray = ({
 	onModel = "Blog",
 }) => {
 	const {
+		auth,
 		files,
 		setFiles,
 		totalPages,
@@ -32,13 +33,16 @@ const AdminMediaLibray = ({
 
 	const router = useRouter();
 
+	const uploader =
+		auth !== "" && auth !== undefined ? `&user=${auth?.user?._id}` : "";
+
 	const [showDropzone, setShowDropzone] = useState(false);
 	const [page, setPage] = useState(1);
 	const [limit] = useState(11);
 	const [sortby] = useState(`-createdAt`);
 	const [next, setNext] = useState(0);
 	const [params, setParams] = useState(
-		`?page=${page}&limit=${limit}&sort=${sortby}`
+		`?page=${page}&limit=${limit}&sort=${sortby}${uploader}`
 	);
 	const [loading, setLoading] = useState(true);
 
@@ -86,7 +90,7 @@ const AdminMediaLibray = ({
 		try {
 			await fetchurl(`/files/${id}`, "DELETE", "no-cache");
 			await fetchurl(
-				`/uploads/deleteObject?publicId=${publicId}`,
+				`/uploads/deleteobject?publicId=${publicId}`,
 				"DELETE",
 				"no-cache"
 			);
@@ -192,18 +196,17 @@ const AdminMediaLibray = ({
 	return (
 		<>
 			<AdminMediaLibraryMenu
-				allLink="/noadmin/files"
-				imagesLink="/noadmin/files/images"
-				documentsLink="/noadmin/files/documents"
-				videosLink="/noadmin/files/videos"
-				audioLink="/noadmin/files/audios"
+				allLink="/dashboard/files"
+				imagesLink="/dashboard/files/images"
+				documentsLink="/dashboard/files/documents"
+				videosLink="/dashboard/files/videos"
+				audioLink="/dashboard/files/audios"
 			/>
-
 			<div className="card rounded-0">
 				<div className="card-header">
 					<Link
 						href={{
-							pathname: "/noadmin/files",
+							pathname: "/dashboard/files",
 							query: { page: 1, limit: 10 },
 						}}
 						passHref

@@ -8,6 +8,7 @@ import AuthContext from "@/helpers/globalContext";
 import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
 import AdminCardHeaderMenu from "@/components/admin/admincardheadermenu";
 import ClientNumericPagination from "@/layout/clientnumericpagination";
+import OnboardingLink from "@/components/dashboard/onboardinglink";
 
 const AdminMembershipsPublishedIndex = () => {
 	const {
@@ -274,34 +275,38 @@ const AdminMembershipsPublishedIndex = () => {
 					setKeyword={setKeyword}
 				/>
 				{list?.length > 0 ? (
-					<>
-						<ul className="list-group list-group-flush">
-							{list?.map((membership) => (
-								<Single
-									key={membership._id}
-									object={membership}
-									handleActivate={activateIt}
-									handleDisactivate={disactivateIt}
-									handleDelete={handleDelete}
-									objects={list}
-									setObjects={setMemberships}
-									setTotalResults={setTotalResults}
-								/>
-							))}
-							<li className="list-group-item">
-								{page} / {totalPages}
-							</li>
-						</ul>
-						<ClientNumericPagination
-							totalPages={totalPages || Math.ceil(list.length / limit)}
-							page={page}
-							limit={limit}
-							sortby={sortby}
-							siblings={1}
-							setParams={setParams}
-							router={router}
-						/>
-					</>
+					auth?.user?.stripe?.stripeChargesEnabled ? (
+						<>
+							<ul className="list-group list-group-flush">
+								{list?.map((membership) => (
+									<Single
+										key={membership._id}
+										object={membership}
+										handleActivate={activateIt}
+										handleDisactivate={disactivateIt}
+										handleDelete={handleDelete}
+										objects={list}
+										setObjects={setMemberships}
+										setTotalResults={setTotalResults}
+									/>
+								))}
+								<li className="list-group-item">
+									{page} / {totalPages}
+								</li>
+							</ul>
+							<ClientNumericPagination
+								totalPages={totalPages || Math.ceil(list.length / limit)}
+								page={page}
+								limit={limit}
+								sortby={sortby}
+								siblings={1}
+								setParams={setParams}
+								router={router}
+							/>
+						</>
+					) : (
+						<OnboardingLink auth={auth} />
+					)
 				) : (
 					<div
 						className={`alert alert-${

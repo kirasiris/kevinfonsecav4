@@ -29,6 +29,20 @@ const PicturesList = ({ object = {}, objects = [], searchParams = {} }) => {
 									</Link>
 									<Link
 										href={{
+											pathname: `/profile/${object.data._id}/${object.data.username}/photos/posts`,
+											query: {
+												page: 1,
+												limit: 50,
+												sort: `-createdAt`,
+											},
+										}}
+										passHref
+										legacyBehavior
+									>
+										<a className="btn btn-link btn-sm">Posts</a>
+									</Link>
+									<Link
+										href={{
 											pathname: `/profile/${object.data._id}/${object.data.username}/photos/avatars`,
 											query: {
 												page: 1,

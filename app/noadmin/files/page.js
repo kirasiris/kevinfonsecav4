@@ -2,7 +2,7 @@
 import { useContext } from "react";
 import { useRouter } from "next/navigation";
 import AuthContext from "@/helpers/globalContext";
-import AdminMediaLibray from "@/components/admin/adminmedialibray";
+import AdminMediaLibray from "@/components/admin/adminmedialibrary";
 
 const AdminFilesIndex = () => {
 	const { auth } = useContext(AuthContext);

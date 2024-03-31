@@ -1,13 +1,13 @@
 "use client";
 import { fetchurl } from "@/helpers/setTokenOnServer";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useState, useEffect, useContext } from "react";
 import { toast } from "react-toastify";
 import AuthContext from "@/helpers/globalContext";
 import MyTextArea from "@/components/global/mytextarea";
 import Image from "next/image";
 import { Modal } from "react-bootstrap";
-import AdminMediaLibray from "@/components/admin/adminmedialibray";
+import AdminMediaLibray from "@/components/admin/adminmedialibrary";
 
 const UpdateUser = () => {
 	const { auth, files, setFiles } = useContext(AuthContext);

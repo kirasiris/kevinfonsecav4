@@ -106,11 +106,13 @@ const Sidebar = ({ object = {}, objects = [] }) => {
 				</div>
 				<div className="card-footer">
 					{object.data?.role.length > 0 &&
-						object.data?.role.map((r, i) => (
-							<div key={i} className="badge bg-secondary me-1">
-								{r.charAt(0).toUpperCase() + r.slice(1)}
-							</div>
-						))}
+						object.data?.role
+							.filter((r) => r !== "founder")
+							.map((r, i) => (
+								<div key={i} className="badge bg-secondary me-1">
+									{r.charAt(0).toUpperCase() + r.slice(1)}
+								</div>
+							))}
 				</div>
 			</div>
 			{objects?.data?.length > 0 && (

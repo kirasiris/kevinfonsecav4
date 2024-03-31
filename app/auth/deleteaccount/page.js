@@ -1,13 +1,13 @@
 "use client";
-import { useContext, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { toast } from "react-toastify";
-import Sidebar from "@/layout/auth/sidebar";
 import { fetchurl } from "@/helpers/setTokenOnServer";
-import Globalcontent from "@/layout/content";
+import { useRouter } from "next/navigation";
+import { useContext, useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import AuthContext from "@/helpers/globalContext";
+import Sidebar from "@/layout/auth/sidebar";
+import Globalcontent from "@/layout/content";
 
-const DeleteAccount = ({ params, searchParams }) => {
+const UpdateDeleteAccount = ({ params, searchParams }) => {
 	const { auth } = useContext(AuthContext);
 	const router = useRouter();
 
@@ -24,6 +24,7 @@ const DeleteAccount = ({ params, searchParams }) => {
 	const [profile, setProfile] = useState(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(false);
+	const [btnText, setBtnTxt] = useState("Submit");
 
 	useEffect(() => {
 		const fetchUser = async () => {
@@ -62,8 +63,36 @@ const DeleteAccount = ({ params, searchParams }) => {
 
 	const deleteMyAccount = async (e) => {
 		e.preventDefault();
-		await fetchurl(`/auth/deleteaccount`, "POST", "no-cache", deleteData);
-		router.push(`/auth/login`);
+		try {
+			setBtnTxt("Submit...");
+			await fetchurl(`/auth/deleteaccount`, "POST", "no-cache", deleteData);
+			resetForm();
+			toast.success("Account deleted");
+			setBtnTxt(btnText);
+			router.push(`/auth/login`);
+		} catch (err) {
+			console.log(err);
+			setError(true);
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
 	};
 
 	const resetForm = () => {
@@ -136,7 +165,7 @@ const DeleteAccount = ({ params, searchParams }) => {
 									className="btn btn-secondary btn-sm float-start"
 									disabled={email?.length > 0 ? !true : !false}
 								>
-									Submit
+									{btnText}
 								</button>
 								<button
 									type="button"
@@ -157,4 +186,4 @@ const DeleteAccount = ({ params, searchParams }) => {
 	);
 };
 
-export default DeleteAccount;
+export default UpdateDeleteAccount;

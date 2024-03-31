@@ -1,11 +1,11 @@
 "use client";
-import { useContext, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { toast } from "react-toastify";
-import Sidebar from "@/layout/auth/sidebar";
 import { fetchurl } from "@/helpers/setTokenOnServer";
-import Globalcontent from "@/layout/content";
+import { useRouter } from "next/navigation";
+import { useContext, useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import AuthContext from "@/helpers/globalContext";
+import Sidebar from "@/layout/auth/sidebar";
+import Globalcontent from "@/layout/content";
 import MyTextArea from "@/components/global/mytextarea";
 
 const UpdateAbout = ({ params, searchParams }) => {
@@ -76,6 +76,7 @@ const UpdateAbout = ({ params, searchParams }) => {
 	const [profile, setProfile] = useState(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(false);
+	const [btnText, setBtnTxt] = useState("Submit");
 
 	useEffect(() => {
 		const fetchUser = async () => {
@@ -85,6 +86,7 @@ const UpdateAbout = ({ params, searchParams }) => {
 				setAboutData({
 					name: res.data.name,
 					sex: res.data.sex,
+					gender: res.data.gender,
 					relationshipStatus: res.data.relationshipStatus,
 					inRelationshipWith: res.data.inRelationshipWith,
 					company: res.data.company,
@@ -124,13 +126,36 @@ const UpdateAbout = ({ params, searchParams }) => {
 
 	const upgradeAbout = async (e) => {
 		e.preventDefault();
-		const res = await fetchurl(
-			`/auth/updateabout`,
-			"PUT",
-			"no-cache",
-			aboutData
-		);
-		router.push(`/auth/profile`);
+		try {
+			setBtnTxt("Submit...");
+			await fetchurl(`/auth/updateabout`, "PUT", "no-cache", aboutData);
+			resetForm();
+			toast.success("Account updated");
+			setBtnTxt(btnText);
+			router.push(`/auth/profile`);
+		} catch (err) {
+			console.log(err);
+			setError(true);
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
 	};
 
 	const resetForm = () => {
@@ -178,6 +203,7 @@ const UpdateAbout = ({ params, searchParams }) => {
 									type="text"
 									className="form-control mb-3"
 									placeholder={`${profile.name}`}
+									required
 								/>
 								<label htmlFor="sex" className="form-label">
 									Sex
@@ -362,12 +388,14 @@ const UpdateAbout = ({ params, searchParams }) => {
 									type="text"
 									className="form-control mb-3"
 									placeholder={`${profile.tags}`}
+									required
 								/>
 								<button
 									type="submit"
 									className="btn btn-secondary btn-sm float-start"
+									disabled={name.length > 0 && tags.length > 0 ? !true : !false}
 								>
-									Submit
+									{btnText}
 								</button>
 								<button
 									type="button"

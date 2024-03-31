@@ -1,11 +1,11 @@
 "use client";
-import AuthContext from "@/helpers/globalContext";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import { useRouter } from "next/navigation";
-import { useContext } from "react";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { toast } from "react-toastify";
+import AuthContext from "@/helpers/globalContext";
 
-const Login = ({ params, searchParams }) => {
+const Recover = ({ params, searchParams }) => {
 	const router = useRouter();
 	const { auth } = useContext(AuthContext);
 
@@ -17,16 +17,48 @@ const Login = ({ params, searchParams }) => {
 
 	const { email } = recoverData;
 
+	const [error, setError] = useState(false);
+	const [btnText, setBtnTxt] = useState("Submit");
+
 	const recoverAccount = async (e) => {
 		e.preventDefault();
-		await fetchurl(`/auth/forgotpassword`, "POST", "no-cache", {
-			...recoverData,
-			website: "beFree",
-		});
+		try {
+			setBtnTxt("Submit...");
+			await fetchurl(`/auth/forgotpassword`, "POST", "no-cache", {
+				...recoverData,
+				website: "beFree",
+			});
+			resetForm();
+			toast.success(
+				`An email has been sent to ${recoverData.email} associated with this account.`
+			);
+			setBtnTxt(btnText);
+			searchParams?.returnpage
+				? router.push(searchParams.returnpage)
+				: router.push(`/auth/login`);
+		} catch (err) {
+			console.log(err);
+			setError(true);
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
 
-		searchParams?.returnpage
-			? router.push(searchParams.returnpage)
-			: router.push(`/auth/login`);
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
 	};
 
 	const resetForm = () => {
@@ -63,7 +95,7 @@ const Login = ({ params, searchParams }) => {
 							className="btn btn-secondary btn-sm float-start"
 							disabled={email.length > 0 ? !true : !false}
 						>
-							Submit
+							{btnText}
 						</button>
 						<button
 							type="button"
@@ -79,4 +111,4 @@ const Login = ({ params, searchParams }) => {
 	);
 };
 
-export default Login;
+export default Recover;

@@ -5,13 +5,9 @@ module.exports = {
 		policies: [
 			{
 				userAgent: "*",
-				disallow: "/admin",
-			},
-			{
-				userAgent: "*",
 				allow: "/",
 			},
 		],
 	},
-	exclude: ["/noadmin"],
+	exclude: ["/noadmin", "/dashboard"],
 };

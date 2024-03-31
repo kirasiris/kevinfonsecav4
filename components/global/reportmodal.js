@@ -27,6 +27,7 @@ const ReportModal = ({ postId = null, postType = ``, onModel = `` }) => {
 			...reportData,
 			type: postType,
 			onModel: onModel,
+			website: "beFree",
 		});
 		setReportModal(false);
 		resetForm();

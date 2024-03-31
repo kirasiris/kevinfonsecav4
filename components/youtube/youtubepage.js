@@ -8,10 +8,10 @@ import "react-multi-carousel/lib/styles.css";
 import DisplayYoutubeInfoModal from "./displayyoutubeinfomodal";
 
 const YouTubePage = ({ searchParams, pushTo = true }) => {
+	const router = useRouter();
+
 	const [video, setVideo] = useState({});
 	const [videos, setVideos] = useState([]);
-
-	const router = useRouter();
 
 	const [videoData, setVideoData] = useState({
 		video_url: ``,
@@ -20,11 +20,11 @@ const YouTubePage = ({ searchParams, pushTo = true }) => {
 
 	const { video_url, download_video } = videoData;
 
-	const [submitButtonText, setButtonText] = useState(`Search`);
+	const [btnText, setBtnText] = useState(`Search`);
 
 	const initLookout = async (e) => {
 		e.preventDefault();
-		setButtonText("...");
+		setBtnText("...");
 		const res = await fetchurl(
 			`/extras/youtube/getinfo`,
 			"POST",
@@ -33,7 +33,7 @@ const YouTubePage = ({ searchParams, pushTo = true }) => {
 		);
 		setVideo(res.data);
 		setVideos([res.data, ...videos]);
-		setButtonText(submitButtonText);
+		setBtnText(btnText);
 		resetForm();
 		router.push(`/youtube?_id=${res.data._id}&videoId=${res.data.videoId}`);
 	};
@@ -173,7 +173,7 @@ const YouTubePage = ({ searchParams, pushTo = true }) => {
 							type="submit"
 							disabled={video_url?.length > 0 ? !true : !false}
 						>
-							{submitButtonText}
+							{btnText}
 						</button>
 						<button
 							className="btn btn-secondary btn-sm float-end"

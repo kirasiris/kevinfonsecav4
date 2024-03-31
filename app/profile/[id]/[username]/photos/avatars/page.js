@@ -34,7 +34,7 @@ const ProfilePhotoAvatarsIndex = async ({ params, searchParams }) => {
 	);
 
 	const getMediasData = getMedias(
-		`?user=${params.id}&page=${page}&limit=${limit}&sort=-createdAt&album=profile-pictures${decrypt}`
+		`?user=${params.id}&page=${page}&limit=${limit}&sort=-createdAt&album=profile-avatars${decrypt}`
 	);
 
 	const [profile, sidebarphotos, files] = await Promise.all([

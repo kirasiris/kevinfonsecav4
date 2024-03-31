@@ -65,6 +65,11 @@ const Sidebar = () => {
 						<a>Passwords</a>
 					</Link>
 				</li>
+				<li className={`list-group-item ${isActive(`/auth/stripe`)}`}>
+					<Link href={`/auth/stripe`} passHref legacyBehavior>
+						<a>Stripe Settings</a>
+					</Link>
+				</li>
 				<li
 					className={`list-group-item list-group-item-danger ${isActive(
 						`/auth/deleteaccount`

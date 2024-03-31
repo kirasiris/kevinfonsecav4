@@ -1,11 +1,11 @@
 "use client";
-import { useContext, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { toast } from "react-toastify";
-import Sidebar from "@/layout/auth/sidebar";
 import { fetchurl } from "@/helpers/setTokenOnServer";
-import Globalcontent from "@/layout/content";
+import { useRouter } from "next/navigation";
+import { useContext, useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import AuthContext from "@/helpers/globalContext";
+import Sidebar from "@/layout/auth/sidebar";
+import Globalcontent from "@/layout/content";
 
 const UpdateBasics = ({ params, searchParams }) => {
 	const { auth } = useContext(AuthContext);
@@ -45,6 +45,7 @@ const UpdateBasics = ({ params, searchParams }) => {
 	const [profile, setProfile] = useState(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(false);
+	const [btnText, setBtnTxt] = useState("Submit");
 
 	useEffect(() => {
 		const fetchUser = async () => {
@@ -96,8 +97,36 @@ const UpdateBasics = ({ params, searchParams }) => {
 
 	const upgradeBasic = async (e) => {
 		e.preventDefault();
-		await fetchurl(`/auth/updatebasics`, "PUT", "no-cache", basicData);
-		router.push(`/auth/profile`);
+		try {
+			setBtnTxt("Submit...");
+			await fetchurl(`/auth/updatebasics`, "PUT", "no-cache", basicData);
+			resetForm();
+			toast.success("Account updated");
+			setBtnTxt(btnText);
+			router.push(`/auth/profile`);
+		} catch (err) {
+			console.log(err);
+			setError(true);
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
+		}
 	};
 
 	const resetForm = () => {
@@ -224,7 +253,7 @@ const UpdateBasics = ({ params, searchParams }) => {
 									type="submit"
 									className="btn btn-secondary btn-sm float-start"
 								>
-									Submit
+									{btnText}
 								</button>
 								<button
 									type="button"

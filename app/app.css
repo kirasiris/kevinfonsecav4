@@ -31,6 +31,13 @@ p > img {
 	cursor: pointer;
 }
 
+.p-within-card-without-body {
+	padding-top: 0.5rem;
+	padding-bottom: 0.5rem;
+	padding-left: 1rem;
+	padding-right: 1rem;
+}
+
 /*****************************
 SHORTS/STORIES
 *****************************/
@@ -336,6 +343,14 @@ PREVIEWER
 	overflow-wrap: break-word;
 	white-space: pre-line;
 	margin-top: 0.5rem;
+}
+
+/*****************************
+NPROGRESS
+*****************************/
+#nprogress .bar {
+	z-index: 9999;
+	height: 5px !important;
 }
 
 /*****************************

@@ -6,6 +6,8 @@ import DeleteModal from "@/components/global/deletemodal";
 
 const Single = ({
 	object = {},
+	handleStripeCustomerId,
+	handleStripeAccountId,
 	handleStripeId,
 	handleSellerAccount,
 	handleDelete,
@@ -60,22 +62,49 @@ const Single = ({
 				<div className="blog-actions-ellipsis-menu">
 					<span className="ellipsis-menu">
 						<DropdownButton title="Options" variant="secondary">
+							{(object?.stripe?.stripeCustomerId === `` ||
+								object?.stripe?.stripeCustomerId === undefined ||
+								object?.stripe?.stripeCustomerId === null) && (
+								<button
+									className="dropdown-item btn btn-sm"
+									onClick={() => handleStripeCustomerId(object._id)}
+								>
+									Assign&nbsp;Stripe&nbsp;Customer&nbsp;Id
+								</button>
+							)}
 							{(object?.stripe?.stripeAccountId === `` ||
 								object?.stripe?.stripeAccountId === undefined ||
 								object?.stripe?.stripeAccountId === null) && (
 								<button
 									className="dropdown-item btn btn-sm"
-									onClick={() => handleStripeId(object._id)}
+									onClick={() => handleStripeAccountId(object._id)}
 								>
 									Assign&nbsp;Stripe&nbsp;Account&nbsp;Id
 								</button>
 							)}
-							<button
-								className="dropdown-item btn btn-sm"
-								onClick={() => handleSellerAccount(object._id)}
-							>
-								Update&nbsp;Stripe&nbsp;Seller&nbsp;Account
-							</button>
+							{(object?.stripe?.stripeCustomerId === "" ||
+								object?.stripe?.stripeCustomerId === undefined ||
+								object?.stripe?.stripeCustomerId === null) &&
+								(object?.stripe?.stripeAccountId === "" ||
+									object?.stripe?.stripeAccountId === undefined ||
+									object?.stripe?.stripeAccountId === null) && (
+									<button
+										className="dropdown-item btn btn-sm"
+										onClick={() => handleStripeId(object._id)}
+									>
+										Assign&nbsp;Stripe&nbsp;Customer&nbsp;and&nbsp;Account&nbsp;Ids
+									</button>
+								)}
+							{object.stripe?.stripeAccountId !== `` &&
+								object.stripe?.stripeAccountId !== undefined &&
+								object.stripe?.stripeAccountId !== null && (
+									<button
+										className="dropdown-item btn btn-sm"
+										onClick={() => handleSellerAccount(object._id)}
+									>
+										Update&nbsp;Stripe&nbsp;Seller&nbsp;Account?
+									</button>
+								)}
 							<Link
 								href={{
 									pathname: `/noadmin/users/read/${object._id}`,

@@ -1,4 +1,6 @@
 "use client";
+import NProgress from "nprogress";
+import "../node_modules/nprogress/nprogress.css";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -7,6 +9,11 @@ import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import { deleteAuthTokenOnServer } from "@/helpers/setTokenOnServer";
 import { deleteCookie } from "@/helpers/utilities";
+import { Router } from "next/router";
+
+Router.onRouteChangeStart = (url) => NProgress.start();
+Router.onRouteChangeComplete = (url) => NProgress.done();
+Router.onRouteChangeError = (url) => NProgress.done();
 
 const Menu = ({
 	auth = {},
@@ -76,6 +83,25 @@ const Menu = ({
 					<Nav as="ul">
 						{auth?.data?.isOnline ? (
 							<>
+								{auth?.data?.role.includes("founder") && (
+									<li className="nav-item">
+										<Link
+											href={{
+												pathname: `/noadmin`,
+												query: {},
+											}}
+											passHref
+											legacyBehavior
+										>
+											<a
+												className={`nav-link ${isActive(`/noadmin`)}`}
+												aria-current="page"
+											>
+												Admin
+											</a>
+										</Link>
+									</li>
+								)}
 								<li className="nav-item">
 									<Link
 										href={{
@@ -142,16 +168,32 @@ const Menu = ({
 								</li>
 							</>
 						) : (
-							<Link
-								href={{
-									pathname: `/auth/login`,
-									query: {},
-								}}
-								passHref
-								legacyBehavior
-							>
-								<a className={`nav-link ${isActive(`/auth/login`)}`}>Log In</a>
-							</Link>
+							<>
+								<Link
+									href={{
+										pathname: `/auth/login`,
+										query: {},
+									}}
+									passHref
+									legacyBehavior
+								>
+									<a className={`nav-link ${isActive(`/auth/login`)}`}>
+										Log In
+									</a>
+								</Link>
+								<Link
+									href={{
+										pathname: `/auth/register`,
+										query: {},
+									}}
+									passHref
+									legacyBehavior
+								>
+									<a className={`nav-link ${isActive(`/auth/register`)}`}>
+										Register
+									</a>
+								</Link>
+							</>
 						)}
 					</Nav>
 				</Navbar.Collapse>

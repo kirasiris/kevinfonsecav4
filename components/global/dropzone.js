@@ -44,7 +44,7 @@ const UseDropzone = ({
 
 						for (let i = 0; i < acceptedFiles.length; i++) {
 							const res = await axios.put(
-								`/uploads/uploadObject`,
+								`/uploads/uploadobject`,
 								{
 									userId: auth?.user._id,
 									username: auth?.user.username,

@@ -19,56 +19,72 @@ const AdminStatusesMenu = ({
 				border: "1px solid rgba(0, 0, 0, 0.175)",
 			}}
 		>
-			<Link
-				href={{
-					pathname: allLink,
-					query: { page: 1, limit: 10, sort: `-createdAt` },
-				}}
-				passHref
-				legacyBehavior
-			>
-				<a className="btn btn-link btn-sm">All</a>
-			</Link>
-			<Link
-				href={{
-					pathname: publishedLink,
-					query: { page: 1, limit: 10, sort: `-createdAt` },
-				}}
-				passHref
-				legacyBehavior
-			>
-				<a className="btn btn-link btn-sm">Published</a>
-			</Link>
-			<Link
-				href={{
-					pathname: draftLink,
-					query: { page: 1, limit: 10, sort: `-createdAt` },
-				}}
-				passHref
-				legacyBehavior
-			>
-				<a className="btn btn-link btn-sm">Draft</a>
-			</Link>
-			<Link
-				href={{
-					pathname: scheduledLink,
-					query: { page: 1, limit: 10, sort: `-createdAt` },
-				}}
-				passHref
-				legacyBehavior
-			>
-				<a className="btn btn-link btn-sm">Scheduled</a>
-			</Link>
-			<Link
-				href={{
-					pathname: trashedLink,
-					query: { page: 1, limit: 10, sort: `-createdAt` },
-				}}
-				passHref
-				legacyBehavior
-			>
-				<a className="btn btn-link btn-sm">Trashed</a>
-			</Link>
+			{allLink !== "" && allLink !== undefined && allLink !== null && (
+				<Link
+					href={{
+						pathname: allLink,
+						query: { page: 1, limit: 10, sort: `-createdAt` },
+					}}
+					passHref
+					legacyBehavior
+				>
+					<a className="btn btn-link btn-sm">All</a>
+				</Link>
+			)}
+			{publishedLink !== "" &&
+				publishedLink !== undefined &&
+				publishedLink !== null && (
+					<Link
+						href={{
+							pathname: publishedLink,
+							query: { page: 1, limit: 10, sort: `-createdAt` },
+						}}
+						passHref
+						legacyBehavior
+					>
+						<a className="btn btn-link btn-sm">Published</a>
+					</Link>
+				)}
+			{draftLink !== "" && draftLink !== undefined && draftLink !== null && (
+				<Link
+					href={{
+						pathname: draftLink,
+						query: { page: 1, limit: 10, sort: `-createdAt` },
+					}}
+					passHref
+					legacyBehavior
+				>
+					<a className="btn btn-link btn-sm">Draft</a>
+				</Link>
+			)}
+			{scheduledLink !== "" &&
+				scheduledLink !== undefined &&
+				scheduledLink !== null && (
+					<Link
+						href={{
+							pathname: scheduledLink,
+							query: { page: 1, limit: 10, sort: `-createdAt` },
+						}}
+						passHref
+						legacyBehavior
+					>
+						<a className="btn btn-link btn-sm">Scheduled</a>
+					</Link>
+				)}
+			{trashedLink !== "" &&
+				trashedLink !== undefined &&
+				trashedLink !== null && (
+					<Link
+						href={{
+							pathname: trashedLink,
+							query: { page: 1, limit: 10, sort: `-createdAt` },
+						}}
+						passHref
+						legacyBehavior
+					>
+						<a className="btn btn-link btn-sm">Trashed</a>
+					</Link>
+				)}
 			{categoriesLink !== "" &&
 				categoriesLink !== undefined &&
 				categoriesLink !== null &&

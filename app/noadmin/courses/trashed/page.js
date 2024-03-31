@@ -8,7 +8,7 @@ import AuthContext from "@/helpers/globalContext";
 import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
 import AdminCardHeaderMenu from "@/components/admin/admincardheadermenu";
 import ClientNumericPagination from "@/layout/clientnumericpagination";
-import OnboardingLink from "@/components/dashboard/courses/onboardinglink";
+import OnboardingLink from "@/components/dashboard/onboardinglink";
 
 const AdminCoursesTrashedIndex = () => {
 	const {
@@ -311,9 +311,7 @@ const AdminCoursesTrashedIndex = () => {
 					setKeyword={setKeyword}
 				/>
 				{list?.length > 0 ? (
-					auth?.user?.stripe?.stripeOnboardingLink === "" &&
-					auth?.user?.stripe?.stripeOnboardingLink === null &&
-					auth?.user?.stripe?.stripeOnboardingLink === undefined ? (
+					auth?.user?.stripe?.stripeChargesEnabled ? (
 						<>
 							<ul className="list-group list-group-flush">
 								{list?.map((course) => (

@@ -5,8 +5,6 @@ import { fetchurl } from "@/helpers/setTokenOnServer";
 import Header from "@/layout/header";
 
 const ContactIndex = () => {
-	const [alert, setAlert] = useState(false);
-	const [emailSent, setEmailSent] = useState({});
 	const [contactData, setContactData] = useState({
 		name: ``,
 		email: ``,
@@ -16,14 +14,19 @@ const ContactIndex = () => {
 
 	const { name, email, subject, text } = contactData;
 
+	const [error, setError] = useState(false);
+	const [btnText, setBtnText] = useState(`Submit`);
+
 	const createContact = async (e) => {
 		e.preventDefault();
 		try {
-			const res = await fetchurl(`/emails`, "POST", "no-cache", contactData);
-			setAlert(true);
-			setEmailSent(res.data);
+			setBtnText("...");
+			await fetchurl(`/emails`, "POST", "no-cache", contactData);
+			setBtnText(btnText);
 			resetForm();
 		} catch (err) {
+			console.log(err);
+			setError(true);
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;
 			const errors = err?.response?.data?.errors;
@@ -144,7 +147,7 @@ const ContactIndex = () => {
 							className="btn btn-secondary btn-sm float-start"
 							disabled={email.length > 0 && text.length > 0 ? !true : !false}
 						>
-							Submit
+							{btnText}
 						</button>
 						<button
 							type="button"
@@ -155,15 +158,6 @@ const ContactIndex = () => {
 						</button>
 					</form>
 				</div>
-				{alert && (
-					<>
-						<br />
-						<div className="alert alert-success">
-							Email sent with message encrypted!
-						</div>
-						<pre>{JSON.stringify({ emailSent }, null, 4)}</pre>
-					</>
-				)}
 			</div>
 		</>
 	);

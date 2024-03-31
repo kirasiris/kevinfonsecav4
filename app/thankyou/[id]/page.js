@@ -27,8 +27,6 @@ const ThankYouRead = async ({ params, searchParams }) => {
 
 	await getVerification(`/${params.id}`);
 
-	console.log(searchParams.returnpage);
-
 	return (
 		<Suspense fallback={<Loading />}>
 			<div

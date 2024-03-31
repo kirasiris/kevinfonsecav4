@@ -7,7 +7,7 @@ import AuthContext from "@/helpers/globalContext";
 import MyTextArea from "@/components/global/mytextarea";
 import Image from "next/image";
 import { Modal } from "react-bootstrap";
-import AdminMediaLibray from "@/components/admin/adminmedialibray";
+import AdminMediaLibray from "@/components/admin/adminmedialibrary";
 
 const CreateUser = () => {
 	const { auth, files, setFiles } = useContext(AuthContext);

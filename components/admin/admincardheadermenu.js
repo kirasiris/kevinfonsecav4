@@ -17,7 +17,6 @@ const AdminCardHeaderMenu = ({
 	keyword = "",
 	setKeyword,
 	classList = "",
-	stripeEnabled = false,
 }) => {
 	const { auth } = useContext(AuthContext);
 	return (

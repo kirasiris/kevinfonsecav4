@@ -3,7 +3,7 @@ import { useContext } from "react";
 import AuthContext from "@/helpers/globalContext";
 import Image from "next/image";
 import { Modal } from "react-bootstrap";
-import AdminMediaLibray from "./adminmedialibray";
+import AdminMediaLibray from "./adminmedialibrary";
 
 const AdminSidebar = ({
 	displayCategoryField = true,

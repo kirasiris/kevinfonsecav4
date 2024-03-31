@@ -1,9 +1,10 @@
 "use client";
-import AuthContext from "@/helpers/globalContext";
 import { fetchurl, setAuthTokenOnServer } from "@/helpers/setTokenOnServer";
-import { setAuthToken } from "@/helpers/utilities";
 import { useRouter } from "next/navigation";
-import { useState, useEffect, useContext } from "react";
+import { useContext, useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import AuthContext from "@/helpers/globalContext";
+import { setAuthToken } from "@/helpers/utilities";
 
 const Login = ({ params, searchParams }) => {
 	const router = useRouter();
@@ -18,6 +19,9 @@ const Login = ({ params, searchParams }) => {
 	});
 
 	const { email, password, rememberMe } = loginData;
+
+	const [error, setError] = useState(false);
+	const [btnText, setBtnTxt] = useState("Submit");
 
 	// Remember me
 	useEffect(() => {
@@ -35,32 +39,60 @@ const Login = ({ params, searchParams }) => {
 
 	const loginAccount = async (e) => {
 		e.preventDefault();
-		if (rememberMe) {
-			localStorage.setItem("email", email);
-			localStorage.setItem("password", password);
-		} else {
-			localStorage.removeItem("email");
-			localStorage.removeItem("password");
+		try {
+			setBtnTxt("Submit...");
+			if (rememberMe) {
+				localStorage.setItem("email", email);
+				localStorage.setItem("password", password);
+			} else {
+				localStorage.removeItem("email");
+				localStorage.removeItem("password");
+			}
+
+			const res = await fetchurl(`/auth/login`, "POST", "no-cache", loginData);
+
+			if (res?.data) {
+				router.push(`/auth/validatetwofactorauth/${res?.data?._id}`);
+				return res;
+			}
+
+			// If not success stop
+			if (!res?.success) return;
+
+			// Else continue,
+			// furthermore, setAuthTokenOnServer needs to be prior to setAuthToken (client version)
+			await setAuthTokenOnServer(res?.token);
+			setAuthToken(res?.token);
+			await loadUser();
+			resetForm();
+			toast.success("Login was a success");
+			setBtnTxt(btnText);
+			searchParams?.returnpage
+				? router.push(searchParams.returnpage)
+				: router.push(`/auth/profile`);
+		} catch (err) {
+			console.log(err);
+			setError(true);
+			// const error = err.response.data.message;
+			const error = err?.response?.data?.error?.errors;
+			const errors = err?.response?.data?.errors;
+
+			if (error) {
+				// dispatch(setAlert(error, 'danger'));
+				error &&
+					Object.entries(error).map(([, value]) => toast.error(value.message));
+			}
+
+			if (errors) {
+				errors.forEach((error) => toast.error(error.msg));
+			}
+
+			toast.error(err?.response?.statusText);
+			return {
+				msg: err?.response?.statusText,
+				status: err?.response?.status,
+			};
 		}
-
-		const res = await fetchurl(`/auth/login`, "POST", "no-cache", loginData);
-
-		if (res?.data) {
-			router.push(`/auth/validatetwofactorauth/${res?.data?._id}`);
-			return res;
-		}
-
-		// If not success stop
-		if (!res?.success) return;
-
-		// Else continue,
-		// furthermore, setAuthTokenOnServer needs to be prior to setAuthToken (client version)
-		await setAuthTokenOnServer(res?.token);
-		setAuthToken(res?.token);
-		await loadUser();
-		searchParams?.returnpage
-			? router.push(searchParams.returnpage)
-			: router.push(`/auth/profile`);
 	};
 
 	const [passwordShown, setPasswordShown] = useState(false);
@@ -124,7 +156,7 @@ const Login = ({ params, searchParams }) => {
 								email.length > 0 && password.length > 0 ? !true : !false
 							}
 						>
-							Submit
+							{btnText}
 						</button>
 						<button
 							type="button"

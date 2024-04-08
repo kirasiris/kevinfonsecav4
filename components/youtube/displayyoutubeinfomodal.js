@@ -17,12 +17,10 @@ const DisplayYoutubeInfoModal = ({ object = {} }) => {
 				More
 			</button>
 			<Modal
+				id={object._id}
 				show={activeModal}
 				onHide={() => setActiveModal(!activeModal)}
 				size="xl"
-				aria-labelledby="contained-modal-title-vcenter"
-				centered
-				id={object._id}
 				backdrop={true}
 				animation={true}
 			>

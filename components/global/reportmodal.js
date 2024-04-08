@@ -46,6 +46,7 @@ const ReportModal = ({ postId = null, postType = ``, onModel = `` }) => {
 			<Modal
 				show={reportModal}
 				onHide={() => setReportModal(!reportModal)}
+				size="xl"
 				backdrop={true}
 				animation={true}
 			>

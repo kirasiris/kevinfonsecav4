@@ -37,6 +37,11 @@ const UpdateAvatar = ({ params, searchParams }) => {
 			try {
 				const res = await fetchurl(`/auth/me`, "GET", "no-cache");
 				setProfile(res?.data);
+				setAvatarData({
+					...avatarData,
+					filename: res?.data?.files?.avatar?.location?.filename,
+					fileurl: res?.data?.files?.avatar?.location?.secure_location,
+				});
 				setLoading(false);
 			} catch (err) {
 				console.log(err);
@@ -83,7 +88,6 @@ const UpdateAvatar = ({ params, searchParams }) => {
 					album: "profile-avatars",
 				},
 				{
-					// method: "PUT",
 					headers: {
 						"Content-Type": "multipart/form-data",
 						Authorization: `Bearer ${token.value}`,
@@ -168,12 +172,10 @@ const UpdateAvatar = ({ params, searchParams }) => {
 						<div className="card-body">
 							<div className="align-content-center d-flex justify-content-center mb-3">
 								<Image
-									src={
-										profile.files?.avatar?.location?.secure_location || fileurl
-									}
+									src={fileurl}
 									alt="xD"
-									width="150"
-									height="150"
+									width={150}
+									height={150}
 									style={{
 										width: "150px",
 										height: "150px",
@@ -190,7 +192,6 @@ const UpdateAvatar = ({ params, searchParams }) => {
 								<input
 									id="avatar"
 									name="file"
-									label={file}
 									onChange={(e) => {
 										const myFile = e.target.files[0];
 										let preview = "";
@@ -198,7 +199,6 @@ const UpdateAvatar = ({ params, searchParams }) => {
 											preview = URL.createObjectURL(myFile);
 										}
 										setAvatarData({
-											...avatarData,
 											file: myFile,
 											filename: myFile.name,
 											fileurl: preview,
@@ -206,7 +206,7 @@ const UpdateAvatar = ({ params, searchParams }) => {
 									}}
 									type="file"
 									className="form-control mb-3"
-									placeholder={`${profile.files?.avatar?.location?.secure_location}`}
+									placeholder={fileurl}
 									accept={`image/*`}
 								/>
 								<UseProgress percentage={uploadPercentage} />

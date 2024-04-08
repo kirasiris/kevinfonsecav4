@@ -3,14 +3,14 @@ import { fetchurl } from "@/helpers/setTokenOnServer";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useContext } from "react";
 import { toast } from "react-toastify";
-import Single from "@/components/dashboard/courses/single";
+import Single from "@/components/dashboard/memberships/single";
 import AuthContext from "@/helpers/globalContext";
 import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
-import DashboardCardHeaderMenu from "@/layout/dashboard/dashboardcardheadermenu";
+import AdminCardHeaderMenu from "@/layout/dashboard/dashboardcardheadermenu";
 import ClientNumericPagination from "@/layout/clientnumericpagination";
 import OnboardingLink from "@/components/dashboard/onboardinglink";
 
-const DashboardCoursesIndex = () => {
+const DashboardMembershipsIndex = () => {
 	const {
 		auth,
 		totalPages,
@@ -25,7 +25,7 @@ const DashboardCoursesIndex = () => {
 	// Redirect if not authenticated
 	!auth.isAuthenticated && router.push("/auth/login");
 
-	const [courses, setCourses] = useState([]);
+	const [memberships, setMemberships] = useState([]);
 	const [page, setPage] = useState(1);
 	const [limit] = useState(10);
 	const [sortby] = useState(`-createdAt`);
@@ -36,13 +36,17 @@ const DashboardCoursesIndex = () => {
 	const [list, setList] = useState([]);
 	const [loading, setLoading] = useState(true);
 
-	const fetchCourses = async () => {
+	const fetchMemberships = async () => {
 		try {
-			const res = await fetchurl(`/courses${params}`, "GET", "no-cache");
-			setCourses(res?.data);
+			const res = await fetchurl(
+				`/extras/stripe/memberships${params}`,
+				"GET",
+				"no-cache"
+			);
+			setMemberships(res?.data);
 			setTotalPages(res?.pagination?.totalpages);
 			setCurrentResults(res?.count);
-			setTotalResults({ ...totalResults, courses: res?.countAll });
+			setTotalResults({ ...totalResults, memberships: res?.countAll });
 			setPage(res?.pagination?.current);
 			setLoading(false);
 		} catch (err) {
@@ -69,29 +73,33 @@ const DashboardCoursesIndex = () => {
 	};
 
 	useEffect(() => {
-		fetchCourses();
+		fetchMemberships();
 	}, [router, params]);
 
 	useEffect(() => {
-		setList(courses);
-	}, [courses]);
+		setList(memberships);
+	}, [memberships]);
 
 	useEffect(() => {
 		if (keyword !== "") {
-			const result = courses.filter((object) => {
+			const result = memberships.filter((object) => {
 				return object.title.toLowerCase().startsWith(keyword.toLowerCase());
 			});
 			setList(result);
 		} else {
-			setList(courses);
+			setList(memberships);
 		}
 	}, [keyword]);
 
-	const draftIt = async (id) => {
+	const activateIt = async (id) => {
 		try {
-			await fetchurl(`/courses/${id}/draftit`, "PUT", "no-cache");
-			toast.success("Course drafted");
-			fetchCourses();
+			await fetchurl(
+				`/extras/stripe/memberships/${id}/activateit`,
+				"PUT",
+				"no-cache"
+			);
+			toast.success("Membership activated");
+			fetchMemberships();
 		} catch (err) {
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;
@@ -115,67 +123,15 @@ const DashboardCoursesIndex = () => {
 		}
 	};
 
-	const publishIt = async (id) => {
+	const disactivateIt = async (id) => {
 		try {
-			await fetchurl(`/courses/${id}/publishit`, "PUT", "no-cache");
-			toast.success("Course published");
-			fetchCourses();
-		} catch (err) {
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
-
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return {
-				msg: err?.response?.statusText,
-				status: err?.response?.status,
-			};
-		}
-	};
-
-	const trashIt = async (id) => {
-		try {
-			await fetchurl(`/courses/${id}/trashit`, "PUT", "no-cache");
-			toast.success("Course trashed");
-			fetchCourses();
-		} catch (err) {
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
-
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return {
-				msg: err?.response?.statusText,
-				status: err?.response?.status,
-			};
-		}
-	};
-
-	const scheduleIt = async (id) => {
-		try {
-			await fetchurl(`/courses/${id}/scheduleit`, "PUT", "no-cache");
-			toast.success("Course scheduled");
-			fetchCourses();
+			await fetchurl(
+				`/extras/stripe/memberships/${id}/disactivateit`,
+				"PUT",
+				"no-cache"
+			);
+			toast.success("Membership disactivated");
+			fetchMemberships();
 		} catch (err) {
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;
@@ -201,9 +157,13 @@ const DashboardCoursesIndex = () => {
 
 	const handleDelete = async (id) => {
 		try {
-			await fetchurl(`/courses/${id}/permanently`, "DELETE", "no-cache");
-			toast.success("Course deleted");
-			fetchCourses();
+			await fetchurl(
+				`/extras/stripe/memberships/${id}/permanently`,
+				"DELETE",
+				"no-cache"
+			);
+			toast.success("Membership deleted");
+			fetchMemberships();
 		} catch (err) {
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;
@@ -229,9 +189,9 @@ const DashboardCoursesIndex = () => {
 
 	const handleTrashAll = async () => {
 		try {
-			await fetchurl(`/courses/deleteall`, "PUT", "no-cache");
-			toast.success("Courses trashed");
-			fetchCourses();
+			await fetchurl(`/extras/stripe/memberships/deleteall`, "PUT", "no-cache");
+			toast.success("Memberships trashed");
+			fetchMemberships();
 		} catch (err) {
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;
@@ -257,9 +217,13 @@ const DashboardCoursesIndex = () => {
 
 	const handleDeleteAll = async () => {
 		try {
-			await fetchurl(`/courses/deleteall/permanently`, "PUT", "no-cache");
-			toast.success("Courses deleted");
-			fetchCourses();
+			await fetchurl(
+				`/extras/stripe/memberships/deleteall/permanently`,
+				"DELETE",
+				"no-cache"
+			);
+			toast.success("Memberships deleted");
+			fetchMemberships();
 		} catch (err) {
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;
@@ -286,20 +250,20 @@ const DashboardCoursesIndex = () => {
 	return (
 		<>
 			<AdminStatusesMenu
-				allLink="/dashboard/courses"
-				publishedLink="/dashboard/courses/published"
-				draftLink="/dashboard/courses/draft"
-				scheduledLink="/dashboard/courses/scheduled"
-				trashedLink="/dashboard/courses/trashed"
+				allLink="/dashboard/memberships"
+				publishedLink="/dashboard/memberships/published"
+				draftLink="/dashboard/memberships/draft"
+				scheduledLink="/dashboard/memberships/scheduled"
+				trashedLink="/dashboard/memberships/trashed"
 			/>
 			<div className="card rounded-0">
-				<DashboardCardHeaderMenu
-					allLink={`/dashboard/courses`}
-					pageText="Courses"
+				<AdminCardHeaderMenu
+					allLink={`/dashboard/memberships`}
+					pageText="Memberships"
 					currentResults={currentResults}
-					totalResults={totalResults.courses}
-					addLink={`/dashboard/courses/create`}
-					addLinkText={`course`}
+					totalResults={totalResults.memberships}
+					addLink={`/dashboard/memberships/create`}
+					addLinkText={`membership`}
 					handleTrashAllFunction={handleTrashAll}
 					handleDeleteAllFunction={handleDeleteAll}
 					keyword={keyword}
@@ -309,17 +273,15 @@ const DashboardCoursesIndex = () => {
 					auth?.user?.stripe?.stripeChargesEnabled ? (
 						<>
 							<ul className="list-group list-group-flush">
-								{list?.map((course) => (
+								{list?.map((membership) => (
 									<Single
-										key={course._id}
-										object={course}
-										handleDraft={draftIt}
-										handlePublish={publishIt}
-										handleTrash={trashIt}
-										handleSchedule={scheduleIt}
+										key={membership._id}
+										object={membership}
+										handleActivate={activateIt}
+										handleDisactivate={disactivateIt}
 										handleDelete={handleDelete}
 										objects={list}
-										setObjects={setCourses}
+										setObjects={setMemberships}
 										setTotalResults={setTotalResults}
 									/>
 								))}
@@ -354,4 +316,4 @@ const DashboardCoursesIndex = () => {
 	);
 };
 
-export default DashboardCoursesIndex;
+export default DashboardMembershipsIndex;

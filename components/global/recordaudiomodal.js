@@ -108,9 +108,7 @@ const RecordAudioModal = ({
 			<button
 				className="btn btn-secondary btn-sm"
 				type="button"
-				onClick={() => {
-					setAudioRecordModal(!audioRecordModal);
-				}}
+				onClick={() => setAudioRecordModal(!audioRecordModal)}
 			>
 				<FaMicrophone style={{ fontSize: "25px" }} />
 			</button>
@@ -122,9 +120,9 @@ const RecordAudioModal = ({
 					setRecordingAudioVisual(false);
 					setAudioRecordingUrl(null);
 				}}
+				size="xl"
 				backdrop={true}
 				animation={true}
-				size="lg"
 			>
 				<Modal.Header closeButton>
 					<Modal.Title>Record Audio!</Modal.Title>

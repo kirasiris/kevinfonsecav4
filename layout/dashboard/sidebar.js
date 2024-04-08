@@ -65,6 +65,42 @@ const AdminMenu = () => {
 						<a>Courses Enrolled</a>
 					</Link>
 				</li>
+				<li className={`list-group-item ${isActive(`/dashboard/memberships`)}`}>
+					<Link
+						href={{
+							pathname: "/dashboard/memberships",
+							query: {
+								page: 1,
+								limit: 10,
+								sortby: "-createdAt",
+							},
+						}}
+						passHref
+						legacyBehavior
+					>
+						<a>Memberships Published</a>
+					</Link>
+				</li>
+				<li
+					className={`list-group-item ${isActive(
+						`/dashboard/memberships/enrolled`
+					)}`}
+				>
+					<Link
+						href={{
+							pathname: "/dashboard/memberships/enrolled",
+							query: {
+								page: 1,
+								limit: 10,
+								sortby: "-createdAt",
+							},
+						}}
+						passHref
+						legacyBehavior
+					>
+						<a>Memberships Enrolled</a>
+					</Link>
+				</li>
 			</ul>
 		</div>
 	);

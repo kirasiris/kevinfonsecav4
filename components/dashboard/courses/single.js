@@ -66,9 +66,7 @@ const Single = ({
 							<Link
 								href={{
 									pathname: `/dashboard/courses/read/${object._id}`,
-									query: {
-										isAdmin: true,
-									},
+									query: {},
 								}}
 								passHref
 								legacyBehavior

@@ -160,7 +160,10 @@ const Menu = ({
 										className="btn btn-link"
 										onClick={async () => {
 											await deleteCookie("xAuthToken", "/");
-											await deleteAuthTokenOnServer("xAuthToken");
+											await deleteAuthTokenOnServer(
+												"xAuthToken",
+												auth?.data._id
+											);
 										}}
 									>
 										Log Out

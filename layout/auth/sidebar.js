@@ -23,7 +23,7 @@ const Sidebar = () => {
 				</li>
 				<li className={`list-group-item ${isActive(`/auth/editavatar`)}`}>
 					<Link href={`/auth/editavatar`} passHref legacyBehavior>
-						<a>Avatar</a>
+						<a>Avatar&nbsp;&&nbsp;Cover</a>
 					</Link>
 				</li>
 				<li className={`list-group-item ${isActive(`/auth/editabout`)}`}>

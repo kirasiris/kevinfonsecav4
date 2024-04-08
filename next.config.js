@@ -1,5 +1,16 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+	compress: true,
+	devIndicators: {
+		buildActivityPosition: "bottom-right",
+		buildActivity: true,
+	},
+	// logging: {
+	// 	fetches: {
+	// 		fullUrl: true,
+	// 	},
+	// },
+	poweredByHeader: false,
 	reactStrictMode: false,
 	experimental: {},
 	images: {

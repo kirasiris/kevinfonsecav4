@@ -24,7 +24,7 @@ const RevenueIndex = ({ params, searchParams }) => {
 				"GET",
 				"no-cache"
 			);
-			console.log("balance withing balance file", balance);
+			console.log("balance within revenue page file", balance);
 			setBalance(res?.data);
 			setLoading(false);
 		} catch (err) {
@@ -61,8 +61,7 @@ const RevenueIndex = ({ params, searchParams }) => {
 				"GET",
 				"no-cache"
 			);
-			console.log("Created link", res);
-			// window.location.href = res;
+			window.location.href = res.data.url;
 		} catch (err) {
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;
@@ -98,7 +97,7 @@ const RevenueIndex = ({ params, searchParams }) => {
 					{!loading &&
 						balance.pending &&
 						balance.pending.map((bp, i) => (
-							<span key={i}>{stripeCurrencyFormatter(bp, "USD")}</span>
+							<span key={i}>{stripeCurrencyFormatter(bp.amount, "USD")}</span>
 						))}
 				</li>
 				<li className="list-group-item d-flex justify-content-between align-items-center">

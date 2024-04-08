@@ -37,6 +37,11 @@ const UpdateCover = ({ params, searchParams }) => {
 			try {
 				const res = await fetchurl(`/auth/me`, "GET", "no-cache");
 				setProfile(res?.data);
+				setCoverData({
+					...coverData,
+					filename: res?.data?.files?.cover?.location?.filename,
+					fileurl: res?.data?.files?.cover?.location?.secure_location,
+				});
 				setLoading(false);
 			} catch (err) {
 				console.log(err);
@@ -83,7 +88,6 @@ const UpdateCover = ({ params, searchParams }) => {
 					album: "profile-covers",
 				},
 				{
-					// method: "PUT",
 					headers: {
 						"Content-Type": "multipart/form-data",
 						Authorization: `Bearer ${token.value}`,
@@ -168,9 +172,7 @@ const UpdateCover = ({ params, searchParams }) => {
 						<div className="card-body">
 							<div className="align-content-center d-flex justify-content-center mb-3">
 								<Image
-									src={
-										profile.files?.cover?.location?.secure_location || fileurl
-									}
+									src={fileurl}
 									alt="xD"
 									width={813}
 									height={457}
@@ -184,11 +186,11 @@ const UpdateCover = ({ params, searchParams }) => {
 								/>
 							</div>
 							<form onSubmit={upgradeCover}>
-								<label htmlFor="avatar" className="form-label">
+								<label htmlFor="cover" className="form-label">
 									File
 								</label>
 								<input
-									id="avatar"
+									id="cover"
 									name="file"
 									label={file}
 									onChange={(e) => {
@@ -198,7 +200,6 @@ const UpdateCover = ({ params, searchParams }) => {
 											preview = URL.createObjectURL(myFile);
 										}
 										setCoverData({
-											...coverData,
 											file: myFile,
 											filename: myFile.name,
 											fileurl: preview,
@@ -206,7 +207,7 @@ const UpdateCover = ({ params, searchParams }) => {
 									}}
 									type="file"
 									className="form-control mb-3"
-									placeholder={`${profile.files?.cover?.location?.secure_location}`}
+									placeholder={fileurl}
 									accept={`image/*`}
 								/>
 								<UseProgress percentage={uploadPercentage} />

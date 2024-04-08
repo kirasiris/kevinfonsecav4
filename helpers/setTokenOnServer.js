@@ -7,13 +7,6 @@ export const getAuthTokenOnServer = () => {
 	return myCookies.get("xAuthToken");
 };
 
-export const deleteAuthTokenOnServer = async (token) => {
-	await fetchurl(`/auth/logout`, "GET");
-	cookies().delete(token);
-	console.log("2.- Deleting cookie from back-end");
-	redirect(`/auth/login`);
-};
-
 export const setAuthTokenOnServer = async (token) => {
 	if (token) {
 		console.log("Token gets to setAuthTokenOnServer function", token);
@@ -29,28 +22,35 @@ export const fetchurl = async (
 	method,
 	cache = "default",
 	bodyData,
-	signal = undefined
+	signal = undefined,
+	multipart = false
 ) => {
 	const myCookies = cookies();
 	const token = myCookies.get("xAuthToken");
 
 	let requestBody = null;
+	let customHeaders = {
+		Authorization: `Bearer ${token?.value}`,
+	};
+
 	if (
 		bodyData &&
 		typeof bodyData === "object" &&
 		!Array.isArray(bodyData) &&
-		bodyData !== null
+		bodyData !== null &&
+		!multipart
 	) {
 		// Check if bodyData is a plain object before stringifying
 		requestBody = JSON.stringify(bodyData);
 	}
 
+	if (!multipart) {
+		customHeaders["Content-Type"] = "application/json";
+	}
+
 	const response = await fetch(`http://localhost:5000/api/v1${url}`, {
 		method: method,
-		headers: {
-			"Content-Type": "application/json",
-			Authorization: `Bearer ${token?.value}`,
-		},
+		headers: customHeaders,
 		body: method !== "GET" && method !== "HEAD" ? requestBody : null,
 		cache: cache,
 		signal: signal,
@@ -68,4 +68,11 @@ export const fetchurl = async (
 		});
 
 	return response;
+};
+
+export const deleteAuthTokenOnServer = async (token, userId) => {
+	await fetchurl(`/auth/logout`, "GET", "no-cache");
+	cookies().delete(token);
+	console.log("2.- Deleting cookie from back-end");
+	redirect(`/auth/login`);
 };

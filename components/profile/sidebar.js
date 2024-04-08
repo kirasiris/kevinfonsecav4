@@ -10,18 +10,21 @@ const Sidebar = ({ object = {}, objects = [] }) => {
 				<div className="card-header">About</div>
 				<div className="card-body p-0">
 					<ul className="list-group list-group-flush">
-						{object.data?.isOnline && (
-							<li className="list-group-item">
-								<p className="m-0">
+						<li className="list-group-item">
+							<p className="m-0">
+								{object.data?.isOnline ? (
 									<strong className="text-success">Is&nbsp;Online</strong>
-									{object.data?.isLive && (
-										<>
-											&nbsp;&amp;&nbsp;<strong>Is Live</strong>
-										</>
-									)}
-								</p>
-							</li>
-						)}
+								) : (
+									<strong className="text-danger">Is&nbsp;Offline</strong>
+								)}
+								{object.data?.isLive && (
+									<>
+										&nbsp;&amp;&nbsp;<strong>Is Live</strong>
+									</>
+								)}
+							</p>
+						</li>
+
 						{object.data?.bio && (
 							<li className="list-group-item">
 								<p className="m-0">{object.data?.bio}</p>
@@ -126,7 +129,6 @@ const Sidebar = ({ object = {}, objects = [] }) => {
 									page: 1,
 									limit: 50,
 									sort: `-createdAt`,
-									album: `posts`,
 								},
 							}}
 							passHref

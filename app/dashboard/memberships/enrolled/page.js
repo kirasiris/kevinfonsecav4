@@ -9,7 +9,7 @@ import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
 import DashboardCardHeaderMenu from "@/layout/dashboard/dashboardcardheadermenu";
 import ClientNumericPagination from "@/layout/clientnumericpagination";
 
-const DashboardCoursesEnrolledIndex = () => {
+const DashboardMembershipsEnrolledIndex = () => {
 	const {
 		auth,
 		totalPages,
@@ -29,7 +29,7 @@ const DashboardCoursesEnrolledIndex = () => {
 	const [limit] = useState(10);
 	const [sortby] = useState(`-createdAt`);
 	const [params, setParams] = useState(
-		`?user=${auth.user._id}&onModel=Course&page=${page}&limit=${limit}&sort=${sortby}`
+		`?user=${auth.user._id}&onModel=User&page=${page}&limit=${limit}&sort=${sortby}`
 	);
 	const [keyword, setKeyword] = useState("");
 	const [list, setList] = useState([]);
@@ -149,7 +149,7 @@ const DashboardCoursesEnrolledIndex = () => {
 	return (
 		<>
 			<AdminStatusesMenu
-				allLink="/dashboard/courses"
+				allLink="/dashboard/memberships"
 				publishedLink=""
 				draftLink=""
 				scheduledLink=""
@@ -159,12 +159,12 @@ const DashboardCoursesEnrolledIndex = () => {
 			/>
 			<div className="card rounded-0">
 				<DashboardCardHeaderMenu
-					allLink={`/dashboard/courses`}
-					pageText="Courses"
+					allLink={`/dashboard/memberships`}
+					pageText="Memberships"
 					currentResults={currentResults}
-					totalResults={totalResults.courses}
-					addLink={`/dashboard/courses/create`}
-					addLinkText={`course`}
+					totalResults={totalResults.memberships}
+					addLink={`/dashboard/memberships/create`}
+					addLinkText={`membership`}
 					// handleTrashAllFunction={handleTrashAll}
 					handleDeleteAllFunction={handleDeleteAll}
 					keyword={keyword}
@@ -215,4 +215,4 @@ const DashboardCoursesEnrolledIndex = () => {
 	);
 };
 
-export default DashboardCoursesEnrolledIndex;
+export default DashboardMembershipsEnrolledIndex;

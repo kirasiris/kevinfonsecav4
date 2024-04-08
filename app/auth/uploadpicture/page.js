@@ -1,7 +1,7 @@
 "use client";
 import { fetchurl, getAuthTokenOnServer } from "@/helpers/setTokenOnServer";
 import { useRouter } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useRef, useCallback } from "react";
 import { toast } from "react-toastify";
 import AuthContext from "@/helpers/globalContext";
 import Sidebar from "@/layout/auth/sidebar";
@@ -10,6 +10,13 @@ import Image from "next/image";
 import UseProgress from "@/components/global/useprogress";
 import axios from "axios";
 import Link from "next/link";
+import { Modal } from "react-bootstrap";
+import Webcam from "react-webcam";
+import { b64toBlob } from "@/helpers/utilities";
+
+const videoConstraints = {
+	facingMode: "user",
+};
 
 const UploadPicture = ({ params, searchParams }) => {
 	const { auth } = useContext(AuthContext);
@@ -18,17 +25,11 @@ const UploadPicture = ({ params, searchParams }) => {
 	// Redirec if not authenticated
 	!auth.isAuthenticated && router.push("/auth/login");
 
-	const [avatarData, setAvatarData] = useState({
-		file: null,
-		filename: `Choose file`,
-		fileurl: `https://static.vecteezy.com/system/resources/previews/005/337/799/original/icon-image-not-found-free-vector.jpg`,
-	});
-
-	const { file, filename, fileurl } = avatarData;
-
+	const fileurl = `https://static.vecteezy.com/system/resources/previews/005/337/799/original/icon-image-not-found-free-vector.jpg`;
 	const [profile, setProfile] = useState(null);
 	const [loading, setLoading] = useState(true);
 	const [uploadPercentage, setUploadPercentage] = useState(0);
+	const [cameraModal, setCameraModal] = useState(false);
 	const [error, setError] = useState(false);
 	const [btnText, setBtnTxt] = useState("Submit");
 
@@ -67,76 +68,80 @@ const UploadPicture = ({ params, searchParams }) => {
 		fetchUser();
 	}, [loading]);
 
-	const upgradeAvatar = async (e) => {
-		e.preventDefault();
-		try {
-			setBtnTxt("Submit...");
-			const token = await getAuthTokenOnServer();
-			const res = await axios.put(
-				`http://localhost:5000/api/v1/uploads/uploadobject`,
-				{
-					userId: auth?.user?._id,
-					username: auth?.user?.username,
-					userEmail: auth?.user?.email,
-					onModel: "User",
-					file: file,
-					album: "profile-avatars",
-				},
-				{
-					// method: "PUT",
-					headers: {
-						"Content-Type": "multipart/form-data",
-						Authorization: `Bearer ${token.value}`,
+	const webcamRef = useRef(null);
+
+	const upgradeAvatar = useCallback(
+		async (e) => {
+			e.preventDefault();
+			try {
+				const src = webcamRef.current.getScreenshot();
+				const blob = b64toBlob(src);
+				setBtnTxt("Submit...");
+				const token = await getAuthTokenOnServer();
+				const res = await axios.put(
+					`http://localhost:5000/api/v1/uploads/uploadobject`,
+					{
+						userId: auth?.user?._id,
+						username: auth?.user?.username,
+						userEmail: auth?.user?.email,
+						onModel: "User",
+						file: blob.file,
+						album: "profile-avatars",
 					},
-					onUploadProgress: (ProgressEvent) => {
-						setUploadPercentage(
-							parseInt(
-								Math.round(ProgressEvent.loaded * 100) / ProgressEvent.total
-							)
+					{
+						// method: "PUT",
+						headers: {
+							"Content-Type": "multipart/form-data",
+							Authorization: `Bearer ${token.value}`,
+						},
+						onUploadProgress: (ProgressEvent) => {
+							setUploadPercentage(
+								parseInt(
+									Math.round(ProgressEvent.loaded * 100) / ProgressEvent.total
+								)
+							);
+							setTimeout(() => setUploadPercentage(0), 10000);
+						},
+					}
+				);
+				await fetchurl(`/auth/updateavatar`, "PUT", "no-cache", {
+					avatar: res.data.data._id,
+				});
+				// resetForm();
+				toast.success("Avatar uploaded");
+				setBtnTxt(btnText);
+				setCameraModal(false);
+				router.push("/auth/profile");
+			} catch (err) {
+				console.log(err);
+				setError(true);
+				// const error = err.response.data.message;
+				const error = err?.response?.data?.error?.errors;
+				const errors = err?.response?.data?.errors;
+
+				if (error) {
+					// dispatch(setAlert(error, 'danger'));
+					error &&
+						Object.entries(error).map(([, value]) =>
+							toast.error(value.message)
 						);
-						setTimeout(() => setUploadPercentage(0), 10000);
-					},
 				}
-			);
-			await fetchurl(`/auth/updateavatar`, "PUT", "no-cache", {
-				avatar: res.data.data._id,
-			});
-			// resetForm()
-			toast.success("Avatar uploaded");
-			setBtnTxt(btnText);
-			router.push(`/auth/profile`);
-		} catch (err) {
-			console.log(err);
-			setError(true);
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
 
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
+				if (errors) {
+					errors.forEach((error) => toast.error(error.msg));
+				}
+
+				toast.error(err?.response?.statusText);
+				return {
+					msg: err?.response?.statusText,
+					status: err?.response?.status,
+				};
 			}
+		},
+		[webcamRef]
+	);
 
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return {
-				msg: err?.response?.statusText,
-				status: err?.response?.status,
-			};
-		}
-	};
-
-	const resetForm = () => {
-		setAvatarData({
-			file: null,
-			filename: `Choose file`,
-			fileurl: `https://static.vecteezy.com/system/resources/previews/005/337/799/original/icon-image-not-found-free-vector.jpg`,
-		});
-	};
+	const resetForm = () => {};
 
 	return loading || profile === null || profile === undefined ? (
 		error ? (
@@ -152,12 +157,12 @@ const UploadPicture = ({ params, searchParams }) => {
 					<div className="card">
 						<div className="card-header">
 							<div className="float-start">
-								<p className="m-1">Edit&nbsp;Avatar</p>
+								<p className="m-1">Take&nbsp;a&nbsp;Picture</p>
 							</div>
 							<div className="float-end">
 								<div className="btn-group">
-									<Link href="/auth/uploadpicture" passHref legacyBehavior>
-										<a className="btn btn-secondary btn-sm">Take a picture</a>
+									<Link href="/auth/editavatar" passHref legacyBehavior>
+										<a className="btn btn-secondary btn-sm">Update avatar</a>
 									</Link>
 									<Link href="/auth/editcover" passHref legacyBehavior>
 										<a className="btn btn-secondary btn-sm">Update cover</a>
@@ -183,51 +188,63 @@ const UploadPicture = ({ params, searchParams }) => {
 									className="img-thumbnail rounded-circle"
 								/>
 							</div>
-							<form onSubmit={upgradeAvatar}>
-								<label htmlFor="avatar" className="form-label">
-									File
-								</label>
-								<input
-									id="avatar"
-									name="file"
-									label={file}
-									onChange={(e) => {
-										const myFile = e.target.files[0];
-										let preview = "";
-										if (myFile instanceof Blob || myFile instanceof File) {
-											preview = URL.createObjectURL(myFile);
-										}
-										setAvatarData({
-											...avatarData,
-											file: myFile,
-											filename: myFile.name,
-											fileurl: preview,
-										});
-									}}
-									type="file"
-									className="form-control mb-3"
-									placeholder={`${profile.files?.avatar?.location?.secure_location}`}
-									accept={`image/*`}
-								/>
-								<UseProgress percentage={uploadPercentage} />
-								<button
-									type="submit"
-									className="btn btn-secondary btn-sm float-start"
-								>
-									{btnText}
-								</button>
-								<button
-									type="button"
-									className="btn btn-secondary btn-sm float-end"
-									onClick={resetForm}
-								>
-									Reset
-								</button>
-							</form>
+							<button
+								className="btn btn-secondary btn-sm w-100"
+								type="button"
+								onClick={() => setCameraModal(!cameraModal)}
+							>
+								Open camera
+							</button>
 						</div>
 					</div>
 				</Globalcontent>
 			</div>
+			<Modal
+				show={cameraModal}
+				onHide={() => setCameraModal(!cameraModal)}
+				size="xl"
+				backdrop={false}
+				animation={true}
+			>
+				<Modal.Header>
+					<Modal.Title>Smile!</Modal.Title>
+				</Modal.Header>
+				<Modal.Body>
+					<Webcam
+						audio={true}
+						// audioConstraints={}
+						forceScreenshotSourceSize={true}
+						imageSmoothing={true}
+						mirrored={false}
+						minScreenshotHeight={550}
+						minScreenshotWidth={550}
+						// onUserMedia={}
+						// onUserMediaError={}
+						screenshotFormat={"image/jpeg"}
+						screenshotQuality={1}
+						videoConstraints={videoConstraints}
+						style={{ maxWidth: "100%", width: "100%" }}
+						ref={webcamRef}
+					/>
+					<hr />
+					<UseProgress percentage={uploadPercentage} />
+				</Modal.Body>
+				<Modal.Footer>
+					<button
+						className="btn btn-secondary btn-sm"
+						onClick={() => setCameraModal(!cameraModal)}
+					>
+						Close
+					</button>
+					<button
+						className="btn btn-primary btn-sm"
+						type="submit"
+						onClick={upgradeAvatar}
+					>
+						{btnText}
+					</button>
+				</Modal.Footer>
+			</Modal>
 		</div>
 	);
 };

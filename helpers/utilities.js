@@ -11,7 +11,7 @@ const getCookie = (name) => {
 
 export const deleteCookie = async (name, path, domain) => {
 	if (getCookie(name)) {
-		await fetchurl(`auth/logout`, "GET", "no-cache");
+		// await fetchurl(`auth/logout`, "GET", "no-cache");
 		localStorage.removeItem("xAuthToken");
 		document.cookie =
 			name +
@@ -99,4 +99,23 @@ export const checkEmptyObject = (obj = {}) => {
 	}
 
 	return true;
+};
+
+export const b64toBlob = (base64Data) => {
+	const byteCharacters = Buffer.from(base64Data).toString("binary");
+	const byteNumbers = new Array(byteCharacters.length);
+	for (let i = 0; i < byteCharacters.length; i++) {
+		byteNumbers[i] = byteCharacters.charCodeAt(i);
+	}
+	const byteArray = new Uint8Array(byteNumbers);
+	const blob = new Blob([byteArray]);
+
+	let file;
+	if (blob instanceof Blob) {
+		file = new File([blob], "file_name.jpg", { type: "image/jpeg" });
+	}
+
+	const url = URL.createObjectURL(blob);
+
+	return { blob, file, url };
 };

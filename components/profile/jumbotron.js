@@ -8,8 +8,8 @@ const Jumbotron = ({
 	object = {},
 	params = {},
 	headerStyle = {},
-	imageWidth = "168",
-	imageHeight = "168",
+	imageWidth = "416",
+	imageHeight = "416",
 }) => {
 	const pathname = usePathname();
 	const isActive = (path = "") => {
@@ -22,9 +22,9 @@ const Jumbotron = ({
 				<div className={`container`}>
 					<div className="row my-5">
 						<div className="col">
-							<figure className="mb-4 bg-dark">
+							<figure className="mb-4">
 								<Image
-									className="img-fluid p-3"
+									className="img-thumbnail"
 									src={
 										object?.data?.files?.avatar?.location?.secure_location ||
 										`https://source.unsplash.com/random/168x168`
@@ -32,11 +32,16 @@ const Jumbotron = ({
 									alt={`profile image`}
 									width={imageWidth}
 									height={imageHeight}
+									style={{
+										width: `${imageWidth}px !important`,
+										height: `${imageHeight}px !important`,
+										objectFit: "cover",
+									}}
 									priority
 								/>
 							</figure>
 						</div>
-						<div className="col-lg-6">
+						<div className="col-lg-8 text-white">
 							<h1 className="fw-bolder">{object?.data?.name}</h1>
 							<p className="lead">{object?.data?.bio}</p>
 						</div>
@@ -111,7 +116,6 @@ const Jumbotron = ({
 											page: 1,
 											limit: 50,
 											sort: `-createdAt`,
-											album: `posts`,
 										},
 									}}
 									passHref

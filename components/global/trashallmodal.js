@@ -23,15 +23,14 @@ const TrashAllModal = ({ action }) => {
 				type="button"
 				onClick={() => setConfirmTrashAllModal(!confirmTrashAllModal)}
 			>
-				{/* <i className={`fas fa-trash-alt mr-1`} aria-hidden /> */}
 				Trash all
 			</button>
 			<Modal
 				show={confirmTrashAllModal}
 				onHide={() => setConfirmTrashAllModal(!confirmTrashAllModal)}
+				size={`xl`}
 				backdrop={true}
 				animation={true}
-				size={`sm`}
 			>
 				<Modal.Header closeButton>
 					<Modal.Title>Are you sure about this?</Modal.Title>

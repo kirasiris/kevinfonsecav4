@@ -30,112 +30,110 @@ const ExportModal = ({
 	const [showExportModal, setShowExportModal] = useState(false);
 	return (
 		<>
-			<Button
-				variant="secondary"
-				size="sm"
+			<button
+				className="btn btn-secondary btn-sm"
+				type="button"
 				onClick={() => setShowExportModal(true)}
-				data-target={object?._id}
+				id={object._id}
 			>
 				Export
-			</Button>
-			{showExportModal && (
-				<Modal
-					show={true}
-					onHide={() => setShowExportModal(false)}
-					backdrop={true}
-					animation={true}
-					size={`lg`}
-					id={object?._id}
-				>
-					<Modal.Header closeButton>
-						<Modal.Title>Export - {object?.title || "Object"}</Modal.Title>
-					</Modal.Header>
-					<Modal.Body>
-						<Form.Control readOnly disabled value={linkToShare} />
-						<hr />
-						<pre>
-							<code>
-								&lt;iframe src=&rdquo;{linkToShare}&rdquo; title=&rdquo;
-								{object?.title}&rdquo;&gt;&lt;/iframe&gt;
-							</code>
-						</pre>
-						<hr />
-						<EmailShareButton subject={object?.title} body={object?.text}>
-							<EmailIcon size={iconSize} />
-						</EmailShareButton>
-						<FacebookShareButton
-							url={linkToShare}
-							title={
-								object.title
-									? `beFree - ` + object.title
-									: `beFree - ` + object._id
-							}
-						>
-							<FacebookIcon size={iconSize} />
-						</FacebookShareButton>
-						<TwitterShareButton
-							url={linkToShare}
-							title={
-								object.title
-									? `beFree - ` + object.title
-									: `beFree - ` + object._id
-							}
-						>
-							<TwitterIcon size={iconSize} />
-						</TwitterShareButton>
-						<RedditShareButton
-							url={linkToShare}
-							title={
-								object.title
-									? `beFree - ` + object.title
-									: `beFree - ` + object._id
-							}
-						>
-							<RedditIcon size={iconSize} />
-						</RedditShareButton>
-						<WhatsappShareButton
-							url={linkToShare}
-							title={
-								object.title
-									? `beFree - ` + object.title
-									: `beFree - ` + object._id
-							}
-						>
-							<WhatsappIcon size={iconSize} />
-						</WhatsappShareButton>
-						<PinterestShareButton
-							url={linkToShare}
-							title={
-								object.title
-									? `beFree - ` + object.title
-									: `beFree - ` + object._id
-							}
-						>
-							<PinterestIcon size={iconSize} />
-						</PinterestShareButton>
-						<LinkedinShareButton
-							url={linkToShare}
-							title={
-								object.title
-									? `beFree - ` + object.title
-									: `beFree - ` + object._id
-							}
-						>
-							<LinkedinIcon size={iconSize} />
-						</LinkedinShareButton>
-						<TelegramShareButton
-							url={linkToShare}
-							title={
-								object.title
-									? `beFree - ` + object.title
-									: `beFree - ` + object._id
-							}
-						>
-							<TelegramIcon size={iconSize} />
-						</TelegramShareButton>
-					</Modal.Body>
-				</Modal>
-			)}
+			</button>
+			<Modal
+				id={object._id}
+				show={showExportModal}
+				onHide={() => setShowExportModal(!showExportModal)}
+				size={`xl`}
+				backdrop={true}
+				animation={true}
+			>
+				<Modal.Header closeButton>
+					<Modal.Title>Export - {object?.title || "Object"}</Modal.Title>
+				</Modal.Header>
+				<Modal.Body>
+					<Form.Control readOnly disabled value={linkToShare} />
+					<hr />
+					<pre>
+						<code>
+							&lt;iframe src=&rdquo;{linkToShare}&rdquo; title=&rdquo;
+							{object?.title}&rdquo;&gt;&lt;/iframe&gt;
+						</code>
+					</pre>
+					<hr />
+					<EmailShareButton subject={object?.title} body={object?.text}>
+						<EmailIcon size={iconSize} />
+					</EmailShareButton>
+					<FacebookShareButton
+						url={linkToShare}
+						title={
+							object.title
+								? `beFree - ` + object.title
+								: `beFree - ` + object._id
+						}
+					>
+						<FacebookIcon size={iconSize} />
+					</FacebookShareButton>
+					<TwitterShareButton
+						url={linkToShare}
+						title={
+							object.title
+								? `beFree - ` + object.title
+								: `beFree - ` + object._id
+						}
+					>
+						<TwitterIcon size={iconSize} />
+					</TwitterShareButton>
+					<RedditShareButton
+						url={linkToShare}
+						title={
+							object.title
+								? `beFree - ` + object.title
+								: `beFree - ` + object._id
+						}
+					>
+						<RedditIcon size={iconSize} />
+					</RedditShareButton>
+					<WhatsappShareButton
+						url={linkToShare}
+						title={
+							object.title
+								? `beFree - ` + object.title
+								: `beFree - ` + object._id
+						}
+					>
+						<WhatsappIcon size={iconSize} />
+					</WhatsappShareButton>
+					<PinterestShareButton
+						url={linkToShare}
+						title={
+							object.title
+								? `beFree - ` + object.title
+								: `beFree - ` + object._id
+						}
+					>
+						<PinterestIcon size={iconSize} />
+					</PinterestShareButton>
+					<LinkedinShareButton
+						url={linkToShare}
+						title={
+							object.title
+								? `beFree - ` + object.title
+								: `beFree - ` + object._id
+						}
+					>
+						<LinkedinIcon size={iconSize} />
+					</LinkedinShareButton>
+					<TelegramShareButton
+						url={linkToShare}
+						title={
+							object.title
+								? `beFree - ` + object.title
+								: `beFree - ` + object._id
+						}
+					>
+						<TelegramIcon size={iconSize} />
+					</TelegramShareButton>
+				</Modal.Body>
+			</Modal>
 		</>
 	);
 };

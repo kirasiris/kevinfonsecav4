@@ -135,7 +135,18 @@ const AuthIndex = async ({ params, searchParams }) => {
 													<ParseHtml text={auth.data.bio} />
 												</li>
 											)}
-											<li className="list-group-item">Skills</li>
+											{auth.data.tags.length >= 1 && (
+												<li className="list-group-item">
+													{auth.data.tags.map((skill, index) => (
+														<div
+															key={index}
+															className="badge bg-secondary me-1"
+														>
+															#{skill}
+														</div>
+													))}
+												</li>
+											)}
 										</ul>
 									</div>
 									<div className="col-6 mb-4">
@@ -246,9 +257,6 @@ const AuthIndex = async ({ params, searchParams }) => {
 											</li>
 										</ul>
 									</div>
-									<pre>
-										<code>{JSON.stringify(auth.data, null, 4)}</code>
-									</pre>
 								</div>
 							</div>
 						</div>

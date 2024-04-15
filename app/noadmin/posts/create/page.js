@@ -93,16 +93,16 @@ const CreatePost = () => {
 
 	const addPost = async (e) => {
 		e.preventDefault();
-		console.log(postData);
-		console.log(files.uploaded);
+		// console.log(postData);
+		// console.log(files.uploaded);
 		try {
-			// await fetchurl(`/posts`,"POST", "no-cache", {
-			// 	...postData,
-			// 	postType: "post",
-			// 	// files: files.uploaded.map((file) => file._id)
-			// });
+			await fetchurl(`/posts`, "POST", "no-cache", {
+				...postData,
+				files: files.uploaded._id,
+			});
 			// router.push(`/noadmin/posts`);
 		} catch (err) {
+			console.log("error:", err);
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;
 			const errors = err?.response?.data?.errors;

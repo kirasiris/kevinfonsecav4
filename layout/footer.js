@@ -168,7 +168,7 @@ const Footer = ({ auth = {}, classes = "", styles = {}, canonical = "" }) => {
 							<li className="nav-item mb-2">
 								<Link
 									href={{
-										pathname: `${canonical}/profile//62ec7926a554425c9e03782d/kirasiris`,
+										pathname: `${canonical}/profile/660600aa29a40c04c35d6188/kirasiris`,
 										query: {
 											page: 1,
 											limit: 10,

@@ -114,6 +114,12 @@ export default function Head({
 				crossOrigin="anonymous"
 				async
 			/>
+			<link
+				href="https://api.mapbox.com/mapbox-gl-js/v3.2.0/mapbox-gl.css"
+				rel="stylesheet"
+				precedence="default"
+				media="all"
+			></link>
 			<Script src="https://code.iconify.design/1/1.0.7/iconify.min.js" async />
 		</>
 	);

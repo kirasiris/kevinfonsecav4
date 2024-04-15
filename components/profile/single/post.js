@@ -8,40 +8,30 @@ import Badge from "react-bootstrap/Badge";
 import ExportModal from "@/components/global/exportmodal";
 import { DropdownButton, Button } from "react-bootstrap";
 import Waveform from "@/layout/waveform";
-import DeleteModal from "@/components/global/deletemodal";
-import { calculateTimeSincePublished } from "@/helpers/utilities";
 
-const Single = ({
-	object = {},
-	handleDelete,
-	objects,
-	setObjects,
-	setTotalResults,
-	auth,
-}) => {
-	const pinPost = (id) => {};
-
+const Post = ({ post = {} }) => {
 	const Author = (author = {}, postedto = {}, postedfrom = {}) => {
 		return (
 			<>
 				<div className="float-start">
 					<Link
-						href={{
-							pathname: `/profiles/${object.user._id}/${object.user.username}/posts`,
-							query: {
-								page: 1,
-								limit: 10,
-								sort: `-createdAt`,
-								loggedInUser: auth?.user?._id,
-							},
-						}}
+						// href={{
+						// 	pathname: `/profiles/${user._id ? user._id : auth?.user?._id}/${user.username ? user.username : auth?.user?.username}/posts`,
+						// 	query: {
+						// 		page: 1,
+						// 		limit: 10,
+						// 		sort: `-createdAt`,
+						// 		loggedInUser: auth?.user?._id,
+						// 	},
+						// }}
+						href="#!"
 						passHref
 						legacyBehavior
 					>
 						<a>
 							<Image
 								src={
-									object?.files?.avatar?.location.secure_location ||
+									post.avatar?.location.secure_location ||
 									`https://source.unsplash.com/random/35x35`
 								}
 								className="me-3"
@@ -54,68 +44,69 @@ const Single = ({
 					</Link>
 				</div>
 				<Link
-					href={{
-						pathname: `/profiles/${object.user._id}/${object.user.username}/posts`,
-						query: {
-							page: 1,
-							limit: 10,
-							sort: `-createdAt`,
-							loggedInUser: auth?.user?._id,
-						},
-					}}
+					// href={{
+					// 	pathname: `/profiles/${user._id ? user._id : auth?.user?._id}/${user.username ? user.username : auth?.user?.username}/posts`,
+					// 	query: {
+					// 		page: 1,
+					// 		limit: 10,
+					// 		sort: `-createdAt`,
+					// 		loggedInUser: auth?.user?._id,
+					// 	},
+					// }}
+					href="#!"
 					passHref
 					legacyBehavior
 				>
-					<a className="me-1">{object.user.username}</a>
+					<a className="me-1">USERNAME</a>
 				</Link>
-				is&nbsp;playing
+				is playing
 				<a href="#!" className="mx-1">
-					Ghost&nbsp;Recon&nbsp;Breakpoint
+					Ghost Recon Breakpoint
 				</a>
-				{object.postedto !== undefined && (
+				{postedto && (
 					<>
-						posted&nbsp;to
+						posted to
 						<Link
-							href={{
-								pathname: `/profiles/${object.postedto._id}/${object.postedto.username}/posts`,
-								query: {
-									page: 1,
-									limit: 10,
-									sort: `-createdAt`,
-									loggedInUser: auth?.user?._id,
-								},
-							}}
+							// href={{
+							// 	pathname: `/profiles/${user._id ? user._id : auth?.user?._id}/${user.username ? user.username : auth?.user?.username}/posts`,
+							// 	query: {
+							// 		page: 1,
+							// 		limit: 10,
+							// 		sort: `-createdAt`,
+							// 		loggedInUser: auth?.user?._id,
+							// 	},
+							// }}
+							href="#!"
 							passHref
 							legacyBehavior
 						>
-							<a className="ms-1 me-1">{object.postedto.username}</a>
+							<a className="ms-1 me-1">USERNAME</a>
 						</Link>
 					</>
 				)}
-				{object.postedfrom && (
+				{postedfrom && (
 					<>
 						shared from
 						<Link
-							href={{
-								pathname: `/profiles/${object.postedfrom._id}/${object.postedfrom.username}/posts`,
-								query: {
-									page: 1,
-									limit: 10,
-									sort: `-createdAt`,
-									loggedInUser: auth?.user?._id,
-								},
-							}}
+							// href={{
+							// 	pathname: `/profiles/${user._id ? user._id : auth?.user?._id}/${user.username ? user.username : auth?.user?.username}/posts`,
+							// 	query: {
+							// 		page: 1,
+							// 		limit: 10,
+							// 		sort: `-createdAt`,
+							// 		loggedInUser: auth?.user?._id,
+							// 	},
+							// }}
+							href="#!"
 							passHref
 							legacyBehavior
 						>
-							<a className="ms-1 me-1">{object.postedfrom.username}</a>
+							<a className="ms-1">USERNAME</a>
 						</Link>
 					</>
 				)}
 				<div className={`position-absolute privacy-options`}>
-					<small className="me-1">
-						{calculateTimeSincePublished(object.createdAt)}
-					</small>
+					<small className="me-1">2 days ago</small>
 					<DropdownButton
 						alignright="true"
 						variant={`secondary`}
@@ -131,7 +122,7 @@ const Single = ({
 								type={`button`}
 							>
 								{/* <i className={`${featuredIcon} mr-1`} aria-hidden /> */}
-								Only&nbsp;me
+								Only me
 							</Button>
 							<Button
 								// onClick={!hiden ? hidePost : unhidePost}
@@ -139,7 +130,7 @@ const Single = ({
 								type={`button`}
 							>
 								{/* <i className={`${hiddenIcon} mr-1`} aria-hidden /> */}
-								Everyone&nbsp;can&nbsp;see
+								Everyone can see
 							</Button>
 							<Button
 								// onClick={!openEditor ? editorOpen : editorClosed}
@@ -147,7 +138,7 @@ const Single = ({
 								type={`button`}
 							>
 								<i className={`fas fa-edit mr-1`} aria-hidden />
-								People&nbsp;I&nbsp;follow
+								People I follow
 							</Button>
 							<Button
 								// onClick={!openEditor ? editorOpen : editorClosed}
@@ -155,7 +146,7 @@ const Single = ({
 								type={`button`}
 							>
 								<i className={`fas fa-edit mr-1`} aria-hidden />
-								People&nbsp;following&nbsp;me
+								People following me
 							</Button>
 							<Button
 								// onClick={!openEditor ? editorOpen : editorClosed}
@@ -184,7 +175,7 @@ const Single = ({
 							type={`button`}
 						>
 							{/* <i className={`${featuredIcon} mr-1`} aria-hidden /> */}
-							Pin&nbsp;post
+							Pin post
 						</Button>
 						<Button
 							// onClick={!hiden ? hidePost : unhidePost}
@@ -192,7 +183,7 @@ const Single = ({
 							type={`button`}
 						>
 							{/* <i className={`${hiddenIcon} mr-1`} aria-hidden /> */}
-							Hide&nbsp;post
+							Hide post
 						</Button>
 						<Button
 							// onClick={!openEditor ? editorOpen : editorClosed}
@@ -200,7 +191,7 @@ const Single = ({
 							type={`button`}
 						>
 							<i className={`fas fa-edit mr-1`} aria-hidden />
-							Update&nbsp;post
+							Update post
 						</Button>
 						<Button
 							// onClick={!openEditor ? editorOpen : editorClosed}
@@ -208,16 +199,8 @@ const Single = ({
 							type={`button`}
 						>
 							<i className={`fas fa-edit mr-1`} aria-hidden />
-							Disable&nbsp;comments
+							Disable comments
 						</Button>
-						<DeleteModal
-							id={object._id ? object._id : object._id}
-							action={handleDelete}
-							classStr="dropdown-item"
-							objects={objects}
-							setObjects={setObjects}
-							setTotalResults={setTotalResults}
-						/>
 					</>
 				</DropdownButton>
 			</>
@@ -237,7 +220,7 @@ const Single = ({
 											// src={`${
 											// 	image || `https://source.unsplash.com/random/1200x900`
 											// }`}
-											// alt={`${object?._id}'s images`}
+											// alt={`${post?._id}'s images`}
 											src={image}
 											alt={`post's images`}
 											className={`p-0 d-block w-100`}
@@ -289,18 +272,18 @@ const Single = ({
 
 	return (
 		<Suspense fallback={<Loading />}>
-			<article className={`${object?._id} mb-3`}>
-				<div className="card rounded-0">
+			<article className={`${post?._id} mb-3`}>
+				<div className="card">
 					<div className="card-header">
-						{/* <Author
-							user={object?.user}
-							postedto={object?.postedto}
-							postedfrom={object?.postedfrom}
-						/> */}
+						<Author
+							user={post?.user}
+							postedto={post?.postedto}
+							postedfrom={post?.postedfrom}
+						/>
 					</div>
 					<div
 						className={`card-body ${
-							(object?.media?.length >= 1 || images?.length >= 1) && `p-0`
+							(post?.media?.length >= 1 || images?.length >= 1) && `p-0`
 						}`}
 					>
 						<Gallery
@@ -317,7 +300,7 @@ const Single = ({
 					</div>
 					<div className="card-footer">
 						<div className="float-end">
-							<ExportModal object={object} />
+							<ExportModal object={post} />
 						</div>
 					</div>
 				</div>
@@ -326,4 +309,4 @@ const Single = ({
 	);
 };
 
-export default Single;
+export default Post;

@@ -39,6 +39,14 @@ p > img {
 }
 
 /*****************************
+MAPBOX
+*****************************/
+.mapboxgl-popup-close-button {
+	width: 20px;
+	height: 20px;
+	color: #000;
+}
+/*****************************
 SHORTS/STORIES
 *****************************/
 .single-story {

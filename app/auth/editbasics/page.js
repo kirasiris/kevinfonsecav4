@@ -42,7 +42,7 @@ const UpdateBasics = ({ params, searchParams }) => {
 		xboxId,
 	} = basicData;
 
-	const [profile, setProfile] = useState(null);
+	const [myprofile, setMyProfile] = useState(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(false);
 	const [btnText, setBtnTxt] = useState("Submit");
@@ -51,23 +51,22 @@ const UpdateBasics = ({ params, searchParams }) => {
 		const fetchUser = async () => {
 			try {
 				const res = await fetchurl(`/auth/me`, "GET", "no-cache");
-				setProfile(res?.data);
+				setMyProfile(res?.data);
 				setBasicData({
-					username: res?.data?.username,
-					workstatus: res?.data?.workstatus,
-					secondaryEmail: res?.data?.secondaryEmail,
-					website: res?.data?.website,
-					facebook: res?.data?.social?.facebook,
-					twitter: res?.data?.social?.twitter,
-					youtube: res?.data?.social?.youtube,
-					instagram: res?.data?.social?.instagram,
-					linkedin: res?.data?.social?.linkedin,
-					steamId: res?.data?.social?.steamId,
-					xboxId: res?.data?.social?.xboxId,
+					username: res.data?.username,
+					workstatus: res.data?.workstatus,
+					secondaryEmail: res.data?.secondaryEmail,
+					website: res.data?.website,
+					facebook: res.data.social?.facebook,
+					twitter: res.data.social?.twitter,
+					youtube: res.data.social?.youtube,
+					instagram: res.data.social?.instagram,
+					linkedin: res.data.social?.linkedin,
+					steamId: res.data.social?.steamId,
+					xboxId: res.data.social?.xboxId,
 				});
 				setLoading(false);
 			} catch (err) {
-				console.log(err);
 				setError(true);
 				// const error = err.response.data.message;
 				const error = err?.response?.data?.error?.errors;
@@ -94,7 +93,6 @@ const UpdateBasics = ({ params, searchParams }) => {
 		};
 		fetchUser();
 	}, [loading]);
-
 	const upgradeBasic = async (e) => {
 		e.preventDefault();
 		try {
@@ -147,7 +145,7 @@ const UpdateBasics = ({ params, searchParams }) => {
 
 	const [displaySocialInputs, toggleSocialInputs] = useState(false);
 
-	return loading || profile === null || profile === undefined ? (
+	return loading || myprofile === null || myprofile === undefined ? (
 		error ? (
 			<>Not found</>
 		) : (
@@ -161,7 +159,6 @@ const UpdateBasics = ({ params, searchParams }) => {
 					<div className="card">
 						<div className="card-header">Edit&nbsp;Basics</div>
 						<div className="card-body">
-							{JSON.stringify(basicData, 4, null)}
 							<form onSubmit={upgradeBasic}>
 								<label htmlFor="username" className="form-label">
 									Username
@@ -178,7 +175,7 @@ const UpdateBasics = ({ params, searchParams }) => {
 									}}
 									type="text"
 									className="form-control mb-3"
-									placeholder={`${profile.username}`}
+									// placeholder={`${myprofile?.username}`}
 								/>
 								<label htmlFor="email" className="form-label">
 									Email
@@ -205,7 +202,7 @@ const UpdateBasics = ({ params, searchParams }) => {
 									}}
 									type="email"
 									className="form-control mb-3"
-									placeholder={`${profile.secondaryEmail}`}
+									// placeholder={`${myprofile?.secondaryEmail}`}
 								/>
 								<label htmlFor="workstatus" className="form-label">
 									Work&nbsp;Status
@@ -222,7 +219,7 @@ const UpdateBasics = ({ params, searchParams }) => {
 									}}
 									type="text"
 									className="form-control mb-3"
-									placeholder={`${profile.workstatus}`}
+									// placeholder={`${myprofile?.workstatus}`}
 								/>
 								<label htmlFor="website" className="form-label">
 									Website
@@ -239,7 +236,7 @@ const UpdateBasics = ({ params, searchParams }) => {
 									}}
 									type="text"
 									className="form-control mb-3"
-									placeholder={`${profile.website}`}
+									// placeholder={`${myprofile?.website}`}
 								/>
 								<button
 									type="button"

@@ -37,18 +37,21 @@ const ProfileRead = async ({ params, searchParams }) => {
 
 	const limit = searchParams.limit || 10;
 	const page = searchParams.page || 1;
+	const subtype = searchParams.subType
+		? `&subType=${searchParams.subType}`
+		: "";
 	const decrypt = searchParams.decrypt === "true" ? "&decrypt=true" : "";
 
 	const getStoriesData = getPosts(
-		`?user${params.id}&page=${page}&limit=${limit}&sort=-createdAt&status=published&postType=story`
+		`?user=${params.id}&page=${page}&limit=${limit}&sort=-createdAt&status=published&postType=story`
 	);
 
 	const getFeaturedPostsData = getFeaturedPosts(
-		`?user${params.id}&featured=true&status=published${decrypt}`
+		`?user=${params.id}&featured=true&status=published${decrypt}`
 	);
 
 	const getPostsData = getPosts(
-		`?user=${params.id}&page=${page}&limit=${limit}&sort=-createdAt&status=published&postType=post${decrypt}`
+		`?user=${params.id}&page=${page}&limit=${limit}&sort=-createdAt&status=published&postType=post${subtype}${decrypt}`
 	);
 
 	const getMediasData = getMedias(`?user=${params.id}&limit=9&album=posts`);
@@ -82,6 +85,8 @@ const ProfileRead = async ({ params, searchParams }) => {
 						stories={stories}
 						featured={featured}
 						objects={posts}
+						params={params}
+						searchParams={searchParams}
 					/>
 				</div>
 			</div>

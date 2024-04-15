@@ -1,3 +1,4 @@
+"use client";
 import Link from "next/link";
 
 const Filter = ({ params = {} }) => {
@@ -6,7 +7,7 @@ const Filter = ({ params = {} }) => {
 			<Link
 				href={{
 					pathname: `/profile/${params.id}/${params.username}`,
-					query: { page: 1, limit: 10 },
+					query: { page: 1, limit: 10, sort: "-createdAt" },
 				}}
 				passHref
 				legacyBehavior
@@ -16,7 +17,7 @@ const Filter = ({ params = {} }) => {
 			<Link
 				href={{
 					pathname: `/profile/${params.id}/${params.username}`,
-					query: { page: 1, limit: 10, subType: "text" },
+					query: { page: 1, limit: 10, sort: "-createdAt", subType: "text" },
 				}}
 				passHref
 				legacyBehavior
@@ -26,7 +27,7 @@ const Filter = ({ params = {} }) => {
 			<Link
 				href={{
 					pathname: `/profile/${params.id}/${params.username}`,
-					query: { page: 1, limit: 10, subType: "photos" },
+					query: { page: 1, limit: 10, sort: "-createdAt", subType: "photos" },
 				}}
 				passHref
 				legacyBehavior
@@ -36,7 +37,7 @@ const Filter = ({ params = {} }) => {
 			<Link
 				href={{
 					pathname: `/profile/${params.id}/${params.username}`,
-					query: { page: 1, limit: 10, subType: "videos" },
+					query: { page: 1, limit: 10, sort: "-createdAt", subType: "videos" },
 				}}
 				passHref
 				legacyBehavior
@@ -46,7 +47,7 @@ const Filter = ({ params = {} }) => {
 			<Link
 				href={{
 					pathname: `/profile/${params.id}/${params.username}`,
-					query: { page: 1, limit: 10, subType: "audios" },
+					query: { page: 1, limit: 10, sort: "-createdAt", subType: "audios" },
 				}}
 				passHref
 				legacyBehavior
@@ -56,7 +57,7 @@ const Filter = ({ params = {} }) => {
 			<Link
 				href={{
 					pathname: `/profile/${params.id}/${params.username}`,
-					query: { page: 1, limit: 10, subType: "files" },
+					query: { page: 1, limit: 10, sort: "-createdAt", subType: "files" },
 				}}
 				passHref
 				legacyBehavior
@@ -66,7 +67,7 @@ const Filter = ({ params = {} }) => {
 			<Link
 				href={{
 					pathname: `/profile/${params.id}/${params.username}`,
-					query: { page: 1, limit: 10, subType: "maps" },
+					query: { page: 1, limit: 10, sort: "-createdAt", subType: "maps" },
 				}}
 				passHref
 				legacyBehavior

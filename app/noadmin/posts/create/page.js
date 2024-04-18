@@ -93,16 +93,21 @@ const CreatePost = () => {
 
 	const addPost = async (e) => {
 		e.preventDefault();
-		// console.log(postData);
-		// console.log(files.uploaded);
 		try {
-			await fetchurl(`/posts`, "POST", "no-cache", {
+			const fileIds = files.uploaded.map((file) => file._id); // Extract _id of each file
+			const uniqueFileIds = [...new Set(fileIds)]; // Remove duplicate file IDs
+			const res = await fetchurl(`/posts`, "POST", "no-cache", {
 				...postData,
-				files: files.uploaded._id,
+				// files: [...fileIds, files.uploaded[files.uploaded.length - 1]._id],
+				files: uniqueFileIds,
 			});
+			setFiles({
+				...files,
+				uploaded: [],
+			});
+			console.log("Result", res);
 			// router.push(`/noadmin/posts`);
 		} catch (err) {
-			console.log("error:", err);
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;
 			const errors = err?.response?.data?.errors;

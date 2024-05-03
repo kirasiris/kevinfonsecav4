@@ -8,6 +8,7 @@ import ReportModal from "@/components/global/reportmodal";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import { formatDateWithoutTime } from "@/helpers/utilities";
 import Menu from "@/components/course/menu";
+import VideoList from "@/components/course/videolist";
 
 async function getAuthenticatedUser() {
 	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
@@ -52,6 +53,7 @@ const VideoRead = async ({ params, searchParams }) => {
 	const getCourseLessonsData = getCourseLessons(
 		`?resourceId=${params.id}&sort=orderingNumber&onModel=Course`
 	);
+
 	// Verify if user is enrolled (it means if course is not free, user should have paid and/or enrolled already)
 	const verifyUserEnrollment = getCourseStudents(
 		`?user=${
@@ -96,47 +98,16 @@ const VideoRead = async ({ params, searchParams }) => {
 								/>
 								{/* TRACK FOR CAPTIONS - OPTIONAL */}
 								{/* <track
-						kind="captions"
-						label="English captions"
-						src="/path/to/captions.vtt"
-						srclang="en"
-						default
-					/> */}
+									kind="captions"
+									label="English captions"
+									src="/path/to/captions.vtt"
+									srclang="en"
+									default
+								/> */}
 							</video>
 						</div>
 						<div className="col-lg-3 p-0">
-							{lessons?.data?.length > 0 ? (
-								<ul
-									className="list-group list-group-flush overflow-x-hidden"
-									style={{ maxHeight: "1073px" }}
-								>
-									{lessons.data.map((lesson, index) => (
-										<li
-											key={lesson._id}
-											className={`${index} list-group-item ${lesson.orderingNumber}`}
-										>
-											<div className="float-start">
-												<Link
-													href={`/course/${course.data._id}/${course.data.category}/${course.data.sub_category}/${course.data.slug}/video/${lesson._id}`}
-													passHref
-													legacyBehavior
-												>
-													<a>
-														<span className="badge bg-secondary me-1">
-															{lesson.orderingNumber}
-														</span>
-														{lesson.title}
-													</a>
-												</Link>
-											</div>
-										</li>
-									))}
-								</ul>
-							) : (
-								<div className="alert alert-danger rounded-0  m-0 border-0">
-									Nothing&nbsp;found
-								</div>
-							)}
+							<VideoList auth={auth} object={course} objects={lessons} />
 						</div>
 					</div>
 				</div>

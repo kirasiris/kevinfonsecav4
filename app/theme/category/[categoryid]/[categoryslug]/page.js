@@ -43,9 +43,10 @@ const ThemeCategoryIndex = async ({ params, searchParams }) => {
 	return (
 		<>
 			<Header
-				title={`Welcome to my ${
-					capitalizeWord.charAt(0).toUpperCase() + capitalizeWord.slice(1)
-				} Portfolios`}
+				title={`Welcome to my ${capitalizeWord
+					.split("-")
+					.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+					.join(" ")} Portfolios`}
 				description="Check my projects out and tell me what you think!"
 			/>
 			<List

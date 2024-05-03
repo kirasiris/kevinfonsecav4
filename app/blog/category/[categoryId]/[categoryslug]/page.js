@@ -51,9 +51,10 @@ const BlogCategoryIndex = async ({ params, searchParams }) => {
 	return (
 		<>
 			<Header
-				title={`Welcome to my ${
-					capitalizeWord.charAt(0).toUpperCase() + capitalizeWord.slice(1)
-				} Blogs`}
+				title={`Welcome to my ${capitalizeWord
+					.split("-")
+					.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+					.join(" ")} Blogs`}
 				description="Learn everything about my programming and life journey"
 			/>
 			<List

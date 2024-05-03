@@ -33,7 +33,6 @@ const UpdateDeleteAccount = ({ params, searchParams }) => {
 				setProfile(res?.data);
 				setLoading(false);
 			} catch (err) {
-				console.log(err);
 				setError(true);
 				// const error = err.response.data.message;
 				const error = err?.response?.data?.error?.errors;

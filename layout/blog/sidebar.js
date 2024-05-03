@@ -1,11 +1,16 @@
 "use client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { TiWeatherCloudy } from "react-icons/ti";
 import Globalsidebar from "../sidebar";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 
 const Sidebar = ({ quotes = [], categories = [] }) => {
 	const router = useRouter();
+	const [forecast, setForecast] = useState({});
+	const [error, setError] = useState(false);
 	const [searchParams, setSearchParams] = useState({
 		keyword: "",
 	});
@@ -18,6 +23,47 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 			`/blog/search?keyword=${keyword}&page=1&limit=10&sort=-createdAt`
 		);
 	};
+
+	useEffect(() => {
+		const fetchForecast = async () => {
+			try {
+				const res = await fetchurl(
+					`https://api.openweathermap.org/data/2.5/weather?lat=32.8009936&lon=-97.4541233&appid=0535e4c52b3e390a1d018112afd15f98&units=imperial`,
+					"GET",
+					"no-cache",
+					undefined,
+					undefined,
+					false,
+					true
+				);
+				setForecast(res);
+			} catch (err) {
+				setError(true);
+				// const error = err.response.data.message;
+				const error = err?.response?.data?.error?.errors;
+				const errors = err?.response?.data?.errors;
+
+				if (error) {
+					// dispatch(setAlert(error, 'danger'));
+					error &&
+						Object.entries(error).map(([, value]) =>
+							toast.error(value.message)
+						);
+				}
+
+				if (errors) {
+					errors.forEach((error) => toast.error(error.msg));
+				}
+
+				toast.error(err?.response?.statusText);
+				return {
+					msg: err?.response?.statusText,
+					status: err?.response?.status,
+				};
+			}
+		};
+		fetchForecast();
+	}, []);
 
 	return (
 		<Globalsidebar>
@@ -155,6 +201,29 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 					</div>
 				</div>
 			)}
+			{/* Weather APP */}
+			<div className="card mb-4">
+				<div className="card-header">
+					Current&nbsp;Forecast&nbsp;(Fort Worth, TX)
+				</div>
+				<div className="card-body">
+					<div className="d-flex">
+						<div className="float-start">
+							<span>City:</span>&nbsp;{forecast.name}
+							<p className="display-1">{parseInt(forecast.main?.temp)}F°</p>
+							<span>Wind:{forecast.wind?.speed}&nbsp;km/h</span>
+							<br />
+							<span>Longitude:&nbsp;{forecast.coord?.lon}</span>
+							<br />
+							<span>Latitude:&nbsp;{forecast.coord?.lat}</span>
+						</div>
+						<div className="float-end m-auto">
+							<TiWeatherCloudy style={{ width: "auto", height: "150px" }} />
+						</div>
+					</div>
+				</div>
+				<div className="card-footer">Based on a 3-hour forecast</div>
+			</div>
 		</Globalsidebar>
 	);
 };

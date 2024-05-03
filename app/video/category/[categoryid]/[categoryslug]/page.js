@@ -28,10 +28,15 @@ const PlaylistIndex = async ({ params, searchParams }) => {
 		getCategoriesData,
 	]);
 
+	const capitalizeWord = params.categoryslug;
+
 	return (
 		<>
 			<Header
-				title={`Welcome to my Movies`}
+				title={`Welcome to my ${capitalizeWord
+					.split("-")
+					.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+					.join(" ")} Movies`}
 				description="Here you will see everything I'm currently watching!"
 			/>
 			<List

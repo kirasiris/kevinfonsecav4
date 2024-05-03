@@ -157,6 +157,7 @@ export const AuthProvider = ({ children }) => {
 		courses: 0,
 		emails: 0,
 		files: 0,
+		jobs: 0,
 		lessons: 0,
 		logs: 0,
 		memberships: 0,

@@ -47,6 +47,46 @@ const Footer = ({ auth = {}, classes = "", styles = {}, canonical = "" }) => {
 							<li className="nav-item mb-2">
 								<Link
 									href={{
+										pathname: "/api",
+										query: {},
+									}}
+									passHref
+									legacyBehavior
+								>
+									API
+								</Link>
+							</li>
+							<li className="nav-item mb-2">
+								<Link
+									href={{
+										pathname: "/forum",
+										query: {},
+									}}
+									passHref
+									legacyBehavior
+								>
+									Forum
+								</Link>
+							</li>
+							<li className="nav-item mb-2">
+								<Link
+									href={{
+										pathname: "/job",
+										query: {
+											page: 1,
+											limit: 10,
+											sort: "-createdAt",
+										},
+									}}
+									passHref
+									legacyBehavior
+								>
+									Jobs
+								</Link>
+							</li>
+							<li className="nav-item mb-2">
+								<Link
+									href={{
 										pathname: "/changelog",
 										query: {
 											page: 1,

@@ -7,6 +7,7 @@ const AdminStatusesMenu = ({
 	draftLink = "",
 	scheduledLink = "",
 	trashedLink = "",
+	filledLink = "",
 	categoriesLink = "",
 	categoryType = "",
 }) => {
@@ -85,6 +86,18 @@ const AdminStatusesMenu = ({
 						<a className="btn btn-link btn-sm">Trashed</a>
 					</Link>
 				)}
+			{filledLink !== "" && filledLink !== undefined && filledLink !== null && (
+				<Link
+					href={{
+						pathname: filledLink,
+						query: { page: 1, limit: 10, sort: `-createdAt` },
+					}}
+					passHref
+					legacyBehavior
+				>
+					<a className="btn btn-link btn-sm">Filled Out</a>
+				</Link>
+			)}
 			{categoriesLink !== "" &&
 				categoriesLink !== undefined &&
 				categoriesLink !== null &&

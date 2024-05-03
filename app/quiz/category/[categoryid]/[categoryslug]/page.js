@@ -43,9 +43,10 @@ const QuizCategoryIndex = async ({ params, searchParams }) => {
 	return (
 		<>
 			<Header
-				title={`Welcome to my ${
-					capitalizeWord.charAt(0).toUpperCase() + capitalizeWord.slice(1)
-				} Quizzes`}
+				title={`Welcome to my ${capitalizeWord
+					.split("-")
+					.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+					.join(" ")} Quizzes`}
 				description="Learn everything you need for free!"
 			/>
 			<List

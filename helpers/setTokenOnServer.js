@@ -18,12 +18,13 @@ export const setAuthTokenOnServer = async (token) => {
 };
 
 export const fetchurl = async (
-	url = `http://localhost:5000/api/v1`,
+	url = ``,
 	method,
 	cache = "default",
 	bodyData,
 	signal = undefined,
-	multipart = false
+	multipart = false,
+	isRemote = false
 ) => {
 	const myCookies = cookies();
 	const token = myCookies.get("xAuthToken");
@@ -48,13 +49,16 @@ export const fetchurl = async (
 		customHeaders["Content-Type"] = "application/json";
 	}
 
-	const response = await fetch(`http://localhost:5000/api/v1${url}`, {
-		method: method,
-		headers: customHeaders,
-		body: method !== "GET" && method !== "HEAD" ? requestBody : null,
-		cache: cache,
-		signal: signal,
-	})
+	const response = await fetch(
+		isRemote ? url : `http://localhost:5000/api/v1${url}`,
+		{
+			method: method,
+			headers: customHeaders,
+			body: method !== "GET" && method !== "HEAD" ? requestBody : null,
+			cache: cache,
+			signal: signal,
+		}
+	)
 		.then(async (res) => await res.json())
 		.then((response) => response)
 		.catch((err) => {

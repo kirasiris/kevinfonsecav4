@@ -305,7 +305,7 @@ const CreatePost = () => {
 							const format = file.path.split(".")[1];
 							return (
 								<div key={index} className="col-auto mb-3">
-									{format === "png" && (
+									{format === "png" && format === "jpeg" && (
 										<figure>
 											<Image
 												src={file.preview}

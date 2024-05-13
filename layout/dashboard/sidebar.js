@@ -36,7 +36,7 @@ const AdminMenu = () => {
 							query: {
 								page: 1,
 								limit: 10,
-								sortby: "-createdAt",
+								sort: "-createdAt",
 							},
 						}}
 						passHref
@@ -56,7 +56,7 @@ const AdminMenu = () => {
 							query: {
 								page: 1,
 								limit: 10,
-								sortby: "-createdAt",
+								sort: "-createdAt",
 							},
 						}}
 						passHref
@@ -72,7 +72,7 @@ const AdminMenu = () => {
 							query: {
 								page: 1,
 								limit: 10,
-								sortby: "-createdAt",
+								sort: "-createdAt",
 							},
 						}}
 						passHref
@@ -92,7 +92,7 @@ const AdminMenu = () => {
 							query: {
 								page: 1,
 								limit: 10,
-								sortby: "-createdAt",
+								sort: "-createdAt",
 							},
 						}}
 						passHref

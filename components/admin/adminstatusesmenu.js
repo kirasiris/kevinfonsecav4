@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const AdminStatusesMenu = ({
 	allLink = "",
@@ -11,15 +12,14 @@ const AdminStatusesMenu = ({
 	categoriesLink = "",
 	categoryType = "",
 }) => {
+	const pathname = usePathname();
+
+	const isActive = (path = "") => {
+		return pathname === path ? "active" : "btn-link";
+	};
+
 	return (
-		<div
-			className="mb-3"
-			style={{
-				padding: "0.5rem 1rem",
-				backgroundColor: "#f8f8f8",
-				border: "1px solid rgba(0, 0, 0, 0.175)",
-			}}
-		>
+		<div className="admin-statuses-menu mb-3">
 			{allLink !== "" && allLink !== undefined && allLink !== null && (
 				<Link
 					href={{
@@ -29,7 +29,7 @@ const AdminStatusesMenu = ({
 					passHref
 					legacyBehavior
 				>
-					<a className="btn btn-link btn-sm">All</a>
+					<a className={`btn ${isActive(allLink)} btn-sm`}>All</a>
 				</Link>
 			)}
 			{publishedLink !== "" &&
@@ -43,7 +43,7 @@ const AdminStatusesMenu = ({
 						passHref
 						legacyBehavior
 					>
-						<a className="btn btn-link btn-sm">Published</a>
+						<a className={`btn ${isActive(publishedLink)} btn-sm`}>Published</a>
 					</Link>
 				)}
 			{draftLink !== "" && draftLink !== undefined && draftLink !== null && (
@@ -55,7 +55,7 @@ const AdminStatusesMenu = ({
 					passHref
 					legacyBehavior
 				>
-					<a className="btn btn-link btn-sm">Draft</a>
+					<a className={`btn ${isActive(draftLink)} btn-sm`}>Draft</a>
 				</Link>
 			)}
 			{scheduledLink !== "" &&
@@ -69,7 +69,7 @@ const AdminStatusesMenu = ({
 						passHref
 						legacyBehavior
 					>
-						<a className="btn btn-link btn-sm">Scheduled</a>
+						<a className={`btn ${isActive(scheduledLink)} btn-sm`}>Scheduled</a>
 					</Link>
 				)}
 			{trashedLink !== "" &&
@@ -83,7 +83,7 @@ const AdminStatusesMenu = ({
 						passHref
 						legacyBehavior
 					>
-						<a className="btn btn-link btn-sm">Trashed</a>
+						<a className={`btn ${isActive(trashedLink)} btn-sm`}>Trashed</a>
 					</Link>
 				)}
 			{filledLink !== "" && filledLink !== undefined && filledLink !== null && (
@@ -95,7 +95,7 @@ const AdminStatusesMenu = ({
 					passHref
 					legacyBehavior
 				>
-					<a className="btn btn-link btn-sm">Filled Out</a>
+					<a className={`btn ${isActive(filledLink)} btn-sm`}>Filled Out</a>
 				</Link>
 			)}
 			{categoriesLink !== "" &&

@@ -265,6 +265,8 @@ const UpdatePlaylist = () => {
 			</div>
 			<div className="col-lg-3">
 				<AdminSidebar
+					displayCategoryField={true}
+					displayAvatar={true}
 					avatar={avatar}
 					status={status}
 					fullWidth={false}
@@ -272,7 +274,7 @@ const UpdatePlaylist = () => {
 					featured={featured}
 					commented={commented}
 					embedding={false}
-					github={false}
+					github_readme={""}
 					category={category._id ? category._id : category}
 					categories={categories}
 					objectData={playlistData}

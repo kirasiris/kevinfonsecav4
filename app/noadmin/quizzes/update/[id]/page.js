@@ -351,8 +351,8 @@ const UpdateQuiz = () => {
 					featured={featured}
 					commented={commented}
 					embedding={embedding}
-					github={false}
-					category={category}
+					github_readme={""}
+					category={category._id ? category._id : category}
 					categories={categories}
 					objectData={quizData}
 					setObjectData={setQuizData}

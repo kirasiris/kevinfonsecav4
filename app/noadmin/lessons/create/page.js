@@ -253,7 +253,7 @@ const CreateLesson = () => {
 					featured={featured}
 					commented={commented}
 					embedding={embedding}
-					github={false}
+					github_readme={""}
 					category={undefined}
 					categories={[]}
 					objectData={lessonData}

@@ -37,6 +37,11 @@ const AdminMenu = () => {
 						<a>Comments</a>
 					</Link>
 				</li>
+				<li className={`list-group-item ${isActive(`/noadmin/companies`)}`}>
+					<Link href={"/noadmin/companies"} passHref legacyBehavior>
+						<a>Companies</a>
+					</Link>
+				</li>
 				<li className={`list-group-item ${isActive(`/noadmin/contacts`)}`}>
 					<Link href={"/noadmin/contacts"} passHref legacyBehavior>
 						<a>Contacts</a>

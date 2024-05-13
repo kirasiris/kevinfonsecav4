@@ -217,6 +217,8 @@ const UpdateBlog = () => {
 			</div>
 			<div className="col-lg-3">
 				<AdminSidebar
+					displayCategoryField={true}
+					displayAvatar={true}
 					avatar={avatar}
 					status={status}
 					fullWidth={fullWidth}
@@ -224,7 +226,7 @@ const UpdateBlog = () => {
 					featured={featured}
 					commented={commented}
 					embedding={embedding}
-					github={false}
+					github_readme={""}
 					category={category._id ? category._id : category}
 					categories={categories}
 					objectData={blogData}

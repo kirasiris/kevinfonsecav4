@@ -222,6 +222,8 @@ const UpdateTheme = () => {
 			</div>
 			<div className="col-lg-3">
 				<AdminSidebar
+					displayCategoryField={true}
+					displayAvatar={true}
 					avatar={avatar}
 					status={status}
 					fullWidth={fullWidth}
@@ -230,7 +232,7 @@ const UpdateTheme = () => {
 					commented={commented}
 					embedding={embedding}
 					github_readme={github_readme}
-					category={category}
+					category={category._id ? category._id : category}
 					categories={categories}
 					objectData={themeData}
 					setObjectData={setThemeData}

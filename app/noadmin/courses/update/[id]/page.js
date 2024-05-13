@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import AuthContext from "@/helpers/globalContext";
 import AdminSidebar from "@/components/admin/adminsidebar";
 import MyTextArea from "@/components/global/mytextarea";
+import OnboardingLink from "@/components/dashboard/onboardinglink";
 
 const UpdateCourse = () => {
 	const { auth, files } = useContext(AuthContext);
@@ -19,8 +20,12 @@ const UpdateCourse = () => {
 		!auth.user.role.includes("founder") &&
 		router.push("/dashboard");
 
+	// Redirect if not charges enabled
+	!auth?.user?.stripe?.stripeChargesEnabled && <OnboardingLink auth={auth} />;
+
 	const [courseData, setCourseData] = useState({
 		title: `Untitled`,
+		avatar: files?.selected?._id,
 		sub_title: ``,
 		text: `No description`,
 		price: 0,
@@ -37,6 +42,7 @@ const UpdateCourse = () => {
 	});
 	const {
 		title,
+		avatar,
 		sub_title,
 		text,
 		price,
@@ -65,8 +71,8 @@ const UpdateCourse = () => {
 				const res = await fetchurl(`/courses/${courseId}`, "GET", "no-cache");
 				setCourse(res?.data);
 				setCourseData({
-					avatar: res?.data?.files?.avatar,
 					title: res?.data?.title,
+					avatar: res?.data?.files?.avatar,
 					sub_title: res?.data?.sub_title,
 					text: res?.data?.text,
 					price: res?.data?.price,
@@ -143,6 +149,7 @@ const UpdateCourse = () => {
 	const resetForm = () => {
 		setCourseData({
 			title: `Untitled`,
+			avatar: files?.selected?._id,
 			sub_title: ``,
 			text: `No description`,
 			price: 0,
@@ -499,19 +506,21 @@ const UpdateCourse = () => {
 			<div className="col-lg-3">
 				<AdminSidebar
 					displayCategoryField={false}
-					avatar={files?.selected?._id}
+					displayAvatar={true}
+					avatar={avatar}
 					status={status}
 					fullWidth={false}
 					password={password}
 					featured={featured}
 					commented={commented}
 					embedding={embedding}
-					github={false}
-					category={category}
+					github_readme={""}
+					category={undefined}
+					categories={[]}
 					objectData={courseData}
 					setObjectData={setCourseData}
 					multipleFiles={false}
-					onModel={"Playlist"}
+					onModel={"Course"}
 				/>
 				<br />
 				<button

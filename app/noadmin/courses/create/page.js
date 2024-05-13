@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import AuthContext from "@/helpers/globalContext";
 import AdminSidebar from "@/components/admin/adminsidebar";
 import MyTextArea from "@/components/global/mytextarea";
+import OnboardingLink from "@/components/dashboard/onboardinglink";
 
 const CreateCourse = () => {
 	const { auth, files } = useContext(AuthContext);
@@ -18,6 +19,9 @@ const CreateCourse = () => {
 	auth.isAuthenticated &&
 		!auth.user.role.includes("founder") &&
 		router.push("/dashboard");
+
+	// Redirect if not charges enabled
+	!auth?.user?.stripe?.stripeChargesEnabled && <OnboardingLink auth={auth} />;
 
 	const [courseData, setCourseData] = useState({
 		title: `Untitled`,
@@ -434,6 +438,7 @@ const CreateCourse = () => {
 			<div className="col-lg-3">
 				<AdminSidebar
 					displayCategoryField={false}
+					displayAvatar={true}
 					avatar={files?.selected?._id}
 					status={status}
 					fullWidth={false}
@@ -441,12 +446,13 @@ const CreateCourse = () => {
 					featured={featured}
 					commented={commented}
 					embedding={embedding}
-					github={false}
+					github_readme={""}
 					category={category}
+					categories={[]}
 					objectData={courseData}
 					setObjectData={setCourseData}
 					multipleFiles={false}
-					onModel={"Playlist"}
+					onModel={"Course"}
 				/>
 				<br />
 				<button

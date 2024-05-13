@@ -39,6 +39,15 @@ p > img {
 }
 
 /*****************************
+ADMIN STATUSES MENU
+*****************************/
+.admin-statuses-menu {
+	padding: 0.5rem 1rem;
+	background-color: #f8f8f8;
+	border: 1px solid #0000002d;
+}
+
+/*****************************
 MAPBOX
 *****************************/
 .mapboxgl-popup-close-button {
@@ -495,6 +504,12 @@ body.dark-mode .accordion-button {
 body.dark-mode .accordion-body {
 	background-color: #222222;
 	color: #00cc00;
+}
+
+body.dark-mode .admin-statuses-menu {
+	padding: 0.5rem 1rem;
+	background-color: #212529;
+	border: 1px solid #0000002d;
 }
 
 body.dark-mode::-webkit-scrollbar {

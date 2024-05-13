@@ -233,6 +233,7 @@ const CreateSubscriber = () => {
 			</div>
 			<div className="col-lg-3">
 				<AdminSidebar
+					displayCategoryField={false}
 					displayAvatar={false}
 					avatar={""}
 					status={status}
@@ -241,7 +242,7 @@ const CreateSubscriber = () => {
 					featured={false}
 					commented={false}
 					embedding={false}
-					github={false}
+					github_readme={""}
 					category={undefined}
 					categories={[]}
 					objectData={subscriberData}

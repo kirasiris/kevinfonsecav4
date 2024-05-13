@@ -201,6 +201,8 @@ const CreatePlaylist = () => {
 			</div>
 			<div className="col-lg-3">
 				<AdminSidebar
+					displayCategoryField={true}
+					displayAvatar={true}
 					avatar={files?.selected?._id}
 					status={status}
 					fullWidth={false}
@@ -208,7 +210,7 @@ const CreatePlaylist = () => {
 					featured={featured}
 					commented={commented}
 					embedding={false}
-					github={false}
+					github_readme={""}
 					category={category}
 					categories={categories}
 					objectData={playlistData}

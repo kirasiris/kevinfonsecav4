@@ -157,6 +157,8 @@ const CreateBlog = () => {
 			</div>
 			<div className="col-lg-3">
 				<AdminSidebar
+					displayCategoryField={true}
+					displayAvatar={true}
 					avatar={files?.selected?._id}
 					status={status}
 					fullWidth={fullWidth}
@@ -164,7 +166,7 @@ const CreateBlog = () => {
 					featured={featured}
 					commented={commented}
 					embedding={embedding}
-					github={false}
+					github_readme={""}
 					category={category}
 					categories={categories}
 					objectData={blogData}

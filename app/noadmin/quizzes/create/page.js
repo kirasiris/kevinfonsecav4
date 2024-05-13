@@ -285,7 +285,7 @@ const CreateQuiz = () => {
 					featured={featured}
 					commented={commented}
 					embedding={embedding}
-					github={false}
+					github_readme={""}
 					category={category}
 					categories={categories}
 					objectData={quizData}

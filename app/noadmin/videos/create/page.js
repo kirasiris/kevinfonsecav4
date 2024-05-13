@@ -359,6 +359,8 @@ const CreateVideo = () => {
 			</div>
 			<div className="col-lg-3">
 				<AdminSidebar
+					displayCategoryField={true}
+					displayAvatar={true}
 					avatar={files?.selected?._id}
 					status={status}
 					fullWidth={false}
@@ -366,7 +368,7 @@ const CreateVideo = () => {
 					featured={featured}
 					commented={commented}
 					embedding={embedding}
-					github={false}
+					github_readme={""}
 					category={category}
 					categories={categories}
 					objectData={videoData}

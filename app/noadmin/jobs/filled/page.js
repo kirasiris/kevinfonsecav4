@@ -8,6 +8,7 @@ import AuthContext from "@/helpers/globalContext";
 import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
 import AdminCardHeaderMenu from "@/components/admin/admincardheadermenu";
 import ClientNumericPagination from "@/layout/clientnumericpagination";
+import CreateCompanyLink from "@/components/dashboard/createcompanylink";
 
 const AdminJobsFilledIndex = () => {
 	const {
@@ -312,46 +313,50 @@ const AdminJobsFilledIndex = () => {
 					keyword={keyword}
 					setKeyword={setKeyword}
 				/>
-				{list?.length > 0 ? (
-					<>
-						<ul className="list-group list-group-flush">
-							{list?.map((job) => (
-								<Single
-									key={job._id}
-									object={job}
-									handleDraft={draftIt}
-									handlePublish={publishIt}
-									handleTrash={trashIt}
-									handleSchedule={scheduleIt}
-									handleDelete={handleDelete}
-									objects={list}
-									setObjects={setJobs}
-									setTotalResults={setTotalResults}
-								/>
-							))}
-							<li className="list-group-item">
-								{page} / {totalPages}
-							</li>
-						</ul>
-						<ClientNumericPagination
-							totalPages={totalPages || Math.ceil(list.length / limit)}
-							page={page}
-							limit={limit}
-							sortby={sortby}
-							siblings={1}
-							setParams={setParams}
-							postType="job"
-							router={router}
-						/>
-					</>
+				{auth?.user?.hasCompany ? (
+					list?.length > 0 ? (
+						<>
+							<ul className="list-group list-group-flush">
+								{list?.map((job) => (
+									<Single
+										key={job._id}
+										object={job}
+										handleDraft={draftIt}
+										handlePublish={publishIt}
+										handleTrash={trashIt}
+										handleSchedule={scheduleIt}
+										handleDelete={handleDelete}
+										objects={list}
+										setObjects={setJobs}
+										setTotalResults={setTotalResults}
+									/>
+								))}
+								<li className="list-group-item">
+									{page} / {totalPages}
+								</li>
+							</ul>
+							<ClientNumericPagination
+								totalPages={totalPages || Math.ceil(list.length / limit)}
+								page={page}
+								limit={limit}
+								sortby={sortby}
+								siblings={1}
+								setParams={setParams}
+								postType="job"
+								router={router}
+							/>
+						</>
+					) : (
+						<div
+							className={`alert alert-${
+								loading ? "primary" : "danger"
+							} rounded-0 m-0 border-0`}
+						>
+							{loading ? "Loading" : "Nothing found"}
+						</div>
+					)
 				) : (
-					<div
-						className={`alert alert-${
-							loading ? "primary" : "danger"
-						} rounded-0 m-0 border-0`}
-					>
-						{loading ? "Loading" : "Nothing found"}
-					</div>
+					<CreateCompanyLink />
 				)}
 			</div>
 		</>

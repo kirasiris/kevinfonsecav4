@@ -164,7 +164,9 @@ const CreateTheme = () => {
 			</div>
 			<div className="col-lg-3">
 				<AdminSidebar
-					avatar={avatar}
+					displayCategoryField={true}
+					displayAvatar={true}
+					avatar={files?.selected?._id}
 					status={status}
 					fullWidth={fullWidth}
 					password={password}
@@ -176,7 +178,7 @@ const CreateTheme = () => {
 					categories={categories}
 					objectData={themeData}
 					setObjectData={setThemeData}
-					multipleFiles={true}
+					multipleFiles={false}
 					onModel={"Blog"}
 				/>
 				<br />

@@ -162,8 +162,7 @@ const UpdateComment = () => {
 					featured={false}
 					commented={false}
 					embedding={false}
-					github={false}
-					github_readme=""
+					github_readme={""}
 					category={undefined}
 					categories={[]}
 					objectData={commentData}

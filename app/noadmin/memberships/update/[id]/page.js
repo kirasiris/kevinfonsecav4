@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import AuthContext from "@/helpers/globalContext";
 import AdminSidebar from "@/components/admin/adminsidebar";
 import MyTextArea from "@/components/global/mytextarea";
+import OnboardingLink from "@/components/dashboard/onboardinglink";
 
 const UpdateMembership = () => {
 	const { auth } = useContext(AuthContext);
@@ -18,6 +19,9 @@ const UpdateMembership = () => {
 	auth.isAuthenticated &&
 		!auth.user.role.includes("founder") &&
 		router.push("/dashboard");
+
+	// Redirect if not charges enabled
+	!auth?.user?.stripe?.stripeChargesEnabled && <OnboardingLink auth={auth} />;
 
 	const [membershipData, setMembershipData] = useState({
 		title: `Untitled`,

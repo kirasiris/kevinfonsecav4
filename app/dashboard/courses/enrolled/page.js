@@ -149,7 +149,7 @@ const DashboardCoursesEnrolledIndex = () => {
 	return (
 		<>
 			<AdminStatusesMenu
-				allLink="/dashboard/courses"
+				allLink="/dashboard/courses/enrolled"
 				publishedLink=""
 				draftLink=""
 				scheduledLink=""

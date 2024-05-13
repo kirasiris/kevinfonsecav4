@@ -149,7 +149,7 @@ const DashboardMembershipsEnrolledIndex = () => {
 	return (
 		<>
 			<AdminStatusesMenu
-				allLink="/dashboard/memberships"
+				allLink="/dashboard/memberships/enrolled"
 				publishedLink=""
 				draftLink=""
 				scheduledLink=""

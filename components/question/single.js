@@ -10,22 +10,22 @@ const Single = ({
 }) => {
 	return (
 		<Suspense fallback={<Loading />}>
-			<article className={`${question._id} row`}>
+			<article className={`${question?._id} row`}>
 				<div className={`col`}>
 					<Image
 						src={
-							question.avatar?.location?.secure_location ||
+							question?.avatar?.location?.secure_location ||
 							`https://source.unsplash.com/random/300x200`
 						}
 						className="img-fluid w-100 rounded-0"
-						alt={`${question.title}'s featured image`}
+						alt={`${question?.title || "Untitled"}'s featured image`}
 						width={`300`}
 						height={`200`}
 					/>
 				</div>
 				<div className={`col`}>
-					<h2>{question.title}</h2>
-					{Object.entries(question.answers).map(([key, value]) => (
+					<h2>{question?.title || "Untitled"}</h2>
+					{Object.entries(question?.answers).map(([key, value]) => (
 						<div
 							key={key}
 							className="form-check"

@@ -8,12 +8,12 @@ import Footer from "@/layout/footer";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 
 async function getAuthenticatedUser() {
-	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
+	const res = await fetchurl(`/auth/me`, "GET", "default");
 	return res;
 }
 
 async function getSetting(params) {
-	const res = await fetchurl(`/settings/${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/settings/${params}`, "GET", "default");
 	return res;
 }
 

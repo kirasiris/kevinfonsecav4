@@ -8,7 +8,7 @@ const Single = ({ object = {}, imageWidth = "500", imageHeight = "320" }) => {
 		return (
 			<Link
 				href={{
-					pathname: `/profile/${object._id}/${object.username}`,
+					pathname: `/profile/${object?._id}/${object?.username}`,
 					query: {
 						page: 1,
 						limit: 50,
@@ -31,7 +31,7 @@ const Single = ({ object = {}, imageWidth = "500", imageHeight = "320" }) => {
 							className="widget-header"
 							style={{
 								background: `url(${
-									object.files?.cover?.location.secure_location ||
+									object?.files?.cover?.location?.secure_location ||
 									`https://source.unsplash.com/random/${imageWidth}x${imageHeight}`
 								})`,
 							}}
@@ -41,35 +41,35 @@ const Single = ({ object = {}, imageWidth = "500", imageHeight = "320" }) => {
 						<UrlToProfileContainer>
 							<Image
 								src={
-									object.files?.avatar?.location.secure_location ||
+									object?.files?.avatar?.location?.secure_location ||
 									`https://source.unsplash.com/random/${imageWidth}x${imageHeight}`
 								}
 								className="widget-img img-circle img-border"
-								alt={`${object.username}'s profile's picture`}
+								alt={`${object?.username || "Username"}'s profile's picture`}
 								width={imageWidth}
 								height={imageHeight}
 							/>
 						</UrlToProfileContainer>
 						<UrlToProfileContainer>
-							<h4 className="m-0">{object.username}</h4>
+							<h4 className="m-0">{object?.username || "Username"}</h4>
 						</UrlToProfileContainer>
-						<p className="text-muted m-0">{object.name}</p>
+						<p className="text-muted m-0">{object?.name || "Name"}</p>
 						<div className="py-1">
-							{object.social?.facebook && (
+							{object?.social?.facebook && (
 								<a
 									className="btn-light btn-sm"
-									href={`${object.social.facebook}`}
-									title={`${object.username}'s Facebook`}
+									href={`${object?.social?.facebook}`}
+									title={`${object?.username || "Username"}'s Facebook`}
 									data-original-title="Facebook"
 								>
 									<i className="fa-brands fa-facebook" />
 								</a>
 							)}
-							{object.social?.twitter && (
+							{object?.social?.twitter && (
 								<a
 									className="btn-light btn-sm"
-									href={`${object.social.twitter}`}
-									title={`${object.username}'s X`}
+									href={`${object?.social?.twitter}`}
+									title={`${object?.username || "Username"}'s X`}
 									data-original-title="Twitter"
 								>
 									<i className="fa-brands fa-twitter" />
@@ -78,8 +78,8 @@ const Single = ({ object = {}, imageWidth = "500", imageHeight = "320" }) => {
 							{object?.email && (
 								<a
 									className="btn-light btn-sm"
-									href={`mailto:${object.email}`}
-									title={`${object.username}'s email`}
+									href={`mailto:${object?.email}`}
+									title={`${object?.username || "Username"}'s email`}
 									data-original-title="Email"
 								>
 									<i className="fa fa-envelope" />

@@ -36,7 +36,7 @@ const List = ({
 									keyword={searchParams.keyword}
 									sortby="-createdAt"
 									siblings={1}
-									postType="quiz"
+									postType=""
 								/>
 							</>
 						) : (

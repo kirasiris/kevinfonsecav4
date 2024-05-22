@@ -5,7 +5,7 @@ import ErrorPage from "@/layout/errorpage";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 
 async function getSetting(params) {
-	const res = await fetchurl(`/settings/${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/settings/${params}`, "GET", "default");
 	return res;
 }
 

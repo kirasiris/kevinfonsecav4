@@ -7,6 +7,21 @@ export const getAuthTokenOnServer = () => {
 	return myCookies.get("xAuthToken");
 };
 
+export const getUserIdOnServer = () => {
+	const myCookies = cookies();
+	return myCookies.get("userId");
+};
+
+export const setUserIdOnServer = async (id) => {
+	if (id) {
+		console.log("User id gets to setUserIdOnServer function", id);
+		cookies().set("userId", id, { secure: true });
+	} else {
+		console.log("User id does not gets to setUserIdOnServer function", id);
+		await deleteAuthTokenOnServer("userId");
+	}
+};
+
 export const setAuthTokenOnServer = async (token) => {
 	if (token) {
 		console.log("Token gets to setAuthTokenOnServer function", token);
@@ -59,8 +74,20 @@ export const fetchurl = async (
 			signal: signal,
 		}
 	)
-		.then(async (res) => await res.json())
-		.then((response) => response)
+		.then(async (res) => {
+			if (!res.ok) {
+				// check if there was JSON
+				const contentType = res.headers.get("Content-Type");
+				if (contentType && contentType.includes("application/json")) {
+					// return a rejected Promise that includes the JSON
+					return res.json().then((json) => Promise.reject(json));
+				}
+				// no JSON, just throw an error
+				throw new Error("Something went horribly wrong 💩");
+			}
+			return res.json();
+		})
+		.then((data) => data)
 		.catch((err) => {
 			console.log(err);
 			if (err.name === "AbortError") {
@@ -74,9 +101,10 @@ export const fetchurl = async (
 	return response;
 };
 
-export const deleteAuthTokenOnServer = async (token, userId) => {
+export const deleteAuthTokenOnServer = async (token) => {
 	await fetchurl(`/auth/logout`, "GET", "no-cache");
 	cookies().delete(token);
+	cookies().delete("userId");
 	console.log("2.- Deleting cookie from back-end");
 	redirect(`/auth/login`);
 };

@@ -87,6 +87,22 @@ const Footer = ({ auth = {}, classes = "", styles = {}, canonical = "" }) => {
 							<li className="nav-item mb-2">
 								<Link
 									href={{
+										pathname: "/realstate",
+										query: {
+											page: 1,
+											limit: 10,
+											sort: "-createdAt",
+										},
+									}}
+									passHref
+									legacyBehavior
+								>
+									Real State
+								</Link>
+							</li>
+							<li className="nav-item mb-2">
+								<Link
+									href={{
 										pathname: "/changelog",
 										query: {
 											page: 1,
@@ -303,6 +319,7 @@ const Footer = ({ auth = {}, classes = "", styles = {}, canonical = "" }) => {
 							</li>
 						</ul>
 					</div>
+					<hr />
 					<div className="col-lg-12">
 						<h5>Disclaimer</h5>
 						<ul className="nav flex-column">

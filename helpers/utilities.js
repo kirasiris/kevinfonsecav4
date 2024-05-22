@@ -11,8 +11,8 @@ const getCookie = (name) => {
 
 export const deleteCookie = async (name, path, domain) => {
 	if (getCookie(name)) {
-		// await fetchurl(`auth/logout`, "GET", "no-cache");
 		localStorage.removeItem("xAuthToken");
+		localStorage.removeItem("userId");
 		document.cookie =
 			name +
 			"=" +

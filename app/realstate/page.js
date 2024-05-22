@@ -2,13 +2,13 @@ import { fetchurl } from "@/helpers/setTokenOnServer";
 import Header from "@/layout/header";
 import List from "@/components/realstate/list";
 
-async function getFeaturedHouse(params) {
-	const res = await fetchurl(`/realstate${params}`, "GET", "no-cache");
+async function getFeaturedRealStates(params) {
+	const res = await fetchurl(`/realstates${params}`, "GET", "no-cache");
 	return res;
 }
 
-async function getHouses(params) {
-	const res = await fetchurl(`/realstate${params}`, "GET", "no-cache");
+async function getRealStates(params) {
+	const res = await fetchurl(`/realstates${params}`, "GET", "no-cache");
 	return res;
 }
 
@@ -17,26 +17,30 @@ const RealStateIndex = async ({ params, searchParams }) => {
 	const page = searchParams.page || 1;
 	const decrypt = searchParams.decrypt === "true" ? "&decrypt=true" : "";
 
-	const getFeaturedHousesData = getFeaturedHouse(
+	const getFeaturedRealStateData = getFeaturedRealStates(
 		`?featured=true&status=published${decrypt}`
 	);
 
-	const getHousesData = getHouses(
+	const getRealStateData = getRealStates(
 		`?page=${page}&limit=${limit}&sort=-createdAt&status=published${decrypt}`
 	);
 
-	const [featured, houses] = await Promise.all([
-		getFeaturedHousesData,
-		getHousesData,
+	const [featured, realstates] = await Promise.all([
+		getFeaturedRealStateData,
+		getRealStateData,
 	]);
 
 	return (
 		<>
 			<Header
-				title="Welcome to my Real State Listing"
-				description="Houses, Studios, Business Buildings and More!"
+				title="Welcome to my Real State"
+				description="Find out whats on Sale!"
 			/>
-			HERE GOES THE LIST
+			<List
+				featured={featured}
+				objects={realstates}
+				searchParams={searchParams}
+			/>
 		</>
 	);
 };

@@ -4,10 +4,10 @@ import Link from "next/link";
 
 const NumericPagination = ({
 	totalPages,
-	page,
-	limit,
+	page = 1,
+	limit = 10,
 	keyword,
-	sortby,
+	sortby = `-createdAt`,
 	decrypt = false,
 	siblings,
 	postType = "",

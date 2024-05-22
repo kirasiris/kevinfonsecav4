@@ -7,30 +7,30 @@ const Single = ({ object = {}, imageWidth = "415", imageHeight = "207" }) => {
 	return (
 		<Suspense fallback={<Loading />}>
 			<article
-				className={`${object._id}`}
+				className={`${object?._id}`}
 				style={{
 					width: "213.5px",
 				}}
 			>
 				<div
-					className={`card ${object.featured && "text-bg-primary"} rounded-0`}
+					className={`card ${object?.featured && "text-bg-primary"} rounded-0`}
 					style={{
 						width: "213.5",
 						height: "262px",
 					}}
 				>
 					<Link
-						href={`/video/${object._id}/${object?.category?._id}/${object?.category?.slug}/${object.slug}/index`}
+						href={`/video/${object?._id}/${object?.category?._id}/${object?.category?.slug}/${object?.slug}/index`}
 						passHref
 						legacyBehavior
 					>
 						<Image
 							src={
-								object.files?.avatar?.location.secure_location ||
+								object?.files?.avatar?.location?.secure_location ||
 								`https://source.unsplash.com/random/213.5x262`
 							}
 							className="card-img-top rounded-0"
-							alt={`${object.title}'s featured image`}
+							alt={`${object?.title || "Untitled"}'s featured image`}
 							width={imageWidth}
 							height={imageHeight}
 							style={{
@@ -41,9 +41,9 @@ const Single = ({ object = {}, imageWidth = "415", imageHeight = "207" }) => {
 					<div className="card-body text-center">
 						<h6 className="card-title">
 							<Link
-								href={`/video/${object._id}/${object?.category?._id}/${object?.category?.slug}/${object.slug}/index`}
+								href={`/video/${object?._id}/${object?.category?._id}/${object?.category?.slug}/${object?.slug}/index`}
 							>
-								{object.title}
+								{object?.title || "Untitled"}
 							</Link>
 						</h6>
 					</div>

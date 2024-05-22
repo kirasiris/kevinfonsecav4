@@ -215,40 +215,38 @@ const YouTubePage = ({ searchParams, pushTo = true }) => {
 							</button>
 						</div>
 						{activeTab.video ? (
-							<>
-								<div className="ratio ratio-16x9">
-									<iframe
-										src={
-											video?.videoEmbedUrl
-												? video?.videoEmbedUrl
-												: video?.videoEmbedUrl
-										}
-									/>
-								</div>
-								<a
-									href={`${
-										video?.videoFetchedUrl
+							video.videoEmbedUrl !== "" &&
+							video.videoEmbedUrl !== undefined &&
+							video.videoEmbedUrl !== null ? (
+								<>
+									<div className="ratio ratio-16x9">
+										<iframe
+											src={
+												video?.videoEmbedUrl
+													? video?.videoEmbedUrl
+													: video?.videoEmbedUrl
+											}
+										/>
+									</div>
+									<a
+										href={`${
+											video?.videoFetchedUrl
+												? video?.videoFetchedUrl
+												: video?.videoFetchedUrl
+										}`}
+										target="_blank"
+										rel="noopener noreferrer"
+										className="btn btn-sm btn-link"
+									>
+										Original Video:
+										{video?.videoFetchedUrl
 											? video?.videoFetchedUrl
-											: video?.videoFetchedUrl
-									}`}
-									target="_blank"
-									rel="noopener noreferrer"
-									className="btn btn-sm btn-link"
-								>
-									Original Video:
-									{video?.videoFetchedUrl
-										? video?.videoFetchedUrl
-										: video?.videoFetchedUrl}
-								</a>
-							</>
-						) : video?.thumbnails?.length > 0 ? (
-							<Carousel>
-								{video?.thumbnails.map((thumbnail, index) => (
-									<Carousel.Item key={index}>
-										<img src={`${thumbnail}`} className="d-block w-100" />
-									</Carousel.Item>
-								))}
-							</Carousel>
+											: video?.videoFetchedUrl}
+									</a>
+								</>
+							) : (
+								<p>Nothing to show</p>
+							)
 						) : video?.thumbnails?.length > 0 ? (
 							<Carousel>
 								{video?.thumbnails.map((thumbnail, index) => (

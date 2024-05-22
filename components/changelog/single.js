@@ -12,27 +12,27 @@ const Single = ({
 }) => {
 	return (
 		<Suspense fallback={<Loading />}>
-			<article className={`${changelog._id}`}>
+			<article className={`${changelog?._id}`}>
 				<Accordion>
-					<Accordion.Item eventKey={changelog._id} className="rounded-0">
+					<Accordion.Item eventKey={changelog?._id} className="rounded-0">
 						<Accordion.Header>
-							{changelog.postType.map((c) => (
+							{changelog?.postType.map((c) => (
 								<small key={c} className="badge bg-secondary rounded-pill me-3">
 									{c}
 								</small>
 							))}
-							{changelog.title}
+							{changelog?.title || "Untitled"}
 						</Accordion.Header>
 						<Accordion.Body>
-							<ParseHtml text={changelog.text} />
+							<ParseHtml text={changelog?.text} />
 							<hr />
 							<Link
-								href={`/changelog/${changelog._id}/${changelog.slug}`}
+								href={`/changelog/${changelog?._id}/${changelog?.slug}`}
 								passHref
 								legacyBehavior
 							>
 								<a className="btn btn-link border-secondary">
-									&gt;&gt; {changelog.title}
+									&gt;&gt;&nbsp;{changelog?.title || "Untitled"}
 								</a>
 							</Link>
 						</Accordion.Body>

@@ -8,7 +8,7 @@ const ParseHtml = ({ text = "" }) => {
 		setDecodedText(he.decode(text));
 	}, [text]);
 
-	if (typeof window !== "undefined") {
+	if (typeof window !== undefined) {
 		return <div dangerouslySetInnerHTML={{ __html: decodedText }} />;
 	}
 };

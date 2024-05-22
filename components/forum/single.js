@@ -13,44 +13,44 @@ const Single = ({
 }) => {
 	return (
 		<Suspense fallback={<Loading />}>
-			<article className={`${object._id} ${fullWidth ? "col" : "col-lg-6"}`}>
-				<div className={`card ${object.featured && "text-bg-primary"} mb-4`}>
+			<article className={`${object?._id} ${fullWidth ? "col" : "col-lg-6"}`}>
+				<div className={`card ${object?.featured && "text-bg-primary"} mb-4`}>
 					<Link
-						href={`/blog/${object._id}/${object?.category?._id}/${object?.category?.slug}/${object.slug}`}
+						href={`/blog/${object?._id}/${object?.category?._id}/${object?.category?.slug}/${object?.slug}`}
 						passHref
 						legacyBehavior
 					>
 						<Image
 							src={
-								object.files?.avatar?.location.secure_location ||
+								object?.files?.avatar?.location?.secure_location ||
 								`https://source.unsplash.com/random/415x207`
 							}
 							className="card-img-top"
-							alt={`${object.title}'s featured image`}
+							alt={`${object.title || "Untitled"}'s featured image`}
 							width={imageWidth}
 							height={imageHeight}
 						/>
 					</Link>
 					<div className="card-body">
 						<div className="small text-muted">
-							{formatDateWithoutTime(object.createdAt)}
+							{formatDateWithoutTime(object?.createdAt)}
 						</div>
 						<h2 className="card-title">
 							<Link
-								href={`/blog/${object._id}/${object?.category?._id}/${object?.category?.slug}/${object.slug}`}
+								href={`/blog/${object?._id}/${object?.category?._id}/${object?.category?.slug}/${object?.slug}`}
 							>
-								{object.title}
+								{object.title || "Untitled"}
 							</Link>
 						</h2>
 						<p className="card-text">
-							{typeof object.text === "object" ? (
+							{typeof object?.text === "object" ? (
 								"TEXT IS EITHER ENCRYPTED OR PASSWORD PROTECTED"
 							) : (
 								<ParseHtml text={JSON.stringify(object.text)} />
 							)}
 						</p>
 						<Link
-							href={`/blog/${object._id}/${object?.category?._id}/${object?.category?.slug}/${object.slug}`}
+							href={`/blog/${object?._id}/${object?.category?._id}/${object?.category?.slug}/${object?.slug}`}
 							passHref
 							legacyBehavior
 						>

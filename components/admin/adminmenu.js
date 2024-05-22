@@ -82,9 +82,19 @@ const AdminMenu = () => {
 						<a>Memberships</a>
 					</Link>
 				</li>
+				<li className={`list-group-item ${isActive(`/noadmin/menus`)}`}>
+					<Link href={"/noadmin/menus"} passHref legacyBehavior>
+						<a>Menus</a>
+					</Link>
+				</li>
 				<li className={`list-group-item ${isActive(`/noadmin/newsletters`)}`}>
 					<Link href={"/noadmin/newsletters"} passHref legacyBehavior>
 						<a>Newsletters</a>
+					</Link>
+				</li>
+				<li className={`list-group-item ${isActive(`/noadmin/pages`)}`}>
+					<Link href={"/noadmin/pages"} passHref legacyBehavior>
+						<a>Pages</a>
 					</Link>
 				</li>
 				<li className={`list-group-item ${isActive(`/noadmin/playlists`)}`}>
@@ -107,6 +117,11 @@ const AdminMenu = () => {
 						<a>Quotes</a>
 					</Link>
 				</li>
+				<li className={`list-group-item ${isActive(`/noadmin/realstates`)}`}>
+					<Link href={"/noadmin/realstates"} passHref legacyBehavior>
+						<a>Real State</a>
+					</Link>
+				</li>
 				<li className={`list-group-item ${isActive(`/noadmin/reports`)}`}>
 					<Link href={"/noadmin/reports"} passHref legacyBehavior>
 						<a>Reports</a>
@@ -125,6 +140,11 @@ const AdminMenu = () => {
 				<li className={`list-group-item ${isActive(`/noadmin/shorturls`)}`}>
 					<Link href={"/noadmin/shorturls"} passHref legacyBehavior>
 						<a>Shortened Urls</a>
+					</Link>
+				</li>
+				<li className={`list-group-item ${isActive(`/noadmin/snippets`)}`}>
+					<Link href={"/noadmin/snippets"} passHref legacyBehavior>
+						<a>Snippets</a>
 					</Link>
 				</li>
 				<li className={`list-group-item ${isActive(`/noadmin/subscribers`)}`}>

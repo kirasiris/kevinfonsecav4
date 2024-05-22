@@ -38,6 +38,11 @@ p > img {
 	padding-right: 1rem;
 }
 
+.badge-tr-5 {
+	top: 5px;
+	right: 5px;
+}
+
 /*****************************
 ADMIN STATUSES MENU
 *****************************/
@@ -411,6 +416,47 @@ WAVEFORM
 #waveform-duration {
 	right: 0;
 }
+
+/*****************************
+CODEPREVIEWER and CODEMIRROR STYLING
+*****************************/
+.code-previewer {
+	border: 1px solid #00cc00;
+	width: 100%;
+	margin-top: 20px;
+	min-height: 600px;
+}
+
+.code-previewer-footer {
+	height: 30px;
+	font-family: var(--cp-font-family);
+	height: 30px;
+	line-height: 1;
+	position: fixed;
+	width: 100%;
+	bottom: 0;
+	left: 0;
+	padding: 0 5px;
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-align: center;
+	-webkit-align-items: center;
+	-ms-flex-align: center;
+	align-items: center;
+	-webkit-box-pack: justify;
+	-webkit-justify-content: space-between;
+	-ms-flex-pack: justify;
+	justify-content: space-between;
+	white-space: nowrap;
+	color: #9b9dad;
+	background: #2c303a;
+	border-top: 1px solid #444857;
+	z-index: 10;
+	font-size: 1rem;
+}
+
 /*****************************
 ERROR COMPONENT
 *****************************/
@@ -531,4 +577,10 @@ body.dark-mode::-webkit-scrollbar-thumb:window-inactive {
 }
 body.dark-mode::-webkit-scrollbar-button {
 	background-color: #00cc00;
+}
+
+body.dark-mode pre,
+body.dark-mode pre code {
+	background-color: #027302 !important;
+	color: #00cc00 !important;
 }

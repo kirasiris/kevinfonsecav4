@@ -13,23 +13,23 @@ const Single = ({
 }) => {
 	return (
 		<Suspense fallback={<Loading />}>
-			<article className={`${object._id || commentId}`}>
+			<article className={`${object?._id || commentId}`}>
 				<div
 					className="d-flex my-4"
-					id={`media comment-${object._id || commentId}`}
+					id={`media comment-${object?._id || commentId}`}
 				>
 					<div className="flex-shrink-0">
 						<Link
-							href={`/profile/${object.user._id}/${object.user.username}`}
+							href={`/profile/${object?.user?._id}/${object?.user?.username}`}
 							passHref
 							legacyBehavior
 						>
 							<Image
 								src={
-									object.user.files?.avatar?.location.secure_location ||
+									object?.user.files?.avatar?.location?.secure_location ||
 									`https://source.unsplash.com/random/64x64`
 								}
-								alt={`${object.user.username}'s featured image`}
+								alt={`${object?.user?.username || "Username"}'s featured image`}
 								width={imageWidth}
 								height={imageHeight}
 								className="div-hover"
@@ -38,13 +38,13 @@ const Single = ({
 					</div>
 					<div className="flex-grow-1 ms-3">
 						<Link
-							href={`/comment/${object._id}/${object.slug}`}
+							href={`/comment/${object?._id}/${object?.slug}`}
 							passHref
 							legacyBehavior
 						>
-							{object.title}
+							{object.title || "Untitled"}
 						</Link>
-						&nbsp;by&nbsp;{object.user.username}
+						&nbsp;by&nbsp;{object?.user?.username || "Username"}
 						<ParseHtml text={object.text} />
 					</div>
 				</div>

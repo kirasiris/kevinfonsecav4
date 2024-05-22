@@ -24,9 +24,15 @@ const PreviewModal = ({ object }) => {
 					<Modal.Title>Preview!</Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
-					<video title={object.title} controls style={{ maxWidth: "100%" }}>
+					<video
+						title={object.title || "Untitled"}
+						controls
+						style={{ maxWidth: "100%" }}
+					>
 						<source
-							src={object.files?.video_url?.location.secure_location}
+							src={
+								object?.files?.video_url?.location?.secure_location || "xd.mp4"
+							}
 							type={`${object?.files?.video_url?.format_type}/${object?.files?.video_url?.format}`}
 						/>
 					</video>

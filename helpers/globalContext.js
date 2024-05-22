@@ -8,6 +8,8 @@ import {
 	deleteAuthTokenOnServer,
 	setAuthTokenOnServer,
 	fetchurl,
+	setUserIdOnServer,
+	setUserAccountOnServer,
 } from "./setTokenOnServer";
 
 export const AuthContext = createContext();
@@ -30,6 +32,8 @@ export const AuthProvider = ({ children }) => {
 		try {
 			const res = await fetchurl(`/auth/me`, "GET", "no-cache");
 			console.log("Holas from loadUser function call", res);
+			localStorage.setItem("userId", res.data._id);
+			await setUserIdOnServer(res.data._id);
 			return res;
 		} catch (err) {
 			// const error = err.response.data.message;
@@ -153,6 +157,7 @@ export const AuthProvider = ({ children }) => {
 		categories: 0,
 		changelogs: 0,
 		comments: 0,
+		companies: 0,
 		contacts: 0,
 		courses: 0,
 		emails: 0,
@@ -161,15 +166,19 @@ export const AuthProvider = ({ children }) => {
 		lessons: 0,
 		logs: 0,
 		memberships: 0,
+		menus: 0,
 		newsletters: 0,
+		pages: 0,
 		playlists: 0,
 		posts: 0,
 		quizzes: 0,
 		quotes: 0,
+		realstates: 0,
 		reports: 0,
 		secrets: 0,
 		settings: 0,
 		shorturls: 0,
+		snippets: 0,
 		subscribers: 0,
 		themes: 0,
 		users: 0,

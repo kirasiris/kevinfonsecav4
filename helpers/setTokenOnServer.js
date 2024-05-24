@@ -55,7 +55,7 @@ export const fetchurl = async (
 	let requestBody = null;
 	let customHeaders = {
 		Authorization: `Bearer ${token?.value}`,
-		"Content-Type": "application/json",
+		// "Content-Type": "application/json",
 	};
 
 	if (
@@ -69,8 +69,9 @@ export const fetchurl = async (
 		requestBody = JSON.stringify(bodyData);
 	}
 
-	if (multipart) {
-		customHeaders["Content-Type"] = "multipart/form-data";
+	if (!multipart) {
+		// customHeaders["Content-Type"] = "multipart/form-data";
+		customHeaders["Content-Type"] = "application/json";
 	}
 
 	const response = await fetch(

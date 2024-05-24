@@ -96,8 +96,8 @@ const BlogRead = async ({ params, searchParams }) => {
 									<div style={{ clear: "both" }} />
 									<AuthorBox author={blog?.data?.user} />
 									<CommentBox
-										auth={auth.data}
-										authorization={auth.authorizationTokens}
+										auth={auth?.data}
+										authorization={auth?.authorizationTokens}
 										user={blog?.data?.user}
 										postId={blog?.data?._id}
 										secondPostId={blog?.data?._id}

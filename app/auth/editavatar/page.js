@@ -258,7 +258,7 @@ async function uploadFile(formData) {
 		"no-cache",
 		formData,
 		undefined,
-		false,
+		true,
 		false
 	);
 	return res;
@@ -281,13 +281,21 @@ const UpdateAvatar = async ({ params, searchParams }) => {
 		const arrayBuffer = await avatar.arrayBuffer();
 		const buffer = new Uint8Array(arrayBuffer);
 
+		// const rawFormData = {
+		// 	userId: auth?.data?._id,
+		// 	username: auth?.data?.username,
+		// 	userEmail: auth?.data?.email,
+		// 	onModel: "User",
+		// 	album: "profile-avatars",
+		// 	file: avatar,
+		// };
 		const rawFormData = {
-			userId: auth?.data?._id,
+			userId: formData.append("userId", auth?.data?._id),
 			username: auth?.data?.username,
 			userEmail: auth?.data?.email,
 			onModel: "User",
 			album: "profile-avatars",
-			file: buffer,
+			file: avatar,
 		};
 		const token = await getAuthTokenOnServer();
 		const res = await uploadFile(rawFormData);

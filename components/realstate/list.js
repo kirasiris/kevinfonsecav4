@@ -12,7 +12,7 @@ const List = ({ featured = {}, objects = [], searchParams = {} }) => {
 					{/* Featured list */}
 					{featured?.data?.length > 0 &&
 						featured.data.map((featured) => (
-							<Single key={featured._id} object={featured} fullWidth={true} />
+							<Single key={featured._id} object={featured} />
 						))}
 					{/* Blog list */}
 					<div className="row">

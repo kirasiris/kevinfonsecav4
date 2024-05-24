@@ -1,150 +1,41 @@
-"use client";
 import { fetchurl } from "@/helpers/setTokenOnServer";
-import { useRouter } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
-import { toast } from "react-toastify";
-import AuthContext from "@/helpers/globalContext";
+import { redirect } from "next/navigation";
 import Sidebar from "@/layout/auth/sidebar";
 import Globalcontent from "@/layout/content";
+import FormButtons from "@/components/global/formbuttons";
 
-const UpdateNotificationEmails = ({ params, searchParams }) => {
-	const { auth } = useContext(AuthContext);
-	const router = useRouter();
+async function getAuthenticatedUser() {
+	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
+	return res;
+}
 
-	// Redirec if not authenticated
-	!auth.isAuthenticated && router.push("/auth/login");
+const UpdateNotificationEmails = async ({ params, searchParams }) => {
+	const auth = await getAuthenticatedUser();
 
-	const [notificationsEmailData, setNotificationsEmailData] = useState({
-		fromBlogComments: false,
-		fromPostComments: false,
-		fromVideoComments: false,
-		fromMediaComments: false,
-		fromProducerComments: false,
-		fromJobComments: false,
-		fromCommentComments: false,
-	});
+	// Redirect if user is not logged in
+	(auth?.error?.statusCode === 401 || !auth?.data?.isOnline) &&
+		redirect(`/auth/login`);
 
-	const {
-		fromBlogComments,
-		fromPostComments,
-		fromVideoComments,
-		fromMediaComments,
-		fromProducerComments,
-		fromJobComments,
-		fromCommentComments,
-	} = notificationsEmailData;
-
-	const [profile, setProfile] = useState(null);
-	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState(false);
-	const [btnText, setBtnTxt] = useState("Submit");
-
-	useEffect(() => {
-		const fetchUser = async () => {
-			try {
-				const res = await fetchurl(`/auth/me`, "GET", "no-cache");
-				setProfile(res?.data);
-				setNotificationsEmailData({
-					fromBlogComments: res.data.settings.emails.comments.fromBlogComments,
-					fromPostComments: res.data.settings.emails.comments.fromPostComments,
-					fromVideoComments:
-						res.data.settings.emails.comments.fromVideoComments,
-					fromMediaComments:
-						res.data.settings.emails.comments.fromMediaComments,
-					fromProducerComments:
-						res.data.settings.emails.comments.fromProducerComments,
-					fromJobComments: res.data.settings.emails.comments.fromJobComments,
-					fromCommentComments:
-						res.data.settings.emails.comments.fromCommentComments,
-				});
-				setLoading(false);
-			} catch (err) {
-				console.log(err);
-				setError(true);
-				// const error = err.response.data.message;
-				const error = err?.response?.data?.error?.errors;
-				const errors = err?.response?.data?.errors;
-
-				if (error) {
-					// dispatch(setAlert(error, 'danger'));
-					error &&
-						Object.entries(error).map(([, value]) =>
-							toast.error(value.message)
-						);
-				}
-
-				if (errors) {
-					errors.forEach((error) => toast.error(error.msg));
-				}
-
-				toast.error(err?.response?.statusText);
-				return {
-					msg: err?.response?.statusText,
-					status: err?.response?.status,
-				};
-			}
+	const upgradeNotifications = async (formData) => {
+		"use server";
+		const rawFormData = {
+			fromBlogComments: formData.get("fromBlogComments"),
+			fromPostComments: formData.get("fromPostComments"),
+			fromVideoComments: formData.get("fromVideoComments"),
+			fromMediaComments: formData.get("fromMediaComments"),
+			fromJobComments: formData.get("fromJobComments"),
+			fromCommentComments: formData.get("fromCommentComments"),
 		};
-		fetchUser();
-	}, [loading]);
-
-	const upgradeNotifications = async (e) => {
-		e.preventDefault();
-		try {
-			setBtnTxt("Submit...");
-			await fetchurl(
-				`/auth/updateemailnotifications`,
-				"PUT",
-				"no-cache",
-				notificationsEmailData
-			);
-			resetForm();
-			toast.success("Account updated");
-			setBtnTxt(btnText);
-			router.push(`/auth/profile`);
-		} catch (err) {
-			console.log(err);
-			setError(true);
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
-
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return {
-				msg: err?.response?.statusText,
-				status: err?.response?.status,
-			};
-		}
+		await fetchurl(
+			`/auth/updateemailnotifications`,
+			"PUT",
+			"no-cache",
+			rawFormData
+		);
+		redirect(`/auth/profile`);
 	};
 
-	const resetForm = () => {
-		setNotificationsEmailData({
-			fromBlogComments: false,
-			fromPostComments: false,
-			fromVideoComments: false,
-			fromMediaComments: false,
-			fromProducerComments: false,
-			fromJobComments: false,
-			fromCommentComments: false,
-		});
-	};
-
-	return loading || profile === null || profile === undefined ? (
-		error ? (
-			<>Not found</>
-		) : (
-			<>Loading...</>
-		)
-	) : (
+	return (
 		<div className="container my-4">
 			<div className="row">
 				<Sidebar />
@@ -154,21 +45,17 @@ const UpdateNotificationEmails = ({ params, searchParams }) => {
 							Edit&nbsp;Email&nbsp;Notifications
 						</div>
 						<div className="card-body">
-							<form onSubmit={upgradeNotifications}>
+							<form action={upgradeNotifications}>
 								<label htmlFor="fromBlogComments" className="form-label">
 									From&nbsp;Blog
 								</label>
 								<select
 									id="fromBlogComments"
 									name="fromBlogComments"
-									value={fromBlogComments}
-									onChange={(e) => {
-										setNotificationsEmailData({
-											...notificationsEmailData,
-											fromBlogComments: e.target.value,
-										});
-									}}
 									className="form-control mb-3"
+									defaultValue={
+										auth.data.settings.emails.comments.fromBlogComments
+									}
 								>
 									<option value={true}>Yes</option>
 									<option value={false}>No</option>
@@ -179,14 +66,10 @@ const UpdateNotificationEmails = ({ params, searchParams }) => {
 								<select
 									id="fromPostComments"
 									name="fromPostComments"
-									value={fromPostComments}
-									onChange={(e) => {
-										setNotificationsEmailData({
-											...notificationsEmailData,
-											fromPostComments: e.target.value,
-										});
-									}}
 									className="form-control mb-3"
+									defaultValue={
+										auth.data.settings.emails.comments.fromPostComments
+									}
 								>
 									<option value={true}>Yes</option>
 									<option value={false}>No</option>
@@ -197,14 +80,10 @@ const UpdateNotificationEmails = ({ params, searchParams }) => {
 								<select
 									id="fromVideoComments"
 									name="fromVideoComments"
-									value={fromVideoComments}
-									onChange={(e) => {
-										setNotificationsEmailData({
-											...notificationsEmailData,
-											fromVideoComments: e.target.value,
-										});
-									}}
 									className="form-control mb-3"
+									defaultValue={
+										auth.data.settings.emails.comments.fromVideoComments
+									}
 								>
 									<option value={true}>Yes</option>
 									<option value={false}>No</option>
@@ -215,32 +94,10 @@ const UpdateNotificationEmails = ({ params, searchParams }) => {
 								<select
 									id="fromMediaComments"
 									name="fromMediaComments"
-									value={fromMediaComments}
-									onChange={(e) => {
-										setNotificationsEmailData({
-											...notificationsEmailData,
-											fromMediaComments: e.target.value,
-										});
-									}}
 									className="form-control mb-3"
-								>
-									<option value={true}>Yes</option>
-									<option value={false}>No</option>
-								</select>
-								<label htmlFor="fromProducerComments" className="form-label">
-									From&nbsp;Producer&nbsp;/&nbsp;Channel
-								</label>
-								<select
-									id="fromProducerComments"
-									name="fromProducerComments"
-									value={fromProducerComments}
-									onChange={(e) => {
-										setNotificationsEmailData({
-											...notificationsEmailData,
-											fromProducerComments: e.target.value,
-										});
-									}}
-									className="form-control mb-3"
+									defaultValue={
+										auth.data.settings.emails.comments.fromMediaComments
+									}
 								>
 									<option value={true}>Yes</option>
 									<option value={false}>No</option>
@@ -251,14 +108,10 @@ const UpdateNotificationEmails = ({ params, searchParams }) => {
 								<select
 									id="fromJobComments"
 									name="fromJobComments"
-									value={fromJobComments}
-									onChange={(e) => {
-										setNotificationsEmailData({
-											...notificationsEmailData,
-											fromJobComments: e.target.value,
-										});
-									}}
 									className="form-control mb-3"
+									defaultValue={
+										auth.data.settings.emails.comments.fromJobComments
+									}
 								>
 									<option value={true}>Yes</option>
 									<option value={false}>No</option>
@@ -269,31 +122,15 @@ const UpdateNotificationEmails = ({ params, searchParams }) => {
 								<select
 									id="fromCommentComments"
 									name="fromCommentComments"
-									value={fromCommentComments}
-									onChange={(e) => {
-										setNotificationsEmailData({
-											...notificationsEmailData,
-											fromCommentComments: e.target.value,
-										});
-									}}
 									className="form-control mb-3"
+									defaultValue={
+										auth.data.settings.emails.comments.fromCommentComments
+									}
 								>
 									<option value={true}>Yes</option>
 									<option value={false}>No</option>
 								</select>
-								<button
-									type="submit"
-									className="btn btn-secondary btn-sm float-start"
-								>
-									{btnText}
-								</button>
-								<button
-									type="button"
-									className="btn btn-secondary btn-sm float-end"
-									onClick={resetForm}
-								>
-									Reset
-								</button>
+								<FormButtons />
 							</form>
 						</div>
 					</div>

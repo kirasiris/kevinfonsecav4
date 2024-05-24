@@ -23,7 +23,7 @@ const List = ({ objects = [], searchParams = {} }) => {
 									<div key={date}>
 										<p className="text-center my-3">{date}</p>
 										{objects.map((changelog) => (
-											<Single key={changelog._id} changelog={changelog} />
+											<Single key={changelog._id} object={changelog} />
 										))}
 									</div>
 								))}

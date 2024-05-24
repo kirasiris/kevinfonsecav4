@@ -5,12 +5,7 @@ import Loading from "@/app/realstate/loading";
 import ParseHtml from "@/layout/parseHtml";
 import { formatDateWithoutTime } from "@/helpers/utilities";
 
-const Single = ({
-	object = {},
-	fullWidth = false,
-	imageWidth = "415",
-	imageHeight = "207",
-}) => {
+const Single = ({ object = {}, imageWidth = "415", imageHeight = "207" }) => {
 	return (
 		<Suspense fallback={<Loading />}>
 			<article className={`${object?._id} col-lg-6`}>
@@ -77,6 +72,11 @@ const Single = ({
 								<bold>${object?.rates?.nightlyPrice}</bold>
 							)}
 						</p>
+						{typeof object?.text === "object" ? (
+							"TEXT IS EITHER ENCRYPTED OR PASSWORD PROTECTED"
+						) : (
+							<ParseHtml text={object?.text} classList="card-text" />
+						)}
 						<hr />
 						{object?.address}
 						<hr />

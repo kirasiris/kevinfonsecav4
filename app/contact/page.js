@@ -1,62 +1,21 @@
-"use client";
-import { useState } from "react";
-import { toast } from "react-toastify";
+import { revalidatePath } from "next/cache";
+import FormButtons from "@/components/global/formbuttons";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import Header from "@/layout/header";
 
-const ContactIndex = () => {
-	const [contactData, setContactData] = useState({
-		name: ``,
-		email: ``,
-		subject: `greetings`,
-		text: ``,
-	});
-
-	const { name, email, subject, text } = contactData;
-
-	const [error, setError] = useState(false);
-	const [btnText, setBtnText] = useState(`Submit`);
-
-	const createContact = async (e) => {
-		e.preventDefault();
-		try {
-			setBtnText("...");
-			await fetchurl(`/emails`, "POST", "no-cache", contactData);
-			setBtnText(btnText);
-			resetForm();
-		} catch (err) {
-			console.log(err);
-			setError(true);
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
-
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return {
-				msg: err?.response?.statusText,
-				status: err?.response?.status,
-			};
-		}
+const ContactIndex = async ({ params, searchParams }) => {
+	const createContact = async (formData) => {
+		"use server";
+		const rawFormData = {
+			name: formData.get("name"),
+			email: formData.get("email"),
+			subject: formData.get("subject"),
+			text: formData.get("text"),
+		};
+		await fetchurl(`/emails`, "POST", "no-cache", rawFormData);
+		revalidatePath("/contact");
 	};
 
-	const resetForm = () => {
-		setContactData({
-			name: ``,
-			email: ``,
-			subject: `greetings`,
-			text: ``,
-		});
-	};
 	return (
 		<>
 			<Header
@@ -65,7 +24,7 @@ const ContactIndex = () => {
 			/>
 			<div className="container">
 				<div className="row">
-					<form onSubmit={createContact}>
+					<form action={createContact}>
 						<div className="col">
 							<label htmlFor="name" className="form-label">
 								Name
@@ -73,13 +32,6 @@ const ContactIndex = () => {
 							<input
 								id="name"
 								name="name"
-								value={name}
-								onChange={(e) => {
-									setContactData({
-										...contactData,
-										name: e.target.value,
-									});
-								}}
 								type="text"
 								className="form-control mb-3"
 								placeholder="John Doe"
@@ -92,13 +44,6 @@ const ContactIndex = () => {
 							<input
 								id="email"
 								name="email"
-								value={email}
-								onChange={(e) => {
-									setContactData({
-										...contactData,
-										email: e.target.value,
-									});
-								}}
 								type="email"
 								className="form-control mb-3"
 								placeholder="john@doe.com"
@@ -107,18 +52,7 @@ const ContactIndex = () => {
 						<label htmlFor="subject" className="form-label">
 							Subject
 						</label>
-						<select
-							id="subject"
-							name="subject"
-							value={subject}
-							onChange={(e) => {
-								setContactData({
-									...contactData,
-									subject: e.target.value,
-								});
-							}}
-							className="form-control"
-						>
+						<select id="subject" name="subject" className="form-control">
 							<option value={`suggestion`}>Suggestion</option>
 							<option value={`bug`}>Bug</option>
 							<option value={`review`}>Review</option>
@@ -130,32 +64,12 @@ const ContactIndex = () => {
 						<textarea
 							id="text"
 							name="text"
-							value={text}
-							onChange={(e) => {
-								setContactData({
-									...contactData,
-									text: e.target.value,
-								});
-							}}
 							className="form-control"
 							placeholder={`Here goes the message`}
 							rows={`3`}
 						/>
 						<br />
-						<button
-							type="submit"
-							className="btn btn-secondary btn-sm float-start"
-							disabled={email.length > 0 && text.length > 0 ? !true : !false}
-						>
-							{btnText}
-						</button>
-						<button
-							type="button"
-							className="btn btn-secondary btn-sm float-end"
-							onClick={resetForm}
-						>
-							Reset
-						</button>
+						<FormButtons />
 					</form>
 				</div>
 			</div>

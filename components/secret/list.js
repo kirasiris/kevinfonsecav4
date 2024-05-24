@@ -15,7 +15,7 @@ const List = ({ objects = [], searchParams = {} }) => {
 							href={{
 								pathname: `/secret/create`,
 								query: {
-									returnpage: `/secret?page=1&limit=10&sort=-createdAt`,
+									returnpage: `/secret?page=1&limit=32&sort=-createdAt`,
 								},
 							}}
 							passHref

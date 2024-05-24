@@ -1,132 +1,67 @@
-"use client";
-import { fetchurl, setAuthTokenOnServer } from "@/helpers/setTokenOnServer";
-import { useRouter } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
-import { toast } from "react-toastify";
-import AuthContext from "@/helpers/globalContext";
-import { setAuthToken } from "@/helpers/utilities";
+import {
+	fetchurl,
+	setAuthTokenOnServer,
+	setUserIdOnServer,
+} from "@/helpers/setTokenOnServer";
+import { redirect } from "next/navigation";
+import FormButtons from "@/components/global/formbuttons";
 
-const Login = ({ params, searchParams }) => {
-	const router = useRouter();
-	const { auth, loadUser } = useContext(AuthContext);
+async function getAuthenticatedUser() {
+	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
+	return res;
+}
 
-	auth.isAuthenticated && router.push("/");
+const Login = async ({ params, searchParams }) => {
+	const auth = await getAuthenticatedUser();
 
-	const [loginData, setLoginData] = useState({
-		email: "",
-		password: "",
-		rememberMe: false,
-	});
+	// Redirect if user is not logged in
+	auth?.data?.isOnline && redirect(`/`);
 
-	const { email, password, rememberMe } = loginData;
+	const loginAccount = async (formData) => {
+		"use server";
+		const rawFormData = {
+			email: formData.get("email"),
+			password: formData.get("password"),
+			rememberMe: formData.get("rememberMe"),
+		};
 
-	const [error, setError] = useState(false);
-	const [btnText, setBtnTxt] = useState("Submit");
-
-	// Remember me
-	useEffect(() => {
-		const email = localStorage.getItem("email");
-		const password = localStorage.getItem("password");
-		email &&
-			password &&
-			setLoginData((loginData) => ({
-				...loginData,
-				email,
-				password,
-				rememberMe: true,
-			}));
-	}, []);
-
-	const loginAccount = async (e) => {
-		e.preventDefault();
-		try {
-			setBtnTxt("Submit...");
-			if (rememberMe) {
-				localStorage.setItem("email", email);
-				localStorage.setItem("password", password);
-			} else {
-				localStorage.removeItem("email");
-				localStorage.removeItem("password");
-			}
-
-			const res = await fetchurl(`/auth/login`, "POST", "no-cache", loginData);
-
-			if (res?.data) {
-				router.push(`/auth/validatetwofactorauth/${res?.data?._id}`);
-				return res;
-			}
-
-			// If not success stop
-			if (!res?.success) return;
-
-			// Else continue,
-			// furthermore, setAuthTokenOnServer needs to be prior to setAuthToken (client version)
-			await setAuthTokenOnServer(res?.token);
-			setAuthToken(res?.token);
-			await loadUser();
-			resetForm();
-			toast.success("Login was a success");
-			setBtnTxt(btnText);
-			searchParams?.returnpage
-				? router.push(searchParams.returnpage)
-				: router.push(`/auth/profile`);
-		} catch (err) {
-			console.log(err);
-			setError(true);
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
-
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return {
-				msg: err?.response?.statusText,
-				status: err?.response?.status,
-			};
-		}
-	};
-
-	const [passwordShown, setPasswordShown] = useState(false);
-
-	const handlePasswordVisibility = () => {
-		setPasswordShown(passwordShown ? false : true);
-	};
-
-	const resetForm = () => {
-		setLoginData({
-			email: "",
-			password: "",
-			rememberMe: false,
+		const res = await fetchurl(`/auth/login`, "POST", "no-cache", {
+			...rawFormData,
+			website: "beFree",
 		});
+
+		console.log("Login...", res);
+
+		if (res?.data) {
+			redirect(`/auth/validatetwofactorauth/${res?.data?._id}`);
+			// return res;
+		}
+
+		// If not success, stop
+		if (!res?.success) return;
+
+		// Else continue,
+		// furthermore, setAuthTokenOnServer needs to be prior to setAuthToken (client version)
+		await setAuthTokenOnServer(res?.token);
+		const loadUser = await fetchurl(`/auth/me`, "GET", "no-cache");
+		await setUserIdOnServer(loadUser?.data?._id);
+		// alert("Login was a success");
+		searchParams?.returnpage
+			? redirect(searchParams.returnpage)
+			: redirect(`/auth/profile`);
 	};
 
 	return (
 		<div className="container">
 			<div className="row">
 				<div className="col-lg-12">
-					<form onSubmit={loginAccount}>
+					<form action={loginAccount}>
 						<label htmlFor="email" className="form-label">
 							Email
 						</label>
 						<input
 							id="email"
 							name="email"
-							value={email}
-							onChange={(e) => {
-								setLoginData({
-									...loginData,
-									email: e.target.value,
-								});
-							}}
 							type="email"
 							className="form-control mb-3"
 							placeholder="john@doe.com"
@@ -137,34 +72,12 @@ const Login = ({ params, searchParams }) => {
 						<input
 							id="password"
 							name="password"
-							value={password}
-							onChange={(e) => {
-								setLoginData({
-									...loginData,
-									password: e.target.value,
-								});
-							}}
 							type="password"
 							className="form-control mb-3"
 							placeholder="******"
 						/>
 						<br />
-						<button
-							type="submit"
-							className="btn btn-secondary btn-sm float-start"
-							disabled={
-								email.length > 0 && password.length > 0 ? !true : !false
-							}
-						>
-							{btnText}
-						</button>
-						<button
-							type="button"
-							className="btn btn-secondary btn-sm float-end"
-							onClick={resetForm}
-						>
-							Reset
-						</button>
+						<FormButtons />
 					</form>
 				</div>
 			</div>

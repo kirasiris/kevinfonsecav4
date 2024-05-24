@@ -26,17 +26,41 @@ async function getTheme(params) {
 }
 
 async function getReadMe(repoName) {
-	const res = await fetch(
+	const response = await fetch(
 		`https://api.github.com/repos/kirasiris/${repoName}/contents/README.md`,
 		{
-			accept: "application/vnd.github.v3+json",
+			method: "GET",
+			accept: "application/vnd.github+json",
 			headers: {
 				Authorization: "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",
 			},
 			cache: "no-store",
 		}
-	);
-	return res;
+	)
+		.then(async (res) => {
+			if (!res.ok) {
+				// check if there was JSON
+				const contentType = res.headers.get("Content-Type");
+				if (contentType && contentType.includes("application/json")) {
+					// return a rejected Promise that includes the JSON
+					return res.json().then((json) => Promise.reject(json));
+				}
+				// no JSON, just throw an error
+				throw new Error("Something went horribly wrong 💩");
+			}
+			return res.json();
+		})
+		.then((data) => data)
+		.catch((err) => {
+			console.log(err);
+			if (err.name === "AbortError") {
+				console.log("successfully aborted");
+			} else {
+				// handle error
+				console.log("Error coming from setTokenOnServer file", err);
+			}
+		});
+	return response;
 }
 
 const ThemeRead = async ({ params, searchParams }) => {
@@ -46,18 +70,17 @@ const ThemeRead = async ({ params, searchParams }) => {
 
 	const [theme] = await Promise.all([getThemesData]);
 
-	const readMeData = await getReadMe(theme.data.github_readme);
+	const readMeResponse = await getReadMe(theme.data.github_readme);
 
 	const readMEDecoder = (text) => {
 		const converter = new showdown.Converter();
 		const readMEContentBase64 = base64.decode(text);
 		const textConverted = converter.makeHtml(readMEContentBase64);
-
 		return textConverted;
 	};
 
 	const readme = readMEDecoder(
-		readMeData.content ? readMeData.content : "Tm8gcmVhZE1FIGZpbGU="
+		readMeResponse.content ? readMeResponse.content : "Tm8gcmVhZE1FIGZpbGU="
 	);
 
 	return (
@@ -79,7 +102,7 @@ const ThemeRead = async ({ params, searchParams }) => {
 									<div className="card">
 										<div className="card-header">ReadMe.md</div>
 										<div className="card-body">
-											<ParseHtml text={readme} markdown={true} />
+											<ParseHtml text={readme} />
 										</div>
 									</div>
 									<hr />

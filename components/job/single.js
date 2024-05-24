@@ -34,6 +34,12 @@ const Single = ({
 							{object?.provides_training.toString()}
 							{object?.security_clearance.toString()}
 						</p>
+						{typeof object?.text === "object" ? (
+							"TEXT IS EITHER ENCRYPTED OR PASSWORD PROTECTED"
+						) : (
+							<ParseHtml text={object?.text} classList="card-text" />
+						)}
+						<hr />
 						<Link
 							href={`/job/${object?._id}/${object?.slug}`}
 							passHref

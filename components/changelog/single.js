@@ -5,34 +5,34 @@ import Loading from "@/app/changelog/loading";
 import ParseHtml from "@/layout/parseHtml";
 import Link from "next/link";
 
-const Single = ({
-	changelog = {},
-	imageWidth = "415",
-	imageHeight = "207",
-}) => {
+const Single = ({ object = {}, imageWidth = "415", imageHeight = "207" }) => {
 	return (
 		<Suspense fallback={<Loading />}>
-			<article className={`${changelog?._id}`}>
+			<article className={`${object?._id}`}>
 				<Accordion>
-					<Accordion.Item eventKey={changelog?._id} className="rounded-0">
+					<Accordion.Item eventKey={object?._id} className="rounded-0">
 						<Accordion.Header>
-							{changelog?.postType.map((c) => (
+							{object?.postType.map((c) => (
 								<small key={c} className="badge bg-secondary rounded-pill me-3">
 									{c}
 								</small>
 							))}
-							{changelog?.title || "Untitled"}
+							{object?.title || "Untitled"}
 						</Accordion.Header>
 						<Accordion.Body>
-							<ParseHtml text={changelog?.text} />
+							{typeof object?.text === "object" ? (
+								"TEXT IS EITHER ENCRYPTED OR PASSWORD PROTECTED"
+							) : (
+								<ParseHtml text={object?.text} classList="card-text" />
+							)}
 							<hr />
 							<Link
-								href={`/changelog/${changelog?._id}/${changelog?.slug}`}
+								href={`/changelog/${object?._id}/${object?.slug}`}
 								passHref
 								legacyBehavior
 							>
 								<a className="btn btn-link border-secondary">
-									&gt;&gt;&nbsp;{changelog?.title || "Untitled"}
+									&gt;&gt;&nbsp;{object?.title || "Untitled"}
 								</a>
 							</Link>
 						</Accordion.Body>

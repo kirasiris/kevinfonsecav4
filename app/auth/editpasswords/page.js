@@ -1,121 +1,37 @@
-"use client";
 import { fetchurl } from "@/helpers/setTokenOnServer";
-import { useRouter } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
-import { toast } from "react-toastify";
-import AuthContext from "@/helpers/globalContext";
+import { redirect } from "next/navigation";
 import Sidebar from "@/layout/auth/sidebar";
 import Globalcontent from "@/layout/content";
+import FormButtons from "@/components/global/formbuttons";
 
-const UpdatePasswords = ({ params, searchParams }) => {
-	const { auth } = useContext(AuthContext);
-	const router = useRouter();
+async function getAuthenticatedUser() {
+	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
+	return res;
+}
 
-	// Redirec if not authenticated
-	!auth.isAuthenticated && router.push("/auth/login");
+const UpdatePasswords = async ({ params, searchParams }) => {
+	const auth = await getAuthenticatedUser();
 
-	const [passwordData, setPasswordData] = useState({
-		currentpassword: ``,
-		newpassword: ``,
-		newpassword2: ``,
-		token: ``,
-	});
+	// Redirect if user is not logged in
+	(auth?.error?.statusCode === 401 || !auth?.data?.isOnline) &&
+		redirect(`/auth/login`);
 
-	const { currentpassword, newpassword, newpassword2, token } = passwordData;
-
-	const [profile, setProfile] = useState(null);
-	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState(false);
-	const [btnText, setBtnTxt] = useState("Submit");
-
-	useEffect(() => {
-		const fetchUser = async () => {
-			try {
-				const res = await fetchurl(`/auth/me`, "GET", "no-cache");
-				setProfile(res?.data);
-				setLoading(false);
-			} catch (err) {
-				console.log(err);
-				setError(true);
-				// const error = err.response.data.message;
-				const error = err?.response?.data?.error?.errors;
-				const errors = err?.response?.data?.errors;
-
-				if (error) {
-					// dispatch(setAlert(error, 'danger'));
-					error &&
-						Object.entries(error).map(([, value]) =>
-							toast.error(value.message)
-						);
-				}
-
-				if (errors) {
-					errors.forEach((error) => toast.error(error.msg));
-				}
-
-				toast.error(err?.response?.statusText);
-				return {
-					msg: err?.response?.statusText,
-					status: err?.response?.status,
-				};
-			}
+	const upgradePassword = async (formData) => {
+		"use server";
+		const rawFormData = {
+			currentpassword: formData.get("currentpassword"),
+			newpassword: formData.get("newpassword"),
+			newpassword2: formData.get("newpassword2"),
+			token: formData.get("token"),
 		};
-		fetchUser();
-	}, [loading]);
-
-	const upgradePassword = async (e) => {
-		e.preventDefault();
-		try {
-			setBtnTxt("Submit...");
-			await fetchurl(`/auth/updatepassword`, "PUT", "no-cache", {
-				...passwordData,
-				website: "beFree",
-			});
-			resetForm();
-			toast.success("Account updated");
-			setBtnTxt(btnText);
-			router.push(`/auth/profile`);
-		} catch (err) {
-			console.log(err);
-			setError(true);
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
-
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return {
-				msg: err?.response?.statusText,
-				status: err?.response?.status,
-			};
-		}
-	};
-
-	const resetForm = () => {
-		setPasswordData({
-			currentpassword: ``,
-			newpassword: ``,
-			newpassword2: ``,
-			token: ``,
+		await fetchurl(`/auth/updatepassword`, "PUT", "no-cache", {
+			...rawFormData,
+			website: "beFree",
 		});
+		redirect(`/auth/profile`);
 	};
 
-	return loading || profile === null || profile === undefined ? (
-		error ? (
-			<>Not found</>
-		) : (
-			<>Loading...</>
-		)
-	) : (
+	return (
 		<div className="container my-4">
 			<div className="row">
 				<Sidebar />
@@ -123,20 +39,13 @@ const UpdatePasswords = ({ params, searchParams }) => {
 					<div className="card">
 						<div className="card-header">Edit&nbsp;Password</div>
 						<div className="card-body">
-							<form onSubmit={upgradePassword}>
+							<form action={upgradePassword}>
 								<label htmlFor="currentpassword" className="form-label">
 									Current&nbsp;Password
 								</label>
 								<input
 									id="currentpassword"
 									name="currentpassword"
-									value={currentpassword}
-									onChange={(e) => {
-										setPasswordData({
-											...passwordData,
-											currentpassword: e.target.value,
-										});
-									}}
 									type="password"
 									className="form-control mb-3"
 								/>
@@ -146,13 +55,6 @@ const UpdatePasswords = ({ params, searchParams }) => {
 								<input
 									id="newpassword"
 									name="newpassword"
-									value={newpassword}
-									onChange={(e) => {
-										setPasswordData({
-											...passwordData,
-											newpassword: e.target.value,
-										});
-									}}
 									type="password"
 									className="form-control mb-3"
 								/>
@@ -162,17 +64,10 @@ const UpdatePasswords = ({ params, searchParams }) => {
 								<input
 									id="newpassword2"
 									name="newpassword2"
-									value={newpassword2}
-									onChange={(e) => {
-										setPasswordData({
-											...passwordData,
-											newpassword2: e.target.value,
-										});
-									}}
 									type="password"
 									className="form-control mb-3"
 								/>
-								{profile.twoFactorTokenEnabled && (
+								{auth.data.twoFactorTokenEnabled && (
 									<div className="form-group">
 										<label htmlFor="token" className="form-label">
 											Token
@@ -181,13 +76,6 @@ const UpdatePasswords = ({ params, searchParams }) => {
 											<input
 												id="token"
 												name="token"
-												value={token}
-												onChange={(e) => {
-													setPasswordData({
-														...passwordData,
-														token: e.target.value,
-													});
-												}}
 												type="text"
 												className="form-control mb-3"
 												placeholder="012 345"
@@ -196,26 +84,7 @@ const UpdatePasswords = ({ params, searchParams }) => {
 										</div>
 									</div>
 								)}
-								<button
-									type="submit"
-									className="btn btn-secondary btn-sm float-start"
-									disabled={
-										currentpassword?.length > 0 &&
-										newpassword?.length > 0 &&
-										newpassword2?.length > 0
-											? !true
-											: !false
-									}
-								>
-									{btnText}
-								</button>
-								<button
-									type="button"
-									className="btn btn-secondary btn-sm float-end"
-									onClick={resetForm}
-								>
-									Reset
-								</button>
+								<FormButtons />
 							</form>
 						</div>
 					</div>

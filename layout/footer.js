@@ -23,7 +23,19 @@ const Footer = ({ auth = {}, classes = "", styles = {}, canonical = "" }) => {
 							<li className="nav-item mb-2">
 								<Link
 									href={{
-										pathname: "/openai/generateimage",
+										pathname: `${canonical}/contact`,
+										query: {},
+									}}
+									passHref
+									legacyBehavior
+								>
+									Contact
+								</Link>
+							</li>
+							<li className="nav-item mb-2">
+								<Link
+									href={{
+										pathname: `${canonical}/openai/generateimage`,
 										query: {},
 									}}
 									passHref
@@ -35,7 +47,7 @@ const Footer = ({ auth = {}, classes = "", styles = {}, canonical = "" }) => {
 							<li className="nav-item mb-2">
 								<Link
 									href={{
-										pathname: "/openai/generatecode",
+										pathname: `${canonical}/openai/generatecode`,
 										query: {},
 									}}
 									passHref
@@ -47,7 +59,7 @@ const Footer = ({ auth = {}, classes = "", styles = {}, canonical = "" }) => {
 							<li className="nav-item mb-2">
 								<Link
 									href={{
-										pathname: "/api",
+										pathname: `${canonical}/api`,
 										query: {},
 									}}
 									passHref
@@ -59,7 +71,7 @@ const Footer = ({ auth = {}, classes = "", styles = {}, canonical = "" }) => {
 							<li className="nav-item mb-2">
 								<Link
 									href={{
-										pathname: "/forum",
+										pathname: `${canonical}/forum`,
 										query: {},
 									}}
 									passHref
@@ -71,7 +83,7 @@ const Footer = ({ auth = {}, classes = "", styles = {}, canonical = "" }) => {
 							<li className="nav-item mb-2">
 								<Link
 									href={{
-										pathname: "/job",
+										pathname: `${canonical}/job`,
 										query: {
 											page: 1,
 											limit: 10,
@@ -87,7 +99,7 @@ const Footer = ({ auth = {}, classes = "", styles = {}, canonical = "" }) => {
 							<li className="nav-item mb-2">
 								<Link
 									href={{
-										pathname: "/realstate",
+										pathname: `${canonical}/realstate`,
 										query: {
 											page: 1,
 											limit: 10,
@@ -103,7 +115,7 @@ const Footer = ({ auth = {}, classes = "", styles = {}, canonical = "" }) => {
 							<li className="nav-item mb-2">
 								<Link
 									href={{
-										pathname: "/changelog",
+										pathname: `${canonical}/changelog`,
 										query: {
 											page: 1,
 											limit: 10,
@@ -124,7 +136,7 @@ const Footer = ({ auth = {}, classes = "", styles = {}, canonical = "" }) => {
 							<li className="nav-item mb-2">
 								<Link
 									href={{
-										pathname: "/youtube",
+										pathname: `${canonical}/youtube`,
 										query: {},
 									}}
 									passHref
@@ -136,7 +148,7 @@ const Footer = ({ auth = {}, classes = "", styles = {}, canonical = "" }) => {
 							<li className="nav-item mb-2">
 								<Link
 									href={{
-										pathname: "/restful",
+										pathname: `${canonical}/restful`,
 										query: {},
 									}}
 									passHref
@@ -148,7 +160,7 @@ const Footer = ({ auth = {}, classes = "", styles = {}, canonical = "" }) => {
 							<li className="nav-item mb-2">
 								<Link
 									href={{
-										pathname: "/opengraphviewer",
+										pathname: `${canonical}/opengraphviewer`,
 										query: {},
 									}}
 									passHref
@@ -160,7 +172,7 @@ const Footer = ({ auth = {}, classes = "", styles = {}, canonical = "" }) => {
 							<li className="nav-item mb-2">
 								<Link
 									href={{
-										pathname: "/livecode",
+										pathname: `${canonical}/livecode`,
 										query: {},
 									}}
 									passHref
@@ -315,6 +327,22 @@ const Footer = ({ auth = {}, classes = "", styles = {}, canonical = "" }) => {
 									legacyBehavior
 								>
 									<a aria-current="page">Courses</a>
+								</Link>
+							</li>
+							<li className="nav-item mb-2">
+								<Link
+									href={{
+										pathname: `${canonical}/secret`,
+										query: {
+											page: 1,
+											limit: 32,
+											sort: `-createdAt`,
+										},
+									}}
+									passHref
+									legacyBehavior
+								>
+									Secrets
 								</Link>
 							</li>
 						</ul>

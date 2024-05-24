@@ -45,7 +45,11 @@ const Single = ({
 							{object.title || "Untitled"}
 						</Link>
 						&nbsp;by&nbsp;{object?.user?.username || "Username"}
-						<ParseHtml text={object.text} />
+						{typeof object?.text === "object" ? (
+							"TEXT IS EITHER ENCRYPTED OR PASSWORD PROTECTED"
+						) : (
+							<ParseHtml text={object?.text} classList="card-text" />
+						)}
 					</div>
 				</div>
 			</article>

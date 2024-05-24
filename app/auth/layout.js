@@ -13,7 +13,10 @@ export default async function Layout({ children }) {
 	const settings = await getSetting(`6519d7b34d26360354527e9a`);
 
 	return settings.data.maintenance === false ? (
-		<AuthProvider>{children}</AuthProvider>
+		<>
+			{/* <AuthProvider>{children}</AuthProvider> */}
+			{children}
+		</>
 	) : (
 		<ErrorPage />
 	);

@@ -74,64 +74,65 @@ const UpdateCover = ({ params, searchParams }) => {
 
 	const upgradeCover = async (e) => {
 		e.preventDefault();
-		try {
-			setBtnTxt("Submit...");
-			const token = await getAuthTokenOnServer();
-			const res = await axios.put(
-				`http://localhost:5000/api/v1/uploads/uploadobject`,
-				{
-					userId: auth?.user?._id,
-					username: auth?.user?.username,
-					userEmail: auth?.user?.email,
-					onModel: "User",
-					file: file,
-					album: "profile-covers",
-				},
-				{
-					headers: {
-						"Content-Type": "multipart/form-data",
-						Authorization: `Bearer ${token.value}`,
-					},
-					onUploadProgress: (ProgressEvent) => {
-						setUploadPercentage(
-							parseInt(
-								Math.round(ProgressEvent.loaded * 100) / ProgressEvent.total
-							)
-						);
-						setTimeout(() => setUploadPercentage(0), 10000);
-					},
-				}
-			);
-			await fetchurl(`/auth/updatecover`, "PUT", "no-cache", {
-				cover: res.data.data._id,
-			});
-			// resetForm();
-			toast.success("Cover uploaded");
-			setBtnTxt(btnText);
-			router.push(`/auth/profile`);
-		} catch (err) {
-			console.log(err);
-			setError(true);
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
+		console.log(e.target.files[0]);
+		// try {
+		// 	setBtnTxt("Submit...");
+		// 	const token = await getAuthTokenOnServer();
+		// 	const res = await axios.put(
+		// 		`http://localhost:5000/api/v1/uploads/uploadobject`,
+		// 		{
+		// 			userId: auth?.user?._id,
+		// 			username: auth?.user?.username,
+		// 			userEmail: auth?.user?.email,
+		// 			onModel: "User",
+		// 			file: file,
+		// 			album: "profile-covers",
+		// 		},
+		// 		{
+		// 			headers: {
+		// 				"Content-Type": "multipart/form-data",
+		// 				Authorization: `Bearer ${token.value}`,
+		// 			},
+		// 			onUploadProgress: (ProgressEvent) => {
+		// 				setUploadPercentage(
+		// 					parseInt(
+		// 						Math.round(ProgressEvent.loaded * 100) / ProgressEvent.total
+		// 					)
+		// 				);
+		// 				setTimeout(() => setUploadPercentage(0), 10000);
+		// 			},
+		// 		}
+		// 	);
+		// 	await fetchurl(`/auth/updatecover`, "PUT", "no-cache", {
+		// 		cover: res.data.data._id,
+		// 	});
+		// 	// resetForm();
+		// 	toast.success("Cover uploaded");
+		// 	setBtnTxt(btnText);
+		// 	router.push(`/auth/profile`);
+		// } catch (err) {
+		// 	console.log(err);
+		// 	setError(true);
+		// 	// const error = err.response.data.message;
+		// 	const error = err?.response?.data?.error?.errors;
+		// 	const errors = err?.response?.data?.errors;
 
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
+		// 	if (error) {
+		// 		// dispatch(setAlert(error, 'danger'));
+		// 		error &&
+		// 			Object.entries(error).map(([, value]) => toast.error(value.message));
+		// 	}
 
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
+		// 	if (errors) {
+		// 		errors.forEach((error) => toast.error(error.msg));
+		// 	}
 
-			toast.error(err?.response?.statusText);
-			return {
-				msg: err?.response?.statusText,
-				status: err?.response?.status,
-			};
-		}
+		// 	toast.error(err?.response?.statusText);
+		// 	return {
+		// 		msg: err?.response?.statusText,
+		// 		status: err?.response?.status,
+		// 	};
+		// }
 	};
 
 	const resetForm = () => {

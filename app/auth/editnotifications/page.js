@@ -1,168 +1,39 @@
-"use client";
 import { fetchurl } from "@/helpers/setTokenOnServer";
-import { useRouter } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
-import { toast } from "react-toastify";
-import AuthContext from "@/helpers/globalContext";
+import { redirect } from "next/navigation";
 import Sidebar from "@/layout/auth/sidebar";
 import Globalcontent from "@/layout/content";
+// MyTextArea
+import FormButtons from "@/components/global/formbuttons";
 
-const UpdateNotifications = ({ params, searchParams }) => {
-	const { auth } = useContext(AuthContext);
-	const router = useRouter();
+async function getAuthenticatedUser() {
+	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
+	return res;
+}
 
-	// Redirec if not authenticated
-	!auth.isAuthenticated && router.push("/auth/login");
+const UpdateNotifications = async ({ params, searchParams }) => {
+	const auth = await getAuthenticatedUser();
 
-	const [notificationsData, setNotificationsData] = useState({
-		fromBlogNotification: false,
-		fromPostNotification: false,
-		fromVideoNotification: false,
-		fromMediaNotification: false,
-		fromProducerNotification: false,
-		fromJobNotification: false,
-		fromCommentNotification: false,
-		fromBlogNewsNotification: false,
-		fromProducerNewsNotification: false,
-		fromUserNewsNotification: false,
-	});
+	// Redirect if user is not logged in
+	(auth?.error?.statusCode === 401 || !auth?.data?.isOnline) &&
+		redirect(`/auth/login`);
 
-	const {
-		fromBlogNotification,
-		fromPostNotification,
-		fromVideoNotification,
-		fromMediaNotification,
-		fromProducerNotification,
-		fromJobNotification,
-		fromCommentNotification,
-		fromBlogNewsNotification,
-		fromProducerNewsNotification,
-		fromUserNewsNotification,
-	} = notificationsData;
-
-	const [profile, setProfile] = useState(null);
-	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState(false);
-	const [btnText, setBtnTxt] = useState("Submit");
-
-	useEffect(() => {
-		const fetchUser = async () => {
-			try {
-				const res = await fetchurl(`/auth/me`, "GET", "no-cache");
-				setProfile(res?.data);
-				setNotificationsData({
-					fromBlogNotification:
-						res.data.settings.notifications.comments.fromBlogNotification,
-					fromPostNotification:
-						res.data.settings.notifications.comments.fromPostNotification,
-					fromVideoNotification:
-						res.data.settings.notifications.comments.fromVideoNotification,
-					fromMediaNotification:
-						res.data.settings.notifications.comments.fromMediaNotification,
-					fromProducerNotification:
-						res.data.settings.notifications.comments.fromProducerNotification,
-					fromJobNotification:
-						res.data.settings.notifications.comments.fromJobNotification,
-					fromCommentNotification:
-						res.data.settings.notifications.comments.fromCommentNotification,
-					fromBlogNewsNotification:
-						res.data.settings.notifications.news.fromBlogNewsNotification,
-					fromProducerNewsNotification:
-						res.data.settings.notifications.news.fromProducerNewsNotification,
-					fromUserNewsNotification:
-						res.data.settings.notifications.news.fromUserNewsNotification,
-				});
-				setLoading(false);
-			} catch (err) {
-				console.log(err);
-				setError(true);
-				// const error = err.response.data.message;
-				const error = err?.response?.data?.error?.errors;
-				const errors = err?.response?.data?.errors;
-
-				if (error) {
-					// dispatch(setAlert(error, 'danger'));
-					error &&
-						Object.entries(error).map(([, value]) =>
-							toast.error(value.message)
-						);
-				}
-
-				if (errors) {
-					errors.forEach((error) => toast.error(error.msg));
-				}
-
-				toast.error(err?.response?.statusText);
-				return {
-					msg: err?.response?.statusText,
-					status: err?.response?.status,
-				};
-			}
+	const upgradeNotifications = async (formData) => {
+		"use server";
+		const rawFormData = {
+			fromBlogNotification: formData.get("fromBlogNotification"),
+			fromPostNotification: formData.get("fromPostNotification"),
+			fromVideoNotification: formData.get("fromVideoNotification"),
+			fromMediaNotification: formData.get("fromMediaNotification"),
+			fromJobNotification: formData.get("fromJobNotification"),
+			fromCommentNotification: formData.get("fromCommentNotification"),
+			fromBlogNewsNotification: formData.get("fromBlogNewsNotification"),
+			fromUserNewsNotification: formData.get("fromUserNewsNotification"),
 		};
-		fetchUser();
-	}, [loading]);
-
-	const upgradeNotifications = async (e) => {
-		e.preventDefault();
-		try {
-			setBtnTxt("Submit...");
-			await fetchurl(
-				`/auth/updatenotifications`,
-				"PUT",
-				"no-cache",
-				notificationsData
-			);
-			resetForm();
-			toast.success("Account updated");
-			setBtnTxt(btnText);
-			router.push(`/auth/profile`);
-		} catch (err) {
-			console.log(err);
-			setError(true);
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
-
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return {
-				msg: err?.response?.statusText,
-				status: err?.response?.status,
-			};
-		}
+		await fetchurl(`/auth/updatenotifications`, "PUT", "no-cache", rawFormData);
+		redirect(`/auth/profile`);
 	};
 
-	const resetForm = () => {
-		setNotificationsData({
-			fromBlogNotification: false,
-			fromPostNotification: false,
-			fromVideoNotification: false,
-			fromMediaNotification: false,
-			fromProducerNotification: false,
-			fromJobNotification: false,
-			fromCommentNotification: false,
-			fromBlogNewsNotification: false,
-			fromProducerNewsNotification: false,
-			fromUserNewsNotification: false,
-		});
-	};
-
-	return loading || profile === null || profile === undefined ? (
-		error ? (
-			<>Not found</>
-		) : (
-			<>Loading...</>
-		)
-	) : (
+	return (
 		<div className="container my-4">
 			<div className="row">
 				<Sidebar />
@@ -170,7 +41,7 @@ const UpdateNotifications = ({ params, searchParams }) => {
 					<div className="card">
 						<div className="card-header">Edit&nbsp;Notifications</div>
 						<div className="card-body">
-							<form onSubmit={upgradeNotifications}>
+							<form action={upgradeNotifications}>
 								<h6 className="display-6 text-center text-decoration-underline">
 									Comments
 								</h6>
@@ -180,14 +51,11 @@ const UpdateNotifications = ({ params, searchParams }) => {
 								<select
 									id="fromBlogNotification"
 									name="fromBlogNotification"
-									value={fromBlogNotification}
-									onChange={(e) => {
-										setNotificationsData({
-											...notificationsData,
-											fromBlogNotification: e.target.value,
-										});
-									}}
 									className="form-control mb-3"
+									defaultValue={
+										auth.data.settings.notifications.comments
+											.fromBlogNotification
+									}
 								>
 									<option value={true}>Yes</option>
 									<option value={false}>No</option>
@@ -198,14 +66,11 @@ const UpdateNotifications = ({ params, searchParams }) => {
 								<select
 									id="fromPostNotification"
 									name="fromPostNotification"
-									value={fromPostNotification}
-									onChange={(e) => {
-										setNotificationsData({
-											...notificationsData,
-											fromPostNotification: e.target.value,
-										});
-									}}
 									className="form-control mb-3"
+									defaultValue={
+										auth.data.settings.notifications.comments
+											.fromPostNotification
+									}
 								>
 									<option value={true}>Yes</option>
 									<option value={false}>No</option>
@@ -216,14 +81,11 @@ const UpdateNotifications = ({ params, searchParams }) => {
 								<select
 									id="fromVideoNotification"
 									name="fromVideoNotification"
-									value={fromVideoNotification}
-									onChange={(e) => {
-										setNotificationsData({
-											...notificationsData,
-											fromVideoNotification: e.target.value,
-										});
-									}}
 									className="form-control mb-3"
+									defaultValue={
+										auth.data.settings.notifications.comments
+											.fromVideoNotification
+									}
 								>
 									<option value={true}>Yes</option>
 									<option value={false}>No</option>
@@ -234,35 +96,11 @@ const UpdateNotifications = ({ params, searchParams }) => {
 								<select
 									id="fromMediaNotification"
 									name="fromMediaNotification"
-									value={fromMediaNotification}
-									onChange={(e) => {
-										setNotificationsData({
-											...notificationsData,
-											fromMediaNotification: e.target.value,
-										});
-									}}
 									className="form-control mb-3"
-								>
-									<option value={true}>Yes</option>
-									<option value={false}>No</option>
-								</select>
-								<label
-									htmlFor="fromProducerNotification"
-									className="form-label"
-								>
-									From&nbsp;Producer&nbsp;/&nbsp;Channel
-								</label>
-								<select
-									id="fromProducerNotification"
-									name="fromProducerNotification"
-									value={fromProducerNotification}
-									onChange={(e) => {
-										setNotificationsData({
-											...notificationsData,
-											fromProducerNotification: e.target.value,
-										});
-									}}
-									className="form-control mb-3"
+									defaultValue={
+										auth.data.settings.notifications.comments
+											.fromMediaNotification
+									}
 								>
 									<option value={true}>Yes</option>
 									<option value={false}>No</option>
@@ -273,14 +111,11 @@ const UpdateNotifications = ({ params, searchParams }) => {
 								<select
 									id="fromJobNotification"
 									name="fromJobNotification"
-									value={fromJobNotification}
-									onChange={(e) => {
-										setNotificationsData({
-											...notificationsData,
-											fromJobNotification: e.target.value,
-										});
-									}}
 									className="form-control mb-3"
+									defaultValue={
+										auth.data.settings.notifications.comments
+											.fromJobNotification
+									}
 								>
 									<option value={true}>Yes</option>
 									<option value={false}>No</option>
@@ -291,14 +126,11 @@ const UpdateNotifications = ({ params, searchParams }) => {
 								<select
 									id="fromCommentNotification"
 									name="fromCommentNotification"
-									value={fromCommentNotification}
-									onChange={(e) => {
-										setNotificationsData({
-											...notificationsData,
-											fromCommentNotification: e.target.value,
-										});
-									}}
 									className="form-control mb-3"
+									defaultValue={
+										auth.data.settings.notifications.comments
+											.fromCommentNotification
+									}
 								>
 									<option value={true}>Yes</option>
 									<option value={false}>No</option>
@@ -315,35 +147,11 @@ const UpdateNotifications = ({ params, searchParams }) => {
 								<select
 									id="fromBlogNewsNotification"
 									name="fromBlogNewsNotification"
-									value={fromBlogNewsNotification}
-									onChange={(e) => {
-										setNotificationsData({
-											...notificationsData,
-											fromBlogNewsNotification: e.target.value,
-										});
-									}}
 									className="form-control mb-3"
-								>
-									<option value={true}>Yes</option>
-									<option value={false}>No</option>
-								</select>
-								<label
-									htmlFor="fromProducerNewsNotification"
-									className="form-label"
-								>
-									From&nbsp;Producer
-								</label>
-								<select
-									id="fromProducerNewsNotification"
-									name="fromProducerNewsNotification"
-									value={fromProducerNewsNotification}
-									onChange={(e) => {
-										setNotificationsData({
-											...notificationsData,
-											fromProducerNewsNotification: e.target.value,
-										});
-									}}
-									className="form-control mb-3"
+									defaultValue={
+										auth.data.settings.notifications.news
+											.fromBlogNewsNotification
+									}
 								>
 									<option value={true}>Yes</option>
 									<option value={false}>No</option>
@@ -357,31 +165,16 @@ const UpdateNotifications = ({ params, searchParams }) => {
 								<select
 									id="fromUserNewsNotification"
 									name="fromUserNewsNotification"
-									value={fromUserNewsNotification}
-									onChange={(e) => {
-										setNotificationsData({
-											...notificationsData,
-											fromUserNewsNotification: e.target.value,
-										});
-									}}
 									className="form-control mb-3"
+									defaultValue={
+										auth.data.settings.notifications.news
+											.fromUserNewsNotification
+									}
 								>
 									<option value={true}>Yes</option>
 									<option value={false}>No</option>
 								</select>
-								<button
-									type="submit"
-									className="btn btn-secondary btn-sm float-start"
-								>
-									{btnText}
-								</button>
-								<button
-									type="button"
-									className="btn btn-secondary btn-sm float-end"
-									onClick={resetForm}
-								>
-									Reset
-								</button>
+								<FormButtons />
 							</form>
 						</div>
 					</div>

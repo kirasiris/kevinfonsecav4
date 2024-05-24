@@ -1,60 +1,37 @@
-"use client";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Globalcontent from "@/layout/content";
 import Sidebar from "@/layout/secret/sidebar";
 import { fetchurl } from "@/helpers/setTokenOnServer";
+import { redirect } from "next/navigation";
+import FormButtons from "@/components/global/formbuttons";
 
-const CreateSecret = ({ params, searchParams }) => {
-	const router = useRouter();
-	const [secretData, setSecretData] = useState({
-		age: 13,
-		sex: "male",
-		nsfw: false,
-		text: ``,
-		status: "published",
-	});
+const CreateSecret = async ({ params, searchParams }) => {
+	const createContact = async (formData) => {
+		"use server";
+		const rawFormData = {
+			age: formData.get("age"),
+			sex: formData.get("sex"),
+			nsfw: formData.get("nsfw"),
+			text: formData.get("text"),
+		};
 
-	const { age, sex, nsfw, text } = secretData;
-
-	const createContact = async (e) => {
-		e.preventDefault();
-		await fetchurl(`/extras/secrets`, "POST", "no-cache", secretData);
+		await fetchurl(`/extras/secrets`, "POST", "no-cache", rawFormData);
 		searchParams?.returnpage
-			? router.push(searchParams.returnpage)
-			: router.push(`/secret`);
+			? redirect(searchParams.returnpage)
+			: redirect(`/secret`);
 	};
 
-	const resetForm = () => {
-		setSecretData({
-			age: 13,
-			sex: "male",
-			nsfw: false,
-			text: ``,
-		});
-	};
 	return (
 		<>
 			<div className="container mt-4">
 				<div className="row">
 					<Globalcontent>
-						<form onSubmit={createContact}>
+						<form action={createContact}>
 							<label htmlFor="age" className="form-label">
 								Age
 							</label>
 							<input
 								id="age"
 								name="age"
-								value={age}
-								onChange={(e) => {
-									const inputValue = e.target.value;
-									if (/^\d+$/.test(inputValue) && parseInt(inputValue) >= 13) {
-										setSecretData({
-											...secretData,
-											age: inputValue,
-										});
-									}
-								}}
 								type="number"
 								className="form-control mb-3"
 								min={13}
@@ -64,18 +41,7 @@ const CreateSecret = ({ params, searchParams }) => {
 							<label htmlFor="sex" className="form-label">
 								Sex
 							</label>
-							<select
-								id="sex"
-								name="sex"
-								value={sex}
-								onChange={(e) => {
-									setSecretData({
-										...secretData,
-										sex: e.target.value,
-									});
-								}}
-								className="form-control mb-3"
-							>
+							<select id="sex" name="sex" className="form-control mb-3">
 								<option value={`male`}>Male</option>
 								<option value={`female`}>Female</option>
 								<option value={`non-binary`}>Non-binary</option>
@@ -83,18 +49,7 @@ const CreateSecret = ({ params, searchParams }) => {
 							<label htmlFor="nsfw" className="form-label">
 								NSFW
 							</label>
-							<select
-								id="nsfw"
-								name="nsfw"
-								value={nsfw}
-								onChange={(e) => {
-									setSecretData({
-										...secretData,
-										nsfw: e.target.value,
-									});
-								}}
-								className="form-control mb-3"
-							>
+							<select id="nsfw" name="nsfw" className="form-control mb-3">
 								<option value={true}>Yes</option>
 								<option value={false}>No</option>
 							</select>
@@ -104,32 +59,12 @@ const CreateSecret = ({ params, searchParams }) => {
 							<textarea
 								id="text"
 								name="text"
-								value={text}
-								onChange={(e) => {
-									setSecretData({
-										...secretData,
-										text: e.target.value,
-									});
-								}}
 								className="form-control"
 								placeholder={`Here goes the message`}
 								rows={`3`}
 							/>
 							<br />
-							<button
-								type="submit"
-								className="btn btn-secondary btn-sm float-start"
-								disabled={text.length > 0 ? !true : !false}
-							>
-								Submit
-							</button>
-							<button
-								type="button"
-								className="btn btn-secondary btn-sm float-end"
-								onClick={resetForm}
-							>
-								Reset
-							</button>
+							<FormButtons />
 						</form>
 					</Globalcontent>
 					<Sidebar />

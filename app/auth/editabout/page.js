@@ -1,184 +1,49 @@
-"use client";
 import { fetchurl } from "@/helpers/setTokenOnServer";
-import { useRouter } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
-import { toast } from "react-toastify";
-import AuthContext from "@/helpers/globalContext";
+import { redirect } from "next/navigation";
 import Sidebar from "@/layout/auth/sidebar";
 import Globalcontent from "@/layout/content";
-import MyTextArea from "@/components/global/mytextarea";
+import MyTextArea from "@/components/global/myfinaltextarea";
+import FormButtons from "@/components/global/formbuttons";
 
-const UpdateAbout = ({ params, searchParams }) => {
-	const { auth } = useContext(AuthContext);
-	const router = useRouter();
+async function getAuthenticatedUser() {
+	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
+	return res;
+}
 
-	// Redirec if not authenticated
-	!auth.isAuthenticated && router.push("/auth/login");
+async function getProfiles(params) {
+	const res = await fetchurl(`/users${params}`, "GET", "no-cache");
+	return res;
+}
 
-	const [profiles, setProfiles] = useState([]);
+const UpdateAbout = async ({ params, searchParams }) => {
+	const auth = await getAuthenticatedUser();
 
-	const fetchUsers = async (params = "") => {
-		try {
-			const res = await fetchurl(`/users${params}`, "GET", "no-cache");
-			setProfiles(res?.data);
-		} catch (err) {
-			console.log(err);
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
+	// Redirect if user is not logged in
+	(auth?.error?.statusCode === 401 || !auth?.data?.isOnline) &&
+		redirect(`/auth/login`);
 
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
+	const getProfilesData = getProfiles(`?isEmailConfirmed=true`);
 
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
+	const [profiles] = await Promise.all([getProfilesData]);
 
-			toast.error(err?.response?.statusText);
-			return {
-				msg: err?.response?.statusText,
-				status: err?.response?.status,
-			};
-		}
-	};
-
-	useEffect(() => {
-		fetchUsers(`?isEmailConfirmed=true`);
-	}, []);
-
-	const [aboutData, setAboutData] = useState({
-		name: ``,
-		sex: `Straight`,
-		gender: "non-binary",
-		relationshipStatus: ``,
-		inRelationshipWith: ``,
-		company: ``,
-		age: ``,
-		bio: ``,
-		tags: ``,
-	});
-
-	const {
-		name,
-		sex,
-		gender,
-		relationshipStatus,
-		inRelationshipWith,
-		company,
-		age,
-		bio,
-		tags,
-	} = aboutData;
-
-	const [profile, setProfile] = useState(null);
-	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState(false);
-	const [btnText, setBtnTxt] = useState("Submit");
-
-	useEffect(() => {
-		const fetchUser = async () => {
-			try {
-				const res = await fetchurl(`/auth/me`, "GET", "no-cache");
-				setProfile(res?.data);
-				setAboutData({
-					name: res.data.name,
-					sex: res.data.sex,
-					gender: res.data.gender,
-					relationshipStatus: res.data.relationshipStatus,
-					inRelationshipWith: res.data.inRelationshipWith,
-					company: res.data.company,
-					age: res.data.age,
-					bio: res.data.bio,
-					tags: res.data.tags,
-				});
-				setLoading(false);
-			} catch (err) {
-				console.log(err);
-				setError(true);
-				// const error = err.response.data.message;
-				const error = err?.response?.data?.error?.errors;
-				const errors = err?.response?.data?.errors;
-
-				if (error) {
-					// dispatch(setAlert(error, 'danger'));
-					error &&
-						Object.entries(error).map(([, value]) =>
-							toast.error(value.message)
-						);
-				}
-
-				if (errors) {
-					errors.forEach((error) => toast.error(error.msg));
-				}
-
-				toast.error(err?.response?.statusText);
-				return {
-					msg: err?.response?.statusText,
-					status: err?.response?.status,
-				};
-			}
+	const upgradeAbout = async (formData) => {
+		"use server";
+		const rawFormData = {
+			name: formData.get("name"),
+			sex: formData.get("sex"),
+			gender: formData.get("gender"),
+			relationshipStatus: formData.get("relationshipStatus"),
+			inRelationshipWith: formData.get("inRelationshipWith"),
+			company: formData.get("company"),
+			age: formData.get("age"),
+			text: formData.get("text"),
+			tags: formData.get("tags"),
 		};
-		fetchUser();
-	}, [loading]);
-
-	const upgradeAbout = async (e) => {
-		e.preventDefault();
-		try {
-			setBtnTxt("Submit...");
-			await fetchurl(`/auth/updateabout`, "PUT", "no-cache", aboutData);
-			resetForm();
-			toast.success("Account updated");
-			setBtnTxt(btnText);
-			router.push(`/auth/profile`);
-		} catch (err) {
-			console.log(err);
-			setError(true);
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
-
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return {
-				msg: err?.response?.statusText,
-				status: err?.response?.status,
-			};
-		}
+		await fetchurl(`/auth/updateabout`, "PUT", "no-cache", rawFormData);
+		redirect(`/auth/profile`);
 	};
 
-	const resetForm = () => {
-		setAboutData({
-			name: ``,
-			sex: `Straight`,
-			gender: "non-binary",
-			relationshipStatus: ``,
-			inRelationshipWith: ``,
-			company: ``,
-			age: ``,
-			bio: ``,
-			tags: ``,
-		});
-	};
-
-	return loading || profile === null || profile === undefined ? (
-		error ? (
-			<>Not found</>
-		) : (
-			<>Loading...</>
-		)
-	) : (
+	return (
 		<div className="container my-4">
 			<div className="row">
 				<Sidebar />
@@ -186,24 +51,18 @@ const UpdateAbout = ({ params, searchParams }) => {
 					<div className="card">
 						<div className="card-header">Edit&nbsp;About</div>
 						<div className="card-body">
-							<form onSubmit={upgradeAbout}>
+							<form action={upgradeAbout}>
 								<label htmlFor="name" className="form-label">
 									Name
 								</label>
 								<input
 									id="name"
 									name="name"
-									value={name}
-									onChange={(e) => {
-										setAboutData({
-											...aboutData,
-											name: e.target.value,
-										});
-									}}
 									type="text"
 									className="form-control mb-3"
-									placeholder={`${profile.name}`}
 									required
+									placeholder="John Doe"
+									defaultValue={auth?.data?.name}
 								/>
 								<label htmlFor="sex" className="form-label">
 									Sex
@@ -211,16 +70,10 @@ const UpdateAbout = ({ params, searchParams }) => {
 								<input
 									id="sex"
 									name="sex"
-									value={sex}
-									onChange={(e) => {
-										setAboutData({
-											...aboutData,
-											sex: e.target.value,
-										});
-									}}
 									type="text"
 									className="form-control mb-3"
-									placeholder={`${profile.sex}`}
+									placeholder="male"
+									defaultValue={auth?.data?.sex}
 								/>
 								<label htmlFor="gender" className="form-label">
 									Gender
@@ -228,14 +81,8 @@ const UpdateAbout = ({ params, searchParams }) => {
 								<select
 									id="gender"
 									name="gender"
-									value={gender}
-									onChange={(e) => {
-										setAboutData({
-											...aboutData,
-											gender: e.target.value,
-										});
-									}}
 									className="form-control mb-3"
+									defaultValue={auth?.data?.gender}
 								>
 									<option value={`non-binary`}>Non&nbsp;binary</option>
 									<option value={`intersex`}>Intersex</option>
@@ -263,14 +110,8 @@ const UpdateAbout = ({ params, searchParams }) => {
 										<select
 											id="relationshipStatus"
 											name="relationshipStatus"
-											value={relationshipStatus}
-											onChange={(e) => {
-												setAboutData({
-													...aboutData,
-													relationshipStatus: e.target.value,
-												});
-											}}
 											className="form-control mb-3"
+											defaultValue={auth?.data?.relationshipStatus}
 										>
 											<option value={`single`}>Single</option>
 											<option value={`taken`}>Taken</option>
@@ -279,12 +120,12 @@ const UpdateAbout = ({ params, searchParams }) => {
 											<option value={`divorced`}>Divorced</option>
 										</select>
 									</div>
-									{relationshipStatus !== "" &&
-										relationshipStatus !== "single" &&
-										relationshipStatus !== "widowed" &&
-										relationshipStatus !== "divorced" &&
-										relationshipStatus !== undefined &&
-										relationshipStatus !== null &&
+									{auth.data.relationshipStatus !== "" &&
+										auth.data.relationshipStatus !== "single" &&
+										auth.data.relationshipStatus !== "widowed" &&
+										auth.data.relationshipStatus !== "divorced" &&
+										auth.data.relationshipStatus !== undefined &&
+										auth.data.relationshipStatus !== null &&
 										profiles.length >= 1 && (
 											<div className="col">
 												<label
@@ -296,18 +137,13 @@ const UpdateAbout = ({ params, searchParams }) => {
 												<select
 													id="inRelationshipWith"
 													name="inRelationshipWith"
-													value={inRelationshipWith}
-													onChange={(e) => {
-														setAboutData({
-															...aboutData,
-															inRelationshipWith: e.target.value,
-														});
-													}}
 													className="form-control"
+													defaultValue={auth?.data?.inRelationshipWith}
 												>
 													{profiles
 														.filter(
-															(excludedUser) => excludedUser._id !== profile._id
+															(excludedUser) =>
+																excludedUser._id !== auth.data._id
 														)
 														.map((user) => (
 															<option key={user._id} value={user._id}>
@@ -324,16 +160,10 @@ const UpdateAbout = ({ params, searchParams }) => {
 								<input
 									id="company"
 									name="company"
-									value={company}
-									onChange={(e) => {
-										setAboutData({
-											...aboutData,
-											company: e.target.value,
-										});
-									}}
 									type="text"
 									className="form-control mb-3"
-									placeholder={`${profile.company}`}
+									placeholder="John Doe's Business"
+									defaultValue={auth?.data?.company}
 								/>
 								<label htmlFor="age" className="form-label">
 									Age
@@ -341,24 +171,25 @@ const UpdateAbout = ({ params, searchParams }) => {
 								<input
 									id="age"
 									name="age"
-									value={age}
-									onChange={(e) => {
-										const inputValue = e.target.value;
-										if (
-											/^\d+$/.test(inputValue) &&
-											parseInt(inputValue) >= 18
-										) {
-											setAboutData({
-												...aboutData,
-												age: inputValue,
-											});
-										}
-									}}
+									// value={age}
+									// onChange={(e) => {
+									// 	const inputValue = e.target.value;
+									// 	if (
+									// 		/^\d+$/.test(inputValue) &&
+									// 		parseInt(inputValue) >= 18
+									// 	) {
+									// 		setAboutData({
+									// 			...aboutData,
+									// 			age: inputValue,
+									// 		});
+									// 	}
+									// }}
 									type="number"
 									className="form-control mb-3"
 									min={18}
 									max={99}
-									placeholder={`${profile.age}`}
+									placeholder="18"
+									defaultValue={auth?.data?.age}
 								/>
 								<label htmlFor="bio" className="form-label">
 									Bio
@@ -366,44 +197,24 @@ const UpdateAbout = ({ params, searchParams }) => {
 								<MyTextArea
 									id="text"
 									name="text"
-									value={bio}
-									objectData={aboutData}
-									setObjectData={setAboutData}
 									onModel="User"
 									advancedTextEditor={false}
+									customPlaceholder="Lets get to know you!"
+									defaultValue={auth?.data?.bio}
 								/>
-								<label htmlFor="skills" className="form-label">
+								<label htmlFor="tags" className="form-label">
 									Skills
 								</label>
 								<input
-									id="skills"
-									name="skills"
-									value={tags}
-									onChange={(e) => {
-										setAboutData({
-											...aboutData,
-											tags: e.target.value,
-										});
-									}}
+									id="tags"
+									name="tags"
 									type="text"
 									className="form-control mb-3"
-									placeholder={`${profile.tags}`}
 									required
+									placeholder="html, css, javascript, php, etc"
+									defaultValue={auth?.data?.tags}
 								/>
-								<button
-									type="submit"
-									className="btn btn-secondary btn-sm float-start"
-									disabled={name.length > 0 && tags.length > 0 ? !true : !false}
-								>
-									{btnText}
-								</button>
-								<button
-									type="button"
-									className="btn btn-secondary btn-sm float-end"
-									onClick={resetForm}
-								>
-									Reset
-								</button>
+								<FormButtons />
 							</form>
 						</div>
 					</div>

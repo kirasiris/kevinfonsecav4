@@ -29,13 +29,11 @@ const Single = ({ object = {} }) => {
 					</Link>
 					<div className="card-body">
 						<h5 className="card-title">{object?.title || "Untitled"}</h5>
-						<p className="card-text">
-							{typeof object?.text === "object" ? (
-								"TEXT IS EITHER ENCRYPTED OR PASSWORD PROTECTED"
-							) : (
-								<ParseHtml text={JSON.stringify(object?.text)} />
-							)}
-						</p>
+						{typeof object?.text === "object" ? (
+							"TEXT IS EITHER ENCRYPTED OR PASSWORD PROTECTED"
+						) : (
+							<ParseHtml text={object?.text} classList="card-text" />
+						)}
 					</div>
 					<ul className="list-group list-group-flush">
 						<li className="list-group-item p-0">

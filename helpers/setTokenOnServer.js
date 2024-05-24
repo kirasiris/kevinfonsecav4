@@ -32,6 +32,14 @@ export const setAuthTokenOnServer = async (token) => {
 	}
 };
 
+export const deleteAuthTokenOnServer = async (token) => {
+	await fetchurl(`/auth/logout`, "GET", "no-cache");
+	cookies().delete(token);
+	cookies().delete("userId");
+	console.log("2.- Deleting cookie from back-end");
+	redirect(`/auth/login`);
+};
+
 export const fetchurl = async (
 	url = ``,
 	method,
@@ -47,6 +55,7 @@ export const fetchurl = async (
 	let requestBody = null;
 	let customHeaders = {
 		Authorization: `Bearer ${token?.value}`,
+		"Content-Type": "application/json",
 	};
 
 	if (
@@ -60,18 +69,18 @@ export const fetchurl = async (
 		requestBody = JSON.stringify(bodyData);
 	}
 
-	if (!multipart) {
-		customHeaders["Content-Type"] = "application/json";
+	if (multipart) {
+		customHeaders["Content-Type"] = "multipart/form-data";
 	}
 
 	const response = await fetch(
 		isRemote ? url : `http://localhost:5000/api/v1${url}`,
 		{
 			method: method,
-			headers: customHeaders,
-			body: method !== "GET" && method !== "HEAD" ? requestBody : null,
 			cache: cache,
+			body: method !== "GET" && method !== "HEAD" ? requestBody : null,
 			signal: signal,
+			headers: customHeaders,
 		}
 	)
 		.then(async (res) => {
@@ -99,12 +108,4 @@ export const fetchurl = async (
 		});
 
 	return response;
-};
-
-export const deleteAuthTokenOnServer = async (token) => {
-	await fetchurl(`/auth/logout`, "GET", "no-cache");
-	cookies().delete(token);
-	cookies().delete("userId");
-	console.log("2.- Deleting cookie from back-end");
-	redirect(`/auth/login`);
 };

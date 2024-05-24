@@ -1,7 +1,7 @@
 "use client";
 import he from "he";
 import { useEffect, useState } from "react";
-const ParseHtml = ({ text = "" }) => {
+const ParseHtml = ({ text = "", classList = "" }) => {
 	const [decodedText, setDecodedText] = useState("");
 
 	useEffect(() => {
@@ -9,7 +9,12 @@ const ParseHtml = ({ text = "" }) => {
 	}, [text]);
 
 	if (typeof window !== undefined) {
-		return <div dangerouslySetInnerHTML={{ __html: decodedText }} />;
+		return (
+			<div
+				dangerouslySetInnerHTML={{ __html: decodedText }}
+				className={classList}
+			/>
+		);
 	}
 };
 

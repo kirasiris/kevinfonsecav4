@@ -1,5 +1,4 @@
 "use client";
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import Single from "../comment/single";
@@ -8,13 +7,10 @@ import MyTextArea from "@/components/global/mytextarea";
 
 const CommentBox = ({
 	auth = {},
-	authorization = {},
-	user = {},
 	postId = null,
 	secondPostId = null,
 	parentId = null,
 	isVisible = true,
-	backToOriginalPost = true,
 	postType = "",
 	onModel = "",
 }) => {
@@ -34,10 +30,8 @@ const CommentBox = ({
 
 	const fetchComments = async () => {
 		try {
-			const res = await axios.get(
-				`http://localhost:5000/api/v1/comments${params}`
-			);
-			setComments(res?.data?.data);
+			const res = await fetchurl(`/comments${params}`, "GET", "no-cache");
+			setComments(res?.data);
 		} catch (err) {
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;
@@ -80,16 +74,7 @@ const CommentBox = ({
 	const newComment = async (e) => {
 		e.preventDefault();
 		try {
-			await axios.post(
-				`http://localhost:5000/api/v1/comments/${postId}`,
-				commentData,
-				{
-					headers: {
-						Authorization: authorization.bearer,
-					},
-				}
-			);
-			// setComments([res?.data?.data, ...comments]);
+			await fetchurl(`/comments/${postId}`, "POST", "no-cache", commentData);
 			resetForm();
 			fetchComments();
 		} catch (err) {

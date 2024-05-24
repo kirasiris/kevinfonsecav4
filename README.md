@@ -4,39 +4,56 @@
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-################################################################################################################################################################################
-
 ## Getting Started
 
-First, run the development server:
+Used by some of the world's largest companies, Next.js enables you to create full-stack web applications by extending the latest React features, and integrating powerful Rust-based JavaScript tooling for the fastest builds.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- Visit our [Learn Next.js](https://nextjs.org/learn) course to get started with Next.js.
+- Visit the [Next.js Showcase](https://nextjs.org/showcase) to see more sites built with Next.js.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Documentation
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+Visit [https://nextjs.org/docs](https://nextjs.org/docs) to view the full documentation.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Community
 
-## Learn More
+The Next.js community can be found on [GitHub Discussions](https://github.com/vercel/next.js/discussions) where you can ask questions, voice ideas, and share your projects with other people.
 
-To learn more about Next.js, take a look at the following resources:
+To chat with other community members you can join the Next.js [Discord](https://nextjs.org/discord) server.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Do note that our [Code of Conduct](https://github.com/vercel/next.js/blob/canary/CODE_OF_CONDUCT.md) applies to all Next.js community channels. Users are **highly encouraged** to read and adhere to them to avoid repercussions.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## Contributing
 
-## Deploy on Vercel
+Contributions to Next.js are welcome and highly appreciated. However, before you jump right into it, we would like you to review our [Contribution Guidelines](/contributing.md) to make sure you have a smooth experience contributing to Next.js.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Good First Issues:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+We have a list of **[good first issues](https://github.com/vercel/next.js/labels/good%20first%20issue)** that contain bugs that have a relatively limited scope. This is a great place for newcomers and beginners alike to get started, gain experience, and get familiar with our contribution process.
+
+## beFree Author
+
+- Kevin Fonseca ([@kirasiris](https://instagram.com/kirasiris))
+
+## NextJS Authors
+
+A list of the original co-authors of Next.js that helped bring this amazing website to life!
+
+- Tim Neutkens ([@timneutkens](https://x.com/timneutkens))
+- Naoyuki Kanezawa ([@nkzawa](https://x.com/nkzawa))
+- Guillermo Rauch ([@rauchg](https://x.com/rauchg))
+- Arunoda Susiripala ([@arunoda](https://x.com/arunoda))
+- Tony Kovanen ([@tonykovanen](https://x.com/tonykovanen))
+- Dan Zajdband ([@impronunciable](https://x.com/impronunciable))
+
+---
+
+## Security
+
+If you believe you have found a security vulnerability in beFree, I encourage you to **_responsibly disclose this and NOT open a public issue_**.
+
+I will investigate all legitimate reports. and do my best to quickly fix the problem.
+
+Email `kebin1421@hotmail.com` to disclose any security vulnerabilities.
+
+Alternatively, you can visit this [link](https://kevinurielfonseca.me/security) to know more about beFree's security

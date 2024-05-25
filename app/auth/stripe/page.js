@@ -2,6 +2,7 @@ import { fetchurl } from "@/helpers/setTokenOnServer";
 import { redirect } from "next/navigation";
 import Sidebar from "@/layout/auth/sidebar";
 import Globalcontent from "@/layout/content";
+import { revalidatePath } from "next/cache";
 
 async function getAuthenticatedUser() {
 	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
@@ -18,7 +19,7 @@ const StripeSettings = async ({ params, searchParams }) => {
 	const assignStripeOnBoardingLink = async (formData) => {
 		"use server";
 		// const rawFormData = {};
-		const res = await fetchurl(
+		await fetchurl(
 			`/extras/stripe/accounts/${auth.data._id}/assignstripeonboardinglink`,
 			"PUT",
 			"no-cache",
@@ -26,10 +27,7 @@ const StripeSettings = async ({ params, searchParams }) => {
 				website: "beFree",
 			}
 		);
-		return {
-			...auth.data.stripe,
-			stripeOnboardingLink: res.data.stripe.url,
-		};
+		revalidatePath(`/auth/stripe`);
 	};
 
 	return (

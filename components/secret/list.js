@@ -1,29 +1,16 @@
-import Link from "next/link";
 import Single from "./single";
 import NumericPagination from "@/layout/numericpagination";
 import NothingFoundAlert from "@/layout/nothingfoundalert";
 import Sidebar from "@/layout/secret/sidebar";
 import Globalcontent from "@/layout/content";
+import Form from "@/app/secret/form";
 
 const List = ({ objects = [], searchParams = {} }) => {
 	return (
 		<div className="container mt-4">
 			<div className="row">
 				<Globalcontent>
-					<div className="d-grid gap-2 mb-4">
-						<Link
-							href={{
-								pathname: `/secret/create`,
-								query: {
-									returnpage: `/secret?page=1&limit=32&sort=-createdAt`,
-								},
-							}}
-							passHref
-							legacyBehavior
-						>
-							<a className="btn btn-secondary btn-sm">Create</a>
-						</Link>
-					</div>
+					<Form searchParams={searchParams} />
 					{/* Blog list */}
 					{objects?.data?.length > 0 ? (
 						<>

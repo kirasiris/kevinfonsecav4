@@ -1,7 +1,3 @@
-import "../bootstrap.css";
-// import "../bootstrap.js";
-import "../global.css";
-import "../app.css";
 import ErrorPage from "@/layout/errorpage";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 

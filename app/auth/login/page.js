@@ -30,11 +30,8 @@ const Login = async ({ params, searchParams }) => {
 			website: "beFree",
 		});
 
-		console.log("Login...", res);
-
 		if (res?.data) {
 			redirect(`/auth/validatetwofactorauth/${res?.data?._id}`);
-			// return res;
 		}
 
 		// If not success, stop

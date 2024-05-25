@@ -60,6 +60,10 @@ MAPBOX
 	height: 20px;
 	color: #000;
 }
+
+div .mapboxgl-ctrl-attrib-inner {
+	display: none !important;
+}
 /*****************************
 SHORTS/STORIES
 *****************************/

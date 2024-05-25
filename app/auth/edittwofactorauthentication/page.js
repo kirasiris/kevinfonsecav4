@@ -1,158 +1,40 @@
-"use client";
+import { revalidatePath } from "next/cache";
 import { fetchurl } from "@/helpers/setTokenOnServer";
-import { useRouter } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
-import { toast } from "react-toastify";
-import AuthContext from "@/helpers/globalContext";
 import Sidebar from "@/layout/auth/sidebar";
 import Globalcontent from "@/layout/content";
-import QRCode from "qrcode.react";
+import QRC from "@/components/global/qrcode";
 
-const UpdateTwoFactorAuthentication = ({ params, searchParams }) => {
-	const { auth } = useContext(AuthContext);
-	const router = useRouter();
+async function getAuthenticatedUser() {
+	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
+	return res;
+}
 
-	// Redirec if not authenticated
-	!auth.isAuthenticated && router.push("/auth/login");
+const UpdateTwoFactorAuthentication = async ({ params, searchParams }) => {
+	const auth = await getAuthenticatedUser();
 
-	const [twoFactorAuthData, setTwoFactorAuthData] = useState({
-		base32: null,
-		otpauth_url: null,
-	});
-	const { base32, otpauth_url } = twoFactorAuthData;
+	// Redirect if user is not logged in
+	(auth?.error?.statusCode === 401 || !auth?.data?.isOnline) &&
+		redirect(`/auth/login`);
 
-	const [profile, setProfile] = useState(null);
-	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState(false);
-	const [enabled, setEnabled] = useState(false);
-	const [enabledStr, setEnabledStr] = useState(`Enable`);
-	const [recoveryToken, setRecoveryToken] = useState(null);
-	const [qrCodeImageUrl, setQRCodeImageUrl] = useState(null);
-
-	useEffect(() => {
-		const fetchUser = async () => {
-			try {
-				const res = await fetchurl(`/auth/me`, "GET", "no-cache");
-				setProfile(res?.data);
-				setEnabled(res.data.twoFactorTokenEnabled);
-				setEnabledStr(res.data.twoFactorTokenEnabled ? `Enabled` : `Disabled`);
-				setRecoveryToken(res.data.twoFactorRecoveryToken);
-				setTwoFactorAuthData({
-					base32: res.data.twoFactorToken?.base32,
-					otpauth_url: res.data.twoFactorToken?.otpauth_url,
-				});
-				setLoading(false);
-			} catch (err) {
-				console.log(err);
-				setError(true);
-				// const error = err.response.data.message;
-				const error = err?.response?.data?.error?.errors;
-				const errors = err?.response?.data?.errors;
-
-				if (error) {
-					// dispatch(setAlert(error, 'danger'));
-					error &&
-						Object.entries(error).map(([, value]) =>
-							toast.error(value.message)
-						);
-				}
-
-				if (errors) {
-					errors.forEach((error) => toast.error(error.msg));
-				}
-
-				toast.error(err?.response?.statusText);
-				return {
-					msg: err?.response?.statusText,
-					status: err?.response?.status,
-				};
-			}
-		};
-		fetchUser();
-	}, [loading]);
-
-	const activate = async (e) => {
-		try {
-			const res = await fetchurl(`/auth/2fa/enable`, "PUT", "no-cache", {
-				website: "beFree",
-			});
-			setEnabled(res.data.twoFactorTokenEnabled);
-			setEnabledStr(`Enabled`);
-			setRecoveryToken(res.data.twoFactorRecoveryToken);
-			setTwoFactorAuthData({
-				base32: res.data.twoFactorToken.base32,
-				otpauth_url: res.data.twoFactorToken.otpauth_url,
-			});
-			setQRCodeImageUrl(res.data.twoFactorToken.otpauth_url);
-		} catch (err) {
-			console.log(err);
-			setError(true);
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
-
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return {
-				msg: err?.response?.statusText,
-				status: err?.response?.status,
-			};
-		}
+	const activate = async (formData) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/auth/2fa/enable`, "PUT", "no-cache", {
+			website: "beFree",
+		});
+		revalidatePath(`/auth/edittwofactorauthentication`);
 	};
 
-	const disactivate = async (e) => {
-		try {
-			const res = await fetchurl(`/auth/2fa/disable`, "PUT", "no-cache", {
-				website: "beFree",
-			});
-			setEnabled(res.data.twoFactorTokenEnabled);
-			setEnabledStr(`Disabled`);
-			setRecoveryToken(null);
-			setTwoFactorAuthData({
-				base32: null,
-				otpauth_url: null,
-			});
-		} catch (err) {
-			console.log(err);
-			setError(true);
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
-
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return {
-				msg: err?.response?.statusText,
-				status: err?.response?.status,
-			};
-		}
+	const disactivate = async (formData) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/auth/2fa/disable`, "PUT", "no-cache", {
+			website: "beFree",
+		});
+		revalidatePath(`/auth/edittwofactorauthentication`);
 	};
 
-	return loading || profile === null || profile === undefined ? (
-		error ? (
-			<>Not found</>
-		) : (
-			<>Loading...</>
-		)
-	) : (
+	return (
 		<div className="container my-4">
 			<div className="row">
 				<Sidebar />
@@ -201,31 +83,20 @@ const UpdateTwoFactorAuthentication = ({ params, searchParams }) => {
 									</ul>
 								</li>
 							</ol>
-							{enabled && (
+							{auth?.data?.twoFactorTokenEnabled && (
 								<>
 									<hr />
 									<div className="align-content-center border border-5 d-flex justify-content-center">
-										<QRCode
-											value={`${qrCodeImageUrl}`}
-											includeMargin={true}
-											size={200}
-											level={`L`}
-											imageSettings={{
-												src: `https://static.thenounproject.com/png/649740-200.png`,
-												height: 30,
-												width: 30,
-												excavate: true,
-											}}
-										/>
+										<QRC value={auth?.data?.twoFactorToken?.otpauth_url} />
 									</div>
 									<hr />
-									{recoveryToken && (
+									{auth?.data?.twoFactorRecoveryToken && (
 										<>
 											<p>
 												Please&nbsp;keep&nbsp;this&nbsp;code&nbsp;in&nbsp;a&nbsp;safe&nbsp;but&nbsp;accessible&nbsp;area.
 												This&nbsp;is&nbsp;your&nbsp;<b>BACKUP</b>&nbsp;code:
 												<br />
-												<code>{recoveryToken}</code>
+												<code>{auth?.data?.twoFactorRecoveryToken}</code>
 											</p>
 										</>
 									)}
@@ -234,26 +105,31 @@ const UpdateTwoFactorAuthentication = ({ params, searchParams }) => {
 										<i>Enter&nbsp;a&nbsp;setup&nbsp;key</i>
 										&nbsp;to&nbsp;your&nbsp;authenticator app:
 										<br />
-										<code>{base32}</code>
+										<code>{auth?.data?.twoFactorToken.base32}</code>
 									</p>
 									<p>
 										This&nbsp;is&nbsp;the&nbsp;string&nbsp;used&nbsp;for&nbsp;the&nbsp;
 										<i>QR&nbsp;Code</i>.
 										<b>You&nbsp;can&nbsp;ignore&nbsp;it!.&nbsp;</b>
 										<br />
-										<code>{otpauth_url}</code>
+										<code>{auth?.data?.twoFactorToken?.otpauth_url}</code>
 									</p>
 								</>
 							)}
-							<button
-								type={`button`}
-								className={`btn btn-${
-									!enabled ? `secondary` : `success`
-								} btn-sm float-start`}
-								onClick={!enabled ? activate : disactivate}
+							<form
+								action={
+									!auth?.data?.twoFactorTokenEnabled ? activate : disactivate
+								}
 							>
-								{enabledStr}
-							</button>
+								<button
+									type={`submit`}
+									className={`btn btn-${
+										!auth?.data?.twoFactorTokenEnabled ? `secondary` : `success`
+									} btn-sm float-start`}
+								>
+									{auth?.data?.twoFactorTokenEnabled ? "Enabled" : "Disabled"}
+								</button>
+							</form>
 						</div>
 					</div>
 				</Globalcontent>

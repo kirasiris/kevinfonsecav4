@@ -1,8 +1,6 @@
 "use client";
 import "react-calendar/dist/Calendar.css";
-import "../global.css";
-import "../admin.css";
-import "../app.css";
+import "@/src/css/admin.css";
 import AdminMenu from "@/components/admin/adminmenu";
 import { AuthProvider } from "@/helpers/globalContext";
 

@@ -1,75 +1,43 @@
-"use client";
 import { fetchurl } from "@/helpers/setTokenOnServer";
-import { useRouter } from "next/navigation";
-import { useContext, useState } from "react";
-import { toast } from "react-toastify";
-import AuthContext from "@/helpers/globalContext";
 import Globalcontent from "@/layout/content";
+import FormButtons from "@/components/global/formbuttons";
+import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 
-const VerifyTwoFactorAuthentication = ({ params, searchParams }) => {
-	const { auth } = useContext(AuthContext);
-	const router = useRouter();
+async function getAuthenticatedUser() {
+	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
+	return res;
+}
 
-	const [tokenData, setTokenData] = useState({
-		token: ``,
-	});
-	const { token } = tokenData;
+const VerifyTwoFactorAuthentication = async ({ params, searchParams }) => {
+	const auth = await getAuthenticatedUser();
 
-	const [verified, setVerified] = useState(false);
-	const [recoveryToken, setRecoveryToken] = useState(``);
-	const [error, setError] = useState(false);
-	const [btnText, setBtnText] = useState("Submit");
+	// Redirect if user is not logged in
+	(auth?.error?.statusCode === 401 || !auth?.data?.isOnline) &&
+		redirect(`/auth/login`);
 
-	const verifyTFA = async (e) => {
-		e.preventDefault();
-		try {
-			setBtnText("Submit...");
-			const userid = params.userid;
-			if (!userid) {
-				toast.error("There was an error, please try again");
-				router.push("/auth/profile");
-			}
+	const verifyTFA = async (formData) => {
+		"use server";
+		const rawFormData = {
+			token: formData.get("token"),
+		};
 
-			const res = await fetchurl(
-				`/auth/2fa/verify/${userid}`,
-				"PUT",
-				"no-cache",
-				{ ...tokenData, website: "beFree" }
-			);
-			setVerified(true);
-			setRecoveryToken(res?.data);
-			resetForm();
-			toast.success("2FA was successfully verified");
-			setBtnText(btnText);
-		} catch (err) {
-			console.log(err);
-			setError(true);
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
+		const userid = params.userid;
 
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return {
-				msg: err?.response?.statusText,
-				status: err?.response?.status,
-			};
+		if (!userid) {
+			redirect(`/auth/profile`);
 		}
-	};
 
-	const resetForm = () => {
-		setTokenData({
-			token: ``,
+		if (!rawFormData.token) {
+			console.log("Not token provided");
+			return;
+		}
+
+		await fetchurl(`/auth/2fa/verify/${userid}`, "PUT", "no-cache", {
+			...rawFormData,
+			website: "beFree",
 		});
+		revalidatePath(`/auth/verifytwofactorauth/660600aa29a40c04c35d6188`);
 	};
 
 	return (
@@ -81,7 +49,7 @@ const VerifyTwoFactorAuthentication = ({ params, searchParams }) => {
 							Please&nbsp;enter&nbsp;the&nbsp;2FA&nbsp;token&nbsp;given&nbsp;to&nbsp;you&nbsp;by&nbsp;your&nbsp;Authenticator&nbsp;app
 						</div>
 						<div className="card-body">
-							<form onSubmit={verifyTFA}>
+							<form action={verifyTFA}>
 								<div className="form-group">
 									<label htmlFor="token" className="form-label">
 										Token
@@ -90,13 +58,6 @@ const VerifyTwoFactorAuthentication = ({ params, searchParams }) => {
 										<input
 											id="token"
 											name="token"
-											value={token}
-											onChange={(e) => {
-												setTokenData({
-													...tokenData,
-													token: e.target.value,
-												});
-											}}
 											type="text"
 											className="form-control mb-3"
 											placeholder="012 345"
@@ -104,32 +65,22 @@ const VerifyTwoFactorAuthentication = ({ params, searchParams }) => {
 										/>
 									</div>
 								</div>
-								{verified && (
-									<>
-										<p>
-											Please keep this code in a safe but accessible area. This
-											is your <b>BACKUP</b> code:
-											<br />
-											<code>{recoveryToken}</code>
-											<br />
-											You can now close this window
-										</p>
-									</>
-								)}
-								<button
-									type="submit"
-									className="btn btn-secondary btn-sm float-start"
-									disabled={token?.length > 0 ? !true : !false}
-								>
-									{btnText}
-								</button>
-								<button
-									type="button"
-									className="btn btn-secondary btn-sm float-end"
-									onClick={resetForm}
-								>
-									Reset
-								</button>
+								{auth?.data?.twoFactorTokenEnabled &&
+									auth?.data?.twoFactorRecoveryToken !== "" &&
+									auth?.data?.twoFactorRecoveryToken !== undefined &&
+									auth?.data?.twoFactorRecoveryToken !== null && (
+										<>
+											<p>
+												Please keep this code in a safe but accessible area.
+												This is your <b>BACKUP</b> code:
+												<br />
+												<code>{auth?.data?.twoFactorRecoveryToken}</code>
+												<hr />
+												<b>You can now close this window</b>
+											</p>
+										</>
+									)}
+								<FormButtons />
 							</form>
 						</div>
 					</div>

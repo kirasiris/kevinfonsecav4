@@ -1,6 +1,5 @@
-import { AuthProvider } from "@/helpers/globalContext";
-import "../global.css";
-import "../app.css";
+import "@/src/css/global.css";
+import "@/src/css/app.css";
 import ErrorPage from "@/layout/errorpage";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 
@@ -12,12 +11,5 @@ async function getSetting(params) {
 export default async function Layout({ children }) {
 	const settings = await getSetting(`6519d7b34d26360354527e9a`);
 
-	return settings.data.maintenance === false ? (
-		<>
-			{/* <AuthProvider>{children}</AuthProvider> */}
-			{children}
-		</>
-	) : (
-		<ErrorPage />
-	);
+	return settings.data.maintenance === false ? children : <ErrorPage />;
 }

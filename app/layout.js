@@ -1,7 +1,7 @@
-import "./bootstrap.css";
-// import "./bootstrap.js";
-import "./global.css";
-import "./app.css";
+import "@/src/css/bootstrap.css";
+// import "@/src/js/bootstrap.js";
+import "@/src/css/global.css";
+import "@/src/css/app.css";
 import Head from "@/app/head";
 import Menu from "@/layout/menu";
 import Footer from "@/layout/footer";

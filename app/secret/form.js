@@ -4,13 +4,14 @@ import FormButtons from "@/components/global/formbuttons";
 import { revalidatePath } from "next/cache";
 
 const Form = async ({ params, searchParams }) => {
-	const createContact = async (formData) => {
+	const createSecret = async (formData) => {
 		"use server";
 		const rawFormData = {
 			age: formData.get("age"),
 			sex: formData.get("sex"),
-			nsfw: formData.get("nsfw"),
+			password: formData.get("password"),
 			text: formData.get("text"),
+			nsfw: formData.get("nsfw"),
 		};
 
 		await fetchurl(`/extras/secrets`, "POST", "no-cache", rawFormData);
@@ -24,7 +25,7 @@ const Form = async ({ params, searchParams }) => {
 
 	return (
 		<div className="d-grid gap-2 mb-4">
-			<form action={createContact}>
+			<form action={createSecret}>
 				<label htmlFor="age" className="form-label">
 					Age
 				</label>
@@ -45,6 +46,16 @@ const Form = async ({ params, searchParams }) => {
 					<option value={`female`}>Female</option>
 					<option value={`non-binary`}>Non-binary</option>
 				</select>
+				<label htmlFor="password" className="form-label">
+					Password
+				</label>
+				<input
+					id="password"
+					name="password"
+					type="password"
+					className="form-control mb-3"
+					placeholder="******"
+				/>
 				<label htmlFor="nsfw" className="form-label">
 					NSFW
 				</label>

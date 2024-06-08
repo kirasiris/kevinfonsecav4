@@ -1,73 +1,30 @@
-"use client";
 import { fetchurl } from "@/helpers/setTokenOnServer";
-import { useRouter } from "next/navigation";
-import { useState, useContext } from "react";
-import { toast } from "react-toastify";
-import AuthContext from "@/helpers/globalContext";
-import MyTextArea from "@/components/global/mytextarea";
+import { redirect } from "next/navigation";
+import MyTextArea from "@/components/global/myfinaltextarea";
+import FormButtons from "@/components/global/formbuttons";
 
-const CreateChangelog = () => {
-	const { auth } = useContext(AuthContext);
-	const router = useRouter();
+async function getAuthenticatedUser() {
+	const res = await fetchurl(`/auth/me`, "GET", "force-cache");
+	return res;
+}
 
-	// Redirect if not authenticated
-	!auth.isAuthenticated && router.push("/auth/login");
-
-	// Redirec if not founder
-	auth.isAuthenticated &&
-		!auth.user.role.includes("founder") &&
-		router.push("/dashboard");
-
-	const [changelogData, setChangelogData] = useState({
-		title: `Untitled`,
-		text: `No description`,
-		status: `draft`,
-		postType: [`enhancement`],
-		version: `1.0.0`,
-	});
-
-	const { title, text, status, postType, version } = changelogData;
-
-	const addChangelog = async (e) => {
-		e.preventDefault();
-		try {
-			await fetchurl(`/changelogs`, "POST", "no-cache", changelogData);
-			toast.success(`Item created`);
-			resetForm();
-			router.push(`/noadmin/changelogs`);
-		} catch (err) {
-			console.log(err);
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
-
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return { msg: err?.response?.statusText, status: err?.response?.status };
-		}
-	};
-
-	const resetForm = () => {
-		setChangelogData({
-			title: `Untitled`,
-			text: `No description`,
-			status: `draft`,
-			postType: [`enhancement`],
-			version: `1.0.0`,
-		});
+const CreateChangelog = async ({ params, searchParams }) => {
+	const auth = await getAuthenticatedUser();
+	const addChangelog = async (formData) => {
+		"use server";
+		const rawFormData = {
+			title: formData.get("title"),
+			text: formData.get("text"),
+			status: formData.get("status"),
+			postType: formData.get("postType"),
+			version: formData.get("version"),
+		};
+		await fetchurl(`/changelogs`, "POST", "no-cache", rawFormData);
+		redirect(`/noadmin/changelogs`);
 	};
 
 	return (
-		<form className="row" onSubmit={addChangelog}>
+		<form className="row" action={addChangelog}>
 			<div className="col">
 				<label htmlFor="blog-title" className="form-label">
 					Title
@@ -75,13 +32,7 @@ const CreateChangelog = () => {
 				<input
 					id="blog-title"
 					name="title"
-					value={title}
-					onChange={(e) => {
-						setChangelogData({
-							...changelogData,
-							title: e.target.value,
-						});
-					}}
+					defaultValue="Untitled"
 					type="text"
 					className="form-control mb-3"
 					placeholder=""
@@ -90,13 +41,13 @@ const CreateChangelog = () => {
 					Text
 				</label>
 				<MyTextArea
+					auth={auth}
 					id="text"
 					name="text"
-					value={text}
-					objectData={changelogData}
-					setObjectData={setChangelogData}
 					onModel="Changelog"
-					advancedTextEditor={false}
+					advancedTextEditor={true}
+					customPlaceholder="No description"
+					defaultValue="No description..."
 				/>
 				<label htmlFor="version" className="form-label">
 					Version
@@ -104,13 +55,7 @@ const CreateChangelog = () => {
 				<input
 					id="version"
 					name="version"
-					value={version}
-					onChange={(e) => {
-						setChangelogData({
-							...changelogData,
-							version: e.target.value,
-						});
-					}}
+					defaultValue="1.0.0"
 					type="text"
 					className="form-control mb-3"
 					placeholder=""
@@ -121,16 +66,7 @@ const CreateChangelog = () => {
 				<select
 					id="postType"
 					name="postType"
-					value={postType}
-					onChange={(e) => {
-						const selectedOptions = Array.from(e.target.selectedOptions).map(
-							(option) => option.value
-						);
-						setChangelogData({
-							...changelogData,
-							postType: selectedOptions,
-						});
-					}}
+					defaultValue="enhancement"
 					className="form-control"
 					multiple
 				>
@@ -149,13 +85,7 @@ const CreateChangelog = () => {
 				<select
 					id="status"
 					name="status"
-					value={status}
-					onChange={(e) => {
-						setChangelogData({
-							...changelogData,
-							status: e.target.value,
-						});
-					}}
+					defaultValue="draft"
 					className="form-control"
 				>
 					<option value={`draft`}>Draft</option>
@@ -164,20 +94,7 @@ const CreateChangelog = () => {
 					<option value={`scheduled`}>Scheduled</option>
 				</select>
 				<br />
-				<button
-					type="submit"
-					className="btn btn-secondary btn-sm float-start"
-					disabled={title.length > 0 && text.length > 0 ? !true : !false}
-				>
-					Submit
-				</button>
-				<button
-					type="button"
-					className="btn btn-secondary btn-sm float-end"
-					onClick={resetForm}
-				>
-					Reset
-				</button>
+				<FormButtons />
 			</div>
 		</form>
 	);

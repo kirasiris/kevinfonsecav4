@@ -1,290 +1,79 @@
-"use client";
 import { fetchurl } from "@/helpers/setTokenOnServer";
-import { useRouter } from "next/navigation";
-import { useState, useEffect, useContext } from "react";
-import { toast } from "react-toastify";
-import Single from "@/components/admin/snippets/single";
-import AuthContext from "@/helpers/globalContext";
 import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
-import AdminCardHeaderMenu from "@/components/admin/admincardheadermenu";
-import ClientNumericPagination from "@/layout/clientnumericpagination";
+import List from "@/components/admin/snippets/list";
+import { revalidatePath } from "next/cache";
 
-const AdminSnippetsScheduledIndex = () => {
-	const {
-		auth,
-		totalPages,
-		setTotalPages,
-		currentResults,
-		setCurrentResults,
-		totalResults,
-		setTotalResults,
-	} = useContext(AuthContext);
-	const router = useRouter();
+async function getSnippets(params) {
+	const res = await fetchurl(`/snippets${params}`, "GET", "no-cache");
+	return res;
+}
 
-	// Redirect if not authenticated
-	!auth.isAuthenticated && router.push("/auth/login");
-
-	// Redirec if not founder
-	auth.isAuthenticated &&
-		!auth.user.role.includes("founder") &&
-		router.push("/dashboard");
-
-	const [snippets, setSnippets] = useState([]);
-	const [page, setPage] = useState(1);
-	const [limit] = useState(10);
-	const [sortby] = useState(`-createdAt`);
-	const [params, setParams] = useState(
-		`?page=${page}&limit=${limit}&sort=${sortby}&status=scheduled`
+const AdminSnippetsScheduledIndex = async ({ params, searchParams }) => {
+	const snippets = await getSnippets(
+		`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}&status=scheduled`
 	);
-	const [keyword, setKeyword] = useState("");
-	const [list, setList] = useState([]);
-	const [loading, setLoading] = useState(true);
-
-	const fetchSnippets = async () => {
-		try {
-			const res = await fetchurl(`/snippets${params}`);
-			setSnippets(res?.data);
-			setTotalPages(res?.pagination?.totalpages);
-			setCurrentResults(res?.count);
-			setTotalResults({ ...totalResults, snippets: res?.countAll });
-			setPage(res?.pagination?.current);
-			setLoading(false);
-		} catch (err) {
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
-
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return {
-				msg: err?.response?.statusText,
-				status: err?.response?.status,
-			};
-		}
-	};
-
-	useEffect(() => {
-		fetchSnippets();
-	}, [router, params]);
-
-	useEffect(() => {
-		setList(snippets);
-	}, [snippets]);
-
-	useEffect(() => {
-		if (keyword !== "") {
-			const result = snippets.filter((object) => {
-				return object.title.toLowerCase().startsWith(keyword.toLowerCase());
-			});
-			setList(result);
-		} else {
-			setList(snippets);
-		}
-	}, [keyword]);
 
 	const draftIt = async (id) => {
-		try {
-			await fetchurl(`/snippets/${id}/draftit`, "PUT", "no-cache");
-			toast.success("Snippet drafted");
-			fetchSnippets();
-		} catch (err) {
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
-
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return {
-				msg: err?.response?.statusText,
-				status: err?.response?.status,
-			};
-		}
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/snippets/${id}/draftit`, "PUT", "no-cache");
+		revalidatePath(
+			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}&status=scheduled`
+		);
 	};
 
 	const publishIt = async (id) => {
-		try {
-			await fetchurl(`/snippets/${id}/publishit`, "PUT", "no-cache");
-			toast.success("Snippet published");
-			fetchSnippets();
-		} catch (err) {
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
-
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return {
-				msg: err?.response?.statusText,
-				status: err?.response?.status,
-			};
-		}
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/snippets/${id}/publishit`, "PUT", "no-cache");
+		revalidatePath(
+			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}&status=scheduled`
+		);
 	};
 
 	const trashIt = async (id) => {
-		try {
-			await fetchurl(`/snippets/${id}/trashit`, "PUT", "no-cache");
-			toast.success("Snippet trashed");
-			fetchSnippets();
-		} catch (err) {
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
-
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return {
-				msg: err?.response?.statusText,
-				status: err?.response?.status,
-			};
-		}
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/snippets/${id}/trashit`, "PUT", "no-cache");
+		revalidatePath(
+			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}&status=scheduled`
+		);
 	};
 
 	const scheduleIt = async (id) => {
-		try {
-			await fetchurl(`/snippets/${id}/scheduleit`, "PUT", "no-cache");
-			toast.success("Snippet scheduled");
-			fetchSnippets();
-		} catch (err) {
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
-
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return {
-				msg: err?.response?.statusText,
-				status: err?.response?.status,
-			};
-		}
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/snippets/${id}/scheduleit`, "PUT", "no-cache");
+		revalidatePath(
+			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}&status=scheduled`
+		);
 	};
 
 	const handleDelete = async (id) => {
-		try {
-			await fetchurl(`/snippets/${id}/permanently`, "DELETE", "no-cache");
-			toast.success("Snippet deleted");
-			fetchSnippets();
-		} catch (err) {
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
-
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return {
-				msg: err?.response?.statusText,
-				status: err?.response?.status,
-			};
-		}
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/snippets/${id}/permanently`, "DELETE", "no-cache");
+		revalidatePath(
+			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}&status=scheduled`
+		);
 	};
 
 	const handleTrashAll = async () => {
-		try {
-			await fetchurl(`/snippets/deleteall`, "PUT", "no-cache");
-			toast.success("Snippets trashed");
-			fetchSnippets();
-		} catch (err) {
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
-
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return {
-				msg: err?.response?.statusText,
-				status: err?.response?.status,
-			};
-		}
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/snippets/deleteall`, "PUT", "no-cache");
+		revalidatePath(
+			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}&status=scheduled`
+		);
 	};
 
 	const handleDeleteAll = async () => {
-		try {
-			await fetchurl(`/snippets/deleteall/permanently`, "DELETE", "no-cache");
-			toast.success("Snippets deleted");
-			fetchSnippets();
-		} catch (err) {
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
-
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return {
-				msg: err?.response?.statusText,
-				status: err?.response?.status,
-			};
-		}
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/snippets/deleteall/permanently`, "DELETE", "no-cache");
+		revalidatePath(
+			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}&status=scheduled`
+		);
 	};
 
 	return (
@@ -299,59 +88,21 @@ const AdminSnippetsScheduledIndex = () => {
 				categoryType="snippet"
 			/>
 			<div className="card rounded-0">
-				<AdminCardHeaderMenu
-					allLink={`/noadmin/snippets`}
+				<List
+					allLink="/noadmin/snippets"
 					pageText="Snippets"
-					currentResults={currentResults}
-					totalResults={totalResults.snippet}
-					addLink={`/noadmin/snippets/create`}
-					addLinkText={`snippet`}
+					addLink="/noadmin/snippets/create"
+					searchOn="/noadmin/snippets"
+					objects={snippets}
+					searchParams={searchParams}
+					handleDraft={draftIt}
+					handlePublish={publishIt}
+					handleTrash={trashIt}
+					handleSchedule={scheduleIt}
+					handleDelete={handleDelete}
 					handleTrashAllFunction={handleTrashAll}
 					handleDeleteAllFunction={handleDeleteAll}
-					keyword={keyword}
-					setKeyword={setKeyword}
 				/>
-				{list?.length > 0 ? (
-					<>
-						<ul className="list-group list-group-flush">
-							{list?.map((snippet) => (
-								<Single
-									key={snippet._id}
-									object={snippet}
-									handleDraft={draftIt}
-									handlePublish={publishIt}
-									handleTrash={trashIt}
-									handleSchedule={scheduleIt}
-									handleDelete={handleDelete}
-									objects={list}
-									setObjects={setSnippets}
-									setTotalResults={setTotalResults}
-								/>
-							))}
-							<li className="list-group-item">
-								{page} / {totalPages}
-							</li>
-						</ul>
-						<ClientNumericPagination
-							totalPages={totalPages || Math.ceil(list.length / limit)}
-							page={page}
-							limit={limit}
-							sortby={sortby}
-							siblings={1}
-							setParams={setParams}
-							postType="blog"
-							router={router}
-						/>
-					</>
-				) : (
-					<div
-						className={`alert alert-${
-							loading ? "primary" : "danger"
-						} rounded-0 m-0 border-0`}
-					>
-						{loading ? "Loading" : "Nothing found"}
-					</div>
-				)}
 			</div>
 		</>
 	);

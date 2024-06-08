@@ -27,7 +27,7 @@ const List = ({
 										<li className="list-group-item">
 											<Link
 												href={{
-													pathname: `/forum/programming/asharp`,
+													pathname: `/forum/programming/assembly`,
 													query: {
 														page: 1,
 														limit: 10,
@@ -37,13 +37,13 @@ const List = ({
 												passHref
 												legacyBehavior
 											>
-												<a className="btn btn-sm btn-link">A#</a>
+												<a className="btn btn-sm btn-link">Assembly</a>
 											</Link>
 										</li>
 										<li className="list-group-item">
 											<Link
 												href={{
-													pathname: `/forum/programming/azero`,
+													pathname: `/forum/programming/c`,
 													query: {
 														page: 1,
 														limit: 10,
@@ -53,13 +53,13 @@ const List = ({
 												passHref
 												legacyBehavior
 											>
-												<a className="btn btn-sm btn-link">A-0</a>
+												<a className="btn btn-sm btn-link">C</a>
 											</Link>
 										</li>
 										<li className="list-group-item">
 											<Link
 												href={{
-													pathname: `/forum/programming/aplus`,
+													pathname: `/forum/programming/cplus`,
 													query: {
 														page: 1,
 														limit: 10,
@@ -69,13 +69,13 @@ const List = ({
 												passHref
 												legacyBehavior
 											>
-												<a className="btn btn-sm btn-link">A+</a>
+												<a className="btn btn-sm btn-link">C+</a>
 											</Link>
 										</li>
 										<li className="list-group-item">
 											<Link
 												href={{
-													pathname: `/forum/programming/abab`,
+													pathname: `/forum/programming/csharp`,
 													query: {
 														page: 1,
 														limit: 10,
@@ -85,13 +85,13 @@ const List = ({
 												passHref
 												legacyBehavior
 											>
-												<a className="btn btn-sm btn-link">ABAB</a>
+												<a className="btn btn-sm btn-link">C#</a>
 											</Link>
 										</li>
 										<li className="list-group-item">
 											<Link
 												href={{
-													pathname: `/forum/programming/abc`,
+													pathname: `/forum/programming/cobol`,
 													query: {
 														page: 1,
 														limit: 10,
@@ -101,45 +101,13 @@ const List = ({
 												passHref
 												legacyBehavior
 											>
-												<a className="btn btn-sm btn-link">ABC</a>
+												<a className="btn btn-sm btn-link">Cobol</a>
 											</Link>
 										</li>
 										<li className="list-group-item">
 											<Link
 												href={{
-													pathname: `/forum/programming/abcalgol`,
-													query: {
-														page: 1,
-														limit: 10,
-														sort: `-createdAt`,
-													},
-												}}
-												passHref
-												legacyBehavior
-											>
-												<a className="btn btn-sm btn-link">ABC ALGOL</a>
-											</Link>
-										</li>
-										<li className="list-group-item">
-											<Link
-												href={{
-													pathname: `/forum/programming/acc`,
-													query: {
-														page: 1,
-														limit: 10,
-														sort: `-createdAt`,
-													},
-												}}
-												passHref
-												legacyBehavior
-											>
-												<a className="btn btn-sm btn-link">ACC</a>
-											</Link>
-										</li>
-										<li className="list-group-item">
-											<Link
-												href={{
-													pathname: `/forum/programming/accent`,
+													pathname: `/forum/programming/delphi`,
 													query: {
 														page: 1,
 														limit: 10,
@@ -150,14 +118,14 @@ const List = ({
 												legacyBehavior
 											>
 												<a className="btn btn-sm btn-link">
-													Accent (Rational Synergy)
+													DELPHI/OBJECT PASCAL
 												</a>
 											</Link>
 										</li>
 										<li className="list-group-item">
 											<Link
 												href={{
-													pathname: `/forum/programming/ace`,
+													pathname: `/forum/programming/fortran`,
 													query: {
 														page: 1,
 														limit: 10,
@@ -167,13 +135,13 @@ const List = ({
 												passHref
 												legacyBehavior
 											>
-												<a className="btn btn-sm btn-link">ACE / DASL</a>
+												<a className="btn btn-sm btn-link">FORTRAN</a>
 											</Link>
 										</li>
 										<li className="list-group-item">
 											<Link
 												href={{
-													pathname: `/forum/programming/action`,
+													pathname: `/forum/programming/go`,
 													query: {
 														page: 1,
 														limit: 10,
@@ -183,13 +151,13 @@ const List = ({
 												passHref
 												legacyBehavior
 											>
-												<a className="btn btn-sm btn-link">Action!</a>
+												<a className="btn btn-sm btn-link">GO</a>
 											</Link>
 										</li>
 										<li className="list-group-item">
 											<Link
 												href={{
-													pathname: `/forum/programming/actionscript`,
+													pathname: `/forum/programming/java`,
 													query: {
 														page: 1,
 														limit: 10,
@@ -199,13 +167,13 @@ const List = ({
 												passHref
 												legacyBehavior
 											>
-												<a className="btn btn-sm btn-link">Action Script</a>
+												<a className="btn btn-sm btn-link">JAVA</a>
 											</Link>
 										</li>
 										<li className="list-group-item">
 											<Link
 												href={{
-													pathname: `/forum/programming/actor`,
+													pathname: `/forum/programming/javascript`,
 													query: {
 														page: 1,
 														limit: 10,
@@ -215,7 +183,39 @@ const List = ({
 												passHref
 												legacyBehavior
 											>
-												<a className="btn btn-sm btn-link">Actor</a>
+												<a className="btn btn-sm btn-link">JAVASCRIPT</a>
+											</Link>
+										</li>
+										<li className="list-group-item">
+											<Link
+												href={{
+													pathname: `/forum/programming/kotlin`,
+													query: {
+														page: 1,
+														limit: 10,
+														sort: `-createdAt`,
+													},
+												}}
+												passHref
+												legacyBehavior
+											>
+												<a className="btn btn-sm btn-link">KOTLIN</a>
+											</Link>
+										</li>
+										<li className="list-group-item">
+											<Link
+												href={{
+													pathname: `/forum/programming/matlab`,
+													query: {
+														page: 1,
+														limit: 10,
+														sort: `-createdAt`,
+													},
+												}}
+												passHref
+												legacyBehavior
+											>
+												<a className="btn btn-sm btn-link">MATLAB</a>
 											</Link>
 										</li>
 									</ul>
@@ -225,7 +225,7 @@ const List = ({
 										<li className="list-group-item">
 											<Link
 												href={{
-													pathname: `/forum/programming/asharp`,
+													pathname: `/forum/programming/php`,
 													query: {
 														page: 1,
 														limit: 10,
@@ -235,7 +235,119 @@ const List = ({
 												passHref
 												legacyBehavior
 											>
-												<a className="btn btn-sm btn-link">A#</a>
+												<a className="btn btn-sm btn-link">PHP</a>
+											</Link>
+										</li>
+										<li className="list-group-item">
+											<Link
+												href={{
+													pathname: `/forum/programming/python`,
+													query: {
+														page: 1,
+														limit: 10,
+														sort: `-createdAt`,
+													},
+												}}
+												passHref
+												legacyBehavior
+											>
+												<a className="btn btn-sm btn-link">PYTHON</a>
+											</Link>
+										</li>
+										<li className="list-group-item">
+											<Link
+												href={{
+													pathname: `/forum/programming/ruby`,
+													query: {
+														page: 1,
+														limit: 10,
+														sort: `-createdAt`,
+													},
+												}}
+												passHref
+												legacyBehavior
+											>
+												<a className="btn btn-sm btn-link">RUBY</a>
+											</Link>
+										</li>
+										<li className="list-group-item">
+											<Link
+												href={{
+													pathname: `/forum/programming/rust`,
+													query: {
+														page: 1,
+														limit: 10,
+														sort: `-createdAt`,
+													},
+												}}
+												passHref
+												legacyBehavior
+											>
+												<a className="btn btn-sm btn-link">RUST</a>
+											</Link>
+										</li>
+										<li className="list-group-item">
+											<Link
+												href={{
+													pathname: `/forum/programming/sql`,
+													query: {
+														page: 1,
+														limit: 10,
+														sort: `-createdAt`,
+													},
+												}}
+												passHref
+												legacyBehavior
+											>
+												<a className="btn btn-sm btn-link">SQL</a>
+											</Link>
+										</li>
+										<li className="list-group-item">
+											<Link
+												href={{
+													pathname: `/forum/programming/swift`,
+													query: {
+														page: 1,
+														limit: 10,
+														sort: `-createdAt`,
+													},
+												}}
+												passHref
+												legacyBehavior
+											>
+												<a className="btn btn-sm btn-link">SWIFT</a>
+											</Link>
+										</li>
+										<li className="list-group-item">
+											<Link
+												href={{
+													pathname: `/forum/programming/scratch`,
+													query: {
+														page: 1,
+														limit: 10,
+														sort: `-createdAt`,
+													},
+												}}
+												passHref
+												legacyBehavior
+											>
+												<a className="btn btn-sm btn-link">SCRATCH</a>
+											</Link>
+										</li>
+										<li className="list-group-item">
+											<Link
+												href={{
+													pathname: `/forum/programming/visual-basics`,
+													query: {
+														page: 1,
+														limit: 10,
+														sort: `-createdAt`,
+													},
+												}}
+												passHref
+												legacyBehavior
+											>
+												<a className="btn btn-sm btn-link">VISUAL BASICS</a>
 											</Link>
 										</li>
 									</ul>

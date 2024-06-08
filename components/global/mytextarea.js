@@ -95,23 +95,25 @@ const MyTextArea = ({
 						 */
 						"image.beforeUpload": async (images) => {
 							console.log("Auth from image.beforeUpload event", auth);
-							const data = new FormData();
-							data.append("userId", auth?.user?._id);
-							data.append("username", auth?.user?.username);
-							data.append("userEmail", auth?.user?.email);
-							data.append("onModel", onModel);
-							data.append("file", images[0]);
-							await axios.put(
-								`http://localhost:5000/api/v1/uploads/uploadobject`,
-								data,
-								{
-									headers: {
-										accept: "application/json",
-										Authorization: `Bearer ${auth.token}`,
-										"Content-Type": `multipart/form-data; boundary=${data._boundary}`,
-									},
-								}
-							);
+							if (auth !== undefined) {
+								const data = new FormData();
+								data.append("userId", auth?.user?._id);
+								data.append("username", auth?.user?.username);
+								data.append("userEmail", auth?.user?.email);
+								data.append("onModel", onModel);
+								data.append("file", images[0]);
+								await axios.put(
+									`http://localhost:5000/api/v1/uploads/uploadobject`,
+									data,
+									{
+										headers: {
+											accept: "application/json",
+											Authorization: `Bearer ${auth.token}`,
+											"Content-Type": `multipart/form-data; boundary=${data._boundary}`,
+										},
+									}
+								);
+							}
 						},
 						"image.uploaded": function (response) {
 							// Image was uploaded to the server.

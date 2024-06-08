@@ -1,100 +1,52 @@
-"use client";
-import { fetchurl } from "@/helpers/setTokenOnServer";
-import { useRouter } from "next/navigation";
-import { useState, useContext } from "react";
-import { toast } from "react-toastify";
-import AuthContext from "@/helpers/globalContext";
-import AdminSidebar from "@/components/admin/adminsidebar";
-import MyTextArea from "@/components/global/mytextarea";
+import { fetchurl, getAuthTokenOnServer } from "@/helpers/setTokenOnServer";
+import { redirect } from "next/navigation";
+import AdminSidebar from "@/components/admin/myfinaladminsidebar";
+import MyTextArea from "@/components/global/myfinaltextarea";
+import FormButtons from "@/components/global/formbuttons";
 
-const CreateLesson = ({ params }) => {
-	const { auth, files } = useContext(AuthContext);
-	const router = useRouter();
+async function getAuthenticatedUser() {
+	const res = await fetchurl(`/auth/me`, "GET", "force-cache");
+	return res;
+}
 
-	// Redirect if not authenticated
-	!auth.isAuthenticated && router.push("/auth/login");
+async function getFiles(params) {
+	const res = await fetchurl(`/files${params}`, "GET", "force-cache");
+	return res;
+}
 
-	// Redirec if not founder
-	auth.isAuthenticated &&
-		!auth.user.role.includes("founder") &&
-		router.push("/dashboard");
+const CreateLesson = async ({ params, searchParams }) => {
+	const token = await getAuthTokenOnServer();
+	const auth = await getAuthenticatedUser();
+	const getFilesData = getFiles(`?page=1&limit=100&sort=-createdAt`);
 
-	const [lessonData, setLessonData] = useState({
-		title: `Untitled`,
-		text: `No description`,
-		featured: true,
-		commented: true,
-		embedding: true,
-		category: undefined,
-		password: ``,
-		status: `draft`,
-		free_preview: true,
-		duration: 0,
-		orderingNumber: 1,
-	});
-	const {
-		title,
-		text,
-		featured,
-		commented,
-		embedding,
-		category,
-		password,
-		status,
-		free_preview,
-		duration,
-		orderingNumber,
-	} = lessonData;
+	const [files] = await Promise.all([getFilesData]);
 
-	const addLesson = async (e) => {
-		e.preventDefault();
-		try {
-			await fetchurl(`/videos`, "POST", "no-cache", {
-				...lessonData,
-				resourceId: params.id,
-				files: { video_url: files?.selected?._id },
-				onModel: "Course",
-			});
-			router.push(`/noadmin/courses/read/${params.id}`);
-		} catch (err) {
-			console.log(err);
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
-
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return { msg: err?.response?.statusText, status: err?.response?.status };
-		}
-	};
-
-	const resetForm = () => {
-		setLessonData({
-			title: `Untitled`,
-			text: `No description`,
-			featured: true,
-			commented: true,
-			embedding: true,
-			category: undefined,
-			password: ``,
-			status: `draft`,
-			free_preview: true,
-			duration: 0,
-			orderingNumber: 1,
+	const addLesson = async (formData) => {
+		"use server";
+		const rawFormData = {
+			title: formData.get("title"),
+			text: formData.get("text"),
+			featured: formData.get("featured"),
+			commented: formData.get("commented"),
+			embedding: formData.get("embedding"),
+			category: formData.get("category"),
+			password: formData.get("password"),
+			status: formData.get("status"),
+			free_preview: formData.get("free_preview"),
+			duration: formData.get("duration"),
+			orderingNumber: formData.get("orderingNumber"),
+			files: { video_url: formData.get("file") },
+		};
+		await fetchurl(`/videos`, "POST", "no-cache", {
+			...rawFormData,
+			resourceId: params.id,
+			onModel: "Course",
 		});
+		redirect(`/noadmin/courses/read/${params.id}`);
 	};
 
 	return (
-		<form className="row" onSubmit={addLesson}>
+		<form className="row" action={addLesson}>
 			<div className="col">
 				<label htmlFor="blog-title" className="form-label">
 					Title
@@ -102,13 +54,7 @@ const CreateLesson = ({ params }) => {
 				<input
 					id="blog-title"
 					name="title"
-					value={title}
-					onChange={(e) => {
-						setLessonData({
-							...lessonData,
-							title: e.target.value,
-						});
-					}}
+					defaultValue="Untitled"
 					type="text"
 					className="form-control mb-3"
 					placeholder=""
@@ -117,13 +63,13 @@ const CreateLesson = ({ params }) => {
 					Text
 				</label>
 				<MyTextArea
+					auth={auth}
 					id="text"
 					name="text"
-					value={text}
-					objectData={lessonData}
-					setObjectData={setLessonData}
-					onModel="video"
-					advancedTextEditor={false}
+					onModel="Lesson"
+					advancedTextEditor={true}
+					customPlaceholder="No description"
+					defaultValue="No description..."
 				/>
 				<div className="row">
 					<div className="col">
@@ -133,13 +79,7 @@ const CreateLesson = ({ params }) => {
 						<select
 							id="free_preview"
 							name="free_preview"
-							value={free_preview}
-							onChange={(e) => {
-								setLessonData({
-									...lessonData,
-									free_preview: e.target.value,
-								});
-							}}
+							defaultValue={true}
 							className="form-control"
 						>
 							<option value={true}>Yes</option>
@@ -153,13 +93,7 @@ const CreateLesson = ({ params }) => {
 						<input
 							id="duration"
 							name="duration"
-							value={duration}
-							onChange={(e) => {
-								setLessonData({
-									...lessonData,
-									duration: e.target.value,
-								});
-							}}
+							defaultValue={0}
 							type="text"
 							className="form-control mb-3"
 							placeholder=""
@@ -172,13 +106,7 @@ const CreateLesson = ({ params }) => {
 						<input
 							id="orderingNumber"
 							name="orderingNumber"
-							value={orderingNumber}
-							onChange={(e) => {
-								setLessonData({
-									...lessonData,
-									orderingNumber: e.target.value,
-								});
-							}}
+							defaultValue={1}
 							type="text"
 							className="form-control mb-3"
 							placeholder="Here goes the #number of object within list"
@@ -190,36 +118,24 @@ const CreateLesson = ({ params }) => {
 				<AdminSidebar
 					displayCategoryField={false}
 					displayAvatar={true}
-					avatar={files?.selected?._id}
-					status={status}
+					// avatar={files?.selected?._id}
+					status="draft"
 					fullWidth={false}
-					password={password}
-					featured={featured}
-					commented={commented}
-					embedding={embedding}
-					github={false}
+					password=""
+					featured={true}
+					commented={true}
+					embedding={true}
+					github_readme={""}
 					category={undefined}
 					categories={[]}
-					objectData={lessonData}
-					setObjectData={setLessonData}
 					multipleFiles={false}
 					onModel={"Lesson"}
+					files={files}
+					auth={auth}
+					token={token}
 				/>
 				<br />
-				<button
-					type="submit"
-					className="btn btn-secondary btn-sm float-start"
-					disabled={title.length > 0 && text.length > 0 ? !true : !false}
-				>
-					Submit
-				</button>
-				<button
-					type="button"
-					className="btn btn-secondary btn-sm float-end"
-					onClick={resetForm}
-				>
-					Reset
-				</button>
+				<FormButtons />
 			</div>
 		</form>
 	);

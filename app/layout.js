@@ -17,28 +17,39 @@ async function getSetting(params) {
 	return res;
 }
 
+async function getMenus(params) {
+	const res = await fetchurl(`/pages${params}`, "GET", "default");
+	return res;
+}
+
 export default async function RootLayout({ children }) {
 	const auth = await getAuthenticatedUser();
 	const settings = await getSetting(`6519d7b34d26360354527e9a`);
+	const menus = await getMenus(`?page=1&status=published`);
 
 	return (
 		<html lang="en">
 			<Head
 				auth={auth}
-				title={settings.data.title}
-				description={settings.data.text}
-				favicon={settings.data.favicon}
-				canonical={settings.data.site_url}
+				title={settings?.data?.title}
+				description={settings?.data?.text}
+				favicon={settings?.data?.favicon}
+				canonical={settings?.data?.site_url}
 			/>
 			<body>
 				<Menu
 					auth={auth}
-					title={settings.data.title}
-					logo={settings.data.logo}
-					canonical={settings.data.site_url}
+					title={settings?.data?.title}
+					logo={settings?.data?.logo}
+					canonical={settings?.data?.site_url}
+					menus={menus.data}
 				/>
 				<main>{children}</main>
-				<Footer auth={auth} />
+				<Footer
+					auth={auth}
+					canonical={settings?.data?.site_url}
+					menus={menus.data}
+				/>
 			</body>
 		</html>
 	);

@@ -1,6 +1,7 @@
 "use client";
 import _ from "lodash";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const NumericPagination = ({
 	totalPages,
@@ -11,7 +12,9 @@ const NumericPagination = ({
 	decrypt = false,
 	siblings,
 	postType = "",
+	isAdmin = true,
 }) => {
+	const router = useRouter();
 	// If query postType is found
 	const comesPostType =
 		postType !== "" && postType !== undefined ? `&postType=${postType}` : "";
@@ -26,8 +29,6 @@ const NumericPagination = ({
 	if (page <= totalPages) {
 		pageNo = page;
 	} else {
-		// setParams(`?page=${totalPages}&limit=${limit}${newParams}`);
-		// router.push(`?page=${totalPages}&limit=${limit}${newParams}`);
 		pageNo = page;
 	}
 
@@ -62,8 +63,36 @@ const NumericPagination = ({
 
 	let array = paginationRange(siblings);
 
+	const handlePageLimit = (value) => {
+		router.push(`?page=${pageNo}&limit=${value}${newParams}`);
+	};
+
+	const selectLimit = () => {
+		return (
+			<select
+				onChange={(e) => handlePageLimit(e.target.value)}
+				className="form-select form-select-sm d-none d-md-block d-lg-block d-xl-block d-xxl-block p-2"
+			>
+				<option value={1}>1</option>
+				<option value={3}>3</option>
+				<option value={5}>5</option>
+				<option value={10}>10</option>
+				<option value={15}>15</option>
+				<option value={20}>20</option>
+				<option value={25}>25</option>
+				<option value={50}>50</option>
+				<option value={100}>100</option>
+				<option value={250}>250</option>
+				<option value={500}>500</option>
+				<option value={750}>750</option>
+				<option value={1000}>1000</option>
+			</select>
+		);
+	};
+
 	return (
 		<div className="pagination-container d-flex align-items-center justify-content-end">
+			{isAdmin && selectLimit()}
 			<ul className="pagination justify-content-end m-0 my-1 mx-1">
 				<li className="page-item">
 					<Link
@@ -71,7 +100,7 @@ const NumericPagination = ({
 						passHref
 						legacyBehavior
 					>
-						<a className="page-link">&laquo;</a>
+						<a className="page-link">&laquo;&nbsp;First</a>
 					</Link>
 				</li>
 				<li className="page-item">
@@ -80,7 +109,7 @@ const NumericPagination = ({
 						passHref
 						legacyBehavior
 					>
-						<a className="page-link">&lsaquo;</a>
+						<a className="page-link">&lsaquo;&nbsp;Previous</a>
 					</Link>
 				</li>
 
@@ -88,8 +117,8 @@ const NumericPagination = ({
 					return (
 						<li
 							key={index}
-							className={`page-item ${
-								Number(index) === Number(pageNo) ? "active" : ""
+							className={`page-item${
+								Number(index) === Number(pageNo) ? " active" : ""
 							}`}
 						>
 							{index === "&laquo;" ? (
@@ -98,7 +127,11 @@ const NumericPagination = ({
 									passHref
 									legacyBehavior
 								>
-									<a className="page-link">{index}</a>
+									<a
+										className={`page-link${index === "..." ? " disabled" : ""}`}
+									>
+										{index}
+									</a>
 								</Link>
 							) : index === "&lsaquo;" ? (
 								pageNo !== 1 && (
@@ -107,7 +140,13 @@ const NumericPagination = ({
 										passHref
 										legacyBehavior
 									>
-										<a className="page-link">{index}</a>
+										<a
+											className={`page-link${
+												index === "..." ? " disabled" : ""
+											}`}
+										>
+											{index}
+										</a>
 									</Link>
 								)
 							) : index === "&rsaquo;" ? (
@@ -117,7 +156,13 @@ const NumericPagination = ({
 										passHref
 										legacyBehavior
 									>
-										<a className="page-link">{index}</a>
+										<a
+											className={`page-link${
+												index === "..." ? " disabled" : ""
+											}`}
+										>
+											{index}
+										</a>
 									</Link>
 								)
 							) : index === "&raquo;" ? (
@@ -126,7 +171,11 @@ const NumericPagination = ({
 									passHref
 									legacyBehavior
 								>
-									<a className="page-link">{index}</a>
+									<a
+										className={`page-link${index === "..." ? " disabled" : ""}`}
+									>
+										{index}
+									</a>
 								</Link>
 							) : (
 								<Link
@@ -134,7 +183,11 @@ const NumericPagination = ({
 									passHref
 									legacyBehavior
 								>
-									<a className="page-link">{index}</a>
+									<a
+										className={`page-link${index === "..." ? " disabled" : ""}`}
+									>
+										{index}
+									</a>
 								</Link>
 							)}
 						</li>
@@ -146,7 +199,7 @@ const NumericPagination = ({
 						passHref
 						legacyBehavior
 					>
-						<a className="page-link">&rsaquo;</a>
+						<a className="page-link">&rsaquo;&nbsp;Next</a>
 					</Link>
 				</li>
 				<li className="page-item">
@@ -155,7 +208,7 @@ const NumericPagination = ({
 						passHref
 						legacyBehavior
 					>
-						<a className="page-link">&raquo;</a>
+						<a className="page-link">&raquo;&nbsp;Last</a>
 					</Link>
 				</li>
 			</ul>

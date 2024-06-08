@@ -24,24 +24,24 @@ const ChangelogRead = async ({ params }) => {
 
 	return (
 		<Suspense fallback={<Loading />}>
-			<Header title={changelog.data.title} />
+			<Header title={changelog?.data?.title} />
 			<div className="container">
 				<div className="row">
 					<div className={`col-lg-12`}>
 						<article>
 							<header className="mb-4">
-								<h1>{changelog.data.title}</h1>
+								<h1>{changelog?.data?.title}</h1>
 								<div className="text-muted fst-italic mb-2">
-									Posted on {changelog.data.createdAt} by{" "}
-									{changelog.data.user.username}
+									Posted on {changelog?.data?.createdAt} by{" "}
+									{changelog?.data?.user.username}
 								</div>
 							</header>
 							<section className="mb-5">
 								<ParseHtml text={changelog?.data?.text} />
 								<AuthorBox author={changelog?.data?.user} />
 								<CommentBox
-									auth={auth.data}
-									authorization={auth.authorizationTokens}
+									auth={auth?.data}
+									authorization={auth?.authorizationTokens}
 									user={changelog?.data?.user}
 									postId={changelog?.data?._id}
 									secondPostId={changelog?.data?._id}

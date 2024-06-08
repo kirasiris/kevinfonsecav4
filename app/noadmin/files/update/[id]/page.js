@@ -1,114 +1,36 @@
-"use client";
 import { fetchurl } from "@/helpers/setTokenOnServer";
-import { useParams, useRouter } from "next/navigation";
-import { useState, useEffect, useContext, useRef } from "react";
-import { toast } from "react-toastify";
-import AuthContext from "@/helpers/globalContext";
-import MyTextArea from "@/components/global/mytextarea";
+import { redirect } from "next/navigation";
+import MyTextArea from "@/components/global/myfinaltextarea";
 import Image from "next/image";
-import Plyr from "plyr";
+// import Plyr from "plyr";
+import FormButtons from "@/components/global/formbuttons";
 
-const UpdateFile = () => {
-	const { auth } = useContext(AuthContext);
-	const router = useRouter();
+async function getAuthenticatedUser() {
+	const res = await fetchurl(`/auth/me`, "GET", "force-cache");
+	return res;
+}
 
-	// Redirect if not authenticated
-	!auth.isAuthenticated && router.push("/auth/login");
+async function getFile(params) {
+	const res = await fetchurl(`/files${params}`, "GET", "no-cache");
+	return res;
+}
 
-	// Redirec if not founder
-	auth.isAuthenticated &&
-		!auth.user.role.includes("founder") &&
-		router.push("/dashboard");
+const UpdateFile = async ({ params, searchParams }) => {
+	const file = await getFile(`/${params.id}`);
 
-	const [fileData, setFileData] = useState({
-		title: `Untitled`,
-		caption: "",
-		altText: "",
-		text: "No description",
-	});
-	const { title, caption, altText, text } = fileData;
+	const auth = await getAuthenticatedUser();
 
-	const [file, setFile] = useState(null);
-	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState(false);
-
-	const { id } = useParams();
-	const fileId = id;
-
-	useEffect(() => {
-		const fetchFile = async () => {
-			try {
-				const res = await fetchurl(`/files/${fileId}`, "GET", "no-cache");
-				setFile(res?.data);
-				setFileData({
-					title: res?.data?.title,
-					caption: res?.data?.caption,
-					altText: res?.data?.altText,
-					text: res?.data?.text,
-				});
-				setLoading(false);
-			} catch (err) {
-				console.log(err);
-				// const error = err.response.data.message;
-				const error = err?.response?.data?.error?.errors;
-				const errors = err?.response?.data?.errors;
-
-				if (error) {
-					// dispatch(setAlert(error, 'danger'));
-					error &&
-						Object.entries(error).map(([, value]) =>
-							toast.error(value.message)
-						);
-				}
-
-				if (errors) {
-					errors.forEach((error) => toast.error(error.msg));
-				}
-
-				toast.error(err?.response?.statusText);
-				return {
-					msg: err?.response?.statusText,
-					status: err?.response?.status,
-				};
-			}
+	const upgradeFile = async (formData) => {
+		"use server";
+		const rawFormData = {
+			title: formData.get("title"),
+			caption: formData.get("caption"),
+			altText: formData.get("altText"),
+			text: formData.get("text"),
 		};
-		fetchFile();
-	}, [fileId]);
 
-	const upgradeFile = async (e) => {
-		e.preventDefault();
-		try {
-			await fetchurl(`/files/${file._id}`, "PUT", "no-cache", fileData);
-			toast.success(`Item updated`);
-			router.push(`/noadmin/files`);
-		} catch (err) {
-			console.log(err);
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
-
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return { msg: err?.response?.statusText, status: err?.response?.status };
-		}
-	};
-
-	const resetForm = () => {
-		setFileData({
-			title: `Untitled`,
-			caption: "",
-			altText: "",
-			text: "No description",
-		});
+		await fetchurl(`/files/${params.id}`, "PUT", "no-cache", rawFormData);
+		redirect("/noadmin/files");
 	};
 
 	/*
@@ -118,10 +40,10 @@ const UpdateFile = () => {
 	 */
 	const imgObj = ({ file }) => {
 		return (
-			<figure title={file.title}>
+			<figure title={file?.data?.title}>
 				<Image
 					src={
-						file?.location?.secure_location ||
+						file?.data?.location?.secure_location ||
 						`https://source.unsplash.com/random/188x188`
 					}
 					alt={file.title}
@@ -141,8 +63,8 @@ const UpdateFile = () => {
 	const pdfObj = ({ file }) => {
 		return (
 			<object
-				data={file?.location?.secure_location}
-				type={`${file?.format_type}/${file?.format}`}
+				data={file?.data?.location?.secure_location}
+				type={`${file?.data?.format_type}/${file?.data?.format}`}
 				width="100%"
 				height="100%"
 			>
@@ -158,38 +80,36 @@ const UpdateFile = () => {
 	 * VIDEO OBJECT
 	 *
 	 */
-	const videoRef = useRef(null);
+	// const videoRef = useRef(null);
 
-	useEffect(() => {
-		const player = new Plyr(videoRef.current);
-		return () => {
-			player.destroy();
-		};
-	}, [fileId]);
+	// useEffect(() => {
+	// 	const player = new Plyr(videoRef.current);
+	// 	return () => {
+	// 		player.destroy();
+	// 	};
+	// }, [fileId]);
 
 	const vidObj = ({ file }) => {
 		return (
-			<video ref={videoRef} title={file.title} controls>
+			<video
+				// ref={videoRef}
+				title={file?.data?.title}
+				controls
+			>
 				<source
-					src={file?.location?.secure_location}
-					type={`${file?.format_type}/${file?.format}`}
+					src={file?.data?.location?.secure_location}
+					type={`${file?.data?.format_type}/${file?.data?.format}`}
 				/>
 			</video>
 		);
 	};
 
-	return loading || file === null || file === undefined ? (
-		error ? (
-			<>Not found</>
-		) : (
-			<>Loading...</>
-		)
-	) : (
-		<form className="row" onSubmit={upgradeFile}>
+	return (
+		<form className="row" action={upgradeFile}>
 			<div className="col">
-				{file.format_type === "image" && imgObj({ file })}
-				{file.format_type === "application" && pdfObj({ file })}
-				{file.format_type === "video" && vidObj({ file })}
+				{file?.data?.format_type === "image" && imgObj({ file })}
+				{file?.data?.format_type === "application" && pdfObj({ file })}
+				{file?.data?.format_type === "video" && vidObj({ file })}
 			</div>
 			<div className="col">
 				<label htmlFor="file-title" className="form-label">
@@ -198,13 +118,7 @@ const UpdateFile = () => {
 				<input
 					id="file-title"
 					name="title"
-					value={title}
-					onChange={(e) => {
-						setFileData({
-							...fileData,
-							title: e.target.value,
-						});
-					}}
+					defaultValue={file?.data?.title}
 					type="text"
 					className="form-control mb-3"
 					placeholder=""
@@ -212,33 +126,22 @@ const UpdateFile = () => {
 				<label htmlFor="file-caption" className="form-label">
 					Caption
 				</label>
-				<textarea
+				<MyTextArea
+					auth={auth}
 					id="file-caption"
 					name="caption"
-					onChange={(e) => {
-						setFileData({
-							...fileData,
-							caption: e.target.value,
-						});
-					}}
-					className="form-control"
-					placeholder=""
-				>
-					{caption}
-				</textarea>
+					onModel="File"
+					advancedTextEditor={false}
+					customPlaceholder="No description"
+					defaultValue={file?.data?.caption}
+				/>
 				<label htmlFor="file-alt-text" className="form-label">
 					Alt text
 				</label>
 				<input
 					id="file-alt-text"
 					name="altText"
-					value={altText}
-					onChange={(e) => {
-						setFileData({
-							...fileData,
-							altText: e.target.value,
-						});
-					}}
+					defaultValue={file?.data?.altText}
 					type="text"
 					className="form-control mb-3"
 					placeholder=""
@@ -247,13 +150,13 @@ const UpdateFile = () => {
 					Text
 				</label>
 				<MyTextArea
+					auth={auth}
 					id="text"
 					name="text"
-					value={text}
-					objectData={fileData}
-					setObjectData={setFileData}
 					onModel="File"
 					advancedTextEditor={false}
+					customPlaceholder="No description"
+					defaultValue={file?.data?.text}
 				/>
 				<label htmlFor="file-url" className="form-label">
 					URL
@@ -261,7 +164,7 @@ const UpdateFile = () => {
 				<input
 					id="file-url"
 					name="url"
-					value={file.location.secure_location}
+					defaultValue={file?.data?.location?.secure_location}
 					type="text"
 					className="form-control mb-3"
 					placeholder=""
@@ -276,7 +179,7 @@ const UpdateFile = () => {
 						<input
 							id="file-name"
 							name="file-name"
-							value={file.location.filename}
+							defaultValue={file?.data?.location?.filename}
 							type="text"
 							className="form-control"
 							placeholder=""
@@ -289,7 +192,11 @@ const UpdateFile = () => {
 						<input
 							id="file-dimensions"
 							name=""
-							value={file.dimensions.width + "x" + file.dimensions.height}
+							defaultValue={
+								file?.data?.dimensions?.width +
+								"x" +
+								file?.data?.dimensions?.height
+							}
 							type="text"
 							className="form-control"
 							placeholder=""
@@ -304,7 +211,7 @@ const UpdateFile = () => {
 						<input
 							id="file-type"
 							name=""
-							value={file.format.toUpperCase()}
+							defaultValue={file?.data?.format.toUpperCase()}
 							type="text"
 							className="form-control"
 							placeholder=""
@@ -317,7 +224,7 @@ const UpdateFile = () => {
 						<input
 							id="file-uploadedAt"
 							name=""
-							value={file.createdAt}
+							defaultValue={file?.data?.createdAt}
 							type="text"
 							className="form-control"
 							placeholder=""
@@ -327,20 +234,7 @@ const UpdateFile = () => {
 					</div>
 				</div>
 				<br />
-				<button
-					type="submit"
-					className="btn btn-secondary btn-sm float-start"
-					disabled={title.length > 0 && text.length > 0 ? !true : !false}
-				>
-					Submit
-				</button>
-				<button
-					type="button"
-					className="btn btn-secondary btn-sm float-end"
-					onClick={resetForm}
-				>
-					Reset
-				</button>
+				<FormButtons />
 			</div>
 		</form>
 	);

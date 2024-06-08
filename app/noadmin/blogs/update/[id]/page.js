@@ -1,189 +1,57 @@
-"use client";
-import { fetchurl } from "@/helpers/setTokenOnServer";
-import { useParams, useRouter } from "next/navigation";
-import { useState, useEffect, useContext } from "react";
-import { toast } from "react-toastify";
-import AuthContext from "@/helpers/globalContext";
-import AdminSidebar from "@/components/admin/adminsidebar";
-import MyTextArea from "@/components/global/mytextarea";
+import { fetchurl, getAuthTokenOnServer } from "@/helpers/setTokenOnServer";
+import { redirect } from "next/navigation";
+import AdminSidebar from "@/components/admin/myfinaladminsidebar";
+import MyTextArea from "@/components/global/myfinaltextarea";
+import FormButtons from "@/components/global/formbuttons";
 
-const UpdateBlog = () => {
-	const { auth, files } = useContext(AuthContext);
-	const router = useRouter();
+async function getAuthenticatedUser() {
+	const res = await fetchurl(`/auth/me`, "GET", "force-cache");
+	return res;
+}
 
-	// Redirect if not authenticated
-	!auth.isAuthenticated && router.push("/auth/login");
+async function getFiles(params) {
+	const res = await fetchurl(`/files${params}`, "GET", "no-cache");
+	return res;
+}
 
-	// Redirec if not founder
-	auth.isAuthenticated &&
-		!auth.user.role.includes("founder") &&
-		router.push("/dashboard");
+async function getCategories(params) {
+	const res = await fetchurl(`/categories${params}`, "GET", "no-cache");
+	return res;
+}
 
-	const [categories, setCategories] = useState([]);
+async function getBlog(params) {
+	const res = await fetchurl(`/blogs${params}`, "GET", "no-cache");
+	return res;
+}
 
-	const fetchCategories = async (params = "") => {
-		try {
-			const res = await fetchurl(`/categories${params}`, "GET", "no-cache");
-			setCategories(res?.data);
-		} catch (err) {
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
+const UpdateBlog = async ({ params, searchParams }) => {
+	const blog = await getBlog(`/${params.id}`);
 
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
+	const token = await getAuthTokenOnServer();
+	const auth = await getAuthenticatedUser();
+	const files = await getFiles(`?page=1&limit=100&sort=-createdAt`);
+	const categories = await getCategories(`?categoryType=blog`);
 
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return {
-				msg: err?.response?.statusText,
-				status: err?.response?.status,
-			};
-		}
-	};
-
-	useEffect(() => {
-		fetchCategories(`?categoryType=blog`);
-	}, []);
-
-	const [blogData, setBlogData] = useState({
-		title: `Untitled`,
-		avatar: files?.selected?._id,
-		text: `No description`,
-		featured: true,
-		embedding: true,
-		category: undefined,
-		commented: true,
-		password: ``,
-		status: `draft`,
-		fullWidth: true,
-	});
-	const {
-		title,
-		avatar,
-		text,
-		featured,
-		embedding,
-		category,
-		commented,
-		password,
-		status,
-		fullWidth,
-	} = blogData;
-
-	const [blog, setBlog] = useState(null);
-	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState(false);
-
-	const { id } = useParams();
-	const blogId = id;
-
-	useEffect(() => {
-		const fetchBlog = async () => {
-			try {
-				const res = await fetchurl(`/blogs/${blogId}`, "GET", "no-cache");
-				setBlog(res?.data);
-				setBlogData({
-					title: res?.data?.title,
-					avatar: res?.data?.files?.avatar,
-					text: res?.data?.text,
-					featured: res?.data?.featured,
-					embedding: res?.data?.embedding,
-					category: res?.data?.category,
-					commented: res?.data?.commented,
-					// password: res?.data?.password,
-					status: res?.data?.status,
-					fullWidth: res?.data?.fullWidth,
-				});
-				setLoading(false);
-			} catch (err) {
-				console.log(err);
-				// const error = err.response.data.message;
-				const error = err?.response?.data?.error?.errors;
-				const errors = err?.response?.data?.errors;
-
-				if (error) {
-					// dispatch(setAlert(error, 'danger'));
-					error &&
-						Object.entries(error).map(([, value]) =>
-							toast.error(value.message)
-						);
-				}
-
-				if (errors) {
-					errors.forEach((error) => toast.error(error.msg));
-				}
-
-				toast.error(err?.response?.statusText);
-				return {
-					msg: err?.response?.statusText,
-					status: err?.response?.status,
-				};
-			}
+	const upgradeBlog = async (formData) => {
+		"use server";
+		const rawFormData = {
+			title: formData.get("title"),
+			text: formData.get("text"),
+			featured: formData.get("featured"),
+			embedding: formData.get("embedding"),
+			category: formData.get("category"),
+			commented: formData.get("commented"),
+			password: formData.get("password"),
+			status: formData.get("status"),
+			fullWidth: formData.get("fullWidth"),
+			files: { avatar: formData.get("file") },
 		};
-		fetchBlog();
-	}, [blogId]);
-
-	const upgradeBlog = async (e) => {
-		e.preventDefault();
-		try {
-			await fetchurl(`/blogs/${blog._id}`, "PUT", "no-cache", {
-				...blogData,
-				files: { avatar: files?.selected?._id },
-			});
-			toast.success(`Item updated`);
-			router.push(`/noadmin/blogs`);
-		} catch (err) {
-			console.log(err);
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
-
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return { msg: err?.response?.statusText, status: err?.response?.status };
-		}
+		await fetchurl(`/blogs/${params.id}`, "PUT", "no-cache", rawFormData);
+		redirect(`/noadmin/blogs`);
 	};
 
-	const resetForm = () => {
-		setBlogData({
-			title: `Untitled`,
-			avatar: files?.selected?._id,
-			text: `No description`,
-			featured: true,
-			embedding: true,
-			category: undefined,
-			commented: true,
-			password: ``,
-			tags: [],
-			status: `draft`,
-			fullWidth: true,
-		});
-	};
-
-	return loading || blog === null || blog === undefined ? (
-		error ? (
-			<>Not found</>
-		) : (
-			<>Loading...</>
-		)
-	) : (
-		<form className="row" onSubmit={upgradeBlog}>
+	return (
+		<form className="row" action={upgradeBlog}>
 			<div className="col">
 				<label htmlFor="blog-title" className="form-label">
 					Title
@@ -191,13 +59,7 @@ const UpdateBlog = () => {
 				<input
 					id="blog-title"
 					name="title"
-					value={title}
-					onChange={(e) => {
-						setBlogData({
-							...blogData,
-							title: e.target.value,
-						});
-					}}
+					defaultValue={blog?.data?.title}
 					type="text"
 					className="form-control mb-3"
 					placeholder=""
@@ -206,49 +68,37 @@ const UpdateBlog = () => {
 					Text
 				</label>
 				<MyTextArea
+					auth={auth}
 					id="text"
 					name="text"
-					value={text}
-					objectData={blogData}
-					setObjectData={setBlogData}
 					onModel="Blog"
 					advancedTextEditor={true}
+					customPlaceholder="No description"
+					defaultValue={blog?.data?.text}
 				/>
 			</div>
 			<div className="col-lg-3">
 				<AdminSidebar
 					displayCategoryField={true}
 					displayAvatar={true}
-					avatar={avatar}
-					status={status}
-					fullWidth={fullWidth}
-					password={password}
-					featured={featured}
-					commented={commented}
-					embedding={embedding}
+					avatar={blog?.data?.files?.avatar}
+					status={blog?.data?.status}
+					fullWidth={blog?.data?.fullWidth.toString()}
+					password=""
+					featured={blog?.data?.featured.toString()}
+					commented={blog?.data?.commented.toString()}
+					embedding={blog?.data?.embedding.toString()}
 					github_readme={""}
-					category={category._id ? category._id : category}
-					categories={categories}
-					objectData={blogData}
-					setObjectData={setBlogData}
+					category={blog?.data?.category?._id || blog?.data?.category}
+					categories={categories.data}
 					multipleFiles={false}
 					onModel={"Blog"}
+					files={files}
+					auth={auth}
+					token={token}
 				/>
 				<br />
-				<button
-					type="submit"
-					className="btn btn-secondary btn-sm float-start"
-					disabled={title.length > 0 && text.length > 0 ? !true : !false}
-				>
-					Submit
-				</button>
-				<button
-					type="button"
-					className="btn btn-secondary btn-sm float-end"
-					onClick={resetForm}
-				>
-					Reset
-				</button>
+				<FormButtons />
 			</div>
 		</form>
 	);

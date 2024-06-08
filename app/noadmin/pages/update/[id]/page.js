@@ -1,144 +1,39 @@
-"use client";
 import { fetchurl } from "@/helpers/setTokenOnServer";
-import { useParams, useRouter } from "next/navigation";
-import { useState, useEffect, useContext } from "react";
-import { toast } from "react-toastify";
-import AuthContext from "@/helpers/globalContext";
-import AdminSidebar from "@/components/admin/adminsidebar";
-import MyTextArea from "@/components/global/mytextarea";
+import { redirect } from "next/navigation";
+import AdminSidebar from "@/components/admin/myfinaladminsidebar";
+import MyTextArea from "@/components/global/myfinaltextarea";
+import FormButtons from "@/components/global/formbuttons";
 
-const UpdatePage = () => {
-	const { auth } = useContext(AuthContext);
-	const router = useRouter();
+async function getPage(params) {
+	const res = await fetchurl(`/pages${params}`, "GET", "no-cache");
+	return res;
+}
 
-	// Redirect if not authenticated
-	!auth.isAuthenticated && router.push("/auth/login");
+const UpdatePage = async ({ params, searchParams }) => {
+	const page = await getPage(`/${params.id}`);
 
-	// Redirec if not founder
-	auth.isAuthenticated &&
-		!auth.user.role.includes("founder") &&
-		router.push("/dashboard");
-
-	const [pageData, setPageData] = useState({
-		title: `Untitled`,
-		text: `No description`,
-		referrerpolicy: "strict-origin-when-cross-origin",
-		rel: "no-referrer",
-		target: "_self",
-		commented: true,
-		password: ``,
-		status: `draft`,
-	});
-	const {
-		title,
-		text,
-		referrerpolicy,
-		rel,
-		target,
-		commented,
-		password,
-		status,
-	} = pageData;
-
-	const [page, setPage] = useState(null);
-	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState(false);
-
-	const { id } = useParams();
-	const pageId = id;
-
-	useEffect(() => {
-		const fetchPage = async () => {
-			try {
-				const res = await fetchurl(`/pages/${pageId}`, "GET", "no-cache");
-				setPage(res?.data);
-				setPageData({
-					title: res?.data?.title,
-					text: res?.data?.text,
-					referrerpolicy: res?.data?.referrerpolicy,
-					rel: res?.data?.rel,
-					target: res?.data?.target,
-					commented: res?.data?.commented,
-					// password: res?.data?.password,
-					status: res?.data?.status,
-				});
-				setLoading(false);
-			} catch (err) {
-				console.log(err);
-				// const error = err.response.data.message;
-				const error = err?.response?.data?.error?.errors;
-				const errors = err?.response?.data?.errors;
-
-				if (error) {
-					// dispatch(setAlert(error, 'danger'));
-					error &&
-						Object.entries(error).map(([, value]) =>
-							toast.error(value.message)
-						);
-				}
-
-				if (errors) {
-					errors.forEach((error) => toast.error(error.msg));
-				}
-
-				toast.error(err?.response?.statusText);
-				return {
-					msg: err?.response?.statusText,
-					status: err?.response?.status,
-				};
-			}
+	const upgradePage = async (formData) => {
+		"use server";
+		const rawFormData = {
+			title: formData.get("title"),
+			url: formData.get("url"),
+			text: formData.get("text"),
+			referrerpolicy: formData.get("referrerpolicy"),
+			rel: formData.get("rel"),
+			target: formData.get("target"),
+			orderingNumber: formData.get("orderingNumber"),
+			commented: formData.get("commented"),
+			password: formData.get("password"),
+			status: formData.get("status"),
 		};
-		fetchPage();
-	}, [pageId]);
-
-	const upgradePage = async (e) => {
-		e.preventDefault();
-		try {
-			await fetchurl(`/pages/${page._id}`, "PUT", "no-cache", pageData);
-			toast.success(`Item updated`);
-			router.push(`/noadmin/pages`);
-		} catch (err) {
-			console.log(err);
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
-
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return { msg: err?.response?.statusText, status: err?.response?.status };
-		}
+		await fetchurl(`/pages/${params.id}`, "PUT", "no-cache", rawFormData);
+		searchParams?.returnpage
+			? redirect(searchParams.returnpage)
+			: redirect(`/noadmin/pages`);
 	};
 
-	const resetForm = () => {
-		setPageData({
-			title: `Untitled`,
-			text: `No description`,
-			referrerpolicy: "strict-origin-when-cross-origin",
-			rel: "no-referrer",
-			target: "_self",
-			commented: true,
-			password: ``,
-			status: `draft`,
-		});
-	};
-
-	return loading || page === null || page === undefined ? (
-		error ? (
-			<>Not found</>
-		) : (
-			<>Loading...</>
-		)
-	) : (
-		<form className="row" onSubmit={upgradePage}>
+	return (
+		<form className="row" action={upgradePage}>
 			<div className="col">
 				<label htmlFor="blog-title" className="form-label">
 					Title
@@ -146,13 +41,18 @@ const UpdatePage = () => {
 				<input
 					id="blog-title"
 					name="title"
-					value={title}
-					onChange={(e) => {
-						setPageData({
-							...pageData,
-							title: e.target.value,
-						});
-					}}
+					defaultValue={page.data.title}
+					type="text"
+					className="form-control mb-3"
+					placeholder=""
+				/>
+				<label htmlFor="url" className="form-label">
+					Url
+				</label>
+				<input
+					id="url"
+					name="url"
+					defaultValue={page.data.url}
 					type="text"
 					className="form-control mb-3"
 					placeholder=""
@@ -163,11 +63,10 @@ const UpdatePage = () => {
 				<MyTextArea
 					id="text"
 					name="text"
-					value={text}
-					objectData={pageData}
-					setObjectData={setPageData}
 					onModel="Page"
-					advancedTextEditor={true}
+					advancedTextEditor={false}
+					customPlaceholder="No description"
+					defaultValue={page.data.text}
 				/>
 				<div className="row">
 					<div className="col"></div>
@@ -180,13 +79,7 @@ const UpdatePage = () => {
 						<select
 							id="referrerpolicy"
 							name="referrerpolicy"
-							value={referrerpolicy}
-							onChange={(e) => {
-								setPageData({
-									...pageData,
-									referrerpolicy: e.target.value,
-								});
-							}}
+							defaultValue={page.data.referrerpolicy}
 							className="form-control"
 						>
 							<option value={`no-referrer`}>No Referrer</option>
@@ -212,13 +105,7 @@ const UpdatePage = () => {
 						<select
 							id="rel"
 							name="rel"
-							value={rel}
-							onChange={(e) => {
-								setPageData({
-									...pageData,
-									rel: e.target.value,
-								});
-							}}
+							defaultValue={page.data.rel}
 							className="form-control"
 						>
 							<option value={`no-referrer`}>No Referrer</option>
@@ -231,13 +118,7 @@ const UpdatePage = () => {
 						<select
 							id="target"
 							name="target"
-							value={target}
-							onChange={(e) => {
-								setPageData({
-									...pageData,
-									target: e.target.value,
-								});
-							}}
+							defaultValue={page.data.target}
 							className="form-control"
 						>
 							<option value={`_self`}>Self</option>
@@ -247,6 +128,21 @@ const UpdatePage = () => {
 							<option value={`_unfencedTop`}>Unfenced Top</option>
 						</select>
 					</div>
+					<div className="col">
+						<label htmlFor="orderingNumber" className="form-label">
+							Ordering Number
+						</label>
+						<input
+							id="orderingNumber"
+							name="orderingNumber"
+							defaultValue={page.data.orderingNumber}
+							min={1}
+							max={99}
+							type="number"
+							className="form-control mb-3"
+							placeholder=""
+						/>
+					</div>
 				</div>
 			</div>
 			<div className="col-lg-3">
@@ -254,35 +150,20 @@ const UpdatePage = () => {
 					displayCategoryField={false}
 					displayAvatar={false}
 					avatar={""}
-					status={status}
+					status={page.data.status}
 					fullWidth={false}
-					password={password}
+					password={""}
 					featured={false}
-					commented={commented}
+					commented={page.data.commented.toString()}
 					embedding={false}
 					github_readme={""}
 					category={undefined}
 					categories={[]}
-					objectData={pageData}
-					setObjectData={setPageData}
 					multipleFiles={false}
 					onModel={"Page"}
 				/>
 				<br />
-				<button
-					type="submit"
-					className="btn btn-secondary btn-sm float-start"
-					disabled={title.length > 0 && text.length > 0 ? !true : !false}
-				>
-					Submit
-				</button>
-				<button
-					type="button"
-					className="btn btn-secondary btn-sm float-end"
-					onClick={resetForm}
-				>
-					Reset
-				</button>
+				<FormButtons />
 			</div>
 		</form>
 	);

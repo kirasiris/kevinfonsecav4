@@ -1,216 +1,103 @@
-"use client";
 import { fetchurl } from "@/helpers/setTokenOnServer";
-import { useRouter } from "next/navigation";
-import { useState, useEffect, useContext } from "react";
-import { toast } from "react-toastify";
-import Single from "@/components/admin/quotes/single";
-import AuthContext from "@/helpers/globalContext";
-import MyTextArea from "@/components/global/mytextarea";
 import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
-import AdminCardHeaderMenu from "@/components/admin/admincardheadermenu";
-import ClientNumericPagination from "@/layout/clientnumericpagination";
+import MyTextArea from "@/components/global/myfinaltextarea";
+import FormButtons from "@/components/global/formbuttons";
+import List from "@/components/admin/quotes/list";
+import { revalidatePath } from "next/cache";
 
-const AdminQuotesIndex = () => {
-	const {
-		auth,
-		totalPages,
-		setTotalPages,
-		currentResults,
-		setCurrentResults,
-		totalResults,
-		setTotalResults,
-	} = useContext(AuthContext);
-	const router = useRouter();
+async function getQuotes(params) {
+	const res = await fetchurl(`/extras/quotes${params}`, "GET", "no-cache");
+	return res;
+}
 
-	// Redirect if not authenticated
-	!auth.isAuthenticated && router.push("/auth/login");
-
-	// Redirec if not founder
-	auth.isAuthenticated &&
-		!auth.user.role.includes("founder") &&
-		router.push("/dashboard");
-
-	const [quotes, setQuotes] = useState([]);
-	const [page, setPage] = useState(1);
-	const [limit] = useState(10);
-	const [sortby] = useState(`-createdAt`);
-	const [params, setParams] = useState(
-		`?page=${page}&limit=${limit}&sort=${sortby}`
+const AdminQuotesIndex = async ({ params, searchParams }) => {
+	const quotes = await getQuotes(
+		`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
 	);
-	const [keyword, setKeyword] = useState("");
-	const [list, setList] = useState([]);
-	const [loading, setLoading] = useState(true);
 
-	const fetchQuotes = async () => {
-		try {
-			const res = await fetchurl(`/extras/quotes${params}`, "GET", "no-cache");
-			setQuotes(res?.data);
-			setTotalPages(res?.pagination?.totalpages);
-			setCurrentResults(res?.count);
-			setTotalResults({ ...totalResults, quotes: res?.countAll });
-			setPage(res?.pagination?.current);
-			setLoading(false);
-		} catch (err) {
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
+	const createQuote = async (formData) => {
+		"use server";
+		const rawFormData = {
+			text: formData.get("text"),
+			authorName: formData.get("authorName"),
+			authorUrl: formData.get("authorUrl"),
+			sourceWebsite: formData.get("sourceWebsite"),
+			sourceUrl: formData.get("sourceUrl"),
+			status: formData.get("status"),
+			embedding: formData.get("embedding"),
+		};
 
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return {
-				msg: err?.response?.statusText,
-				status: err?.response?.status,
-			};
-		}
+		await fetchurl(`/extras/quotes`, "POST", "no-cache", rawFormData);
+		revalidatePath(
+			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+		);
 	};
 
-	useEffect(() => {
-		fetchQuotes();
-	}, [router, params]);
-
-	const [quoteData, setQuoteData] = useState({
-		text: `No description`,
-		authorName: ``,
-		authorUrl: `#`,
-		sourceWebsite: ``,
-		sourceUrl: `#`,
-		status: `draft`,
-		embedding: true,
-	});
-
-	const {
-		text,
-		authorName,
-		authorUrl,
-		sourceWebsite,
-		sourceUrl,
-		status,
-		embedding,
-	} = quoteData;
-
-	const createQuote = async (e) => {
-		e.preventDefault();
-		try {
-			const res = await fetchurl(
-				`/extras/quotes`,
-				"POST",
-				"no-cache",
-				quoteData
-			);
-			setQuotes([res?.data, ...quotes]);
-			setTotalResults({ ...totalResults, quotes: quotes.length + 1 });
-			toast.success(`Item created`);
-			resetForm();
-		} catch (err) {
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
-
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return { msg: err?.response?.statusText, status: err?.response?.status };
-		}
+	const draftIt = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/extras/quotes/${id}/draftit`, "PUT", "no-cache");
+		revalidatePath(
+			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+		);
 	};
 
-	useEffect(() => {
-		setList(quotes);
-	}, [quotes]);
+	const publishIt = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/extras/quotes/${id}/publishit`, "PUT", "no-cache");
+		revalidatePath(
+			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+		);
+	};
 
-	useEffect(() => {
-		if (keyword !== "") {
-			const result = quotes.filter((object) => {
-				return object.text.toLowerCase().startsWith(keyword.toLowerCase());
-			});
-			setList(result);
-		} else {
-			setList(quotes);
-		}
-	}, [keyword]);
+	const trashIt = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/extras/quotes/${id}/trashit`, "PUT", "no-cache");
+		revalidatePath(
+			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+		);
+	};
+
+	const scheduleIt = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/extras/quotes/${id}/scheduleit`, "PUT", "no-cache");
+		revalidatePath(
+			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+		);
+	};
 
 	const handleDelete = async (id) => {
-		try {
-			await fetchurl(`/extras/quotes/${id}`, "DELETE", "no-cache");
-			toast.success("Quote deleted");
-			fetchQuotes();
-		} catch (err) {
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/extras/quotes/${id}/permanently`, "DELETE", "no-cache");
+		revalidatePath(
+			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+		);
+	};
 
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return {
-				msg: err?.response?.statusText,
-				status: err?.response?.status,
-			};
-		}
+	const handleTrashAll = async () => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/extras/quotes/deleteall`, "PUT", "no-cache");
+		revalidatePath(
+			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+		);
 	};
 
 	const handleDeleteAll = async () => {
-		try {
-			await fetchurl(`/extras/quotes/deleteall`, "DELETE", "no-cache");
-			toast.success("Quotes deleted");
-			fetchQuotes();
-		} catch (err) {
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
-
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return {
-				msg: err?.response?.statusText,
-				status: err?.response?.status,
-			};
-		}
-	};
-
-	const resetForm = () => {
-		setQuoteData({
-			text: `No description`,
-			authorName: ``,
-			authorUrl: `#`,
-			sourceWebsite: ``,
-			sourceUrl: `#`,
-			status: `draft`,
-			embedding: true,
-		});
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(
+			`/extras/quotes/deleteall/permanently`,
+			"DELETE",
+			"no-cache"
+		);
+		revalidatePath(
+			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+		);
 	};
 
 	return (
@@ -224,16 +111,15 @@ const AdminQuotesIndex = () => {
 			/>
 			<div className="row">
 				<div className="col">
-					<form onSubmit={createQuote}>
+					<form action={createQuote}>
 						<label htmlFor="text" className="form-label">
 							Text
 						</label>
 						<MyTextArea
 							id="text"
 							name="text"
-							value={text}
-							objectData={quoteData}
-							setObjectData={setQuoteData}
+							customPlaceholder="Type something..."
+							defaultValue=""
 							onModel="Quote"
 							advancedTextEditor={false}
 						/>
@@ -243,13 +129,7 @@ const AdminQuotesIndex = () => {
 						<input
 							id="authorName"
 							name="authorName"
-							value={authorName}
-							onChange={(e) => {
-								setQuoteData({
-									...quoteData,
-									authorName: e.target.value,
-								});
-							}}
+							defaultValue="John Doe"
 							type="text"
 							className="form-control mb-3"
 							placeholder="Someone"
@@ -260,13 +140,7 @@ const AdminQuotesIndex = () => {
 						<input
 							id="authorUrl"
 							name="authorUrl"
-							value={authorUrl}
-							onChange={(e) => {
-								setQuoteData({
-									...quoteData,
-									authorUrl: e.target.value,
-								});
-							}}
+							defaultValue="#"
 							type="text"
 							className="form-control mb-3"
 							placeholder="#"
@@ -277,13 +151,7 @@ const AdminQuotesIndex = () => {
 						<input
 							id="sourceWebsite"
 							name="sourceWebsite"
-							value={sourceWebsite}
-							onChange={(e) => {
-								setQuoteData({
-									...quoteData,
-									sourceWebsite: e.target.value,
-								});
-							}}
+							defaultValue=""
 							type="text"
 							className="form-control mb-3"
 							placeholder="Somewhere"
@@ -294,13 +162,7 @@ const AdminQuotesIndex = () => {
 						<input
 							id="sourceUrl"
 							name="sourceUrl"
-							value={sourceUrl}
-							onChange={(e) => {
-								setQuoteData({
-									...quoteData,
-									sourceUrl: e.target.value,
-								});
-							}}
+							defaultValue="#"
 							type="text"
 							className="form-control mb-3"
 							placeholder="#"
@@ -311,13 +173,7 @@ const AdminQuotesIndex = () => {
 						<select
 							id="embedding"
 							name="embedding"
-							value={embedding}
-							onChange={(e) => {
-								setQuoteData({
-									...quoteData,
-									embedding: e.target.value,
-								});
-							}}
+							defaultValue={true}
 							className="form-control"
 						>
 							<option value={true}>Yes</option>
@@ -329,13 +185,7 @@ const AdminQuotesIndex = () => {
 						<select
 							id="status"
 							name="status"
-							value={status}
-							onChange={(e) => {
-								setQuoteData({
-									...quoteData,
-									status: e.target.value,
-								});
-							}}
+							defaultValue="draft"
 							className="form-control"
 						>
 							<option value={`draft`}>Draft</option>
@@ -344,25 +194,27 @@ const AdminQuotesIndex = () => {
 							<option value={`scheduled`}>Scheduled</option>
 						</select>
 						<br />
-						<button
-							type="submit"
-							className="btn btn-secondary btn-sm float-start"
-							disabled={authorName.length > 0 ? !true : !false}
-						>
-							Submit
-						</button>
-						<button
-							type="button"
-							className="btn btn-secondary btn-sm float-end"
-							onClick={resetForm}
-						>
-							Reset
-						</button>
+						<FormButtons />
 					</form>
 				</div>
 				<div className="col-lg-10">
 					<div className="card rounded-0">
-						<AdminCardHeaderMenu
+						<List
+							allLink="/noadmin/quotes"
+							pageText="Quotes"
+							addLink="/noadmin/quotes"
+							searchOn="/noadmin/quotes"
+							objects={quotes}
+							searchParams={searchParams}
+							handleDraft={draftIt}
+							handlePublish={publishIt}
+							handleTrash={trashIt}
+							handleSchedule={scheduleIt}
+							handleDelete={handleDelete}
+							handleTrashAllFunction={handleTrashAll}
+							handleDeleteAllFunction={handleDeleteAll}
+						/>
+						{/* <AdminCardHeaderMenu
 							allLink={`/noadmin/quotes`}
 							pageText="Quotes"
 							currentResults={currentResults}
@@ -408,7 +260,7 @@ const AdminQuotesIndex = () => {
 							>
 								{loading ? "Loading" : "Nothing found"}
 							</div>
-						)}
+						)} */}
 					</div>
 				</div>
 			</div>

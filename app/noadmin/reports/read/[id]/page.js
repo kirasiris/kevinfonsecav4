@@ -1,82 +1,26 @@
-"use client";
 import { fetchurl } from "@/helpers/setTokenOnServer";
-import { useParams, useRouter } from "next/navigation";
-import { useState, useEffect, useContext } from "react";
-import { toast } from "react-toastify";
-import AuthContext from "@/helpers/globalContext";
 import ParseHtml from "@/layout/parseHtml";
 
-const ReadReport = () => {
-	const { auth } = useContext(AuthContext);
-	const router = useRouter();
+async function getReport(params) {
+	const res = await fetchurl(`/reports${params}`, "GET", "no-cache");
+	return res;
+}
 
-	// Redirect if not authenticated
-	!auth.isAuthenticated && router.push("/auth/login");
+const ReadReport = async ({ params, searchParams }) => {
+	const report = await getReport(`/${params.id}`);
 
-	// Redirec if not founder
-	auth.isAuthenticated &&
-		!auth.user.role.includes("founder") &&
-		router.push("/dashboard");
-
-	const [report, setReport] = useState(null);
-	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState(false);
-
-	const { id } = useParams();
-	const reportId = id;
-
-	useEffect(() => {
-		const fetchReport = async () => {
-			try {
-				const res = await fetchurl(`/reports/${reportId}`, "GET", "no-cache");
-				setReport(res?.data);
-				setLoading(false);
-			} catch (err) {
-				console.log(err);
-				// const error = err.response.data.message;
-				const error = err?.response?.data?.error?.errors;
-				const errors = err?.response?.data?.errors;
-
-				if (error) {
-					// dispatch(setAlert(error, 'danger'));
-					error &&
-						Object.entries(error).map(([, value]) =>
-							toast.error(value.message)
-						);
-				}
-
-				if (errors) {
-					errors.forEach((error) => toast.error(error.msg));
-				}
-
-				toast.error(err?.response?.statusText);
-				return {
-					msg: err?.response?.statusText,
-					status: err?.response?.status,
-				};
-			}
-		};
-		fetchReport();
-	}, [reportId]);
-
-	return loading || report === null || report === undefined ? (
-		error ? (
-			<>Not found</>
-		) : (
-			<>Loading...</>
-		)
-	) : (
+	return (
 		<div className="row">
 			<div className="col-lg-12">
 				<article>
 					<header className="mb-4">
-						<h1>{report?.title}</h1>
+						<h1>{report?.data?.title || "Untitled"}</h1>
 						<div className="text-muted fst-italic mb-2">
-							Posted on {report?.createdAt}
+							Posted on {report?.data?.createdAt}
 						</div>
 					</header>
 					<section className="mb-5">
-						<ParseHtml text={report?.text} />
+						<ParseHtml text={report?.data?.text} />
 					</section>
 				</article>
 			</div>

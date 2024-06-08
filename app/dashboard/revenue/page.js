@@ -1,88 +1,28 @@
-"use client";
 import { fetchurl } from "@/helpers/setTokenOnServer";
-import { useRouter } from "next/navigation";
-import { useState, useEffect, useContext } from "react";
-import { toast } from "react-toastify";
-// SINGLE
-import AuthContext from "@/helpers/globalContext";
 import { stripeCurrencyFormatter } from "@/helpers/utilities";
+import { redirect } from "next/navigation";
 
-const RevenueIndex = ({ params, searchParams }) => {
-	const { auth } = useContext(AuthContext);
-	const router = useRouter();
+async function getBalance() {
+	const res = await fetchurl(
+		`/extras/stripe/accounts/balance`,
+		"GET",
+		"no-cache"
+	);
+	return res;
+}
 
-	// Redirect if not authenticated
-	!auth.isAuthenticated && router.push("/auth/login");
+const RevenueIndex = async ({ params, searchParams }) => {
+	const balance = await getBalance();
 
-	const [balance, setBalance] = useState([]);
-	const [loading, setLoading] = useState(false);
-
-	const fetchBalance = async () => {
-		try {
-			const res = await fetchurl(
-				`/extras/stripe/accounts/balance`,
-				"GET",
-				"no-cache"
-			);
-			console.log("balance within revenue page file", balance);
-			setBalance(res?.data);
-			setLoading(false);
-		} catch (err) {
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
-
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return {
-				msg: err?.response?.statusText,
-				status: err?.response?.status,
-			};
-		}
-	};
-
-	useEffect(() => {
-		fetchBalance();
-	}, [router]);
-
-	const fetchStripeAccountSettings = async () => {
-		try {
-			const res = await fetchurl(
-				`/extras/stripe/accounts/payoutsettings`,
-				"GET",
-				"no-cache"
-			);
-			window.location.href = res.data.url;
-		} catch (err) {
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
-
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return {
-				msg: err?.response?.statusText,
-				status: err?.response?.status,
-			};
-		}
+	const fetchStripeAccountSettings = async (formData) => {
+		"use server";
+		// const rawFormData = {}
+		const res = await fetchurl(
+			`/extras/stripe/accounts/payoutsettings`,
+			"GET",
+			"no-cache"
+		);
+		redirect(res.data.url);
 	};
 
 	return (
@@ -94,9 +34,8 @@ const RevenueIndex = ({ params, searchParams }) => {
 			<ul className="list-group list-group-flush">
 				<li className="list-group-item d-flex justify-content-between align-items-center">
 					<p className="m-0">Pending Balance</p>
-					{!loading &&
-						balance.pending &&
-						balance.pending.map((bp, i) => (
+					{balance?.data?.pending &&
+						balance?.data?.pending.map((bp, i) => (
 							<span key={i}>{stripeCurrencyFormatter(bp.amount, "USD")}</span>
 						))}
 				</li>
@@ -104,12 +43,11 @@ const RevenueIndex = ({ params, searchParams }) => {
 					<p className="m-0">
 						Update your Stripe account details or view your previous payouts.
 					</p>
-					<button
-						className="btn btn-link btn-sm"
-						onClick={() => fetchStripeAccountSettings()}
-					>
-						Payout settings
-					</button>
+					<form action={fetchStripeAccountSettings}>
+						<button type="submit" className="btn btn-link btn-sm">
+							Payout settings
+						</button>
+					</form>
 				</li>
 			</ul>
 		</div>

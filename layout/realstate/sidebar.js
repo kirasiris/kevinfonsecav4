@@ -15,7 +15,7 @@ const Sidebar = ({}) => {
 	const searchData = async (e) => {
 		e.preventDefault();
 		router.push(
-			`/blog/search?keyword=${keyword}&page=1&limit=10&sort=-createdAt`
+			`/realstate/search?keyword=${keyword}&page=1&limit=10&sort=-createdAt`
 		);
 	};
 

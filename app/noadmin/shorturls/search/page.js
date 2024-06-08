@@ -1,0 +1,115 @@
+import { fetchurl } from "@/helpers/setTokenOnServer";
+import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
+import List from "@/components/admin/shorturls/list";
+import { revalidatePath } from "next/cache";
+
+async function getShortUrls(params) {
+	const res = await fetchurl(`/extras/shorturls${params}`, "GET", "no-cache");
+	return res;
+}
+
+const AdminShortUrlsSearchIndex = async ({ params, searchParams }) => {
+	const shorturls = await getShortUrls(
+		`?keyword=${searchParams.keyword}&page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+	);
+
+	const draftIt = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/extras/shorturls/${id}/draftit`, "PUT", "no-cache");
+		revalidatePath(
+			`?keyword=${searchParams.keyword}&page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+		);
+	};
+
+	const publishIt = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/extras/shorturls/${id}/publishit`, "PUT", "no-cache");
+		revalidatePath(
+			`?keyword=${searchParams.keyword}&page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+		);
+	};
+
+	const trashIt = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/extras/shorturls/${id}/trashit`, "PUT", "no-cache");
+		revalidatePath(
+			`?keyword=${searchParams.keyword}&page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+		);
+	};
+
+	const scheduleIt = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/extras/shorturls/${id}/scheduleit`, "PUT", "no-cache");
+		revalidatePath(
+			`?keyword=${searchParams.keyword}&page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+		);
+	};
+
+	const handleDelete = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/extras/shorturls/${id}/permanently`, "DELETE", "no-cache");
+		revalidatePath(
+			`?keyword=${searchParams.keyword}&page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+		);
+	};
+
+	const handleTrashAll = async () => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/extras/shorturls/deleteall`, "PUT", "no-cache");
+		revalidatePath(
+			`?keyword=${searchParams.keyword}&page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+		);
+	};
+
+	const handleDeleteAll = async () => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(
+			`/extras/shorturls/deleteall/permanently`,
+			"DELETE",
+			"no-cache"
+		);
+		revalidatePath(
+			`?keyword=${searchParams.keyword}&page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+		);
+	};
+
+	return (
+		<>
+			<AdminStatusesMenu
+				allLink="/noadmin/shorturls"
+				publishedLink="/noadmin/shorturls/published"
+				draftLink="/noadmin/shorturls/draft"
+				scheduledLink="/noadmin/shorturls/scheduled"
+				trashedLink="/noadmin/shorturls/trashed"
+				categoriesLink=""
+				categoryType=""
+			/>
+			<div className="card rounded-0">
+				<List
+					allLink="/noadmin/shorturls"
+					pageText="Short Urls"
+					addLink="/noadmin/shorturls/create"
+					searchOn="/noadmin/shorturls"
+					objects={shorturls}
+					searchParams={searchParams}
+					handleDraft={draftIt}
+					handlePublish={publishIt}
+					handleTrash={trashIt}
+					handleSchedule={scheduleIt}
+					handleDelete={handleDelete}
+					handleTrashAllFunction={handleTrashAll}
+					handleDeleteAllFunction={handleDeleteAll}
+				/>
+			</div>
+		</>
+	);
+};
+
+export default AdminShortUrlsSearchIndex;

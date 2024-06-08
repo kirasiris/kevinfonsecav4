@@ -20,6 +20,7 @@ const Menu = ({
 	title = "",
 	logo = "https://getbootstrap.com/docs/5.3/assets/brand/bootstrap-logo.svg",
 	canonical = "/",
+	menus = [],
 }) => {
 	const pathname = usePathname();
 	const isActive = (path = "") => {

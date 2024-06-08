@@ -1,136 +1,54 @@
-"use client";
-import { fetchurl } from "@/helpers/setTokenOnServer";
-import { useRouter } from "next/navigation";
-import { useState, useEffect, useContext } from "react";
-import { toast } from "react-toastify";
-import AuthContext from "@/helpers/globalContext";
-import AdminSidebar from "@/components/admin/adminsidebar";
-import MyTextArea from "@/components/global/mytextarea";
+import { fetchurl, getAuthTokenOnServer } from "@/helpers/setTokenOnServer";
+import { redirect } from "next/navigation";
+import AdminSidebar from "@/components/admin/myfinaladminsidebar";
+import MyTextArea from "@/components/global/myfinaltextarea";
+import FormButtons from "@/components/global/formbuttons";
 
-const CreateTheme = () => {
-	const { auth, files } = useContext(AuthContext);
-	const router = useRouter();
+async function getAuthenticatedUser() {
+	const res = await fetchurl(`/auth/me`, "GET", "force-cache");
+	return res;
+}
 
-	// Redirect if not authenticated
-	!auth.isAuthenticated && router.push("/auth/login");
+async function getFiles(params) {
+	const res = await fetchurl(`/files${params}`, "GET", "no-cache");
+	return res;
+}
 
-	// Redirec if not founder
-	auth.isAuthenticated &&
-		!auth.user.role.includes("founder") &&
-		router.push("/dashboard");
+async function getCategories(params) {
+	const res = await fetchurl(`/categories${params}`, "GET", "no-cache");
+	return res;
+}
 
-	const [categories, setCategories] = useState([]);
+const CreateTheme = async ({ params, searchParams }) => {
+	const token = await getAuthTokenOnServer();
+	const auth = await getAuthenticatedUser();
+	const files = await getFiles(`?page=1&limit=100&sort=-createdAt`);
+	const categories = await getCategories(`?categoryType=theme`);
 
-	const fetchCategories = async (params = "") => {
-		try {
-			const res = await fetchurl(`/categories${params}`, "GET", "no-cache");
-			setCategories(res?.data);
-		} catch (err) {
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
-
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return {
-				msg: err?.response?.statusText,
-				status: err?.response?.status,
-			};
-		}
-	};
-
-	useEffect(() => {
-		fetchCategories(`?categoryType=theme`);
-	}, []);
-
-	const [themeData, setThemeData] = useState({
-		title: `Untitled`,
-		avatar: files?.selected?._id,
-		text: `No description`,
-		featured: true,
-		embedding: true,
-		category: undefined,
-		commented: true,
-		password: ``,
-		status: `draft`,
-		fullWidth: false,
-		github_readme: `#`,
-	});
-
-	const {
-		title,
-		avatar,
-		text,
-		featured,
-		embedding,
-		category,
-		commented,
-		password,
-		status,
-		fullWidth,
-		github_readme,
-	} = themeData;
-
-	const addTheme = async (e) => {
-		e.preventDefault();
-		try {
-			await fetchurl(`/themes`, "POST", "no-cache", {
-				...blogData,
-				postType: "theme",
-				files: { avatar: files?.selected?._id },
-			});
-			toast.success(`Item created`);
-			resetForm();
-			router.push(`/noadmin/themes`);
-		} catch (err) {
-			console.log(err);
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
-
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return { msg: err?.response?.statusText, status: err?.response?.status };
-		}
-	};
-
-	const resetForm = () => {
-		setThemeData({
-			title: `Untitled`,
-			avatar: files?.selected?._id,
-			text: ``,
-			featured: false,
-			embedding: false,
-			category: undefined,
-			commented: false,
-			password: ``,
-			tags: [],
-			status: `draft`,
-			fullWidth: false,
-			github_readme: ``,
+	const addTheme = async (formData) => {
+		"use server";
+		const rawFormData = {
+			title: formData.get("title"),
+			text: formData.get("text"),
+			featured: formData.get("featured"),
+			embedding: formData.get("embedding"),
+			category: formData.get("category"),
+			commented: formData.get("commented"),
+			password: formData.get("password"),
+			status: formData.get("status"),
+			fullWidth: formData.get("fullWidth"),
+			github_readme: formData.get("github_readme"),
+			files: { avatar: formData.get("file") },
+		};
+		await fetchurl(`/themes`, "POST", "no-cache", {
+			...rawFormData,
+			postType: "theme",
 		});
+		redirect(`/noadmin/themes`);
 	};
 
 	return (
-		<form className="row" onSubmit={addTheme}>
+		<form className="row" action={addTheme}>
 			<div className="col">
 				<label htmlFor="blog-title" className="form-label">
 					Title
@@ -138,13 +56,7 @@ const CreateTheme = () => {
 				<input
 					id="blog-title"
 					name="title"
-					value={title}
-					onChange={(e) => {
-						setThemeData({
-							...themeData,
-							title: e.target.value,
-						});
-					}}
+					defaultValue="Untitled"
 					type="text"
 					className="form-control mb-3"
 					placeholder=""
@@ -153,49 +65,37 @@ const CreateTheme = () => {
 					Text
 				</label>
 				<MyTextArea
+					auth={auth}
 					id="text"
 					name="text"
-					value={text}
-					objectData={themeData}
-					setObjectData={setThemeData}
 					onModel="Blog"
 					advancedTextEditor={true}
+					customPlaceholder="No description"
+					defaultValue="No description..."
 				/>
 			</div>
 			<div className="col-lg-3">
 				<AdminSidebar
 					displayCategoryField={true}
 					displayAvatar={true}
-					avatar={files?.selected?._id}
-					status={status}
-					fullWidth={fullWidth}
-					password={password}
-					featured={featured}
-					commented={commented}
-					embedding={embedding}
-					github_readme={github_readme}
-					category={category}
-					categories={categories}
-					objectData={themeData}
-					setObjectData={setThemeData}
+					// avatar={files?.selected?._id}
+					status="draft"
+					fullWidth={true}
+					password=""
+					featured={true}
+					commented={true}
+					embedding={true}
+					github_readme={"#"}
+					category={undefined}
+					categories={categories.data}
 					multipleFiles={false}
 					onModel={"Blog"}
+					files={files}
+					auth={auth}
+					token={token}
 				/>
 				<br />
-				<button
-					type="submit"
-					className="btn btn-secondary btn-sm float-start"
-					disabled={title.length > 0 && text.length > 0 ? !true : !false}
-				>
-					Submit
-				</button>
-				<button
-					type="button"
-					className="btn btn-secondary btn-sm float-end"
-					onClick={resetForm}
-				>
-					Reset
-				</button>
+				<FormButtons />
 			</div>
 		</form>
 	);

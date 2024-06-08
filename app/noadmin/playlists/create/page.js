@@ -1,128 +1,54 @@
-"use client";
-import { fetchurl } from "@/helpers/setTokenOnServer";
-import { useRouter } from "next/navigation";
-import { useState, useEffect, useContext } from "react";
-import { toast } from "react-toastify";
-import AuthContext from "@/helpers/globalContext";
-import AdminSidebar from "@/components/admin/adminsidebar";
-import MyTextArea from "@/components/global/mytextarea";
+import { fetchurl, getAuthTokenOnServer } from "@/helpers/setTokenOnServer";
+import { redirect } from "next/navigation";
+import AdminSidebar from "@/components/admin/myfinaladminsidebar";
+import MyTextArea from "@/components/global/myfinaltextarea";
+import FormButtons from "@/components/global/formbuttons";
 
-const CreatePlaylist = () => {
-	const { auth, files } = useContext(AuthContext);
-	const router = useRouter();
+async function getAuthenticatedUser() {
+	const res = await fetchurl(`/auth/me`, "GET", "force-cache");
+	return res;
+}
 
-	// Redirect if not authenticated
-	!auth.isAuthenticated && router.push("/auth/login");
+async function getFiles(params) {
+	const res = await fetchurl(`/files${params}`, "GET", "no-cache");
+	return res;
+}
 
-	// Redirec if not founder
-	auth.isAuthenticated &&
-		!auth.user.role.includes("founder") &&
-		router.push("/dashboard");
+async function getCategories(params) {
+	const res = await fetchurl(`/categories${params}`, "GET", "no-cache");
+	return res;
+}
 
-	const [categories, setCategories] = useState([]);
+const CreatePlaylist = async ({ params, searchParams }) => {
+	const token = await getAuthTokenOnServer();
+	const auth = await getAuthenticatedUser();
 
-	const fetchCategories = async (params = "") => {
-		try {
-			const res = await fetchurl(`/categories${params}`, "GET", "no-cache");
-			setCategories(res?.data);
-		} catch (err) {
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
+	const files = await getFiles(`?page=1&limit=100&sort=-createdAt`);
+	const categories = await getCategories(`?categoryType=playlist`);
 
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return {
-				msg: err?.response?.statusText,
-				status: err?.response?.status,
-			};
-		}
-	};
-
-	useEffect(() => {
-		fetchCategories(`?categoryType=playlist`);
-	}, []);
-
-	const [playlistData, setPlaylistData] = useState({
-		title: `Untitled`,
-		text: `No description`,
-		featured: true,
-		category: undefined,
-		commented: true,
-		password: ``,
-		onairstatus: `finished`,
-		onairtype: `tv`,
-		status: `draft`,
-	});
-	const {
-		title,
-		text,
-		featured,
-		category,
-		commented,
-		password,
-		onairstatus,
-		onairtype,
-		status,
-	} = playlistData;
-
-	const addPlaylist = async (e) => {
-		e.preventDefault();
-		try {
-			await fetchurl(`/playlists`, "POST", "no-cache", {
-				...playlistData,
-				playlistType: "video",
-				files: { avatar: files?.selected?._id },
-			});
-			toast.success(`Item created`);
-			resetForm();
-			router.push(`/noadmin/playlists`);
-		} catch (err) {
-			console.log(err);
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
-
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return { msg: err?.response?.statusText, status: err?.response?.status };
-		}
-	};
-
-	const resetForm = () => {
-		setPlaylistData({
-			title: `Untitled`,
-			text: `No description`,
-			featured: true,
-			category: undefined,
-			commented: true,
-			password: ``,
-			onairstatus: `finished`,
-			onairtype: `tv`,
-			status: `draft`,
+	const addPlaylist = async (formData) => {
+		"use server";
+		const rawFormData = {
+			title: formData.get("title"),
+			text: formData.get("text"),
+			featured: formData.get("featured"),
+			category: formData.get("category"),
+			commented: formData.get("commented"),
+			password: formData.get("password"),
+			onairstatus: formData.get("onairstatus"),
+			onairtype: formData.get("onairtype"),
+			status: formData.get("status"),
+			files: { avatar: formData.get("file") },
+		};
+		await fetchurl(`/playlists`, "POST", "no-cache", {
+			...rawFormData,
+			playlistType: "video",
 		});
+		redirect(`/noadmin/playlists`);
 	};
 
 	return (
-		<form className="row" onSubmit={addPlaylist}>
+		<form className="row" action={addPlaylist}>
 			<div className="col">
 				<label htmlFor="blog-title" className="form-label">
 					Title
@@ -130,13 +56,7 @@ const CreatePlaylist = () => {
 				<input
 					id="blog-title"
 					name="title"
-					value={title}
-					onChange={(e) => {
-						setPlaylistData({
-							...playlistData,
-							title: e.target.value,
-						});
-					}}
+					defaultValue="Untitled"
 					type="text"
 					className="form-control mb-3"
 					placeholder=""
@@ -145,13 +65,13 @@ const CreatePlaylist = () => {
 					Text
 				</label>
 				<MyTextArea
+					auth={auth}
 					id="text"
 					name="text"
-					value={text}
-					objectData={playlistData}
-					setObjectData={setPlaylistData}
 					onModel="Playlist"
 					advancedTextEditor={true}
+					customPlaceholder="No description"
+					defaultValue="No description..."
 				/>
 				<div className="row">
 					<div className="col">
@@ -161,13 +81,7 @@ const CreatePlaylist = () => {
 						<select
 							id="onairstatus"
 							name="onairstatus"
-							value={onairstatus}
-							onChange={(e) => {
-								setPlaylistData({
-									...playlistData,
-									onairstatus: e.target.value,
-								});
-							}}
+							defaultValue="onair"
 							className="form-control"
 						>
 							<option value={`onair`}>On Air</option>
@@ -182,19 +96,18 @@ const CreatePlaylist = () => {
 						<select
 							id="onairtype"
 							name="onairtype"
-							value={onairtype}
-							onChange={(e) => {
-								setPlaylistData({
-									...playlistData,
-									onairtype: e.target.value,
-								});
-							}}
+							defaultValue="tv"
 							className="form-control"
 						>
+							<option value={`anime`}>Anime</option>
+							<option value={`photo-album`}>Photo Album</option>
+							<option value={`cd-album`}>CD Album</option>
+							<option value={`podcast`}>Podcast</option>
 							<option value={`tv`}>TV</option>
 							<option value={`movie`}>Movie</option>
 							<option value={`special`}>Special</option>
 							<option value={`ova`}>Ova</option>
+							<option value={`internet`}>Internet</option>
 						</select>
 					</div>
 				</div>
@@ -203,36 +116,24 @@ const CreatePlaylist = () => {
 				<AdminSidebar
 					displayCategoryField={true}
 					displayAvatar={true}
-					avatar={files?.selected?._id}
-					status={status}
+					// avatar={files?.selected?._id}
+					status="draft"
 					fullWidth={false}
-					password={password}
-					featured={featured}
-					commented={commented}
+					password=""
+					featured={true}
+					commented={true}
 					embedding={false}
 					github_readme={""}
-					category={category}
-					categories={categories}
-					objectData={playlistData}
-					setObjectData={setPlaylistData}
+					category={undefined}
+					categories={categories.data}
 					multipleFiles={false}
 					onModel={"Playlist"}
+					files={files}
+					auth={auth}
+					token={token}
 				/>
 				<br />
-				<button
-					type="submit"
-					className="btn btn-secondary btn-sm float-start"
-					disabled={title.length > 0 && text.length > 0 ? !true : !false}
-				>
-					Submit
-				</button>
-				<button
-					type="button"
-					className="btn btn-secondary btn-sm float-end"
-					onClick={resetForm}
-				>
-					Reset
-				</button>
+				<FormButtons />
 			</div>
 		</form>
 	);

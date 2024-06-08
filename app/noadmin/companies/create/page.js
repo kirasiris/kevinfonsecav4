@@ -1,74 +1,41 @@
-"use client";
-import { fetchurl } from "@/helpers/setTokenOnServer";
-import { useRouter } from "next/navigation";
-import { useState, useContext } from "react";
-import { toast } from "react-toastify";
-import AuthContext from "@/helpers/globalContext";
-import AdminSidebar from "@/components/admin/adminsidebar";
-import MyTextArea from "@/components/global/mytextarea";
+import { fetchurl, getAuthTokenOnServer } from "@/helpers/setTokenOnServer";
+import { redirect } from "next/navigation";
+import AdminSidebar from "@/components/admin/myfinaladminsidebar";
+import MyTextArea from "@/components/global/myfinaltextarea";
+import FormButtons from "@/components/global/formbuttons";
 
-const CreateCompany = () => {
-	const { auth, files } = useContext(AuthContext);
-	const router = useRouter();
+async function getAuthenticatedUser() {
+	const res = await fetchurl(`/auth/me`, "GET", "force-cache");
+	return res;
+}
 
-	// Redirect if not authenticated
-	!auth.isAuthenticated && router.push("/auth/login");
+async function getFiles(params) {
+	const res = await fetchurl(`/files${params}`, "GET", "force-cache");
+	return res;
+}
 
-	// Redirec if not founder
-	auth.isAuthenticated &&
-		!auth.user.role.includes("founder") &&
-		router.push("/dashboard");
+const CreateCompany = async ({ params, searchParams }) => {
+	const token = await getAuthTokenOnServer();
+	const auth = await getAuthenticatedUser();
+	const files = await getFiles(`?page=1&limit=100&sort=-createdAt`);
 
-	const [companyData, setCompanyData] = useState({
-		title: `Untitled`,
-		text: `No description`,
-		address: ``,
-		password: ``,
-		status: `draft`,
-	});
-	const { title, text, address, password, status } = companyData;
+	const addCompany = async (formData) => {
+		"use server";
+		const rawFormData = {
+			title: formData.get("title"),
+			text: formData.get("text"),
+			address: formData.get("address"),
+			password: formData.get("password"),
+			status: formData.get("status"),
+			files: { avatar: formData.get("file") },
+		};
 
-	const addCompany = async (e) => {
-		e.preventDefault();
-		try {
-			await fetchurl(`/companies`, "POST", "no-cache", {
-				...companyData,
-				files: { avatar: files?.selected?._id },
-			});
-			router.push(`/noadmin/companies`);
-		} catch (err) {
-			console.log(err);
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
-
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return { msg: err?.response?.statusText, status: err?.response?.status };
-		}
-	};
-
-	const resetForm = () => {
-		setCompanyData({
-			title: `Untitled`,
-			text: `No description`,
-			address: ``,
-			password: ``,
-			status: `draft`,
-		});
+		await fetchurl(`/companies`, "POST", "no-cache", rawFormData);
+		redirect(`/noadmin/companies`);
 	};
 
 	return (
-		<form className="row" onSubmit={addCompany}>
+		<form className="row" action={addCompany}>
 			<div className="col">
 				<label htmlFor="blog-title" className="form-label">
 					Title
@@ -76,13 +43,7 @@ const CreateCompany = () => {
 				<input
 					id="blog-title"
 					name="title"
-					value={title}
-					onChange={(e) => {
-						setCompanyData({
-							...companyData,
-							title: e.target.value,
-						});
-					}}
+					defaultValue="Untitled"
 					type="text"
 					className="form-control mb-3"
 					placeholder=""
@@ -91,13 +52,13 @@ const CreateCompany = () => {
 					Text
 				</label>
 				<MyTextArea
+					auth={auth}
 					id="text"
 					name="text"
-					value={text}
-					objectData={companyData}
-					setObjectData={setCompanyData}
 					onModel="Course"
-					advancedTextEditor={false}
+					advancedTextEditor={true}
+					customPlaceholder="No description"
+					defaultValue="No description..."
 				/>
 				<label htmlFor="address" className="form-label">
 					Address
@@ -105,13 +66,7 @@ const CreateCompany = () => {
 				<input
 					id="address"
 					name="address"
-					value={address}
-					onChange={(e) => {
-						setCompanyData({
-							...companyData,
-							address: e.target.value,
-						});
-					}}
+					defaultValue=""
 					type="text"
 					className="form-control mb-3"
 					placeholder=""
@@ -121,36 +76,24 @@ const CreateCompany = () => {
 				<AdminSidebar
 					displayCategoryField={false}
 					displayAvatar={true}
-					avatar={files?.selected?._id}
-					status={status}
+					// avatar={files?.selected?._id}
+					status="draft"
 					fullWidth={false}
-					password={password}
+					password=""
 					featured={false}
 					commented={false}
 					embedding={false}
 					github_readme={""}
 					category={undefined}
 					categories={[]}
-					objectData={companyData}
-					setObjectData={setCompanyData}
 					multipleFiles={false}
 					onModel={"Company"}
+					files={files}
+					auth={auth}
+					token={token}
 				/>
 				<br />
-				<button
-					type="submit"
-					className="btn btn-secondary btn-sm float-start"
-					disabled={title.length > 0 && text.length > 0 ? !true : !false}
-				>
-					Submit
-				</button>
-				<button
-					type="button"
-					className="btn btn-secondary btn-sm float-end"
-					onClick={resetForm}
-				>
-					Reset
-				</button>
+				<FormButtons />
 			</div>
 		</form>
 	);

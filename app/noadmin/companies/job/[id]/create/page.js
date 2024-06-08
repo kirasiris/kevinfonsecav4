@@ -1,119 +1,57 @@
-"use client";
-import { fetchurl } from "@/helpers/setTokenOnServer";
-import { useRouter } from "next/navigation";
-import { useState, useEffect, useContext } from "react";
-import { toast } from "react-toastify";
-import AuthContext from "@/helpers/globalContext";
-import AdminSidebar from "@/components/admin/adminsidebar";
-import MyTextArea from "@/components/global/mytextarea";
+import { fetchurl, getAuthTokenOnServer } from "@/helpers/setTokenOnServer";
+import { redirect } from "next/navigation";
+import AdminSidebar from "@/components/admin/myfinaladminsidebar";
+import MyTextArea from "@/components/global/myfinaltextarea";
+import FormButtons from "@/components/global/formbuttons";
 
-const CreateJob = ({ params }) => {
-	const { auth } = useContext(AuthContext);
-	const router = useRouter();
+async function getAuthenticatedUser() {
+	const res = await fetchurl(`/auth/me`, "GET", "force-cache");
+	return res;
+}
 
-	// Redirect if not authenticated
-	!auth.isAuthenticated && router.push("/auth/login");
+async function getFiles(params) {
+	const res = await fetchurl(`/files${params}`, "GET", "force-cache");
+	return res;
+}
 
-	// Redirec if not founder
-	auth.isAuthenticated &&
-		!auth.user.role.includes("founder") &&
-		router.push("/dashboard");
+const CreateJob = async ({ params, searchParams }) => {
+	const token = await getAuthTokenOnServer();
+	const auth = await getAuthenticatedUser();
+	const files = await getFiles(`?page=1&limit=100&sort=-createdAt`);
 
 	// Redirect if not company
-	!auth?.user?.hasCompany && router.push(`/noadmin/companies`);
+	!auth?.data?.hasCompany && redirect(`/noadmin/companies`);
 
-	const [jobData, setJobData] = useState({
-		title: `Untitled`,
-		text: `No description`,
-		featured: true,
-		positionFilled: false,
-		experience_level: ["graduate"],
-		job_type: ["full-time"],
-		remote: "remote",
-		shift_and_schedule: ["monday-to-friday"],
-		encouraged_to_apply: "fair-chance",
-		starting_at: 7.5,
-		provides_training: true,
-		security_clearance: false,
-		address: "",
-		commented: false,
-		password: ``,
-		status: `draft`,
-	});
-	const {
-		title,
-		text,
-		featured,
-		positionFilled,
-		experience_level,
-		job_type,
-		remote,
-		shift_and_schedule,
-		encouraged_to_apply,
-		starting_at,
-		provides_training,
-		security_clearance,
-		address,
-		commented,
-		password,
-		status,
-	} = jobData;
-
-	const addJob = async (e) => {
-		e.preventDefault();
-		try {
-			await fetchurl(`/jobs`, "POST", "no-cache", {
-				...jobData,
-				resourceId: params.id,
-				website: "beFree",
-			});
-			toast.success(`Item created`);
-			resetForm();
-			router.push(`/noadmin/companies/read/${params.id}`);
-		} catch (err) {
-			console.log("Error", err);
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
-
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return { msg: err?.response?.statusText, status: err?.response?.status };
-		}
-	};
-
-	const resetForm = () => {
-		setJobData({
-			title: `Untitled`,
-			text: `No description`,
-			featured: true,
-			positionFilled: false,
-			experience_level: ["graduate"],
-			job_type: ["full-time"],
-			remote: "remote",
-			shift_and_schedule: ["monday-to-friday"],
-			encouraged_to_apply: "fair-chance",
-			starting_at: 7.5,
-			provides_training: true,
-			security_clearance: false,
-			address: "",
-			commented: false,
-			password: ``,
-			status: `draft`,
+	const addJob = async (formData) => {
+		"use server";
+		const rawFormData = {
+			title: formData.get("title"),
+			text: formData.get("text"),
+			featured: formData.get("featured"),
+			positionFilled: formData.get("positionFilled"),
+			experience_level: formData.get("experience_level"),
+			job_type: formData.get("job_type"),
+			remote: formData.get("remote"),
+			shift_and_schedule: formData.get("shift_and_schedule"),
+			encouraged_to_apply: formData.get("encouraged_to_apply"),
+			starting_at: formData.get("starting_at"),
+			provides_training: formData.get("provides_training"),
+			security_clearance: formData.get("security_clearance"),
+			address: formData.get("address"),
+			commented: formData.get("commented"),
+			password: formData.get("password"),
+			status: formData.get("status"),
+		};
+		await fetchurl(`/jobs`, "POST", "no-cache", {
+			...rawFormData,
+			resourceId: params.id,
+			website: "beFree",
 		});
+		redirect(`/noadmin/companies/read/${params.id}`);
 	};
 
 	return (
-		<form className="row" onSubmit={addJob}>
+		<form className="row" action={addJob}>
 			<div className="col">
 				<label htmlFor="blog-title" className="form-label">
 					Title
@@ -121,13 +59,7 @@ const CreateJob = ({ params }) => {
 				<input
 					id="blog-title"
 					name="title"
-					value={title}
-					onChange={(e) => {
-						setJobData({
-							...jobData,
-							title: e.target.value,
-						});
-					}}
+					defaultValue="Untitled"
 					type="text"
 					className="form-control mb-3"
 					placeholder=""
@@ -136,13 +68,13 @@ const CreateJob = ({ params }) => {
 					Text
 				</label>
 				<MyTextArea
+					auth={auth}
 					id="text"
 					name="text"
-					value={text}
-					objectData={jobData}
-					setObjectData={setJobData}
 					onModel="Job"
-					advancedTextEditor={false}
+					advancedTextEditor={true}
+					customPlaceholder="No description"
+					defaultValue="No description..."
 				/>
 				<div className="row">
 					<div className="col">
@@ -152,13 +84,7 @@ const CreateJob = ({ params }) => {
 						<select
 							id="positionFilled"
 							name="positionFilled"
-							value={positionFilled}
-							onChange={(e) => {
-								setJobData({
-									...jobData,
-									positionFilled: e.target.value,
-								});
-							}}
+							defaultValue={false}
 							className="form-control"
 						>
 							<option value={true}>Yes</option>
@@ -170,13 +96,7 @@ const CreateJob = ({ params }) => {
 						<input
 							id="starting_at"
 							name="starting_at"
-							value={starting_at}
-							onChange={(e) => {
-								setJobData({
-									...jobData,
-									starting_at: e.target.value,
-								});
-							}}
+							defaultValue="21"
 							type="text"
 							className="form-control mb-3"
 							placeholder="7.5"
@@ -189,16 +109,7 @@ const CreateJob = ({ params }) => {
 						<select
 							id="experience_level"
 							name="experience_level"
-							value={experience_level}
-							onChange={(e) => {
-								const selectedOptions = Array.from(
-									e.target.selectedOptions
-								).map((option) => option.value);
-								setJobData({
-									...jobData,
-									experience_level: selectedOptions,
-								});
-							}}
+							defaultValue="entry"
 							className="form-control"
 							multiple
 						>
@@ -213,16 +124,7 @@ const CreateJob = ({ params }) => {
 						<select
 							id="job_type"
 							name="job_type"
-							value={job_type}
-							onChange={(e) => {
-								const selectedOptions = Array.from(
-									e.target.selectedOptions
-								).map((option) => option.value);
-								setJobData({
-									...jobData,
-									job_type: selectedOptions,
-								});
-							}}
+							defaultValue="full-time"
 							className="form-control"
 						>
 							<option value={"full-time"}>Full Time</option>
@@ -239,13 +141,7 @@ const CreateJob = ({ params }) => {
 						<select
 							id="provides_training"
 							name="provides_training"
-							value={provides_training}
-							onChange={(e) => {
-								setJobData({
-									...jobData,
-									provides_training: e.target.value,
-								});
-							}}
+							defaultValue={true}
 							className="form-control"
 						>
 							<option value={true}>Yes</option>
@@ -257,13 +153,7 @@ const CreateJob = ({ params }) => {
 						<select
 							id="security_clearance"
 							name="security_clearance"
-							value={security_clearance}
-							onChange={(e) => {
-								setJobData({
-									...jobData,
-									security_clearance: e.target.value,
-								});
-							}}
+							defaultValue={false}
 							className="form-control"
 						>
 							<option value={true}>Yes</option>
@@ -277,13 +167,7 @@ const CreateJob = ({ params }) => {
 						<input
 							id="address"
 							name="address"
-							value={address}
-							onChange={(e) => {
-								setJobData({
-									...jobData,
-									address: e.target.value,
-								});
-							}}
+							defaultValue=""
 							type="text"
 							className="form-control mb-3"
 							placeholder=""
@@ -296,13 +180,7 @@ const CreateJob = ({ params }) => {
 						<select
 							id="remote"
 							name="remote"
-							value={remote}
-							onChange={(e) => {
-								setJobData({
-									...jobData,
-									remote: e.target.value,
-								});
-							}}
+							defaultValue="remote"
 							className="form-control"
 						>
 							<option value={`hybrid`}>Hybrid</option>
@@ -316,16 +194,7 @@ const CreateJob = ({ params }) => {
 						<select
 							id="shift_and_schedule"
 							name="shift_and_schedule"
-							value={shift_and_schedule}
-							onChange={(e) => {
-								const selectedOptions = Array.from(
-									e.target.selectedOptions
-								).map((option) => option.value);
-								setJobData({
-									...jobData,
-									shift_and_schedule: selectedOptions,
-								});
-							}}
+							defaultValue="monday-to-friday"
 							className="form-control"
 						>
 							<option value={`hybrid`}>Hybrid</option>
@@ -350,13 +219,7 @@ const CreateJob = ({ params }) => {
 						<select
 							id="encouraged_to_apply"
 							name="encouraged_to_apply"
-							value={encouraged_to_apply}
-							onChange={(e) => {
-								setJobData({
-									...jobData,
-									encouraged_to_apply: e.target.value,
-								});
-							}}
+							defaultValue="fair-chance"
 							className="form-control"
 						>
 							<option value={`fair-chance`}>Fair Chance</option>
@@ -374,36 +237,24 @@ const CreateJob = ({ params }) => {
 				<AdminSidebar
 					displayCategoryField={false}
 					displayAvatar={false}
-					avatar={""}
-					status={status}
+					// avatar={files?.selected?._id}
+					status="draft"
 					fullWidth={false}
-					password={password}
-					featured={featured}
-					commented={commented}
+					password=""
+					featured={true}
+					commented={true}
 					embedding={false}
 					github_readme={""}
 					category={undefined}
 					categories={[]}
-					objectData={jobData}
-					setObjectData={setJobData}
 					multipleFiles={false}
 					onModel={"Job"}
+					files={files}
+					auth={auth}
+					token={token}
 				/>
 				<br />
-				<button
-					type="submit"
-					className="btn btn-secondary btn-sm float-start"
-					disabled={title.length > 0 && text.length > 0 ? !true : !false}
-				>
-					Submit
-				</button>
-				<button
-					type="button"
-					className="btn btn-secondary btn-sm float-end"
-					onClick={resetForm}
-				>
-					Reset
-				</button>
+				<FormButtons />
 			</div>
 		</form>
 	);

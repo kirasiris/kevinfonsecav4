@@ -1,135 +1,47 @@
-"use client";
-import { fetchurl } from "@/helpers/setTokenOnServer";
-import { useParams, useRouter } from "next/navigation";
-import { useState, useEffect, useContext } from "react";
-import { toast } from "react-toastify";
-import AuthContext from "@/helpers/globalContext";
-import AdminSidebar from "@/components/admin/adminsidebar";
-import MyTextArea from "@/components/global/mytextarea";
+import { fetchurl, getAuthTokenOnServer } from "@/helpers/setTokenOnServer";
+import { redirect } from "next/navigation";
+import AdminSidebar from "@/components/admin/myfinaladminsidebar";
+import MyTextArea from "@/components/global/myfinaltextarea";
+import FormButtons from "@/components/global/formbuttons";
 
-const UpdateCompany = () => {
-	const { auth, files } = useContext(AuthContext);
-	const router = useRouter();
+async function getAuthenticatedUser() {
+	const res = await fetchurl(`/auth/me`, "GET", "force-cache");
+	return res;
+}
 
-	// Redirect if not authenticated
-	!auth.isAuthenticated && router.push("/auth/login");
+async function getFiles(params) {
+	const res = await fetchurl(`/files${params}`, "GET", "force-cache");
+	return res;
+}
 
-	// Redirec if not founder
-	auth.isAuthenticated &&
-		!auth.user.role.includes("founder") &&
-		router.push("/dashboard");
+async function getCompany(params) {
+	const res = await fetchurl(`/companies${params}`, "GET", "no-cache");
+	return res;
+}
 
-	const [companyData, setCompanyData] = useState({
-		title: `Untitled`,
-		avatar: files?.selected?._id,
-		text: `No description`,
-		address: ``,
-		password: ``,
-		status: `draft`,
-	});
-	const { title, avatar, text, address, password, status } = companyData;
+const UpdateCompany = async ({ params, searchParams }) => {
+	const company = await getCompany(`/${params.id}`);
 
-	const [company, setCompany] = useState(null);
-	const [loading, setLoading] = useState(false);
-	const [error, setError] = useState(false);
+	const token = await getAuthTokenOnServer();
+	const auth = await getAuthenticatedUser();
+	const files = await getFiles(`?page=1&limit=100&sort=-createdAt`);
 
-	const { id } = useParams();
-	const companyId = id;
-
-	useEffect(() => {
-		const fetchCompany = async () => {
-			try {
-				const res = await fetchurl(
-					`/companies/${companyId}`,
-					"GET",
-					"no-cache"
-				);
-				setCompany(res?.data);
-				setCompanyData({
-					title: res?.data?.title,
-					avatar: res?.data?.files?.avatar,
-					text: res?.data?.text,
-					address: res?.data?.address,
-					// password: res?.data?.password,
-					status: res?.data?.status,
-				});
-				setLoading(false);
-			} catch (err) {
-				console.log(err);
-				// const error = err.response.data.message;
-				const error = err?.response?.data?.error?.errors;
-				const errors = err?.response?.data?.errors;
-
-				if (error) {
-					// dispatch(setAlert(error, 'danger'));
-					error &&
-						Object.entries(error).map(([, value]) =>
-							toast.error(value.message)
-						);
-				}
-
-				if (errors) {
-					errors.forEach((error) => toast.error(error.msg));
-				}
-
-				toast.error(err?.response?.statusText);
-				return {
-					msg: err?.response?.statusText,
-					status: err?.response?.status,
-				};
-			}
+	const upgradeCompany = async (formData) => {
+		"use server";
+		const rawFormData = {
+			title: formData.get("title"),
+			text: formData.get("text"),
+			address: formData.get("address"),
+			password: formData.get("password"),
+			status: formData.get("status"),
+			files: { avatar: formData.get("file") },
 		};
-		fetchCompany();
-	}, [companyId]);
-
-	const upgradeCompany = async (e) => {
-		e.preventDefault();
-		try {
-			await fetchurl(`/companies/${company._id}`, "PUT", "no-cache", {
-				...companyData,
-				files: { avatar: files?.selected?._id },
-			});
-			router.push(`/noadmin/companies`);
-		} catch (err) {
-			console.log(err);
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
-
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return { msg: err?.response?.statusText, status: err?.response?.status };
-		}
+		await fetchurl(`/companies/${params.id}`, "PUT", "no-cache", rawFormData);
+		redirect("/noadmin/companies");
 	};
 
-	const resetForm = () => {
-		setCompanyData({
-			title: `Untitled`,
-			avatar: files?.selected?._id,
-			text: `No description`,
-			address: ``,
-			password: ``,
-			status: `draft`,
-		});
-	};
-
-	return loading || company === null || company === undefined ? (
-		error ? (
-			<>Not found</>
-		) : (
-			<>Loading</>
-		)
-	) : (
-		<form className="row" onSubmit={upgradeCompany}>
+	return (
+		<form className="row" action={upgradeCompany}>
 			<div className="col">
 				<label htmlFor="blog-title" className="form-label">
 					Title
@@ -137,13 +49,7 @@ const UpdateCompany = () => {
 				<input
 					id="blog-title"
 					name="title"
-					value={title}
-					onChange={(e) => {
-						setCompanyData({
-							...companyData,
-							title: e.target.value,
-						});
-					}}
+					defaultValue={company?.data?.title}
 					type="text"
 					className="form-control mb-3"
 					placeholder=""
@@ -152,13 +58,13 @@ const UpdateCompany = () => {
 					Text
 				</label>
 				<MyTextArea
+					auth={auth}
 					id="text"
 					name="text"
-					value={text}
-					objectData={companyData}
-					setObjectData={setCompanyData}
-					onModel="Course"
-					advancedTextEditor={false}
+					onModel="Company"
+					advancedTextEditor={true}
+					customPlaceholder="No description"
+					defaultValue={company?.data?.text}
 				/>
 				<label htmlFor="address" className="form-label">
 					Address
@@ -166,13 +72,7 @@ const UpdateCompany = () => {
 				<input
 					id="address"
 					name="address"
-					value={address}
-					onChange={(e) => {
-						setCompanyData({
-							...companyData,
-							address: e.target.value,
-						});
-					}}
+					defaultValue=""
 					type="text"
 					className="form-control mb-3"
 					placeholder=""
@@ -182,36 +82,24 @@ const UpdateCompany = () => {
 				<AdminSidebar
 					displayCategoryField={false}
 					displayAvatar={true}
-					avatar={avatar}
-					status={status}
+					avatar={company?.data?.files?.avatar}
+					status={company?.data?.status}
 					fullWidth={false}
-					password={password}
+					password={company?.data?.password}
 					featured={false}
 					commented={false}
 					embedding={false}
 					github_readme={""}
 					category={undefined}
 					categories={[]}
-					objectData={companyData}
-					setObjectData={setCompanyData}
 					multipleFiles={false}
 					onModel={"Company"}
+					files={files}
+					auth={auth}
+					token={token}
 				/>
 				<br />
-				<button
-					type="submit"
-					className="btn btn-secondary btn-sm float-start"
-					disabled={title.length > 0 && text.length > 0 ? !true : !false}
-				>
-					Submit
-				</button>
-				<button
-					type="button"
-					className="btn btn-secondary btn-sm float-end"
-					onClick={resetForm}
-				>
-					Reset
-				</button>
+				<FormButtons />
 			</div>
 		</form>
 	);

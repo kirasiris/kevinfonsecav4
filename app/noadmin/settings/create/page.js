@@ -1,133 +1,51 @@
-"use client";
 import { fetchurl } from "@/helpers/setTokenOnServer";
-import { useRouter } from "next/navigation";
-import { useState, useContext } from "react";
-import { toast } from "react-toastify";
-import AuthContext from "@/helpers/globalContext";
-import MyTextArea from "@/components/global/mytextarea";
+import { redirect } from "next/navigation";
+import MyTextArea from "@/components/global/myfinaltextarea";
+import FormButtons from "@/components/global/formbuttons";
 
-const CreateSetting = () => {
-	const { auth } = useContext(AuthContext);
-	const router = useRouter();
-
-	// Redirect if not authenticated
-	!auth.isAuthenticated && router.push("/auth/login");
-
-	// Redirec if not founder
-	auth.isAuthenticated &&
-		!auth.user.role.includes("founder") &&
-		router.push("/dashboard");
-
-	const [settingData, setSettingData] = useState({
-		author: "Kevin Uriel Fonseca",
-		author_email: "kebin1421@hotmail.com",
-		site_url: "",
-		home_url: "",
-		favicon: "",
-		logo: "",
-		charset: "UTF-8",
-		title: "Kevin Uriel Fonseca",
-		text: "",
-		showcase_image: "",
-		maintenance: false,
-		address: "",
-		language: "en-US",
-		facebook: "",
-		twitter: "",
-		youtube: "",
-		instagram: "",
-		google_api: "",
-		first_ad: "",
-		second_ad: "",
-		third_ad: "",
-		fourth_ad: "",
-		script_head: "",
-		script_footer: "",
-	});
-	const {
-		author,
-		author_email,
-		site_url,
-		home_url,
-		favicon,
-		logo,
-		charset,
-		title,
-		text,
-		showcase_image,
-		maintenance,
-		address,
-		language,
-		facebook,
-		twitter,
-		youtube,
-		instagram,
-		google_api,
-		first_ad,
-		second_ad,
-		third_ad,
-		fourth_ad,
-		script_head,
-		script_footer,
-	} = settingData;
-
-	const addSetting = async (e) => {
-		e.preventDefault();
-		try {
-			await fetchurl(`/settings`, "POST", "no-cache", settingData);
-			router.push(`/noadmin/settings`);
-		} catch (err) {
-			console.log(err);
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
-
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return { msg: err?.response?.statusText, status: err?.response?.status };
-		}
-	};
-
-	const resetForm = () => {
-		setSettingData({
-			author: "Kevin Uriel Fonseca",
-			author_email: "kebin1421@hotmail.com",
-			site_url: "",
-			home_url: "",
-			favicon: "",
-			logo: "",
-			charset: "UTF-8",
-			title: "Kevin Uriel Fonseca",
-			text: "",
-			showcase_image: "",
-			maintenance: false,
-			address: "",
-			language: "en-US",
-			facebook: "",
-			twitter: "",
-			youtube: "",
-			instagram: "",
-			google_api: "",
-			first_ad: "",
-			second_ad: "",
-			third_ad: "",
-			fourth_ad: "",
-			script_head: "",
-			script_footer: "",
+const CreateSetting = async ({ params, searchParams }) => {
+	const addSetting = async (formData) => {
+		"use server";
+		const rawFormData = {
+			author: formData.get("author"),
+			author_email: formData.get("author_email"),
+			site_url: formData.get("site_url"),
+			home_url: formData.get("home_url"),
+			favicon: formData.get("favicon"),
+			logo: formData.get("logo"),
+			charset: formData.get("charset"),
+			title: formData.get("title"),
+			text: formData.get("text"),
+			showcase_image: formData.get("showcase_image"),
+			maintenance: formData.get("maintenance"),
+			address: formData.get("address"),
+			language: formData.get("language"),
+			google_api: formData.get("google_api"),
+		};
+		await fetchurl(`/settings`, "POST", "no-cache", {
+			...rawFormData,
+			social: {
+				facebook: formData.get("facebook"),
+				twitter: formData.get("twitter"),
+				youtube: formData.get("youtube"),
+				instagram: formData.get("instagram"),
+			},
+			ads: {
+				first: formData.get("first_ad"),
+				second: formData.get("second_ad"),
+				third: formData.get("third_ad"),
+				fourth: formData.get("fourth_ad"),
+			},
+			scripts: {
+				head: formData.get("script_head"),
+				footer: formData.get("script_footer"),
+			},
 		});
+		redirect(`/noadmin/settings`);
 	};
 
 	return (
-		<form className="row" onSubmit={addSetting}>
+		<form className="row" action={addSetting}>
 			<div className="col">
 				<label htmlFor="blog-title" className="form-label">
 					Title
@@ -135,13 +53,7 @@ const CreateSetting = () => {
 				<input
 					id="blog-title"
 					name="title"
-					value={title}
-					onChange={(e) => {
-						setSettingData({
-							...settingData,
-							title: e.target.value,
-						});
-					}}
+					defaultValue=""
 					type="text"
 					className="form-control mb-3"
 					placeholder=""
@@ -152,28 +64,22 @@ const CreateSetting = () => {
 				<input
 					id="showcase_image"
 					name="showcase_image"
-					value={showcase_image}
-					onChange={(e) => {
-						setSettingData({
-							...settingData,
-							showcase_image: e.target.value,
-						});
-					}}
+					defaultValue=""
 					type="text"
 					className="form-control mb-3"
 					placeholder=""
 				/>
-				<label htmlFor="blog-text multipurpose-textarea" className="form-label">
+				<label htmlFor="text" className="form-label">
 					Text
 				</label>
 				<MyTextArea
-					id="blog-text multipurpose-textarea"
+					auth={undefined}
+					id="text"
 					name="text"
-					value={text}
-					objectData={settingData}
-					setObjectData={setSettingData}
 					onModel="Setting"
 					advancedTextEditor={false}
+					customPlaceholder="No description"
+					defaultValue="No description..."
 				/>
 				<div className="row">
 					<div className="col">
@@ -183,13 +89,7 @@ const CreateSetting = () => {
 						<input
 							id="author"
 							name="author"
-							value={author}
-							onChange={(e) => {
-								setSettingData({
-									...settingData,
-									author: e.target.value,
-								});
-							}}
+							defaultValue="Kevin Uriel Fonseca"
 							type="text"
 							className="form-control mb-3"
 							placeholder=""
@@ -202,13 +102,7 @@ const CreateSetting = () => {
 						<input
 							id="author_email"
 							name="author_email"
-							value={author_email}
-							onChange={(e) => {
-								setSettingData({
-									...settingData,
-									author_email: e.target.value,
-								});
-							}}
+							defaultValue="kebin1421@hotmail.com"
 							type="text"
 							className="form-control mb-3"
 							placeholder=""
@@ -223,13 +117,7 @@ const CreateSetting = () => {
 						<input
 							id="site_url"
 							name="site_url"
-							value={site_url}
-							onChange={(e) => {
-								setSettingData({
-									...settingData,
-									site_url: e.target.value,
-								});
-							}}
+							defaultValue="/"
 							type="text"
 							className="form-control mb-3"
 							placeholder=""
@@ -242,13 +130,7 @@ const CreateSetting = () => {
 						<input
 							id="home_url"
 							name="home_url"
-							value={home_url}
-							onChange={(e) => {
-								setSettingData({
-									...settingData,
-									home_url: e.target.value,
-								});
-							}}
+							defaultValue="/"
 							type="text"
 							className="form-control mb-3"
 							placeholder=""
@@ -263,13 +145,7 @@ const CreateSetting = () => {
 						<input
 							id="favicon"
 							name="favicon"
-							value={favicon}
-							onChange={(e) => {
-								setSettingData({
-									...settingData,
-									favicon: e.target.value,
-								});
-							}}
+							defaultValue=""
 							type="text"
 							className="form-control mb-3"
 							placeholder=""
@@ -282,13 +158,7 @@ const CreateSetting = () => {
 						<input
 							id="logo"
 							name="logo"
-							value={logo}
-							onChange={(e) => {
-								setSettingData({
-									...settingData,
-									logo: e.target.value,
-								});
-							}}
+							defaultValue=""
 							type="text"
 							className="form-control mb-3"
 							placeholder=""
@@ -301,13 +171,7 @@ const CreateSetting = () => {
 						<input
 							id="charset"
 							name="charset"
-							value={charset}
-							onChange={(e) => {
-								setSettingData({
-									...settingData,
-									charset: e.target.value,
-								});
-							}}
+							defaultValue="UTF-8"
 							type="text"
 							className="form-control mb-3"
 							placeholder=""
@@ -320,13 +184,7 @@ const CreateSetting = () => {
 						<select
 							id="maintenance"
 							name="maintenance"
-							value={maintenance}
-							onChange={(e) => {
-								setSettingData({
-									...settingData,
-									maintenance: e.target.value,
-								});
-							}}
+							defaultValue={false}
 							className="form-control"
 						>
 							<option value={true}>Yes</option>
@@ -340,13 +198,7 @@ const CreateSetting = () => {
 				<input
 					id="address"
 					name="address"
-					value={address}
-					onChange={(e) => {
-						setSettingData({
-							...settingData,
-							address: e.target.value,
-						});
-					}}
+					defaultValue=""
 					type="text"
 					className="form-control mb-3"
 					placeholder=""
@@ -357,13 +209,7 @@ const CreateSetting = () => {
 				<input
 					id="language"
 					name="language"
-					value={language}
-					onChange={(e) => {
-						setSettingData({
-							...settingData,
-							language: e.target.value,
-						});
-					}}
+					defaultValue="en-US"
 					type="text"
 					className="form-control mb-3"
 					placeholder=""
@@ -376,13 +222,7 @@ const CreateSetting = () => {
 						<input
 							id="facebook"
 							name="facebook"
-							value={facebook}
-							onChange={(e) => {
-								setSettingData({
-									...settingData,
-									facebook: e.target.value,
-								});
-							}}
+							defaultValue=""
 							type="text"
 							className="form-control mb-3"
 							placeholder=""
@@ -395,13 +235,7 @@ const CreateSetting = () => {
 						<input
 							id="twitter"
 							name="twitter"
-							value={twitter}
-							onChange={(e) => {
-								setSettingData({
-									...settingData,
-									twitter: e.target.value,
-								});
-							}}
+							defaultValue=""
 							type="text"
 							className="form-control mb-3"
 							placeholder=""
@@ -414,13 +248,7 @@ const CreateSetting = () => {
 						<input
 							id="youtube"
 							name="youtube"
-							value={youtube}
-							onChange={(e) => {
-								setSettingData({
-									...settingData,
-									youtube: e.target.value,
-								});
-							}}
+							defaultValue=""
 							type="text"
 							className="form-control mb-3"
 							placeholder=""
@@ -433,13 +261,7 @@ const CreateSetting = () => {
 						<input
 							id="instagram"
 							name="instagram"
-							value={instagram}
-							onChange={(e) => {
-								setSettingData({
-									...settingData,
-									instagram: e.target.value,
-								});
-							}}
+							defaultValue=""
 							type="text"
 							className="form-control mb-3"
 							placeholder=""
@@ -452,13 +274,7 @@ const CreateSetting = () => {
 				<input
 					id="google_api"
 					name="google_api"
-					value={google_api}
-					onChange={(e) => {
-						setSettingData({
-							...settingData,
-							google_api: e.target.value,
-						});
-					}}
+					defaultValue=""
 					type="text"
 					className="form-control mb-3"
 					placeholder=""
@@ -470,13 +286,13 @@ const CreateSetting = () => {
 							First
 						</label>
 						<MyTextArea
+							auth={undefined}
 							id="first_ad"
-							name="text"
-							value={first_ad}
-							objectData={settingData}
-							setObjectData={setSettingData}
+							name="first_ad"
 							onModel="Setting"
 							advancedTextEditor={false}
+							customPlaceholder=""
+							defaultValue=""
 						/>
 					</div>
 					<div className="col">
@@ -484,13 +300,13 @@ const CreateSetting = () => {
 							Second
 						</label>
 						<MyTextArea
+							auth={undefined}
 							id="second_ad"
-							name="text"
-							value={second_ad}
-							objectData={settingData}
-							setObjectData={setSettingData}
+							name="second_ad"
 							onModel="Setting"
 							advancedTextEditor={false}
+							customPlaceholder=""
+							defaultValue=""
 						/>
 					</div>
 					<div className="col">
@@ -498,13 +314,13 @@ const CreateSetting = () => {
 							Third
 						</label>
 						<MyTextArea
+							auth={undefined}
 							id="third_ad"
-							name="text"
-							value={third_ad}
-							objectData={settingData}
-							setObjectData={setSettingData}
+							name="third_ad"
 							onModel="Setting"
 							advancedTextEditor={false}
+							customPlaceholder=""
+							defaultValue=""
 						/>
 					</div>
 					<div className="col">
@@ -512,13 +328,13 @@ const CreateSetting = () => {
 							Fourth
 						</label>
 						<MyTextArea
+							auth={undefined}
 							id="fourth_ad"
-							name="text"
-							value={fourth_ad}
-							objectData={settingData}
-							setObjectData={setSettingData}
+							name="fourth_ad"
 							onModel="Setting"
 							advancedTextEditor={false}
+							customPlaceholder=""
+							defaultValue=""
 						/>
 					</div>
 				</div>
@@ -529,13 +345,13 @@ const CreateSetting = () => {
 							Head
 						</label>
 						<MyTextArea
+							auth={undefined}
 							id="script_head"
-							name="text"
-							value={script_head}
-							objectData={settingData}
-							setObjectData={setSettingData}
+							name="script_head"
 							onModel="Setting"
 							advancedTextEditor={false}
+							customPlaceholder="Paste some JS code here"
+							defaultValue=""
 						/>
 					</div>
 					<div className="col">
@@ -543,31 +359,18 @@ const CreateSetting = () => {
 							Footer
 						</label>
 						<MyTextArea
+							auth={undefined}
 							id="script_footer"
-							name="text"
-							value={script_footer}
-							objectData={settingData}
-							setObjectData={setSettingData}
+							name="script_footer"
 							onModel="Setting"
 							advancedTextEditor={false}
+							customPlaceholder="Paste some JS code here"
+							defaultValue=""
 						/>
 					</div>
 				</div>
 				<br />
-				<button
-					type="submit"
-					className="btn btn-secondary btn-sm float-start"
-					disabled={title.length > 0 && text.length > 0 ? !true : !false}
-				>
-					Submit
-				</button>
-				<button
-					type="button"
-					className="btn btn-secondary btn-sm float-end"
-					onClick={resetForm}
-				>
-					Reset
-				</button>
+				<FormButtons />
 			</div>
 		</form>
 	);

@@ -1,122 +1,29 @@
-"use client";
 import { fetchurl } from "@/helpers/setTokenOnServer";
-import { useParams, useRouter } from "next/navigation";
-import { useState, useEffect, useContext } from "react";
-import { toast } from "react-toastify";
-import AuthContext from "@/helpers/globalContext";
-import AdminSidebar from "@/components/admin/adminsidebar";
+import { redirect } from "next/navigation";
+import AdminSidebar from "@/components/admin/myfinaladminsidebar";
+import FormButtons from "@/components/global/formbuttons";
 
-const UpdateMenu = () => {
-	const { auth, files } = useContext(AuthContext);
-	const router = useRouter();
+async function getMenu(params) {
+	const res = await fetchurl(`/menus${params}`, "GET", "no-cache");
+	return res;
+}
 
-	// Redirect if not authenticated
-	!auth.isAuthenticated && router.push("/auth/login");
+const UpdateMenu = async ({ params, searchParams }) => {
+	const menu = await getMenu(`/${params.id}`);
 
-	// Redirec if not founder
-	auth.isAuthenticated &&
-		!auth.user.role.includes("founder") &&
-		router.push("/dashboard");
-
-	const [menuData, setMenuData] = useState({
-		title: `Untitled`,
-		position: "top",
-		status: `draft`,
-	});
-	const { title, position, status } = menuData;
-
-	const [menu, setMenu] = useState(null);
-	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState(false);
-
-	const { id } = useParams();
-	const menuId = id;
-
-	useEffect(() => {
-		const fetchMenu = async () => {
-			try {
-				const res = await fetchurl(`/menus/${menuId}`, "GET", "no-cache");
-				setMenu(res?.data);
-				setMenuData({
-					title: res?.data?.title,
-					position: res?.data?.position,
-					status: res?.data?.status,
-				});
-				setLoading(false);
-			} catch (err) {
-				console.log(err);
-				// const error = err.response.data.message;
-				const error = err?.response?.data?.error?.errors;
-				const errors = err?.response?.data?.errors;
-
-				if (error) {
-					// dispatch(setAlert(error, 'danger'));
-					error &&
-						Object.entries(error).map(([, value]) =>
-							toast.error(value.message)
-						);
-				}
-
-				if (errors) {
-					errors.forEach((error) => toast.error(error.msg));
-				}
-
-				toast.error(err?.response?.statusText);
-				return {
-					msg: err?.response?.statusText,
-					status: err?.response?.status,
-				};
-			}
+	const upgradeMenu = async (formData) => {
+		"use server";
+		const rawFormData = {
+			title: formData.get("title"),
+			position: formData.get("position"),
+			status: formData.get("status"),
 		};
-		fetchMenu();
-	}, [menuId]);
-
-	const upgradeMenu = async (e) => {
-		e.preventDefault();
-		try {
-			await fetchurl(`/menus/${menu._id}`, "PUT", "no-cache", {
-				...menuData,
-				files: { avatar: files?.selected?._id },
-			});
-			toast.success(`Item updated`);
-			router.push(`/noadmin/menus`);
-		} catch (err) {
-			console.log(err);
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
-
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return { msg: err?.response?.statusText, status: err?.response?.status };
-		}
+		await fetchurl(`/menus/${params.id}`, "PUT", "no-cache", rawFormData);
+		redirect(`/noadmin/menus`);
 	};
 
-	const resetForm = () => {
-		setMenuData({
-			title: `Untitled`,
-			position: "top",
-			status: `draft`,
-		});
-	};
-
-	return loading || menu === null || menu === undefined ? (
-		error ? (
-			<>Not found</>
-		) : (
-			<>Loading...</>
-		)
-	) : (
-		<form className="row" onSubmit={upgradeMenu}>
+	return (
+		<form className="row" action={upgradeMenu}>
 			<div className="col">
 				<label htmlFor="menu-title" className="form-label">
 					Title
@@ -124,13 +31,7 @@ const UpdateMenu = () => {
 				<input
 					id="menu-title"
 					name="title"
-					value={title}
-					onChange={(e) => {
-						setMenuData({
-							...menuData,
-							title: e.target.value,
-						});
-					}}
+					defaultValue={menu.data.title}
 					type="text"
 					className="form-control mb-3"
 					placeholder=""
@@ -141,13 +42,7 @@ const UpdateMenu = () => {
 				<select
 					id="position"
 					name="position"
-					value={position}
-					onChange={(e) => {
-						setMenuData({
-							...menuData,
-							position: e.target.value,
-						});
-					}}
+					defaultValue={menu.data.position}
 					className="form-control"
 				>
 					<option value={`top`}>Top</option>
@@ -159,7 +54,7 @@ const UpdateMenu = () => {
 					displayCategoryField={false}
 					displayAvatar={false}
 					avatar={""}
-					status={status}
+					status={menu.data.status}
 					fullWidth={false}
 					password={""}
 					featured={false}
@@ -168,26 +63,11 @@ const UpdateMenu = () => {
 					github_readme={""}
 					category={undefined}
 					categories={[]}
-					objectData={menuData}
-					setObjectData={setMenuData}
 					multipleFiles={false}
 					onModel={"Menu"}
 				/>
 				<br />
-				<button
-					type="submit"
-					className="btn btn-secondary btn-sm float-start"
-					disabled={title.length > 0 ? !true : !false}
-				>
-					Submit
-				</button>
-				<button
-					type="button"
-					className="btn btn-secondary btn-sm float-end"
-					onClick={resetForm}
-				>
-					Reset
-				</button>
+				<FormButtons />
 			</div>
 		</form>
 	);

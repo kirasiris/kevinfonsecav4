@@ -1,161 +1,77 @@
-"use client";
 import { fetchurl } from "@/helpers/setTokenOnServer";
-import { useParams, useRouter } from "next/navigation";
-import { useState, useEffect, useContext } from "react";
-import { toast } from "react-toastify";
-import AuthContext from "@/helpers/globalContext";
 import ParseHtml from "@/layout/parseHtml";
 import Image from "next/image";
 import Link from "next/link";
 
-const ReadQuiz = () => {
-	const { auth } = useContext(AuthContext);
-	const router = useRouter();
+async function getQuiz(params) {
+	const res = await fetchurl(`/quizzes${params}`, "GET", "no-cache");
+	return res;
+}
 
-	// Redirect if not authenticated
-	!auth.isAuthenticated && router.push("/auth/login");
+async function getQuestions(params) {
+	const res = await fetchurl(`/questions${params}`, "GET", "no-cache");
+	return res;
+}
 
-	// Redirec if not founder
-	auth.isAuthenticated &&
-		!auth.user.role.includes("founder") &&
-		router.push("/dashboard");
+const ReadQuiz = async ({ params, searchParams }) => {
+	const quiz = await getQuiz(`/${params.id}`);
+	const questions = await getQuestions(
+		`?resourceId=${quiz?.data?._id}&sort=orderingNumber`
+	);
 
-	const [quiz, setQuiz] = useState(null);
-	const [questions, setQuestions] = useState([]);
-	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState(false);
+	// const updateOrder = async (e, index) => {
+	// 	e.dataTransfer.setData("itemIndex", index.toString());
+	// };
 
-	const { id } = useParams();
-	const quizId = id;
+	// const updateDrop = async (e, index) => {
+	// 	const movingItemIndex = e.dataTransfer.getData("itemIndex");
+	// 	const targetItemIndex = index;
 
-	useEffect(() => {
-		const fetchQuiz = async () => {
-			try {
-				const res = await fetchurl(`/quizzes/${quizId}`, "GET", "no-cache");
-				setQuiz(res?.data);
-				setLoading(false);
-			} catch (err) {
-				console.log(err);
-				// const error = err.response.data.message;
-				const error = err?.response?.data?.error?.errors;
-				const errors = err?.response?.data?.errors;
+	// 	let allQuestions = questions; // Create a copy of the questions array
 
-				if (error) {
-					// dispatch(setAlert(error, 'danger'));
-					error &&
-						Object.entries(error).map(([, value]) =>
-							toast.error(value.message)
-						);
-				}
+	// 	let movingItem = allQuestions[movingItemIndex];
+	// 	let targetItem = allQuestions[targetItemIndex];
 
-				if (errors) {
-					errors.forEach((error) => toast.error(error.msg));
-				}
+	// 	if (movingItem.orderingNumber !== targetItem.orderingNumber) {
+	// 		// Only update the ordering numbers if they are different
 
-				toast.error(err?.response?.statusText);
-				return {
-					msg: err?.response?.statusText,
-					status: err?.response?.status,
-				};
-			}
-		};
+	// 		// Switch the ordering numbers of the moving item and the target item
+	// 		const tempOrderingNumber = movingItem.orderingNumber;
+	// 		movingItem.orderingNumber = targetItem.orderingNumber;
+	// 		targetItem.orderingNumber = tempOrderingNumber;
 
-		const fetchQuestions = async () => {
-			try {
-				const res = await fetchurl(
-					`/questions?resourceId=${quizId}&sort=orderingNumber`,
-					"GET",
-					"no-cache"
-				);
-				setQuestions(res?.data);
-			} catch (err) {
-				console.log(err);
-				// const error = err.response.data.message;
-				const error = err?.response?.data?.error?.errors;
-				const errors = err?.response?.data?.errors;
+	// 		// Update the ordering numbers in the backend
+	// 		await fetchurl(
+	// 			`/questions/${movingItem._id}/updateorder`,
+	// 			"PUT",
+	// 			"no-cache",
+	// 			{
+	// 				index: movingItem.orderingNumber, // Update the moving item's ordering number
+	// 			}
+	// 		);
+	// 		await fetchurl(
+	// 			`/questions/${targetItem._id}/updateorder`,
+	// 			"PUT",
+	// 			"no-cache",
+	// 			{
+	// 				index: targetItem.orderingNumber, // Update the target item's ordering number
+	// 			}
+	// 		);
+	// 	}
 
-				if (error) {
-					// dispatch(setAlert(error, 'danger'));
-					error &&
-						Object.entries(error).map(([, value]) =>
-							toast.error(value.message)
-						);
-				}
+	// 	allQuestions.splice(movingItemIndex, 1); // Remove the moving item from the original position
+	// 	allQuestions.splice(targetItemIndex, 0, movingItem); // Insert the moving item at the target position
 
-				if (errors) {
-					errors.forEach((error) => toast.error(error.msg));
-				}
+	// 	setQuestions([...questions], allQuestions);
+	// };
 
-				toast.error(err?.response?.statusText);
-				return {
-					msg: err?.response?.statusText,
-					status: err?.response?.status,
-				};
-			}
-		};
-		fetchQuiz();
-		fetchQuestions();
-	}, [quizId]);
-
-	const updateOrder = async (e, index) => {
-		e.dataTransfer.setData("itemIndex", index.toString());
-	};
-
-	const updateDrop = async (e, index) => {
-		const movingItemIndex = e.dataTransfer.getData("itemIndex");
-		const targetItemIndex = index;
-
-		let allQuestions = questions; // Create a copy of the questions array
-
-		let movingItem = allQuestions[movingItemIndex];
-		let targetItem = allQuestions[targetItemIndex];
-
-		if (movingItem.orderingNumber !== targetItem.orderingNumber) {
-			// Only update the ordering numbers if they are different
-
-			// Switch the ordering numbers of the moving item and the target item
-			const tempOrderingNumber = movingItem.orderingNumber;
-			movingItem.orderingNumber = targetItem.orderingNumber;
-			targetItem.orderingNumber = tempOrderingNumber;
-
-			// Update the ordering numbers in the backend
-			await fetchurl(
-				`/questions/${movingItem._id}/updateorder`,
-				"PUT",
-				"no-cache",
-				{
-					index: movingItem.orderingNumber, // Update the moving item's ordering number
-				}
-			);
-			await fetchurl(
-				`/questions/${targetItem._id}/updateorder`,
-				"PUT",
-				"no-cache",
-				{
-					index: targetItem.orderingNumber, // Update the target item's ordering number
-				}
-			);
-		}
-
-		allQuestions.splice(movingItemIndex, 1); // Remove the moving item from the original position
-		allQuestions.splice(targetItemIndex, 0, movingItem); // Insert the moving item at the target position
-
-		setQuestions([...questions], allQuestions);
-	};
-
-	return loading || quiz === null || quiz === undefined ? (
-		error ? (
-			<>Not found</>
-		) : (
-			<>Loading...</>
-		)
-	) : (
+	return (
 		<div className="row">
 			<div className="col-lg-8">
 				<div className="card rounded-0 mb-3">
-					<div className="card-header">{quiz.title}</div>
+					<div className="card-header">{quiz?.data?.title || "Untitled"}</div>
 					<div className="card-body">
-						<ParseHtml text={quiz.text} />
+						<ParseHtml text={quiz?.data?.text} />
 					</div>
 				</div>
 				<div className="card rounded-0">
@@ -169,7 +85,7 @@ const ReadQuiz = () => {
 							<div className="btn-group">
 								<Link
 									href={{
-										pathname: `/noadmin/quizzes/question/${quiz._id}/create`,
+										pathname: `/noadmin/quizzes/question/${quiz?.data?._id}/create`,
 										query: {},
 									}}
 									passHref
@@ -182,19 +98,19 @@ const ReadQuiz = () => {
 							</div>
 						</div>
 					</div>
-					{questions?.length > 0 ? (
+					{questions?.data?.length > 0 ? (
 						<ul
 							className="list-group list-group-flush overflow-x-hidden"
 							style={{ maxHeight: "1000px" }}
-							onDragOver={(e) => e.preventDefault()}
+							// onDragOver={(e) => e.preventDefault()}
 						>
-							{questions.map((question, index) => (
+							{questions?.data?.map((question, index) => (
 								<li
 									key={question._id}
 									className={`list-group-item ${question.orderingNumber}`}
 									draggable
-									onDragStart={(e) => updateOrder(e, index)}
-									onDrop={(e) => updateDrop(e, index)}
+									// onDragStart={(e) => updateOrder(e, index)}
+									// onDrop={(e) => updateDrop(e, index)}
 								>
 									<div className="float-start">
 										<Link
@@ -233,10 +149,10 @@ const ReadQuiz = () => {
 					<Image
 						className="img-fluid p-3"
 						src={
-							quiz?.files?.avatar?.location?.secure_location ||
+							quiz?.data?.files?.avatar?.location?.secure_location ||
 							`https://source.unsplash.com/random/260x370`
 						}
-						alt={`${quiz?.files?.avatar?.location?.filename}'s featured image`}
+						alt={`${quiz?.data?.files?.avatar?.location?.filename}'s featured image`}
 						width={440}
 						height={570}
 						priority

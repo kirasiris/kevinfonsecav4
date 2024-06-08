@@ -1,139 +1,54 @@
-"use client";
-import { fetchurl } from "@/helpers/setTokenOnServer";
-import { useRouter } from "next/navigation";
-import { useState, useEffect, useContext } from "react";
-import { toast } from "react-toastify";
-import AuthContext from "@/helpers/globalContext";
-import AdminSidebar from "@/components/admin/adminsidebar";
-import MyTextArea from "@/components/global/mytextarea";
+import { fetchurl, getAuthTokenOnServer } from "@/helpers/setTokenOnServer";
+import { redirect } from "next/navigation";
+import AdminSidebar from "@/components/admin/myfinaladminsidebar";
+import MyTextArea from "@/components/global/myfinaltextarea";
+import FormButtons from "@/components/global/formbuttons";
 
-const CreateQuiz = () => {
-	const { auth, files } = useContext(AuthContext);
-	const router = useRouter();
+async function getAuthenticatedUser() {
+	const res = await fetchurl(`/auth/me`, "GET", "force-cache");
+	return res;
+}
 
-	// Redirect if not authenticated
-	!auth.isAuthenticated && router.push("/auth/login");
+async function getFiles(params) {
+	const res = await fetchurl(`/files${params}`, "GET", "no-cache");
+	return res;
+}
 
-	// Redirec if not founder
-	auth.isAuthenticated &&
-		!auth.user.role.includes("founder") &&
-		router.push("/dashboard");
+async function getCategories(params) {
+	const res = await fetchurl(`/categories${params}`, "GET", "no-cache");
+	return res;
+}
 
-	const [categories, setCategories] = useState([]);
+const CreateQuiz = async ({ params, searchParams }) => {
+	const token = await getAuthTokenOnServer();
+	const auth = await getAuthenticatedUser();
+	const files = await getFiles(`?page=1&limit=100&sort=-createdAt`);
+	const categories = await getCategories(`?categoryType=quiz`);
 
-	const fetchCategories = async (params = "") => {
-		try {
-			const res = await fetchurl(`/categories${params}`, "GET", "no-cache");
-			setCategories(res?.data);
-		} catch (err) {
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
-
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return {
-				msg: err?.response?.statusText,
-				status: err?.response?.status,
-			};
-		}
-	};
-
-	useEffect(() => {
-		fetchCategories(`?categoryType=quiz`);
-	}, []);
-
-	const [quizData, setQuizData] = useState({
-		title: `Untitled`,
-		text: `No description`,
-		duration: 0,
-		minimumScore: 3,
-		maximumScore: 100,
-		featured: true,
-		embedding: true,
-		category: undefined,
-		commented: true,
-		password: ``,
-		status: `draft`,
-		attempts: 1,
-		singlePage: true,
-	});
-	const {
-		title,
-		text,
-		duration,
-		minimumScore,
-		maximumScore,
-		featured,
-		embedding,
-		category,
-		commented,
-		password,
-		status,
-		attempts,
-		singlePage,
-	} = quizData;
-
-	const addQuiz = async (e) => {
-		e.preventDefault();
-		try {
-			await fetchurl(`/quizzes`, "POST", "no-cache", {
-				...quizData,
-				files: { avatar: files?.selected?._id },
-			});
-			toast.success(`Item created`);
-			resetForm();
-			router.push(`/noadmin/quizzes`);
-		} catch (err) {
-			console.log(err);
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
-
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return { msg: err?.response?.statusText, status: err?.response?.status };
-		}
-	};
-
-	const resetForm = () => {
-		setQuizData({
-			title: `Untitled`,
-			text: `No description`,
-			duration: 0,
-			minimumScore: 3,
-			maximumScore: 100,
-			featured: true,
-			embedding: true,
-			category: undefined,
-			commented: true,
-			password: ``,
-			status: `draft`,
-			attempts: 1,
-			singlePage: true,
-		});
+	const addQuiz = async (formData) => {
+		"use server";
+		const rawFormData = {
+			title: formData.get("title"),
+			text: formData.get("text"),
+			duration: formData.get("duration"),
+			minimumScore: formData.get("minimumScore"),
+			maximumScore: formData.get("maximumScore"),
+			featured: formData.get("featured"),
+			embedding: formData.get("embedding"),
+			category: formData.get("category"),
+			commented: formData.get("commented"),
+			password: formData.get("password"),
+			status: formData.get("status"),
+			attempts: formData.get("attempts"),
+			singlePage: formData.get("singlePage"),
+			files: { avatar: formData.get("file") },
+		};
+		await fetchurl(`/quizzes`, "POST", "no-cache", rawFormData);
+		redirect(`/noadmin/quizzes`);
 	};
 
 	return (
-		<form className="row" onSubmit={addQuiz}>
+		<form className="row" action={addQuiz}>
 			<div className="col">
 				<label htmlFor="blog-title" className="form-label">
 					Title
@@ -141,13 +56,7 @@ const CreateQuiz = () => {
 				<input
 					id="blog-title"
 					name="title"
-					value={title}
-					onChange={(e) => {
-						setQuizData({
-							...quizData,
-							title: e.target.value,
-						});
-					}}
+					defaultValue="Untitled"
 					type="text"
 					className="form-control mb-3"
 					placeholder=""
@@ -156,13 +65,13 @@ const CreateQuiz = () => {
 					Text
 				</label>
 				<MyTextArea
+					auth={auth}
 					id="text"
 					name="text"
-					value={text}
-					objectData={quizData}
-					setObjectData={setQuizData}
-					onModel="Quizz"
-					advancedTextEditor={false}
+					onModel="Quiz"
+					advancedTextEditor={true}
+					customPlaceholder="No description"
+					defaultValue="No description..."
 				/>
 				<div className="row">
 					<div className="col">
@@ -173,13 +82,7 @@ const CreateQuiz = () => {
 							<input
 								id="duration"
 								name="duration"
-								value={duration}
-								onChange={(e) => {
-									setQuizData({
-										...quizData,
-										duration: e.target.value,
-									});
-								}}
+								defaultValue={1}
 								type="number"
 								className="form-control mb-3"
 								placeholder=""
@@ -195,13 +98,7 @@ const CreateQuiz = () => {
 						<input
 							id="minimumScore"
 							name="minimumScore"
-							value={minimumScore}
-							onChange={(e) => {
-								setQuizData({
-									...quizData,
-									minimumScore: e.target.value,
-								});
-							}}
+							defaultValue={3}
 							type="number"
 							className="form-control mb-3"
 							placeholder=""
@@ -216,13 +113,7 @@ const CreateQuiz = () => {
 						<input
 							id="maximumScore"
 							name="maximumScore"
-							value={maximumScore}
-							onChange={(e) => {
-								setQuizData({
-									...quizData,
-									maximumScore: e.target.value,
-								});
-							}}
+							defaultValue={100}
 							type="number"
 							className="form-control mb-3"
 							placeholder=""
@@ -239,13 +130,7 @@ const CreateQuiz = () => {
 						<input
 							id="attempts"
 							name="attempts"
-							value={attempts}
-							onChange={(e) => {
-								setQuizData({
-									...quizData,
-									attempts: e.target.value,
-								});
-							}}
+							defaultValue={1}
 							type="number"
 							className="form-control mb-3"
 							placeholder=""
@@ -259,13 +144,7 @@ const CreateQuiz = () => {
 						<select
 							id="singlePage"
 							name="singlePage"
-							value={singlePage}
-							onChange={(e) => {
-								setQuizData({
-									...quizData,
-									singlePage: e.target.value,
-								});
-							}}
+							defaultValue={false}
 							className="form-control"
 						>
 							<option value={true}>Yes</option>
@@ -278,36 +157,24 @@ const CreateQuiz = () => {
 				<AdminSidebar
 					displayCategoryField={true}
 					displayAvatar={true}
-					avatar={files?.selected?._id}
-					status={status}
+					// avatar={files?.selected?._id}
+					status="draft"
 					fullWidth={false}
-					password={password}
-					featured={featured}
-					commented={commented}
-					embedding={embedding}
+					password=""
+					featured={true}
+					commented={true}
+					embedding={true}
 					github_readme={""}
-					category={category}
-					categories={categories}
-					objectData={quizData}
-					setObjectData={setQuizData}
+					category={undefined}
+					categories={categories.data}
 					multipleFiles={false}
 					onModel={"Quiz"}
+					files={files}
+					auth={auth}
+					token={token}
 				/>
 				<br />
-				<button
-					type="submit"
-					className="btn btn-secondary btn-sm float-start"
-					disabled={title.length > 0 && text.length > 0 ? !true : !false}
-				>
-					Submit
-				</button>
-				<button
-					type="button"
-					className="btn btn-secondary btn-sm float-end"
-					onClick={resetForm}
-				>
-					Reset
-				</button>
+				<FormButtons />
 			</div>
 		</form>
 	);

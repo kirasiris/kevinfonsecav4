@@ -1,80 +1,51 @@
-"use client";
-import { fetchurl } from "@/helpers/setTokenOnServer";
-import { useRouter } from "next/navigation";
-import { useState, useContext } from "react";
-import { toast } from "react-toastify";
-import AuthContext from "@/helpers/globalContext";
-import AdminSidebar from "@/components/admin/adminsidebar";
-import MyTextArea from "@/components/global/mytextarea";
+import { fetchurl, getAuthTokenOnServer } from "@/helpers/setTokenOnServer";
+import { redirect } from "next/navigation";
+import AdminSidebar from "@/components/admin/myfinaladminsidebar";
+import MyTextArea from "@/components/global/myfinaltextarea";
+import FormButtons from "@/components/global/formbuttons";
 
-const CreateQuestion = ({ params }) => {
-	const { auth, files } = useContext(AuthContext);
-	const router = useRouter();
+async function getAuthenticatedUser() {
+	const res = await fetchurl(`/auth/me`, "GET", "force-cache");
+	return res;
+}
 
-	// Redirect if not authenticated
-	!auth.isAuthenticated && router.push("/auth/login");
+async function getFiles(params) {
+	const res = await fetchurl(`/files${params}`, "GET", "no-cache");
+	return res;
+}
 
-	// Redirec if not founder
-	auth.isAuthenticated &&
-		!auth.user.role.includes("founder") &&
-		router.push("/dashboard");
+const CreateQuestion = async ({ params, searchParams }) => {
+	const token = await getAuthTokenOnServer();
+	const auth = await getAuthenticatedUser();
+	const files = await getFiles(`?page=1&limit=100&sort=-createdAt`);
 
-	const [questionData, setQuestionData] = useState({
-		title: `Untitled`,
-		text: `No description`,
-		password: ``,
-		status: `draft`,
-		correctAnswer: "",
-		answers: {},
-	});
+	const addQuestion = async (formData) => {
+		"use server";
+		const rawFormData = {
+			title: formData.get("title"),
+			text: formData.get("text"),
+			password: formData.get("password"),
+			status: formData.get("status"),
+			correctAnswer: formData.get("correctAnswer"),
+			answers: {
+				A: formData.get("answersA"),
+				B: formData.get("answersB"),
+				C: formData.get("answersC"),
+				D: formData.get("answersD"),
+			},
+			files: { avatar: formData.get("file") },
+		};
 
-	const { title, text, password, status, correctAnswer, answers } =
-		questionData;
-
-	const addQuestion = async (e) => {
-		e.preventDefault();
-		try {
-			await fetchurl(`/questions`, "POST", "no-cache", {
-				...questionData,
-				resourceId: params.id,
-				files: { avatar: files?.selected?._id },
-				onModel: "Quiz",
-			});
-			router.push(`/noadmin/quizzes/read/${params.id}`);
-		} catch (err) {
-			console.log(err);
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
-
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return { msg: err?.response?.statusText, status: err?.response?.status };
-		}
-	};
-
-	const resetForm = () => {
-		setQuestionData({
-			title: `Untitled`,
-			text: `No description`,
-			password: ``,
-			status: `draft`,
-			correctAnswer: "",
-			answers: {},
+		await fetchurl(`/questions`, "POST", "no-cache", {
+			...rawFormData,
+			resourceId: params.id,
+			onModel: "Quiz",
 		});
+		redirect(`/noadmin/quizzes/read/${params.id}`);
 	};
 
 	return (
-		<form className="row" onSubmit={addQuestion}>
+		<form className="row" action={addQuestion}>
 			<div className="col">
 				<label htmlFor="blog-title" className="form-label">
 					Title
@@ -82,13 +53,7 @@ const CreateQuestion = ({ params }) => {
 				<input
 					id="blog-title"
 					name="title"
-					value={title}
-					onChange={(e) => {
-						setQuestionData({
-							...questionData,
-							title: e.target.value,
-						});
-					}}
+					defaultValue="Untitled"
 					type="text"
 					className="form-control mb-3"
 					placeholder=""
@@ -97,13 +62,13 @@ const CreateQuestion = ({ params }) => {
 					Text
 				</label>
 				<MyTextArea
+					auth={auth}
 					id="text"
 					name="text"
-					value={text}
-					objectData={questionData}
-					setObjectData={setQuestionData}
-					onModel="question"
-					advancedTextEditor={false}
+					onModel="Question"
+					advancedTextEditor={true}
+					customPlaceholder="No description"
+					defaultValue="No description..."
 				/>
 				<label htmlFor="correctAnswer" className="form-label">
 					Correct Answer
@@ -111,13 +76,7 @@ const CreateQuestion = ({ params }) => {
 				<input
 					id="correctAnswer"
 					name="correctAnswer"
-					value={correctAnswer}
-					onChange={(e) => {
-						setQuestionData({
-							...questionData,
-							correctAnswer: e.target.value,
-						});
-					}}
+					defaultValue=""
 					type="text"
 					className="form-control mb-3"
 					placeholder=""
@@ -130,16 +89,7 @@ const CreateQuestion = ({ params }) => {
 						<input
 							id="answersA"
 							name="answersA"
-							value={answers.A}
-							onChange={(e) => {
-								setQuestionData({
-									...questionData,
-									answers: {
-										...answers,
-										A: e.target.value,
-									},
-								});
-							}}
+							defaultValue=""
 							type="text"
 							className="form-control mb-3"
 							placeholder=""
@@ -150,16 +100,7 @@ const CreateQuestion = ({ params }) => {
 						<input
 							id="answersB"
 							name="answersB"
-							value={answers.B}
-							onChange={(e) => {
-								setQuestionData({
-									...questionData,
-									answers: {
-										...answers,
-										B: e.target.value,
-									},
-								});
-							}}
+							defaultValue=""
 							type="text"
 							className="form-control mb-3"
 							placeholder=""
@@ -172,16 +113,7 @@ const CreateQuestion = ({ params }) => {
 						<input
 							id="answersC"
 							name="answersC"
-							value={answers.C}
-							onChange={(e) => {
-								setQuestionData({
-									...questionData,
-									answers: {
-										...answers,
-										C: e.target.value,
-									},
-								});
-							}}
+							defaultValue=""
 							type="text"
 							className="form-control mb-3"
 							placeholder=""
@@ -192,16 +124,7 @@ const CreateQuestion = ({ params }) => {
 						<input
 							id="answersD"
 							name="answersD"
-							value={answers.D}
-							onChange={(e) => {
-								setQuestionData({
-									...questionData,
-									answers: {
-										...answers,
-										D: e.target.value,
-									},
-								});
-							}}
+							defaultValue=""
 							type="text"
 							className="form-control mb-3"
 							placeholder=""
@@ -213,36 +136,24 @@ const CreateQuestion = ({ params }) => {
 				<AdminSidebar
 					displayCategoryField={false}
 					displayAvatar={true}
-					avatar={files?.selected?._id}
-					status={status}
+					// avatar={files?.selected?._id}
+					status="draft"
 					fullWidth={false}
-					password={password}
+					password=""
 					featured={false}
 					commented={false}
 					embedding={false}
-					github={false}
+					github_readme={""}
 					category={undefined}
 					categories={[]}
-					objectData={questionData}
-					setObjectData={setQuestionData}
 					multipleFiles={false}
 					onModel={"Question"}
+					files={files}
+					auth={auth}
+					token={token}
 				/>
 				<br />
-				<button
-					type="submit"
-					className="btn btn-secondary btn-sm float-start"
-					disabled={title.length > 0 && text.length > 0 ? !true : !false}
-				>
-					Submit
-				</button>
-				<button
-					type="button"
-					className="btn btn-secondary btn-sm float-end"
-					onClick={resetForm}
-				>
-					Reset
-				</button>
+				<FormButtons />
 			</div>
 		</form>
 	);

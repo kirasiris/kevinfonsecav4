@@ -1,36 +1,189 @@
-"use client";
 import QuickBlogDraft from "@/components/admin/quickblogdraft";
 import QuickQuoteDraft from "@/components/admin/quickquotedraft";
-import AuthContext from "@/helpers/globalContext";
 import DynamicCards from "@/components/global/dynamiccards";
 import Header from "@/layout/header";
-import { useContext } from "react";
-import { useRouter } from "next/navigation";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 
-const AdminHome = ({ params, searchParams }) => {
-	const { auth, totalResults } = useContext(AuthContext);
-	const router = useRouter();
+async function getBlogs(params) {
+	const res = await fetchurl(`/blogs${params}`, "GET", "default");
+	return res;
+}
 
-	// Redirect if not authenticated
-	!auth.isAuthenticated && router.push("/auth/login");
+async function getThemes(params) {
+	const res = await fetchurl(`/themes${params}`, "GET", "default");
+	return res;
+}
 
-	// Redirec if not founder
-	auth.isAuthenticated &&
-		!auth.user.role.includes("founder") &&
-		router.push("/dashboard");
+// async function getPosts(params) {
+// 	const res = await fetchurl(`/posts${params}`, "GET", "default");
+// 	return res;
+// }
+
+// async function getPlaylists(params) {
+// 	const res = await fetchurl(`/playlists${params}`, "GET", "default");
+// 	return res;
+// }
+
+// async function getCourses(params) {
+// 	const res = await fetchurl(`/courses${params}`, "GET", "default");
+// 	return res;
+// }
+
+// async function getVideos(params) {
+// 	const res = await fetchurl(`/videos${params}`, "GET", "default");
+// 	return res;
+// }
+
+// async function getUsers(params) {
+// 	const res = await fetchurl(`/users${params}`, "GET", "default");
+// 	return res;
+// }
+
+// async function getComments(params) {
+// 	const res = await fetchurl(`/comments${params}`, "GET", "default");
+// 	return res;
+// }
+
+// async function getQuizzes(params) {
+// 	const res = await fetchurl(`/quizzes${params}`, "GET", "default");
+// 	return res;
+// }
+
+// async function getEmails(params) {
+// 	const res = await fetchurl(`/emails${params}`, "GET", "default");
+// 	return res;
+// }
+
+// async function getReports(params) {
+// 	const res = await fetchurl(`/reports${params}`, "GET", "default");
+// 	return res;
+// }
+
+// async function getSecrets(params) {
+// 	const res = await fetchurl(`/extras/secrets${params}`, "GET", "default");
+// 	return res;
+// }
+
+// async function getFiles(params) {
+// 	const res = await fetchurl(`/files${params}`, "GET", "default");
+// 	return res;
+// }
+
+// async function getCategories(params) {
+// 	const res = await fetchurl(`/categories${params}`, "GET", "default");
+// 	return res;
+// }
+
+// async function getChangelogs(params) {
+// 	const res = await fetchurl(`/changelogs${params}`, "GET", "default");
+// 	return res;
+// }
+
+// async function getNewsletters(params) {
+// 	const res = await fetchurl(`/newsletters${params}`, "GET", "default");
+// 	return res;
+// }
+
+// async function getQuotes(params) {
+// 	const res = await fetchurl(`/extras/quotes${params}`, "GET", "default");
+// 	return res;
+// }
+
+// async function getYouTubeDownloads(params) {
+// 	const res = await fetchurl(`/extras/youtube${params}`, "GET", "default");
+// 	return res;
+// }
+
+// async function getShortUrls(params) {
+// 	const res = await fetchurl(`/extras/shorturls${params}`, "GET", "default");
+// 	return res;
+// }
+
+// async function getLogs(params) {
+// 	const res = await fetchurl(`/logs${params}`, "GET", "default");
+// 	return res;
+// }
+
+const AdminHome = async ({ params, searchParams }) => {
+	const blogsData = getBlogs(`?postType=blog`);
+	const themesData = getThemes(`?postType=theme`);
+	// const postsData = getPosts(`?page=1`);
+	// const playlistsData = getPlaylists(`?page=1`);
+	// const coursesData = getCourses(`?page=1`);
+	// const videosData = getVideos(`?page=1`);
+	// const usersData = getUsers(`?page=1`);
+	// const commentsData = getComments(`?page=1`);
+	// const quizzesData = getQuizzes(`?page=1`);
+	// const emailsData = getEmails(`?page=1`);
+	// const reportsData = getReports(`?page=1`);
+	// const filesData = getFiles(`?page=1`);
+	// const categoriesData = getCategories(`?page=1`);
+	// const changelogsData = getChangelogs(`?page=1`);
+	// const newslettersData = getNewsletters(`?page=1`);
+	// const logsData = getLogs(`?page=1`);
+
+	// const secrets = await getSecrets(`?page=1`);
+	// const quotes = await getQuotes(`?page=1`);
+	// const youtubedownloads = await getYouTubeDownloads(`?page=1`);
+	// const shorturls = await getShortUrls(`?page=1`);
+
+	const [
+		blogs,
+		themes,
+		posts,
+		playlists,
+		courses,
+		videos,
+		users,
+		comments,
+		quizzes,
+		emails,
+		reports,
+		files,
+		categories,
+		changelogs,
+		newsletters,
+		logs,
+	] = await Promise.all([
+		blogsData,
+		themesData,
+		// postsData,
+		// playlistsData,
+		// coursesData,
+		// videosData,
+		// usersData,
+		// commentsData,
+		// quizzesData,
+		// emailsData,
+		// reportsData,
+		// filesData,
+		// categoriesData,
+		// changelogsData,
+		// newslettersData,
+		// logsData,
+	]);
+
+	// const { auth, totalResults } = useContext(AuthContext);
+	// const router = useRouter();
+
+	// // Redirect if not authenticated
+	// !auth.isAuthenticated && router.push("/auth/login");
+
+	// // Redirec if not founder
+	// auth.isAuthenticated &&
+	// 	!auth.user.role.includes("founder") &&
+	// 	router.push("/dashboard");
 
 	return (
 		<>
 			<Header
-				title={`Welcome back, ${
-					auth.loading ? "loading..." : auth.user.username
-				}`}
+				title={`Welcome back!`}
 				description="This is the place where you have the full control of your website. Feel free to play with it as you like!"
 			/>
 			<div className="row">
 				<DynamicCards
 					title="Blogs"
-					text={totalResults.blogs}
+					text={blogs?.data?.length || `0`}
 					// bgcolor="dark"
 					// txtcolor="red"
 					myLink="/noadmin/blogs"
@@ -41,7 +194,7 @@ const AdminHome = ({ params, searchParams }) => {
 				/>
 				<DynamicCards
 					title="Themes"
-					text={totalResults.themes}
+					text={themes?.data?.length || `0`}
 					// bgcolor="dark"
 					// txtcolor="red"
 					myLink="/noadmin/themes"
@@ -50,9 +203,9 @@ const AdminHome = ({ params, searchParams }) => {
 						limit: 10,
 					}}
 				/>
-				<DynamicCards
+				{/* <DynamicCards
 					title="Posts"
-					text={totalResults.posts}
+					text={posts?.data?.length || `0`}
 					// bgcolor="dark"
 					// txtcolor="red"
 					myLink="/noadmin/posts"
@@ -63,7 +216,7 @@ const AdminHome = ({ params, searchParams }) => {
 				/>
 				<DynamicCards
 					title="Playlists"
-					text={totalResults.playlists}
+					text={playlists?.data?.length || `0`}
 					// bgcolor="dark"
 					// txtcolor="red"
 					myLink="/noadmin/playlists"
@@ -74,7 +227,7 @@ const AdminHome = ({ params, searchParams }) => {
 				/>
 				<DynamicCards
 					title="Courses"
-					text={totalResults.courses}
+					text={courses?.data?.length || `0`}
 					// bgcolor="dark"
 					// txtcolor="red"
 					myLink="/noadmin/courses"
@@ -85,7 +238,7 @@ const AdminHome = ({ params, searchParams }) => {
 				/>
 				<DynamicCards
 					title="Videos"
-					text={totalResults.videos}
+					text={videos?.data?.length || `0`}
 					// bgcolor="dark"
 					// txtcolor="red"
 					myLink="/noadmin/videos"
@@ -96,7 +249,7 @@ const AdminHome = ({ params, searchParams }) => {
 				/>
 				<DynamicCards
 					title="Users"
-					text={totalResults.users}
+					text={users?.data?.length || `0`}
 					// bgcolor="dark"
 					// txtcolor="red"
 					myLink="/noadmin/users"
@@ -107,7 +260,7 @@ const AdminHome = ({ params, searchParams }) => {
 				/>
 				<DynamicCards
 					title="Comments"
-					text={totalResults.comments}
+					text={comments?.data?.length || `0`}
 					// bgcolor="dark"
 					// txtcolor="red"
 					myLink="/noadmin/comments"
@@ -118,7 +271,7 @@ const AdminHome = ({ params, searchParams }) => {
 				/>
 				<DynamicCards
 					title="Quizzes"
-					text={totalResults.quizzes}
+					text={quizzes?.data?.length || `0`}
 					// bgcolor="dark"
 					// txtcolor="red"
 					myLink="/noadmin/quizzes"
@@ -129,7 +282,7 @@ const AdminHome = ({ params, searchParams }) => {
 				/>
 				<DynamicCards
 					title="Emails"
-					text={totalResults.emails}
+					text={emails?.data?.length || `0`}
 					// bgcolor="dark"
 					// txtcolor="red"
 					myLink="/noadmin/emails"
@@ -140,7 +293,7 @@ const AdminHome = ({ params, searchParams }) => {
 				/>
 				<DynamicCards
 					title="Reports"
-					text={totalResults.reports}
+					text={reports?.data?.length || `0`}
 					// bgcolor="dark"
 					// txtcolor="red"
 					myLink="/noadmin/reports"
@@ -151,7 +304,7 @@ const AdminHome = ({ params, searchParams }) => {
 				/>
 				<DynamicCards
 					title="Secrets"
-					text={totalResults.secrets}
+					text={secrets?.data?.length || `0`}
 					// bgcolor="dark"
 					// txtcolor="red"
 					myLink="/noadmin/secrets"
@@ -162,7 +315,7 @@ const AdminHome = ({ params, searchParams }) => {
 				/>
 				<DynamicCards
 					title="Files"
-					text={totalResults.files}
+					text={files?.data?.length || `0`}
 					// bgcolor="dark"
 					// txtcolor="red"
 					myLink="/noadmin/files"
@@ -173,7 +326,7 @@ const AdminHome = ({ params, searchParams }) => {
 				/>
 				<DynamicCards
 					title="Categories"
-					text={totalResults.categories}
+					text={categories?.data?.length || `0`}
 					// bgcolor="dark"
 					// txtcolor="red"
 					myLink="/noadmin/categories"
@@ -184,7 +337,7 @@ const AdminHome = ({ params, searchParams }) => {
 				/>
 				<DynamicCards
 					title="Changelogs"
-					text={totalResults.changelogs}
+					text={changelogs?.data?.length || `0`}
 					// bgcolor="dark"
 					// txtcolor="red"
 					myLink="/noadmin/changelogs"
@@ -195,7 +348,7 @@ const AdminHome = ({ params, searchParams }) => {
 				/>
 				<DynamicCards
 					title="Newsletter Subscribers"
-					text={totalResults.newsletters}
+					text={newsletters?.data?.length || `0`}
 					// bgcolor="dark"
 					// txtcolor="red"
 					myLink="/noadmin/newsletters"
@@ -206,7 +359,7 @@ const AdminHome = ({ params, searchParams }) => {
 				/>
 				<DynamicCards
 					title="Quotes"
-					text={totalResults.quotes}
+					text={quotes?.data?.length || `0`}
 					// bgcolor="dark"
 					// txtcolor="red"
 					myLink="/noadmin/quotes"
@@ -217,7 +370,7 @@ const AdminHome = ({ params, searchParams }) => {
 				/>
 				<DynamicCards
 					title="YouTube"
-					text={totalResults.ytdownloads}
+					text={youtubedownloads?.data?.length || `0`}
 					// bgcolor="dark"
 					// txtcolor="red"
 					myLink="/noadmin/ytdownloads"
@@ -228,7 +381,7 @@ const AdminHome = ({ params, searchParams }) => {
 				/>
 				<DynamicCards
 					title="Short Urls"
-					text={totalResults.shorturls}
+					text={shorturls?.data?.length || `0`}
 					// bgcolor="dark"
 					// txtcolor="red"
 					myLink="/noadmin/shorturls"
@@ -239,7 +392,7 @@ const AdminHome = ({ params, searchParams }) => {
 				/>
 				<DynamicCards
 					title="Logs"
-					text={totalResults.logs}
+					text={logs?.data?.length || `0`}
 					// bgcolor="dark"
 					// txtcolor="red"
 					myLink="/noadmin/logs"
@@ -247,7 +400,7 @@ const AdminHome = ({ params, searchParams }) => {
 						page: 1,
 						limit: 10,
 					}}
-				/>
+				/> */}
 			</div>
 			<div className="row">
 				<div className="col">

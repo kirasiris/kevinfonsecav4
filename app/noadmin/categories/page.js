@@ -1,230 +1,93 @@
-"use client";
 import { fetchurl } from "@/helpers/setTokenOnServer";
-import { useRouter } from "next/navigation";
-import { useState, useEffect, useContext } from "react";
-import { toast } from "react-toastify";
-import Single from "@/components/admin/categories/single";
-import AuthContext from "@/helpers/globalContext";
 import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
-import AdminCardHeaderMenu from "@/components/admin/admincardheadermenu";
-import MyTextArea from "@/components/global/mytextarea";
-import ClientNumericPagination from "@/layout/clientnumericpagination";
+import MyTextArea from "@/components/global/myfinaltextarea";
+import FormButtons from "@/components/global/formbuttons";
+import List from "@/components/admin/categories/list";
+import { revalidatePath } from "next/cache";
 
-const AdminCategoriesIndex = () => {
-	const {
-		auth,
-		totalPages,
-		setTotalPages,
-		currentResults,
-		setCurrentResults,
-		totalResults,
-		setTotalResults,
-	} = useContext(AuthContext);
-	const router = useRouter();
+async function getCategories(params) {
+	const res = await fetchurl(`/categories${params}`, "GET", "no-cache");
+	return res;
+}
 
-	// Redirect if not authenticated
-	!auth.isAuthenticated && router.push("/auth/login");
-
-	// Redirec if not founder
-	auth.isAuthenticated &&
-		!auth.user.role.includes("founder") &&
-		router.push("/dashboard");
-
-	const [isTopLevel, setTopLevel] = useState(true);
-	const [categories, setCategories] = useState([]);
-	const [page, setPage] = useState(1);
-	const [limit] = useState(50);
-	const [sortby] = useState(`-createdAt`);
-	const [params, setParams] = useState(
-		`?page=${page}&limit=${limit}&sort=${sortby}`
+const AdminCategoriesIndex = async ({ params, searchParams }) => {
+	const categories = await getCategories(
+		`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
 	);
-	const [keyword, setKeyword] = useState("");
-	const [list, setList] = useState([]);
-	const [loading, setLoading] = useState(true);
-
-	const fetchCategories = async () => {
-		try {
-			const res = await fetchurl(`/categories${params}`, "GET", "no-cache");
-			setCategories(res?.data);
-			setTotalPages(res?.pagination?.totalpages);
-			setCurrentResults(res?.count);
-			setTotalResults({ ...totalResults, categories: res?.countAll });
-			setPage(res?.pagination?.current);
-			setLoading(false);
-		} catch (err) {
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
-
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return {
-				msg: err?.response?.statusText,
-				status: err?.response?.status,
-			};
-		}
+	const createCategory = async (formData) => {
+		"use server";
+		const rawFormData = {
+			title: formData.get("title"),
+			text: formData.get("text"),
+			parentCategory: formData.get("parentCategory"),
+		};
+		await fetchurl(`/categories`, "POST", "no-cache", rawFormData);
+		revalidatePath(
+			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+		);
 	};
 
-	useEffect(() => {
-		fetchCategories();
-	}, [router, params]);
-
-	const [categoryData, setCategoryData] = useState({
-		title: `Untitled`,
-		text: `No description`,
-		parentCategory: undefined,
-	});
-
-	const { title, text, parentCategory } = categoryData;
-
-	const createCategory = async (e) => {
-		e.preventDefault();
-		try {
-			const res = await fetchurl(
-				`/categories`,
-				"POST",
-				"no-cache",
-				categoryData
-			);
-			setCategories([res?.data, ...categories]);
-			setTotalResults({ ...totalResults, categories: categories.length + 1 });
-			toast.success(`Item created`);
-			resetForm();
-		} catch (err) {
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
-
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return { msg: err?.response?.statusText, status: err?.response?.status };
-		}
+	const draftIt = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/categories/${id}/draftit`, "PUT", "no-cache");
+		revalidatePath(
+			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+		);
 	};
 
-	useEffect(() => {
-		setList(categories);
-	}, [categories]);
+	const publishIt = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/categories/${id}/publishit`, "PUT", "no-cache");
+		revalidatePath(
+			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+		);
+	};
 
-	useEffect(() => {
-		if (keyword !== "") {
-			const result = categories.filter((object) => {
-				return object.title.toLowerCase().startsWith(keyword.toLowerCase());
-			});
-			setList(result);
-		} else {
-			setList(categories);
-		}
-	}, [keyword]);
+	const trashIt = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/categories/${id}/trashit`, "PUT", "no-cache");
+		revalidatePath(
+			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+		);
+	};
+
+	const scheduleIt = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/categories/${id}/scheduleit`, "PUT", "no-cache");
+		revalidatePath(
+			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+		);
+	};
 
 	const handleDelete = async (id) => {
-		try {
-			await fetchurl(`/categories/${id}`, "DELETE", "no-cache");
-			toast.success("Category deleted");
-			fetchCategories();
-		} catch (err) {
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
-
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return {
-				msg: err?.response?.statusText,
-				status: err?.response?.status,
-			};
-		}
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/categories/${id}/permanently`, "DELETE", "no-cache");
+		revalidatePath(
+			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+		);
 	};
 
 	const handleTrashAll = async () => {
-		try {
-			await fetchurl(`/categories/deleteall`, "PUT", "no-cache");
-			toast.success("Categories trashed");
-			fetchCategories();
-		} catch (err) {
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
-
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return {
-				msg: err?.response?.statusText,
-				status: err?.response?.status,
-			};
-		}
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/categories/deleteall`, "PUT", "no-cache");
+		revalidatePath(
+			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+		);
 	};
 
 	const handleDeleteAll = async () => {
-		try {
-			await fetchurl(`/categories/deleteall`, "DELETE", "no-cache");
-			toast.success("Categories deleted");
-			fetchCategories();
-		} catch (err) {
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
-
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return {
-				msg: err?.response?.statusText,
-				status: err?.response?.status,
-			};
-		}
-	};
-
-	const resetForm = () => {
-		setCategoryData({
-			title: `Untitled`,
-			text: `No description`,
-			parentCategory: undefined,
-		});
-		setTopLevel(true);
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/categories/deleteall/permanently`, "DELETE", "no-cache");
+		revalidatePath(
+			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+		);
 	};
 
 	return (
@@ -238,23 +101,17 @@ const AdminCategoriesIndex = () => {
 			/>
 			<div className="row">
 				<div className="col">
-					<form onSubmit={createCategory}>
+					<form action={createCategory}>
 						<label htmlFor="category-title" className="form-label">
 							Title
 						</label>
 						<input
 							id="category-title"
 							name="title"
-							value={title}
-							onChange={(e) => {
-								setCategoryData({
-									...categoryData,
-									title: e.target.value,
-								});
-							}}
+							defaultValue=""
 							type="text"
 							className="form-control mb-3"
-							placeholder=""
+							placeholder="Untitled"
 						/>
 						<label htmlFor="text" className="form-label">
 							Text
@@ -262,118 +119,47 @@ const AdminCategoriesIndex = () => {
 						<MyTextArea
 							id="text"
 							name="text"
-							value={text}
-							objectData={categoryData}
-							setObjectData={setCategoryData}
+							customPlaceholder="Type something..."
+							defaultValue=""
 							onModel="Category"
 							advancedTextEditor={false}
 						/>
-						<div className="form-check form-switch">
-							<input
-								className="form-check-input"
-								type="checkbox"
-								role="switch"
-								id="isTopLevel"
-								defaultChecked={isTopLevel}
-								onClick={() => setTopLevel(!isTopLevel)}
-							/>
-							<label htmlFor="isTopLevel" className="form-check-label">
-								{isTopLevel ? "Is Top Level" : "Is Not Top Level"}
-							</label>
-						</div>
-						{!isTopLevel && (
-							<>
-								<label htmlFor="parent" className="form-label">
-									Parent
-								</label>
-								<select
-									id="parent"
-									name="parent"
-									value={parentCategory}
-									onChange={(e) => {
-										setCategoryData({
-											...categoryData,
-											parentCategory: e.target.value,
-										});
-									}}
-									className="form-control"
-								>
-									{categories?.map((item) => (
-										<option key={item._id} value={item._id}>
-											{item.title}
-										</option>
-									))}
-								</select>
-							</>
-						)}
+						<label htmlFor="parent" className="form-label">
+							Parent Category
+						</label>
+						<select
+							id="parent"
+							name="parent"
+							defaultValue=""
+							className="form-control"
+						>
+							{categories?.data?.map((item) => (
+								<option key={item._id} value={item._id}>
+									{item.title}
+								</option>
+							))}
+						</select>
 						<br />
-						<button
-							type="submit"
-							className="btn btn-secondary btn-sm float-start"
-							disabled={title.length > 0 && text.length > 0 ? !true : !false}
-						>
-							Submit
-						</button>
-						<button
-							type="button"
-							className="btn btn-secondary btn-sm float-end"
-							onClick={resetForm}
-						>
-							Reset
-						</button>
+						<FormButtons />
 					</form>
 				</div>
 				<div className="col-lg-10">
 					<div className="card rounded-0">
-						<AdminCardHeaderMenu
-							allLink={`/noadmin/categories`}
+						<List
+							allLink="/noadmin/categories"
 							pageText="Categories"
-							currentResults={currentResults}
-							totalResults={totalResults.categories}
-							addLink={`/noadmin/categories`}
-							addLinkText={`category`}
+							addLink="/noadmin/categories"
+							searchOn="/noadmin/categories"
+							objects={categories}
+							searchParams={searchParams}
+							handleDraft={draftIt}
+							handlePublish={publishIt}
+							handleTrash={trashIt}
+							handleSchedule={scheduleIt}
+							handleDelete={handleDelete}
 							handleTrashAllFunction={handleTrashAll}
 							handleDeleteAllFunction={handleDeleteAll}
-							keyword={keyword}
-							setKeyword={setKeyword}
 						/>
-						{list?.length > 0 ? (
-							<>
-								<ul className="list-group list-group-flush">
-									{list?.map((category) => (
-										<Single
-											key={category._id}
-											linkTo={`/noadmin/categories/update/${category._id}`}
-											object={category}
-											handleDelete={handleDelete}
-											objects={list}
-											setObjects={setCategories}
-											setTotalResults={setTotalResults}
-										/>
-									))}
-									<li className="list-group-item">
-										{page} / {totalPages}
-									</li>
-								</ul>
-								<ClientNumericPagination
-									totalPages={totalPages || Math.ceil(list.length / limit)}
-									page={page}
-									limit={limit}
-									sortby={sortby}
-									siblings={1}
-									setParams={setParams}
-									router={router}
-								/>
-							</>
-						) : (
-							<div
-								className={`alert alert-${
-									loading ? "primary" : "danger"
-								} rounded-0 m-0 border-0`}
-							>
-								{loading ? "Loading" : "Nothing found"}
-							</div>
-						)}
 					</div>
 				</div>
 			</div>

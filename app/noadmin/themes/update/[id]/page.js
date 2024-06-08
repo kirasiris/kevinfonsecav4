@@ -1,194 +1,58 @@
-"use client";
-import { fetchurl } from "@/helpers/setTokenOnServer";
-import { useParams, useRouter } from "next/navigation";
-import { useState, useEffect, useContext } from "react";
-import { toast } from "react-toastify";
-import AuthContext from "@/helpers/globalContext";
-import AdminSidebar from "@/components/admin/adminsidebar";
-import MyTextArea from "@/components/global/mytextarea";
+import { fetchurl, getAuthTokenOnServer } from "@/helpers/setTokenOnServer";
+import { redirect } from "next/navigation";
+import AdminSidebar from "@/components/admin/myfinaladminsidebar";
+import MyTextArea from "@/components/global/myfinaltextarea";
+import FormButtons from "@/components/global/formbuttons";
 
-const UpdateTheme = () => {
-	const { auth, files } = useContext(AuthContext);
-	const router = useRouter();
+async function getAuthenticatedUser() {
+	const res = await fetchurl(`/auth/me`, "GET", "force-cache");
+	return res;
+}
 
-	// Redirect if not authenticated
-	!auth.isAuthenticated && router.push("/auth/login");
+async function getFiles(params) {
+	const res = await fetchurl(`/files${params}`, "GET", "no-cache");
+	return res;
+}
 
-	// Redirec if not founder
-	auth.isAuthenticated &&
-		!auth.user.role.includes("founder") &&
-		router.push("/dashboard");
+async function getCategories(params) {
+	const res = await fetchurl(`/categories${params}`, "GET", "no-cache");
+	return res;
+}
 
-	const [categories, setCategories] = useState([]);
+async function getTheme(params) {
+	const res = await fetchurl(`/themes${params}`, "GET", "no-cache");
+	return res;
+}
 
-	const fetchCategories = async (params = "") => {
-		try {
-			const res = await fetchurl(`/categories${params}`, "GET", "no-cache");
-			setCategories(res?.data);
-		} catch (err) {
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
+const UpdateTheme = async ({ params, searchParams }) => {
+	const theme = await getTheme(`/${params.id}`);
 
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
+	const token = await getAuthTokenOnServer();
+	const auth = await getAuthenticatedUser();
+	const files = await getFiles(`?page=1&limit=100&sort=-createdAt`);
+	const categories = await getCategories(`?categoryType=theme`);
 
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return {
-				msg: err?.response?.statusText,
-				status: err?.response?.status,
-			};
-		}
-	};
-
-	useEffect(() => {
-		fetchCategories(`?categoryType=theme`);
-	}, []);
-
-	const [themeData, setThemeData] = useState({
-		title: `Untitled`,
-		avatar: files?.selected?._id,
-		text: `No description`,
-		featured: true,
-		embedding: true,
-		category: undefined,
-		commented: true,
-		password: ``,
-		status: `draft`,
-		fullWidth: false,
-		github_readme: `#`,
-	});
-
-	const {
-		title,
-		avatar,
-		text,
-		featured,
-		embedding,
-		category,
-		commented,
-		password,
-		status,
-		fullWidth,
-		github_readme,
-	} = themeData;
-
-	const [theme, setTheme] = useState(null);
-	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState(false);
-
-	const { id } = useParams();
-	const themeId = id;
-
-	useEffect(() => {
-		const fetchTheme = async () => {
-			try {
-				const res = await fetchurl(`/themes/${themeId}`, "GET", "no-cache");
-				setTheme(res?.data);
-				setThemeData({
-					title: res?.data?.title,
-					avatar: res?.data?.files?.avatar,
-					text: res?.data?.text,
-					featured: res?.data?.featured,
-					embedding: res?.data?.embedding,
-					category: res?.data?.category,
-					commented: res?.data?.commented,
-					// password: res?.data?.password,
-					status: res?.data?.status,
-					fullWidth: res?.data?.fullWidth,
-					github_readme: res?.data?.github_readme,
-				});
-				setLoading(false);
-			} catch (err) {
-				console.log(err);
-				// const error = err.response.data.message;
-				const error = err?.response?.data?.error?.errors;
-				const errors = err?.response?.data?.errors;
-
-				if (error) {
-					// dispatch(setAlert(error, 'danger'));
-					error &&
-						Object.entries(error).map(([, value]) =>
-							toast.error(value.message)
-						);
-				}
-
-				if (errors) {
-					errors.forEach((error) => toast.error(error.msg));
-				}
-
-				toast.error(err?.response?.statusText);
-				return {
-					msg: err?.response?.statusText,
-					status: err?.response?.status,
-				};
-			}
+	const upgradeTheme = async (formData) => {
+		"use server";
+		const rawFormData = {
+			title: formData.get("title"),
+			text: formData.get("text"),
+			featured: formData.get("featured"),
+			embedding: formData.get("embedding"),
+			category: formData.get("category"),
+			commented: formData.get("commented"),
+			password: formData.get("password"),
+			status: formData.get("status"),
+			fullWidth: formData.get("fullWidth"),
+			github_readme: formData.get("github_readme"),
+			files: { avatar: formData.get("file") },
 		};
-		fetchTheme();
-	}, [themeId]);
-
-	const upgradeTheme = async (e) => {
-		e.preventDefault();
-		try {
-			await fetchurl(`/themes/${theme._id}`, "PUT", "no-cache", {
-				...themeData,
-				files: { avatar: files?.selected?._id },
-			});
-			toast.success(`Item updated`);
-			router.push(`/noadmin/themes`);
-		} catch (err) {
-			console.log(err);
-			// const error = err.respgfonse.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
-
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return { msg: err?.response?.statusText, status: err?.response?.status };
-		}
+		await fetchurl(`/themes/${params.id}`, "PUT", "no-cache", rawFormData);
+		redirect(`/noadmin/themes`);
 	};
 
-	const resetForm = () => {
-		setThemeData({
-			title: `Untitled`,
-			avatar: files?.selected?._id,
-			text: ``,
-			featured: false,
-			embedding: false,
-			category: undefined,
-			commented: false,
-			password: ``,
-			tags: [],
-			status: `draft`,
-			fullWidth: false,
-			github_readme: ``,
-		});
-	};
-
-	return loading || theme === null || theme === undefined ? (
-		error ? (
-			<>Not found</>
-		) : (
-			<>Loading... {console.log(error)}</>
-		)
-	) : (
-		<form className="row" onSubmit={upgradeTheme}>
+	return (
+		<form className="row" action={upgradeTheme}>
 			<div className="col">
 				<label htmlFor="blog-title" className="form-label">
 					Title
@@ -196,13 +60,7 @@ const UpdateTheme = () => {
 				<input
 					id="blog-title"
 					name="title"
-					value={title}
-					onChange={(e) => {
-						setThemeData({
-							...themeData,
-							title: e.target.value,
-						});
-					}}
+					defaultValue={theme?.data?.title}
 					type="text"
 					className="form-control mb-3"
 					placeholder=""
@@ -211,49 +69,37 @@ const UpdateTheme = () => {
 					Text
 				</label>
 				<MyTextArea
+					auth={auth}
 					id="text"
 					name="text"
-					value={text}
-					objectData={themeData}
-					setObjectData={setThemeData}
 					onModel="Blog"
 					advancedTextEditor={true}
+					customPlaceholder="No description"
+					defaultValue={theme?.data?.text}
 				/>
 			</div>
 			<div className="col-lg-3">
 				<AdminSidebar
 					displayCategoryField={true}
 					displayAvatar={true}
-					avatar={avatar}
-					status={status}
-					fullWidth={fullWidth}
-					password={password}
-					featured={featured}
-					commented={commented}
-					embedding={embedding}
-					github_readme={github_readme}
-					category={category._id ? category._id : category}
-					categories={categories}
-					objectData={themeData}
-					setObjectData={setThemeData}
-					multipleFiles={true}
+					avatar={theme?.data?.files?.avatar}
+					status={theme?.data?.status}
+					fullWidth={theme?.data?.fullWidth.toString()}
+					password=""
+					featured={theme?.data?.featured.toString()}
+					commented={theme?.data?.commented.toString()}
+					embedding={theme?.data?.embedding.toString()}
+					github_readme={theme?.data?.github_readme}
+					category={theme?.data?.category?._id || theme?.data?.category}
+					categories={categories.data}
+					multipleFiles={false}
 					onModel={"Blog"}
+					files={files}
+					auth={auth}
+					token={token}
 				/>
 				<br />
-				<button
-					type="submit"
-					className="btn btn-secondary btn-sm float-start"
-					disabled={title.length > 0 && text.length > 0 ? !true : !false}
-				>
-					Submit
-				</button>
-				<button
-					type="button"
-					className="btn btn-secondary btn-sm float-end"
-					onClick={resetForm}
-				>
-					Reset
-				</button>
+				<FormButtons />
 			</div>
 		</form>
 	);

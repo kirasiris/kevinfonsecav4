@@ -1,188 +1,80 @@
-"use client";
 import { fetchurl } from "@/helpers/setTokenOnServer";
-import { useRouter } from "next/navigation";
-import { useState, useEffect, useContext } from "react";
-import { toast } from "react-toastify";
-import Single from "@/components/admin/changelogs/single";
-import AuthContext from "@/helpers/globalContext";
 import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
-import AdminCardHeaderMenu from "@/components/admin/admincardheadermenu";
-import ClientNumericPagination from "@/layout/clientnumericpagination";
+import List from "@/components/admin/changelogs/list";
+import { revalidatePath } from "next/cache";
 
-const AdminChangelogsIndex = () => {
-	const {
-		auth,
-		totalPages,
-		setTotalPages,
-		currentResults,
-		setCurrentResults,
-		totalResults,
-		setTotalResults,
-	} = useContext(AuthContext);
-	const router = useRouter();
+async function getChangelogs(params) {
+	const res = await fetchurl(`/changelogs${params}`, "GET", "no-cache");
+	return res;
+}
 
-	// Redirect if not authenticated
-	!auth.isAuthenticated && router.push("/auth/login");
-
-	// Redirec if not founder
-	auth.isAuthenticated &&
-		!auth.user.role.includes("founder") &&
-		router.push("/dashboard");
-
-	const [changelogs, setChangelogs] = useState([]);
-	const [page, setPage] = useState(1);
-	const [limit] = useState(10);
-	const [sortby] = useState(`-createdAt`);
-	const [params, setParams] = useState(
-		`?page=${page}&limit=${limit}&sort=${sortby}`
+const AdminChangelogsIndex = async ({ params, searchParams }) => {
+	const changelogs = await getChangelogs(
+		`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
 	);
-	const [keyword, setKeyword] = useState("");
-	const [list, setList] = useState([]);
-	const [loading, setLoading] = useState(true);
 
-	const fetchChangelogs = async () => {
-		try {
-			const res = await fetchurl(`/changelogs${params}`, "GET", "no-cache");
-			setChangelogs(res?.data);
-			setTotalPages(res?.pagination?.totalpages);
-			setCurrentResults(res?.count);
-			setTotalResults({ ...totalResults, changelogs: res?.countAll });
-			setPage(res?.pagination?.current);
-			setLoading(false);
-		} catch (err) {
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
-
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return {
-				msg: err?.response?.statusText,
-				status: err?.response?.status,
-			};
-		}
+	const draftIt = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/changelogs/${id}/draftit`, "PUT", "no-cache");
+		revalidatePath(
+			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+		);
 	};
 
-	useEffect(() => {
-		fetchChangelogs();
-	}, [router, params]);
+	const publishIt = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/changelogs/${id}/publishit`, "PUT", "no-cache");
+		revalidatePath(
+			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+		);
+	};
 
-	useEffect(() => {
-		setList(changelogs);
-	}, [changelogs]);
+	const trashIt = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/changelogs/${id}/trashit`, "PUT", "no-cache");
+		revalidatePath(
+			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+		);
+	};
 
-	useEffect(() => {
-		if (keyword !== "") {
-			const result = changelogs.filter((object) => {
-				return object.title.toLowerCase().startsWith(keyword.toLowerCase());
-			});
-			setList(result);
-		} else {
-			setList(changelogs);
-		}
-	}, [keyword]);
+	const scheduleIt = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/changelogs/${id}/scheduleit`, "PUT", "no-cache");
+		revalidatePath(
+			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+		);
+	};
 
 	const handleDelete = async (id) => {
-		try {
-			await fetchurl(`/changelogs/${id}/permanently`, "DELETE", "no-cache");
-			toast.success("Changelog deleted");
-			fetchChangelogs();
-		} catch (err) {
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
-
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return {
-				msg: err?.response?.statusText,
-				status: err?.response?.status,
-			};
-		}
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/changelogs/${id}/permanently`, "DELETE", "no-cache");
+		revalidatePath(
+			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+		);
 	};
 
 	const handleTrashAll = async () => {
-		try {
-			await fetchurl(`/changelogs/deleteall`, "PUT", "no-cache");
-			toast.success("Changelogs trashed");
-			fetchChangelogs();
-		} catch (err) {
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
-
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return {
-				msg: err?.response?.statusText,
-				status: err?.response?.status,
-			};
-		}
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/changelogs/deleteall`, "PUT", "no-cache");
+		revalidatePath(
+			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+		);
 	};
 
 	const handleDeleteAll = async () => {
-		try {
-			await fetchurl(`/changelogs/deleteall/permanently`, "DELETE", "no-cache");
-			toast.success("Changelogs deleted");
-			fetchChangelogs();
-		} catch (err) {
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
-
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return {
-				msg: err?.response?.statusText,
-				status: err?.response?.status,
-			};
-		}
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/changelogs/deleteall/permanently`, "DELETE", "no-cache");
+		revalidatePath(
+			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+		);
 	};
-
-	const groupByDate = changelogs?.reduce((groups, changelog) => {
-		const date = changelog.createdAt.split("T")[0];
-		if (!groups[date]) {
-			groups[date] = [];
-		}
-		groups[date].push(changelog);
-		return groups;
-	}, {});
 
 	return (
 		<>
@@ -194,59 +86,21 @@ const AdminChangelogsIndex = () => {
 				trashedLink="/noadmin/changelogs/trashed"
 			/>
 			<div className="card rounded-0">
-				<AdminCardHeaderMenu
-					allLink={`/noadmin/changelogs`}
+				<List
+					allLink="/noadmin/changelogs"
 					pageText="Changelogs"
-					currentResults={currentResults}
-					totalResults={totalResults.changelogs}
-					addLink={`/noadmin/changelogs/create`}
-					addLinkText={`changelog`}
+					addLink="/noadmin/changelogs/create"
+					searchOn="/noadmin/changelogs"
+					objects={changelogs}
+					searchParams={searchParams}
+					handleDraft={draftIt}
+					handlePublish={publishIt}
+					handleTrash={trashIt}
+					handleSchedule={scheduleIt}
+					handleDelete={handleDelete}
 					handleTrashAllFunction={handleTrashAll}
 					handleDeleteAllFunction={handleDeleteAll}
-					keyword={keyword}
-					setKeyword={setKeyword}
 				/>
-				{list?.length > 0 ? (
-					<>
-						<ul className="list-group list-group-flush">
-							{Object.entries(groupByDate)?.map(([date, list]) => (
-								<div key={date}>
-									<p className="text-center my-3">{date}</p>
-									{list?.map((changelog) => (
-										<Single
-											key={changelog._id}
-											object={changelog}
-											handleDelete={handleDelete}
-											objects={list}
-											setObjects={setChangelogs}
-											setTotalResults={setTotalResults}
-										/>
-									))}
-								</div>
-							))}
-							<li className="list-group-item">
-								{page} / {totalPages}
-							</li>
-						</ul>
-						<ClientNumericPagination
-							totalPages={totalPages || Math.ceil(list.length / limit)}
-							page={page}
-							limit={limit}
-							sortby={sortby}
-							siblings={1}
-							setParams={setParams}
-							router={router}
-						/>
-					</>
-				) : (
-					<div
-						className={`alert alert-${
-							loading ? "primary" : "danger"
-						} rounded-0 m-0 border-0`}
-					>
-						{loading ? "Loading" : "Nothing found"}
-					</div>
-				)}
 			</div>
 		</>
 	);

@@ -1,162 +1,78 @@
-"use client";
 import { fetchurl } from "@/helpers/setTokenOnServer";
-import { useParams, useRouter } from "next/navigation";
-import { useState, useEffect, useContext } from "react";
-import { toast } from "react-toastify";
-import AuthContext from "@/helpers/globalContext";
 import ParseHtml from "@/layout/parseHtml";
 import Image from "next/image";
 import Link from "next/link";
 import PreviewModal from "@/components/chapter/previewmodal";
 
-const ReadCourse = () => {
-	const { auth } = useContext(AuthContext);
-	const router = useRouter();
+async function getCourse(params) {
+	const res = await fetchurl(`/courses${params}`, "GET", "no-cache");
+	return res;
+}
 
-	// Redirect if not authenticated
-	!auth.isAuthenticated && router.push("/auth/login");
+async function getLessons(params) {
+	const res = await fetchurl(`/videos${params}`, "GET", "no-cache");
+	return res;
+}
 
-	// Redirec if not founder
-	auth.isAuthenticated &&
-		!auth.user.role.includes("founder") &&
-		router.push("/dashboard");
+const ReadCourse = async ({ params, searchParams }) => {
+	const course = await getCourse(`/${params.id}`);
+	const lessons = await getLessons(
+		`?resourceId=${course?.data?._id}&sort=orderingNumber`
+	);
 
-	const [course, setCourse] = useState(null);
-	const [lessons, setLessons] = useState([]);
-	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState(false);
+	// const updateOrder = async (e, index) => {
+	// 	e.dataTransfer.setData("itemIndex", index.toString());
+	// };
 
-	const { id } = useParams();
-	const courseId = id;
+	// const updateDrop = async (e, index) => {
+	// 	const movingItemIndex = e.dataTransfer.getData("itemIndex");
+	// 	const targetItemIndex = index;
 
-	useEffect(() => {
-		const fetchCourse = async () => {
-			try {
-				const res = await fetchurl(`/courses/${courseId}`, "GET", "no-cache");
-				setCourse(res?.data);
-				setLoading(false);
-			} catch (err) {
-				console.log(err);
-				// const error = err.response.data.message;
-				const error = err?.response?.data?.error?.errors;
-				const errors = err?.response?.data?.errors;
+	// 	let allLessons = lessons; // Create a copy of the lessons array
 
-				if (error) {
-					// dispatch(setAlert(error, 'danger'));
-					error &&
-						Object.entries(error).map(([, value]) =>
-							toast.error(value.message)
-						);
-				}
+	// 	let movingItem = allLessons[movingItemIndex];
+	// 	let targetItem = allLessons[targetItemIndex];
 
-				if (errors) {
-					errors.forEach((error) => toast.error(error.msg));
-				}
+	// 	if (movingItem.orderingNumber !== targetItem.orderingNumber) {
+	// 		// Only update the ordering numbers if they are different
 
-				toast.error(err?.response?.statusText);
-				return {
-					msg: err?.response?.statusText,
-					status: err?.response?.status,
-				};
-			}
-		};
+	// 		// Switch the ordering numbers of the moving item and the target item
+	// 		const tempOrderingNumber = movingItem.orderingNumber;
+	// 		movingItem.orderingNumber = targetItem.orderingNumber;
+	// 		targetItem.orderingNumber = tempOrderingNumber;
 
-		const fetchLessons = async () => {
-			try {
-				const res = await fetchurl(
-					`/videos?resourceId=${courseId}&sort=orderingNumber`,
-					"GET",
-					"no-cache"
-				);
-				setLessons(res?.data);
-			} catch (err) {
-				console.log(err);
-				// const error = err.response.data.message;
-				const error = err?.response?.data?.error?.errors;
-				const errors = err?.response?.data?.errors;
+	// 		// Update the ordering numbers in the backend
+	// 		await fetchurl(
+	// 			`/videos/${movingItem._id}/updateorder`,
+	// 			"PUT",
+	// 			"no-cache",
+	// 			{
+	// 				index: movingItem.orderingNumber, // Update the moving item's ordering number
+	// 			}
+	// 		);
+	// 		await fetchurl(
+	// 			`/videos/${targetItem._id}/updateorder`,
+	// 			"PUT",
+	// 			"no-cache",
+	// 			{
+	// 				index: targetItem.orderingNumber, // Update the target item's ordering number
+	// 			}
+	// 		);
+	// 	}
 
-				if (error) {
-					// dispatch(setAlert(error, 'danger'));
-					error &&
-						Object.entries(error).map(([, value]) =>
-							toast.error(value.message)
-						);
-				}
+	// 	allLessons.splice(movingItemIndex, 1); // Remove the moving item from the original position
+	// 	allLessons.splice(targetItemIndex, 0, movingItem); // Insert the moving item at the target position
 
-				if (errors) {
-					errors.forEach((error) => toast.error(error.msg));
-				}
+	// 	setLessons([...lessons], allLessons);
+	// };
 
-				toast.error(err?.response?.statusText);
-				return {
-					msg: err?.response?.statusText,
-					status: err?.response?.status,
-				};
-			}
-		};
-		fetchCourse();
-		fetchLessons();
-	}, [courseId]);
-
-	const updateOrder = async (e, index) => {
-		e.dataTransfer.setData("itemIndex", index.toString());
-	};
-
-	const updateDrop = async (e, index) => {
-		const movingItemIndex = e.dataTransfer.getData("itemIndex");
-		const targetItemIndex = index;
-
-		let allLessons = lessons; // Create a copy of the lessons array
-
-		let movingItem = allLessons[movingItemIndex];
-		let targetItem = allLessons[targetItemIndex];
-
-		if (movingItem.orderingNumber !== targetItem.orderingNumber) {
-			// Only update the ordering numbers if they are different
-
-			// Switch the ordering numbers of the moving item and the target item
-			const tempOrderingNumber = movingItem.orderingNumber;
-			movingItem.orderingNumber = targetItem.orderingNumber;
-			targetItem.orderingNumber = tempOrderingNumber;
-
-			// Update the ordering numbers in the backend
-			await fetchurl(
-				`/videos/${movingItem._id}/updateorder`,
-				"PUT",
-				"no-cache",
-				{
-					index: movingItem.orderingNumber, // Update the moving item's ordering number
-				}
-			);
-			await fetchurl(
-				`/videos/${targetItem._id}/updateorder`,
-				"PUT",
-				"no-cache",
-				{
-					index: targetItem.orderingNumber, // Update the target item's ordering number
-				}
-			);
-		}
-
-		allLessons.splice(movingItemIndex, 1); // Remove the moving item from the original position
-		allLessons.splice(targetItemIndex, 0, movingItem); // Insert the moving item at the target position
-
-		setLessons([...lessons], allLessons);
-	};
-
-	return loading || course === null || course === undefined ? (
-		error ? (
-			<>Not found</>
-		) : (
-			<>Loading...</>
-		)
-	) : (
+	return (
 		<div className="row">
 			<div className="col-lg-8">
 				<div className="card rounded-0 mb-3">
-					<div className="card-header">{course.title}</div>
+					<div className="card-header">{course?.data?.title || "Untitled"}</div>
 					<div className="card-body">
-						<ParseHtml text={course.text} />
+						<ParseHtml text={course?.data?.text} />
 					</div>
 				</div>
 				<div className="card rounded-0">
@@ -170,7 +86,7 @@ const ReadCourse = () => {
 							<div className="btn-group">
 								<Link
 									href={{
-										pathname: `/noadmin/courses/lesson/${course._id}/create`,
+										pathname: `/noadmin/courses/lesson/${course?.data?._id}/create`,
 										query: {},
 									}}
 									passHref
@@ -181,19 +97,19 @@ const ReadCourse = () => {
 							</div>
 						</div>
 					</div>
-					{lessons?.length > 0 ? (
+					{lessons?.data?.length > 0 ? (
 						<ul
 							className="list-group list-group-flush overflow-x-hidden"
 							style={{ maxHeight: "1000px" }}
-							onDragOver={(e) => e.preventDefault()}
+							// onDragOver={(e) => e.preventDefault()}
 						>
-							{lessons.map((lesson, index) => (
+							{lessons?.data?.map((lesson, index) => (
 								<li
 									key={lesson._id}
 									className={`list-group-item ${lesson.orderingNumber}`}
 									draggable
-									onDragStart={(e) => updateOrder(e, index)}
-									onDrop={(e) => updateDrop(e, index)}
+									// onDragStart={(e) => updateOrder(e, index)}
+									// onDrop={(e) => updateDrop(e, index)}
 								>
 									<div className="float-start">
 										<Link href={`/video/${lesson._id}`} passHref legacyBehavior>
@@ -232,10 +148,10 @@ const ReadCourse = () => {
 					<Image
 						className="img-fluid p-3"
 						src={
-							course?.files?.avatar?.location?.secure_location ||
+							course?.data?.files?.avatar?.location?.secure_location ||
 							`https://source.unsplash.com/random/260x370`
 						}
-						alt={`${course?.files?.avatar?.location?.filename}'s featured image`}
+						alt={`${course?.data?.files?.avatar?.location?.filename}'s featured image`}
 						width={440}
 						height={570}
 						priority

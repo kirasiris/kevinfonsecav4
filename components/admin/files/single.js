@@ -10,6 +10,8 @@ const Single = ({
 	objects,
 	setObjects,
 	setTotalResults,
+	setSelectedObject,
+	setShowMediaModel,
 }) => {
 	/*
 	 *
@@ -22,11 +24,8 @@ const Single = ({
 				<figure
 					title={object.title}
 					onClick={() => {
-						setObjects({
-							...objects,
-							selected: object,
-							showMediaModal: false,
-						});
+						setSelectedObject(object);
+						setShowMediaModel(false);
 					}}
 				>
 					<Image
@@ -51,6 +50,7 @@ const Single = ({
 					</Link>
 					<DeleteModal
 						id={object._id ? object._id : object._id}
+						sId={object?.location?.public_id}
 						action={handleDelete}
 						objects={objects}
 						setObjects={setObjects}
@@ -73,11 +73,8 @@ const Single = ({
 				<figure
 					title={object.title}
 					onClick={() => {
-						setObjects({
-							...objects,
-							selected: object,
-							showMediaModal: false,
-						});
+						setSelectedObject(object);
+						setShowMediaModel(false);
 					}}
 				>
 					<FaFilePdf style={{ fontSize: "184px" }} />
@@ -114,11 +111,8 @@ const Single = ({
 				<figure
 					title={object.title}
 					onClick={() => {
-						setObjects({
-							...objects,
-							selected: object,
-							showMediaModal: false,
-						});
+						setSelectedObject(object);
+						setShowMediaModel(false);
 					}}
 				>
 					<FaFileVideo style={{ fontSize: "184px" }} />

@@ -1,290 +1,79 @@
-"use client";
 import { fetchurl } from "@/helpers/setTokenOnServer";
-import { useRouter } from "next/navigation";
-import { useState, useEffect, useContext } from "react";
-import { toast } from "react-toastify";
-import Single from "@/components/admin/blogs/single";
-import AuthContext from "@/helpers/globalContext";
 import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
-import AdminCardHeaderMenu from "@/components/admin/admincardheadermenu";
-import ClientNumericPagination from "@/layout/clientnumericpagination";
+import List from "@/components/admin/blogs/list";
+import { revalidatePath } from "next/cache";
 
-const AdminBlogsIndex = () => {
-	const {
-		auth,
-		totalPages,
-		setTotalPages,
-		currentResults,
-		setCurrentResults,
-		totalResults,
-		setTotalResults,
-	} = useContext(AuthContext);
-	const router = useRouter();
+async function getBlogs(params) {
+	const res = await fetchurl(`/blogs${params}`, "GET", "no-cache");
+	return res;
+}
 
-	// Redirect if not authenticated
-	!auth.isAuthenticated && router.push("/auth/login");
-
-	// Redirec if not founder
-	auth.isAuthenticated &&
-		!auth.user.role.includes("founder") &&
-		router.push("/dashboard");
-
-	const [blogs, setBlogs] = useState([]);
-	const [page, setPage] = useState(1);
-	const [limit] = useState(10);
-	const [sortby] = useState(`-createdAt`);
-	const [params, setParams] = useState(
-		`?page=${page}&limit=${limit}&sort=${sortby}&postType=blog`
+const AdminBlogsIndex = async ({ params, searchParams }) => {
+	const blogs = await getBlogs(
+		`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}&postType=blog`
 	);
-	const [keyword, setKeyword] = useState("");
-	const [list, setList] = useState([]);
-	const [loading, setLoading] = useState(true);
-
-	const fetchBlogs = async () => {
-		try {
-			const res = await fetchurl(`/blogs${params}`);
-			setBlogs(res?.data);
-			setTotalPages(res?.pagination?.totalpages);
-			setCurrentResults(res?.count);
-			setTotalResults({ ...totalResults, blogs: res?.countAll });
-			setPage(res?.pagination?.current);
-			setLoading(false);
-		} catch (err) {
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
-
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return {
-				msg: err?.response?.statusText,
-				status: err?.response?.status,
-			};
-		}
-	};
-
-	useEffect(() => {
-		fetchBlogs();
-	}, [router, params]);
-
-	useEffect(() => {
-		setList(blogs);
-	}, [blogs]);
-
-	useEffect(() => {
-		if (keyword !== "") {
-			const result = blogs.filter((object) => {
-				return object.title.toLowerCase().startsWith(keyword.toLowerCase());
-			});
-			setList(result);
-		} else {
-			setList(blogs);
-		}
-	}, [keyword]);
 
 	const draftIt = async (id) => {
-		try {
-			await fetchurl(`/blogs/${id}/draftit`, "PUT", "no-cache");
-			toast.success("Blog drafted");
-			fetchBlogs();
-		} catch (err) {
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
-
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return {
-				msg: err?.response?.statusText,
-				status: err?.response?.status,
-			};
-		}
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/blogs/${id}/draftit`, "PUT", "no-cache");
+		revalidatePath(
+			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}&postType=blog`
+		);
 	};
 
 	const publishIt = async (id) => {
-		try {
-			await fetchurl(`/blogs/${id}/publishit`, "PUT", "no-cache");
-			toast.success("Blog published");
-			fetchBlogs();
-		} catch (err) {
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
-
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return {
-				msg: err?.response?.statusText,
-				status: err?.response?.status,
-			};
-		}
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/blogs/${id}/publishit`, "PUT", "no-cache");
+		revalidatePath(
+			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}&postType=blog`
+		);
 	};
 
 	const trashIt = async (id) => {
-		try {
-			await fetchurl(`/blogs/${id}/trashit`, "PUT", "no-cache");
-			toast.success("Blog trashed");
-			fetchBlogs();
-		} catch (err) {
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
-
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return {
-				msg: err?.response?.statusText,
-				status: err?.response?.status,
-			};
-		}
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/blogs/${id}/trashit`, "PUT", "no-cache");
+		revalidatePath(
+			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}&postType=blog`
+		);
 	};
 
 	const scheduleIt = async (id) => {
-		try {
-			await fetchurl(`/blogs/${id}/scheduleit`, "PUT", "no-cache");
-			toast.success("Blog scheduled");
-			fetchBlogs();
-		} catch (err) {
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
-
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return {
-				msg: err?.response?.statusText,
-				status: err?.response?.status,
-			};
-		}
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/blogs/${id}/scheduleit`, "PUT", "no-cache");
+		revalidatePath(
+			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}&postType=blog`
+		);
 	};
 
 	const handleDelete = async (id) => {
-		try {
-			await fetchurl(`/blogs/${id}/permanently`, "DELETE", "no-cache");
-			toast.success("Blog deleted");
-			fetchBlogs();
-		} catch (err) {
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
-
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return {
-				msg: err?.response?.statusText,
-				status: err?.response?.status,
-			};
-		}
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/blogs/${id}/permanently`, "DELETE", "no-cache");
+		revalidatePath(
+			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}&postType=blog`
+		);
 	};
 
 	const handleTrashAll = async () => {
-		try {
-			await fetchurl(`/blogs/deleteall`, "PUT", "no-cache");
-			toast.success("Blogs trashed");
-			fetchBlogs();
-		} catch (err) {
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
-
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return {
-				msg: err?.response?.statusText,
-				status: err?.response?.status,
-			};
-		}
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/blogs/deleteall`, "PUT", "no-cache");
+		revalidatePath(
+			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}&postType=blog`
+		);
 	};
 
 	const handleDeleteAll = async () => {
-		try {
-			await fetchurl(`/blogs/deleteall/permanently`, "DELETE", "no-cache");
-			toast.success("Blogs deleted");
-			fetchBlogs();
-		} catch (err) {
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
-
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return {
-				msg: err?.response?.statusText,
-				status: err?.response?.status,
-			};
-		}
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/blogs/deleteall/permanently`, "DELETE", "no-cache");
+		revalidatePath(
+			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}&postType=blog`
+		);
 	};
 
 	return (
@@ -299,59 +88,21 @@ const AdminBlogsIndex = () => {
 				categoryType="blog"
 			/>
 			<div className="card rounded-0">
-				<AdminCardHeaderMenu
-					allLink={`/noadmin/blogs`}
+				<List
+					allLink="/noadmin/blogs"
 					pageText="Blogs"
-					currentResults={currentResults}
-					totalResults={totalResults.blogs}
-					addLink={`/noadmin/blogs/create`}
-					addLinkText={`blog`}
+					addLink="/noadmin/blogs/create"
+					searchOn="/noadmin/blogs"
+					objects={blogs}
+					searchParams={searchParams}
+					handleDraft={draftIt}
+					handlePublish={publishIt}
+					handleTrash={trashIt}
+					handleSchedule={scheduleIt}
+					handleDelete={handleDelete}
 					handleTrashAllFunction={handleTrashAll}
 					handleDeleteAllFunction={handleDeleteAll}
-					keyword={keyword}
-					setKeyword={setKeyword}
 				/>
-				{list?.length > 0 ? (
-					<>
-						<ul className="list-group list-group-flush">
-							{list?.map((blog) => (
-								<Single
-									key={blog._id}
-									object={blog}
-									handleDraft={draftIt}
-									handlePublish={publishIt}
-									handleTrash={trashIt}
-									handleSchedule={scheduleIt}
-									handleDelete={handleDelete}
-									objects={list}
-									setObjects={setBlogs}
-									setTotalResults={setTotalResults}
-								/>
-							))}
-							<li className="list-group-item">
-								{page} / {totalPages}
-							</li>
-						</ul>
-						<ClientNumericPagination
-							totalPages={totalPages || Math.ceil(list.length / limit)}
-							page={page}
-							limit={limit}
-							sortby={sortby}
-							siblings={1}
-							setParams={setParams}
-							postType="blog"
-							router={router}
-						/>
-					</>
-				) : (
-					<div
-						className={`alert alert-${
-							loading ? "primary" : "danger"
-						} rounded-0 m-0 border-0`}
-					>
-						{loading ? "Loading" : "Nothing found"}
-					</div>
-				)}
 			</div>
 		</>
 	);

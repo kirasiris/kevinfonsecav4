@@ -171,19 +171,6 @@ const UpdateAbout = async ({ params, searchParams }) => {
 								<input
 									id="age"
 									name="age"
-									// value={age}
-									// onChange={(e) => {
-									// 	const inputValue = e.target.value;
-									// 	if (
-									// 		/^\d+$/.test(inputValue) &&
-									// 		parseInt(inputValue) >= 18
-									// 	) {
-									// 		setAboutData({
-									// 			...aboutData,
-									// 			age: inputValue,
-									// 		});
-									// 	}
-									// }}
 									type="number"
 									className="form-control mb-3"
 									min={18}

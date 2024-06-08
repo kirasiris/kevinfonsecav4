@@ -23,17 +23,14 @@ const Single = ({
 					<h1 className="blog-item__title">
 						<Link
 							href={{
-								pathname: `/course/${object.resourceId._id}/${object.resourceId.category}/${object.resourceId.sub_category}/${object.resourceId.slug}/index`,
+								pathname: `/course/${object?.resourceId?._id}/${object?.resourceId?.category}/${object?.resourceId?.sub_category}/${object?.resourceId?.slug}/index`,
 								query: {},
 							}}
 							passHref
 							legacyBehavior
 						>
 							<a className="blog-item__title-link">
-								{object.resourceId.title !== `` &&
-									object.resourceId.title !== undefined &&
-									object.resourceId.title !== null &&
-									object.resourceId.title}
+								{object?.resourceId?.title || "Untitled"}
 							</a>
 						</Link>
 					</h1>
@@ -44,7 +41,7 @@ const Single = ({
 				<div className="blog-type-list__blog-thumbnail-wrapper has-image d-none d-md-block d-lg-block d-xl-block d-xxl-block">
 					<Link
 						href={{
-							pathname: `/course/${object.resourceId._id}/${object.resourceId.category}/${object.resourceId.sub_category}/${object.resourceId.slug}/index`,
+							pathname: `/course/${object?.resourceId?._id}/${object?.resourceId?.category}/${object?.resourceId?.sub_category}/${object?.resourceId?.slug}/index`,
 							query: {},
 						}}
 						passHref
@@ -53,7 +50,8 @@ const Single = ({
 						<a className="blog-type-list__blog-thumbnail-link">
 							<Image
 								src={
-									object.resourceId?.files?.avatar?.location.secure_location ||
+									object?.resourceId?.files?.avatar?.location
+										?.secure_location ||
 									`https://source.unsplash.com/random/83x63`
 								}
 								className="blog-type-list__blog-thumbnail"
@@ -69,7 +67,7 @@ const Single = ({
 						<DropdownButton title="Options" variant="secondary">
 							<Link
 								href={{
-									pathname: `/course/${object.resourceId._id}/${object.resourceId.category}/${object.resourceId.sub_category}/${object.resourceId.slug}/index`,
+									pathname: `/course/${object?.resourceId?._id}/${object?.resourceId?.category}/${object?.resourceId?.sub_category}/${object?.resourceId?.slug}/index`,
 									query: {},
 								}}
 								passHref

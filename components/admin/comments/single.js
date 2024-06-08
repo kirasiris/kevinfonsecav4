@@ -29,12 +29,18 @@ const Single = ({
 							passHref
 							legacyBehavior
 						>
-							<a className="blog-item__title-link">{object.title}</a>
+							<a className="blog-item__title-link">
+								{object.title || "Untitled"}
+							</a>
 						</Link>
 					</h1>
 					<div className="blog-item__meta">
 						<span className="blog-item__meta-time-status">
-							<ParseHtml text={object.text} />
+							{typeof object?.text === "object" ? (
+								"TEXT IS EITHER ENCRYPTED OR PASSWORD PROTECTED"
+							) : (
+								<ParseHtml text={object?.text} classList="card-text" />
+							)}
 						</span>
 					</div>
 				</div>
@@ -51,9 +57,7 @@ const Single = ({
 								passHref
 								legacyBehavior
 							>
-								<a className="dropdown-item btn btn-link" target="_blank">
-									View&nbsp;It
-								</a>
+								<a className="dropdown-item btn btn-link">View&nbsp;It</a>
 							</Link>
 							<button
 								className="dropdown-item btn btn-sm"

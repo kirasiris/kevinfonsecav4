@@ -1,26 +1,39 @@
 "use client";
-import { useContext } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import DeleteAllModal from "../global/deleteallmodal";
 import TrashAllModal from "../global/trashallmodal";
-import AuthContext from "@/helpers/globalContext";
+import { useRouter } from "next/navigation";
 
 const AdminCardHeaderMenu = ({
+	stripeChargesEnabled = false,
 	allLink = "",
 	pageText = "",
 	currentResults = 0,
 	totalResults = 0,
 	addLink = "#",
-	addLinkText = "",
+	searchOn = "/noadmin",
 	handleTrashAllFunction,
 	handleDeleteAllFunction,
-	keyword = "",
-	setKeyword,
 	classList = "",
 }) => {
-	const { auth } = useContext(AuthContext);
+	const router = useRouter();
+
+	const [searchParams, setSearchParams] = useState({
+		keyword: "",
+	});
+
+	const { keyword } = searchParams;
+
+	const searchData = async (e) => {
+		e.preventDefault();
+		router.push(
+			`${searchOn}/search?keyword=${keyword}&page=1&limit=10&sort=-createdAt`
+		);
+	};
+
 	return (
-		<div className={`card-header ${classList}`}>
+		<div className={`card-header${classList ? ` ${classList}` : ""}`}>
 			<div className="float-start">
 				<div className="d-flex align-items-center">
 					<Link
@@ -35,14 +48,19 @@ const AdminCardHeaderMenu = ({
 							{pageText} - ({currentResults} / {totalResults})
 						</a>
 					</Link>
-					<form className="d-none d-md-block d-lg-block d-xl-block d-xxl-block">
+					<form
+						onSubmit={searchData}
+						className="d-none d-md-block d-lg-block d-xl-block d-xxl-block"
+					>
 						<input
 							id="keyword"
 							name="keyword"
 							value={keyword}
 							onChange={(e) => {
-								e.preventDefault();
-								setKeyword(e.target.value);
+								setSearchParams({
+									...searchParams,
+									keyword: e.target.value,
+								});
 							}}
 							type="text"
 							className="form-control"
@@ -53,7 +71,7 @@ const AdminCardHeaderMenu = ({
 			</div>
 			<div className="float-end my-1">
 				<div className="btn-group">
-					{auth?.user?.stripe.stripeChargesEnabled && (
+					{addLink === "/noadmin/courses/create" && stripeChargesEnabled ? (
 						<Link
 							href={{
 								pathname: addLink,
@@ -64,7 +82,33 @@ const AdminCardHeaderMenu = ({
 						>
 							<a className="btn btn-primary btn-sm">Add new</a>
 						</Link>
+					) : (
+						<></>
 					)}
+					{addLink === "/noadmin/memberships/create" && stripeChargesEnabled ? (
+						<Link
+							href={{
+								pathname: addLink,
+								query: {},
+							}}
+							passHref
+							legacyBehavior
+						>
+							<a className="btn btn-primary btn-sm">Add new</a>
+						</Link>
+					) : (
+						<></>
+					)}
+					<Link
+						href={{
+							pathname: addLink,
+							query: {},
+						}}
+						passHref
+						legacyBehavior
+					>
+						<a className="btn btn-primary btn-sm">Add new</a>
+					</Link>
 					<TrashAllModal action={handleTrashAllFunction} />
 					<DeleteAllModal action={handleDeleteAllFunction} />
 				</div>

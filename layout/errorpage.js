@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 
-const ErrorPage = ({}) => {
+const ErrorPage = ({ statusCode, statusCodeMessage = "" }) => {
 	return (
 		<div className="container error-container">
 			<div className="row">
@@ -9,13 +9,21 @@ const ErrorPage = ({}) => {
 					<div className="error-template mb-5 mt-5 pb-5 pt-5">
 						<h1>:) Oops!</h1>
 						<h2>Temporarily down for maintenance</h2>
-						<h1>We&apos;ll be back soon!</h1>
+						<h3>We&apos;ll be back soon!</h3>
 						<div>
 							<p>
 								Sorry for the inconvenience but we&apos;re performing some
 								maintenance at the moment. we&apos;ll be back online shortly!
 							</p>
-							<p>— The Team</p>
+							<p>— Kevin Uriel Fonseca</p>
+						</div>
+						<h4>
+							{statusCode
+								? `An error ${statusCode} occurred on server`
+								: "An error occurred on client"}
+						</h4>
+						<div>
+							<p>{statusCodeMessage}</p>
 						</div>
 						<div className="error-actions">
 							<Link

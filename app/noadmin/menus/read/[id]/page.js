@@ -1,114 +1,30 @@
-"use client";
 import { fetchurl } from "@/helpers/setTokenOnServer";
-import { useParams, useRouter } from "next/navigation";
-import { useState, useEffect, useContext } from "react";
-import { toast } from "react-toastify";
-import AuthContext from "@/helpers/globalContext";
 import ParseHtml from "@/layout/parseHtml";
 import Link from "next/link";
 
-const ReadMenu = () => {
-	const { auth } = useContext(AuthContext);
-	const router = useRouter();
+async function getMenu(params) {
+	const res = await fetchurl(`/menus${params}`, "GET", "no-cache");
+	return res;
+}
 
-	// Redirect if not authenticated
-	!auth.isAuthenticated && router.push("/auth/login");
+async function getPages(params) {
+	const res = await fetchurl(`/pages${params}`, "GET", "no-cache");
+	return res;
+}
 
-	// Redirec if not founder
-	auth.isAuthenticated &&
-		!auth.user.role.includes("founder") &&
-		router.push("/dashboard");
+const ReadMenu = async ({ params, searchParams }) => {
+	const menu = await getMenu(`/${params.id}`);
+	const pages = await getPages(
+		`?resourceId=${menu?.data?._id}&sort=orderingNumber`
+	);
 
-	const [menu, setMenu] = useState(null);
-	const [pages, setPages] = useState([]);
-	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState(false);
-
-	const { id } = useParams();
-	const menuId = id;
-
-	useEffect(() => {
-		const fetchMenu = async () => {
-			try {
-				const res = await fetchurl(`/menus/${menuId}`, "GET", "no-cache");
-				setMenu(res?.data);
-				setLoading(false);
-			} catch (err) {
-				console.log(err);
-				// const error = err.response.data.message;
-				const error = err?.response?.data?.error?.errors;
-				const errors = err?.response?.data?.errors;
-
-				if (error) {
-					// dispatch(setAlert(error, 'danger'));
-					error &&
-						Object.entries(error).map(([, value]) =>
-							toast.error(value.message)
-						);
-				}
-
-				if (errors) {
-					errors.forEach((error) => toast.error(error.msg));
-				}
-
-				toast.error(err?.response?.statusText);
-				return {
-					msg: err?.response?.statusText,
-					status: err?.response?.status,
-				};
-			}
-		};
-
-		const fetchPages = async () => {
-			try {
-				const res = await fetchurl(
-					`/pages?resourceId=${menuId}&sort=-createdAt`,
-					"GET",
-					"no-cache"
-				);
-				setPages(res?.data);
-			} catch (err) {
-				console.log(err);
-				// const error = err.response.data.message;
-				const error = err?.response?.data?.error?.errors;
-				const errors = err?.response?.data?.errors;
-
-				if (error) {
-					// dispatch(setAlert(error, 'danger'));
-					error &&
-						Object.entries(error).map(([, value]) =>
-							toast.error(value.message)
-						);
-				}
-
-				if (errors) {
-					errors.forEach((error) => toast.error(error.msg));
-				}
-
-				toast.error(err?.response?.statusText);
-				return {
-					msg: err?.response?.statusText,
-					status: err?.response?.status,
-				};
-			}
-		};
-		fetchMenu();
-		fetchPages();
-	}, [menuId]);
-
-	return loading || menu === null || menu === undefined ? (
-		error ? (
-			<>Not found</>
-		) : (
-			<>Loading...</>
-		)
-	) : (
+	return (
 		<div className="row">
 			<div className="col-lg-12">
 				<div className="card rounded-0 mb-3">
-					<div className="card-header">{menu.title}</div>
+					<div className="card-header">{menu?.data?.title || "Untitled"}</div>
 					<div className="card-body">
-						<ParseHtml text={menu.text} />
+						<ParseHtml text={menu?.data?.text} />
 					</div>
 				</div>
 				<div className="card rounded-0">
@@ -122,7 +38,7 @@ const ReadMenu = () => {
 							<div className="btn-group">
 								<Link
 									href={{
-										pathname: `/noadmin/menus/page/${menu._id}/create`,
+										pathname: `/noadmin/menus/page/${menu?.data?._id}/create`,
 										query: {},
 									}}
 									passHref
@@ -133,20 +49,25 @@ const ReadMenu = () => {
 							</div>
 						</div>
 					</div>
-					{pages?.length > 0 ? (
+					{pages?.data?.length > 0 ? (
 						<ul
 							className="list-group list-group-flush overflow-x-hidden"
 							style={{ maxHeight: "1000px" }}
 						>
-							{pages.map((page, index) => (
+							{pages?.data?.map((page, index) => (
 								<li key={page._id} className={`list-group-item`}>
 									<div className="float-start">
 										<Link
-											href={`/page/${page._id}/${page.slug}`}
+											href={{
+												pathname: `/noadmin/pages/update/${page._id}`,
+												query: {
+													returnpage: `/noadmin/menus/read/${menu?.data?._id}`,
+												},
+											}}
 											passHref
 											legacyBehavior
 										>
-											<a target="_blank">
+											<a>
 												<span className="badge bg-secondary me-1">
 													{page.orderingNumber}
 												</span>

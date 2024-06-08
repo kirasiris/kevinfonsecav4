@@ -1,88 +1,30 @@
-"use client";
 import { fetchurl } from "@/helpers/setTokenOnServer";
-import { useRouter } from "next/navigation";
-import { useState, useEffect, useContext } from "react";
-import { toast } from "react-toastify";
-import AuthContext from "@/helpers/globalContext";
-import AdminSidebar from "@/components/admin/adminsidebar";
-import MyTextArea from "@/components/global/mytextarea";
+import { redirect } from "next/navigation";
+import AdminSidebar from "@/components/admin/myfinaladminsidebar";
+import MyTextArea from "@/components/global/myfinaltextarea";
+import FormButtons from "@/components/global/formbuttons";
 
-const CreatePage = () => {
-	const { auth } = useContext(AuthContext);
-	const router = useRouter();
-
-	// Redirect if not authenticated
-	!auth.isAuthenticated && router.push("/auth/login");
-
-	// Redirec if not founder
-	auth.isAuthenticated &&
-		!auth.user.role.includes("founder") &&
-		router.push("/dashboard");
-
-	const [pageData, setPageData] = useState({
-		title: `Untitled`,
-		text: `No description`,
-		referrerpolicy: "strict-origin-when-cross-origin",
-		rel: "no-referrer",
-		target: "_self",
-		commented: true,
-		password: ``,
-		status: `draft`,
-	});
-	const {
-		title,
-		text,
-		referrerpolicy,
-		rel,
-		target,
-		commented,
-		password,
-		status,
-	} = pageData;
-
-	const addPage = async (e) => {
-		e.preventDefault();
-		try {
-			await fetchurl(`/pages`, "POST", "no-cache", pageData);
-			toast.success(`Item created`);
-			resetForm();
-			router.push(`/noadmin/pages`);
-		} catch (err) {
-			console.log(err);
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
-
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return { msg: err?.response?.statusText, status: err?.response?.status };
-		}
-	};
-
-	const resetForm = () => {
-		setPageData({
-			title: `Untitled`,
-			text: `No description`,
-			referrerpolicy: "strict-origin-when-cross-origin",
-			rel: "no-referrer",
-			target: "_self",
-			commented: true,
-			password: ``,
-			status: `draft`,
-		});
+const CreatePage = async ({ params, searchParams }) => {
+	const addPage = async (formData) => {
+		"use server";
+		const rawFormData = {
+			title: formData.get("title"),
+			url: formData.get("url"),
+			text: formData.get("text"),
+			referrerpolicy: formData.get("referrerpolicy"),
+			rel: formData.get("rel"),
+			target: formData.get("target"),
+			orderingNumber: formData.get("orderingNumber"),
+			commented: formData.get("commented"),
+			password: formData.get("password"),
+			status: formData.get("status"),
+		};
+		await fetchurl(`/pages`, "POST", "no-cache", rawFormData);
+		redirect(`/noadmin/pages`);
 	};
 
 	return (
-		<form className="row" onSubmit={addPage}>
+		<form className="row" action={addPage}>
 			<div className="col">
 				<label htmlFor="blog-title" className="form-label">
 					Title
@@ -90,13 +32,18 @@ const CreatePage = () => {
 				<input
 					id="blog-title"
 					name="title"
-					value={title}
-					onChange={(e) => {
-						setPageData({
-							...pageData,
-							title: e.target.value,
-						});
-					}}
+					defaultValue="Untitled"
+					type="text"
+					className="form-control mb-3"
+					placeholder=""
+				/>
+				<label htmlFor="url" className="form-label">
+					Url
+				</label>
+				<input
+					id="url"
+					name="url"
+					defaultValue="Url"
 					type="text"
 					className="form-control mb-3"
 					placeholder=""
@@ -107,11 +54,10 @@ const CreatePage = () => {
 				<MyTextArea
 					id="text"
 					name="text"
-					value={text}
-					objectData={pageData}
-					setObjectData={setPageData}
 					onModel="Page"
-					advancedTextEditor={true}
+					advancedTextEditor={false}
+					customPlaceholder="No description"
+					defaultValue="No description"
 				/>
 				<div className="row">
 					<div className="col"></div>
@@ -124,13 +70,7 @@ const CreatePage = () => {
 						<select
 							id="referrerpolicy"
 							name="referrerpolicy"
-							value={referrerpolicy}
-							onChange={(e) => {
-								setPageData({
-									...pageData,
-									referrerpolicy: e.target.value,
-								});
-							}}
+							defaultValue="strict-origin-when-cross-origin"
 							className="form-control"
 						>
 							<option value={`no-referrer`}>No Referrer</option>
@@ -156,13 +96,7 @@ const CreatePage = () => {
 						<select
 							id="rel"
 							name="rel"
-							value={rel}
-							onChange={(e) => {
-								setPageData({
-									...pageData,
-									rel: e.target.value,
-								});
-							}}
+							defaultValue="no-referrer"
 							className="form-control"
 						>
 							<option value={`no-referrer`}>No Referrer</option>
@@ -175,13 +109,7 @@ const CreatePage = () => {
 						<select
 							id="target"
 							name="target"
-							value={target}
-							onChange={(e) => {
-								setPageData({
-									...pageData,
-									target: e.target.value,
-								});
-							}}
+							defaultValue="_blank"
 							className="form-control"
 						>
 							<option value={`_self`}>Self</option>
@@ -191,6 +119,21 @@ const CreatePage = () => {
 							<option value={`_unfencedTop`}>Unfenced Top</option>
 						</select>
 					</div>
+					<div className="col">
+						<label htmlFor="orderingNumber" className="form-label">
+							Ordering Number
+						</label>
+						<input
+							id="orderingNumber"
+							name="orderingNumber"
+							defaultValue="1"
+							min={1}
+							max={99}
+							type="number"
+							className="form-control mb-3"
+							placeholder=""
+						/>
+					</div>
 				</div>
 			</div>
 			<div className="col-lg-3">
@@ -198,35 +141,20 @@ const CreatePage = () => {
 					displayCategoryField={false}
 					displayAvatar={false}
 					avatar={""}
-					status={status}
+					status={"draft"}
 					fullWidth={false}
-					password={password}
+					password={""}
 					featured={false}
-					commented={commented}
+					commented={true}
 					embedding={false}
 					github_readme={""}
 					category={undefined}
 					categories={[]}
-					objectData={pageData}
-					setObjectData={setPageData}
 					multipleFiles={false}
 					onModel={"Page"}
 				/>
 				<br />
-				<button
-					type="submit"
-					className="btn btn-secondary btn-sm float-start"
-					disabled={title.length > 0 && text.length > 0 ? !true : !false}
-				>
-					Submit
-				</button>
-				<button
-					type="button"
-					className="btn btn-secondary btn-sm float-end"
-					onClick={resetForm}
-				>
-					Reset
-				</button>
+				<FormButtons />
 			</div>
 		</form>
 	);

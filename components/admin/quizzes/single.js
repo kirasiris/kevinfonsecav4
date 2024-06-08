@@ -64,7 +64,7 @@ const Single = ({
 						<DropdownButton title="Options" variant="secondary">
 							<Link
 								href={{
-									pathname: `/quiz/${object._id}`,
+									pathname: `/noadmin/quizzes/read/${object._id}`,
 									query: {
 										isAdmin: true,
 									},
@@ -72,9 +72,7 @@ const Single = ({
 								passHref
 								legacyBehavior
 							>
-								<a className="dropdown-item btn btn-link" target="_blank">
-									View&nbsp;It
-								</a>
+								<a className="dropdown-item btn btn-link">View&nbsp;It</a>
 							</Link>
 							<button
 								className="dropdown-item btn btn-sm"

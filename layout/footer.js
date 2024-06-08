@@ -2,7 +2,13 @@
 import Link from "next/link";
 import ToggleTheme from "./toggletheme";
 
-const Footer = ({ auth = {}, classes = "", styles = {}, canonical = "" }) => {
+const Footer = ({
+	auth = {},
+	classes = "",
+	styles = {},
+	canonical = "",
+	menus = [],
+}) => {
 	return (
 		<footer className={`py-5 mt-4 bg-dark ${classes}`} style={styles}>
 			<div className="container">
@@ -20,331 +26,113 @@ const Footer = ({ auth = {}, classes = "", styles = {}, canonical = "" }) => {
 					<div className="col-lg-3">
 						<h5>Menu</h5>
 						<ul className="nav flex-column">
-							<li className="nav-item mb-2">
-								<Link
-									href={{
-										pathname: `${canonical}/contact`,
-										query: {},
-									}}
-									passHref
-									legacyBehavior
-								>
-									Contact
-								</Link>
-							</li>
-							<li className="nav-item mb-2">
-								<Link
-									href={{
-										pathname: `${canonical}/openai/generateimage`,
-										query: {},
-									}}
-									passHref
-									legacyBehavior
-								>
-									Generate&nbsp;AI&nbsp;Image
-								</Link>
-							</li>
-							<li className="nav-item mb-2">
-								<Link
-									href={{
-										pathname: `${canonical}/openai/generatecode`,
-										query: {},
-									}}
-									passHref
-									legacyBehavior
-								>
-									Generate&nbsp;AI&nbsp;Code
-								</Link>
-							</li>
-							<li className="nav-item mb-2">
-								<Link
-									href={{
-										pathname: `${canonical}/api`,
-										query: {},
-									}}
-									passHref
-									legacyBehavior
-								>
-									API
-								</Link>
-							</li>
-							<li className="nav-item mb-2">
-								<Link
-									href={{
-										pathname: `${canonical}/forum`,
-										query: {},
-									}}
-									passHref
-									legacyBehavior
-								>
-									Forum
-								</Link>
-							</li>
-							<li className="nav-item mb-2">
-								<Link
-									href={{
-										pathname: `${canonical}/job`,
-										query: {
-											page: 1,
-											limit: 10,
-											sort: "-createdAt",
-										},
-									}}
-									passHref
-									legacyBehavior
-								>
-									Jobs
-								</Link>
-							</li>
-							<li className="nav-item mb-2">
-								<Link
-									href={{
-										pathname: `${canonical}/realstate`,
-										query: {
-											page: 1,
-											limit: 10,
-											sort: "-createdAt",
-										},
-									}}
-									passHref
-									legacyBehavior
-								>
-									Real State
-								</Link>
-							</li>
-							<li className="nav-item mb-2">
-								<Link
-									href={{
-										pathname: `${canonical}/changelog`,
-										query: {
-											page: 1,
-											limit: 10,
-											sort: `-createdAt`,
-										},
-									}}
-									passHref
-									legacyBehavior
-								>
-									Changelog
-								</Link>
-							</li>
+							{menus
+								.filter((m) => m?.resourceId?.slug === "footer-1")
+								.sort((a, b) => a.orderingNumber - b.orderingNumber)
+								.map((p, index) => (
+									<li key={index} className="nav-item mb-2">
+										{p.target === "_self" ? (
+											<Link
+												href={{
+													pathname: decodeURI(`${canonical}${p.url}`),
+													query: {},
+												}}
+												passHref
+												legacyBehavior
+											>
+												{p.title}
+											</Link>
+										) : (
+											<a href={p.url} target="_blank" rel="noreferrer noopener">
+												{p.title}
+											</a>
+										)}
+									</li>
+								))}
 						</ul>
 					</div>
 					<div className="col-lg-3">
 						<h5>Tools</h5>
 						<ul className="nav flex-column">
-							<li className="nav-item mb-2">
-								<Link
-									href={{
-										pathname: `${canonical}/youtube`,
-										query: {},
-									}}
-									passHref
-									legacyBehavior
-								>
-									YouTube
-								</Link>
-							</li>
-							<li className="nav-item mb-2">
-								<Link
-									href={{
-										pathname: `${canonical}/restful`,
-										query: {},
-									}}
-									passHref
-									legacyBehavior
-								>
-									RESTFUL&nbsp;Tester
-								</Link>
-							</li>
-							<li className="nav-item mb-2">
-								<Link
-									href={{
-										pathname: `${canonical}/opengraphviewer`,
-										query: {},
-									}}
-									passHref
-									legacyBehavior
-								>
-									OpenGraph&nbsp;Viewer
-								</Link>
-							</li>
-							<li className="nav-item mb-2">
-								<Link
-									href={{
-										pathname: `${canonical}/livecode`,
-										query: {},
-									}}
-									passHref
-									legacyBehavior
-								>
-									HTML,&nbsp;CSS&nbsp;and&nbsp;JS&nbsp;Viewer
-								</Link>
-							</li>
-							<li className="nav-item mb-2">
-								<Link
-									href={{
-										pathname: `${canonical}/mongodbcompiler`,
-										query: {},
-									}}
-									passHref
-									legacyBehavior
-								>
-									MongoDB&nbsp;Compiler
-								</Link>
-							</li>
+							{menus
+								.filter((m) => m?.resourceId?.slug === "footer-2")
+								.sort((a, b) => a.orderingNumber - b.orderingNumber)
+								.map((p, index) => (
+									<li key={index} className="nav-item mb-2">
+										{p.target === "_self" ? (
+											<Link
+												href={{
+													pathname: decodeURI(`${canonical}${p.url}`),
+													query: {},
+												}}
+												passHref
+												legacyBehavior
+											>
+												{p.title}
+											</Link>
+										) : (
+											<a href={p.url} target="_blank" rel="noreferrer noopener">
+												{p.title}
+											</a>
+										)}
+									</li>
+								))}
 						</ul>
 					</div>
 					<div className="col-lg-3">
 						<h5>Mind&nbsp;to&nbsp;donate?</h5>
 						<ul className="nav flex-column">
-							<li className="nav-item mb-2">
-								<a
-									rel="noreferrer noopener"
-									href="https://www.paypal.com/paypalme/kirasiris"
-									target="_blank"
-								>
-									<i className="fa fa-paypal me-1" aria-hidden />
-									PayPal
-								</a>
-							</li>
-							<li className="nav-item mb-2">
-								<a
-									href="https://wordpress.com/refer-a-friend/AgJ8XA6iNz1XmnGwkWYQ/"
-									target="_blank"
-									rel="noreferrer noopener"
-								>
-									<i className="fa fa-wordpress me-1" aria-hidden />
-									WordPress
-								</a>
-							</li>
-							<li className="nav-item mb-2">
-								<a
-									href="https://cash.app/$kirasiris"
-									target="_blank"
-									rel="noreferrer noopener"
-								>
-									<i className="fa fa-dollar-sign me-1" aria-hidden />
-									CashApp
-								</a>
-							</li>
+							{menus
+								.filter((m) => m?.resourceId?.slug === "footer-3")
+								.sort((a, b) => a.orderingNumber - b.orderingNumber)
+								.map((p, index) => (
+									<li key={index} className="nav-item mb-2">
+										{p.target === "_self" ? (
+											<Link
+												href={{
+													pathname: decodeURI(`${canonical}${p.url}`),
+													query: {},
+												}}
+												passHref
+												legacyBehavior
+											>
+												{p.title}
+											</Link>
+										) : (
+											<a href={p.url} target="_blank" rel="noreferrer noopener">
+												{p.title}
+											</a>
+										)}
+									</li>
+								))}
 						</ul>
 					</div>
 					<div className="col-lg-3">
 						<h5>About</h5>
 						<ul className="nav flex-column">
-							<li className="nav-item mb-2">
-								<Link
-									href={{
-										pathname: `${canonical}/profile/660600aa29a40c04c35d6188/kirasiris`,
-										query: {
-											page: 1,
-											limit: 10,
-											sort: `-createdAt`,
-										},
-									}}
-									passHref
-									legacyBehavior
-								>
-									<a aria-current="page">Kevin?</a>
-								</Link>
-							</li>
-							<li className="nav-item mb-2">
-								<Link
-									href={{
-										pathname: `${canonical}/blog`,
-										query: {
-											page: 1,
-											limit: 10,
-											sort: `-createdAt`,
-										},
-									}}
-									passHref
-									legacyBehavior
-								>
-									<a aria-current="page">Blog</a>
-								</Link>
-							</li>
-							<li className="nav-item mb-2">
-								<Link
-									href={{
-										pathname: `${canonical}/theme`,
-										query: {
-											page: 1,
-											limit: 10,
-											sort: `-createdAt`,
-										},
-									}}
-									passHref
-									legacyBehavior
-								>
-									<a aria-current="page">Themes</a>
-								</Link>
-							</li>
-							<li className="nav-item mb-2">
-								<Link
-									href={{
-										pathname: `${canonical}/video`,
-										query: {
-											page: 1,
-											limit: 32,
-											sort: `-createdAt`,
-										},
-									}}
-									passHref
-									legacyBehavior
-								>
-									<a aria-current="page">Videos</a>
-								</Link>
-							</li>
-							<li className="nav-item mb-2">
-								<Link
-									href={{
-										pathname: `${canonical}/anime`,
-										query: {
-											page: 1,
-											limit: 24,
-											sort: `-createdAt`,
-										},
-									}}
-									passHref
-									legacyBehavior
-								>
-									<a aria-current="page">Animes</a>
-								</Link>
-							</li>
-							<li className="nav-item mb-2">
-								<Link
-									href={{
-										pathname: `${canonical}/course`,
-										query: {
-											page: 1,
-											limit: 32,
-											sort: `-createdAt`,
-										},
-									}}
-									passHref
-									legacyBehavior
-								>
-									<a aria-current="page">Courses</a>
-								</Link>
-							</li>
-							<li className="nav-item mb-2">
-								<Link
-									href={{
-										pathname: `${canonical}/secret`,
-										query: {
-											page: 1,
-											limit: 32,
-											sort: `-createdAt`,
-										},
-									}}
-									passHref
-									legacyBehavior
-								>
-									Secrets
-								</Link>
-							</li>
+							{menus
+								.filter((m) => m?.resourceId?.slug === "footer-4")
+								.sort((a, b) => a.orderingNumber - b.orderingNumber)
+								.map((p, index) => (
+									<li key={index} className="nav-item mb-2">
+										{p.target === "_self" ? (
+											<Link
+												href={{
+													pathname: decodeURI(`${canonical}${p.url}`),
+													query: {},
+												}}
+												passHref
+												legacyBehavior
+											>
+												{p.title}
+											</Link>
+										) : (
+											<a href={p.url} target="_blank" rel="noreferrer noopener">
+												{p.title}
+											</a>
+										)}
+									</li>
+								))}
 						</ul>
 					</div>
 					<hr />

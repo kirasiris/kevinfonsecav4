@@ -1,199 +1,57 @@
-"use client";
-import { fetchurl } from "@/helpers/setTokenOnServer";
-import { useParams, useRouter } from "next/navigation";
-import { useState, useEffect, useContext } from "react";
-import { toast } from "react-toastify";
-import AuthContext from "@/helpers/globalContext";
-import AdminSidebar from "@/components/admin/adminsidebar";
-import MyTextArea from "@/components/global/mytextarea";
+import { fetchurl, getAuthTokenOnServer } from "@/helpers/setTokenOnServer";
+import { redirect } from "next/navigation";
+import AdminSidebar from "@/components/admin/myfinaladminsidebar";
+import MyTextArea from "@/components/global/myfinaltextarea";
+import FormButtons from "@/components/global/formbuttons";
 
-const UpdateRealState = () => {
-	const { auth, files } = useContext(AuthContext);
-	const router = useRouter();
+async function getAuthenticatedUser() {
+	const res = await fetchurl(`/auth/me`, "GET", "force-cache");
+	return res;
+}
 
-	// Redirect if not authenticated
-	!auth.isAuthenticated && router.push("/auth/login");
+async function getFiles(params) {
+	const res = await fetchurl(`/files${params}`, "GET", "no-cache");
+	return res;
+}
 
-	// Redirec if not founder
-	auth.isAuthenticated &&
-		!auth.user.role.includes("founder") &&
-		router.push("/dashboard");
+async function getRealState(params) {
+	const res = await fetchurl(`/realstates${params}`, "GET", "no-cache");
+	return res;
+}
 
-	const [realstateData, setRealStateData] = useState({
-		title: `Untitled`,
-		avatar: files?.selected?._id,
-		text: `No description`,
-		weeklyPrice: 0,
-		monthlyPrice: 0,
-		nightlyPrice: 0,
-		featured: true,
-		commented: true,
-		address: "",
-		bedrooms: 1,
-		bathrooms: 1,
-		squarefeet: 1,
-		isSold: false,
-		businessType: "sale",
-		type: "house",
-		amenities: "",
-		password: ``,
-		status: `draft`,
-	});
-	const {
-		title,
-		avatar,
-		text,
-		weeklyPrice,
-		monthlyPrice,
-		nightlyPrice,
-		featured,
-		commented,
-		address,
-		bedrooms,
-		bathrooms,
-		squarefeet,
-		isSold,
-		businessType,
-		type,
-		amenities,
-		password,
-		status,
-	} = realstateData;
+const UpdateRealState = async ({ params, searchParams }) => {
+	const realstate = await getRealState(`/${params.id}`);
 
-	const [realstate, setRealState] = useState(null);
-	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState(false);
+	const token = await getAuthTokenOnServer();
+	const auth = await getAuthenticatedUser();
+	const files = await getFiles(`?page=1&limit=100&sort=-createdAt`);
 
-	const { id } = useParams();
-	const realstateId = id;
-
-	useEffect(() => {
-		const fetchRealState = async () => {
-			try {
-				const res = await fetchurl(
-					`/realstates/${realstateId}`,
-					"GET",
-					"no-cache"
-				);
-				setRealState(res?.data);
-				setRealStateData({
-					title: res?.data?.title,
-					avatar: res?.data?.files?.avatar,
-					text: res?.data?.text,
-					weeklyPrice: res?.data?.rates?.weeklyPrice,
-					monthlyPrice: res?.data?.rates?.monthlyPrice,
-					nightlyPrice: res?.data?.rates?.nightlyPrice,
-					featured: res?.data?.featured,
-					commented: res?.data?.commented,
-					address: res?.data?.address,
-					bedrooms: res?.data?.bedrooms,
-					bathrooms: res?.data?.bathrooms,
-					squarefeet: res?.data?.squarefeet,
-					isSold: res?.data?.isSold,
-					businessType: res?.data?.businessType,
-					type: res?.data?.type,
-					amenities: res?.data?.amenities,
-					// password: res?.data?.password,
-					status: res?.data?.status,
-				});
-				setLoading(false);
-			} catch (err) {
-				console.log(err);
-				// const error = err.response.data.message;
-				const error = err?.response?.data?.error?.errors;
-				const errors = err?.response?.data?.errors;
-
-				if (error) {
-					// dispatch(setAlert(error, 'danger'));
-					error &&
-						Object.entries(error).map(([, value]) =>
-							toast.error(value.message)
-						);
-				}
-
-				if (errors) {
-					errors.forEach((error) => toast.error(error.msg));
-				}
-
-				toast.error(err?.response?.statusText);
-				return {
-					msg: err?.response?.statusText,
-					status: err?.response?.status,
-				};
-			}
+	const upgradeRealState = async (formData) => {
+		"use server";
+		const rawFormData = {
+			title: formData.get("title"),
+			text: formData.get("text"),
+			featured: formData.get("featured"),
+			commented: formData.get("commented"),
+			address: formData.get("address"),
+			bedrooms: formData.get("bedrooms"),
+			bathrooms: formData.get("bathrooms"),
+			squarefeet: formData.get("squarefeet"),
+			isSold: formData.get("isSold"),
+			businessType: formData.get("businessType"),
+			type: formData.get("type"),
+			amenities: Array.from(formData.getAll("amenities")),
+			password: formData.get("password"),
+			status: formData.get("status"),
+			files: { avatar: formData.get("file") },
 		};
-		fetchRealState();
-	}, [realstateId]);
 
-	const upgradeRealState = async (e) => {
-		e.preventDefault();
-		try {
-			await fetchurl(`/realstates/${realstate._id}`, "PUT", "no-cache", {
-				...realstateData,
-				files: { avatar: files?.selected?._id },
-			});
-			toast.success(`Item updated`);
-			router.push(`/noadmin/realstates`);
-		} catch (err) {
-			console.log(err);
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
-
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return { msg: err?.response?.statusText, status: err?.response?.status };
-		}
+		await fetchurl(`/realstates/${params.id}`, "PUT", "no-cache", rawFormData);
+		redirect(`/noadmin/realstates`);
 	};
 
-	const resetForm = () => {
-		setRealStateData({
-			title: `Untitled`,
-			avatar: files?.selected?._id,
-			text: `No description`,
-			weeklyPrice: 0,
-			monthlyPrice: 0,
-			nightlyPrice: 0,
-			featured: true,
-			commented: true,
-			address: "",
-			bedrooms: 1,
-			bathrooms: 1,
-			squarefeet: 1,
-			isSold: false,
-			businessType: "sale",
-			type: "house",
-			amenities: "",
-			password: ``,
-			status: `draft`,
-		});
-	};
-
-	const handleAmenitiesChange = (e) => {
-		const { value } = e.target;
-		const updatedAmenities = amenities.includes(value)
-			? amenities.filter((amenity) => amenity !== value)
-			: [...amenities, value];
-		setRealStateData({ ...realstateData, amenities: updatedAmenities });
-	};
-
-	return loading || realstate === null || realstate === undefined ? (
-		error ? (
-			<>Not found</>
-		) : (
-			<>Loading...</>
-		)
-	) : (
-		<form className="row" onSubmit={upgradeRealState}>
+	return (
+		<form className="row" action={upgradeRealState}>
 			<div className="col">
 				<label htmlFor="blog-title" className="form-label">
 					Title
@@ -201,13 +59,7 @@ const UpdateRealState = () => {
 				<input
 					id="blog-title"
 					name="title"
-					value={title}
-					onChange={(e) => {
-						setRealStateData({
-							...realstateData,
-							title: e.target.value,
-						});
-					}}
+					defaultValue={realstate?.data?.title}
 					type="text"
 					className="form-control mb-3"
 					placeholder=""
@@ -216,13 +68,13 @@ const UpdateRealState = () => {
 					Text
 				</label>
 				<MyTextArea
+					auth={auth}
 					id="text"
 					name="text"
-					value={text}
-					objectData={realstateData}
-					setObjectData={setRealStateData}
 					onModel="RealState"
-					advancedTextEditor={false}
+					advancedTextEditor={true}
+					customPlaceholder="No description"
+					defaultValue={realstate?.data?.text}
 				/>
 				<div className="row">
 					<div className="col">
@@ -232,16 +84,7 @@ const UpdateRealState = () => {
 						<input
 							id="weeklyPrice"
 							name="weeklyPrice"
-							value={weeklyPrice}
-							onChange={(e) => {
-								const inputValue = e.target.value;
-								if (/^\d+$/.test(inputValue) && parseInt(inputValue) >= 0) {
-									setRealStateData({
-										...realstateData,
-										weeklyPrice: inputValue,
-									});
-								}
-							}}
+							defaultValue={realstate?.data?.rates?.weeklyPrice}
 							type="number"
 							className="form-control mb-3"
 							placeholder="18"
@@ -255,16 +98,7 @@ const UpdateRealState = () => {
 						<input
 							id="monthlyPrice"
 							name="monthlyPrice"
-							value={monthlyPrice}
-							onChange={(e) => {
-								const inputValue = e.target.value;
-								if (/^\d+$/.test(inputValue) && parseInt(inputValue) >= 0) {
-									setRealStateData({
-										...realstateData,
-										monthlyPrice: inputValue,
-									});
-								}
-							}}
+							defaultValue={realstate?.data?.rates?.monthlyPrice}
 							type="number"
 							className="form-control mb-3"
 							placeholder="18"
@@ -278,16 +112,7 @@ const UpdateRealState = () => {
 						<input
 							id="nightlyPrice"
 							name="nightlyPrice"
-							value={nightlyPrice}
-							onChange={(e) => {
-								const inputValue = e.target.value;
-								if (/^\d+$/.test(inputValue) && parseInt(inputValue) >= 0) {
-									setRealStateData({
-										...realstateData,
-										nightlyPrice: inputValue,
-									});
-								}
-							}}
+							defaultValue={realstate?.data?.rates?.nightlyPrice}
 							type="number"
 							className="form-control mb-3"
 							placeholder="18"
@@ -303,13 +128,7 @@ const UpdateRealState = () => {
 						<input
 							id="address"
 							name="address"
-							value={address}
-							onChange={(e) => {
-								setRealStateData({
-									...realstateData,
-									address: e.target.value,
-								});
-							}}
+							defaultValue={realstate?.data?.address}
 							type="text"
 							className="form-control mb-3"
 							placeholder=""
@@ -322,13 +141,7 @@ const UpdateRealState = () => {
 						<select
 							id="isSold"
 							name="isSold"
-							value={isSold}
-							onChange={(e) => {
-								setRealStateData({
-									...realstateData,
-									isSold: e.target.value,
-								});
-							}}
+							defaultValue={realstate?.data?.isSold}
 							className="form-control"
 						>
 							<option value={true}>Yes</option>
@@ -344,16 +157,7 @@ const UpdateRealState = () => {
 						<input
 							id="bedrooms"
 							name="bedrooms"
-							value={bedrooms}
-							onChange={(e) => {
-								const inputValue = e.target.value;
-								if (/^\d+$/.test(inputValue) && parseInt(inputValue) >= 1) {
-									setRealStateData({
-										...realstateData,
-										bedrooms: inputValue,
-									});
-								}
-							}}
+							defaultValue={realstate?.data?.bedrooms}
 							type="number"
 							className="form-control mb-3"
 							placeholder="18"
@@ -367,16 +171,7 @@ const UpdateRealState = () => {
 						<input
 							id="bathrooms"
 							name="bathrooms"
-							value={bathrooms}
-							onChange={(e) => {
-								const inputValue = e.target.value;
-								if (/^\d+$/.test(inputValue) && parseInt(inputValue) >= 1) {
-									setRealStateData({
-										...realstateData,
-										bathrooms: inputValue,
-									});
-								}
-							}}
+							defaultValue={realstate?.data?.bathrooms}
 							type="number"
 							className="form-control mb-3"
 							placeholder="18"
@@ -390,16 +185,7 @@ const UpdateRealState = () => {
 						<input
 							id="squarefeet"
 							name="squarefeet"
-							value={squarefeet}
-							onChange={(e) => {
-								const inputValue = e.target.value;
-								if (/^\d+$/.test(inputValue) && parseInt(inputValue) >= 1) {
-									setRealStateData({
-										...realstateData,
-										squarefeet: inputValue,
-									});
-								}
-							}}
+							defaultValue={realstate?.data?.squarefeet}
 							type="number"
 							className="form-control mb-3"
 							placeholder="18"
@@ -415,13 +201,7 @@ const UpdateRealState = () => {
 						<select
 							id="businessType"
 							name="businessType"
-							value={businessType}
-							onChange={(e) => {
-								setRealStateData({
-									...realstateData,
-									businessType: e.target.value,
-								});
-							}}
+							defaultValue={realstate?.data?.businessType}
 							className="form-control"
 						>
 							<option value={`sale`}>Sale</option>
@@ -435,13 +215,7 @@ const UpdateRealState = () => {
 						<select
 							id="type"
 							name="type"
-							value={type}
-							onChange={(e) => {
-								setRealStateData({
-									...realstateData,
-									type: e.target.value,
-								});
-							}}
+							defaultValue={realstate?.data?.type}
 							className="form-control"
 						>
 							<option value={`apartment`}>Apartment</option>
@@ -463,11 +237,10 @@ const UpdateRealState = () => {
 							<input
 								id="wifi"
 								name="amenities"
-								value="wifi"
+								defaultValue="wifi"
 								className="form-check-input"
 								type="checkbox"
-								checked={amenities.includes("wifi")}
-								onChange={handleAmenitiesChange}
+								defaultChecked={realstate?.data?.amenities.includes("wifi")}
 							/>
 							<label htmlFor="wifi" className="form-check-label">
 								Wi-Fi
@@ -477,11 +250,12 @@ const UpdateRealState = () => {
 							<input
 								id="free-parking"
 								name="amenities"
-								value="free-parking"
+								defaultValue="free-parking"
 								className="form-check-input"
 								type="checkbox"
-								checked={amenities.includes("free-parking")}
-								onChange={handleAmenitiesChange}
+								defaultChecked={realstate?.data?.amenities.includes(
+									"free-parking"
+								)}
 							/>
 							<label htmlFor="free-parking" className="form-check-label">
 								Free Parking
@@ -491,11 +265,12 @@ const UpdateRealState = () => {
 							<input
 								id="elevator-access"
 								name="amenities"
-								value="elevator-access"
+								defaultValue="elevator-access"
 								className="form-check-input"
 								type="checkbox"
-								checked={amenities.includes("elevator-access")}
-								onChange={handleAmenitiesChange}
+								defaultChecked={realstate?.data?.amenities.includes(
+									"elevator-access"
+								)}
 							/>
 							<label htmlFor="elevator-access" className="form-check-label">
 								Elevator Access
@@ -505,11 +280,12 @@ const UpdateRealState = () => {
 							<input
 								id="air-conditioning"
 								name="amenities"
-								value="air-conditioning"
+								defaultValue="air-conditioning"
 								className="form-check-input"
 								type="checkbox"
-								checked={amenities.includes("air-conditioning")}
-								onChange={handleAmenitiesChange}
+								defaultChecked={realstate?.data?.amenities.includes(
+									"air-conditioning"
+								)}
 							/>
 							<label htmlFor="air-conditioning" className="form-check-label">
 								Air Conditioning
@@ -519,11 +295,12 @@ const UpdateRealState = () => {
 							<input
 								id="coffee-maker"
 								name="amenities"
-								value="coffee-maker"
+								defaultValue="coffee-maker"
 								className="form-check-input"
 								type="checkbox"
-								checked={amenities.includes("coffee-maker")}
-								onChange={handleAmenitiesChange}
+								defaultChecked={realstate?.data?.amenities.includes(
+									"coffee-maker"
+								)}
 							/>
 							<label htmlFor="coffee-maker" className="form-check-label">
 								Coffee Maker
@@ -535,11 +312,12 @@ const UpdateRealState = () => {
 							<input
 								id="full-kitchen"
 								name="amenities"
-								value="full-kitchen"
+								defaultValue="full-kitchen"
 								className="form-check-input"
 								type="checkbox"
-								checked={amenities.includes("full-kitchen")}
-								onChange={handleAmenitiesChange}
+								defaultChecked={realstate?.data?.amenities.includes(
+									"full-kitchen"
+								)}
 							/>
 							<label htmlFor="full-kitchen" className="form-check-label">
 								Full Kitchen
@@ -549,11 +327,12 @@ const UpdateRealState = () => {
 							<input
 								id="swimming-pool"
 								name="amenities"
-								value="swimming-pool"
+								defaultValue="swimming-pool"
 								className="form-check-input"
 								type="checkbox"
-								checked={amenities.includes("swimming-pool")}
-								onChange={handleAmenitiesChange}
+								defaultChecked={realstate?.data?.amenities.includes(
+									"swimming-pool"
+								)}
 							/>
 							<label htmlFor="swimming-pool" className="form-check-label">
 								Swimming Pool
@@ -563,11 +342,12 @@ const UpdateRealState = () => {
 							<input
 								id="dish-washer"
 								name="amenities"
-								value="dish-washer"
+								defaultValue="dish-washer"
 								className="form-check-input"
 								type="checkbox"
-								checked={amenities.includes("dish-washer")}
-								onChange={handleAmenitiesChange}
+								defaultChecked={realstate?.data?.amenities.includes(
+									"dish-washer"
+								)}
 							/>
 							<label htmlFor="dish-washer" className="form-check-label">
 								Dish Washer
@@ -577,11 +357,12 @@ const UpdateRealState = () => {
 							<input
 								id="balcony-patio"
 								name="amenities"
-								value="balcony-patio"
+								defaultValue="balcony-patio"
 								className="form-check-input"
 								type="checkbox"
-								checked={amenities.includes("balcony-patio")}
-								onChange={handleAmenitiesChange}
+								defaultChecked={realstate?.data?.amenities.includes(
+									"balcony-patio"
+								)}
 							/>
 							<label htmlFor="balcony-patio" className="form-check-label">
 								Balcony / Patio
@@ -591,11 +372,12 @@ const UpdateRealState = () => {
 							<input
 								id="laundry-room"
 								name="amenities"
-								value="laundry-room"
+								defaultValue="laundry-room"
 								className="form-check-input"
 								type="checkbox"
-								checked={amenities.includes("laundry-room")}
-								onChange={handleAmenitiesChange}
+								defaultChecked={realstate?.data?.amenities.includes(
+									"laundry-room"
+								)}
 							/>
 							<label htmlFor="laundry-room" className="form-check-label">
 								Laundry Room
@@ -607,11 +389,12 @@ const UpdateRealState = () => {
 							<input
 								id="24-7-security"
 								name="amenities"
-								value="24-7-security"
+								defaultValue="24-7-security"
 								className="form-check-input"
 								type="checkbox"
-								checked={amenities.includes("24-7-security")}
-								onChange={handleAmenitiesChange}
+								defaultChecked={realstate?.data?.amenities.includes(
+									"24-7-security"
+								)}
 							/>
 							<label htmlFor="24-7-security" className="form-check-label">
 								24/7 Security
@@ -621,11 +404,12 @@ const UpdateRealState = () => {
 							<input
 								id="gym-fitness-center"
 								name="amenities"
-								value="gym-fitness-center"
+								defaultValue="gym-fitness-center"
 								className="form-check-input"
 								type="checkbox"
-								checked={amenities.includes("gym-fitness-center")}
-								onChange={handleAmenitiesChange}
+								defaultChecked={realstate?.data?.amenities.includes(
+									"gym-fitness-center"
+								)}
 							/>
 							<label htmlFor="gym-fitness-center" className="form-check-label">
 								Gym / Fitness Center
@@ -635,11 +419,10 @@ const UpdateRealState = () => {
 							<input
 								id="smart-tv"
 								name="amenities"
-								value="smart-tv"
+								defaultValue="smart-tv"
 								className="form-check-input"
 								type="checkbox"
-								checked={amenities.includes("smart-tv")}
-								onChange={handleAmenitiesChange}
+								defaultChecked={realstate?.data?.amenities.includes("smart-tv")}
 							/>
 							<label htmlFor="smart-tv" className="form-check-label">
 								Smart TV
@@ -649,11 +432,12 @@ const UpdateRealState = () => {
 							<input
 								id="wheelchair-accessible"
 								name="amenities"
-								value="wheelchair-accessible"
+								defaultValue="wheelchair-accessible"
 								className="form-check-input"
 								type="checkbox"
-								checked={amenities.includes("wheelchair-accessible")}
-								onChange={handleAmenitiesChange}
+								defaultChecked={realstate?.data?.amenities.includes(
+									"wheelchair-accessible"
+								)}
 							/>
 							<label
 								htmlFor="wheelchair-accessible"
@@ -666,11 +450,10 @@ const UpdateRealState = () => {
 							<input
 								id="hot-tub"
 								name="amenities"
-								value="hot-tub"
+								defaultValue="hot-tub"
 								className="form-check-input"
 								type="checkbox"
-								checked={amenities.includes("hot-tub")}
-								onChange={handleAmenitiesChange}
+								defaultChecked={realstate?.data?.amenities.includes("hot-tub")}
 							/>
 							<label htmlFor="hot-tub" className="form-check-label">
 								Hot Tub
@@ -683,36 +466,24 @@ const UpdateRealState = () => {
 				<AdminSidebar
 					displayCategoryField={false}
 					displayAvatar={true}
-					avatar={avatar}
-					status={status}
+					avatar={realstate?.data?.files?.avatar}
+					status={realstate?.data?.status}
 					fullWidth={false}
-					password={password}
-					featured={featured}
-					commented={commented}
+					password=""
+					featured={realstate?.data?.featured.toString()}
+					commented={realstate?.data?.commented.toString()}
 					embedding={false}
 					github_readme={""}
 					category={undefined}
 					categories={[]}
-					objectData={realstateData}
-					setObjectData={setRealStateData}
 					multipleFiles={false}
 					onModel={"RealState"}
+					files={files}
+					auth={auth}
+					token={token}
 				/>
 				<br />
-				<button
-					type="submit"
-					className="btn btn-secondary btn-sm float-start"
-					disabled={title.length > 0 && text.length > 0 ? !true : !false}
-				>
-					Submit
-				</button>
-				<button
-					type="button"
-					className="btn btn-secondary btn-sm float-end"
-					onClick={resetForm}
-				>
-					Reset
-				</button>
+				<FormButtons />
 			</div>
 		</form>
 	);

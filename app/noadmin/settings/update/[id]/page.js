@@ -1,211 +1,57 @@
-"use client";
 import { fetchurl } from "@/helpers/setTokenOnServer";
-import { useParams, useRouter } from "next/navigation";
-import { useState, useEffect, useContext } from "react";
-import { toast } from "react-toastify";
-import AuthContext from "@/helpers/globalContext";
-import MyTextArea from "@/components/global/mytextarea";
+import { redirect } from "next/navigation";
+import MyTextArea from "@/components/global/myfinaltextarea";
+import FormButtons from "@/components/global/formbuttons";
 
-const UpdateSetting = () => {
-	const { auth } = useContext(AuthContext);
-	const router = useRouter();
+async function getSetting(params) {
+	const res = await fetchurl(`/settings${params}`, "GET", "no-cache");
+	return res;
+}
 
-	// Redirect if not authenticated
-	!auth.isAuthenticated && router.push("/auth/login");
-
-	// Redirec if not founder
-	auth.isAuthenticated &&
-		!auth.user.role.includes("founder") &&
-		router.push("/dashboard");
-
-	const [settingData, setSettingData] = useState({
-		author: "Kevin Uriel Fonseca",
-		author_email: "kebin1421@hotmail.com",
-		site_url: "",
-		home_url: "",
-		favicon: "",
-		logo: "",
-		charset: "UTF-8",
-		title: "Kevin Uriel Fonseca",
-		text: "",
-		showcase_image: "",
-		maintenance: false,
-		address: "",
-		language: "en-US",
-		facebook: "",
-		twitter: "",
-		youtube: "",
-		instagram: "",
-		google_api: "",
-		first_ad: "",
-		second_ad: "",
-		third_ad: "",
-		fourth_ad: "",
-		script_head: "",
-		script_footer: "",
-	});
-	const {
-		author,
-		author_email,
-		site_url,
-		home_url,
-		favicon,
-		logo,
-		charset,
-		title,
-		text,
-		showcase_image,
-		maintenance,
-		address,
-		language,
-		facebook,
-		twitter,
-		youtube,
-		instagram,
-		google_api,
-		first_ad,
-		second_ad,
-		third_ad,
-		fourth_ad,
-		script_head,
-		script_footer,
-	} = settingData;
-
-	const [setting, setSetting] = useState(null);
-	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState(false);
-
-	const { id } = useParams();
-	const settingId = id;
-
-	useEffect(() => {
-		const fetchSetting = async () => {
-			try {
-				const res = await fetchurl(`/settings/${settingId}`, "GET", "no-cache");
-				setSetting(res?.data);
-				setSettingData({
-					author: res?.data?.author,
-					author_email: res?.data?.author_email,
-					site_url: res?.data?.site_url,
-					home_url: res?.data?.home_url,
-					favicon: res?.data?.favicon,
-					logo: res?.data?.logo,
-					charset: res?.data?.charset,
-					title: res?.data?.title,
-					text: res?.data?.text,
-					showcase_image: res?.data?.showcase_image,
-					maintenance: res?.data?.maintenance,
-					address: res?.data?.address,
-					language: res?.data?.language,
-					facebook: res?.data?.social?.facebook,
-					twitter: res?.data?.social?.twitter,
-					youtube: res?.data?.social?.youtube,
-					instagram: res?.data?.social?.instagram,
-					google_api: res?.data?.google_api,
-					first_ad: res?.data?.ads?.first_ad,
-					second_ad: res?.data?.ads?.second_ad,
-					third_ad: res?.data?.ads?.third_ad,
-					fourth_ad: res?.data?.ads?.fourth_ad,
-					script_head: res?.data?.scripts?.head,
-					script_footer: res?.data?.scripts?.footer,
-				});
-				setLoading(false);
-			} catch (err) {
-				console.log(err);
-				// const error = err.response.data.message;
-				const error = err?.response?.data?.error?.errors;
-				const errors = err?.response?.data?.errors;
-
-				if (error) {
-					// dispatch(setAlert(error, 'danger'));
-					error &&
-						Object.entries(error).map(([, value]) =>
-							toast.error(value.message)
-						);
-				}
-
-				if (errors) {
-					errors.forEach((error) => toast.error(error.msg));
-				}
-
-				toast.error(err?.response?.statusText);
-				return {
-					msg: err?.response?.statusText,
-					status: err?.response?.status,
-				};
-			}
+const UpdateSetting = async ({ params, searchParams }) => {
+	const setting = await getSetting(`/${params.id}`);
+	const upgradeSetting = async (formData) => {
+		"use server";
+		const rawFormData = {
+			author: formData.get("author"),
+			author_email: formData.get("author_email"),
+			site_url: formData.get("site_url"),
+			home_url: formData.get("home_url"),
+			favicon: formData.get("favicon"),
+			logo: formData.get("logo"),
+			charset: formData.get("charset"),
+			title: formData.get("title"),
+			text: formData.get("text"),
+			showcase_image: formData.get("showcase_image"),
+			maintenance: formData.get("maintenance"),
+			address: formData.get("address"),
+			language: formData.get("language"),
+			google_api: formData.get("google_api"),
 		};
-		fetchSetting();
-	}, [settingId]);
-
-	const upgradeSetting = async (e) => {
-		e.preventDefault();
-		try {
-			await fetchurl(
-				`/settings/${setting._id}`,
-				"PUT",
-				"no-cache",
-				settingData
-			);
-			router.push(`/noadmin/settings`);
-		} catch (err) {
-			console.log(err);
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
-
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return { msg: err?.response?.statusText, status: err?.response?.status };
-		}
-	};
-
-	const resetForm = () => {
-		setSettingData({
-			author: "Kevin Uriel Fonseca",
-			author_email: "kebin1421@hotmail.com",
-			site_url: "",
-			home_url: "",
-			favicon: "",
-			logo: "",
-			charset: "UTF-8",
-			title: "Kevin Uriel Fonseca",
-			text: "",
-			showcase_image: "",
-			maintenance: false,
-			address: "",
-			language: "en-US",
-			facebook: "",
-			twitter: "",
-			youtube: "",
-			instagram: "",
-			google_api: "",
-			first_ad: "",
-			second_ad: "",
-			third_ad: "",
-			fourth_ad: "",
-			script_head: "",
-			script_footer: "",
+		await fetchurl(`/settings/${params.id}`, "PUT", "no-cache", {
+			...rawFormData,
+			social: {
+				facebook: formData.get("facebook"),
+				twitter: formData.get("twitter"),
+				youtube: formData.get("youtube"),
+				instagram: formData.get("instagram"),
+			},
+			ads: {
+				first: formData.get("first_ad"),
+				second: formData.get("second_ad"),
+				third: formData.get("third_ad"),
+				fourth: formData.get("fourth_ad"),
+			},
+			scripts: {
+				head: formData.get("script_head"),
+				footer: formData.get("script_footer"),
+			},
 		});
+		redirect(`/noadmin/settings`);
 	};
 
-	return loading || setting === null || setting === undefined ? (
-		error ? (
-			<>Not found</>
-		) : (
-			<>Loading...</>
-		)
-	) : (
-		<form className="row" onSubmit={upgradeSetting}>
+	return (
+		<form className="row" action={upgradeSetting}>
 			<div className="col">
 				<label htmlFor="blog-title" className="form-label">
 					Title
@@ -213,13 +59,7 @@ const UpdateSetting = () => {
 				<input
 					id="blog-title"
 					name="title"
-					value={title}
-					onChange={(e) => {
-						setSettingData({
-							...settingData,
-							title: e.target.value,
-						});
-					}}
+					defaultValue={setting?.data?.title}
 					type="text"
 					className="form-control mb-3"
 					placeholder=""
@@ -230,13 +70,7 @@ const UpdateSetting = () => {
 				<input
 					id="showcase_image"
 					name="showcase_image"
-					value={showcase_image}
-					onChange={(e) => {
-						setSettingData({
-							...settingData,
-							showcase_image: e.target.value,
-						});
-					}}
+					defaultValue={setting?.data?.showcase_image}
 					type="text"
 					className="form-control mb-3"
 					placeholder=""
@@ -245,13 +79,13 @@ const UpdateSetting = () => {
 					Text
 				</label>
 				<MyTextArea
-					id="blog-text multipurpose-textarea"
+					auth={undefined}
+					id="text"
 					name="text"
-					value={text}
-					objectData={settingData}
-					setObjectData={setSettingData}
 					onModel="Setting"
 					advancedTextEditor={false}
+					customPlaceholder="No description"
+					defaultValue={setting?.data?.text}
 				/>
 				<div className="row">
 					<div className="col">
@@ -261,13 +95,7 @@ const UpdateSetting = () => {
 						<input
 							id="author"
 							name="author"
-							value={author}
-							onChange={(e) => {
-								setSettingData({
-									...settingData,
-									author: e.target.value,
-								});
-							}}
+							defaultValue={setting?.data?.author}
 							type="text"
 							className="form-control mb-3"
 							placeholder=""
@@ -280,13 +108,7 @@ const UpdateSetting = () => {
 						<input
 							id="author_email"
 							name="author_email"
-							value={author_email}
-							onChange={(e) => {
-								setSettingData({
-									...settingData,
-									author_email: e.target.value,
-								});
-							}}
+							defaultValue={setting?.data?.author_email}
 							type="text"
 							className="form-control mb-3"
 							placeholder=""
@@ -301,13 +123,7 @@ const UpdateSetting = () => {
 						<input
 							id="site_url"
 							name="site_url"
-							value={site_url}
-							onChange={(e) => {
-								setSettingData({
-									...settingData,
-									site_url: e.target.value,
-								});
-							}}
+							defaultValue={setting?.data?.site_url}
 							type="text"
 							className="form-control mb-3"
 							placeholder=""
@@ -320,13 +136,7 @@ const UpdateSetting = () => {
 						<input
 							id="home_url"
 							name="home_url"
-							value={home_url}
-							onChange={(e) => {
-								setSettingData({
-									...settingData,
-									home_url: e.target.value,
-								});
-							}}
+							defaultValue={setting?.data?.home_url}
 							type="text"
 							className="form-control mb-3"
 							placeholder=""
@@ -341,13 +151,7 @@ const UpdateSetting = () => {
 						<input
 							id="favicon"
 							name="favicon"
-							value={favicon}
-							onChange={(e) => {
-								setSettingData({
-									...settingData,
-									favicon: e.target.value,
-								});
-							}}
+							defaultValue={setting?.data?.favicon}
 							type="text"
 							className="form-control mb-3"
 							placeholder=""
@@ -360,13 +164,7 @@ const UpdateSetting = () => {
 						<input
 							id="logo"
 							name="logo"
-							value={logo}
-							onChange={(e) => {
-								setSettingData({
-									...settingData,
-									logo: e.target.value,
-								});
-							}}
+							defaultValue={setting?.data?.logo}
 							type="text"
 							className="form-control mb-3"
 							placeholder=""
@@ -379,13 +177,7 @@ const UpdateSetting = () => {
 						<input
 							id="charset"
 							name="charset"
-							value={charset}
-							onChange={(e) => {
-								setSettingData({
-									...settingData,
-									charset: e.target.value,
-								});
-							}}
+							defaultValue={setting?.data?.charset}
 							type="text"
 							className="form-control mb-3"
 							placeholder=""
@@ -398,13 +190,7 @@ const UpdateSetting = () => {
 						<select
 							id="maintenance"
 							name="maintenance"
-							value={maintenance}
-							onChange={(e) => {
-								setSettingData({
-									...settingData,
-									maintenance: e.target.value,
-								});
-							}}
+							defaultValue={setting?.data?.maintenance}
 							className="form-control"
 						>
 							<option value={true}>Yes</option>
@@ -418,13 +204,7 @@ const UpdateSetting = () => {
 				<input
 					id="address"
 					name="address"
-					value={address}
-					onChange={(e) => {
-						setSettingData({
-							...settingData,
-							address: e.target.value,
-						});
-					}}
+					defaultValue={setting?.data?.address}
 					type="text"
 					className="form-control mb-3"
 					placeholder=""
@@ -435,13 +215,7 @@ const UpdateSetting = () => {
 				<input
 					id="language"
 					name="language"
-					value={language}
-					onChange={(e) => {
-						setSettingData({
-							...settingData,
-							language: e.target.value,
-						});
-					}}
+					defaultValue={setting?.data?.language}
 					type="text"
 					className="form-control mb-3"
 					placeholder=""
@@ -454,13 +228,7 @@ const UpdateSetting = () => {
 						<input
 							id="facebook"
 							name="facebook"
-							value={facebook}
-							onChange={(e) => {
-								setSettingData({
-									...settingData,
-									facebook: e.target.value,
-								});
-							}}
+							defaultValue={setting?.data?.social?.facebook}
 							type="text"
 							className="form-control mb-3"
 							placeholder=""
@@ -473,13 +241,7 @@ const UpdateSetting = () => {
 						<input
 							id="twitter"
 							name="twitter"
-							value={twitter}
-							onChange={(e) => {
-								setSettingData({
-									...settingData,
-									twitter: e.target.value,
-								});
-							}}
+							defaultValue={setting?.data?.social?.twitter}
 							type="text"
 							className="form-control mb-3"
 							placeholder=""
@@ -492,13 +254,7 @@ const UpdateSetting = () => {
 						<input
 							id="youtube"
 							name="youtube"
-							value={youtube}
-							onChange={(e) => {
-								setSettingData({
-									...settingData,
-									youtube: e.target.value,
-								});
-							}}
+							defaultValue={setting?.data?.social?.youtube}
 							type="text"
 							className="form-control mb-3"
 							placeholder=""
@@ -511,13 +267,7 @@ const UpdateSetting = () => {
 						<input
 							id="instagram"
 							name="instagram"
-							value={instagram}
-							onChange={(e) => {
-								setSettingData({
-									...settingData,
-									instagram: e.target.value,
-								});
-							}}
+							defaultValue={setting?.data?.social?.instagram}
 							type="text"
 							className="form-control mb-3"
 							placeholder=""
@@ -530,13 +280,7 @@ const UpdateSetting = () => {
 				<input
 					id="google_api"
 					name="google_api"
-					value={google_api}
-					onChange={(e) => {
-						setSettingData({
-							...settingData,
-							google_api: e.target.value,
-						});
-					}}
+					defaultValue={setting?.data?.google_api}
 					type="text"
 					className="form-control mb-3"
 					placeholder=""
@@ -548,13 +292,13 @@ const UpdateSetting = () => {
 							First
 						</label>
 						<MyTextArea
+							auth={undefined}
 							id="first_ad"
-							name="text"
-							value={first_ad}
-							objectData={settingData}
-							setObjectData={setSettingData}
+							name="first_ad"
 							onModel="Setting"
 							advancedTextEditor={false}
+							customPlaceholder=""
+							defaultValue={setting?.data?.ads?.first}
 						/>
 					</div>
 					<div className="col">
@@ -562,13 +306,13 @@ const UpdateSetting = () => {
 							Second
 						</label>
 						<MyTextArea
+							auth={undefined}
 							id="second_ad"
-							name="text"
-							value={second_ad}
-							objectData={settingData}
-							setObjectData={setSettingData}
+							name="second_ad"
 							onModel="Setting"
 							advancedTextEditor={false}
+							customPlaceholder=""
+							defaultValue={setting?.data?.ads?.second}
 						/>
 					</div>
 					<div className="col">
@@ -576,13 +320,13 @@ const UpdateSetting = () => {
 							Third
 						</label>
 						<MyTextArea
+							auth={undefined}
 							id="third_ad"
-							name="text"
-							value={third_ad}
-							objectData={settingData}
-							setObjectData={setSettingData}
+							name="third_ad"
 							onModel="Setting"
 							advancedTextEditor={false}
+							customPlaceholder=""
+							defaultValue={setting?.data?.ads?.third}
 						/>
 					</div>
 					<div className="col">
@@ -590,13 +334,13 @@ const UpdateSetting = () => {
 							Fourth
 						</label>
 						<MyTextArea
+							auth={undefined}
 							id="fourth_ad"
-							name="text"
-							value={fourth_ad}
-							objectData={settingData}
-							setObjectData={setSettingData}
+							name="fourth_ad"
 							onModel="Setting"
 							advancedTextEditor={false}
+							customPlaceholder=""
+							defaultValue={setting?.data?.ads?.fourth}
 						/>
 					</div>
 				</div>
@@ -607,13 +351,13 @@ const UpdateSetting = () => {
 							Head
 						</label>
 						<MyTextArea
+							auth={undefined}
 							id="script_head"
-							name="text"
-							value={script_head}
-							objectData={settingData}
-							setObjectData={setSettingData}
+							name="script_head"
 							onModel="Setting"
 							advancedTextEditor={false}
+							customPlaceholder="Paste some JS code here"
+							defaultValue={setting?.data?.scripts?.head}
 						/>
 					</div>
 					<div className="col">
@@ -621,31 +365,18 @@ const UpdateSetting = () => {
 							Footer
 						</label>
 						<MyTextArea
+							auth={undefined}
 							id="script_footer"
-							name="text"
-							value={script_footer}
-							objectData={settingData}
-							setObjectData={setSettingData}
+							name="script_footer"
 							onModel="Setting"
 							advancedTextEditor={false}
+							customPlaceholder="Paste some JS code here"
+							defaultValue={setting?.data?.scripts?.footer}
 						/>
 					</div>
 				</div>
 				<br />
-				<button
-					type="submit"
-					className="btn btn-secondary btn-sm float-start"
-					disabled={title.length > 0 && text.length > 0 ? !true : !false}
-				>
-					Submit
-				</button>
-				<button
-					type="button"
-					className="btn btn-secondary btn-sm float-end"
-					onClick={resetForm}
-				>
-					Reset
-				</button>
+				<FormButtons />
 			</div>
 		</form>
 	);

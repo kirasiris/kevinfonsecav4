@@ -2,6 +2,7 @@ import {
 	fetchurl,
 	setAuthTokenOnServer,
 	setUserIdOnServer,
+	setUserStripeChargesEnabled,
 } from "@/helpers/setTokenOnServer";
 import { redirect } from "next/navigation";
 import FormButtons from "@/components/global/formbuttons";
@@ -41,6 +42,9 @@ const Login = async ({ params, searchParams }) => {
 		// furthermore, setAuthTokenOnServer needs to be prior to setAuthToken (client version)
 		await setAuthTokenOnServer(res?.token);
 		const loadUser = await fetchurl(`/auth/me`, "GET", "no-cache");
+		await setUserStripeChargesEnabled(
+			loadUser?.data?.stripe?.stripeChargesEnabled
+		);
 		await setUserIdOnServer(loadUser?.data?._id);
 		// alert("Login was a success");
 		searchParams?.returnpage

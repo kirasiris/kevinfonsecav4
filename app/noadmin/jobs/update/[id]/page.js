@@ -1,182 +1,57 @@
-"use client";
-import { fetchurl } from "@/helpers/setTokenOnServer";
-import { useParams, useRouter } from "next/navigation";
-import { useState, useEffect, useContext } from "react";
-import { toast } from "react-toastify";
-import AuthContext from "@/helpers/globalContext";
-import AdminSidebar from "@/components/admin/adminsidebar";
-import MyTextArea from "@/components/global/mytextarea";
+import { fetchurl, getAuthTokenOnServer } from "@/helpers/setTokenOnServer";
+import { redirect } from "next/navigation";
+import AdminSidebar from "@/components/admin/myfinaladminsidebar";
+import MyTextArea from "@/components/global/myfinaltextarea";
+import FormButtons from "@/components/global/formbuttons";
 
-const UpdateJob = () => {
-	const { auth } = useContext(AuthContext);
-	const router = useRouter();
+async function getAuthenticatedUser() {
+	const res = await fetchurl(`/auth/me`, "GET", "force-cache");
+	return res;
+}
 
-	// Redirect if not authenticated
-	!auth.isAuthenticated && router.push("/auth/login");
+async function getJob(params) {
+	const res = await fetchurl(`/jobs${params}`, "GET", "no-cache");
+	return res;
+}
 
-	// Redirec if not founder
-	auth.isAuthenticated &&
-		!auth.user.role.includes("founder") &&
-		router.push("/dashboard");
+const UpdateJob = async ({ params, searchParams }) => {
+	const job = await getJob(`/${params.id}`);
 
+	const token = await getAuthTokenOnServer();
+	const auth = await getAuthenticatedUser();
 	// Redirect if not company
-	!auth?.user?.hasCompany && router.push(`/noadmin/companies`);
+	!auth?.data?.hasCompany && router.push(`/noadmin/companies`);
 
-	const [jobData, setJobData] = useState({
-		title: `Untitled`,
-		text: `No description`,
-		featured: true,
-		positionFilled: false,
-		experience_level: "graduate",
-		job_type: "full-time",
-		remote: "remote",
-		shift_and_schedule: "monday-to-friday",
-		encouraged_to_apply: "fair-chance",
-		starting_at: 7.5,
-		provides_training: true,
-		security_clearance: false,
-		address: "",
-		commented: false,
-		password: ``,
-		status: `draft`,
-	});
-	const {
-		title,
-		text,
-		featured,
-		positionFilled,
-		experience_level,
-		job_type,
-		remote,
-		shift_and_schedule,
-		encouraged_to_apply,
-		starting_at,
-		provides_training,
-		security_clearance,
-		address,
-		commented,
-		password,
-		status,
-	} = jobData;
-
-	const [job, setJob] = useState(null);
-	const [loading, setLoading] = useState(false);
-	const [error, setError] = useState(false);
-
-	const { id } = useParams();
-	const jobId = id;
-
-	useEffect(() => {
-		const fetchJob = async () => {
-			try {
-				const res = await fetchurl(`/jobs/${jobId}`, "GET", "no-cache");
-				setJob(res?.data);
-				setJobData({
-					title: res?.data?.title,
-					text: res?.data?.text,
-					featured: res?.data?.featured,
-					positionFilled: res?.data?.positionFilled,
-					experience_level: res?.data?.experience_level,
-					job_type: res?.data?.job_type,
-					remote: res?.data?.remote,
-					shift_and_schedule: res?.data?.shift_and_schedule,
-					encouraged_to_apply: res?.data?.encouraged_to_apply,
-					starting_at: res?.data?.starting_at,
-					provides_training: res?.data?.provides_training,
-					security_clearance: res?.data?.security_clearance,
-					address: res?.data?.address,
-					commented: res?.data?.commented,
-					// password: ``,
-					status: res?.data?.status,
-				});
-				setLoading(false);
-			} catch (err) {
-				console.log(err);
-				// const error = err.response.data.message;
-				const error = err?.response?.data?.error?.errors;
-				const errors = err?.response?.data?.errors;
-
-				if (error) {
-					// dispatch(setAlert(error, 'danger'));
-					error &&
-						Object.entries(error).map(([, value]) =>
-							toast.error(value.message)
-						);
-				}
-
-				if (errors) {
-					errors.forEach((error) => toast.error(error.msg));
-				}
-
-				toast.error(err?.response?.statusText);
-				return {
-					msg: err?.response?.statusText,
-					status: err?.response?.status,
-				};
-			}
+	const upgradeJob = async (formData) => {
+		"use server";
+		const rawFormData = {
+			title: formData.get("title"),
+			text: formData.get("text"),
+			featured: formData.get("featured"),
+			positionFilled: formData.get("positionFilled"),
+			experience_level: formData.get("experience_level"),
+			job_type: formData.get("job_type"),
+			remote: formData.get("remote"),
+			shift_and_schedule: formData.get("shift_and_schedule"),
+			encouraged_to_apply: formData.get("encouraged_to_apply"),
+			starting_at: formData.get("starting_at"),
+			provides_training: formData.get("provides_training"),
+			security_clearance: formData.get("security_clearance"),
+			address: formData.get("address"),
+			commented: formData.get("commented"),
+			password: formData.get("password"),
+			status: formData.get("status"),
 		};
-		fetchJob();
-	}, [jobId]);
-
-	const upgradeJob = async (e) => {
-		e.preventDefault();
-		try {
-			await fetchurl(`/jobs/${job._id}`, "PUT", "no-cache", {
-				...jobData,
-				website: "beFree",
-			});
-			toast.success(`Item updated`);
-			router.push(`/noadmin/jobs`);
-		} catch (err) {
-			console.log(err);
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
-
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return { msg: err?.response?.statusText, status: err?.response?.status };
-		}
-	};
-
-	const resetForm = () => {
-		setJobData({
-			title: `Untitled`,
-			text: `No description`,
-			featured: true,
-			positionFilled: false,
-			experience_level: "graduate",
-			job_type: "full-time",
-			remote: "remote",
-			shift_and_schedule: "monday-to-friday",
-			encouraged_to_apply: "fair-chance",
-			starting_at: 7.5,
-			provides_training: true,
-			security_clearance: false,
-			address: "",
-			commented: false,
-			password: ``,
-			status: `draft`,
+		console.log(rawFormData);
+		await fetchurl(`/jobs/${params.id}`, "PUT", "no-cache", {
+			...rawFormData,
+			website: "beFree",
 		});
+		redirect(`/noadmin/jobs`);
 	};
 
-	return loading || job === null || job === undefined ? (
-		error ? (
-			<>Not found</>
-		) : (
-			<>Loading</>
-		)
-	) : (
-		<form className="row" onSubmit={upgradeJob}>
+	return (
+		<form className="row" action={upgradeJob}>
 			<div className="col">
 				<label htmlFor="blog-title" className="form-label">
 					Title
@@ -184,13 +59,7 @@ const UpdateJob = () => {
 				<input
 					id="blog-title"
 					name="title"
-					value={title}
-					onChange={(e) => {
-						setJobData({
-							...jobData,
-							title: e.target.value,
-						});
-					}}
+					defaultValue={job?.data?.title}
 					type="text"
 					className="form-control mb-3"
 					placeholder=""
@@ -199,13 +68,13 @@ const UpdateJob = () => {
 					Text
 				</label>
 				<MyTextArea
+					auth={auth}
 					id="text"
 					name="text"
-					value={text}
-					objectData={jobData}
-					setObjectData={setJobData}
 					onModel="Job"
-					advancedTextEditor={false}
+					advancedTextEditor={true}
+					customPlaceholder="No description"
+					defaultValue={job?.data?.text}
 				/>
 				<div className="row">
 					<div className="col">
@@ -215,13 +84,7 @@ const UpdateJob = () => {
 						<select
 							id="positionFilled"
 							name="positionFilled"
-							value={positionFilled}
-							onChange={(e) => {
-								setJobData({
-									...jobData,
-									positionFilled: e.target.value,
-								});
-							}}
+							defaultValue={job?.data?.positionFilled}
 							className="form-control"
 						>
 							<option value={true}>Yes</option>
@@ -233,13 +96,7 @@ const UpdateJob = () => {
 						<input
 							id="starting_at"
 							name="starting_at"
-							value={starting_at}
-							onChange={(e) => {
-								setJobData({
-									...jobData,
-									starting_at: e.target.value,
-								});
-							}}
+							defaultValue={job?.data?.starting_at}
 							type="text"
 							className="form-control mb-3"
 							placeholder="7.5"
@@ -252,13 +109,7 @@ const UpdateJob = () => {
 						<select
 							id="experience_level"
 							name="experience_level"
-							value={experience_level}
-							onChange={(e) => {
-								setJobData({
-									...jobData,
-									experience_level: e.target.value,
-								});
-							}}
+							defaultValue={job?.data?.experience_level}
 							className="form-control"
 						>
 							<option value={"graduate"}>Graduate</option>
@@ -272,16 +123,7 @@ const UpdateJob = () => {
 						<select
 							id="job_type"
 							name="job_type"
-							value={job_type}
-							onChange={(e) => {
-								const selectedOptions = Array.from(
-									e.target.selectedOptions
-								).map((option) => option.value);
-								setJobData({
-									...jobData,
-									job_type: selectedOptions,
-								});
-							}}
+							defaultValue={job?.data?.job_type}
 							className="form-control"
 							multiple
 						>
@@ -299,13 +141,7 @@ const UpdateJob = () => {
 						<select
 							id="provides_training"
 							name="provides_training"
-							value={provides_training}
-							onChange={(e) => {
-								setJobData({
-									...jobData,
-									provides_training: e.target.value,
-								});
-							}}
+							defaultValue={job?.data?.provides_training}
 							className="form-control"
 						>
 							<option value={true}>Yes</option>
@@ -317,13 +153,7 @@ const UpdateJob = () => {
 						<select
 							id="security_clearance"
 							name="security_clearance"
-							value={security_clearance}
-							onChange={(e) => {
-								setJobData({
-									...jobData,
-									security_clearance: e.target.value,
-								});
-							}}
+							defaultValue={job?.data?.security_clearance}
 							className="form-control"
 						>
 							<option value={true}>Yes</option>
@@ -337,13 +167,7 @@ const UpdateJob = () => {
 						<input
 							id="address"
 							name="address"
-							value={address}
-							onChange={(e) => {
-								setJobData({
-									...jobData,
-									address: e.target.value,
-								});
-							}}
+							defaultValue={job?.data?.address}
 							type="text"
 							className="form-control mb-3"
 							placeholder=""
@@ -356,13 +180,7 @@ const UpdateJob = () => {
 						<select
 							id="remote"
 							name="remote"
-							value={remote}
-							onChange={(e) => {
-								setJobData({
-									...jobData,
-									remote: e.target.value,
-								});
-							}}
+							defaultValue={job?.data?.remote}
 							className="form-control"
 						>
 							<option value={`hybrid`}>Hybrid</option>
@@ -376,16 +194,16 @@ const UpdateJob = () => {
 						<select
 							id="shift_and_schedule"
 							name="shift_and_schedule"
-							value={shift_and_schedule}
-							onChange={(e) => {
-								const selectedOptions = Array.from(
-									e.target.selectedOptions
-								).map((option) => option.value);
-								setJobData({
-									...jobData,
-									shift_and_schedule: selectedOptions,
-								});
-							}}
+							defaultValue={job?.data?.shift_and_schedule}
+							// onChange={(e) => {
+							// 	const selectedOptions = Array.from(
+							// 		e.target.selectedOptions
+							// 	).map((option) => option.value);
+							// 	setJobData({
+							// 		...jobData,
+							// 		shift_and_schedule: selectedOptions,
+							// 	});
+							// }}
 							className="form-control"
 							multiple
 						>
@@ -411,13 +229,7 @@ const UpdateJob = () => {
 						<select
 							id="encouraged_to_apply"
 							name="encouraged_to_apply"
-							value={encouraged_to_apply}
-							onChange={(e) => {
-								setJobData({
-									...jobData,
-									encouraged_to_apply: e.target.value,
-								});
-							}}
+							defaultValue={job?.data?.encouraged_to_apply}
 							className="form-control"
 						>
 							<option value={`fair-chance`}>Fair Chance</option>
@@ -435,36 +247,24 @@ const UpdateJob = () => {
 				<AdminSidebar
 					displayCategoryField={false}
 					displayAvatar={false}
-					avatar={""}
-					status={status}
+					// avatar={files?.selected?._id}
+					status={job?.data?.status}
 					fullWidth={false}
-					password={password}
-					featured={featured}
-					commented={commented}
+					password={job?.data?.password}
+					featured={job?.data?.featured}
+					commented={job?.data?.commented}
 					embedding={false}
 					github_readme={""}
 					category={undefined}
 					categories={[]}
-					objectData={jobData}
-					setObjectData={setJobData}
 					multipleFiles={false}
 					onModel={"Job"}
+					files={[]}
+					auth={auth}
+					token={token}
 				/>
 				<br />
-				<button
-					type="submit"
-					className="btn btn-secondary btn-sm float-start"
-					disabled={title.length > 0 && text.length > 0 ? !true : !false}
-				>
-					Submit
-				</button>
-				<button
-					type="button"
-					className="btn btn-secondary btn-sm float-end"
-					onClick={resetForm}
-				>
-					Reset
-				</button>
+				<FormButtons />
 			</div>
 		</form>
 	);

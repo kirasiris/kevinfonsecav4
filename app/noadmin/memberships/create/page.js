@@ -1,142 +1,59 @@
-"use client";
-import { fetchurl } from "@/helpers/setTokenOnServer";
-import { useRouter } from "next/navigation";
-import { useState, useContext } from "react";
-import { toast } from "react-toastify";
-import AuthContext from "@/helpers/globalContext";
-import AdminSidebar from "@/components/admin/adminsidebar";
-import MyTextArea from "@/components/global/mytextarea";
+import { fetchurl, getAuthTokenOnServer } from "@/helpers/setTokenOnServer";
+import { redirect } from "next/navigation";
+import AdminSidebar from "@/components/admin/myfinaladminsidebar";
+import MyTextArea from "@/components/global/myfinaltextarea";
 import OnboardingLink from "@/components/dashboard/onboardinglink";
+import FormButtons from "@/components/global/formbuttons";
 
-const CreateMembership = () => {
-	const { auth } = useContext(AuthContext);
-	const router = useRouter();
+async function getAuthenticatedUser() {
+	const res = await fetchurl(`/auth/me`, "GET", "force-cache");
+	return res;
+}
 
-	// Redirect if not authenticated
-	!auth.isAuthenticated && router.push("/auth/login");
-
-	// Redirec if not founder
-	auth.isAuthenticated &&
-		!auth.user.role.includes("founder") &&
-		router.push("/dashboard");
-
+const CreateMembership = async ({ params, searchParams }) => {
+	const auth = await getAuthenticatedUser();
 	// Redirect if not charges enabled
-	!auth?.user?.stripe?.stripeChargesEnabled && <OnboardingLink auth={auth} />;
+	!auth?.data?.stripe?.stripeChargesEnabled && <OnboardingLink auth={auth} />;
 
-	const [membershipData, setMembershipData] = useState({
-		title: `Untitled`,
-		text: `No description`,
-		active: false,
-		currency: "usd",
-		interval: "month",
-		interval_count: 1,
-		tax_behavior: "unspecified",
-		unit_amount: 0,
-		features: [],
-		width: 0,
-		height: 0,
-		length: 0,
-		weight: 0,
-		shippable: false,
-		statement_descriptor: "BIWEEKLY BFR MEMBRSHP",
-		unit_label: "digital-good",
-		url: "",
-		livemode: false,
-		status: `draft`,
-	});
-	const {
-		title,
-		text,
-		active,
-		currency,
-		interval,
-		interval_count,
-		tax_behavior,
-		unit_amount,
-		features,
-		width,
-		height,
-		length,
-		weight,
-		shippable,
-		statement_descriptor,
-		unit_label,
-		url,
-		livemode,
-		status,
-	} = membershipData;
-
-	const addMembership = async (e) => {
-		e.preventDefault();
-		try {
-			await fetchurl(`/extras/stripe/memberships`, "POST", "no-cache", {
-				...membershipData,
-				// files: { avatar: files?.selected?._id },
-				default_price_data: {
-					currency: currency,
-					recurring: {
-						interval: interval,
-						interval_count: interval_count,
-					},
-					tax_behavior: tax_behavior,
-					unit_amount: unit_amount,
-				},
-				package_dimensions: {
-					width: width,
-					height: height,
-					length: length,
-					weight: weight,
-				},
-			});
-			toast.success(`Item created`);
-			router.push(`/noadmin/memberships`);
-		} catch (err) {
-			console.log(err);
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
-
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return { msg: err?.response?.statusText, status: err?.response?.status };
-		}
-	};
-
-	const resetForm = () => {
-		setMembershipData({
-			title: `Untitled`,
-			text: `No description`,
-			active: false,
-			currency: "usd",
-			interval: "month",
-			interval_count: 1,
-			tax_behavior: "unspecified",
-			unit_amount: 0,
-			features: [],
-			width: 0,
-			height: 0,
-			length: 0,
-			weight: 0,
-			shippable: false,
-			statement_descriptor: "BIWEEKLY BFR MEMBRSHP",
+	const addMembership = async (formData) => {
+		"use server";
+		const rawFormData = {
+			title: formData.get("title"),
+			text: formData.get("text"),
+			active: formData.get("active"),
+			// features: formData.get("features"),
+			shippable: formData.get("shippable"),
+			statement_descriptor: formData.get("statement_descriptor"),
 			unit_label: "digital-good",
-			url: "",
-			livemode: false,
-			status: `draft`,
+			url: formData.get("url"),
+			livemode: formData.get("livemode"),
+			status: formData.get("status"),
+		};
+
+		await fetchurl(`/extras/stripe/memberships`, "POST", "no-cache", {
+			...rawFormData,
+			default_price_data: {
+				currency: formData.get("currency"),
+				recurring: {
+					interval: formData.get("interval"),
+					interval_count: formData.get("interval_count"),
+				},
+				tax_behavior: formData.get("tax_behavior"),
+				unit_amount: formData.get("unit_amount"),
+			},
+			package_dimensions: {
+				width: formData.get("width"),
+				height: formData.get("height"),
+				length: formData.get("length"),
+				weight: formData.get("weight"),
+			},
 		});
+
+		redirect(`/noadmin/memberships`);
 	};
 
 	return (
-		<form className="row" onSubmit={addMembership}>
+		<form className="row" action={addMembership}>
 			<div className="col">
 				<label htmlFor="blog-title" className="form-label">
 					Title
@@ -144,13 +61,7 @@ const CreateMembership = () => {
 				<input
 					id="blog-title"
 					name="title"
-					value={title}
-					onChange={(e) => {
-						setMembershipData({
-							...membershipData,
-							title: e.target.value,
-						});
-					}}
+					defaultValue="Untitled"
 					type="text"
 					className="form-control mb-3"
 					placeholder=""
@@ -159,13 +70,13 @@ const CreateMembership = () => {
 					Text
 				</label>
 				<MyTextArea
+					auth={undefined}
 					id="text"
 					name="text"
-					value={text}
-					objectData={membershipData}
-					setObjectData={setMembershipData}
 					onModel="Membership"
 					advancedTextEditor={false}
+					customPlaceholder="No description"
+					defaultValue="No description..."
 				/>
 				<div className="row">
 					<div className="col">
@@ -175,13 +86,7 @@ const CreateMembership = () => {
 						<input
 							id="currency"
 							name="currency"
-							value={currency}
-							onChange={(e) => {
-								setMembershipData({
-									...membershipData,
-									currency: e.target.value,
-								});
-							}}
+							defaultValue="usd"
 							type="text"
 							className="form-control mb-3"
 							placeholder=""
@@ -194,16 +99,8 @@ const CreateMembership = () => {
 						<input
 							id="unit_amount"
 							name="unit_amount"
-							value={unit_amount}
-							onChange={(e) => {
-								const inputValue = e.target.value;
-								if (/^\d+$/.test(inputValue) && parseInt(inputValue) >= 0) {
-									setMembershipData({
-										...membershipData,
-										unit_amount: inputValue,
-									});
-								}
-							}}
+							defaultValue={1}
+							min={1}
 							type="number"
 							className="form-control mb-3"
 							placeholder="How much?"
@@ -218,16 +115,8 @@ const CreateMembership = () => {
 						<input
 							id="interval_count"
 							name="interval_count"
-							value={interval_count}
-							onChange={(e) => {
-								const inputValue = e.target.value;
-								if (/^\d+$/.test(inputValue) && parseInt(inputValue) >= 1) {
-									setMembershipData({
-										...membershipData,
-										interval_count: inputValue,
-									});
-								}
-							}}
+							defaultValue={1}
+							min={1}
 							type="number"
 							className="form-control mb-3"
 							placeholder="1"
@@ -237,13 +126,7 @@ const CreateMembership = () => {
 						<select
 							id="interval"
 							name="interval"
-							value={interval}
-							onChange={(e) => {
-								setMembershipData({
-									...membershipData,
-									interval: e.target.value,
-								});
-							}}
+							defaultValue="month"
 							className="form-control mb-3"
 						>
 							<option value={"day"}>Day</option>
@@ -261,16 +144,8 @@ const CreateMembership = () => {
 						<input
 							id="width"
 							name="width"
-							value={width}
-							onChange={(e) => {
-								const inputValue = e.target.value;
-								if (/^\d+$/.test(inputValue) && parseInt(inputValue) >= 0) {
-									setMembershipData({
-										...membershipData,
-										width: inputValue,
-									});
-								}
-							}}
+							defaultValue={0}
+							min={0}
 							type="number"
 							className="form-control mb-3"
 							placeholder="In inches"
@@ -283,16 +158,8 @@ const CreateMembership = () => {
 						<input
 							id="height"
 							name="height"
-							value={height}
-							onChange={(e) => {
-								const inputValue = e.target.value;
-								if (/^\d+$/.test(inputValue) && parseInt(inputValue) >= 0) {
-									setMembershipData({
-										...membershipData,
-										height: inputValue,
-									});
-								}
-							}}
+							defaultValue={0}
+							min={0}
 							type="number"
 							className="form-control mb-3"
 							placeholder="In inches"
@@ -305,16 +172,8 @@ const CreateMembership = () => {
 						<input
 							id="length"
 							name="length"
-							value={length}
-							onChange={(e) => {
-								const inputValue = e.target.value;
-								if (/^\d+$/.test(inputValue) && parseInt(inputValue) >= 0) {
-									setMembershipData({
-										...membershipData,
-										length: inputValue,
-									});
-								}
-							}}
+							defaultValue={0}
+							min={0}
 							type="number"
 							className="form-control mb-3"
 							placeholder="In inches"
@@ -327,16 +186,8 @@ const CreateMembership = () => {
 						<input
 							id="weight"
 							name="weight"
-							value={weight}
-							onChange={(e) => {
-								const inputValue = e.target.value;
-								if (/^\d+$/.test(inputValue) && parseInt(inputValue) >= 0) {
-									setMembershipData({
-										...membershipData,
-										weight: inputValue,
-									});
-								}
-							}}
+							defaultValue={0}
+							min={0}
 							type="number"
 							className="form-control mb-3"
 							placeholder="In ounces"
@@ -351,13 +202,7 @@ const CreateMembership = () => {
 						<select
 							id="shippable"
 							name="shippable"
-							value={shippable}
-							onChange={(e) => {
-								setMembershipData({
-									...membershipData,
-									shippable: e.target.value,
-								});
-							}}
+							defaultValue={false}
 							className="form-control mb-3"
 						>
 							<option value={true}>Yes</option>
@@ -369,13 +214,7 @@ const CreateMembership = () => {
 						<select
 							id="tax_behavior"
 							name="tax_behavior"
-							value={tax_behavior}
-							onChange={(e) => {
-								setMembershipData({
-									...membershipData,
-									tax_behavior: e.target.value,
-								});
-							}}
+							defaultValue="unspecified"
 							className="form-control mb-3"
 						>
 							<option value={"exclusive"}>Exclusive</option>
@@ -390,13 +229,7 @@ const CreateMembership = () => {
 						<select
 							id="statement_descriptor"
 							name="statement_descriptor"
-							value={statement_descriptor}
-							onChange={(e) => {
-								setMembershipData({
-									...membershipData,
-									statement_descriptor: e.target.value,
-								});
-							}}
+							defaultValue="BIWEEKLY BFR MEMBRSHP"
 							className="form-control mb-3"
 							placeholder="This is what will appear in the user's bank statement account"
 						>
@@ -419,16 +252,7 @@ const CreateMembership = () => {
 						<input
 							id="unit_label"
 							name="unit_label"
-							value={unit_label}
-							onChange={(e) => {
-								const inputValue = e.target.value;
-								if (/^\d+$/.test(inputValue) && inputValue.length <= 12) {
-									setMembershipData({
-										...membershipData,
-										unit_label: inputValue,
-									});
-								}
-							}}
+							defaultValue="digital-good"
 							type="text"
 							className="form-control mb-3"
 							placeholder="Category of the product or service offered"
@@ -444,13 +268,7 @@ const CreateMembership = () => {
 						<input
 							id="url"
 							name="url"
-							value={url}
-							onChange={(e) => {
-								setMembershipData({
-									...membershipData,
-									url: e.target.value,
-								});
-							}}
+							defaultValue=""
 							type="text"
 							className="form-control mb-3"
 							placeholder=""
@@ -463,13 +281,7 @@ const CreateMembership = () => {
 						<select
 							id="active"
 							name="active"
-							value={active}
-							onChange={(e) => {
-								setMembershipData({
-									...membershipData,
-									active: e.target.value,
-								});
-							}}
+							defaultValue={false}
 							className="form-control mb-3"
 						>
 							<option value={true}>Yes</option>
@@ -483,13 +295,7 @@ const CreateMembership = () => {
 						<select
 							id="livemode"
 							name="livemode"
-							value={livemode}
-							onChange={(e) => {
-								setMembershipData({
-									...membershipData,
-									livemode: e.target.value,
-								});
-							}}
+							defaultValue={false}
 							className="form-control mb-3"
 						>
 							<option value={true}>Yes</option>
@@ -502,36 +308,24 @@ const CreateMembership = () => {
 				<AdminSidebar
 					displayCategoryField={false}
 					displayAvatar={false}
-					avatar={""}
-					status={status}
+					// avatar={files?.selected?._id}
+					status="draft"
 					fullWidth={false}
-					password={""}
+					password=""
 					featured={false}
 					commented={false}
 					embedding={false}
-					github_readme=""
+					github_readme={""}
 					category={undefined}
 					categories={[]}
-					objectData={membershipData}
-					setObjectData={setMembershipData}
 					multipleFiles={false}
 					onModel={"Membership"}
+					files={[]}
+					// auth={auth}
+					// token={token}
 				/>
 				<br />
-				<button
-					type="submit"
-					className="btn btn-secondary btn-sm float-start"
-					disabled={title.length > 0 && text.length > 0 ? !true : !false}
-				>
-					Submit
-				</button>
-				<button
-					type="button"
-					className="btn btn-secondary btn-sm float-end"
-					onClick={resetForm}
-				>
-					Reset
-				</button>
+				<FormButtons />
 			</div>
 		</form>
 	);

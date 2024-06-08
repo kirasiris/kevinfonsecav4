@@ -37,11 +37,11 @@ const DeleteModal = ({
 				setError(true);
 			});
 		if (sId) {
-			setObjects(objects.filter((object) => object._id !== sId));
+			setObjects(objects?.filter((object) => object._id !== sId));
 		} else {
-			setObjects(objects.filter((object) => object._id !== id));
+			setObjects(objects?.filter((object) => object._id !== id));
 		}
-		setTotalResults(objects.length - 1);
+		setTotalResults(objects?.length - 1);
 	};
 
 	return (

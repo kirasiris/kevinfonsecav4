@@ -12,9 +12,9 @@ const Single = ({
 }) => {
 	return (
 		<Accordion>
-			<Accordion.Item eventKey={object._id} className="rounded-0">
+			<Accordion.Item eventKey={object?._id} className="rounded-0">
 				<Accordion.Header>
-					{object.postType.map((c) => (
+					{object?.postType?.map((c) => (
 						<small key={c} className="badge bg-secondary rounded-pill me-3">
 							{c}
 						</small>
@@ -31,7 +31,7 @@ const Single = ({
 						setTotalResults={setTotalResults}
 					/>
 					<hr />
-					<ParseHtml text={object.text} />
+					<ParseHtml text={object?.text} />
 				</Accordion.Body>
 			</Accordion.Item>
 		</Accordion>

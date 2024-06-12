@@ -23,26 +23,23 @@ const Single = ({
 					<h1 className="blog-item__title">
 						<Link
 							href={{
-								pathname: `/noadmin/contacts/update/${object._id}`,
+								pathname: `/noadmin/blogs/update/${object._id}`,
 								query: {},
 							}}
 							passHref
 							legacyBehavior
 						>
-							<a className="blog-item__title-link">{object.nickname}</a>
+							<a className="blog-item__title-link">{object.title}</a>
 						</Link>
 					</h1>
 					<div className="blog-item__meta">
-						<span className="blog-item__meta-time-status">
-							{object.name.first}&nbsp;{object.name.middle}&nbsp;
-							{object.name.last}
-						</span>
+						{/* <span className="blog-item__meta-time-status">{object.text}</span> */}
 					</div>
 				</div>
 				<div className="blog-type-list__blog-thumbnail-wrapper has-image d-none d-md-block d-lg-block d-xl-block d-xxl-block">
 					<Link
 						href={{
-							pathname: `/noadmin/contacts/update/${object._id}`,
+							pathname: `/noadmin/blogs/update/${object._id}`,
 							query: {},
 						}}
 						passHref
@@ -67,7 +64,7 @@ const Single = ({
 						<DropdownButton title="Options" variant="secondary">
 							<Link
 								href={{
-									pathname: `/noadmin/contacts/read/${object._id}`,
+									pathname: `/noadmin/blogs/read/${object._id}`,
 									query: {
 										isAdmin: true,
 									},

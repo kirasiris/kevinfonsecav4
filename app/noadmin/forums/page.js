@@ -1,22 +1,22 @@
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
-import List from "@/components/admin/contacts/list";
+import List from "@/components/admin/forums/list";
 import { revalidatePath } from "next/cache";
 
-async function getContacts(params) {
-	const res = await fetchurl(`/contacts${params}`, "GET", "no-cache");
+async function getForums(params) {
+	const res = await fetchurl(`/forums${params}`, "GET", "no-cache");
 	return res;
 }
 
-const AdminContactsIndex = async ({ params, searchParams }) => {
-	const contacts = await getContacts(
+const AdminForumsIndex = async ({ params, searchParams }) => {
+	const forums = await getForums(
 		`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
 	);
 
 	const draftIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/contacts/${id}/draftit`, "PUT", "no-cache");
+		await fetchurl(`/forums/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
 			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
 		);
@@ -25,7 +25,7 @@ const AdminContactsIndex = async ({ params, searchParams }) => {
 	const publishIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/contacts/${id}/publishit`, "PUT", "no-cache");
+		await fetchurl(`/forums/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
 			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
 		);
@@ -34,7 +34,7 @@ const AdminContactsIndex = async ({ params, searchParams }) => {
 	const trashIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/contacts/${id}/trashit`, "PUT", "no-cache");
+		await fetchurl(`/forums/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
 			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
 		);
@@ -43,7 +43,7 @@ const AdminContactsIndex = async ({ params, searchParams }) => {
 	const scheduleIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/contacts/${id}/scheduleit`, "PUT", "no-cache");
+		await fetchurl(`/forums/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
 			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
 		);
@@ -52,7 +52,7 @@ const AdminContactsIndex = async ({ params, searchParams }) => {
 	const handleDelete = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/contacts/${id}/permanently`, "DELETE", "no-cache");
+		await fetchurl(`/forums/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(
 			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
 		);
@@ -61,7 +61,7 @@ const AdminContactsIndex = async ({ params, searchParams }) => {
 	const handleTrashAll = async () => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/contacts/deleteall`, "PUT", "no-cache");
+		await fetchurl(`/forums/deleteall`, "PUT", "no-cache");
 		revalidatePath(
 			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
 		);
@@ -70,7 +70,7 @@ const AdminContactsIndex = async ({ params, searchParams }) => {
 	const handleDeleteAll = async () => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/contacts/deleteall/permanently`, "DELETE", "no-cache");
+		await fetchurl(`/forums/deleteall/permanently`, "DELETE", "no-cache");
 		revalidatePath(
 			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
 		);
@@ -79,19 +79,21 @@ const AdminContactsIndex = async ({ params, searchParams }) => {
 	return (
 		<>
 			<AdminStatusesMenu
-				allLink="/noadmin/contacts"
-				publishedLink="/noadmin/contacts/published"
-				draftLink="/noadmin/contacts/draft"
-				scheduledLink="/noadmin/contacts/scheduled"
-				trashedLink="/noadmin/contacts/trashed"
+				allLink="/noadmin/forums"
+				publishedLink="/noadmin/forums/published"
+				draftLink="/noadmin/forums/draft"
+				scheduledLink="/noadmin/forums/scheduled"
+				trashedLink="/noadmin/forums/trashed"
+				categoriesLink=""
+				categoryType=""
 			/>
 			<div className="card rounded-0">
 				<List
-					allLink="/noadmin/contacts"
-					pageText="Contacts"
-					addLink="/noadmin/contacts/create"
-					searchOn="/noadmin/contacts"
-					objects={contacts}
+					allLink="/noadmin/forums"
+					pageText="Forums"
+					addLink="/noadmin/forums/create"
+					searchOn="/noadmin/forums"
+					objects={forums}
 					searchParams={searchParams}
 					handleDraft={draftIt}
 					handlePublish={publishIt}
@@ -106,4 +108,4 @@ const AdminContactsIndex = async ({ params, searchParams }) => {
 	);
 };
 
-export default AdminContactsIndex;
+export default AdminForumsIndex;

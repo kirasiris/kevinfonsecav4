@@ -1,0 +1,28 @@
+import { fetchurl } from "@/helpers/setTokenOnServer";
+import LiveCode from "@/components/admin/snippets/livecode";
+
+async function getSnippet(params) {
+	const res = await fetchurl(`/snippets${params}`, "GET", "no-cache");
+	return res;
+}
+
+const ReadSnippet = async ({ params, searchParams }) => {
+	const snippet = await getSnippet(`/${params.id}`);
+
+	return (
+		<div className="row">
+			<div className="col-lg-12">
+				<article>
+					<LiveCode
+						title={snippet?.data?.title}
+						MyHtml={snippet?.data?.code?.html}
+						MyCss={snippet?.data?.code?.css}
+						MyJs={snippet?.data?.code?.javascript}
+					/>
+				</article>
+			</div>
+		</div>
+	);
+};
+
+export default ReadSnippet;

@@ -1,104 +1,29 @@
-"use client";
 import { fetchurl } from "@/helpers/setTokenOnServer";
-import { useRouter } from "next/navigation";
-import { useState, useContext } from "react";
-import { toast } from "react-toastify";
-import AuthContext from "@/helpers/globalContext";
-import AdminSidebar from "@/components/admin/adminsidebar";
-import MyTextArea from "@/components/global/mytextarea";
+import { redirect } from "next/navigation";
+import AdminSidebar from "@/components/admin/myfinaladminsidebar";
+import MyTextArea from "@/components/global/myfinaltextarea";
 import LiveCode from "@/components/admin/snippets/livecode";
+import FormButtons from "@/components/global/formbuttons";
 
-const CreateSnippet = () => {
-	const { auth } = useContext(AuthContext);
-	const router = useRouter();
-
-	// Redirect if not authenticated
-	!auth.isAuthenticated && router.push("/auth/login");
-
-	// Redirec if not founder
-	auth.isAuthenticated &&
-		!auth.user.role.includes("founder") &&
-		router.push("/dashboard");
-
-	const [snippetData, setSnippetData] = useState({
-		title: `Untitled`,
-		text: `No description`,
-		html: "<h1>Title</h1>",
-		css: "body {}",
-		csslinks: [
-			"https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css",
-		],
-		js: "console.log('This example contains external urls from Bootstrap!');",
-		jslinks: [
-			"https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js",
-		],
-		featured: true,
-		commented: true,
-		status: `draft`,
-	});
-
-	const {
-		title,
-		text,
-		html,
-		css,
-		csslinks,
-		js,
-		jslinks,
-		featured,
-		commented,
-		status,
-	} = snippetData;
-
-	const addSnippet = async (e) => {
-		e.preventDefault();
-		try {
-			await fetchurl(`/snippets`, "POST", "no-cache", snippetData);
-			toast.success(`Item created`);
-			resetForm();
-			router.push(`/noadmin/snippets`);
-		} catch (err) {
-			console.log(err);
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
-
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return { msg: err?.response?.statusText, status: err?.response?.status };
-		}
-	};
-
-	const resetForm = () => {
-		setSnippetData({
-			title: `Untitled`,
-			text: `No description`,
-			html: "<h1>Title</h1>",
-			css: "body {}",
-			csslinks: [
-				"https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css",
-			],
-			js: "console.log('This example contains external urls from Bootstrap!');",
-			jslinks: [
-				"https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js",
-			],
-			featured: true,
-			commented: true,
-			status: `draft`,
-		});
+const CreateSnippet = async ({ params, searchParams }) => {
+	const addSnippet = async (formData) => {
+		"use server";
+		const rawFormData = {
+			title: formData.get("title"),
+			text: formData.get("text"),
+			html: formData.get("html"),
+			css: formData.get("css"),
+			js: formData.get("js"),
+			featured: formData.get("featured"),
+			commented: formData.get("commented"),
+			status: formData.get("status"),
+		};
+		await fetchurl(`/snippets`, "POST", "no-cache", rawFormData);
+		redirect(`/noadmin/snippets`);
 	};
 
 	return (
-		<form onSubmit={addSnippet}>
+		<form action={addSnippet}>
 			<div className="row">
 				<div className="col">
 					<label htmlFor="blog-title" className="form-label">
@@ -107,13 +32,7 @@ const CreateSnippet = () => {
 					<input
 						id="blog-title"
 						name="title"
-						value={title}
-						onChange={(e) => {
-							setSnippetData({
-								...snippetData,
-								title: e.target.value,
-							});
-						}}
+						defaultValue="Untitled"
 						type="text"
 						className="form-control mb-3"
 						placeholder=""
@@ -122,55 +41,46 @@ const CreateSnippet = () => {
 						Text
 					</label>
 					<MyTextArea
+						auth={undefined}
 						id="text"
 						name="text"
-						value={text}
-						objectData={snippetData}
-						setObjectData={setSnippetData}
 						onModel="Snippet"
 						advancedTextEditor={false}
+						customPlaceholder="No description"
+						defaultValue="No description..."
 					/>
 				</div>
 				<div className="col-lg-2">
 					<AdminSidebar
 						displayCategoryField={false}
 						displayAvatar={false}
-						avatar={""}
-						status={status}
+						// avatar={files?.selected?._id}
+						status="draft"
 						fullWidth={false}
-						password={""}
-						featured={featured}
-						commented={commented}
+						password=""
+						featured={true}
+						commented={true}
 						embedding={false}
 						github_readme={""}
 						category={undefined}
 						categories={[]}
-						objectData={snippetData}
-						setObjectData={setSnippetData}
 						multipleFiles={false}
 						onModel={"Snippet"}
+						// files={files}
+						files={undefined}
+						auth={undefined}
+						token={undefined}
 					/>
 					<br />
-					<button
-						type="submit"
-						className="btn btn-secondary btn-sm float-start"
-						disabled={title.length > 0 && text.length > 0 ? !true : !false}
-					>
-						Submit
-					</button>
-					<button
-						type="button"
-						className="btn btn-secondary btn-sm float-end"
-						onClick={resetForm}
-					>
-						Reset
-					</button>
+					<FormButtons />
 				</div>
 				<div className="mt-3 mb-3" />
 				<div className="col-lg-12">
 					<LiveCode
-						objectData={snippetData}
-						setObjectData={setSnippetData}
+						title="Untitled"
+						MyHtml="<h1>Titulo</h1>"
+						MyCss="cuerpo {}"
+						MyJs="console.log('This example contains external urls from Bootstrap!');"
 						hasId={false}
 					/>
 				</div>

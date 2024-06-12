@@ -148,10 +148,10 @@ const List = ({
 			{objects?.data?.length > 0 ? (
 				<>
 					<ul className="list-group list-group-flush">
-						{objects?.data?.map((contact) => (
+						{objects?.data?.map((blog) => (
 							<Single
-								key={contact._id}
-								object={contact}
+								key={blog._id}
+								object={blog}
 								handleDraft={handleDraft}
 								handlePublish={handlePublish}
 								handleTrash={handleTrash}
@@ -176,7 +176,7 @@ const List = ({
 						keyword={searchParams.keyword}
 						sortby="-createdAt"
 						siblings={1}
-						postType=""
+						postType="blog"
 						isAdmin={true}
 					/>
 				</>

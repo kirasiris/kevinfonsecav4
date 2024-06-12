@@ -17,6 +17,11 @@ const AdminMenu = () => {
 						<a>Dashboard</a>
 					</Link>
 				</li>
+				<li className={`list-group-item ${isActive(`/noadmin/animes`)}`}>
+					<Link href={"/noadmin/animes"} passHref legacyBehavior>
+						<a>Animes</a>
+					</Link>
+				</li>
 				<li className={`list-group-item ${isActive(`/noadmin/blogs`)}`}>
 					<Link href={"/noadmin/blogs"} passHref legacyBehavior>
 						<a>Blog</a>
@@ -25,6 +30,11 @@ const AdminMenu = () => {
 				<li className={`list-group-item ${isActive(`/noadmin/categories`)}`}>
 					<Link href={"/noadmin/categories"} passHref legacyBehavior>
 						<a>Categories</a>
+					</Link>
+				</li>
+				<li className={`list-group-item ${isActive(`/noadmin/cdalbums`)}`}>
+					<Link href={"/noadmin/cdalbums"} passHref legacyBehavior>
+						<a>CD Albums</a>
 					</Link>
 				</li>
 				<li className={`list-group-item ${isActive(`/noadmin/changelogs`)}`}>
@@ -42,11 +52,6 @@ const AdminMenu = () => {
 						<a>Companies</a>
 					</Link>
 				</li>
-				<li className={`list-group-item ${isActive(`/noadmin/contacts`)}`}>
-					<Link href={"/noadmin/contacts"} passHref legacyBehavior>
-						<a>Contacts</a>
-					</Link>
-				</li>
 				<li className={`list-group-item ${isActive(`/noadmin/courses`)}`}>
 					<Link href={"/noadmin/courses"} passHref legacyBehavior>
 						<a>Courses</a>
@@ -60,6 +65,11 @@ const AdminMenu = () => {
 				<li className={`list-group-item ${isActive(`/noadmin/files`)}`}>
 					<Link href={"/noadmin/files"} passHref legacyBehavior>
 						<a>Files</a>
+					</Link>
+				</li>
+				<li className={`list-group-item ${isActive(`/noadmin/forums`)}`}>
+					<Link href={"/noadmin/forums"} passHref legacyBehavior>
+						<a>Forums</a>
 					</Link>
 				</li>
 				<li className={`list-group-item ${isActive(`/noadmin/jobs`)}`}>
@@ -85,6 +95,11 @@ const AdminMenu = () => {
 				<li className={`list-group-item ${isActive(`/noadmin/menus`)}`}>
 					<Link href={"/noadmin/menus"} passHref legacyBehavior>
 						<a>Menus</a>
+					</Link>
+				</li>
+				<li className={`list-group-item ${isActive(`/noadmin/movies`)}`}>
+					<Link href={"/noadmin/movies"} passHref legacyBehavior>
+						<a>Movies</a>
 					</Link>
 				</li>
 				<li className={`list-group-item ${isActive(`/noadmin/newsletters`)}`}>

@@ -1,168 +1,36 @@
-"use client";
 import { fetchurl } from "@/helpers/setTokenOnServer";
-import { useParams, useRouter } from "next/navigation";
-import { useState, useEffect, useContext } from "react";
-import { toast } from "react-toastify";
-import AuthContext from "@/helpers/globalContext";
-import AdminSidebar from "@/components/admin/adminsidebar";
-import MyTextArea from "@/components/global/mytextarea";
+import { redirect } from "next/navigation";
+import AdminSidebar from "@/components/admin/myfinaladminsidebar";
+import MyTextArea from "@/components/global/myfinaltextarea";
 import LiveCode from "@/components/admin/snippets/livecode";
+import FormButtons from "@/components/global/formbuttons";
 
-const UpdateSnippet = () => {
-	const { auth } = useContext(AuthContext);
-	const router = useRouter();
+async function getSnippet(params) {
+	const res = await fetchurl(`/snippets${params}`, "GET", "no-cache");
+	return res;
+}
 
-	// Redirect if not authenticated
-	!auth.isAuthenticated && router.push("/auth/login");
+const UpdateSnippet = async ({ params, searchParams }) => {
+	const snippet = await getSnippet(`/${params.id}`);
 
-	// Redirec if not founder
-	auth.isAuthenticated &&
-		!auth.user.role.includes("founder") &&
-		router.push("/dashboard");
-
-	const [snippetData, setSnippetData] = useState({
-		title: `Untitled`,
-		text: `No description`,
-		html: "<h1>Title</h1>",
-		css: "body {}",
-		csslinks: [
-			"https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css",
-		],
-		js: "console.log('This example contains external urls from Bootstrap!');",
-		jslinks: [
-			"https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js",
-		],
-		featured: true,
-		commented: true,
-		status: `draft`,
-	});
-
-	const {
-		title,
-		text,
-		html,
-		css,
-		csslinks,
-		js,
-		jslinks,
-		featured,
-		commented,
-		status,
-	} = snippetData;
-
-	const [snippet, setSnippet] = useState(null);
-	const [loading, setLoading] = useState(false);
-	const [error, setError] = useState(false);
-
-	const { id } = useParams();
-	const snippetId = id;
-
-	useEffect(() => {
-		const fetchSnippet = async () => {
-			try {
-				const res = await fetchurl(`/snippets/${snippetId}`, "GET", "no-cache");
-				setSnippet(res?.data);
-				setSnippetData({
-					title: res?.data?.title,
-					text: res?.data?.text,
-					html: res?.data?.code?.html,
-					css: res?.data?.code?.css,
-					csslinks: res?.data?.csslinks,
-					js: res?.data?.code?.javascript,
-					jslinks: res?.data?.jslinks,
-					featured: res?.data?.featured,
-					commented: res?.data?.commented,
-					status: res?.data?.status,
-				});
-				setLoading(false);
-			} catch (err) {
-				console.log(err);
-				// const error = err.response.data.message;
-				const error = err?.response?.data?.error?.errors;
-				const errors = err?.response?.data?.errors;
-
-				if (error) {
-					// dispatch(setAlert(error, 'danger'));
-					error &&
-						Object.entries(error).map(([, value]) =>
-							toast.error(value.message)
-						);
-				}
-
-				if (errors) {
-					errors.forEach((error) => toast.error(error.msg));
-				}
-
-				toast.error(err?.response?.statusText);
-				return {
-					msg: err?.response?.statusText,
-					status: err?.response?.status,
-				};
-			}
+	const upgradeSnippet = async (formData) => {
+		"use server";
+		const rawFormData = {
+			title: formData.get("title"),
+			text: formData.get("text"),
+			html: formData.get("html"),
+			css: formData.get("css"),
+			js: formData.get("js"),
+			featured: formData.get("featured"),
+			commented: formData.get("commented"),
+			status: formData.get("status"),
 		};
-		fetchSnippet();
-	}, [snippetId]);
-
-	const upgradeSnippet = async (e) => {
-		e.preventDefault();
-		try {
-			const res = await fetchurl(
-				`/snippets/${snippet._id}`,
-				"PUT",
-				"no-cache",
-				snippetData
-			);
-			toast.success(`Item updated`);
-			resetForm();
-			router.push(`/noadmin/snippets`);
-		} catch (err) {
-			console.log(err);
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
-
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return { msg: err?.response?.statusText, status: err?.response?.status };
-		}
+		await fetchurl(`/snippets/${params.id}`, "PUT", "no-cache", rawFormData);
+		redirect(`/noadmin/snippets`);
 	};
 
-	const resetForm = () => {
-		setSnippetData({
-			title: `Untitled`,
-			text: `No description`,
-			html: "<h1>Title</h1>",
-			css: "body {}",
-			csslinks: [
-				"https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css",
-			],
-			js: "console.log('This example contains external urls from Bootstrap!');",
-			jslinks: [
-				"https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js",
-			],
-			featured: true,
-			commented: true,
-			status: `draft`,
-		});
-	};
-
-	return loading || snippet === null || snippet === undefined ? (
-		error ? (
-			<>Not found</>
-		) : (
-			<>Loading</>
-		)
-	) : (
-		<form onSubmit={upgradeSnippet}>
+	return (
+		<form action={upgradeSnippet}>
 			<div className="row">
 				<div className="col">
 					<label htmlFor="blog-title" className="form-label">
@@ -171,13 +39,7 @@ const UpdateSnippet = () => {
 					<input
 						id="blog-title"
 						name="title"
-						value={title}
-						onChange={(e) => {
-							setSnippetData({
-								...snippetData,
-								title: e.target.value,
-							});
-						}}
+						defaultValue={snippet?.data?.title}
 						type="text"
 						className="form-control mb-3"
 						placeholder=""
@@ -186,55 +48,46 @@ const UpdateSnippet = () => {
 						Text
 					</label>
 					<MyTextArea
+						auth={undefined}
 						id="text"
 						name="text"
-						value={text}
-						objectData={snippetData}
-						setObjectData={setSnippetData}
 						onModel="Snippet"
 						advancedTextEditor={false}
+						customPlaceholder="No description"
+						defaultValue={snippet?.data?.text}
 					/>
 				</div>
 				<div className="col-lg-2">
 					<AdminSidebar
 						displayCategoryField={false}
 						displayAvatar={false}
-						avatar={""}
-						status={status}
+						// avatar={files?.selected?._id}
+						status={snippet?.data?.status}
 						fullWidth={false}
-						password={""}
-						featured={featured}
-						commented={commented}
+						password=""
+						featured={snippet?.data?.featured.toString()}
+						commented={snippet?.data?.commented.toString()}
 						embedding={false}
 						github_readme={""}
 						category={undefined}
 						categories={[]}
-						objectData={snippetData}
-						setObjectData={setSnippetData}
 						multipleFiles={false}
 						onModel={"Snippet"}
+						// files={files}
+						files={undefined}
+						auth={undefined}
+						token={undefined}
 					/>
 					<br />
-					<button
-						type="submit"
-						className="btn btn-secondary btn-sm float-start"
-						disabled={title.length > 0 && text.length > 0 ? !true : !false}
-					>
-						Submit
-					</button>
-					<button
-						type="button"
-						className="btn btn-secondary btn-sm float-end"
-						onClick={resetForm}
-					>
-						Reset
-					</button>
+					<FormButtons />
 				</div>
 				<div className="mt-3 mb-3" />
 				<div className="col-lg-12">
 					<LiveCode
-						objectData={snippetData}
-						setObjectData={setSnippetData}
+						title={snippet?.data?.title}
+						MyHtml={snippet?.data?.code?.html}
+						MyCss={snippet?.data?.code?.css}
+						MyJs={snippet?.data?.code?.javascript}
 						hasId={true}
 					/>
 				</div>

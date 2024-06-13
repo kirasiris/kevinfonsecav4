@@ -14,21 +14,16 @@ async function getFiles(params) {
 	return res;
 }
 
-async function getCourses(params) {
-	const res = await fetchurl(`/courses${params}`, "GET", "force-cache");
-	return res;
-}
-
-const CreateLesson = async ({ params, searchParams }) => {
+const CreateChapter = async ({ params, searchParams }) => {
 	const token = await getAuthTokenOnServer();
 	const auth = await getAuthenticatedUser();
-	const files = await getFiles(`?page=1&limit=100&sort=-createdAt`);
-	const courses = await getCourses(`?page=1&sort=-createdAt`);
+	const getFilesData = getFiles(`?page=1&limit=100&sort=-createdAt`);
 
-	const addLesson = async (formData) => {
+	const [files] = await Promise.all([getFilesData]);
+
+	const addChapter = async (formData) => {
 		"use server";
 		const rawFormData = {
-			resourceId: formData.get("resourceId"),
 			title: formData.get("title"),
 			text: formData.get("text"),
 			featured: formData.get("featured"),
@@ -44,14 +39,19 @@ const CreateLesson = async ({ params, searchParams }) => {
 		};
 		await fetchurl(`/videos`, "POST", "no-cache", {
 			...rawFormData,
-			onModel: "Course",
+			resourceId: params.id,
+			onModel: "Playlist",
 		});
-		redirect(`/noadmin/lessons`);
+		redirect(`/noadmin/animes/read/${params.id}`);
 	};
 
 	return (
-		<form className="row" action={addLesson}>
+		<form className="row" action={addChapter}>
 			<div className="col">
+				<div className="text-center h-100 justify-content-center align-content-center">
+					<h1>WORK IN PROGRESS</h1>
+					<p>Need a good design</p>
+				</div>
 				<label htmlFor="blog-title" className="form-label">
 					Title
 				</label>
@@ -75,21 +75,6 @@ const CreateLesson = async ({ params, searchParams }) => {
 					customPlaceholder="No description"
 					defaultValue="No description..."
 				/>
-				<label htmlFor="resourceId" className="form-label">
-					Course
-				</label>
-				<select
-					id="resourceId"
-					name="resourceId"
-					defaultValue={0}
-					className="form-control"
-				>
-					{courses?.data?.map((course) => (
-						<option key={course._id} value={course._id}>
-							{course.title}
-						</option>
-					))}
-				</select>
 				<div className="row">
 					<div className="col">
 						<label htmlFor="free_preview" className="form-label">
@@ -126,8 +111,7 @@ const CreateLesson = async ({ params, searchParams }) => {
 							id="orderingNumber"
 							name="orderingNumber"
 							defaultValue={1}
-							type="number"
-							min={1}
+							type="text"
 							className="form-control mb-3"
 							placeholder="Here goes the #number of object within list"
 						/>
@@ -161,4 +145,4 @@ const CreateLesson = async ({ params, searchParams }) => {
 	);
 };
 
-export default CreateLesson;
+export default CreateChapter;

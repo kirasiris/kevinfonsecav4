@@ -484,7 +484,6 @@ CODEPREVIEWER and CODEMIRROR STYLING
 	font-family: var(--cp-font-family);
 	height: 30px;
 	line-height: 1;
-	position: fixed;
 	width: 100%;
 	bottom: 0;
 	left: 0;
@@ -519,13 +518,17 @@ ERROR COMPONENT
 /*****************************
 BODY-DARK
 *****************************/
-body.light-mode {
+body.ligth-mode {
 	background-color: #fff;
+	background-size: 50px 50px;
+	background-image: radial-gradient(circle, #cdcecf 1px, rgba(0, 0, 0, 0) 1px);
 }
 
 body.dark-mode {
 	background-color: #222;
 	color: #00cc00;
+	background-size: 50px 50px;
+	background-image: radial-gradient(circle, #005000 1px, rgba(0, 0, 0, 0) 1px);
 }
 
 body.dark-mode h1,

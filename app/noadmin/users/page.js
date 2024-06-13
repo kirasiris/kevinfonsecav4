@@ -10,7 +10,9 @@ async function getUsers(params) {
 
 const AdminUsersIndex = async ({ params, searchParams }) => {
 	const users = await getUsers(
-		`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+		`?page=${searchParams.page || 1}&limit=${searchParams.limit || 10}&sort=${
+			searchParams.sort || "-createdAt"
+		}`
 	);
 
 	const assignStripeCustomerId = async (id) => {
@@ -24,7 +26,9 @@ const AdminUsersIndex = async ({ params, searchParams }) => {
 			}
 		);
 		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+			`/noadmin/users?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -39,7 +43,9 @@ const AdminUsersIndex = async ({ params, searchParams }) => {
 			}
 		);
 		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+			`/noadmin/users?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -55,7 +61,9 @@ const AdminUsersIndex = async ({ params, searchParams }) => {
 			}
 		);
 		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+			`/noadmin/users?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -68,7 +76,9 @@ const AdminUsersIndex = async ({ params, searchParams }) => {
 			"no-cache"
 		);
 		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+			`/noadmin/users?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -76,7 +86,9 @@ const AdminUsersIndex = async ({ params, searchParams }) => {
 		"use server";
 		await fetchurl(`/users/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+			`/noadmin/users?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -85,7 +97,9 @@ const AdminUsersIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/users/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+			`/noadmin/users?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -94,7 +108,9 @@ const AdminUsersIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/users/deleteall/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+			`/noadmin/users?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 

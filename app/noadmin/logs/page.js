@@ -10,7 +10,9 @@ async function getLogs(params) {
 
 const AdminLogsIndex = async ({ params, searchParams }) => {
 	const logs = await getLogs(
-		`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+		`?page=${searchParams.page || 1}&limit=${searchParams.limit || 10}&sort=${
+			searchParams.sort || "-createdAt"
+		}`
 	);
 
 	const handleDelete = async (id) => {
@@ -18,7 +20,9 @@ const AdminLogsIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/logs/${id}`, "DELETE", "no-cache");
 		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+			`/noadmin/logs?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -27,7 +31,9 @@ const AdminLogsIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/logs/deleteall`, "DELETE", "no-cache");
 		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+			`/noadmin/logs?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 

@@ -51,8 +51,9 @@ const Form = ({ auth = {} }) => {
 					},
 				}
 			);
+
 			await fetchurl(`/auth/updateavatar`, "PUT", "no-cache", {
-				cover: res.data.data._id,
+				avatar: res.data.data._id,
 			});
 			resetForm();
 			toast.success("Avatar uploaded");

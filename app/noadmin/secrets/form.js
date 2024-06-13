@@ -2,7 +2,7 @@ import { fetchurl } from "@/helpers/setTokenOnServer";
 import FormButtons from "@/components/global/formbuttons";
 import { revalidatePath } from "next/cache";
 
-const Form = async ({ params, searchParams }) => {
+const Form = async ({ params, searchParams, revalidateUrl = "" }) => {
 	const createSecret = async (formData) => {
 		"use server";
 		const rawFormData = {
@@ -16,9 +16,7 @@ const Form = async ({ params, searchParams }) => {
 
 		await fetchurl(`/extras/secrets`, "POST", "no-cache", rawFormData);
 
-		revalidatePath(
-			`/noadmin/secrets?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
-		);
+		revalidatePath(revalidateUrl);
 	};
 
 	return (

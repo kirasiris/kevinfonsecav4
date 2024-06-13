@@ -10,7 +10,9 @@ async function getChangelogs(params) {
 
 const AdminChangelogsIndex = async ({ params, searchParams }) => {
 	const changelogs = await getChangelogs(
-		`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+		`?page=${searchParams.page || 1}&limit=${searchParams.limit || 10}&sort=${
+			searchParams.sort || "-createdAt"
+		}`
 	);
 
 	const draftIt = async (id) => {
@@ -18,7 +20,9 @@ const AdminChangelogsIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/changelogs/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+			`/noadmin/changelogs?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -27,7 +31,9 @@ const AdminChangelogsIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/changelogs/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+			`/noadmin/changelogs?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -36,7 +42,9 @@ const AdminChangelogsIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/changelogs/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+			`/noadmin/changelogs?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -45,7 +53,9 @@ const AdminChangelogsIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/changelogs/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+			`/noadmin/changelogs?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -54,7 +64,9 @@ const AdminChangelogsIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/changelogs/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+			`/noadmin/changelogs?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -63,7 +75,9 @@ const AdminChangelogsIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/changelogs/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+			`/noadmin/changelogs?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -72,7 +86,9 @@ const AdminChangelogsIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/changelogs/deleteall/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+			`/noadmin/changelogs?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 

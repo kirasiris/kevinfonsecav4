@@ -18,7 +18,9 @@ async function getMembershipsPublished(params) {
 const AdminMembershipsIndex = async ({ params, searchParams }) => {
 	const stripeChargesEnabled = await getUserStripeChargesEnabled();
 	const memberships = await getMembershipsPublished(
-		`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+		`?page=${searchParams.page || 1}&limit=${searchParams.limit || 10}&sort=${
+			searchParams.sort || "-createdAt"
+		}`
 	);
 
 	const activateIt = async (id) => {
@@ -30,7 +32,9 @@ const AdminMembershipsIndex = async ({ params, searchParams }) => {
 			"no-cache"
 		);
 		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+			`/noadmin/memberships?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -43,7 +47,9 @@ const AdminMembershipsIndex = async ({ params, searchParams }) => {
 			"no-cache"
 		);
 		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+			`/noadmin/memberships?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -56,7 +62,9 @@ const AdminMembershipsIndex = async ({ params, searchParams }) => {
 			"no-cache"
 		);
 		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+			`/noadmin/memberships?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -65,7 +73,9 @@ const AdminMembershipsIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/extras/stripe/memberships/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+			`/noadmin/memberships?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -78,7 +88,9 @@ const AdminMembershipsIndex = async ({ params, searchParams }) => {
 			"no-cache"
 		);
 		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+			`/noadmin/memberships?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 

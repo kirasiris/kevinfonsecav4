@@ -4,13 +4,19 @@ import List from "@/components/admin/blogs/list";
 import { revalidatePath } from "next/cache";
 
 async function getBlogs(params) {
-	const res = await fetchurl(`/blogs${params}`, "GET", "no-cache");
+	const res = await fetchurl(
+		`/blogs${params}&postType=blog`,
+		"GET",
+		"no-cache"
+	);
 	return res;
 }
 
 const AdminBlogsSearchIndex = async ({ params, searchParams }) => {
 	const blogs = await getBlogs(
-		`?keyword=${searchParams.keyword}&page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}&postType=blog`
+		`?keyword=${searchParams.keyword}&page=${searchParams.page || 1}&limit=${
+			searchParams.limit || 10
+		}&sort=${searchParams.sort || "-createdAt"}`
 	);
 
 	const draftIt = async (id) => {
@@ -18,7 +24,11 @@ const AdminBlogsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/blogs/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
-			`?keyword=${searchParams.keyword}&page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}&postType=blog`
+			`/noadmin/blogs/search?keyword=${searchParams.keyword}&page=${
+				searchParams.page || 1
+			}&limit=${searchParams.limit || 10}&sort=${
+				searchParams.sort || "-createdAt"
+			}`
 		);
 	};
 
@@ -27,7 +37,11 @@ const AdminBlogsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/blogs/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
-			`?keyword=${searchParams.keyword}&page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}&postType=blog`
+			`/noadmin/blogs/search?keyword=${searchParams.keyword}&page=${
+				searchParams.page || 1
+			}&limit=${searchParams.limit || 10}&sort=${
+				searchParams.sort || "-createdAt"
+			}`
 		);
 	};
 
@@ -36,7 +50,11 @@ const AdminBlogsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/blogs/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
-			`?keyword=${searchParams.keyword}&page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}&postType=blog`
+			`/noadmin/blogs/search?keyword=${searchParams.keyword}&page=${
+				searchParams.page || 1
+			}&limit=${searchParams.limit || 10}&sort=${
+				searchParams.sort || "-createdAt"
+			}`
 		);
 	};
 
@@ -45,7 +63,11 @@ const AdminBlogsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/blogs/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
-			`?keyword=${searchParams.keyword}&page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}&postType=blog`
+			`/noadmin/blogs/search?keyword=${searchParams.keyword}&page=${
+				searchParams.page || 1
+			}&limit=${searchParams.limit || 10}&sort=${
+				searchParams.sort || "-createdAt"
+			}`
 		);
 	};
 
@@ -54,7 +76,11 @@ const AdminBlogsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/blogs/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`?keyword=${searchParams.keyword}&page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}&postType=blog`
+			`/noadmin/blogs/search?keyword=${searchParams.keyword}&page=${
+				searchParams.page || 1
+			}&limit=${searchParams.limit || 10}&sort=${
+				searchParams.sort || "-createdAt"
+			}`
 		);
 	};
 
@@ -63,7 +89,11 @@ const AdminBlogsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/blogs/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`?keyword=${searchParams.keyword}&page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}&postType=blog`
+			`/noadmin/blogs/search?keyword=${searchParams.keyword}&page=${
+				searchParams.page || 1
+			}&limit=${searchParams.limit || 10}&sort=${
+				searchParams.sort || "-createdAt"
+			}`
 		);
 	};
 
@@ -72,7 +102,11 @@ const AdminBlogsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/blogs/deleteall/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`?keyword=${searchParams.keyword}&page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}&postType=blog`
+			`/noadmin/blogs/search?keyword=${searchParams.keyword}&page=${
+				searchParams.page || 1
+			}&limit=${searchParams.limit || 10}&sort=${
+				searchParams.sort || "-createdAt"
+			}`
 		);
 	};
 

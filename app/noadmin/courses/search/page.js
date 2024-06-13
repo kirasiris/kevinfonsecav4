@@ -14,7 +14,9 @@ async function getCourses(params) {
 const AdminCoursesSearchIndex = async ({ params, searchParams }) => {
 	const stripeChargesEnabled = await getUserStripeChargesEnabled();
 	const courses = await getCourses(
-		`?keyword=${searchParams.keyword}&page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+		`?keyword=${searchParams.keyword}&page=${searchParams.page || 1}&limit=${
+			searchParams.limit || 10
+		}&sort=${searchParams.sort || "-createdAt"}`
 	);
 
 	const draftIt = async (id) => {
@@ -22,7 +24,11 @@ const AdminCoursesSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/courses/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
-			`?keyword=${searchParams.keyword}&page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+			`/noadmin/courses/search?keyword=${searchParams.keyword}&page=${
+				searchParams.page || 1
+			}&limit=${searchParams.limit || 10}&sort=${
+				searchParams.sort || "-createdAt"
+			}`
 		);
 	};
 
@@ -31,7 +37,11 @@ const AdminCoursesSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/courses/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
-			`?keyword=${searchParams.keyword}&page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+			`/noadmin/courses/search?keyword=${searchParams.keyword}&page=${
+				searchParams.page || 1
+			}&limit=${searchParams.limit || 10}&sort=${
+				searchParams.sort || "-createdAt"
+			}`
 		);
 	};
 
@@ -40,7 +50,11 @@ const AdminCoursesSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/courses/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
-			`?keyword=${searchParams.keyword}&page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+			`/noadmin/courses/search?keyword=${searchParams.keyword}&page=${
+				searchParams.page || 1
+			}&limit=${searchParams.limit || 10}&sort=${
+				searchParams.sort || "-createdAt"
+			}`
 		);
 	};
 
@@ -49,7 +63,11 @@ const AdminCoursesSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/courses/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
-			`?keyword=${searchParams.keyword}&page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+			`/noadmin/courses/search?keyword=${searchParams.keyword}&page=${
+				searchParams.page || 1
+			}&limit=${searchParams.limit || 10}&sort=${
+				searchParams.sort || "-createdAt"
+			}`
 		);
 	};
 
@@ -58,7 +76,11 @@ const AdminCoursesSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/courses/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`?keyword=${searchParams.keyword}&page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+			`/noadmin/courses/search?keyword=${searchParams.keyword}&page=${
+				searchParams.page || 1
+			}&limit=${searchParams.limit || 10}&sort=${
+				searchParams.sort || "-createdAt"
+			}`
 		);
 	};
 
@@ -67,7 +89,11 @@ const AdminCoursesSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/courses/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`?keyword=${searchParams.keyword}&page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+			`/noadmin/courses/search?keyword=${searchParams.keyword}&page=${
+				searchParams.page || 1
+			}&limit=${searchParams.limit || 10}&sort=${
+				searchParams.sort || "-createdAt"
+			}`
 		);
 	};
 
@@ -76,7 +102,11 @@ const AdminCoursesSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/courses/deleteall/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`?keyword=${searchParams.keyword}&page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+			`/noadmin/courses/search?keyword=${searchParams.keyword}&page=${
+				searchParams.page || 1
+			}&limit=${searchParams.limit || 10}&sort=${
+				searchParams.sort || "-createdAt"
+			}`
 		);
 	};
 

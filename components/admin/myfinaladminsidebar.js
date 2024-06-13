@@ -159,7 +159,7 @@ const AdminSidebar = ({
 			{displayCategoryField && (
 				<>
 					<label htmlFor="category" className="form-label">
-						Category
+						Category {console.log(categories)}
 					</label>
 					<select
 						id="category"
@@ -168,7 +168,7 @@ const AdminSidebar = ({
 						className="form-control"
 					>
 						{categories
-							.filter((c) => c.parentCategory === undefined)
+							// .filter((c) => c.parentCategory === undefined)
 							.map((category) => (
 								<optgroup key={category._id} label={category.title}>
 									{categories

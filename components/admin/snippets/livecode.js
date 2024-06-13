@@ -7,6 +7,7 @@ import { css } from "@codemirror/lang-css";
 import { vscodeDark } from "@uiw/codemirror-theme-vscode";
 import he from "he"; // Import the 'he' library
 import { FaExternalLinkAlt } from "react-icons/fa";
+import Link from "next/link";
 
 const LiveCode = ({
 	object = {},
@@ -15,6 +16,8 @@ const LiveCode = ({
 	MyCss = "body {}",
 	MyJs = "console.log('This example contains external urls from Bootstrap!');",
 	hasId = false,
+	positionFixed = true,
+	isFull = false,
 }) => {
 	const [objectData, setObjectData] = useState({
 		html: MyHtml,
@@ -69,71 +72,78 @@ const LiveCode = ({
 
 	return (
 		<>
-			<div className="row">
-				<div className="col-lg-4">
-					<div className="card resizable-card">
-						<div className="card-header">
-							<div className="float-start">HTML</div>
+			{!isFull && (
+				<div className="row">
+					<div className="col-lg-4">
+						<div className="card resizable-card">
+							<div className="card-header">
+								<div className="float-start">HTML</div>
+							</div>
+							<div className="card-body p-0">
+								<CodeMirror
+									id="html"
+									// name="html"
+									value={he.decode(objectData.html)}
+									height="200px"
+									theme={vscodeDark}
+									extensions={[html()]}
+									onChange={(value) => {
+										setObjectData({ ...objectData, html: value });
+									}}
+								/>
+								<input
+									type="hidden"
+									name="html"
+									defaultValue={objectData.html}
+								/>
+							</div>
 						</div>
-						<div className="card-body p-0">
-							<CodeMirror
-								id="html"
-								// name="html"
-								value={he.decode(objectData.html)}
-								height="200px"
-								theme={vscodeDark}
-								extensions={[html()]}
-								onChange={(value) => {
-									setObjectData({ ...objectData, html: value });
-								}}
-							/>
-							<input type="hidden" name="html" defaultValue={objectData.html} />
+					</div>
+					<div className="col-lg-4">
+						<div className="card resizable-card">
+							<div className="card-header">
+								<div className="float-start">CSS</div>
+							</div>
+							<div className="card-body p-0">
+								<CodeMirror
+									id="css"
+									// name="css"
+									value={he.decode(objectData.css)}
+									height="200px"
+									theme={vscodeDark}
+									extensions={[css()]}
+									onChange={(value) => {
+										setObjectData({ ...objectData, css: value });
+									}}
+								/>
+								<input type="hidden" name="css" defaultValue={objectData.css} />
+							</div>
+						</div>
+					</div>
+					<div className="col-lg-4">
+						<div className="card resizable-card">
+							<div className="card-header">
+								<div className="float-start">JavaScript</div>
+							</div>
+							<div className="card-body p-0">
+								<CodeMirror
+									id="js"
+									// name="js"
+									value={he.decode(objectData.js)}
+									height="200px"
+									theme={vscodeDark}
+									extensions={[javascript({ jsx: true })]}
+									onChange={(value) => {
+										setObjectData({ ...objectData, js: value });
+									}}
+								/>
+								<input type="hidden" name="js" defaultValue={objectData.js} />
+							</div>
 						</div>
 					</div>
 				</div>
-				<div className="col-lg-4">
-					<div className="card resizable-card">
-						<div className="card-header">
-							<div className="float-start">CSS</div>
-						</div>
-						<div className="card-body p-0">
-							<CodeMirror
-								id="css"
-								// name="css"
-								value={he.decode(objectData.css)}
-								height="200px"
-								theme={vscodeDark}
-								extensions={[css()]}
-								onChange={(value) => {
-									setObjectData({ ...objectData, css: value });
-								}}
-							/>
-							<input type="hidden" name="css" defaultValue={objectData.css} />
-						</div>
-					</div>
-				</div>
-				<div className="col-lg-4">
-					<div className="card resizable-card">
-						<div className="card-header">
-							<div className="float-start">JavaScript</div>
-						</div>
-						<div className="card-body p-0">
-							<CodeMirror
-								id="js"
-								// name="js"
-								value={he.decode(objectData.js)}
-								height="200px"
-								theme={vscodeDark}
-								extensions={[javascript({ jsx: true })]}
-								onChange={(value) => {
-									setObjectData({ ...objectData, js: value });
-								}}
-							/>
-							<input type="hidden" name="js" defaultValue={objectData.js} />
-						</div>
-					</div>
-				</div>
-			</div>
+			)}
+
 			<iframe
 				ref={iframeRef}
 				title={objectData.title}
@@ -145,8 +155,25 @@ const LiveCode = ({
 				loading="lazy"
 			/>
 			{hasId && (
-				<div className="code-previewer-footer">
-					<FaExternalLinkAlt />
+				<div
+					className={`code-previewer-footer${
+						positionFixed ? " position-fixed" : ""
+					}`}
+				>
+					<div className="btn-group">
+						<Link
+							href={{
+								pathname: `/snippet/full/${object._id}/${object.slug}`,
+								query: {},
+							}}
+							passHref
+							legacyBehavior
+						>
+							<a className="btn btn-link btn-sm">
+								<FaExternalLinkAlt />
+							</a>
+						</Link>
+					</div>
 				</div>
 			)}
 		</>

@@ -4,13 +4,19 @@ import List from "@/components/admin/videos/list";
 import { revalidatePath } from "next/cache";
 
 async function getVideos(params) {
-	const res = await fetchurl(`/videos${params}`, "GET", "no-cache");
+	const res = await fetchurl(
+		`/videos${params}&onModel=Playlist`,
+		"GET",
+		"no-cache"
+	);
 	return res;
 }
 
 const AdminVideosSearchIndex = async ({ params, searchParams }) => {
 	const videos = await getVideos(
-		`?keyword=${searchParams.keyword}&page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}&onModel=Playlist`
+		`?keyword=${searchParams.keyword}&page=${searchParams.page || 1}&limit=${
+			searchParams.limit || 10
+		}&sort=${searchParams.sort || "-createdAt"}`
 	);
 
 	const draftIt = async (id) => {
@@ -18,7 +24,11 @@ const AdminVideosSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/videos/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
-			`?keyword=${searchParams.keyword}&page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}&onModel=Playlist`
+			`/noadmin/videos/search?keyword=${searchParams.keyword}&page=${
+				searchParams.page || 1
+			}&limit=${searchParams.limit || 10}&sort=${
+				searchParams.sort || "-createdAt"
+			}`
 		);
 	};
 
@@ -27,7 +37,11 @@ const AdminVideosSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/videos/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
-			`?keyword=${searchParams.keyword}&page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}&onModel=Playlist`
+			`/noadmin/videos/search?keyword=${searchParams.keyword}&page=${
+				searchParams.page || 1
+			}&limit=${searchParams.limit || 10}&sort=${
+				searchParams.sort || "-createdAt"
+			}`
 		);
 	};
 
@@ -36,7 +50,11 @@ const AdminVideosSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/videos/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
-			`?keyword=${searchParams.keyword}&page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}&onModel=Playlist`
+			`/noadmin/videos/search?keyword=${searchParams.keyword}&page=${
+				searchParams.page || 1
+			}&limit=${searchParams.limit || 10}&sort=${
+				searchParams.sort || "-createdAt"
+			}`
 		);
 	};
 
@@ -45,7 +63,11 @@ const AdminVideosSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/videos/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
-			`?keyword=${searchParams.keyword}&page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}&onModel=Playlist`
+			`/noadmin/videos/search?keyword=${searchParams.keyword}&page=${
+				searchParams.page || 1
+			}&limit=${searchParams.limit || 10}&sort=${
+				searchParams.sort || "-createdAt"
+			}`
 		);
 	};
 
@@ -54,7 +76,11 @@ const AdminVideosSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/videos/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`?keyword=${searchParams.keyword}&page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}&onModel=Playlist`
+			`/noadmin/videos/search?keyword=${searchParams.keyword}&page=${
+				searchParams.page || 1
+			}&limit=${searchParams.limit || 10}&sort=${
+				searchParams.sort || "-createdAt"
+			}`
 		);
 	};
 
@@ -63,7 +89,11 @@ const AdminVideosSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/videos/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`?keyword=${searchParams.keyword}&page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}&onModel=Playlist`
+			`/noadmin/videos/search?keyword=${searchParams.keyword}&page=${
+				searchParams.page || 1
+			}&limit=${searchParams.limit || 10}&sort=${
+				searchParams.sort || "-createdAt"
+			}`
 		);
 	};
 
@@ -72,7 +102,11 @@ const AdminVideosSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/videos/deleteall/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`?keyword=${searchParams.keyword}&page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}&onModel=Playlist`
+			`/noadmin/videos/search?keyword=${searchParams.keyword}&page=${
+				searchParams.page || 1
+			}&limit=${searchParams.limit || 10}&sort=${
+				searchParams.sort || "-createdAt"
+			}`
 		);
 	};
 

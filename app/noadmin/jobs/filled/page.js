@@ -4,13 +4,19 @@ import List from "@/components/admin/jobs/list";
 import { revalidatePath } from "next/cache";
 
 async function getJobs(params) {
-	const res = await fetchurl(`/jobs${params}`, "GET", "no-cache");
+	const res = await fetchurl(
+		`/jobs${params}&positionFilled=true`,
+		"GET",
+		"no-cache"
+	);
 	return res;
 }
 
 const AdminJobsFilledIndex = async ({ params, searchParams }) => {
 	const jobs = await getJobs(
-		`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}&positionFilled=true`
+		`?page=${searchParams.page || 1}&limit=${searchParams.limit || 10}&sort=${
+			searchParams.sort || "-createdAt"
+		}`
 	);
 
 	const draftIt = async (id) => {
@@ -18,7 +24,9 @@ const AdminJobsFilledIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/jobs/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}&positionFilled=true`
+			`/noadmin/jobs/filled?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -27,7 +35,9 @@ const AdminJobsFilledIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/jobs/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}&positionFilled=true`
+			`/noadmin/jobs/filled?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -36,7 +46,9 @@ const AdminJobsFilledIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/jobs/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}&positionFilled=true`
+			`/noadmin/jobs/filled?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -45,7 +57,9 @@ const AdminJobsFilledIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/jobs/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}&positionFilled=true`
+			`/noadmin/jobs/filled?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -54,7 +68,9 @@ const AdminJobsFilledIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/jobs/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}&positionFilled=true`
+			`/noadmin/jobs/filled?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -63,7 +79,9 @@ const AdminJobsFilledIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/jobs/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}&positionFilled=true`
+			`/noadmin/jobs/filled?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -72,7 +90,9 @@ const AdminJobsFilledIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/jobs/deleteall/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}&positionFilled=true`
+			`/noadmin/jobs/filled?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 

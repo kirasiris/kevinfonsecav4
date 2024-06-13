@@ -12,7 +12,9 @@ async function getQuotes(params) {
 
 const AdminQuotesIndex = async ({ params, searchParams }) => {
 	const quotes = await getQuotes(
-		`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+		`?page=${searchParams.page || 1}&limit=${searchParams.limit || 10}&sort=${
+			searchParams.sort || "-createdAt"
+		}`
 	);
 
 	const createQuote = async (formData) => {
@@ -29,7 +31,9 @@ const AdminQuotesIndex = async ({ params, searchParams }) => {
 
 		await fetchurl(`/extras/quotes`, "POST", "no-cache", rawFormData);
 		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+			`/noadmin/quotes?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -38,7 +42,9 @@ const AdminQuotesIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/extras/quotes/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+			`/noadmin/quotes?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -47,7 +53,9 @@ const AdminQuotesIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/extras/quotes/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+			`/noadmin/quotes?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -56,7 +64,9 @@ const AdminQuotesIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/extras/quotes/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+			`/noadmin/quotes?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -65,7 +75,9 @@ const AdminQuotesIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/extras/quotes/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+			`/noadmin/quotes?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -74,7 +86,9 @@ const AdminQuotesIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/extras/quotes/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+			`/noadmin/quotes?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -83,7 +97,9 @@ const AdminQuotesIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/extras/quotes/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+			`/noadmin/quotes?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -96,7 +112,9 @@ const AdminQuotesIndex = async ({ params, searchParams }) => {
 			"no-cache"
 		);
 		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+			`/noadmin/quotes?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -214,53 +232,6 @@ const AdminQuotesIndex = async ({ params, searchParams }) => {
 							handleTrashAllFunction={handleTrashAll}
 							handleDeleteAllFunction={handleDeleteAll}
 						/>
-						{/* <AdminCardHeaderMenu
-							allLink={`/noadmin/quotes`}
-							pageText="Quotes"
-							currentResults={currentResults}
-							totalResults={totalResults.quotes}
-							addLink={`/noadmin/quotes/create`}
-							addLinkText={`quote`}
-							handleDeleteAllFunction={handleDeleteAll}
-							keyword={keyword}
-							setKeyword={setKeyword}
-						/>
-						{list?.length > 0 ? (
-							<>
-								<ul className="list-group list-group-flush">
-									{list?.map((quote) => (
-										<Single
-											key={quote._id}
-											object={quote}
-											handleDelete={handleDelete}
-											objects={list}
-											setObjects={setQuotes}
-											setTotalResults={setTotalResults}
-										/>
-									))}
-									<li className="list-group-item">
-										{page} / {totalPages}
-									</li>
-								</ul>
-								<ClientNumericPagination
-									totalPages={totalPages || Math.ceil(list.length / limit)}
-									page={page}
-									limit={limit}
-									sortby={sortby}
-									siblings={1}
-									setParams={setParams}
-									router={router}
-								/>
-							</>
-						) : (
-							<div
-								className={`alert alert-${
-									loading ? "primary" : "danger"
-								} rounded-0 m-0 border-0`}
-							>
-								{loading ? "Loading" : "Nothing found"}
-							</div>
-						)} */}
 					</div>
 				</div>
 			</div>

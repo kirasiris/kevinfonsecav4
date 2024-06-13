@@ -10,7 +10,9 @@ async function getReports(params) {
 
 const AdminReportsSearchIndex = async ({ params, searchParams }) => {
 	const reports = await getReports(
-		`?keyword=${searchParams.keyword}&page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+		`?keyword=${searchParams.keyword}&page=${searchParams.page || 1}&limit=${
+			searchParams.limit || 10
+		}&sort=${searchParams.sort || "-createdAt"}`
 	);
 
 	const draftIt = async (id) => {
@@ -18,7 +20,11 @@ const AdminReportsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/reports/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
-			`?keyword=${searchParams.keyword}&page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+			`/noadmin/reports/search?keyword=${searchParams.keyword}&page=${
+				searchParams.page || 1
+			}&limit=${searchParams.limit || 10}&sort=${
+				searchParams.sort || "-createdAt"
+			}`
 		);
 	};
 
@@ -27,7 +33,11 @@ const AdminReportsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/reports/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
-			`?keyword=${searchParams.keyword}&page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+			`/noadmin/reports/search?keyword=${searchParams.keyword}&page=${
+				searchParams.page || 1
+			}&limit=${searchParams.limit || 10}&sort=${
+				searchParams.sort || "-createdAt"
+			}`
 		);
 	};
 
@@ -36,7 +46,11 @@ const AdminReportsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/reports/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
-			`?keyword=${searchParams.keyword}&page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+			`/noadmin/reports/search?keyword=${searchParams.keyword}&page=${
+				searchParams.page || 1
+			}&limit=${searchParams.limit || 10}&sort=${
+				searchParams.sort || "-createdAt"
+			}`
 		);
 	};
 
@@ -45,7 +59,11 @@ const AdminReportsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/reports/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
-			`?keyword=${searchParams.keyword}&page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+			`/noadmin/reports/search?keyword=${searchParams.keyword}&page=${
+				searchParams.page || 1
+			}&limit=${searchParams.limit || 10}&sort=${
+				searchParams.sort || "-createdAt"
+			}`
 		);
 	};
 
@@ -54,7 +72,11 @@ const AdminReportsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/reports/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`?keyword=${searchParams.keyword}&page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+			`/noadmin/reports/search?keyword=${searchParams.keyword}&page=${
+				searchParams.page || 1
+			}&limit=${searchParams.limit || 10}&sort=${
+				searchParams.sort || "-createdAt"
+			}`
 		);
 	};
 
@@ -63,7 +85,11 @@ const AdminReportsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/reports/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`?keyword=${searchParams.keyword}&page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+			`/noadmin/reports/search?keyword=${searchParams.keyword}&page=${
+				searchParams.page || 1
+			}&limit=${searchParams.limit || 10}&sort=${
+				searchParams.sort || "-createdAt"
+			}`
 		);
 	};
 
@@ -72,7 +98,11 @@ const AdminReportsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/reports/deleteall/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`?keyword=${searchParams.keyword}&page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+			`/noadmin/reports/search?keyword=${searchParams.keyword}&page=${
+				searchParams.page || 1
+			}&limit=${searchParams.limit || 10}&sort=${
+				searchParams.sort || "-createdAt"
+			}`
 		);
 	};
 

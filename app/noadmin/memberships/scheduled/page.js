@@ -8,7 +8,7 @@ import { revalidatePath } from "next/cache";
 
 async function getMembershipsPublished(params) {
 	const res = await fetchurl(
-		`/extras/stripe/memberships${params}`,
+		`/extras/stripe/memberships${params}&status=scheduled`,
 		"GET",
 		"no-cache"
 	);
@@ -18,7 +18,9 @@ async function getMembershipsPublished(params) {
 const AdminMembershipsScheduledIndex = async ({ params, searchParams }) => {
 	const stripeChargesEnabled = await getUserStripeChargesEnabled();
 	const memberships = await getMembershipsPublished(
-		`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}&status=scheduled`
+		`?page=${searchParams.page || 1}&limit=${searchParams.limit || 10}&sort=${
+			searchParams.sort || "-createdAt"
+		}`
 	);
 
 	const activateIt = async (id) => {
@@ -30,7 +32,9 @@ const AdminMembershipsScheduledIndex = async ({ params, searchParams }) => {
 			"no-cache"
 		);
 		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+			`/noadmin/memberships/scheduled?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -43,7 +47,9 @@ const AdminMembershipsScheduledIndex = async ({ params, searchParams }) => {
 			"no-cache"
 		);
 		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+			`/noadmin/memberships/scheduled?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -56,7 +62,9 @@ const AdminMembershipsScheduledIndex = async ({ params, searchParams }) => {
 			"no-cache"
 		);
 		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}&status=scheduled`
+			`/noadmin/memberships/scheduled?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -65,7 +73,9 @@ const AdminMembershipsScheduledIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/extras/stripe/memberships/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}&status=scheduled`
+			`/noadmin/memberships/scheduled?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -78,7 +88,9 @@ const AdminMembershipsScheduledIndex = async ({ params, searchParams }) => {
 			"no-cache"
 		);
 		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}&status=scheduled`
+			`/noadmin/memberships/scheduled?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 

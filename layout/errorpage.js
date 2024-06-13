@@ -10,19 +10,23 @@ const ErrorPage = ({ statusCode, statusCodeMessage = "" }) => {
 						<h1>:) Oops!</h1>
 						<h2>Temporarily down for maintenance</h2>
 						<h3>We&apos;ll be back soon!</h3>
-						<div>
-							<p>
-								Sorry for the inconvenience but we&apos;re performing some
-								maintenance at the moment. we&apos;ll be back online shortly!
-							</p>
-							<p>— Kevin Uriel Fonseca</p>
-						</div>
-						<h4>
-							{statusCode
-								? `An error ${statusCode} occurred on server`
-								: "An error occurred on client"}
-						</h4>
-						<div>
+						<p>
+							Sorry for the inconvenience but we&apos;re performing some
+							maintenance at the moment. we&apos;ll be back online shortly!
+						</p>
+						<p>
+							—{" "}
+							<a className="btn btn-link" href="mailto:kebin1421@hotmail.com">
+								Kevin Uriel Fonseca
+							</a>
+						</p>
+						<div className="display-6 fw-bold text-uppercase">
+							<h4>
+								{statusCode
+									? `An error ${statusCode} occurred on server`
+									: "An error occurred on client"}
+							</h4>
+
 							<p>{statusCodeMessage}</p>
 						</div>
 						<div className="error-actions">

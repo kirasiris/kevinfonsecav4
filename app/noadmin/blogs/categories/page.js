@@ -6,13 +6,19 @@ import List from "@/components/admin/categories/list";
 import { revalidatePath } from "next/cache";
 
 async function getCategories(params) {
-	const res = await fetchurl(`/categories${params}`, "GET", "no-cache");
+	const res = await fetchurl(
+		`/categories${params}&categoryType=blog`,
+		"GET",
+		"no-cache"
+	);
 	return res;
 }
 
 const AdminBlogCategoriesIndex = async ({ params, searchParams }) => {
 	const categories = await getCategories(
-		`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}&categoryType=blog`
+		`?page=${searchParams.page || 1}&limit=${searchParams.limit || 10}&sort=${
+			searchParams.sort || "-createdAt"
+		}`
 	);
 	const createCategory = async (formData) => {
 		"use server";
@@ -26,7 +32,9 @@ const AdminBlogCategoriesIndex = async ({ params, searchParams }) => {
 			categoryType: "blog",
 		});
 		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}&categoryType=blog`
+			`/noadmin/blogs/categories?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -35,7 +43,9 @@ const AdminBlogCategoriesIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/categories/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}&categoryType=blog`
+			`/noadmin/blogs/categories?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -44,7 +54,9 @@ const AdminBlogCategoriesIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/categories/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}&categoryType=blog`
+			`/noadmin/blogs/categories?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -53,7 +65,9 @@ const AdminBlogCategoriesIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/categories/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}&categoryType=blog`
+			`/noadmin/blogs/categories?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -62,7 +76,9 @@ const AdminBlogCategoriesIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/categories/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}&categoryType=blog`
+			`/noadmin/blogs/categories?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -71,7 +87,9 @@ const AdminBlogCategoriesIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/categories/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}&categoryType=blog`
+			`/noadmin/blogs/categories?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -82,7 +100,9 @@ const AdminBlogCategoriesIndex = async ({ params, searchParams }) => {
 			categoryType: "blog",
 		});
 		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}&categoryType=blog`
+			`/noadmin/blogs/categories?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -93,7 +113,9 @@ const AdminBlogCategoriesIndex = async ({ params, searchParams }) => {
 			categoryType: "blog",
 		});
 		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}&categoryType=blog`
+			`/noadmin/blogs/categories?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 

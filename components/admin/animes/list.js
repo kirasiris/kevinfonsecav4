@@ -148,10 +148,10 @@ const List = ({
 			{objects?.data?.length > 0 ? (
 				<>
 					<ul className="list-group list-group-flush">
-						{objects?.data?.map((lesson) => (
+						{objects?.data?.map((playlist) => (
 							<Single
-								key={lesson._id}
-								object={lesson}
+								key={playlist._id}
+								object={playlist}
 								handleDraft={handleDraft}
 								handlePublish={handlePublish}
 								handleTrash={handleTrash}

@@ -26,13 +26,13 @@ const CreateCDAlbum = async ({ params, searchParams }) => {
 	// const files = await getFiles(`?page=1&limit=100&sort=-createdAt`);
 	// const categories = await getCategories(`?categoryType=playlist`);
 
-	const addPlaylist = async (formData) => {
+	const addCDAlbum = async (formData) => {
 		"use server";
 		const rawFormData = {
 			title: formData.get("title"),
 			text: formData.get("text"),
 			featured: formData.get("featured"),
-			category: formData.get("category"),
+			// category: formData.get("category"),
 			commented: formData.get("commented"),
 			password: formData.get("password"),
 			onairtype: formData.get("onairtype"),
@@ -45,11 +45,11 @@ const CreateCDAlbum = async ({ params, searchParams }) => {
 			onairtype: "cd-album",
 			playlistType: "audio",
 		});
-		redirect(`/noadmin/playlists`);
+		redirect(`/noadmin/cdalbums`);
 	};
 
 	return (
-		<form className="row" action={addPlaylist}>
+		<form className="row" action={addCDAlbum}>
 			<div className="col">
 				<label htmlFor="blog-title" className="form-label">
 					Title
@@ -77,7 +77,7 @@ const CreateCDAlbum = async ({ params, searchParams }) => {
 			</div>
 			<div className="col-lg-3">
 				<AdminSidebar
-					displayCategoryField={true}
+					displayCategoryField={false}
 					displayAvatar={false}
 					// avatar={files?.selected?._id}
 					status="draft"

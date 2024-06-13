@@ -1,6 +1,6 @@
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
-import List from "@/components/admin/playlists/list";
+import List from "@/components/admin/animes/list";
 import { revalidatePath } from "next/cache";
 
 async function getPlaylists(params) {
@@ -24,9 +24,9 @@ const AdminAnimesIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/playlists/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
-			`?page=${searchParams.page || 1}&limit=${searchParams.limit || 10}&sort=${
-				searchParams.sort || "-createdAt"
-			}`
+			`/noadmin/animes?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -35,9 +35,9 @@ const AdminAnimesIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/playlists/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
-			`?page=${searchParams.page || 1}&limit=${searchParams.limit || 10}&sort=${
-				searchParams.sort || "-createdAt"
-			}`
+			`/noadmin/animes?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -46,9 +46,9 @@ const AdminAnimesIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/playlists/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
-			`?page=${searchParams.page || 1}&limit=${searchParams.limit || 10}&sort=${
-				searchParams.sort || "-createdAt"
-			}`
+			`/noadmin/animes?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -57,9 +57,9 @@ const AdminAnimesIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/playlists/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
-			`?page=${searchParams.page || 1}&limit=${searchParams.limit || 10}&sort=${
-				searchParams.sort || "-createdAt"
-			}`
+			`/noadmin/animes?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -68,9 +68,9 @@ const AdminAnimesIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/playlists/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`?page=${searchParams.page || 1}&limit=${searchParams.limit || 10}&sort=${
-				searchParams.sort || "-createdAt"
-			}`
+			`/noadmin/animes?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -79,9 +79,9 @@ const AdminAnimesIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/playlists/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`?page=${searchParams.page || 1}&limit=${searchParams.limit || 10}&sort=${
-				searchParams.sort || "-createdAt"
-			}`
+			`/noadmin/animes?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -90,9 +90,9 @@ const AdminAnimesIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/playlists/deleteall/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`?page=${searchParams.page || 1}&limit=${searchParams.limit || 10}&sort=${
-				searchParams.sort || "-createdAt"
-			}`
+			`/noadmin/animes?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 

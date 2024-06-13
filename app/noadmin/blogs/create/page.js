@@ -86,7 +86,7 @@ const CreateBlog = async ({ params, searchParams }) => {
 					embedding={true}
 					github_readme={""}
 					category={undefined}
-					categories={categories.data}
+					categories={categories?.data}
 					multipleFiles={false}
 					onModel={"Blog"}
 					files={files}

@@ -4,13 +4,19 @@ import List from "@/components/admin/blogs/list";
 import { revalidatePath } from "next/cache";
 
 async function getBlogs(params) {
-	const res = await fetchurl(`/blogs${params}`, "GET", "no-cache");
+	const res = await fetchurl(
+		`/blogs${params}&postType=blog&status=scheduled`,
+		"GET",
+		"no-cache"
+	);
 	return res;
 }
 
 const AdminBlogsScheduledIndex = async ({ params, searchParams }) => {
 	const blogs = await getBlogs(
-		`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}&postType=blog&status=scheduled`
+		`?page=${searchParams.page || 1}&limit=${searchParams.limit || 10}&sort=${
+			searchParams.sort || "-createdAt"
+		}`
 	);
 
 	const draftIt = async (id) => {
@@ -18,7 +24,9 @@ const AdminBlogsScheduledIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/blogs/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}&postType=blog&status=scheduled`
+			`/noadmin/blogs/scheduled?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -27,7 +35,9 @@ const AdminBlogsScheduledIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/blogs/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}&postType=blog&status=scheduled`
+			`/noadmin/blogs/scheduled?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -36,7 +46,9 @@ const AdminBlogsScheduledIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/blogs/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}&postType=blog&status=scheduled`
+			`/noadmin/blogs/scheduled?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -45,7 +57,9 @@ const AdminBlogsScheduledIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/blogs/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}&postType=blog&status=scheduled`
+			`/noadmin/blogs/scheduled?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -54,7 +68,9 @@ const AdminBlogsScheduledIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/blogs/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}&postType=blog&status=scheduled`
+			`/noadmin/blogs/scheduled?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -63,7 +79,9 @@ const AdminBlogsScheduledIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/blogs/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}&postType=blog&status=scheduled`
+			`/noadmin/blogs/scheduled?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -72,7 +90,9 @@ const AdminBlogsScheduledIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/blogs/deleteall/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}&postType=blog&status=scheduled`
+			`/noadmin/blogs/scheduled?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 

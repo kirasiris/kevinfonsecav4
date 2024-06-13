@@ -4,13 +4,19 @@ import List from "@/components/admin/companies/list";
 import { revalidatePath } from "next/cache";
 
 async function getCompanies(params) {
-	const res = await fetchurl(`/companies${params}`, "GET", "no-cache");
+	const res = await fetchurl(
+		`/companies${params}&status=scheduled`,
+		"GET",
+		"no-cache"
+	);
 	return res;
 }
 
 const AdminCompaniesScheduledIndex = async ({ params, searchParams }) => {
 	const companies = await getCompanies(
-		`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}&status=scheduled`
+		`?page=${searchParams.page || 1}&limit=${searchParams.limit || 10}&sort=${
+			searchParams.sort || "-createdAt"
+		}`
 	);
 
 	const draftIt = async (id) => {
@@ -18,7 +24,9 @@ const AdminCompaniesScheduledIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/companies/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}&status=scheduled`
+			`/noadmin/companies/scheduled?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -27,7 +35,9 @@ const AdminCompaniesScheduledIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/companies/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}&status=scheduled`
+			`/noadmin/companies/scheduled?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -36,7 +46,9 @@ const AdminCompaniesScheduledIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/companies/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}&status=scheduled`
+			`/noadmin/companies/scheduled?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -45,7 +57,9 @@ const AdminCompaniesScheduledIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/companies/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}&status=scheduled`
+			`/noadmin/companies/scheduled?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -54,7 +68,9 @@ const AdminCompaniesScheduledIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/companies/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}&status=scheduled`
+			`/noadmin/companies/scheduled?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -63,7 +79,9 @@ const AdminCompaniesScheduledIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/companies/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}&status=scheduled`
+			`/noadmin/companies/scheduled?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -72,7 +90,9 @@ const AdminCompaniesScheduledIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/companies/deleteall/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}&status=scheduled`
+			`/noadmin/companies/scheduled?page=${searchParams.page || 1}&limit=${
+				searchParams.limit || 10
+			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
 

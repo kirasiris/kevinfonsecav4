@@ -2,7 +2,7 @@ import { fetchurl, getUserIdOnServer } from "@/helpers/setTokenOnServer";
 import FormButtons from "@/components/global/formbuttons";
 import { revalidatePath } from "next/cache";
 
-const Form = async ({ params, searchParams }) => {
+const Form = async ({ params, searchParams, revalidateUrl = `` }) => {
 	const addShortUrl = async (formData) => {
 		"use server";
 		const rawFormData = {
@@ -20,9 +20,7 @@ const Form = async ({ params, searchParams }) => {
 			rawFormData
 		);
 
-		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
-		);
+		revalidatePath(revalidateUrl);
 	};
 
 	return (

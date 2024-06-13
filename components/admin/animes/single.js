@@ -23,13 +23,15 @@ const Single = ({
 					<h1 className="blog-item__title">
 						<Link
 							href={{
-								pathname: `/noadmin/lessons/update/${object._id}`,
+								pathname: `/noadmin/animes/update/${object._id}`,
 								query: {},
 							}}
 							passHref
 							legacyBehavior
 						>
-							<a className="blog-item__title-link">{object.title}</a>
+							<a className="blog-item__title-link">
+								{object.title}({object.onairtype.toUpperCase()})
+							</a>
 						</Link>
 					</h1>
 					<div className="blog-item__meta">
@@ -39,7 +41,7 @@ const Single = ({
 				<div className="blog-type-list__blog-thumbnail-wrapper has-image d-none d-md-block d-lg-block d-xl-block d-xxl-block">
 					<Link
 						href={{
-							pathname: `/noadmin/lessons/update/${object._id}`,
+							pathname: `/noadmin/animes/update/${object._id}`,
 							query: {},
 						}}
 						passHref
@@ -64,7 +66,7 @@ const Single = ({
 						<DropdownButton title="Options" variant="secondary">
 							<Link
 								href={{
-									pathname: `/noadmin/lessons/read/${object._id}`,
+									pathname: `/noadmin/animes/read/${object._id}`,
 									query: {
 										isAdmin: true,
 									},
@@ -72,9 +74,7 @@ const Single = ({
 								passHref
 								legacyBehavior
 							>
-								<a className="dropdown-item btn btn-link" target="_blank">
-									View&nbsp;It
-								</a>
+								<a className="dropdown-item btn btn-link">View&nbsp;It</a>
 							</Link>
 							<button
 								className="dropdown-item btn btn-sm"

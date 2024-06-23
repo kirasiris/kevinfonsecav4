@@ -72,16 +72,6 @@ const AdminMenu = () => {
 						<a>Forums</a>
 					</Link>
 				</li>
-				<li className={`list-group-item ${isActive(`/noadmin/jobs`)}`}>
-					<Link href={"/noadmin/jobs"} passHref legacyBehavior>
-						<a>Jobs</a>
-					</Link>
-				</li>
-				<li className={`list-group-item ${isActive(`/noadmin/lessons`)}`}>
-					<Link href={"/noadmin/lessons"} passHref legacyBehavior>
-						<a>Lessons</a>
-					</Link>
-				</li>
 				<li className={`list-group-item ${isActive(`/noadmin/logs`)}`}>
 					<Link href={"/noadmin/logs"} passHref legacyBehavior>
 						<a>Logs</a>
@@ -105,11 +95,6 @@ const AdminMenu = () => {
 				<li className={`list-group-item ${isActive(`/noadmin/newsletters`)}`}>
 					<Link href={"/noadmin/newsletters"} passHref legacyBehavior>
 						<a>Newsletters</a>
-					</Link>
-				</li>
-				<li className={`list-group-item ${isActive(`/noadmin/pages`)}`}>
-					<Link href={"/noadmin/pages"} passHref legacyBehavior>
-						<a>Pages</a>
 					</Link>
 				</li>
 				<li className={`list-group-item ${isActive(`/noadmin/playlists`)}`}>

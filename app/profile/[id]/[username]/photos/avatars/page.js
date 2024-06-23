@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import { notFound } from "next/navigation";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import Loading from "@/app/profile/loading";
 import PicturesList from "@/components/profile/pictureslist";
@@ -12,6 +13,7 @@ async function getAuthenticatedUser() {
 
 async function getProfile(params) {
 	const res = await fetchurl(`/users${params}`, "GET", "no-cache");
+	if (!res.success) notFound();
 	return res;
 }
 

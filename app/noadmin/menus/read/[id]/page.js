@@ -1,6 +1,7 @@
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import ParseHtml from "@/layout/parseHtml";
-import Link from "next/link";
+import PageList from "@/components/admin/menus/pagelist";
+import { revalidatePath } from "next/cache";
 
 async function getMenu(params) {
 	const res = await fetchurl(`/menus${params}`, "GET", "no-cache");
@@ -15,8 +16,59 @@ async function getPages(params) {
 const ReadMenu = async ({ params, searchParams }) => {
 	const menu = await getMenu(`/${params.id}`);
 	const pages = await getPages(
-		`?resourceId=${menu?.data?._id}&sort=orderingNumber`
+		`?resourceId=${menu?.data?._id}&page=${searchParams.page || 1}&limit=${
+			searchParams.limit || 10
+		}&sort=orderingNumber`
 	);
+
+	const draftIt = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/pages/${id}/draftit`, "PUT", "no-cache");
+		revalidatePath(`/noadmin/menus/read/${params.id}`);
+	};
+
+	const publishIt = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/pages/${id}/publishit`, "PUT", "no-cache");
+		revalidatePath(`/noadmin/menus/read/${params.id}`);
+	};
+
+	const trashIt = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/pages/${id}/trashit`, "PUT", "no-cache");
+		revalidatePath(`/noadmin/menus/read/${params.id}`);
+	};
+
+	const scheduleIt = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/pages/${id}/scheduleit`, "PUT", "no-cache");
+		revalidatePath(`/noadmin/menus/read/${params.id}`);
+	};
+
+	const handleDelete = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/pages/${id}/permanently`, "DELETE", "no-cache");
+		revalidatePath(`/noadmin/menus/read/${params.id}`);
+	};
+
+	const handleTrashAll = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/pages/deleteall`, "PUT", "no-cache");
+		revalidatePath(`/noadmin/menus/read/${params.id}`);
+	};
+
+	const handleDeleteAll = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/pages/deleteall/permanently`, "DELETE", "no-cache");
+		revalidatePath(`/noadmin/menus/read/${params.id}`);
+	};
 
 	return (
 		<div className="row">
@@ -28,70 +80,21 @@ const ReadMenu = async ({ params, searchParams }) => {
 					</div>
 				</div>
 				<div className="card rounded-0">
-					<div className="card-header">
-						<div className="float-start">
-							<div className="d-flex align-items-center">
-								<p className="mt-2 mb-0">Pages</p>
-							</div>
-						</div>
-						<div className="float-end my-1">
-							<div className="btn-group">
-								<Link
-									href={{
-										pathname: `/noadmin/menus/page/${menu?.data?._id}/create`,
-										query: {},
-									}}
-									passHref
-									legacyBehavior
-								>
-									<a className="btn btn-outline-secondary btn-sm">Add page</a>
-								</Link>
-							</div>
-						</div>
-					</div>
-					{pages?.data?.length > 0 ? (
-						<ul
-							className="list-group list-group-flush overflow-x-hidden"
-							style={{ maxHeight: "1000px" }}
-						>
-							{pages?.data?.map((page, index) => (
-								<li key={page._id} className={`list-group-item`}>
-									<div className="float-start">
-										<Link
-											href={{
-												pathname: `/noadmin/pages/update/${page._id}`,
-												query: {
-													returnpage: `/noadmin/menus/read/${menu?.data?._id}`,
-												},
-											}}
-											passHref
-											legacyBehavior
-										>
-											<a>
-												<span className="badge bg-secondary me-1">
-													{page.orderingNumber}
-												</span>
-												{page.title}
-											</a>
-										</Link>
-									</div>
-									<div className="float-end">
-										<span className="badge bg-info me-1">
-											{page.referrerpolicy}
-										</span>
-										<span className="badge bg-secondary me-1">
-											{page.rel}&nbsp;Views
-										</span>
-										<span className="badge bg-dark me-1">{page.target}</span>
-									</div>
-								</li>
-							))}
-						</ul>
-					) : (
-						<div className="alert alert-danger rounded-0  m-0 border-0">
-							Nothing&nbsp;found
-						</div>
-					)}
+					<PageList
+						allLink={`/noadmin/menus/read/${menu?.data?._id}`}
+						pageText="Pages"
+						addLink={`/noadmin/menus/page/${menu?.data?._id}/create`}
+						searchOn={`/noadmin/menus/read/${menu?.data?._id}`}
+						objects={pages}
+						searchParams={searchParams}
+						handleDraft={draftIt}
+						handlePublish={publishIt}
+						handleTrash={trashIt}
+						handleSchedule={scheduleIt}
+						handleDelete={handleDelete}
+						handleTrashAllFunction={handleTrashAll}
+						handleDeleteAllFunction={handleDeleteAll}
+					/>
 				</div>
 			</div>
 		</div>

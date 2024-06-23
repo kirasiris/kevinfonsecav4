@@ -1,5 +1,6 @@
 import { Suspense } from "react";
-import Link from "next/link";
+import { notFound } from "next/navigation";
+// import Link from "next/link";
 import Image from "next/image";
 import Header from "@/layout/header";
 import Sidebar from "@/layout/blog/sidebar";
@@ -20,6 +21,7 @@ async function getAuthenticatedUser() {
 
 async function getBlog(params) {
 	const res = await fetchurl(`/blogs${params}`, "GET", "no-cache");
+	if (!res.success) notFound();
 	return res;
 }
 

@@ -1,4 +1,5 @@
 import { fetchurl } from "@/helpers/setTokenOnServer";
+import { notFound } from "next/navigation";
 import Jumbotron from "@/components/course/jumbotron";
 import List from "@/components/course/profileslist";
 
@@ -9,6 +10,7 @@ async function getAuthenticatedUser() {
 
 async function getCourse(params) {
 	const res = await fetchurl(`/courses${params}`, "GET", "no-cache");
+	if (!res.success) notFound();
 	return res;
 }
 

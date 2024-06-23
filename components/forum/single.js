@@ -1,9 +1,11 @@
 import { Suspense } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import Loading from "@/app/blog/loading";
 import ParseHtml from "@/layout/parseHtml";
-import { formatDateWithoutTime } from "@/helpers/utilities";
+import {
+	calculateTimeSincePublished,
+	formatDateWithoutTime,
+} from "@/helpers/utilities";
 
 const Single = ({
 	object = {},
@@ -13,50 +15,34 @@ const Single = ({
 }) => {
 	return (
 		<Suspense fallback={<Loading />}>
-			<article className={`${object?._id} ${fullWidth ? "col" : "col-lg-6"}`}>
-				<div className={`card ${object?.featured && "text-bg-primary"} mb-4`}>
+			<li
+				className="list-group-item"
+				style={{
+					marginRight: "4px",
+					marginLeft: "12px",
+				}}
+			>
+				<div className="float-start">
 					<Link
-						href={`/blog/${object?._id}/${object?.category?._id}/${object?.category?.slug}/${object?.slug}`}
+						href={{
+							pathname: `/forum/${object._id}/${object.category}/${object.sub_category}/${object.slug}`,
+							query: {},
+						}}
 						passHref
 						legacyBehavior
 					>
-						<Image
-							src={
-								object?.files?.avatar?.location?.secure_location ||
-								`https://source.unsplash.com/random/415x207`
-							}
-							className="card-img-top"
-							alt={`${object.title || "Untitled"}'s featured image`}
-							width={imageWidth}
-							height={imageHeight}
-						/>
+						<a className="btn btn-link btn-sm">{object.title}</a>
 					</Link>
-					<div className="card-body">
-						<div className="small text-muted">
-							{formatDateWithoutTime(object?.createdAt)}
-						</div>
-						<h2 className="card-title">
-							<Link
-								href={`/blog/${object?._id}/${object?.category?._id}/${object?.category?.slug}/${object?.slug}`}
-							>
-								{object.title || "Untitled"}
-							</Link>
-						</h2>
-						{typeof object?.text === "object" ? (
-							"TEXT IS EITHER ENCRYPTED OR PASSWORD PROTECTED"
-						) : (
-							<ParseHtml text={object?.text} classList="card-text" />
-						)}
-						<Link
-							href={`/blog/${object?._id}/${object?.category?._id}/${object?.category?.slug}/${object?.slug}`}
-							passHref
-							legacyBehavior
-						>
-							<a className="btn btn-sm btn-secondary">Read more</a>
-						</Link>
-					</div>
 				</div>
-			</article>
+				<div className="float-end">
+					<span className="badge bg-secondary me-1">
+						{object.views}&nbsp;Views
+					</span>
+					<span className="badge bg-secondary me-1">
+						{calculateTimeSincePublished(object.createdAt)}
+					</span>
+				</div>
+			</li>
 		</Suspense>
 	);
 };

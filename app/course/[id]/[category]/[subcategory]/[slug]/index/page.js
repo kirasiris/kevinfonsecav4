@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import { notFound } from "next/navigation";
 import Loading from "@/app/blog/loading";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import List from "@/components/chapter/list";
@@ -11,6 +12,7 @@ async function getAuthenticatedUser() {
 
 async function getCourse(params) {
 	const res = await fetchurl(`/courses${params}`, "GET", "no-cache");
+	if (!res.success) notFound();
 	return res;
 }
 

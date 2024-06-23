@@ -1,179 +1,60 @@
-"use client";
-import { fetchurl } from "@/helpers/setTokenOnServer";
-import { useParams, useRouter } from "next/navigation";
-import { useState, useEffect, useContext } from "react";
-import { toast } from "react-toastify";
-import AuthContext from "@/helpers/globalContext";
-import AdminSidebar from "@/components/admin/adminsidebar";
-import MyTextArea from "@/components/global/mytextarea";
+import { fetchurl, getAuthTokenOnServer } from "@/helpers/setTokenOnServer";
+import { redirect } from "next/navigation";
+import AdminSidebar from "@/components/admin/myfinaladminsidebar";
+import MyTextArea from "@/components/global/myfinaltextarea";
 import OnboardingLink from "@/components/dashboard/onboardinglink";
+import FormButtons from "@/components/global/formbuttons";
 
-const UpdateCourse = () => {
-	const { auth, files } = useContext(AuthContext);
-	const router = useRouter();
+async function getAuthenticatedUser() {
+	const res = await fetchurl(`/auth/me`, "GET", "force-cache");
+	return res;
+}
 
-	// Redirect if not authenticated
-	!auth.isAuthenticated && router.push("/auth/login");
+async function getFiles(params) {
+	const res = await fetchurl(`/files${params}`, "GET", "no-cache");
+	return res;
+}
 
-	// Redirec if not founder
-	auth.isAuthenticated &&
-		!auth.user.role.includes("founder") &&
-		router.push("/dashboard");
+async function getCourse(params) {
+	const res = await fetchurl(`/courses${params}`, "GET", "no-cache");
+	return res;
+}
+
+const UpdateCourse = async ({ params, searchParams }) => {
+	const course = await getCourse(`/${params.id}`);
+
+	const token = await getAuthTokenOnServer();
+	const auth = await getAuthenticatedUser();
+	const files = await getFiles(`?page=1&limit=100&sort=-createdAt`);
 
 	// Redirect if not charges enabled
-	!auth?.user?.stripe?.stripeChargesEnabled && <OnboardingLink auth={auth} />;
+	!auth?.data?.stripe?.stripeChargesEnabled && <OnboardingLink auth={auth} />;
 
-	const [courseData, setCourseData] = useState({
-		title: `Untitled`,
-		avatar: files?.selected?._id,
-		sub_title: ``,
-		text: `No description`,
-		price: 0,
-		featured: true,
-		embedding: true,
-		category: "development",
-		sub_category: "web-development",
-		isFree: true,
-		language: "english",
-		difficulty: "beginner",
-		commented: true,
-		password: ``,
-		status: `draft`,
-	});
-	const {
-		title,
-		avatar,
-		sub_title,
-		text,
-		price,
-		featured,
-		embedding,
-		category,
-		sub_category,
-		isFree,
-		language,
-		difficulty,
-		commented,
-		password,
-		status,
-	} = courseData;
-
-	const [course, setCourse] = useState(null);
-	const [loading, setLoading] = useState(false);
-	const [error, setError] = useState(false);
-
-	const { id } = useParams();
-	const courseId = id;
-
-	useEffect(() => {
-		const fetchCourse = async () => {
-			try {
-				const res = await fetchurl(`/courses/${courseId}`, "GET", "no-cache");
-				setCourse(res?.data);
-				setCourseData({
-					title: res?.data?.title,
-					avatar: res?.data?.files?.avatar,
-					sub_title: res?.data?.sub_title,
-					text: res?.data?.text,
-					price: res?.data?.price,
-					featured: res?.data?.featured,
-					embedding: res?.data?.embedding,
-					category: res?.data?.category,
-					sub_category: res?.data?.sub_category,
-					isFree: res?.data?.isFree.toString(),
-					language: res?.data?.language,
-					difficulty: res?.data?.difficulty,
-					commented: res?.data?.commented,
-					// password: res?.data?.password,
-					status: res?.data?.status,
-				});
-				setLoading(false);
-			} catch (err) {
-				console.log(err);
-				// const error = err.response.data.message;
-				const error = err?.response?.data?.error?.errors;
-				const errors = err?.response?.data?.errors;
-
-				if (error) {
-					// dispatch(setAlert(error, 'danger'));
-					error &&
-						Object.entries(error).map(([, value]) =>
-							toast.error(value.message)
-						);
-				}
-
-				if (errors) {
-					errors.forEach((error) => toast.error(error.msg));
-				}
-
-				toast.error(err?.response?.statusText);
-				return {
-					msg: err?.response?.statusText,
-					status: err?.response?.status,
-				};
-			}
+	const upgradeCourse = async (formData) => {
+		"use server";
+		const rawFormData = {
+			title: formData.get("title"),
+			sub_title: formData.get("sub_title"),
+			text: formData.get("text"),
+			price: formData.get("price"),
+			featured: formData.get("featured"),
+			embedding: formData.get("embedding"),
+			category: formData.get("category"),
+			sub_category: formData.get("sub_category"),
+			isFree: formData.get("isFree"),
+			language: formData.get("language"),
+			difficulty: formData.get("difficulty"),
+			commented: formData.get("commented"),
+			password: formData.get("password"),
+			status: formData.get("status"),
+			files: { avatar: formData.get("file") },
 		};
-		fetchCourse();
-	}, [courseId]);
-
-	const upgradeCourse = async (e) => {
-		e.preventDefault();
-		try {
-			await fetchurl(`/courses/${course._id}`, "PUT", "no-cache", {
-				...courseData,
-				files: { avatar: files?.selected?._id },
-			});
-			toast.success(`Item updated`);
-			router.push(`/noadmin/courses`);
-		} catch (err) {
-			console.log(err);
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
-
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return { msg: err?.response?.statusText, status: err?.response?.status };
-		}
+		await fetchurl(`/courses/${params.id}`, "PUT", "no-cache", rawFormData);
+		redirect(`/noadmin/courses`);
 	};
 
-	const resetForm = () => {
-		setCourseData({
-			title: `Untitled`,
-			avatar: files?.selected?._id,
-			sub_title: ``,
-			text: `No description`,
-			price: 0,
-			featured: true,
-			embedding: true,
-			category: "development",
-			sub_category: "web-development",
-			isFree: true,
-			language: "english",
-			difficulty: "beginner",
-			commented: true,
-			password: ``,
-			status: `draft`,
-		});
-	};
-
-	return loading || course === null || course === undefined ? (
-		error ? (
-			<>Not found</>
-		) : (
-			<>Loading</>
-		)
-	) : (
-		<form className="row" onSubmit={upgradeCourse}>
+	return (
+		<form className="row" action={upgradeCourse}>
 			<div className="col">
 				<label htmlFor="blog-title" className="form-label">
 					Title
@@ -181,13 +62,7 @@ const UpdateCourse = () => {
 				<input
 					id="blog-title"
 					name="title"
-					value={title}
-					onChange={(e) => {
-						setCourseData({
-							...courseData,
-							title: e.target.value,
-						});
-					}}
+					defaultValue={course?.data?.title}
 					type="text"
 					className="form-control mb-3"
 					placeholder=""
@@ -198,13 +73,7 @@ const UpdateCourse = () => {
 				<input
 					id="sub_title"
 					name="sub_title"
-					value={sub_title}
-					onChange={(e) => {
-						setCourseData({
-							...courseData,
-							sub_title: e.target.value,
-						});
-					}}
+					defaultValue={course?.data?.sub_title}
 					type="text"
 					className="form-control mb-3"
 					placeholder=""
@@ -213,13 +82,13 @@ const UpdateCourse = () => {
 					Text
 				</label>
 				<MyTextArea
+					auth={auth}
 					id="text"
 					name="text"
-					value={text}
-					objectData={courseData}
-					setObjectData={setCourseData}
 					onModel="Course"
-					advancedTextEditor={false}
+					advancedTextEditor={true}
+					customPlaceholder="No description"
+					defaultValue={course?.data?.text}
 				/>
 				<div className="row">
 					<div className="col">
@@ -229,13 +98,7 @@ const UpdateCourse = () => {
 						<select
 							id="category"
 							name="category"
-							value={category}
-							onChange={(e) => {
-								setCourseData({
-									...courseData,
-									category: e.target.value,
-								});
-							}}
+							defaultValue={course?.data?.category}
 							className="form-control"
 						>
 							<option value={"development"}>Development</option>
@@ -261,151 +124,123 @@ const UpdateCourse = () => {
 						<select
 							id="sub_category"
 							name="sub_category"
-							value={sub_category}
-							onChange={(e) => {
-								setCourseData({
-									...courseData,
-									sub_category: e.target.value,
-								});
-							}}
+							defaultValue={course?.data?.sub_category}
 							className="form-control"
 						>
-							{category === "development" && (
-								<>
-									<option value={"web-development"}>Web Development</option>
-									<option value={"mobile-development"}>
-										Mobile Development
-									</option>
-									<option value="programming-languages">
-										Programming Languages
-									</option>
-									<option value="game-development">Game Development</option>
-									<option value="database-design-and-development">
-										Database Design and Development
-									</option>
-									<option value="software-testing">Software Testing</option>
-								</>
-							)}
-							{category === "business" && (
-								<>
-									<option value="entrepreneurship">Entrepreneurship</option>
-									<option value="communication">Communication</option>
-									<option value="management">Management</option>
-									<option value="sales">Sales</option>
-									<option value="business-strategy">Business Strategy</option>
-								</>
-							)}
-							{category === "finance-and-accounting" && (
-								<>
-									<option value="accounting-and-bookkeeping">
-										Accounting and Bookkeeping
-									</option>
-									<option value="cryptocurrency-and-blockchain">
-										Cryptocurrency and Blockchain
-									</option>
-									<option value="finance">Finance</option>
-									<option value="financial-modeling-and-analysis">
-										Financial Modeling and Analysis
-									</option>
-									<option value="investing-and-trading">
-										Investing and Trading
-									</option>
-								</>
-							)}
-							{category === "it-and-software" && (
-								<>
-									<option value="it-certifications">IT Certifications</option>
-									<option value="network-and-security">
-										Network and Security
-									</option>
-									<option value="hardware">Hardware</option>
-									<option value="operating-systems-and-servers">
-										Operating Systems and Servers
-									</option>
-									<option value="other-it-and-software">
-										Other IT and Software
-									</option>
-								</>
-							)}
-							{category === "office-productivity" && (
-								<>
-									<option value="microsoft">Microsoft</option>
-									<option value="apple">Apple</option>
-									<option value="google">Google</option>
-									<option value="sap">SAP</option>
-									<option value="oracle">Oracle</option>
-									<option value="other-office-productivity">
-										Other Office Productivity
-									</option>
-								</>
-							)}
-							{category === "personal-development" && (
-								<>
-									<option value="personal-transformation">
-										Personal Transformation
-									</option>
-									<option value="personal-productivity">
-										Personal Productivity
-									</option>
-									<option value="leadership">Leadership</option>
-									<option value="career-development">Career Development</option>
-									<option value="parenting-and-relationships">
-										Parenting and Relationships
-									</option>
-								</>
-							)}
-							{category === "design" && (
-								<>
-									<option value="web-design">Web Design</option>
-									<option value="graphic-design-and-illustration">
-										Graphic Design and Illustration
-									</option>
-									<option value="design-tools">Design Tools</option>
-									<option value="user-experience-design">
-										User Experience Design
-									</option>
-									<option value="game-design">Game Design</option>
-									<option value="3d-and-animation">3D and Animation</option>
-								</>
-							)}
-							{category === "marketing" && (
-								<>
-									<option value="digital-marketing">Digital Marketing</option>
-									<option value="search-engine-optimization">
-										Search Engine Optimization
-									</option>
-									<option value="social-media-marketing">
-										Social Media Marketing
-									</option>
-									<option value="branding">Branding</option>
-									<option value="marketing-fundamentals">
-										Marketing Fundamentals
-									</option>
-									<option value="marketing-analytics-and-automation">
-										Marketing Analytics and Automation
-									</option>
-								</>
-							)}
-							{category === "health-and-fitness" && (
-								<>
-									<option value="fitness">Fitness</option>
-									<option value="general-health">General Health</option>
-									<option value="sports">Sports</option>
-									<option value="nutrition-and-diet">Nutrition and Diet</option>
-									<option value="yoga">Yoga</option>
-									<option value="mental-health">Mental Health</option>
-								</>
-							)}
-							{category === "music" && (
-								<>
-									<option value="instruments">Instruments</option>
-									<option value="music-production">Music Production</option>
-									<option value="music-fundamentals">Music Fundamentals</option>
-									<option value="vocal">Vocal</option>
-									<option value="music-techniques">Music Techniques</option>
-									<option value="music-software">Music Software</option>
-								</>
-							)}
+							<optgroup label="Development">
+								<option value={"web-development"}>Web Development</option>
+								<option value={"mobile-development"}>Mobile Development</option>
+								<option value="programming-languages">
+									Programming Languages
+								</option>
+								<option value="game-development">Game Development</option>
+								<option value="database-design-and-development">
+									Database Design and Development
+								</option>
+								<option value="software-testing">Software Testing</option>
+							</optgroup>
+							<optgroup label="Business">
+								<option value="entrepreneurship">Entrepreneurship</option>
+								<option value="communication">Communication</option>
+								<option value="management">Management</option>
+								<option value="sales">Sales</option>
+								<option value="business-strategy">Business Strategy</option>
+							</optgroup>
+							<optgroup label="Finance and Accounting">
+								<option value="accounting-and-bookkeeping">
+									Accounting and Bookkeeping
+								</option>
+								<option value="cryptocurrency-and-blockchain">
+									Cryptocurrency and Blockchain
+								</option>
+								<option value="finance">Finance</option>
+								<option value="financial-modeling-and-analysis">
+									Financial Modeling and Analysis
+								</option>
+								<option value="investing-and-trading">
+									Investing and Trading
+								</option>
+							</optgroup>
+							<optgroup label="IT and Software">
+								<option value="it-certifications">IT Certifications</option>
+								<option value="network-and-security">
+									Network and Security
+								</option>
+								<option value="hardware">Hardware</option>
+								<option value="operating-systems-and-servers">
+									Operating Systems and Servers
+								</option>
+								<option value="other-it-and-software">
+									Other IT and Software
+								</option>
+							</optgroup>
+							<optgroup label="Office Productivity">
+								<option value="microsoft">Microsoft</option>
+								<option value="apple">Apple</option>
+								<option value="google">Google</option>
+								<option value="sap">SAP</option>
+								<option value="oracle">Oracle</option>
+								<option value="other-office-productivity">
+									Other Office Productivity
+								</option>
+							</optgroup>
+							<optgroup label="Personal Development">
+								<option value="personal-transformation">
+									Personal Transformation
+								</option>
+								<option value="personal-productivity">
+									Personal Productivity
+								</option>
+								<option value="leadership">Leadership</option>
+								<option value="career-development">Career Development</option>
+								<option value="parenting-and-relationships">
+									Parenting and Relationships
+								</option>
+							</optgroup>
+							<optgroup label="Design">
+								<option value="web-design">Web Design</option>
+								<option value="graphic-design-and-illustration">
+									Graphic Design and Illustration
+								</option>
+								<option value="design-tools">Design Tools</option>
+								<option value="user-experience-design">
+									User Experience Design
+								</option>
+								<option value="game-design">Game Design</option>
+								<option value="3d-and-animation">3D and Animation</option>
+							</optgroup>
+							<optgroup label="Marketing">
+								<option value="digital-marketing">Digital Marketing</option>
+								<option value="search-engine-optimization">
+									Search Engine Optimization
+								</option>
+								<option value="social-media-marketing">
+									Social Media Marketing
+								</option>
+								<option value="branding">Branding</option>
+								<option value="marketing-fundamentals">
+									Marketing Fundamentals
+								</option>
+								<option value="marketing-analytics-and-automation">
+									Marketing Analytics and Automation
+								</option>
+							</optgroup>
+							<optgroup label="Health and Fitness">
+								<option value="fitness">Fitness</option>
+								<option value="general-health">General Health</option>
+								<option value="sports">Sports</option>
+								<option value="nutrition-and-diet">Nutrition and Diet</option>
+								<option value="yoga">Yoga</option>
+								<option value="mental-health">Mental Health</option>
+							</optgroup>
+							<optgroup label="Music">
+								<option value="instruments">Instruments</option>
+								<option value="music-production">Music Production</option>
+								<option value="music-fundamentals">Music Fundamentals</option>
+								<option value="vocal">Vocal</option>
+								<option value="music-techniques">Music Techniques</option>
+								<option value="music-software">Music Software</option>
+							</optgroup>
 						</select>
 					</div>
 				</div>
@@ -417,39 +252,23 @@ const UpdateCourse = () => {
 						<select
 							id="isFree"
 							name="isFree"
-							value={isFree}
-							onChange={(e) => {
-								setCourseData({
-									...courseData,
-									isFree: e.target.value,
-								});
-							}}
+							defaultValue={course?.data?.isFree.toString()}
 							className="form-control"
 						>
 							<option value={true}>Yes</option>
 							<option value={false}>No</option>
 						</select>
-						{isFree === "false" && (
-							<>
-								<label htmlFor="price" className="form-label">
-									Price
-								</label>
-								<input
-									id="price"
-									name="price"
-									value={price}
-									onChange={(e) => {
-										setCourseData({
-											...courseData,
-											price: e.target.value,
-										});
-									}}
-									type="text"
-									className="form-control mb-3"
-									placeholder=""
-								/>
-							</>
-						)}
+						<label htmlFor="price" className="form-label">
+							Price
+						</label>
+						<input
+							id="price"
+							name="price"
+							defaultValue={course?.data?.price}
+							type="text"
+							className="form-control mb-3"
+							placeholder=""
+						/>
 					</div>
 					<div className="col">
 						<label htmlFor="language" className="form-label">
@@ -458,13 +277,7 @@ const UpdateCourse = () => {
 						<select
 							id="language"
 							name="language"
-							value={language}
-							onChange={(e) => {
-								setCourseData({
-									...courseData,
-									language: e.target.value,
-								});
-							}}
+							defaultValue={course?.data?.language}
 							className="form-control"
 						>
 							<option value={"english"}>English</option>
@@ -486,13 +299,7 @@ const UpdateCourse = () => {
 						<select
 							id="difficulty"
 							name="difficulty"
-							value={difficulty}
-							onChange={(e) => {
-								setCourseData({
-									...courseData,
-									difficulty: e.target.value,
-								});
-							}}
+							defaultValue={course?.data?.difficulty}
 							className="form-control"
 						>
 							<option value={"all-level"}>All level</option>
@@ -507,36 +314,24 @@ const UpdateCourse = () => {
 				<AdminSidebar
 					displayCategoryField={false}
 					displayAvatar={true}
-					avatar={avatar}
-					status={status}
+					avatar={course?.data?.files?.avatar}
+					status={course?.data?.status}
 					fullWidth={false}
-					password={password}
-					featured={featured}
-					commented={commented}
-					embedding={embedding}
+					password={course?.data?.password}
+					featured={course?.data?.featured.toString()}
+					commented={course?.data?.commented.toString()}
+					embedding={course?.data?.embedding.toString()}
 					github_readme={""}
 					category={undefined}
 					categories={[]}
-					objectData={courseData}
-					setObjectData={setCourseData}
 					multipleFiles={false}
 					onModel={"Course"}
+					files={files}
+					auth={auth}
+					token={token}
 				/>
 				<br />
-				<button
-					type="submit"
-					className="btn btn-secondary btn-sm float-start"
-					disabled={title.length > 0 && text.length > 0 ? !true : !false}
-				>
-					Submit
-				</button>
-				<button
-					type="button"
-					className="btn btn-secondary btn-sm float-end"
-					onClick={resetForm}
-				>
-					Reset
-				</button>
+				<FormButtons />
 			</div>
 		</form>
 	);

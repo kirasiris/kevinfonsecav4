@@ -1,6 +1,7 @@
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import { redirect } from "next/navigation";
 import AdminSidebar from "@/components/admin/myfinaladminsidebar";
+import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
 
 const CreateMenu = async ({ params, searchParams }) => {
@@ -8,6 +9,7 @@ const CreateMenu = async ({ params, searchParams }) => {
 		"use server";
 		const rawFormData = {
 			title: formData.get("title"),
+			text: formData.get("text"),
 			position: formData.get("position"),
 			status: formData.get("status"),
 		};
@@ -28,6 +30,18 @@ const CreateMenu = async ({ params, searchParams }) => {
 					type="text"
 					className="form-control mb-3"
 					placeholder=""
+				/>
+				<label htmlFor="text" className="form-label">
+					Text
+				</label>
+				<MyTextArea
+					auth={{}}
+					id="text"
+					name="text"
+					onModel="Menu"
+					advancedTextEditor={false}
+					customPlaceholder="No description"
+					defaultValue="No description..."
 				/>
 				<label htmlFor="position" className="form-label">
 					Position

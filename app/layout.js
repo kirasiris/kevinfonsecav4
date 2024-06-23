@@ -42,13 +42,13 @@ export default async function RootLayout({ children }) {
 					title={settings?.data?.title}
 					logo={settings?.data?.logo}
 					canonical={settings?.data?.site_url}
-					menus={menus.data}
+					menus={menus?.data}
 				/>
 				<main>{children}</main>
 				<Footer
 					auth={auth}
 					canonical={settings?.data?.site_url}
-					menus={menus.data}
+					menus={menus?.data}
 				/>
 			</body>
 		</html>

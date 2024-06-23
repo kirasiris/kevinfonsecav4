@@ -10,7 +10,7 @@ async function getAuthenticatedUser() {
 }
 
 async function getFiles(params) {
-	const res = await fetchurl(`/files${params}`, "GET", "force-cache");
+	const res = await fetchurl(`/files${params}`, "GET", "no-cache");
 	return res;
 }
 
@@ -55,7 +55,7 @@ const CreateCompany = async ({ params, searchParams }) => {
 					auth={auth}
 					id="text"
 					name="text"
-					onModel="Course"
+					onModel="Company"
 					advancedTextEditor={true}
 					customPlaceholder="No description"
 					defaultValue="No description..."

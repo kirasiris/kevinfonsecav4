@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import { notFound } from "next/navigation";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import Loading from "@/app/profile/loading";
 import List from "@/components/profile/list";
@@ -12,6 +13,7 @@ async function getAuthenticatedUser() {
 
 async function getProfile(params) {
 	const res = await fetchurl(`/users${params}`, "GET", "no-cache");
+	if (!res.success) notFound();
 	return res;
 }
 
@@ -70,7 +72,7 @@ const ProfileRead = async ({ params, searchParams }) => {
 				object={profile}
 				headerStyle={{
 					background: `linear-gradient(to bottom, rgba(0,0,0,0.7) 0%,rgba(0,0,0,0.7) 100%), url(${
-						profile.data?.files?.cover?.location.secure_location ||
+						profile?.data?.files?.cover?.location.secure_location ||
 						`https://befreebucket-for-outputs.s3.amazonaws.com/2023/02/map-image.png`
 					})`,
 					backgroundPosition: "center",

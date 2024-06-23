@@ -1,6 +1,7 @@
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import { redirect } from "next/navigation";
 import AdminSidebar from "@/components/admin/myfinaladminsidebar";
+import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
 
 async function getMenu(params) {
@@ -15,6 +16,7 @@ const UpdateMenu = async ({ params, searchParams }) => {
 		"use server";
 		const rawFormData = {
 			title: formData.get("title"),
+			text: formData.get("text"),
 			position: formData.get("position"),
 			status: formData.get("status"),
 		};
@@ -31,10 +33,22 @@ const UpdateMenu = async ({ params, searchParams }) => {
 				<input
 					id="menu-title"
 					name="title"
-					defaultValue={menu.data.title}
+					defaultValue={menu?.data?.title}
 					type="text"
 					className="form-control mb-3"
 					placeholder=""
+				/>
+				<label htmlFor="text" className="form-label">
+					Text
+				</label>
+				<MyTextArea
+					auth={{}}
+					id="text"
+					name="text"
+					onModel="Menu"
+					advancedTextEditor={false}
+					customPlaceholder="No description"
+					defaultValue={menu?.data?.text}
 				/>
 				<label htmlFor="position" className="form-label">
 					Position
@@ -42,7 +56,7 @@ const UpdateMenu = async ({ params, searchParams }) => {
 				<select
 					id="position"
 					name="position"
-					defaultValue={menu.data.position}
+					defaultValue={menu?.data?.position}
 					className="form-control"
 				>
 					<option value={`top`}>Top</option>
@@ -54,7 +68,7 @@ const UpdateMenu = async ({ params, searchParams }) => {
 					displayCategoryField={false}
 					displayAvatar={false}
 					avatar={""}
-					status={menu.data.status}
+					status={menu?.data?.status}
 					fullWidth={false}
 					password={""}
 					featured={false}

@@ -1,5 +1,4 @@
 "use server";
-import ErrorPage from "@/layout/errorpage";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -118,13 +117,14 @@ export const fetchurl = async (
 		})
 		.then((data) => data)
 		.catch((err) => {
-			console.log(err);
+			console.log("Error from console.log in setTokenOnServer file xD", err);
 			if (err.name === "AbortError") {
 				console.log("successfully aborted");
 			} else {
 				// handle error
 				console.log("Error coming from setTokenOnServer file xD", err);
 			}
+			return err;
 		});
 
 	return response;

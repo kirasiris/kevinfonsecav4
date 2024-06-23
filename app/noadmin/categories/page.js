@@ -124,12 +124,12 @@ const AdminCategoriesIndex = async ({ params, searchParams }) => {
 							onModel="Category"
 							advancedTextEditor={false}
 						/>
-						<label htmlFor="parent" className="form-label">
+						<label htmlFor="parentCategory" className="form-label">
 							Parent Category
 						</label>
 						<select
-							id="parent"
-							name="parent"
+							id="parentCategory"
+							name="parentCategory"
 							defaultValue=""
 							className="form-control"
 						>

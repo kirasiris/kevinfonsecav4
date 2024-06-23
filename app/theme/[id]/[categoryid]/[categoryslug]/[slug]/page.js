@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import showdown from "showdown";
@@ -22,6 +23,7 @@ async function getAuthenticatedUser() {
 
 async function getTheme(params) {
 	const res = await fetchurl(`/themes${params}`, "GET", "no-cache");
+	if (!res.success) notFound();
 	return res;
 }
 

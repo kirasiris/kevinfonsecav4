@@ -139,7 +139,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 					<div className="card-body p-0">
 						<ul className="list-group list-group-flush">
 							{categories.data
-								?.filter((c) => c.parentCategory === undefined)
+								.filter((c) => c.parentCategory === undefined)
 								.filter((c) => c.timesUsed >= 1)
 								.map((category, index) => (
 									<li

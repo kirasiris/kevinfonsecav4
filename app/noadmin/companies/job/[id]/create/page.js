@@ -20,7 +20,7 @@ const CreateJob = async ({ params, searchParams }) => {
 	const files = await getFiles(`?page=1&limit=100&sort=-createdAt`);
 
 	// Redirect if not company
-	!auth?.data?.hasCompany && redirect(`/noadmin/companies`);
+	// !auth?.data?.hasCompany && redirect(`/noadmin/companies`);
 
 	const addJob = async (formData) => {
 		"use server";
@@ -97,7 +97,7 @@ const CreateJob = async ({ params, searchParams }) => {
 							id="starting_at"
 							name="starting_at"
 							defaultValue="21"
-							type="text"
+							type="number"
 							className="form-control mb-3"
 							placeholder="7.5"
 						/>

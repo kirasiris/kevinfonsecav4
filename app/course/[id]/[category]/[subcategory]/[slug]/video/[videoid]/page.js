@@ -1,7 +1,7 @@
 import { Suspense } from "react";
+import { redirect, notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { redirect } from "next/navigation";
 import Loading from "@/app/blog/loading";
 import ParseHtml from "@/layout/parseHtml";
 import ReportModal from "@/components/global/reportmodal";
@@ -17,6 +17,7 @@ async function getAuthenticatedUser() {
 
 async function getCourse(params) {
 	const res = await fetchurl(`/courses${params}`, "GET", "no-cache");
+	if (!res.success) notFound();
 	return res;
 }
 
@@ -32,6 +33,7 @@ async function getCourseStudents(params) {
 
 async function getVideo(params) {
 	const res = await fetchurl(`/videos${params}`, "GET", "no-cache");
+	if (!res.success) notFound();
 	return res;
 }
 

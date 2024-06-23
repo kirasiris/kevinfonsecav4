@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import Loading from "@/app/blog/loading";
@@ -14,6 +15,7 @@ async function getAuthenticatedUser() {
 
 async function getVideo(params) {
 	const res = await fetchurl(`/videos${params}`, "GET", "no-cache");
+	if (!res.success) notFound();
 	return res;
 }
 

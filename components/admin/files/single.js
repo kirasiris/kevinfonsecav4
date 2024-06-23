@@ -34,8 +34,8 @@ const Single = ({
 							`https://source.unsplash.com/random/184x184`
 						}
 						alt={object.title}
-						width={`184`}
-						height={`184`}
+						width={`250`}
+						height={`200`}
 					/>
 				</figure>
 				<div className="btn-group">

@@ -26,7 +26,6 @@ const ErrorPage = ({ statusCode, statusCodeMessage = "" }) => {
 									? `An error ${statusCode} occurred on server`
 									: "An error occurred on client"}
 							</h4>
-
 							<p>{statusCodeMessage}</p>
 						</div>
 						<div className="error-actions">

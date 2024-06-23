@@ -60,7 +60,7 @@ const ReadCompany = async ({ params, searchParams }) => {
 								<li key={job._id} className={`list-group-item ${job._id}`}>
 									<div className="float-start">
 										<Link
-											href={`/noadmin/jobs/update/${job._id}`}
+											href={`/noadmin/companies/job/${job._id}/update`}
 											passHref
 											legacyBehavior
 										>
@@ -88,12 +88,7 @@ const ReadCompany = async ({ params, searchParams }) => {
 						</div>
 					)}
 				</div>
-				<div className="card rounded-0 mb-3">
-					<div className="card-header">Address</div>
-					<div className="card-body p-0">
-						<Map object={company?.data} />
-					</div>
-				</div>
+				<Map object={company?.data} />
 			</div>
 			<div className="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-xs-12 d-none d-sm-none d-md-none d-lg-block dm-xl-block">
 				<figure className="mb-3 bg-dark">

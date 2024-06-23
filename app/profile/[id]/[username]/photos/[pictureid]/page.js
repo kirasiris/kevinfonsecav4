@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import Sidebar from "@/components/profile/sidebar";
@@ -20,11 +21,13 @@ async function getAuthenticatedUser() {
 
 async function getProfile(params) {
 	const res = await fetchurl(`/users${params}`, "GET", "no-cache");
+	if (!res.success) notFound();
 	return res;
 }
 
 async function getMedias(params) {
 	const res = await fetchurl(`/files${params}`, "GET", "no-cache");
+	if (!res.success) notFound();
 	return res;
 }
 

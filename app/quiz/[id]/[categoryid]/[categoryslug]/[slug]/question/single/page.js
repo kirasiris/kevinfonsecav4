@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import { notFound } from "next/navigation";
 // import Link from "next/link";
 import Image from "next/image";
 import Header from "@/layout/header";
@@ -20,6 +21,7 @@ async function getAuthenticatedUser() {
 
 async function getQuiz(params) {
 	const res = await fetchurl(`/quizzes${params}`, "GET", "no-cache");
+	if (!res.success) notFound();
 	return res;
 }
 

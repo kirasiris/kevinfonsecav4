@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import { notFound } from "next/navigation";
 import Header from "@/layout/header";
 import Loading from "@/app/blog/loading";
 import ParseHtml from "@/layout/parseHtml";
@@ -13,6 +14,7 @@ async function getAuthenticatedUser() {
 
 async function getChangelog(params) {
 	const res = await fetchurl(`/v1/changelogs${params}`, "GET", "no-cache");
+	if (!res.success) notFound();
 	return res;
 }
 

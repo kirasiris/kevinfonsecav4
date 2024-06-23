@@ -15,7 +15,7 @@ const AdminFilesIndex = async ({ params, searchParams }) => {
 		);
 		revalidatePath(
 			`/noadmin/files?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
+				searchParams.limit || 50
 			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
@@ -26,7 +26,7 @@ const AdminFilesIndex = async ({ params, searchParams }) => {
 		await fetchurl(`/files/deleteall`, "PUT", "no-cache");
 		revalidatePath(
 			`/noadmin/files?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
+				searchParams.limit || 50
 			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};
@@ -37,7 +37,7 @@ const AdminFilesIndex = async ({ params, searchParams }) => {
 		await fetchurl(`/files/deleteall`, "DELETE", "no-cache");
 		revalidatePath(
 			`/noadmin/files?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
+				searchParams.limit || 50
 			}&sort=${searchParams.sort || "-createdAt"}`
 		);
 	};

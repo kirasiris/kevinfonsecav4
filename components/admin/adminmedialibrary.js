@@ -25,7 +25,9 @@ const AdminMediaLibrary = async ({
 	const token = await getAuthTokenOnServer();
 	const auth = await getAuthenticatedUser();
 	const files = await getFiles(
-		`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+		`?page=${searchParams.page || 1}&limit=${searchParams.limit || 50}&sort=${
+			searchParams.sort || "-createdAt"
+		}`
 	);
 
 	return (

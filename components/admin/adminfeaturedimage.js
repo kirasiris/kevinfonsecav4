@@ -38,6 +38,7 @@ const AdminFeaturedImage = ({
 						height="558"
 						style={{ maxWidth: "1920px", maxHeight: "1920px" }}
 						priority={true}
+						onClick={() => setShowMediaModel(true)}
 					/>
 				</figure>
 				{/* <figure>

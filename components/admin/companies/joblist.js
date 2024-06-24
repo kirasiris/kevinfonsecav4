@@ -1,12 +1,12 @@
 "use client";
 import { useState } from "react";
 import AdminCardHeaderMenu from "@/components/admin/admincardheadermenu";
-import Single from "./lessonsingle";
+import Single from "./jobsingle";
 import NumericPagination from "@/layout/numericpagination";
 import NothingFoundAlert from "@/layout/nothingfoundalert";
 import ErrorPage from "@/layout/errorpage";
 
-const PageList = ({
+const JobList = ({
 	allLink = "",
 	pageText = "",
 	addLink = "",
@@ -193,4 +193,4 @@ const PageList = ({
 	);
 };
 
-export default PageList;
+export default JobList;

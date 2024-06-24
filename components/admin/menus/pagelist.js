@@ -148,7 +148,7 @@ const PageList = ({
 			{objects?.data?.length > 0 ? (
 				<>
 					<ul
-						className="list-group list-group-flush overflow-x-hidden"
+						className="list-group list-group-flush"
 						style={{ maxHeight: "1000px" }}
 					>
 						{objects?.data?.map((menu) => (

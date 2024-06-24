@@ -2,7 +2,6 @@
 import Link from "next/link";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import DeleteModal from "@/components/global/deletemodal";
-import PreviewModal from "@/components/admin/courses/lessonpreviewmodal";
 
 const Single = ({
 	object = {},
@@ -16,11 +15,11 @@ const Single = ({
 	setTotalResults,
 }) => {
 	return (
-		<li className={`list-group-item ${object?.orderingNumber}`}>
+		<li className="list-group-item">
 			<div className="float-start">
 				<Link
 					href={{
-						pathname: `/noadmin/animes/chapter/${object?._id}/update`,
+						pathname: `/noadmin/companies/job/${object?._id}/update`,
 						query: {},
 					}}
 					passHref
@@ -36,20 +35,12 @@ const Single = ({
 			</div>
 			<div className="float-end">
 				<div className="blog-item__panel">
-					{object.free_preview && <PreviewModal object={object} />}
-					<span className="badge bg-info me-1">{object.duration}</span>
-					<span className="badge bg-secondary me-1">
-						{object.views}&nbsp;Views
-					</span>
-					<span className="badge bg-dark me-1">
-						{object.language.toUpperCase()}
-					</span>
 					<div className="blog-actions-ellipsis-menu">
 						<span className="ellipsis-menu">
 							<DropdownButton title="Options" variant="secondary">
 								<Link
 									href={{
-										pathname: `/animes/${object?._id}/${object?.slug}`,
+										pathname: `/job/${object?._id}/${object?.slug}`,
 										query: {
 											isAdmin: true,
 										},
@@ -57,7 +48,9 @@ const Single = ({
 									passHref
 									legacyBehavior
 								>
-									<a className="dropdown-item btn btn-link">View&nbsp;It</a>
+									<a className="dropdown-item btn btn-link" target="_blank">
+										View&nbsp;It
+									</a>
 								</Link>
 								<button
 									className="dropdown-item btn btn-sm"

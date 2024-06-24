@@ -1,7 +1,8 @@
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import ParseHtml from "@/layout/parseHtml";
+import JobList from "@/components/admin/companies/joblist";
+import { revalidatePath } from "next/cache";
 import Image from "next/image";
-import Link from "next/link";
 import Map from "@/components/global/map";
 
 async function getCompany(params) {
@@ -16,7 +17,60 @@ async function getJobs(params) {
 
 const ReadCompany = async ({ params, searchParams }) => {
 	const company = await getCompany(`/${params.id}`);
-	const jobs = await getJobs(`?resourceId=${company?.data?._id}`);
+	const jobs = await getJobs(
+		`?resourceId=${company?.data?._id}&page=${searchParams.page || 1}&limit=${
+			searchParams.limit || 10
+		}&sort=${searchParams.sort || "-createdAt"}`
+	);
+
+	const draftIt = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/jobs/${id}/draftit`, "PUT", "no-cache");
+		revalidatePath(`/noadmin/companies/read/${params.id}`);
+	};
+
+	const publishIt = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/jobs/${id}/publishit`, "PUT", "no-cache");
+		revalidatePath(`/noadmin/companies/read/${params.id}`);
+	};
+
+	const trashIt = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/jobs/${id}/trashit`, "PUT", "no-cache");
+		revalidatePath(`/noadmin/companies/read/${params.id}`);
+	};
+
+	const scheduleIt = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/jobs/${id}/scheduleit`, "PUT", "no-cache");
+		revalidatePath(`/noadmin/companies/read/${params.id}`);
+	};
+
+	const handleDelete = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/jobs/${id}/permanently`, "DELETE", "no-cache");
+		revalidatePath(`/noadmin/companies/read/${params.id}`);
+	};
+
+	const handleTrashAll = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/jobs/deleteall`, "PUT", "no-cache");
+		revalidatePath(`/noadmin/companies/read/${params.id}`);
+	};
+
+	const handleDeleteAll = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/jobs/deleteall/permanently`, "DELETE", "no-cache");
+		revalidatePath(`/noadmin/companies/read/${params.id}`);
+	};
 
 	return (
 		<div className="row">
@@ -30,63 +84,21 @@ const ReadCompany = async ({ params, searchParams }) => {
 					</div>
 				</div>
 				<div className="card rounded-0 mb-3">
-					<div className="card-header">
-						<div className="float-start">
-							<div className="d-flex align-items-center">
-								<p className="mt-2 mb-0">Jobs</p>
-							</div>
-						</div>
-						<div className="float-end my-1">
-							<div className="btn-group">
-								<Link
-									href={{
-										pathname: `/noadmin/companies/job/${company?.data?._id}/create`,
-										query: {},
-									}}
-									passHref
-									legacyBehavior
-								>
-									<a className="btn btn-outline-secondary btn-sm">Add job</a>
-								</Link>
-							</div>
-						</div>
-					</div>
-					{jobs?.data?.length > 0 ? (
-						<ul
-							className="list-group list-group-flush overflow-x-hidden"
-							style={{ maxHeight: "1000px" }}
-						>
-							{jobs?.data?.map((job, index) => (
-								<li key={job._id} className={`list-group-item ${job._id}`}>
-									<div className="float-start">
-										<Link
-											href={`/noadmin/companies/job/${job._id}/update`}
-											passHref
-											legacyBehavior
-										>
-											<a>
-												<span className="badge bg-secondary me-1">{index}</span>
-												{job.title}
-											</a>
-										</Link>
-									</div>
-									<div className="float-end">
-										<Link
-											href={`/job/${job._id}/${job.slug}`}
-											passHref
-											legacyBehavior
-										>
-											<a target="_blank">View</a>
-										</Link>
-									</div>
-								</li>
-							))}
-						</ul>
-					) : (
-						<div className="alert alert-danger rounded-0  m-0 border-0">
-							Nothing&nbsp;found
-						</div>
-					)}
+					<JobList
+						allLink={`/noadmin/companies/read/${company?.data?._id}`}
+						pageText="Jobs"
+						addLink={`/noadmin/companies/job/${company?.data?._id}/create`}
+						searchOn={`/noadmin/companies/read/${company?.data?._id}`}
+						objects={jobs}
+						searchParams={searchParams}
+						handleDraft={draftIt}
+						handlePublish={publishIt}
+						handleTrash={trashIt}
+						handleSchedule={scheduleIt}
+						handleDelete={handleDelete}
+						handleTrashAllFunction={handleTrashAll}
+						handleDeleteAllFunction={handleDeleteAll}
+					/>
 				</div>
 				<Map object={company?.data} />
 			</div>

@@ -1,8 +1,8 @@
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import ParseHtml from "@/layout/parseHtml";
-import Image from "next/image";
 import LessonList from "@/components/admin/courses/lessonlist";
 import { revalidatePath } from "next/cache";
+import Image from "next/image";
 
 async function getCourse(params) {
 	const res = await fetchurl(`/courses${params}`, "GET", "no-cache");
@@ -17,7 +17,9 @@ async function getLessons(params) {
 const ReadCourse = async ({ params, searchParams }) => {
 	const course = await getCourse(`/${params.id}`);
 	const lessons = await getLessons(
-		`?resourceId=${course?.data?._id}&sort=orderingNumber`
+		`?resourceId=${course?.data?._id}&page=${searchParams.page || 1}&limit=${
+			searchParams.limit || 10
+		}&sort=${searchParams.sort || "orderingNumber"}`
 	);
 
 	const draftIt = async (id) => {

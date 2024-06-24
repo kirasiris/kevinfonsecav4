@@ -103,7 +103,7 @@ const CreateAnime = async ({ params, searchParams }) => {
 					commented={true}
 					embedding={false}
 					github_readme={""}
-					category={undefined}
+					category={""}
 					categories={categories?.data}
 					multipleFiles={false}
 					onModel={"Playlist"}

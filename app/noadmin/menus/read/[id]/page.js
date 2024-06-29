@@ -18,7 +18,7 @@ const ReadMenu = async ({ params, searchParams }) => {
 	const pages = await getPages(
 		`?resourceId=${menu?.data?._id}&page=${searchParams.page || 1}&limit=${
 			searchParams.limit || 10
-		}&sort=orderingNumber`
+		}&sort=${searchParams.sort || "orderingNumber"}`
 	);
 
 	const draftIt = async (id) => {

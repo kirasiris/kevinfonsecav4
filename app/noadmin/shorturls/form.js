@@ -1,6 +1,7 @@
 import { fetchurl, getUserIdOnServer } from "@/helpers/setTokenOnServer";
 import FormButtons from "@/components/global/formbuttons";
 import { revalidatePath } from "next/cache";
+import MyTextArea from "@/components/global/myfinaltextarea";
 
 const Form = async ({ params, searchParams, revalidateUrl = `` }) => {
 	const addShortUrl = async (formData) => {
@@ -51,12 +52,14 @@ const Form = async ({ params, searchParams, revalidateUrl = `` }) => {
 				<label htmlFor="text" className="form-label">
 					Text
 				</label>
-				<textarea
+				<MyTextArea
+					auth={undefined}
 					id="text"
 					name="text"
-					className="form-control"
-					placeholder={`Here goes the message`}
-					rows={`3`}
+					onModel="ShortUrl"
+					advancedTextEditor={false}
+					customPlaceholder="No description"
+					defaultValue="No description..."
 				/>
 				<br />
 				<FormButtons />

@@ -99,16 +99,18 @@ const AdminCardHeaderMenu = ({
 					) : (
 						<></>
 					)}
-					<Link
-						href={{
-							pathname: addLink,
-							query: {},
-						}}
-						passHref
-						legacyBehavior
-					>
-						<a className="btn btn-primary btn-sm">Add new</a>
-					</Link>
+					{addLink !== "" && addLink !== undefined && addLink !== null && (
+						<Link
+							href={{
+								pathname: addLink,
+								query: {},
+							}}
+							passHref
+							legacyBehavior
+						>
+							<a className="btn btn-primary btn-sm">Add new</a>
+						</Link>
+					)}
 					<TrashAllModal action={handleTrashAllFunction} />
 					<DeleteAllModal action={handleDeleteAllFunction} />
 				</div>

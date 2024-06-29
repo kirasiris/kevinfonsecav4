@@ -59,6 +59,7 @@ const UpdatePage = async ({ params, searchParams }) => {
 					Text
 				</label>
 				<MyTextArea
+					auth={undefined}
 					id="text"
 					name="text"
 					onModel="Page"
@@ -159,6 +160,9 @@ const UpdatePage = async ({ params, searchParams }) => {
 					categories={[]}
 					multipleFiles={false}
 					onModel={"Page"}
+					files={[]}
+					auth={undefined}
+					token={undefined}
 				/>
 				<br />
 				<FormButtons />

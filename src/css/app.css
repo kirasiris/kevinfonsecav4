@@ -430,11 +430,11 @@ NPROGRESS
 /*****************************
 WAVEFORM
 *****************************/
-#waveform {
+.waveform {
 	cursor: pointer;
 	position: relative;
 }
-#waveform-hover {
+.waveform-hover {
 	position: absolute;
 	left: 0;
 	top: 0;
@@ -447,11 +447,11 @@ WAVEFORM
 	opacity: 0;
 	transition: opacity 0.2s ease;
 }
-#waveform:hover #waveform-hover {
+.waveform:hover .waveform-hover {
 	opacity: 1;
 }
-#waveform-time,
-#waveform-duration {
+.waveform-time,
+.waveform-duration {
 	position: absolute;
 	z-index: 11;
 	top: 50%;
@@ -462,10 +462,10 @@ WAVEFORM
 	padding: 2px;
 	color: #ddd;
 }
-#waveform-time {
+.waveform-time {
 	left: 0;
 }
-#waveform-duration {
+.waveform-duration {
 	right: 0;
 }
 

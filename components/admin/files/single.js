@@ -1,13 +1,13 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { FaFilePdf, FaFileVideo } from "react-icons/fa";
+import { FaFilePdf, FaFileVideo, FaFileAudio } from "react-icons/fa";
 import DeleteModal from "@/components/global/deletemodal";
 
 const Single = ({
 	object = {},
 	handleDelete,
-	objects,
+	objects = [],
 	setObjects,
 	setTotalResults,
 	setSelectedObject,
@@ -60,13 +60,11 @@ const Single = ({
 			</div>
 		);
 	};
-
 	/*
 	 *
 	 * PDF OBJECT
 	 *
 	 */
-
 	const pdfObj = ({ object }) => {
 		return (
 			<div className="col-auto mb-3 text-center">
@@ -138,12 +136,51 @@ const Single = ({
 			</div>
 		);
 	};
+	/*
+	 *
+	 * AUDIO OBJECT
+	 *
+	 */
+	const audObj = ({ object }) => {
+		return (
+			<div className="col-auto mb-3 text-center">
+				<figure
+					title={object.title}
+					onClick={() => {
+						setSelectedObject(object);
+						setShowMediaModel(false);
+					}}
+				>
+					<FaFileAudio style={{ fontSize: "184px" }} />
+				</figure>
+				<div className="btn-group">
+					<Link
+						href={{
+							pathname: `/noadmin/files/update/${object._id}`,
+						}}
+						passHref
+						legacyBehavior
+					>
+						<a className="btn btn-secondary btn-sm">Read&nbsp;more</a>
+					</Link>
+					<DeleteModal
+						id={object._id ? object._id : object._id}
+						action={handleDelete}
+						objects={objects}
+						setObjects={setObjects}
+						setTotalResults={setTotalResults}
+					/>
+				</div>
+			</div>
+		);
+	};
 
 	return (
 		<>
 			{object.format_type === "image" && imgObj({ object })}
 			{object.format_type === "application" && pdfObj({ object })}
 			{object.format_type === "video" && vidObj({ object })}
+			{object.format_type === "audio" && audObj({ object })}
 		</>
 	);
 };

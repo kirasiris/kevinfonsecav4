@@ -102,7 +102,7 @@ const YouTubePage = ({ searchParams, pushTo = true }) => {
 
 	useEffect(() => {
 		const fetchYouTubes = async (id, videoId) => {
-			const res = await fetchurl(`/extras/youtube`);
+			const res = await fetchurl(`/extras/youtube`, "GET", "no-cache");
 			// !id && !videoId && setVideo(res?.data[0]);
 			setVideo(res.data[0]); // Display the most recent video
 			setVideos(res.data); // The set rest of them
@@ -403,7 +403,7 @@ const YouTubePage = ({ searchParams, pushTo = true }) => {
 														controls
 														style={{
 															width: "100%",
-															backgroundColor: "#00000000",
+															backgroundColor: "#000000",
 														}}
 													>
 														<source src={`${video?.audioOnly.url}`} />

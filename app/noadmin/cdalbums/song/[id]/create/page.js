@@ -1,13 +1,14 @@
-import { fetchurl, getAuthTokenOnServer } from "@/helpers/setTokenOnServer";
+import {
+	fetchurl,
+	getAuthTokenOnServer,
+	getUserEmailOnServer,
+	getUserIdOnServer,
+	getUserUsernameOnServer,
+} from "@/helpers/setTokenOnServer";
 import { redirect } from "next/navigation";
 import AdminSidebar from "@/components/admin/myfinaladminsidebar";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
-
-async function getAuthenticatedUser() {
-	const res = await fetchurl(`/auth/me`, "GET", "force-cache");
-	return res;
-}
 
 async function getFiles(params) {
 	const res = await fetchurl(`/files${params}`, "GET", "no-cache");
@@ -16,15 +17,22 @@ async function getFiles(params) {
 
 const CreateSong = async ({ params, searchParams }) => {
 	const token = await getAuthTokenOnServer();
-	const auth = await getAuthenticatedUser();
-	const getFilesData = getFiles(`?page=1&limit=100&sort=-createdAt`);
+	const userId = await getUserIdOnServer();
+	const username = await getUserUsernameOnServer();
+	const email = await getUserEmailOnServer();
 
-	const [files] = await Promise.all([getFilesData]);
+	const auth = {
+		id: userId?.value,
+		username: username?.value,
+		email: email?.value,
+	};
+	const files = await getFiles(`?page=1&limit=100&sort=-createdAt`);
 
 	const addSong = async (formData) => {
 		"use server";
 		const rawFormData = {
 			title: formData.get("title"),
+			sub_title: formData.get("sub_title"),
 			text: formData.get("text"),
 			featured: formData.get("featured"),
 			commented: formData.get("commented"),
@@ -33,10 +41,12 @@ const CreateSong = async ({ params, searchParams }) => {
 			password: formData.get("password"),
 			status: formData.get("status"),
 			duration: formData.get("duration"),
+			averageRating: formData.get("averageRating"),
 			orderingNumber: formData.get("orderingNumber"),
-			files: { video_url: formData.get("file") },
+			files: { avatar: formData.get("file") },
 		};
-		// await fetchurl(`/videos`, "POST", "no-cache", {
+		console.log(rawFormData);
+		// await fetchurl(`/songs`, "POST", "no-cache", {
 		// 	...rawFormData,
 		// 	resourceId: params.id,
 		// 	onModel: "Playlist",
@@ -62,6 +72,17 @@ const CreateSong = async ({ params, searchParams }) => {
 					className="form-control mb-3"
 					placeholder=""
 				/>
+				<label htmlFor="sub_title" className="form-label">
+					Sub title
+				</label>
+				<input
+					id="sub_title"
+					name="sub_title"
+					defaultValue=""
+					type="text"
+					className="form-control mb-3"
+					placeholder=""
+				/>
 				<label htmlFor="text" className="form-label">
 					Lyrics
 				</label>
@@ -69,7 +90,7 @@ const CreateSong = async ({ params, searchParams }) => {
 					auth={auth}
 					id="text"
 					name="text"
-					onModel="Lesson"
+					onModel="Song"
 					advancedTextEditor={true}
 					customPlaceholder="No description"
 					defaultValue="No description..."
@@ -89,6 +110,23 @@ const CreateSong = async ({ params, searchParams }) => {
 						/>
 					</div>
 					<div className="col">
+						<label htmlFor="averageRating" className="form-label">
+							Average Rating
+						</label>
+						<select
+							id="averageRating"
+							name="averageRating"
+							defaultValue={5}
+							className="form-control"
+						>
+							<option value={1}>1</option>
+							<option value={2}>2</option>
+							<option value={3}>3</option>
+							<option value={4}>4</option>
+							<option value={5}>5</option>
+						</select>
+					</div>
+					<div className="col">
 						<label htmlFor="orderingNumber" className="form-label">
 							Order
 						</label>
@@ -96,7 +134,7 @@ const CreateSong = async ({ params, searchParams }) => {
 							id="orderingNumber"
 							name="orderingNumber"
 							defaultValue={1}
-							type="text"
+							type="number"
 							className="form-control mb-3"
 							placeholder="Here goes the #number of object within list"
 						/>
@@ -118,7 +156,7 @@ const CreateSong = async ({ params, searchParams }) => {
 					category={undefined}
 					categories={[]}
 					multipleFiles={false}
-					onModel={"Lesson"}
+					onModel={"Song"}
 					files={files}
 					auth={auth}
 					token={token}

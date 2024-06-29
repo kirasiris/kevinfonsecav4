@@ -18,6 +18,7 @@ const MyTextArea = ({
 	onModel = "Blog",
 	advancedTextEditor = true,
 	customPlaceholder = "Share something new. Now with #hashtags support, YAY!!!",
+	insertClasses = true,
 }) => {
 	const [model, setModel] = useState(he.decode(defaultValue));
 	const handleModelChange = (event) => {
@@ -75,6 +76,7 @@ const MyTextArea = ({
 					model={model}
 					onModelChange={handleModelChange}
 					config={{
+						useClasses: insertClasses,
 						documentReady: false,
 						placeholderText: customPlaceholder,
 						imageUpload: true,
@@ -107,9 +109,9 @@ const MyTextArea = ({
 							"image.beforeUpload": async (images) => {
 								console.log("Auth from image.beforeUpload event", auth);
 								const data = new FormData();
-								data.append("userId", auth?.data?._id);
-								data.append("username", auth?.data?.username);
-								data.append("userEmail", auth?.data?.email);
+								data.append("userId", auth?.id);
+								data.append("username", auth?.username);
+								data.append("userEmail", auth?.email);
 								data.append("onModel", onModel);
 								data.append("file", images[0]);
 								await axios.put(
@@ -162,9 +164,9 @@ const MyTextArea = ({
 							"video.beforeUpload": async (videos) => {
 								console.log("Auth from video.beforeUpload event", auth);
 								const data = new FormData();
-								data.append("userId", auth?.data?._id);
-								data.append("username", auth?.data?.username);
-								data.append("userEmail", auth?.data?.email);
+								data.append("userId", auth?.id);
+								data.append("username", auth?.username);
+								data.append("userEmail", auth?.email);
 								data.append("onModel", onModel);
 								data.append("file", videos[0]);
 								await axios.put(

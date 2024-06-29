@@ -1,5 +1,6 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import Modal from "react-bootstrap/Modal";
 import { FaMicrophone, FaMicrophoneSlash, FaStop } from "react-icons/fa";
 import WaveSurfer from "wavesurfer.js";
@@ -10,7 +11,6 @@ import {
 	cancelAudio,
 } from "@/helpers/formatConvertions";
 import Waveform from "@/layout/waveform";
-import axios from "axios";
 import UseProgress from "./useprogress";
 
 const RecordAudioModal = ({
@@ -70,11 +70,11 @@ const RecordAudioModal = ({
 		const finalAudio = await stopAudio();
 		setAudioRecordingUrl(finalAudio.blobUrl);
 		const res = await axios.put(
-			`/uploads/uploadObject`,
+			`https://localhost:5000/api/v1/uploads/uploadObject`,
 			{
-				userId: auth?.user._id,
-				username: auth?.user.username,
-				userEmail: auth?.user.email,
+				userId: auth?.id,
+				username: auth?.username,
+				userEmail: auth?.email,
 				onModel: onModel,
 				file: finalAudio.blobFile,
 			},

@@ -1,14 +1,15 @@
-import { fetchurl } from "@/helpers/setTokenOnServer";
+import {
+	fetchurl,
+	// getAuthTokenOnServer,
+	getUserEmailOnServer,
+	getUserIdOnServer,
+	getUserUsernameOnServer,
+} from "@/helpers/setTokenOnServer";
 import { redirect } from "next/navigation";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import Image from "next/image";
 // import Plyr from "plyr";
 import FormButtons from "@/components/global/formbuttons";
-
-async function getAuthenticatedUser() {
-	const res = await fetchurl(`/auth/me`, "GET", "force-cache");
-	return res;
-}
 
 async function getFile(params) {
 	const res = await fetchurl(`/files${params}`, "GET", "no-cache");
@@ -18,7 +19,15 @@ async function getFile(params) {
 const UpdateFile = async ({ params, searchParams }) => {
 	const file = await getFile(`/${params.id}`);
 
-	const auth = await getAuthenticatedUser();
+	const userId = await getUserIdOnServer();
+	const username = await getUserUsernameOnServer();
+	const email = await getUserEmailOnServer();
+
+	const auth = {
+		id: userId?.value,
+		username: username?.value,
+		email: email?.value,
+	};
 
 	const upgradeFile = async (formData) => {
 		"use server";
@@ -70,7 +79,7 @@ const UpdateFile = async ({ params, searchParams }) => {
 			>
 				<p>
 					Alternative text - include a link{" "}
-					<a href="http://africau.edu/images/default/sample.pdf">to the PDF!</a>
+					<a href={file?.data?.location?.secure_location}>to the PDF!</a>
 				</p>
 			</object>
 		);

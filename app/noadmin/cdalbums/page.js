@@ -104,8 +104,8 @@ const AdminCDAlbumsIndex = async ({ params, searchParams }) => {
 				draftLink="/noadmin/cdalbums/draft"
 				scheduledLink="/noadmin/cdalbums/scheduled"
 				trashedLink="/noadmin/cdalbums/trashed"
-				categoriesLink=""
-				categoryType=""
+				categoriesLink="/noadmin/cdalbums/categories"
+				categoryType="song"
 			/>
 			<div className="card rounded-0">
 				<List

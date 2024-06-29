@@ -163,39 +163,21 @@ a.blog-relative-time-status__link {
 /* ---------------------------------------------------
   DROPZONE
 ----------------------------------------------------- */
-.dropzone-root {
-	display: flex;
-	flex-direction: column;
-	justify-content: space-around;
-	align-items: center;
-	border-style: dashed;
-}
-
 .dropzone {
-	background-color: white;
-	border: none;
-	width: 50vw;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	cursor: pointer;
+	padding: 20px;
+	border-width: 2px;
+	border-radius: 2px;
+	border-style: dashed;
+	background-color: #fafafa;
+	color: #bdbdbd;
+	outline: none;
+	transition: border 0.24s ease-in-out;
 }
 
 .dropzone-icons {
 	margin: 5vh auto 5vh;
 	text-align: center;
-}
-
-.dropzone-image {
-}
-
-.dropzone-paragraph {
-}
-
-.dropzone-upload {
-	width: 50vw;
-}
-
-.dropzone-upload:hover {
-	background-color: gainsboro;
 }

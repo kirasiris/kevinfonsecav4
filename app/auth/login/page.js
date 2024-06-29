@@ -1,8 +1,10 @@
 import {
 	fetchurl,
 	setAuthTokenOnServer,
-	setUserIdOnServer,
 	setUserStripeChargesEnabled,
+	setUserIdOnServer,
+	setUserUsernameOnServer,
+	setUserEmailOnServer,
 } from "@/helpers/setTokenOnServer";
 import { redirect } from "next/navigation";
 import FormButtons from "@/components/global/formbuttons";
@@ -46,6 +48,8 @@ const Login = async ({ params, searchParams }) => {
 			loadUser?.data?.stripe?.stripeChargesEnabled
 		);
 		await setUserIdOnServer(loadUser?.data?._id);
+		await setUserUsernameOnServer(loadUser?.data?.username);
+		await setUserEmailOnServer(loadUser?.data?.email);
 		// alert("Login was a success");
 		searchParams?.returnpage
 			? redirect(searchParams.returnpage)

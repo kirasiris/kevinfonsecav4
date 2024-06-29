@@ -1,15 +1,25 @@
-import { fetchurl } from "@/helpers/setTokenOnServer";
+import {
+	fetchurl,
+	// getAuthTokenOnServer,
+	getUserEmailOnServer,
+	getUserIdOnServer,
+	getUserUsernameOnServer,
+} from "@/helpers/setTokenOnServer";
 import { redirect } from "next/navigation";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
 
-async function getAuthenticatedUser() {
-	const res = await fetchurl(`/auth/me`, "GET", "force-cache");
-	return res;
-}
-
 const CreateChangelog = async ({ params, searchParams }) => {
-	const auth = await getAuthenticatedUser();
+	const userId = await getUserIdOnServer();
+	const username = await getUserUsernameOnServer();
+	const email = await getUserEmailOnServer();
+
+	const auth = {
+		id: userId?.value,
+		username: username?.value,
+		email: email?.value,
+	};
+
 	const addChangelog = async (formData) => {
 		"use server";
 		const rawFormData = {

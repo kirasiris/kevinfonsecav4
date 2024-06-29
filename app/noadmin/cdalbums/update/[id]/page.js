@@ -1,11 +1,17 @@
-import { fetchurl, getAuthTokenOnServer } from "@/helpers/setTokenOnServer";
+import {
+	fetchurl,
+	getAuthTokenOnServer,
+	getUserEmailOnServer,
+	getUserIdOnServer,
+	getUserUsernameOnServer,
+} from "@/helpers/setTokenOnServer";
 import { redirect } from "next/navigation";
 import AdminSidebar from "@/components/admin/myfinaladminsidebar";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
 
-async function getAuthenticatedUser() {
-	const res = await fetchurl(`/auth/me`, "GET", "force-cache");
+async function getCategories(params) {
+	const res = await fetchurl(`/categories${params}`, "GET", "no-cache");
 	return res;
 }
 
@@ -18,7 +24,18 @@ const UpdateCDAlbum = async ({ params, searchParams }) => {
 	const cdalbum = await getCDAlbum(`/${params.id}`);
 
 	const token = await getAuthTokenOnServer();
-	const auth = await getAuthenticatedUser();
+	const userId = await getUserIdOnServer();
+	const username = await getUserUsernameOnServer();
+	const email = await getUserEmailOnServer();
+
+	const auth = {
+		id: userId?.value,
+		username: username?.value,
+		email: email?.value,
+	};
+
+	// FILES
+	const categories = await getCategories(`?categoryType=album`);
 
 	const upgradeCDAlbum = async (formData) => {
 		"use server";
@@ -71,7 +88,7 @@ const UpdateCDAlbum = async ({ params, searchParams }) => {
 			</div>
 			<div className="col-lg-3">
 				<AdminSidebar
-					displayCategoryField={false}
+					displayCategoryField={true}
 					displayAvatar={false}
 					avatar={undefined}
 					status={cdalbum?.data?.status}
@@ -81,8 +98,8 @@ const UpdateCDAlbum = async ({ params, searchParams }) => {
 					commented={cdalbum?.data?.commented.toString()}
 					embedding={false}
 					github_readme={""}
-					category={undefined}
-					categories={[]}
+					category={cdalbum?.data?.category?._id || cdalbum?.data?.category}
+					categories={categories?.data}
 					multipleFiles={false}
 					onModel={"Playlist"}
 					files={[]}

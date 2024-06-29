@@ -11,6 +11,7 @@ import { GoMute, GoUnmute } from "react-icons/go";
  *
  */
 const Waveform = ({
+	id = 0,
 	src = "",
 	mediaTitle = "",
 	mediaAuthor = "",
@@ -19,7 +20,7 @@ const Waveform = ({
 	styleGiven = {},
 }) => {
 	const [isPlaying, setIsPlaying] = useState(false);
-	const [isMute, setItMute] = useState(true);
+	const [isMute, setItMute] = useState(false);
 	const [myWaveSurfer, setMyWaveSurfer] = useState(null);
 
 	const formatTime = (seconds) => {
@@ -31,7 +32,7 @@ const Waveform = ({
 
 	useEffect(() => {
 		const wavesurfer = WaveSurfer.create({
-			container: "#waveform",
+			container: `#waveform-${id}`,
 			waveColor: "#333",
 			progressColor: "#f50",
 			cursorColor: "#f50",
@@ -49,13 +50,13 @@ const Waveform = ({
 		wavesurfer.load(src);
 
 		// Get initial duraction of source
-		const timeEl = document.querySelector("#waveform-time");
+		const timeEl = document.querySelector(`#waveform-time-${id}`);
 		wavesurfer.on("timeupdate", (currentTime) => {
 			timeEl.textContent = formatTime(currentTime);
 		});
 
 		// Get duration of source
-		const durationEl = document.querySelector("#waveform-duration");
+		const durationEl = document.querySelector(`#waveform-duration-${id}`);
 		wavesurfer.on("decode", (finalDuration) => {
 			durationEl.textContent = formatTime(finalDuration);
 		});
@@ -66,8 +67,8 @@ const Waveform = ({
 		});
 
 		// Hover effect
-		const hover = document.querySelector("#waveform-hover");
-		const waveform = document.querySelector("#waveform");
+		const hover = document.querySelector(`#waveform-hover-${id}`);
+		const waveform = document.querySelector(`#waveform-${id}`);
 		waveform.addEventListener(
 			"pointermove",
 			(e) => (hover.style.width = `${e.offsetX}px`)
@@ -97,17 +98,17 @@ const Waveform = ({
 	};
 
 	const makeMute = () => {
-		myWaveSurfer.toggleMute();
-		setItMute(isMute ? false : true);
+		myWaveSurfer.setMuted(!isMute ? true : false);
+		setItMute(!isMute ? true : false);
 	};
 
 	return (
 		<div className="row">
 			<div className="col-lg-12">
-				<div id="waveform" style={styleGiven}>
-					<div id="waveform-time" />
-					<div id="waveform-duration" />
-					<div id="waveform-hover" />
+				<div className="waveform" id={`waveform-${id}`} style={styleGiven}>
+					<div className="waveform-time" id={`waveform-time-${id}`} />
+					<div className="waveform-duration" id={`waveform-duration-${id}`} />
+					<div className="waveform-hover" id={`waveform-hover-${id}`} />
 				</div>
 			</div>
 			<div className="btn-group">

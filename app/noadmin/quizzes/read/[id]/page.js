@@ -1,7 +1,8 @@
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import ParseHtml from "@/layout/parseHtml";
+import QuestionList from "@/components/admin/quizzes/questionlist";
+import { revalidatePath } from "next/cache";
 import Image from "next/image";
-import Link from "next/link";
 
 async function getQuiz(params) {
 	const res = await fetchurl(`/quizzes${params}`, "GET", "no-cache");
@@ -16,54 +17,59 @@ async function getQuestions(params) {
 const ReadQuiz = async ({ params, searchParams }) => {
 	const quiz = await getQuiz(`/${params.id}`);
 	const questions = await getQuestions(
-		`?resourceId=${quiz?.data?._id}&sort=orderingNumber`
+		`?resourceId=${quiz?.data?._id}&page=${searchParams.page || 1}&limit=${
+			searchParams.limit || 10
+		}&sort=${searchParams.sort || "orderingNumber"}`
 	);
 
-	// const updateOrder = async (e, index) => {
-	// 	e.dataTransfer.setData("itemIndex", index.toString());
-	// };
+	const draftIt = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/questions/${id}/draftit`, "PUT", "no-cache");
+		revalidatePath(`/noadmin/quizzes/read/${params.id}`);
+	};
 
-	// const updateDrop = async (e, index) => {
-	// 	const movingItemIndex = e.dataTransfer.getData("itemIndex");
-	// 	const targetItemIndex = index;
+	const publishIt = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/questions/${id}/publishit`, "PUT", "no-cache");
+		revalidatePath(`/noadmin/quizzes/read/${params.id}`);
+	};
 
-	// 	let allQuestions = questions; // Create a copy of the questions array
+	const trashIt = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/questions/${id}/trashit`, "PUT", "no-cache");
+		revalidatePath(`/noadmin/quizzes/read/${params.id}`);
+	};
 
-	// 	let movingItem = allQuestions[movingItemIndex];
-	// 	let targetItem = allQuestions[targetItemIndex];
+	const scheduleIt = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/questions/${id}/scheduleit`, "PUT", "no-cache");
+		revalidatePath(`/noadmin/quizzes/read/${params.id}`);
+	};
 
-	// 	if (movingItem.orderingNumber !== targetItem.orderingNumber) {
-	// 		// Only update the ordering numbers if they are different
+	const handleDelete = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/questions/${id}/permanently`, "DELETE", "no-cache");
+		revalidatePath(`/noadmin/quizzes/read/${params.id}`);
+	};
 
-	// 		// Switch the ordering numbers of the moving item and the target item
-	// 		const tempOrderingNumber = movingItem.orderingNumber;
-	// 		movingItem.orderingNumber = targetItem.orderingNumber;
-	// 		targetItem.orderingNumber = tempOrderingNumber;
+	const handleTrashAll = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/pages/deleteall`, "PUT", "no-cache");
+		revalidatePath(`/noadmin/quizzes/read/${params.id}`);
+	};
 
-	// 		// Update the ordering numbers in the backend
-	// 		await fetchurl(
-	// 			`/questions/${movingItem._id}/updateorder`,
-	// 			"PUT",
-	// 			"no-cache",
-	// 			{
-	// 				index: movingItem.orderingNumber, // Update the moving item's ordering number
-	// 			}
-	// 		);
-	// 		await fetchurl(
-	// 			`/questions/${targetItem._id}/updateorder`,
-	// 			"PUT",
-	// 			"no-cache",
-	// 			{
-	// 				index: targetItem.orderingNumber, // Update the target item's ordering number
-	// 			}
-	// 		);
-	// 	}
-
-	// 	allQuestions.splice(movingItemIndex, 1); // Remove the moving item from the original position
-	// 	allQuestions.splice(targetItemIndex, 0, movingItem); // Insert the moving item at the target position
-
-	// 	setQuestions([...questions], allQuestions);
-	// };
+	const handleDeleteAll = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/pages/deleteall/permanently`, "DELETE", "no-cache");
+		revalidatePath(`/noadmin/quizzes/read/${params.id}`);
+	};
 
 	return (
 		<div className="row">
@@ -75,73 +81,21 @@ const ReadQuiz = async ({ params, searchParams }) => {
 					</div>
 				</div>
 				<div className="card rounded-0">
-					<div className="card-header">
-						<div className="float-start">
-							<div className="d-flex align-items-center">
-								<p className="mt-2 mb-0">Questions</p>
-							</div>
-						</div>
-						<div className="float-end my-1">
-							<div className="btn-group">
-								<Link
-									href={{
-										pathname: `/noadmin/quizzes/question/${quiz?.data?._id}/create`,
-										query: {},
-									}}
-									passHref
-									legacyBehavior
-								>
-									<a className="btn btn-outline-secondary btn-sm">
-										Add question
-									</a>
-								</Link>
-							</div>
-						</div>
-					</div>
-					{questions?.data?.length > 0 ? (
-						<ul
-							className="list-group list-group-flush overflow-x-hidden"
-							style={{ maxHeight: "1000px" }}
-							// onDragOver={(e) => e.preventDefault()}
-						>
-							{questions?.data?.map((question, index) => (
-								<li
-									key={question._id}
-									className={`list-group-item ${question.orderingNumber}`}
-									draggable
-									// onDragStart={(e) => updateOrder(e, index)}
-									// onDrop={(e) => updateDrop(e, index)}
-								>
-									<div className="float-start">
-										<Link
-											href={`/question/${question._id}/${question.slug}`}
-											passHref
-											legacyBehavior
-										>
-											<a target="_blank">
-												<span className="badge bg-secondary me-1">
-													{question.orderingNumber}
-												</span>
-												{question.title}
-											</a>
-										</Link>
-									</div>
-									<div className="float-end">
-										<span className="badge bg-info me-1">
-											Correct Answer: {question.correctAnswer}
-										</span>
-										<span className="badge bg-secondary me-1">
-											{question.onModel}
-										</span>
-									</div>
-								</li>
-							))}
-						</ul>
-					) : (
-						<div className="alert alert-danger rounded-0  m-0 border-0">
-							Nothing found
-						</div>
-					)}
+					<QuestionList
+						allLink={`/noadmin/quizzes/read/${quiz?.data?._id}`}
+						pageText="Quizzes"
+						addLink={`/noadmin/quizzes/page/${quiz?.data?._id}/create`}
+						searchOn={`/noadmin/quizzes/read/${quiz?.data?._id}`}
+						objects={questions}
+						searchParams={searchParams}
+						handleDraft={draftIt}
+						handlePublish={publishIt}
+						handleTrash={trashIt}
+						handleSchedule={scheduleIt}
+						handleDelete={handleDelete}
+						handleTrashAllFunction={handleTrashAll}
+						handleDeleteAllFunction={handleDeleteAll}
+					/>
 				</div>
 			</div>
 			<div className="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-xs-12 d-none d-sm-none d-md-none d-lg-block dm-xl-block">

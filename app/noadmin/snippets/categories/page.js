@@ -148,6 +148,7 @@ const AdminSnippetCategoriesIndex = async ({ params, searchParams }) => {
 							Text
 						</label>
 						<MyTextArea
+							auth={undefined}
 							id="text"
 							name="text"
 							customPlaceholder="Type something..."

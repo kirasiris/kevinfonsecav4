@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import Image from "next/image";
+import { FaFilePdf, FaFileVideo, FaFileAudio } from "react-icons/fa";
 import { Modal } from "react-bootstrap";
 import List from "./files/list";
 
@@ -15,7 +16,101 @@ const AdminFeaturedImage = ({
 	token = null,
 }) => {
 	const [showMediaModal, setShowMediaModel] = useState(false);
-
+	console.log("Admin Featured Image", selectedFile?.title);
+	/*
+	 *
+	 * IMAGE OBJECT
+	 *
+	 */
+	const imgObj = () => {
+		return (
+			<figure
+				onClick={() => {
+					// setSelectedFile(avatar);
+					setShowMediaModel(true);
+				}}
+			>
+				<Image
+					src={
+						selectedFile?.location?.secure_location ||
+						avatar?.location?.secure_location ||
+						"https://static.vecteezy.com/system/resources/previews/005/337/799/original/icon-image-not-found-free-vector.jpg"
+					}
+					alt="xD"
+					width={`558`}
+					height={`558`}
+					style={{ maxWidth: "1920px", maxHeight: "1920px" }}
+					priority={true}
+				/>
+			</figure>
+		);
+	};
+	/*
+	 *
+	 * PDF OBJECT
+	 *
+	 */
+	const pdfObj = () => {
+		return (
+			<figure
+				onClick={() => {
+					// setSelectedFile(avatar);
+					setShowMediaModel(true);
+				}}
+			>
+				<FaFilePdf style={{ fontSize: "184px" }} />
+			</figure>
+		);
+	};
+	/*
+	 *
+	 * VIDEO OBJECT
+	 *
+	 */
+	const vidObj = () => {
+		return (
+			<figure
+				onClick={() => {
+					// setSelectedFile(avatar);
+					setShowMediaModel(true);
+				}}
+			>
+				<FaFileVideo style={{ fontSize: "184px" }} />
+			</figure>
+		);
+	};
+	/*
+	 *
+	 * AUDIO OBJECT
+	 *
+	 */
+	const audObj = () => {
+		return (
+			<figure
+				onClick={() => {
+					// setSelectedFile(avatar);
+					setShowMediaModel(true);
+				}}
+			>
+				{/* <FaFileAudio style={{ fontSize: "184px" }} /> */}
+				<audio
+					controls
+					style={{
+						width: "100%",
+						backgroundColor: "#000000",
+					}}
+				>
+					<source
+						src={
+							selectedFile?.location?.secure_location ||
+							avatar?.location?.secure_location ||
+							"https://static.vecteezy.com/system/resources/previews/005/337/799/original/icon-image-not-found-free-vector.jpg"
+						}
+					/>
+				</audio>
+			</figure>
+		);
+	};
 	return (
 		<>
 			<div className="d-grid gap-2">
@@ -26,31 +121,10 @@ const AdminFeaturedImage = ({
 				>
 					Featured Image
 				</button>
-				<figure>
-					<Image
-						src={
-							selectedFile?.location?.secure_location ||
-							avatar?.location?.secure_location ||
-							"https://static.vecteezy.com/system/resources/previews/005/337/799/original/icon-image-not-found-free-vector.jpg"
-						}
-						alt="xD"
-						width="558"
-						height="558"
-						style={{ maxWidth: "1920px", maxHeight: "1920px" }}
-						priority={true}
-						onClick={() => setShowMediaModel(true)}
-					/>
-				</figure>
-				{/* <figure>
-					<video title="" controls style={{ maxWidth: "100%" }}>
-						<source
-							src={
-								selectedFile?.location?.secure_location ||
-								avatar?.location?.secure_location
-							}
-						></source>
-					</video>
-				</figure> */}
+				{avatar.format_type === "image" && imgObj()}
+				{avatar.format_type === "application" && pdfObj()}
+				{avatar.format_type === "video" && vidObj()}
+				{avatar.format_type === "audio" && audObj()}
 			</div>
 			<Modal
 				show={showMediaModal}

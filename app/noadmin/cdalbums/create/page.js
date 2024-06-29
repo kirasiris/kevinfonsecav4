@@ -1,30 +1,39 @@
-import { fetchurl, getAuthTokenOnServer } from "@/helpers/setTokenOnServer";
+import {
+	fetchurl,
+	getAuthTokenOnServer,
+	getUserEmailOnServer,
+	getUserIdOnServer,
+	getUserUsernameOnServer,
+} from "@/helpers/setTokenOnServer";
 import { redirect } from "next/navigation";
 import AdminSidebar from "@/components/admin/myfinaladminsidebar";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
-
-async function getAuthenticatedUser() {
-	const res = await fetchurl(`/auth/me`, "GET", "force-cache");
-	return res;
-}
 
 // async function getFiles(params) {
 // 	const res = await fetchurl(`/files${params}`, "GET", "no-cache");
 // 	return res;
 // }
 
-// async function getCategories(params) {
-// 	const res = await fetchurl(`/categories${params}`, "GET", "no-cache");
-// 	return res;
-// }
+async function getCategories(params) {
+	const res = await fetchurl(`/categories${params}`, "GET", "no-cache");
+	return res;
+}
 
 const CreateCDAlbum = async ({ params, searchParams }) => {
 	const token = await getAuthTokenOnServer();
-	const auth = await getAuthenticatedUser();
+	const userId = await getUserIdOnServer();
+	const username = await getUserUsernameOnServer();
+	const email = await getUserEmailOnServer();
+
+	const auth = {
+		id: userId?.value,
+		username: username?.value,
+		email: email?.value,
+	};
 
 	// const files = await getFiles(`?page=1&limit=100&sort=-createdAt`);
-	// const categories = await getCategories(`?categoryType=playlist`);
+	const categories = await getCategories(`?categoryType=album`);
 
 	const addCDAlbum = async (formData) => {
 		"use server";
@@ -77,7 +86,7 @@ const CreateCDAlbum = async ({ params, searchParams }) => {
 			</div>
 			<div className="col-lg-3">
 				<AdminSidebar
-					displayCategoryField={false}
+					displayCategoryField={true}
 					displayAvatar={false}
 					// avatar={files?.selected?._id}
 					status="draft"
@@ -88,7 +97,7 @@ const CreateCDAlbum = async ({ params, searchParams }) => {
 					embedding={false}
 					github_readme={""}
 					category={undefined}
-					categories={[]}
+					categories={categories?.data}
 					multipleFiles={false}
 					onModel={"Playlist"}
 					files={[]}

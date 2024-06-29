@@ -53,7 +53,7 @@ const nextConfig = {
 					},
 					{
 						key: `kevins-web-security`,
-						value: `Do not ever try to paste anything within console of your browser!`,
+						value: `Do not ever try to paste anything within the console of your browser!`,
 					},
 					{
 						key: `kevins-web-facts`,

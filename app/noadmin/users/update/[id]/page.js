@@ -1,4 +1,10 @@
-import { fetchurl } from "@/helpers/setTokenOnServer";
+import {
+	fetchurl,
+	// getAuthTokenOnServer,
+	getUserEmailOnServer,
+	getUserIdOnServer,
+	getUserUsernameOnServer,
+} from "@/helpers/setTokenOnServer";
 import { redirect } from "next/navigation";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
@@ -11,7 +17,16 @@ async function getUsers(params) {
 const UpdateUser = async ({ params, searchParams }) => {
 	const user = await getUsers(`/${params.id}`);
 	// token
-	// auth
+	const userId = await getUserIdOnServer();
+	const username = await getUserUsernameOnServer();
+	const email = await getUserEmailOnServer();
+
+	const auth = {
+		id: userId?.value,
+		username: username?.value,
+		email: email?.value,
+	};
+
 	const users = await getUsers(`?isEmailConfirmed=true`);
 
 	const upgradeUser = async (formData) => {
@@ -266,7 +281,7 @@ const UpdateUser = async ({ params, searchParams }) => {
 							className="form-control"
 						>
 							{users.data
-								.filter((excludedUser) => excludedUser._id !== user.data._id)
+								.filter((excludedUser) => excludedUser._id !== auth?.id)
 								.map((user) => (
 									<option key={user._id} value={user._id}>
 										{user.username}

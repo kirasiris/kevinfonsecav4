@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import AdminCardHeaderMenu from "@/components/admin/admincardheadermenu";
-import Single from "./chaptersingle";
+import Single from "./songsingle";
 import NumericPagination from "@/layout/numericpagination";
 import NothingFoundAlert from "@/layout/nothingfoundalert";
 import ErrorPage from "@/layout/errorpage";
@@ -147,14 +147,11 @@ const SongList = ({
 			/>
 			{objects?.data?.length > 0 ? (
 				<>
-					<ul
-						className="list-group list-group-flush overflow-x-hidden"
-						style={{ maxHeight: "1000px" }}
-					>
-						{objects?.data?.map((menu) => (
+					<ul className="list-group list-group-flush">
+						{objects?.data?.map((song) => (
 							<Single
-								key={menu._id}
-								object={menu}
+								key={song._id}
+								object={song}
 								handleDraft={handleDraft}
 								handlePublish={handlePublish}
 								handleTrash={handleTrash}

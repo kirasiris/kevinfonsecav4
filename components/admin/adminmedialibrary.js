@@ -1,4 +1,10 @@
-import { fetchurl, getAuthTokenOnServer } from "@/helpers/setTokenOnServer";
+import {
+	fetchurl,
+	getAuthTokenOnServer,
+	getUserEmailOnServer,
+	getUserIdOnServer,
+	getUserUsernameOnServer,
+} from "@/helpers/setTokenOnServer";
 import List from "../admin/files/list";
 
 async function getAuthenticatedUser() {
@@ -23,7 +29,16 @@ const AdminMediaLibrary = async ({
 	handleDeleteAllFunction,
 }) => {
 	const token = await getAuthTokenOnServer();
-	const auth = await getAuthenticatedUser();
+	const userId = await getUserIdOnServer();
+	const username = await getUserUsernameOnServer();
+	const email = await getUserEmailOnServer();
+
+	const auth = {
+		id: userId?.value,
+		username: username?.value,
+		email: email?.value,
+	};
+
 	const files = await getFiles(
 		`?page=${searchParams.page || 1}&limit=${searchParams.limit || 50}&sort=${
 			searchParams.sort || "-createdAt"

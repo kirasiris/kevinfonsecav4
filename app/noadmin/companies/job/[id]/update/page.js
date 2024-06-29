@@ -1,13 +1,14 @@
-import { fetchurl, getAuthTokenOnServer } from "@/helpers/setTokenOnServer";
+import {
+	fetchurl,
+	getAuthTokenOnServer,
+	getUserEmailOnServer,
+	getUserIdOnServer,
+	getUserUsernameOnServer,
+} from "@/helpers/setTokenOnServer";
 import { redirect } from "next/navigation";
 import AdminSidebar from "@/components/admin/myfinaladminsidebar";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
-
-async function getAuthenticatedUser() {
-	const res = await fetchurl(`/auth/me`, "GET", "force-cache");
-	return res;
-}
 
 async function getJob(params) {
 	const res = await fetchurl(`/jobs${params}`, "GET", "no-cache");
@@ -18,7 +19,16 @@ const UpdateJob = async ({ params, searchParams }) => {
 	const job = await getJob(`/${params.id}`);
 
 	const token = await getAuthTokenOnServer();
-	const auth = await getAuthenticatedUser();
+	const userId = await getUserIdOnServer();
+	const username = await getUserUsernameOnServer();
+	const email = await getUserEmailOnServer();
+
+	const auth = {
+		id: userId?.value,
+		username: username?.value,
+		email: email?.value,
+	};
+
 	// Redirect if not company
 	// !auth?.data?.hasCompany && redirect(`/noadmin/companies`);
 

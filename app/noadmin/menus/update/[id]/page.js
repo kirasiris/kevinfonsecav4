@@ -42,7 +42,7 @@ const UpdateMenu = async ({ params, searchParams }) => {
 					Text
 				</label>
 				<MyTextArea
-					auth={{}}
+					auth={undefined}
 					id="text"
 					name="text"
 					onModel="Menu"
@@ -79,6 +79,9 @@ const UpdateMenu = async ({ params, searchParams }) => {
 					categories={[]}
 					multipleFiles={false}
 					onModel={"Menu"}
+					files={[]}
+					auth={undefined}
+					token={undefined}
 				/>
 				<br />
 				<FormButtons />

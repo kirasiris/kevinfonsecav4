@@ -1,12 +1,13 @@
-import { fetchurl } from "@/helpers/setTokenOnServer";
+import {
+	fetchurl,
+	// getAuthTokenOnServer,
+	getUserEmailOnServer,
+	getUserIdOnServer,
+	getUserUsernameOnServer,
+} from "@/helpers/setTokenOnServer";
 import { redirect } from "next/navigation";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
-
-async function getAuthenticatedUser() {
-	const res = await fetchurl(`/auth/me`, "GET", "force-cache");
-	return res;
-}
 
 async function getUsers(params) {
 	const res = await fetchurl(`/users${params}`, "GET", "no-cache");
@@ -14,7 +15,16 @@ async function getUsers(params) {
 }
 
 const CreateUser = async ({ params, searchParams }) => {
-	const auth = await getAuthenticatedUser();
+	const userId = await getUserIdOnServer();
+	const username = await getUserUsernameOnServer();
+	const email = await getUserEmailOnServer();
+
+	const auth = {
+		id: userId?.value,
+		username: username?.value,
+		email: email?.value,
+	};
+
 	const users = await getUsers(`?isEmailConfirmed=true`);
 
 	const addUser = async (formData) => {
@@ -281,7 +291,7 @@ const CreateUser = async ({ params, searchParams }) => {
 							className="form-control"
 						>
 							{users.data
-								.filter((excludedUser) => excludedUser._id !== auth.data._id)
+								.filter((excludedUser) => excludedUser._id !== auth?.id)
 								.map((user) => (
 									<option key={user._id} value={user._id}>
 										{user.username}

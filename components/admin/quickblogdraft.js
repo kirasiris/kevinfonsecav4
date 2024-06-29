@@ -1,7 +1,7 @@
 "use client";
 import axios from "axios";
 import { useState } from "react";
-import MyTextArea from "../global/mytextarea";
+import MyTextArea from "../global/myfinaltextarea";
 
 const QuickBlogDraft = () => {
 	const [quickBlogDraftData, setQuickDraftData] = useState({

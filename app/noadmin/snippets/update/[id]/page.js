@@ -74,7 +74,7 @@ const UpdateSnippet = async ({ params, searchParams }) => {
 						multipleFiles={false}
 						onModel={"Snippet"}
 						// files={files}
-						files={undefined}
+						files={[]}
 						auth={undefined}
 						token={undefined}
 					/>

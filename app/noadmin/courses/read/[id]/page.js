@@ -75,52 +75,6 @@ const ReadCourse = async ({ params, searchParams }) => {
 		revalidatePath(`/noadmin/courses/read/${params.id}`);
 	};
 
-	// const updateOrder = async (e, index) => {
-	// 	e.dataTransfer.setData("itemIndex", index.toString());
-	// };
-
-	// const updateDrop = async (e, index) => {
-	// 	const movingItemIndex = e.dataTransfer.getData("itemIndex");
-	// 	const targetItemIndex = index;
-
-	// 	let allLessons = lessons; // Create a copy of the lessons array
-
-	// 	let movingItem = allLessons[movingItemIndex];
-	// 	let targetItem = allLessons[targetItemIndex];
-
-	// 	if (movingItem.orderingNumber !== targetItem.orderingNumber) {
-	// 		// Only update the ordering numbers if they are different
-
-	// 		// Switch the ordering numbers of the moving item and the target item
-	// 		const tempOrderingNumber = movingItem.orderingNumber;
-	// 		movingItem.orderingNumber = targetItem.orderingNumber;
-	// 		targetItem.orderingNumber = tempOrderingNumber;
-
-	// 		// Update the ordering numbers in the backend
-	// 		await fetchurl(
-	// 			`/videos/${movingItem._id}/updateorder`,
-	// 			"PUT",
-	// 			"no-cache",
-	// 			{
-	// 				index: movingItem.orderingNumber, // Update the moving item's ordering number
-	// 			}
-	// 		);
-	// 		await fetchurl(
-	// 			`/videos/${targetItem._id}/updateorder`,
-	// 			"PUT",
-	// 			"no-cache",
-	// 			{
-	// 				index: targetItem.orderingNumber, // Update the target item's ordering number
-	// 			}
-	// 		);
-	// 	}
-
-	// 	allLessons.splice(movingItemIndex, 1); // Remove the moving item from the original position
-	// 	allLessons.splice(targetItemIndex, 0, movingItem); // Insert the moving item at the target position
-
-	// 	setLessons([...lessons], allLessons);
-	// };
-
 	return (
 		<div className="row">
 			<div className="col-lg-8">

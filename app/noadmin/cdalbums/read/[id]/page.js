@@ -1,74 +1,96 @@
-import { fetchurl } from "@/helpers/setTokenOnServer";
+import {
+	fetchurl,
+	getAuthTokenOnServer,
+	getUserEmailOnServer,
+	getUserIdOnServer,
+	getUserUsernameOnServer,
+} from "@/helpers/setTokenOnServer";
 import ParseHtml from "@/layout/parseHtml";
-import Image from "next/image";
-import Link from "next/link";
-import PreviewModal from "@/components/chapter/previewmodal";
+import SongList from "@/components/admin/cdalbums/songlist";
+import { revalidatePath } from "next/cache";
+import UseDropzone from "@/components/admin/cdalbums/songdropzone";
 
 async function getCDAlbum(params) {
 	const res = await fetchurl(`/playlists${params}`, "GET", "no-cache");
 	return res;
 }
 
-async function getLessons(params) {
-	const res = await fetchurl(`/videos${params}`, "GET", "no-cache");
+async function getSongs(params) {
+	const res = await fetchurl(`/songs${params}`, "GET", "no-cache");
 	return res;
 }
 
 const ReadCDAlbum = async ({ params, searchParams }) => {
 	const cdalbum = await getCDAlbum(`/${params.id}`);
-	// const lessons = await getLessons(
-	// 	`?resourceId=${cdalbum?.data?._id}&sort=orderingNumber`
-	// );
+	const songs = await getSongs(
+		`?resourceId=${cdalbum?.data?._id}&page=${searchParams.page || 1}&limit=${
+			searchParams.limit || 10
+		}&sort=${searchParams.sort || "-createdAt"}`
+	);
 
-	// const updateOrder = async (e, index) => {
-	// 	e.dataTransfer.setData("itemIndex", index.toString());
-	// };
+	const token = await getAuthTokenOnServer();
+	const userId = await getUserIdOnServer();
+	const username = await getUserUsernameOnServer();
+	const email = await getUserEmailOnServer();
 
-	// const updateDrop = async (e, index) => {
-	// 	const movingItemIndex = e.dataTransfer.getData("itemIndex");
-	// 	const targetItemIndex = index;
+	const auth = {
+		id: userId?.value,
+		username: username?.value,
+		email: email?.value,
+	};
 
-	// 	let allLessons = lessons; // Create a copy of the lessons array
+	const draftIt = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/songs/${id}/draftit`, "PUT", "no-cache");
+		revalidatePath(`/noadmin/cdalbums/read/${params.id}`);
+	};
 
-	// 	let movingItem = allLessons[movingItemIndex];
-	// 	let targetItem = allLessons[targetItemIndex];
+	const publishIt = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/songs/${id}/publishit`, "PUT", "no-cache");
+		revalidatePath(`/noadmin/cdalbums/read/${params.id}`);
+	};
 
-	// 	if (movingItem.orderingNumber !== targetItem.orderingNumber) {
-	// 		// Only update the ordering numbers if they are different
+	const trashIt = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/songs/${id}/trashit`, "PUT", "no-cache");
+		revalidatePath(`/noadmin/cdalbums/read/${params.id}`);
+	};
 
-	// 		// Switch the ordering numbers of the moving item and the target item
-	// 		const tempOrderingNumber = movingItem.orderingNumber;
-	// 		movingItem.orderingNumber = targetItem.orderingNumber;
-	// 		targetItem.orderingNumber = tempOrderingNumber;
+	const scheduleIt = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/songs/${id}/scheduleit`, "PUT", "no-cache");
+		revalidatePath(`/noadmin/cdalbums/read/${params.id}`);
+	};
 
-	// 		// Update the ordering numbers in the backend
-	// 		await fetchurl(
-	// 			`/videos/${movingItem._id}/updateorder`,
-	// 			"PUT",
-	// 			"no-cache",
-	// 			{
-	// 				index: movingItem.orderingNumber, // Update the moving item's ordering number
-	// 			}
-	// 		);
-	// 		await fetchurl(
-	// 			`/videos/${targetItem._id}/updateorder`,
-	// 			"PUT",
-	// 			"no-cache",
-	// 			{
-	// 				index: targetItem.orderingNumber, // Update the target item's ordering number
-	// 			}
-	// 		);
-	// 	}
+	const handleDelete = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/songs/${id}/permanently`, "DELETE", "no-cache");
+		revalidatePath(`/noadmin/cdalbums/read/${params.id}`);
+	};
 
-	// 	allLessons.splice(movingItemIndex, 1); // Remove the moving item from the original position
-	// 	allLessons.splice(targetItemIndex, 0, movingItem); // Insert the moving item at the target position
+	const handleTrashAll = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/songs/deleteall`, "PUT", "no-cache");
+		revalidatePath(`/noadmin/cdalbums/read/${params.id}`);
+	};
 
-	// 	setLessons([...lessons], allLessons);
-	// };
+	const handleDeleteAll = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/songs/deleteall/permanently`, "DELETE", "no-cache");
+		revalidatePath(`/noadmin/cdalbums/read/${params.id}`);
+	};
 
 	return (
 		<div className="row">
-			<div className="col-lg-8">
+			<div className="col-lg-12">
 				<div className="card rounded-0 mb-3">
 					<div className="card-header">
 						{cdalbum?.data?.title || "Untitled"}
@@ -77,88 +99,41 @@ const ReadCDAlbum = async ({ params, searchParams }) => {
 						<ParseHtml text={cdalbum?.data?.text} />
 					</div>
 				</div>
+				<UseDropzone
+					auth={auth}
+					token={token}
+					id={"file"}
+					name={"file"}
+					multipleFiles={false}
+					onModel="Playlist"
+					objectIpRoute={`http://localhost:5000/api/v1/songs`}
+					object={cdalbum?.data}
+					objectData={{
+						resourceId: cdalbum?.data?._id,
+						duration: "0:0",
+						status: "published",
+						averageRating: 5,
+						onModel: "Playlist",
+					}}
+					revalidateUrl={`/noadmin/cdalbums/read/${params.id}`}
+				/>
 				<div className="card rounded-0">
-					<div className="card-header">
-						<div className="float-start">
-							<div className="d-flex align-items-center">
-								<p className="mt-2 mb-0">Songs</p>
-							</div>
-						</div>
-						<div className="float-end my-1">
-							<div className="btn-group">
-								<Link
-									href={{
-										pathname: `/noadmin/cdalbums/song/${cdalbum?.data?._id}/create`,
-										query: {},
-									}}
-									passHref
-									legacyBehavior
-								>
-									<a className="btn btn-outline-secondary btn-sm">Add song</a>
-								</Link>
-							</div>
-						</div>
-					</div>
-					{/* {lessons?.data?.length > 0 ? (
-						<ul
-							className="list-group list-group-flush overflow-x-hidden"
-							style={{ maxHeight: "1000px" }}
-							// onDragOver={(e) => e.preventDefault()}
-						>
-							{lessons?.data?.map((lesson, index) => (
-								<li
-									key={lesson._id}
-									className={`list-group-item ${lesson.orderingNumber}`}
-									draggable
-									// onDragStart={(e) => updateOrder(e, index)}
-									// onDrop={(e) => updateDrop(e, index)}
-								>
-									<div className="float-start">
-										<Link href={`/video/${lesson._id}`} passHref legacyBehavior>
-											<a target="_blank">
-												<span className="badge bg-secondary me-1">
-													{lesson.orderingNumber}
-												</span>
-												{lesson.title}
-											</a>
-										</Link>
-									</div>
-									<div className="float-end">
-										{lesson.free_preview && <PreviewModal object={lesson} />}
-										<span className="badge bg-info me-1">
-											{lesson.duration}
-										</span>
-										<span className="badge bg-secondary me-1">
-											{lesson.views}&nbsp;Views
-										</span>
-										<span className="badge bg-dark me-1">
-											{lesson.language.toUpperCase()}
-										</span>
-									</div>
-								</li>
-							))}
-						</ul>
-					) : (
-						<div className="alert alert-danger rounded-0  m-0 border-0">
-							Nothing&nbsp;found
-						</div>
-					)} */}
-				</div>
-			</div>
-			<div className="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-xs-12 d-none d-sm-none d-md-none d-lg-block dm-xl-block">
-				<figure className="mb-3 bg-dark">
-					<Image
-						className="img-fluid p-3"
-						src={
-							cdalbum?.data?.files?.avatar?.location?.secure_location ||
-							`https://source.unsplash.com/random/260x370`
-						}
-						alt={`${cdalbum?.data?.files?.avatar?.location?.filename}'s featured image`}
-						width={440}
-						height={570}
-						priority
+					<SongList
+						allLink={`/noadmin/cdalbums/read/${cdalbum?.data?._id}`}
+						pageText="Songs"
+						addLink={``}
+						searchOn={`/noadmin/cdalbums/read/${cdalbum?.data?._id}`}
+						objects={songs}
+						searchParams={searchParams}
+						handleDraft={draftIt}
+						handlePublish={publishIt}
+						handleTrash={trashIt}
+						handleSchedule={scheduleIt}
+						handleDelete={handleDelete}
+						handleTrashAllFunction={handleTrashAll}
+						handleDeleteAllFunction={handleDeleteAll}
 					/>
-				</figure>
+				</div>
 			</div>
 		</div>
 	);

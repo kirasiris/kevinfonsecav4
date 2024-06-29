@@ -92,14 +92,20 @@ const AdminMenu = () => {
 						<a>Movies</a>
 					</Link>
 				</li>
-				<li className={`list-group-item ${isActive(`/noadmin/newsletters`)}`}>
-					<Link href={"/noadmin/newsletters"} passHref legacyBehavior>
-						<a>Newsletters</a>
+				<li
+					className={`list-group-item ${isActive(`/noadmin/newsletteremails`)}`}
+				>
+					<Link href={"/noadmin/newsletteremails"} passHref legacyBehavior>
+						<a>Newsletter Emails</a>
 					</Link>
 				</li>
-				<li className={`list-group-item ${isActive(`/noadmin/playlists`)}`}>
-					<Link href={"/noadmin/playlists"} passHref legacyBehavior>
-						<a>Playlists</a>
+				<li
+					className={`list-group-item ${isActive(
+						`/noadmin/newslettersubscribers`
+					)}`}
+				>
+					<Link href={"/noadmin/newslettersubscribers"} passHref legacyBehavior>
+						<a>Newsletter Subscribers</a>
 					</Link>
 				</li>
 				<li className={`list-group-item ${isActive(`/noadmin/posts`)}`}>

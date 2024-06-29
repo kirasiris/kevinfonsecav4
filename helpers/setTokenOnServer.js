@@ -17,6 +17,16 @@ export const getUserIdOnServer = () => {
 	return myCookies.get("userId");
 };
 
+export const getUserUsernameOnServer = () => {
+	const myCookies = cookies();
+	return myCookies.get("username");
+};
+
+export const getUserEmailOnServer = () => {
+	const myCookies = cookies();
+	return myCookies.get("email");
+};
+
 export const setAuthTokenOnServer = async (token) => {
 	if (token) {
 		console.log("setAuthTokenOnServer function was a success", token);
@@ -47,11 +57,33 @@ export const setUserIdOnServer = async (id) => {
 	}
 };
 
+export const setUserUsernameOnServer = async (username) => {
+	if (username) {
+		console.log("setUserUsernameOnServer function was a success", username);
+		cookies().set("username", username, { secure: true });
+	} else {
+		console.log("setUserUsernameOnServer function was not a success", username);
+		await deleteAuthTokenOnServer("username");
+	}
+};
+
+export const setUserEmailOnServer = async (email) => {
+	if (email) {
+		console.log("setUserEmailOnServer function was a success", email);
+		cookies().set("email", email, { secure: true });
+	} else {
+		console.log("setUserEmailOnServer function was not a success", email);
+		await deleteAuthTokenOnServer("email");
+	}
+};
+
 export const deleteAuthTokenOnServer = async (token) => {
 	await fetchurl(`/auth/logout`, "GET", "no-cache");
 	cookies().delete(token);
-	cookies().delete("userId");
 	cookies().delete("userStripeChargesEnabled");
+	cookies().delete("userId");
+	cookies().delete("username");
+	cookies().delete("email");
 	console.log("2.- Deleting cookie from back-end");
 	redirect(`/auth/login`);
 };

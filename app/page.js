@@ -11,11 +11,6 @@ async function getSetting(params) {
 	return res;
 }
 
-async function getNewsletters(params) {
-	const res = await fetchurl(`/newsletters${params}`, "GET", "no-cache");
-	return res;
-}
-
 async function getBlogs(params) {
 	const res = await fetchurl(`/blogs${params}`, "GET", "no-cache");
 	return res;
@@ -28,7 +23,7 @@ async function getThemes(params) {
 
 const HomeIndex = async () => {
 	const settings = await getSetting(`6519d7b34d26360354527e9a`);
-	const getNewslettersData = getNewsletters(``);
+
 	const getBlogsData = getBlogs(
 		`?page=1&limit=6&sort=-createdAt&postType=blog&status=published`
 	);
@@ -37,11 +32,7 @@ const HomeIndex = async () => {
 		`?page=1&limit=3&sort=-createdAt&postType=theme&status=published`
 	);
 
-	const [newsletters, blogs, themes] = await Promise.all([
-		getNewslettersData,
-		getBlogsData,
-		getThemesData,
-	]);
+	const [blogs, themes] = await Promise.all([getBlogsData, getThemesData]);
 
 	return settings.data.maintenance === false ? (
 		<>
@@ -62,14 +53,7 @@ const HomeIndex = async () => {
 				}}
 			/>
 			{/* CALL TO ACTION - NEWSLETTER REGISTRATION BY EMAIL */}
-			<section id="newsletter" className="border-bottom py-5">
-				<div className="container">
-					<h2 className="page-section-heading display-5 text-uppercase my-5">
-						Subscribe to our Newsletter
-					</h2>
-					<NewsletterForm newsletters={newsletters} />
-				</div>
-			</section>
+			<NewsletterForm classList="border-bottom py-5" />
 			{/* BLOGS */}
 			{blogs?.data?.length > 0 && (
 				<section id="blogs" className="border-bottom py-5">

@@ -1,0 +1,114 @@
+import {
+	fetchurl,
+	getAuthTokenOnServer,
+	getUserEmailOnServer,
+	getUserIdOnServer,
+	getUserUsernameOnServer,
+} from "@/helpers/setTokenOnServer";
+import { redirect } from "next/navigation";
+import AdminSidebar from "@/components/admin/myfinaladminsidebar";
+import MyTextArea from "@/components/global/myfinaltextarea";
+import FormButtons from "@/components/global/formbuttons";
+
+async function getFiles(params) {
+	const res = await fetchurl(`/files${params}`, "GET", "no-cache");
+	return res;
+}
+
+async function getCategories(params) {
+	const res = await fetchurl(`/categories${params}`, "GET", "no-cache");
+	return res;
+}
+
+const CreateEmail = async ({ params, searchParams }) => {
+	const token = await getAuthTokenOnServer();
+	const userId = await getUserIdOnServer();
+	const username = await getUserUsernameOnServer();
+	const email = await getUserEmailOnServer();
+
+	const auth = {
+		id: userId?.value,
+		username: username?.value,
+		email: email?.value,
+	};
+
+	const files = await getFiles(`?page=1&limit=100&sort=-createdAt`);
+	const categories = await getCategories(`?categoryType=blog`);
+
+	const addBlog = async (formData) => {
+		"use server";
+		const rawFormData = {
+			title: formData.get("title"),
+			text: formData.get("text"),
+			featured: formData.get("featured"),
+			embedding: formData.get("embedding"),
+			category: formData.get("category"),
+			commented: formData.get("commented"),
+			password: formData.get("password"),
+			status: formData.get("status"),
+			fullWidth: formData.get("fullWidth"),
+			files: { avatar: formData.get("file") },
+		};
+		await fetchurl(`/blogs`, "POST", "no-cache", {
+			...rawFormData,
+			postType: "blog",
+		});
+		redirect(`/noadmin/blogs`);
+	};
+
+	return (
+		<form className="row" action={addBlog}>
+			<div className="col">
+				<label htmlFor="blog-title" className="form-label">
+					Title
+				</label>
+				<input
+					id="blog-title"
+					name="title"
+					defaultValue="Untitled"
+					type="text"
+					className="form-control mb-3"
+					placeholder=""
+				/>
+				<label htmlFor="text" className="form-label">
+					Text
+				</label>
+				<MyTextArea
+					auth={auth}
+					id="text"
+					name="text"
+					onModel="NewsletterEmail"
+					advancedTextEditor={true}
+					customPlaceholder="No description"
+					defaultValue="No description..."
+					insertClasses={false}
+				/>
+			</div>
+			<div className="col-lg-3">
+				<AdminSidebar
+					displayCategoryField={true}
+					displayAvatar={true}
+					// avatar={files?.selected?._id}
+					status="draft"
+					fullWidth={true}
+					password=""
+					featured={true}
+					commented={true}
+					embedding={true}
+					github_readme={""}
+					category={undefined}
+					categories={[]}
+					multipleFiles={false}
+					onModel={"NewsletterEmail"}
+					files={[]}
+					auth={undefined}
+					token={undefined}
+				/>
+				<br />
+				<FormButtons />
+			</div>
+		</form>
+	);
+};
+
+export default CreateEmail;

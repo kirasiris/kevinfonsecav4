@@ -43,6 +43,7 @@ const UpdateMenu = async ({ params, searchParams }) => {
 				</label>
 				<MyTextArea
 					auth={undefined}
+					token={undefined}
 					id="text"
 					name="text"
 					onModel="Menu"
@@ -68,6 +69,7 @@ const UpdateMenu = async ({ params, searchParams }) => {
 					displayCategoryField={false}
 					displayAvatar={false}
 					avatar={""}
+					avatarFormat={""}
 					status={menu?.data?.status}
 					fullWidth={false}
 					password={""}

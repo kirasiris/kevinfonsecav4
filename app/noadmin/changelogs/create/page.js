@@ -1,24 +1,15 @@
 import {
 	fetchurl,
-	// getAuthTokenOnServer,
-	getUserEmailOnServer,
-	getUserIdOnServer,
-	getUserUsernameOnServer,
+	getAuthTokenOnServer,
+	getUserOnServer,
 } from "@/helpers/setTokenOnServer";
 import { redirect } from "next/navigation";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
 
 const CreateChangelog = async ({ params, searchParams }) => {
-	const userId = await getUserIdOnServer();
-	const username = await getUserUsernameOnServer();
-	const email = await getUserEmailOnServer();
-
-	const auth = {
-		id: userId?.value,
-		username: username?.value,
-		email: email?.value,
-	};
+	const token = await getAuthTokenOnServer();
+	const auth = await getUserOnServer();
 
 	const addChangelog = async (formData) => {
 		"use server";
@@ -26,7 +17,7 @@ const CreateChangelog = async ({ params, searchParams }) => {
 			title: formData.get("title"),
 			text: formData.get("text"),
 			status: formData.get("status"),
-			postType: formData.get("postType"),
+			postType: formData.getAll("postType"),
 			version: formData.get("version"),
 		};
 		await fetchurl(`/changelogs`, "POST", "no-cache", rawFormData);
@@ -52,6 +43,7 @@ const CreateChangelog = async ({ params, searchParams }) => {
 				</label>
 				<MyTextArea
 					auth={auth}
+					token={token}
 					id="text"
 					name="text"
 					onModel="Changelog"

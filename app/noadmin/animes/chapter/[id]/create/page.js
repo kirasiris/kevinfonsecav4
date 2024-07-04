@@ -1,9 +1,7 @@
 import {
 	fetchurl,
 	getAuthTokenOnServer,
-	getUserEmailOnServer,
-	getUserIdOnServer,
-	getUserUsernameOnServer,
+	getUserOnServer,
 } from "@/helpers/setTokenOnServer";
 import { redirect } from "next/navigation";
 import AdminSidebar from "@/components/admin/myfinaladminsidebar";
@@ -17,15 +15,7 @@ async function getFiles(params) {
 
 const CreateChapter = async ({ params, searchParams }) => {
 	const token = await getAuthTokenOnServer();
-	const userId = await getUserIdOnServer();
-	const username = await getUserUsernameOnServer();
-	const email = await getUserEmailOnServer();
-
-	const auth = {
-		id: userId?.value,
-		username: username?.value,
-		email: email?.value,
-	};
+	const auth = await getUserOnServer();
 
 	const getFilesData = getFiles(`?page=1&limit=100&sort=-createdAt`);
 
@@ -44,6 +34,7 @@ const CreateChapter = async ({ params, searchParams }) => {
 			status: formData.get("status"),
 			free_preview: formData.get("free_preview"),
 			duration: formData.get("duration"),
+			averageRating: formData.get("averageRating"),
 			orderingNumber: formData.get("orderingNumber"),
 			files: { video_url: formData.get("file") },
 		};
@@ -78,6 +69,7 @@ const CreateChapter = async ({ params, searchParams }) => {
 				</label>
 				<MyTextArea
 					auth={auth}
+					token={token}
 					id="text"
 					name="text"
 					onModel="Lesson"
@@ -114,6 +106,28 @@ const CreateChapter = async ({ params, searchParams }) => {
 						/>
 					</div>
 					<div className="col">
+						<label htmlFor="averageRating" className="form-label">
+							Average Rating
+						</label>
+						<select
+							id="averageRating"
+							name="averageRating"
+							defaultValue={5}
+							className="form-control"
+						>
+							<option value={1}>1</option>
+							<option value={2}>2</option>
+							<option value={3}>3</option>
+							<option value={4}>4</option>
+							<option value={5}>5</option>
+							<option value={6}>6</option>
+							<option value={7}>7</option>
+							<option value={8}>8</option>
+							<option value={9}>9</option>
+							<option value={10}>10</option>
+						</select>
+					</div>
+					<div className="col">
 						<label htmlFor="orderingNumber" className="form-label">
 							Order
 						</label>
@@ -121,7 +135,7 @@ const CreateChapter = async ({ params, searchParams }) => {
 							id="orderingNumber"
 							name="orderingNumber"
 							defaultValue={1}
-							type="text"
+							type="number"
 							className="form-control mb-3"
 							placeholder="Here goes the #number of object within list"
 						/>
@@ -133,6 +147,7 @@ const CreateChapter = async ({ params, searchParams }) => {
 					displayCategoryField={false}
 					displayAvatar={true}
 					// avatar={files?.selected?._id}
+					avatarFormat={"image"}
 					status="draft"
 					fullWidth={false}
 					password=""

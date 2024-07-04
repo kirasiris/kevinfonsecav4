@@ -1,9 +1,7 @@
 import {
 	fetchurl,
-	// getAuthTokenOnServer,
-	getUserEmailOnServer,
-	getUserIdOnServer,
-	getUserUsernameOnServer,
+	getAuthTokenOnServer,
+	getUserOnServer,
 } from "@/helpers/setTokenOnServer";
 import { redirect } from "next/navigation";
 import MyTextArea from "@/components/global/myfinaltextarea";
@@ -15,17 +13,10 @@ async function getUsers(params) {
 }
 
 const UpdateUser = async ({ params, searchParams }) => {
-	const user = await getUsers(`/${params.id}`);
-	// token
-	const userId = await getUserIdOnServer();
-	const username = await getUserUsernameOnServer();
-	const email = await getUserEmailOnServer();
+	const token = await getAuthTokenOnServer();
+	const auth = await getUserOnServer();
 
-	const auth = {
-		id: userId?.value,
-		username: username?.value,
-		email: email?.value,
-	};
+	const user = await getUsers(`/${params.id}`);
 
 	const users = await getUsers(`?isEmailConfirmed=true`);
 
@@ -40,7 +31,7 @@ const UpdateUser = async ({ params, searchParams }) => {
 			password: formData.get("password"),
 			password2: formData.get("password2"),
 			isEmailConfirmed: formData.get("isEmailConfirmed"),
-			role: Array.from(formData.getAll("role")),
+			role: formData.getAll("role"),
 			sex: formData.get("sex"),
 			gender: formData.get("gender"),
 			age: formData.get("age"),
@@ -328,6 +319,7 @@ const UpdateUser = async ({ params, searchParams }) => {
 						</label>
 						<MyTextArea
 							auth={undefined}
+							token={undefined}
 							id="text"
 							name="text"
 							onModel="User"

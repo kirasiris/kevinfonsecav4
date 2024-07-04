@@ -1,9 +1,7 @@
 import {
 	fetchurl,
 	getAuthTokenOnServer,
-	getUserEmailOnServer,
-	getUserIdOnServer,
-	getUserUsernameOnServer,
+	getUserOnServer,
 } from "@/helpers/setTokenOnServer";
 import ParseHtml from "@/layout/parseHtml";
 import SongList from "@/components/admin/cdalbums/songlist";
@@ -21,23 +19,15 @@ async function getSongs(params) {
 }
 
 const ReadCDAlbum = async ({ params, searchParams }) => {
+	const token = await getAuthTokenOnServer();
+	const auth = await getUserOnServer();
+
 	const cdalbum = await getCDAlbum(`/${params.id}`);
 	const songs = await getSongs(
 		`?resourceId=${cdalbum?.data?._id}&page=${searchParams.page || 1}&limit=${
 			searchParams.limit || 10
 		}&sort=${searchParams.sort || "-createdAt"}`
 	);
-
-	const token = await getAuthTokenOnServer();
-	const userId = await getUserIdOnServer();
-	const username = await getUserUsernameOnServer();
-	const email = await getUserEmailOnServer();
-
-	const auth = {
-		id: userId?.value,
-		username: username?.value,
-		email: email?.value,
-	};
 
 	const draftIt = async (id) => {
 		"use server";
@@ -121,7 +111,7 @@ const ReadCDAlbum = async ({ params, searchParams }) => {
 					<SongList
 						allLink={`/noadmin/cdalbums/read/${cdalbum?.data?._id}`}
 						pageText="Songs"
-						addLink={``}
+						addLink={`/noadmin/cdalbums/song/${cdalbum?.data?._id}/create`}
 						searchOn={`/noadmin/cdalbums/read/${cdalbum?.data?._id}`}
 						objects={songs}
 						searchParams={searchParams}

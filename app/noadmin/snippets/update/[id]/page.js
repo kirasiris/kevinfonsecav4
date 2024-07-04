@@ -49,6 +49,7 @@ const UpdateSnippet = async ({ params, searchParams }) => {
 					</label>
 					<MyTextArea
 						auth={undefined}
+						token={undefined}
 						id="text"
 						name="text"
 						onModel="Snippet"
@@ -62,6 +63,7 @@ const UpdateSnippet = async ({ params, searchParams }) => {
 						displayCategoryField={false}
 						displayAvatar={false}
 						// avatar={files?.selected?._id}
+						avatarFormat={"image"}
 						status={snippet?.data?.status}
 						fullWidth={false}
 						password=""

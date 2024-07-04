@@ -1,9 +1,7 @@
 import {
 	fetchurl,
 	getAuthTokenOnServer,
-	getUserEmailOnServer,
-	getUserIdOnServer,
-	getUserUsernameOnServer,
+	getUserOnServer,
 } from "@/helpers/setTokenOnServer";
 import { redirect } from "next/navigation";
 import AdminSidebar from "@/components/admin/myfinaladminsidebar";
@@ -17,15 +15,8 @@ async function getFiles(params) {
 
 const CreateSong = async ({ params, searchParams }) => {
 	const token = await getAuthTokenOnServer();
-	const userId = await getUserIdOnServer();
-	const username = await getUserUsernameOnServer();
-	const email = await getUserEmailOnServer();
+	const auth = await getUserOnServer();
 
-	const auth = {
-		id: userId?.value,
-		username: username?.value,
-		email: email?.value,
-	};
 	const files = await getFiles(`?page=1&limit=100&sort=-createdAt`);
 
 	const addSong = async (formData) => {
@@ -45,22 +36,17 @@ const CreateSong = async ({ params, searchParams }) => {
 			orderingNumber: formData.get("orderingNumber"),
 			files: { avatar: formData.get("file") },
 		};
-		console.log(rawFormData);
-		// await fetchurl(`/songs`, "POST", "no-cache", {
-		// 	...rawFormData,
-		// 	resourceId: params.id,
-		// 	onModel: "Playlist",
-		// });
-		// redirect(`/noadmin/cdalbums/read/${params.id}`);
+		await fetchurl(`/songs`, "POST", "no-cache", {
+			...rawFormData,
+			resourceId: params.id,
+			onModel: "Playlist",
+		});
+		redirect(`/noadmin/cdalbums/read/${params.id}`);
 	};
 
 	return (
 		<form className="row" action={addSong}>
 			<div className="col">
-				<div className="text-center h-100 justify-content-center align-content-center">
-					<h1>WORK IN PROGRESS</h1>
-					<p>Need a good design</p>
-				</div>
 				<label htmlFor="blog-title" className="form-label">
 					Title
 				</label>
@@ -88,6 +74,7 @@ const CreateSong = async ({ params, searchParams }) => {
 				</label>
 				<MyTextArea
 					auth={auth}
+					token={token}
 					id="text"
 					name="text"
 					onModel="Song"
@@ -146,6 +133,7 @@ const CreateSong = async ({ params, searchParams }) => {
 					displayCategoryField={false}
 					displayAvatar={true}
 					// avatar={files?.selected?._id}
+					avatarFormat={"audio"}
 					status="draft"
 					fullWidth={false}
 					password=""

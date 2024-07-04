@@ -1,8 +1,8 @@
 "use client";
 import { useContext } from "react";
 import Link from "next/link";
-import DeleteAllModal from "../../components/global/deleteallmodal";
-import TrashAllModal from "../../components/global/trashallmodal";
+import DeleteAllModal from "@/components/global/deleteallmodal";
+import TrashAllModal from "@/components/global/trashallmodal";
 import AuthContext from "@/helpers/globalContext";
 
 const DashboardCardHeaderMenu = ({

@@ -42,6 +42,10 @@ const nextConfig = {
 		// 	"yt3.ggpht.com",
 		// ],
 	},
+	env: {
+		apiUrl: `http://localhost:5000/api/v1`,
+		mapboxToken: `pk.eyJ1Ijoia2lyYXNpcmlzIiwiYSI6ImNsMW5zd3huMTB3cGMzZXF1MjBtNDNyam8ifQ.Y9omxfTV8-WjjHhDI6ZHbQ`,
+	},
 	headers: async () => {
 		return [
 			{

@@ -2,7 +2,10 @@
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import { useEffect, useState } from "react";
 
-const NewsletterForm = ({ classList = `py-5` }) => {
+const NewsletterForm = ({
+	sectionClassList = `py-5`,
+	headingClassList = `my-5`,
+}) => {
 	const [newsletters, setNewsletters] = useState([]);
 
 	useEffect(() => {
@@ -18,10 +21,11 @@ const NewsletterForm = ({ classList = `py-5` }) => {
 	}, []);
 
 	const [newsletterData, setNewsletterData] = useState({
+		name: ``,
 		email: ``,
 	});
 
-	const { email } = newsletterData;
+	const { name, email } = newsletterData;
 
 	const [emailBtnTxt, setEmailBtnTxt] = useState("Subscribe Now");
 
@@ -31,7 +35,6 @@ const NewsletterForm = ({ classList = `py-5` }) => {
 			setEmailBtnTxt("...");
 			await fetchurl(`/newslettersubscribers`, "POST", "no-cache", {
 				...newsletterData,
-				email: email,
 				website: "beFree",
 			});
 			newsletters.length += 1;
@@ -44,14 +47,17 @@ const NewsletterForm = ({ classList = `py-5` }) => {
 
 	const resetForm = () => {
 		setNewsletterData({
+			name: "",
 			email: "",
 		});
 	};
 
 	return (
-		<section id="newsletter" className={classList}>
+		<section id="newsletter" className={sectionClassList}>
 			<div className="container">
-				<h2 className="page-section-heading display-5 text-uppercase my-5">
+				<h2
+					className={`${headingClassList} page-section-heading display-5 text-uppercase`}
+				>
 					Subscribe&nbsp;to&nbsp;our&nbsp;Newsletter
 				</h2>
 				<p>
@@ -60,6 +66,20 @@ const NewsletterForm = ({ classList = `py-5` }) => {
 				</p>
 				<form onSubmit={subscribeToNewsletter}>
 					<div className="input-group">
+						<input
+							id="name"
+							name="name"
+							value={name}
+							onChange={(e) => {
+								setNewsletterData({
+									...newsletterData,
+									name: e.target.value,
+								});
+							}}
+							type="text"
+							className="form-control rounded-0"
+							placeholder="Enter your name"
+						/>
 						<input
 							id="email"
 							name="email"
@@ -78,7 +98,7 @@ const NewsletterForm = ({ classList = `py-5` }) => {
 							<button
 								className="btn btn-secondary rounded-0"
 								type="submit"
-								disabled={email.length > 0 ? !true : !false}
+								disabled={name.length > 0 && email.length > 0 ? !true : !false}
 							>
 								{emailBtnTxt}
 							</button>

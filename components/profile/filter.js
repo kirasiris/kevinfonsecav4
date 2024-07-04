@@ -3,7 +3,11 @@ import Link from "next/link";
 
 const Filter = ({ params = {} }) => {
 	return (
-		<div className="btn-group mb-3" role="group" aria-label="Basic example">
+		<div
+			className="btn-group mt-3 mb-3"
+			role="group"
+			aria-label="Basic example"
+		>
 			<Link
 				href={{
 					pathname: `/profile/${params.id}/${params.username}`,

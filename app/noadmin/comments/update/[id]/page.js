@@ -1,9 +1,7 @@
 import {
 	fetchurl,
 	getAuthTokenOnServer,
-	getUserEmailOnServer,
-	getUserIdOnServer,
-	getUserUsernameOnServer,
+	getUserOnServer,
 } from "@/helpers/setTokenOnServer";
 import { redirect } from "next/navigation";
 import AdminSidebar from "@/components/admin/myfinaladminsidebar";
@@ -16,18 +14,10 @@ async function getComment(params) {
 }
 
 const UpdateComment = async ({ params, searchParams }) => {
-	const comment = await getComment(`/${params.id}`);
-
 	const token = await getAuthTokenOnServer();
-	const userId = await getUserIdOnServer();
-	const username = await getUserUsernameOnServer();
-	const email = await getUserEmailOnServer();
+	const auth = await getUserOnServer();
 
-	const auth = {
-		id: userId?.value,
-		username: username?.value,
-		email: email?.value,
-	};
+	const comment = await getComment(`/${params.id}`);
 
 	const upgradeComment = async (formData) => {
 		"use server";
@@ -59,6 +49,7 @@ const UpdateComment = async ({ params, searchParams }) => {
 				</label>
 				<MyTextArea
 					auth={auth}
+					token={token}
 					id="text"
 					name="text"
 					onModel="Comment"
@@ -72,6 +63,7 @@ const UpdateComment = async ({ params, searchParams }) => {
 					displayCategoryField={false}
 					displayAvatar={false}
 					avatar={""}
+					avatarFormat={"image"}
 					status={comment?.data?.status}
 					fullWidth={false}
 					password=""

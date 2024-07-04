@@ -134,6 +134,8 @@ const AdminQuotesIndex = async ({ params, searchParams }) => {
 							Text
 						</label>
 						<MyTextArea
+							auth={undefined}
+							token={undefined}
 							id="text"
 							name="text"
 							customPlaceholder="Type something..."

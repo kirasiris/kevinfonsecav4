@@ -11,9 +11,9 @@ const Map = ({ object = {} }) => {
 					mapboxgl.accessToken =
 						"pk.eyJ1Ijoia2lyYXNpcmlzIiwiYSI6ImNsMW5zd3huMTB3cGMzZXF1MjBtNDNyam8ifQ.Y9omxfTV8-WjjHhDI6ZHbQ";
 					const map = new mapboxgl.Map({
-						container: `mapbox`,
+						container: `mapbox-${object?._id}`,
 						style: "mapbox://styles/mapbox/standard",
-						center: object.location.coordinates,
+						center: object?.location?.coordinates,
 						zoom: 9,
 						dragPan: false,
 					}).addControl(
@@ -26,16 +26,16 @@ const Map = ({ object = {} }) => {
 						color: "#ff0000",
 						draggable: false,
 					})
-						.setLngLat(object.location.coordinates)
+						.setLngLat(object?.location?.coordinates)
 						.setPopup(
 							new mapboxgl.Popup().setHTML(
-								`${object.location.formattedAddress}`
+								`${object?.location?.formattedAddress}`
 							)
 						) // add popup
 						.addTo(map);
 				}}
 			/>
-			<div id="mapbox" style={{ height: "350px" }} />
+			<div id={`mapbox-${object?._id}`} style={{ height: "350px" }} />
 		</>
 	);
 };

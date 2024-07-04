@@ -7,6 +7,7 @@ import List from "./files/list";
 
 const AdminFeaturedImage = ({
 	avatar = "",
+	avatarFormat = "image",
 	multipleFiles = false,
 	onModel = "Blog",
 	files = [],
@@ -17,6 +18,34 @@ const AdminFeaturedImage = ({
 }) => {
 	const [showMediaModal, setShowMediaModel] = useState(false);
 	console.log("Admin Featured Image", selectedFile?.title);
+	/*
+	 *
+	 * ANY OBJECT
+	 *
+	 */
+	const anyObj = () => {
+		return (
+			<figure
+				onClick={() => {
+					// setSelectedFile(avatar);
+					setShowMediaModel(true);
+				}}
+			>
+				<Image
+					src={
+						selectedFile?.location?.secure_location ||
+						avatar?.location?.secure_location ||
+						"https://static.vecteezy.com/system/resources/previews/005/337/799/original/icon-image-not-found-free-vector.jpg"
+					}
+					alt="xD"
+					width={`558`}
+					height={`558`}
+					style={{ maxWidth: "1920px", maxHeight: "1920px" }}
+					priority={true}
+				/>
+			</figure>
+		);
+	};
 	/*
 	 *
 	 * IMAGE OBJECT
@@ -121,10 +150,11 @@ const AdminFeaturedImage = ({
 				>
 					Featured Image
 				</button>
-				{avatar.format_type === "image" && imgObj()}
-				{avatar.format_type === "application" && pdfObj()}
-				{avatar.format_type === "video" && vidObj()}
-				{avatar.format_type === "audio" && audObj()}
+				{avatarFormat === "any" && anyObj()}
+				{avatarFormat === "image" && imgObj()}
+				{avatarFormat === "application" && pdfObj()}
+				{avatarFormat === "video" && vidObj()}
+				{avatarFormat === "audio" && audObj()}
 			</div>
 			<Modal
 				show={showMediaModal}

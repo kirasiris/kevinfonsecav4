@@ -57,11 +57,12 @@ const LiveCode = ({
 				<title>${title}</title>
 				${csslinksarray}
 				<style>${he.decode(objectData.css)}</style>
+				<script>window.console = window.console || function(t) {};</script>
 			</head>
             <body>
 				${he.decode(objectData.html)}
 				${jslinksarray}
-				<script>
+				<script id="rendered-js">
                 	${he.decode(objectData.js)}
             	</script>
 			</body>

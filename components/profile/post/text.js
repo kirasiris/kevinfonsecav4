@@ -1,11 +1,11 @@
 "use client";
 import ParseHtml from "@/layout/parseHtml";
 
-const Text = ({ object = {} }) => {
+const Text = ({ object = {}, classList = "" }) => {
 	return typeof object.text === "object" ? (
 		"TEXT IS EITHER ENCRYPTED OR PASSWORD PROTECTED"
 	) : (
-		<ParseHtml text={JSON.stringify(object.text)} />
+		<ParseHtml className={classList} text={JSON.stringify(object.text)} />
 	);
 };
 

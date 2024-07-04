@@ -53,7 +53,7 @@ const UpdateTwoFactorAuthentication = async ({ params, searchParams }) => {
 								<li>
 									Download&nbsp;and&nbsp;Install&nbsp;the&nbsp;
 									<a
-										href={`https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=en_US&gl=US`}
+										href={`https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2`}
 										target={`_blank`}
 										rel={`noopener noreferrer`}
 									>
@@ -79,6 +79,23 @@ const UpdateTwoFactorAuthentication = async ({ params, searchParams }) => {
 										<li>
 											<i className={`fas fa-keyboard me-1`} />
 											Enter&nbsp;a&nbsp;setup&nbsp;key
+										</li>
+									</ul>
+								</li>
+								<li>
+									In&nbsp;case,&nbsp;you&nbsp;have&nbsp;enabled&nbsp;it&nbsp;and&nbsp;then&nbsp;disabled&nbsp;it
+									<ul>
+										<li>
+											Don&apos;t&nbsp;forget&nbsp;to&nbsp;delete&nbsp;the&nbsp;token&nbsp;from&nbsp;your&nbsp;
+											<a
+												href={`https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2`}
+												target={`_blank`}
+												rel={`noopener noreferrer`}
+											>
+												<b className="text-bg-primary text-decoration-underline">
+													Google&nbsp;Authenticator&nbsp;App
+												</b>
+											</a>
 										</li>
 									</ul>
 								</li>

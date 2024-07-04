@@ -70,7 +70,7 @@ const RecordAudioModal = ({
 		const finalAudio = await stopAudio();
 		setAudioRecordingUrl(finalAudio.blobUrl);
 		const res = await axios.put(
-			`https://localhost:5000/api/v1/uploads/uploadObject`,
+			`${process.env.apiUrl}/uploads/uploadObject`,
 			{
 				userId: auth?.id,
 				username: auth?.username,

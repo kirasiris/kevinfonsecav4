@@ -2,7 +2,7 @@ import Link from "next/link";
 import Header from "@/layout/header";
 import SingleBlog from "@/components/blog/single";
 import SingleTheme from "@/components/theme/single";
-import NewsletterForm from "@/layout/newsletter";
+import NewsletterForm from "@/components/global/newsletter";
 import ErrorPage from "@/layout/errorpage";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 
@@ -53,7 +53,10 @@ const HomeIndex = async () => {
 				}}
 			/>
 			{/* CALL TO ACTION - NEWSLETTER REGISTRATION BY EMAIL */}
-			<NewsletterForm classList="border-bottom py-5" />
+			<NewsletterForm
+				sectionClassList="border-bottom py-5"
+				headingClassList="my-5"
+			/>
 			{/* BLOGS */}
 			{blogs?.data?.length > 0 && (
 				<section id="blogs" className="border-bottom py-5">

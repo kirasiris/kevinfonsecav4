@@ -60,6 +60,7 @@ const UpdatePage = async ({ params, searchParams }) => {
 				</label>
 				<MyTextArea
 					auth={undefined}
+					token={undefined}
 					id="text"
 					name="text"
 					onModel="Page"
@@ -149,6 +150,7 @@ const UpdatePage = async ({ params, searchParams }) => {
 					displayCategoryField={false}
 					displayAvatar={false}
 					avatar={""}
+					avatarFormat={""}
 					status={page.data.status}
 					fullWidth={false}
 					password={""}

@@ -80,6 +80,7 @@ const UpdateSetting = async ({ params, searchParams }) => {
 				</label>
 				<MyTextArea
 					auth={undefined}
+					token={undefined}
 					id="text"
 					name="text"
 					onModel="Setting"
@@ -293,6 +294,7 @@ const UpdateSetting = async ({ params, searchParams }) => {
 						</label>
 						<MyTextArea
 							auth={undefined}
+							token={undefined}
 							id="first_ad"
 							name="first_ad"
 							onModel="Setting"
@@ -307,6 +309,7 @@ const UpdateSetting = async ({ params, searchParams }) => {
 						</label>
 						<MyTextArea
 							auth={undefined}
+							token={undefined}
 							id="second_ad"
 							name="second_ad"
 							onModel="Setting"
@@ -321,6 +324,7 @@ const UpdateSetting = async ({ params, searchParams }) => {
 						</label>
 						<MyTextArea
 							auth={undefined}
+							token={undefined}
 							id="third_ad"
 							name="third_ad"
 							onModel="Setting"
@@ -335,6 +339,7 @@ const UpdateSetting = async ({ params, searchParams }) => {
 						</label>
 						<MyTextArea
 							auth={undefined}
+							token={undefined}
 							id="fourth_ad"
 							name="fourth_ad"
 							onModel="Setting"
@@ -352,6 +357,7 @@ const UpdateSetting = async ({ params, searchParams }) => {
 						</label>
 						<MyTextArea
 							auth={undefined}
+							token={undefined}
 							id="script_head"
 							name="script_head"
 							onModel="Setting"
@@ -366,6 +372,7 @@ const UpdateSetting = async ({ params, searchParams }) => {
 						</label>
 						<MyTextArea
 							auth={undefined}
+							token={undefined}
 							id="script_footer"
 							name="script_footer"
 							onModel="Setting"

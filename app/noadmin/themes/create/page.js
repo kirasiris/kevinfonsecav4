@@ -1,9 +1,7 @@
 import {
 	fetchurl,
 	getAuthTokenOnServer,
-	getUserEmailOnServer,
-	getUserIdOnServer,
-	getUserUsernameOnServer,
+	getUserOnServer,
 } from "@/helpers/setTokenOnServer";
 import { redirect } from "next/navigation";
 import AdminSidebar from "@/components/admin/myfinaladminsidebar";
@@ -22,15 +20,7 @@ async function getCategories(params) {
 
 const CreateTheme = async ({ params, searchParams }) => {
 	const token = await getAuthTokenOnServer();
-	const userId = await getUserIdOnServer();
-	const username = await getUserUsernameOnServer();
-	const email = await getUserEmailOnServer();
-
-	const auth = {
-		id: userId?.value,
-		username: username?.value,
-		email: email?.value,
-	};
+	const auth = await getUserOnServer();
 
 	const files = await getFiles(`?page=1&limit=100&sort=-createdAt`);
 	const categories = await getCategories(`?categoryType=theme`);
@@ -76,6 +66,7 @@ const CreateTheme = async ({ params, searchParams }) => {
 				</label>
 				<MyTextArea
 					auth={auth}
+					token={token}
 					id="text"
 					name="text"
 					onModel="Blog"
@@ -89,6 +80,7 @@ const CreateTheme = async ({ params, searchParams }) => {
 					displayCategoryField={true}
 					displayAvatar={true}
 					// avatar={files?.selected?._id}
+					avatarFormat={"image"}
 					status="draft"
 					fullWidth={true}
 					password=""

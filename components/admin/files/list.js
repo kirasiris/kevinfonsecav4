@@ -9,7 +9,7 @@ import UseDropzone from "@/components/global/dropzone";
 
 const List = ({
 	auth = {},
-	token = null,
+	token = {},
 	id = "",
 	name = "",
 	multipleFiles = false,

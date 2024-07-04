@@ -15,6 +15,7 @@ import ReportModal from "@/components/global/reportmodal";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import Globalcontent from "@/layout/content";
 import ArticleHeader from "@/components/global/articleheader";
+import NewsletterForm from "@/components/global/newsletter";
 
 async function getAuthenticatedUser() {
 	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
@@ -101,13 +102,16 @@ const ThemeRead = async ({ params, searchParams }) => {
 								{/* HERE GOES THE FIGURE */}
 								<section className="mb-5">
 									<ParseHtml text={theme.data.text} />
-									<div className="card">
+									<div className="card mb-4">
 										<div className="card-header">ReadMe.md</div>
 										<div className="card-body">
 											<ParseHtml text={readme} />
 										</div>
 									</div>
-									<hr />
+									<NewsletterForm
+										sectionClassList="text-bg-dark text-center pt-3 pb-3 mb-4"
+										headingClassList=""
+									/>
 									<div className="float-start">
 										{theme?.data?.category && (
 											<ExportModal

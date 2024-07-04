@@ -1,8 +1,13 @@
-import { fetchurl } from "@/helpers/setTokenOnServer";
+import {
+	fetchurl,
+	getAuthTokenOnServer,
+	getUserOnServer,
+} from "@/helpers/setTokenOnServer";
 import ParseHtml from "@/layout/parseHtml";
 import ChapterList from "@/components/admin/animes/chapterlist";
 import { revalidatePath } from "next/cache";
 import Image from "next/image";
+import UseDropzone from "@/components/admin/animes/chapterdropzone";
 
 async function getAnime(params) {
 	const res = await fetchurl(`/playlists${params}`, "GET", "no-cache");
@@ -15,6 +20,9 @@ async function getChapters(params) {
 }
 
 const ReadAnime = async ({ params, searchParams }) => {
+	const token = await getAuthTokenOnServer();
+	const auth = await getUserOnServer();
+
 	const anime = await getAnime(`/${params.id}`);
 	const chapters = await getChapters(
 		`?resourceId=${anime?.data?._id}&page=${searchParams.page || 1}&limit=${
@@ -84,6 +92,24 @@ const ReadAnime = async ({ params, searchParams }) => {
 						<ParseHtml text={anime?.data?.text} />
 					</div>
 				</div>
+				<UseDropzone
+					auth={auth}
+					token={token}
+					id={"file"}
+					name={"file"}
+					multipleFiles={false}
+					onModel="Playlist"
+					objectIpRoute={`http://localhost:5000/api/v1/videos`}
+					object={anime?.data}
+					objectData={{
+						resourceId: anime?.data?._id,
+						duration: "0:0",
+						status: "draft",
+						averageRating: 10,
+						onModel: "Playlist",
+					}}
+					revalidateUrl={`/noadmin/animes/read/${params.id}`}
+				/>
 				<div className="card rounded-0">
 					<ChapterList
 						allLink={`/noadmin/animes/read/${anime?.data?._id}`}

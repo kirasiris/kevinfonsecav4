@@ -1,9 +1,7 @@
 import {
 	fetchurl,
 	getAuthTokenOnServer,
-	getUserEmailOnServer,
-	getUserIdOnServer,
-	getUserUsernameOnServer,
+	getUserOnServer,
 } from "@/helpers/setTokenOnServer";
 import { redirect } from "next/navigation";
 import AdminSidebar from "@/components/admin/myfinaladminsidebar";
@@ -21,18 +19,10 @@ async function getRealState(params) {
 }
 
 const UpdateRealState = async ({ params, searchParams }) => {
-	const realstate = await getRealState(`/${params.id}`);
-
 	const token = await getAuthTokenOnServer();
-	const userId = await getUserIdOnServer();
-	const username = await getUserUsernameOnServer();
-	const email = await getUserEmailOnServer();
+	const auth = await getUserOnServer();
 
-	const auth = {
-		id: userId?.value,
-		username: username?.value,
-		email: email?.value,
-	};
+	const realstate = await getRealState(`/${params.id}`);
 
 	const files = await getFiles(`?page=1&limit=100&sort=-createdAt`);
 
@@ -79,6 +69,7 @@ const UpdateRealState = async ({ params, searchParams }) => {
 				</label>
 				<MyTextArea
 					auth={auth}
+					token={token}
 					id="text"
 					name="text"
 					onModel="RealState"
@@ -477,6 +468,7 @@ const UpdateRealState = async ({ params, searchParams }) => {
 					displayCategoryField={false}
 					displayAvatar={true}
 					avatar={realstate?.data?.files?.avatar}
+					avatarFormat={"image"}
 					status={realstate?.data?.status}
 					fullWidth={false}
 					password=""

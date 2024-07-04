@@ -33,7 +33,7 @@ const List = ({
 							All
 						</a>
 					</Link>
-					{categories.data.length > 0 &&
+					{categories.data?.length > 0 &&
 						categories.data
 							.filter((c) => c.timesUsed >= 1)
 							.map((category, index) => (

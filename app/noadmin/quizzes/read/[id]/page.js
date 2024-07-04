@@ -60,14 +60,14 @@ const ReadQuiz = async ({ params, searchParams }) => {
 	const handleTrashAll = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/pages/deleteall`, "PUT", "no-cache");
+		await fetchurl(`/questions/deleteall`, "PUT", "no-cache");
 		revalidatePath(`/noadmin/quizzes/read/${params.id}`);
 	};
 
 	const handleDeleteAll = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/pages/deleteall/permanently`, "DELETE", "no-cache");
+		await fetchurl(`/questions/deleteall/permanently`, "DELETE", "no-cache");
 		revalidatePath(`/noadmin/quizzes/read/${params.id}`);
 	};
 
@@ -84,7 +84,7 @@ const ReadQuiz = async ({ params, searchParams }) => {
 					<QuestionList
 						allLink={`/noadmin/quizzes/read/${quiz?.data?._id}`}
 						pageText="Quizzes"
-						addLink={`/noadmin/quizzes/page/${quiz?.data?._id}/create`}
+						addLink={`/noadmin/quizzes/question/${quiz?.data?._id}/create`}
 						searchOn={`/noadmin/quizzes/read/${quiz?.data?._id}`}
 						objects={questions}
 						searchParams={searchParams}

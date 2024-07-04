@@ -1,9 +1,7 @@
 import {
 	fetchurl,
-	// getAuthTokenOnServer,
-	getUserEmailOnServer,
-	getUserIdOnServer,
-	getUserUsernameOnServer,
+	getAuthTokenOnServer,
+	getUserOnServer,
 } from "@/helpers/setTokenOnServer";
 import { redirect } from "next/navigation";
 import AdminSidebar from "@/components/admin/myfinaladminsidebar";
@@ -11,15 +9,12 @@ import MyTextArea from "@/components/global/myfinaltextarea";
 import OnboardingLink from "@/components/dashboard/onboardinglink";
 import FormButtons from "@/components/global/formbuttons";
 
-async function getAuthenticatedUser() {
-	const res = await fetchurl(`/auth/me`, "GET", "force-cache");
-	return res;
-}
-
 const CreateMembership = async ({ params, searchParams }) => {
-	const auth = await getAuthenticatedUser();
+	const token = await getAuthTokenOnServer();
+	const auth = await getUserOnServer();
+
 	// Redirect if not charges enabled
-	!auth?.data?.stripe?.stripeChargesEnabled && <OnboardingLink auth={auth} />;
+	!auth?.userStripeChargesEnabled && <OnboardingLink auth={auth} />;
 
 	const addMembership = async (formData) => {
 		"use server";
@@ -76,7 +71,8 @@ const CreateMembership = async ({ params, searchParams }) => {
 					Text
 				</label>
 				<MyTextArea
-					auth={undefined}
+					auth={auth}
+					token={token}
 					id="text"
 					name="text"
 					onModel="Membership"
@@ -315,6 +311,7 @@ const CreateMembership = async ({ params, searchParams }) => {
 					displayCategoryField={false}
 					displayAvatar={false}
 					// avatar={files?.selected?._id}
+					avatarFormat={""}
 					status="draft"
 					fullWidth={false}
 					password=""
@@ -327,8 +324,8 @@ const CreateMembership = async ({ params, searchParams }) => {
 					multipleFiles={false}
 					onModel={"Membership"}
 					files={[]}
-					// auth={auth}
-					// token={token}
+					auth={auth}
+					token={token}
 				/>
 				<br />
 				<FormButtons />

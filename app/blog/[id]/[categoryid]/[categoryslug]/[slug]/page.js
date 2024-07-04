@@ -13,7 +13,7 @@ import ReportModal from "@/components/global/reportmodal";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import Globalcontent from "@/layout/content";
 import ArticleHeader from "@/components/global/articleheader";
-import NewsletterForm from "@/layout/newsletter";
+import NewsletterForm from "@/components/global/newsletter";
 
 async function getAuthenticatedUser() {
 	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
@@ -80,7 +80,10 @@ const BlogRead = async ({ params, searchParams }) => {
 								</figure>
 								<section className="mb-5">
 									<ParseHtml text={blog?.data?.text} />
-									<NewsletterForm classList="text-bg-dark text-center" />
+									<NewsletterForm
+										sectionClassList="text-bg-dark text-center pt-3 pb-3 mb-4"
+										headingClassList=""
+									/>
 									<div className="float-start">
 										{blog?.data?.category && (
 											<ExportModal

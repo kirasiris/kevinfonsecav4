@@ -1,9 +1,7 @@
 import {
 	fetchurl,
-	// getAuthTokenOnServer,
-	getUserEmailOnServer,
-	getUserIdOnServer,
-	getUserUsernameOnServer,
+	getAuthTokenOnServer,
+	getUserOnServer,
 } from "@/helpers/setTokenOnServer";
 import { redirect } from "next/navigation";
 import MyTextArea from "@/components/global/myfinaltextarea";
@@ -15,15 +13,8 @@ async function getUsers(params) {
 }
 
 const CreateUser = async ({ params, searchParams }) => {
-	const userId = await getUserIdOnServer();
-	const username = await getUserUsernameOnServer();
-	const email = await getUserEmailOnServer();
-
-	const auth = {
-		id: userId?.value,
-		username: username?.value,
-		email: email?.value,
-	};
+	const token = await getAuthTokenOnServer();
+	const auth = await getUserOnServer();
 
 	const users = await getUsers(`?isEmailConfirmed=true`);
 
@@ -38,7 +29,7 @@ const CreateUser = async ({ params, searchParams }) => {
 			password: formData.get("password"),
 			password2: formData.get("password2"),
 			isEmailConfirmed: formData.get("isEmailConfirmed"),
-			role: Array.from(formData.getAll("role")),
+			role: formData.getAll("role"),
 			sex: formData.get("sex"),
 			gender: formData.get("gender"),
 			age: formData.get("age"),
@@ -338,6 +329,7 @@ const CreateUser = async ({ params, searchParams }) => {
 						</label>
 						<MyTextArea
 							auth={undefined}
+							token={undefined}
 							id="text"
 							name="text"
 							onModel="User"

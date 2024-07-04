@@ -8,7 +8,6 @@ import Navbar from "react-bootstrap/Navbar";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import { deleteAuthTokenOnServer } from "@/helpers/setTokenOnServer";
-import { deleteCookie } from "@/helpers/utilities";
 import { Router } from "next/router";
 
 Router.onRouteChangeStart = (url) => NProgress.start();
@@ -160,11 +159,7 @@ const Menu = ({
 									<button
 										className="btn btn-link"
 										onClick={async () => {
-											await deleteCookie("xAuthToken", "/");
-											await deleteAuthTokenOnServer(
-												"xAuthToken",
-												auth?.data._id
-											);
+											await deleteAuthTokenOnServer();
 										}}
 									>
 										Log Out

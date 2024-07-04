@@ -141,6 +141,7 @@ const UpdateQuote = async ({ params, searchParams }) => {
 						</label>
 						<MyTextArea
 							auth={undefined}
+							token={undefined}
 							id="text"
 							name="text"
 							customPlaceholder="Type something..."

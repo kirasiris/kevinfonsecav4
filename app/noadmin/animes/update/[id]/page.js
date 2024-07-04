@@ -1,9 +1,7 @@
 import {
 	fetchurl,
 	getAuthTokenOnServer,
-	getUserEmailOnServer,
-	getUserIdOnServer,
-	getUserUsernameOnServer,
+	getUserOnServer,
 } from "@/helpers/setTokenOnServer";
 import { redirect } from "next/navigation";
 import AdminSidebar from "@/components/admin/myfinaladminsidebar";
@@ -26,18 +24,10 @@ async function getAnime(params) {
 }
 
 const UpdateAnime = async ({ params, searchParams }) => {
-	const anime = await getAnime(`/${params.id}`);
-
 	const token = await getAuthTokenOnServer();
-	const userId = await getUserIdOnServer();
-	const username = await getUserUsernameOnServer();
-	const email = await getUserEmailOnServer();
+	const auth = await getUserOnServer();
 
-	const auth = {
-		id: userId?.value,
-		username: username?.value,
-		email: email?.value,
-	};
+	const anime = await getAnime(`/${params.id}`);
 
 	const files = await getFiles(`?page=1&limit=100&sort=-createdAt`);
 	const categories = await getCategories(`?categoryType=anime`);
@@ -82,6 +72,7 @@ const UpdateAnime = async ({ params, searchParams }) => {
 				</label>
 				<MyTextArea
 					auth={auth}
+					token={token}
 					id="text"
 					name="text"
 					onModel="Playlist"
@@ -112,6 +103,7 @@ const UpdateAnime = async ({ params, searchParams }) => {
 					displayCategoryField={true}
 					displayAvatar={true}
 					avatar={anime?.data?.files?.avatar}
+					avatarFormat={"image"}
 					status={anime?.data?.status}
 					fullWidth={false}
 					password=""

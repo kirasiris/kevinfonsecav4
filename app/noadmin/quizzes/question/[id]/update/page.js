@@ -1,9 +1,7 @@
 import {
 	fetchurl,
 	getAuthTokenOnServer,
-	getUserEmailOnServer,
-	getUserIdOnServer,
-	getUserUsernameOnServer,
+	getUserOnServer,
 } from "@/helpers/setTokenOnServer";
 import { redirect } from "next/navigation";
 import AdminSidebar from "@/components/admin/myfinaladminsidebar";
@@ -21,18 +19,10 @@ async function getQuestion(params) {
 }
 
 const UpdateQuestion = async ({ params, searchParams }) => {
-	const question = await getQuestion(`/${params.id}`);
-
 	const token = await getAuthTokenOnServer();
-	const userId = await getUserIdOnServer();
-	const username = await getUserUsernameOnServer();
-	const email = await getUserEmailOnServer();
+	const auth = await getUserOnServer();
 
-	const auth = {
-		id: userId?.value,
-		username: username?.value,
-		email: email?.value,
-	};
+	const question = await getQuestion(`/${params.id}`);
 
 	const files = await getFiles(`?page=1&limit=100&sort=-createdAt`);
 
@@ -54,7 +44,7 @@ const UpdateQuestion = async ({ params, searchParams }) => {
 		};
 
 		await fetchurl(`/questions/${params.id}`, "PUT", "no-cache", rawFormData);
-		redirect(`/noadmin/quizzes/read/${params.id}`);
+		redirect(`/noadmin/quizzes/read/${question?.data?.resourceId}`);
 	};
 
 	return (
@@ -76,6 +66,7 @@ const UpdateQuestion = async ({ params, searchParams }) => {
 				</label>
 				<MyTextArea
 					auth={auth}
+					token={token}
 					id="text"
 					name="text"
 					onModel="Question"
@@ -102,7 +93,7 @@ const UpdateQuestion = async ({ params, searchParams }) => {
 						<input
 							id="answersA"
 							name="answersA"
-							defaultValue={question?.data?.answers.answersA}
+							defaultValue={question?.data?.answers?.A}
 							type="text"
 							className="form-control mb-3"
 							placeholder=""
@@ -113,7 +104,7 @@ const UpdateQuestion = async ({ params, searchParams }) => {
 						<input
 							id="answersB"
 							name="answersB"
-							defaultValue={question?.data?.answers.answersB}
+							defaultValue={question?.data?.answers?.B}
 							type="text"
 							className="form-control mb-3"
 							placeholder=""
@@ -126,7 +117,7 @@ const UpdateQuestion = async ({ params, searchParams }) => {
 						<input
 							id="answersC"
 							name="answersC"
-							defaultValue={question?.data?.answers.answersC}
+							defaultValue={question?.data?.answers?.C}
 							type="text"
 							className="form-control mb-3"
 							placeholder=""
@@ -137,7 +128,7 @@ const UpdateQuestion = async ({ params, searchParams }) => {
 						<input
 							id="answersD"
 							name="answersD"
-							defaultValue={question?.data?.answers.answersD}
+							defaultValue={question?.data?.answers?.D}
 							type="text"
 							className="form-control mb-3"
 							placeholder=""
@@ -150,6 +141,7 @@ const UpdateQuestion = async ({ params, searchParams }) => {
 					displayCategoryField={false}
 					displayAvatar={true}
 					avatar={question?.data?.files?.avatar}
+					avatarFormat={"any"}
 					status={question?.data?.status}
 					fullWidth={false}
 					password=""

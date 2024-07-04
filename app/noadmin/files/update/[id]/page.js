@@ -1,9 +1,7 @@
 import {
 	fetchurl,
-	// getAuthTokenOnServer,
-	getUserEmailOnServer,
-	getUserIdOnServer,
-	getUserUsernameOnServer,
+	getAuthTokenOnServer,
+	getUserOnServer,
 } from "@/helpers/setTokenOnServer";
 import { redirect } from "next/navigation";
 import MyTextArea from "@/components/global/myfinaltextarea";
@@ -17,17 +15,10 @@ async function getFile(params) {
 }
 
 const UpdateFile = async ({ params, searchParams }) => {
+	const token = await getAuthTokenOnServer();
+	const auth = await getUserOnServer();
+
 	const file = await getFile(`/${params.id}`);
-
-	const userId = await getUserIdOnServer();
-	const username = await getUserUsernameOnServer();
-	const email = await getUserEmailOnServer();
-
-	const auth = {
-		id: userId?.value,
-		username: username?.value,
-		email: email?.value,
-	};
 
 	const upgradeFile = async (formData) => {
 		"use server";
@@ -137,6 +128,7 @@ const UpdateFile = async ({ params, searchParams }) => {
 				</label>
 				<MyTextArea
 					auth={auth}
+					token={token}
 					id="file-caption"
 					name="caption"
 					onModel="File"
@@ -160,6 +152,7 @@ const UpdateFile = async ({ params, searchParams }) => {
 				</label>
 				<MyTextArea
 					auth={auth}
+					token={token}
 					id="text"
 					name="text"
 					onModel="File"

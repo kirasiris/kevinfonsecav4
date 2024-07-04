@@ -33,7 +33,7 @@ const Form = ({ auth = {} }) => {
 				setBtnTxt("Submit...");
 				const token = await getAuthTokenOnServer();
 				const res = await axios.put(
-					`http://localhost:5000/api/v1/uploads/uploadobject`,
+					`${process.env.apiUrl}/uploads/uploadobject`,
 					{
 						userId: auth?.data?._id,
 						username: auth?.data?.username,

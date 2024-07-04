@@ -1,9 +1,7 @@
 import {
 	fetchurl,
 	getAuthTokenOnServer,
-	getUserEmailOnServer,
-	getUserIdOnServer,
-	getUserUsernameOnServer,
+	getUserOnServer,
 } from "@/helpers/setTokenOnServer";
 import { redirect } from "next/navigation";
 import AdminSidebar from "@/components/admin/myfinaladminsidebar";
@@ -21,18 +19,10 @@ async function getCDAlbum(params) {
 }
 
 const UpdateCDAlbum = async ({ params, searchParams }) => {
-	const cdalbum = await getCDAlbum(`/${params.id}`);
-
 	const token = await getAuthTokenOnServer();
-	const userId = await getUserIdOnServer();
-	const username = await getUserUsernameOnServer();
-	const email = await getUserEmailOnServer();
+	const auth = await getUserOnServer();
 
-	const auth = {
-		id: userId?.value,
-		username: username?.value,
-		email: email?.value,
-	};
+	const cdalbum = await getCDAlbum(`/${params.id}`);
 
 	// FILES
 	const categories = await getCategories(`?categoryType=album`);
@@ -78,6 +68,7 @@ const UpdateCDAlbum = async ({ params, searchParams }) => {
 				</label>
 				<MyTextArea
 					auth={auth}
+					token={token}
 					id="text"
 					name="text"
 					onModel="Playlist"
@@ -91,6 +82,7 @@ const UpdateCDAlbum = async ({ params, searchParams }) => {
 					displayCategoryField={true}
 					displayAvatar={false}
 					avatar={undefined}
+					avatarFormat={"image"}
 					status={cdalbum?.data?.status}
 					fullWidth={false}
 					password=""

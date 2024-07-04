@@ -12,6 +12,7 @@ import "froala-editor/js/plugins.pkgd.min.js";
 
 const MyTextArea = ({
 	auth = {},
+	token = {},
 	id = "",
 	name = "",
 	defaultValue = "",
@@ -25,7 +26,7 @@ const MyTextArea = ({
 		setModel(event);
 	};
 	const userSearch = (text, cb) => {
-		var URL = `http://localhost:5000/api/v1/users`;
+		var URL = `${process.env.apiUrl}/users`;
 		const xhr = new XMLHttpRequest();
 		xhr.onreadystatechange = function () {
 			if (xhr.readyState === 4) {
@@ -76,7 +77,10 @@ const MyTextArea = ({
 					model={model}
 					onModelChange={handleModelChange}
 					config={{
+						// BELOW IS FOR EMAILS
 						useClasses: insertClasses,
+						htmlRemoveTags: ["script"],
+						// ABOVE IS FOR EMAILS
 						documentReady: false,
 						placeholderText: customPlaceholder,
 						imageUpload: true,
@@ -109,18 +113,18 @@ const MyTextArea = ({
 							"image.beforeUpload": async (images) => {
 								console.log("Auth from image.beforeUpload event", auth);
 								const data = new FormData();
-								data.append("userId", auth?.id);
+								data.append("userId", auth?.userId);
 								data.append("username", auth?.username);
 								data.append("userEmail", auth?.email);
 								data.append("onModel", onModel);
 								data.append("file", images[0]);
 								await axios.put(
-									`http://localhost:5000/api/v1/uploads/uploadobject`,
+									`${process.env.apiUrl}/uploads/uploadobject`,
 									data,
 									{
 										headers: {
 											accept: "application/json",
-											Authorization: `Bearer ${auth.token}`,
+											Authorization: `Bearer ${token?.value}`,
 											"Content-Type": `multipart/form-data; boundary=${data._boundary}`,
 										},
 									}
@@ -164,18 +168,18 @@ const MyTextArea = ({
 							"video.beforeUpload": async (videos) => {
 								console.log("Auth from video.beforeUpload event", auth);
 								const data = new FormData();
-								data.append("userId", auth?.id);
+								data.append("userId", auth?.userId);
 								data.append("username", auth?.username);
 								data.append("userEmail", auth?.email);
 								data.append("onModel", onModel);
 								data.append("file", videos[0]);
 								await axios.put(
-									`http://localhost:5000/api/v1/uploads/uploadobject`,
+									`${process.env.apiUrl}/uploads/uploadobject`,
 									data,
 									{
 										headers: {
 											accept: "application/json",
-											Authorization: `Bearer ${auth.token}`,
+											Authorization: `Bearer ${token?.value}`,
 											"Content-Type": `multipart/form-data; boundary=${data._boundary}`,
 										},
 									}

@@ -7,24 +7,17 @@ export const getAuthTokenOnServer = () => {
 	return myCookies.get("xAuthToken");
 };
 
-export const getUserStripeChargesEnabled = () => {
+export const getUserOnServer = () => {
 	const myCookies = cookies();
-	return myCookies.get("userStripeChargesEnabled");
-};
 
-export const getUserIdOnServer = () => {
-	const myCookies = cookies();
-	return myCookies.get("userId");
-};
-
-export const getUserUsernameOnServer = () => {
-	const myCookies = cookies();
-	return myCookies.get("username");
-};
-
-export const getUserEmailOnServer = () => {
-	const myCookies = cookies();
-	return myCookies.get("email");
+	const cookiesReturned = {
+		userStripeChargesEnabled: myCookies.get("userStripeChargesEnabled")?.value,
+		userId: myCookies.get("userId")?.value,
+		username: myCookies.get("username")?.value,
+		email: myCookies.get("email")?.value,
+		avatar: myCookies.get("avatar")?.value,
+	};
+	return cookiesReturned;
 };
 
 export const setAuthTokenOnServer = async (token) => {
@@ -33,57 +26,37 @@ export const setAuthTokenOnServer = async (token) => {
 		cookies().set("xAuthToken", token, { secure: true });
 	} else {
 		console.log("setAuthTokenOnServer function was not a success", token);
-		await deleteAuthTokenOnServer("xAuthToken");
+		await deleteAuthTokenOnServer();
 	}
 };
 
-export const setUserStripeChargesEnabled = async (enabled) => {
-	if (enabled) {
-		console.log("userStripeChargesEnabled function was a success", enabled);
-		cookies().set("userStripeChargesEnabled", enabled, { secure: true });
+export const setUserOnServer = async (object) => {
+	if (object) {
+		cookies().set(
+			"userStripeChargesEnabled",
+			object?.stripe?.stripeChargesEnabled,
+			{ secure: true }
+		);
+		cookies().set("userId", object?._id, { secure: true });
+		cookies().set("username", object?.username, { secure: true });
+		cookies().set("email", object?.email, { secure: true });
+		cookies().set("avatar", object?.files?.avatar?.location?.secure_location, {
+			secure: true,
+		});
 	} else {
-		console.log("userStripeChargesEnabled function was not a success", enabled);
-		await deleteAuthTokenOnServer("user");
+		console.log("setUserOnServer function was not a success", object);
+		await deleteAuthTokenOnServer();
 	}
 };
 
-export const setUserIdOnServer = async (id) => {
-	if (id) {
-		console.log("setUserIdOnServer function was a success", id);
-		cookies().set("userId", id, { secure: true });
-	} else {
-		console.log("setUserIdOnServer function was not a success", id);
-		await deleteAuthTokenOnServer("userId");
-	}
-};
-
-export const setUserUsernameOnServer = async (username) => {
-	if (username) {
-		console.log("setUserUsernameOnServer function was a success", username);
-		cookies().set("username", username, { secure: true });
-	} else {
-		console.log("setUserUsernameOnServer function was not a success", username);
-		await deleteAuthTokenOnServer("username");
-	}
-};
-
-export const setUserEmailOnServer = async (email) => {
-	if (email) {
-		console.log("setUserEmailOnServer function was a success", email);
-		cookies().set("email", email, { secure: true });
-	} else {
-		console.log("setUserEmailOnServer function was not a success", email);
-		await deleteAuthTokenOnServer("email");
-	}
-};
-
-export const deleteAuthTokenOnServer = async (token) => {
+export const deleteAuthTokenOnServer = async () => {
 	await fetchurl(`/auth/logout`, "GET", "no-cache");
-	cookies().delete(token);
+	cookies().delete("xAuthToken");
 	cookies().delete("userStripeChargesEnabled");
 	cookies().delete("userId");
 	cookies().delete("username");
 	cookies().delete("email");
+	cookies().delete("avatar");
 	console.log("2.- Deleting cookie from back-end");
 	redirect(`/auth/login`);
 };
@@ -124,16 +97,13 @@ export const fetchurl = async (
 		] = `multipart/form-data; boundary=${data._boundary}`;
 	}
 
-	const response = await fetch(
-		isRemote ? url : `http://localhost:5000/api/v1${url}`,
-		{
-			method: method,
-			cache: cache,
-			body: method !== "GET" && method !== "HEAD" ? requestBody : null,
-			signal: signal,
-			headers: customHeaders,
-		}
-	)
+	const response = await fetch(isRemote ? url : `${process.env.apiUrl}${url}`, {
+		method: method,
+		cache: cache,
+		body: method !== "GET" && method !== "HEAD" ? requestBody : null,
+		signal: signal,
+		headers: customHeaders,
+	})
 		.then(async (res) => {
 			if (!res.ok) {
 				// check if there was JSON

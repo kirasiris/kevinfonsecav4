@@ -1,9 +1,7 @@
 import {
 	fetchurl,
 	getAuthTokenOnServer,
-	getUserEmailOnServer,
-	getUserIdOnServer,
-	getUserUsernameOnServer,
+	getUserOnServer,
 } from "@/helpers/setTokenOnServer";
 import { redirect } from "next/navigation";
 import AdminSidebar from "@/components/admin/myfinaladminsidebar";
@@ -16,18 +14,10 @@ async function getJob(params) {
 }
 
 const UpdateJob = async ({ params, searchParams }) => {
-	const job = await getJob(`/${params.id}`);
-
 	const token = await getAuthTokenOnServer();
-	const userId = await getUserIdOnServer();
-	const username = await getUserUsernameOnServer();
-	const email = await getUserEmailOnServer();
+	const auth = await getUserOnServer();
 
-	const auth = {
-		id: userId?.value,
-		username: username?.value,
-		email: email?.value,
-	};
+	const job = await getJob(`/${params.id}`);
 
 	// Redirect if not company
 	// !auth?.data?.hasCompany && redirect(`/noadmin/companies`);
@@ -79,6 +69,7 @@ const UpdateJob = async ({ params, searchParams }) => {
 				</label>
 				<MyTextArea
 					auth={auth}
+					token={token}
 					id="text"
 					name="text"
 					onModel="Job"
@@ -258,6 +249,7 @@ const UpdateJob = async ({ params, searchParams }) => {
 					displayCategoryField={false}
 					displayAvatar={false}
 					// avatar={files?.selected?._id}
+					avatarFormat={"image"}
 					status={job?.data?.status}
 					fullWidth={false}
 					password={job?.data?.password}

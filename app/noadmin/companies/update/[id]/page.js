@@ -1,9 +1,7 @@
 import {
 	fetchurl,
 	getAuthTokenOnServer,
-	getUserEmailOnServer,
-	getUserIdOnServer,
-	getUserUsernameOnServer,
+	getUserOnServer,
 } from "@/helpers/setTokenOnServer";
 import { redirect } from "next/navigation";
 import AdminSidebar from "@/components/admin/myfinaladminsidebar";
@@ -21,18 +19,10 @@ async function getCompany(params) {
 }
 
 const UpdateCompany = async ({ params, searchParams }) => {
-	const company = await getCompany(`/${params.id}`);
-
 	const token = await getAuthTokenOnServer();
-	const userId = await getUserIdOnServer();
-	const username = await getUserUsernameOnServer();
-	const email = await getUserEmailOnServer();
+	const auth = await getUserOnServer();
 
-	const auth = {
-		id: userId?.value,
-		username: username?.value,
-		email: email?.value,
-	};
+	const company = await getCompany(`/${params.id}`);
 
 	const files = await getFiles(`?page=1&limit=100&sort=-createdAt`);
 
@@ -69,6 +59,7 @@ const UpdateCompany = async ({ params, searchParams }) => {
 				</label>
 				<MyTextArea
 					auth={auth}
+					token={token}
 					id="text"
 					name="text"
 					onModel="Company"
@@ -93,6 +84,7 @@ const UpdateCompany = async ({ params, searchParams }) => {
 					displayCategoryField={false}
 					displayAvatar={true}
 					avatar={company?.data?.files?.avatar}
+					avatarFormat={"image"}
 					status={company?.data?.status}
 					fullWidth={false}
 					password={company?.data?.password}

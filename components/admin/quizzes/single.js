@@ -23,7 +23,7 @@ const Single = ({
 					<h1 className="blog-item__title">
 						<Link
 							href={{
-								pathname: `/noadmin/quizzes/update/${object._id}`,
+								pathname: `/noadmin/quizzes/question/${object._id}/update`,
 								query: {},
 							}}
 							passHref
@@ -39,7 +39,7 @@ const Single = ({
 				<div className="blog-type-list__blog-thumbnail-wrapper has-image d-none d-md-block d-lg-block d-xl-block d-xxl-block">
 					<Link
 						href={{
-							pathname: `/noadmin/quizzes/update/${object._id}`,
+							pathname: `/noadmin/quizzes/question/${object._id}/update`,
 							query: {},
 						}}
 						passHref

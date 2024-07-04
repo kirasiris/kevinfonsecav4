@@ -161,6 +161,7 @@ const UpdateCategory = async ({ params, searchParams }) => {
 							defaultValue={category?.data?.parentCategory}
 							className="form-control"
 						>
+							<option value="">Select category</option>
 							{categories?.data?.map((item) => (
 								<option key={item._id} value={item._id}>
 									{item.title}

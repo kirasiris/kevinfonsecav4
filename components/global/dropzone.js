@@ -18,6 +18,9 @@ const UseDropzone = ({
 	const router = useRouter();
 	const [uploadPercentage, setUploadPercentage] = useState(0);
 
+	console.log("Auth in @/components/global/dropzone file", auth);
+	console.log("Token in @/components/global/dropzone file", token);
+
 	return (auth?.id !== "" && auth?.id !== undefined && auth?.id !== null) ||
 		(auth?.username !== "" &&
 			auth?.username !== undefined &&
@@ -32,7 +35,7 @@ const UseDropzone = ({
 				onDrop={async (acceptedFiles) => {
 					for (let i = 0; i < acceptedFiles.length; i++) {
 						await axios.put(
-							`http://localhost:5000/api/v1/uploads/uploadobject`,
+							`${process.env.apiUrl}/uploads/uploadobject`,
 							{
 								userId: auth?.id,
 								username: auth?.username,

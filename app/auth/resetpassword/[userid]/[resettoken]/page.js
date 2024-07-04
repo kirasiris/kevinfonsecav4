@@ -1,6 +1,7 @@
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import { redirect } from "next/navigation";
 import FormButtons from "@/components/global/formbuttons";
+import Globalcontent from "@/layout/content";
 
 async function getAuthenticatedUser() {
 	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
@@ -57,36 +58,50 @@ const ResetPassword = async ({ params, searchParams }) => {
 	};
 
 	return (
-		<div className="container">
-			<div className="row">
-				<div className="col-lg-12">
-					<form action={resetPasswordAccount}>
-						<label htmlFor="password" className="form-label">
-							Password
-						</label>
-						<input
-							id="password"
-							name="password"
-							type="password"
-							className="form-control mb-3"
-							placeholder="******"
-						/>
-						<label htmlFor="password2" className="form-label">
-							Confirm Password
-						</label>
-						<input
-							id="password2"
-							name="password2"
-							type="password"
-							className="form-control mb-3"
-							placeholder="******"
-						/>
-						<br />
-						<FormButtons />
-					</form>
+		<>
+			<style>
+				{`
+					footer: {
+						margin-top: 0px !important;
+					}
+				`}
+			</style>
+			<div
+				className="container align-content-center container"
+				style={{
+					height: "100vh",
+				}}
+			>
+				<div className="row">
+					<Globalcontent containerClasses="col-lg-12">
+						<form action={resetPasswordAccount}>
+							<label htmlFor="password" className="form-label">
+								Password
+							</label>
+							<input
+								id="password"
+								name="password"
+								type="password"
+								className="form-control mb-3"
+								placeholder="******"
+							/>
+							<label htmlFor="password2" className="form-label">
+								Confirm Password
+							</label>
+							<input
+								id="password2"
+								name="password2"
+								type="password"
+								className="form-control mb-3"
+								placeholder="******"
+							/>
+							<br />
+							<FormButtons />
+						</form>
+					</Globalcontent>
 				</div>
 			</div>
-		</div>
+		</>
 	);
 };
 

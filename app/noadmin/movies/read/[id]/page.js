@@ -81,7 +81,7 @@ const ReadMovie = async ({ params, searchParams }) => {
 					<VideoList
 						allLink={`/noadmin/movies/read/${movie?.data?._id}`}
 						pageText="Videos"
-						addLink={`/noadmin/movies/videos/${movie?.data?._id}/create`}
+						addLink={`/noadmin/movies/video/${movie?.data?._id}/create`}
 						searchOn={`/noadmin/movies/read/${movie?.data?._id}`}
 						objects={videos}
 						searchParams={searchParams}

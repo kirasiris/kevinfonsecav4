@@ -1,9 +1,7 @@
 import {
 	fetchurl,
 	getAuthTokenOnServer,
-	getUserEmailOnServer,
-	getUserIdOnServer,
-	getUserUsernameOnServer,
+	getUserOnServer,
 } from "@/helpers/setTokenOnServer";
 import { redirect } from "next/navigation";
 import AdminSidebar from "@/components/admin/myfinaladminsidebar";
@@ -22,18 +20,10 @@ async function getCourse(params) {
 }
 
 const UpdateCourse = async ({ params, searchParams }) => {
-	const course = await getCourse(`/${params.id}`);
-
 	const token = await getAuthTokenOnServer();
-	const userId = await getUserIdOnServer();
-	const username = await getUserUsernameOnServer();
-	const email = await getUserEmailOnServer();
+	const auth = await getUserOnServer();
 
-	const auth = {
-		id: userId?.value,
-		username: username?.value,
-		email: email?.value,
-	};
+	const course = await getCourse(`/${params.id}`);
 
 	const files = await getFiles(`?page=1&limit=100&sort=-createdAt`);
 
@@ -93,6 +83,7 @@ const UpdateCourse = async ({ params, searchParams }) => {
 				</label>
 				<MyTextArea
 					auth={auth}
+					token={token}
 					id="text"
 					name="text"
 					onModel="Course"
@@ -325,6 +316,7 @@ const UpdateCourse = async ({ params, searchParams }) => {
 					displayCategoryField={false}
 					displayAvatar={true}
 					avatar={course?.data?.files?.avatar}
+					avatarFormat={"image"}
 					status={course?.data?.status}
 					fullWidth={false}
 					password={course?.data?.password}

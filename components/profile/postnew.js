@@ -1,70 +1,128 @@
-"use client";
-import MyTextArea from "@/components/global/mytextarea";
+import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import FormButtons from "../global/formbuttons";
+import { fetchurl } from "@/helpers/setTokenOnServer";
+import MyTextArea from "@/components/global/myfinaltextarea";
+import { revalidatePath } from "next/cache";
 
-const PostNew = ({}) => {
-	const [postData, setPostData] = useState({
-		title: "",
-		text: "",
-	});
-	const { title, text } = postData;
+const PostNew = async ({
+	auth = {},
+	object = {},
+	params = {},
+	searchParams = {},
+}) => {
+	const addPost = async (formData) => {
+		"use server";
+		const rawFormData = {
+			privacy: formData.get("privacy"),
+			title: formData.get("title"),
+			text: formData.get("text"),
+			address: formData.get("address"),
+			subType: searchParams.subType || undefined,
+		};
+		console.log("data from postnew file", rawFormData);
+		await fetchurl(`/posts`, "POST", "no-cache", rawFormData);
+		revalidatePath(
+			`/profile/${params.id}/${params.username}?page=${
+				searchParams.page || 1
+			}&limit=${searchParams.limit || 100}&sort=${
+				searchParams.sort || `-createdAt`
+			}${(searchParams.subType && `&subType=${searchParams.subType}`) || ""}`
+		);
+	};
 
 	return (
-		<form className="mb-3">
+		<form action={addPost}>
 			<div className="card">
 				<div className="card-header">
 					<div className="float-start">
-						<a href="#!">
-							<img
-								src="https://yt3.ggpht.com/ytc/AL5GRJUOhe9c1D67-yLQEkT2EqyRclI5V3EOTANZQXmt=s48-c-k-c0x00ffffff-no-rj"
-								className="me-1"
-							/>
-						</a>
+						<Link
+							href={{
+								pathname: `/profile/${object?.data?._id}/${object?.data?.username}`,
+								query: {
+									page: 1,
+									limit: 100,
+									sort: `-createdAt`,
+								},
+							}}
+							passHref
+							legacyBehavior
+						>
+							<a>
+								<Image
+									src={object?.data?.files?.avatar?.location.secure_location}
+									className="rounded-5"
+									alt={`${object?.data?.username}'s avatar`}
+									width={48}
+									height={48}
+								/>
+							</a>
+						</Link>
 					</div>
-					<Link href="#!">USERNAME</Link>
+					<Link
+						href={{
+							pathname: `/profile/${object?.data?._id}/${object?.data?.username}`,
+							query: {
+								page: 1,
+								limit: 100,
+								sort: `-createdAt`,
+							},
+						}}
+						passHref
+						legacyBehavior
+					>
+						{object?.data?.username}
+					</Link>
 					<div className="float-end">
-						<select className="form-control">
-							<option value="1">Only me</option>
-							<option value="2">Everyone can see</option>
-							<option value="3">People I follow</option>
-							<option value="4">People following me</option>
-							<option value="5">Anonymous</option>
+						<select
+							id="privacy"
+							name="privacy"
+							className="form-control"
+							defaultValue="public"
+						>
+							<option value="only-me">Only me</option>
+							<option value="public">Everyone can see</option>
+							<option value="following">People I follow</option>
+							<option value="followers">People following me</option>
+							<option value="anonymous">Anonymous</option>
 						</select>
 					</div>
 				</div>
 				<div className="card-body">
 					<input
-						type={`text`}
-						placeholder={`Title *`}
-						aria-label={`title`}
-						aria-describedby={`title-text`}
-						autoComplete={`title`}
-						name={`title`}
-						id={`title`}
-						value={title}
-						onChange={(e) => {
-							setPostData({
-								...postData,
-								title: e.target.value,
-							});
-						}}
+						id="title"
+						name="title"
+						defaultValue=""
+						type="text"
 						className="form-control"
+						placeholder="Untitled"
 					/>
 					<br />
 					<MyTextArea
-						name="text"
+						auth={auth}
 						id="text"
-						objectData={postData}
-						setObjectData={setPostData}
-						value={text}
-						handleChangeValue={"text"}
+						name="text"
+						onModel="Post"
+						advancedTextEditor={false}
+						customPlaceholder="Share something new. Now with #hashtags support, YAY!!!"
+						defaultValue=""
 					/>
+					{searchParams.subType === "maps" && (
+						<input
+							id="address"
+							name="address"
+							defaultValue=""
+							type="text"
+							className="form-control mt-3"
+							placeholder=""
+						/>
+					)}
 				</div>
 				<div className="card-footer">
-					<button className="btn btn-secondary btn-sm" type="submit">
+					{/* <button className="btn btn-secondary btn-sm" type="submit">
 						Submit
-					</button>
+					</button> */}
+					<FormButtons />
 				</div>
 			</div>
 		</form>

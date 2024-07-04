@@ -6,6 +6,7 @@ const AdminSidebar = ({
 	displayCategoryField = true,
 	displayAvatar = true,
 	avatar = "",
+	avatarFormat = "image",
 	status = "draft",
 	fullWidth = false,
 	password = "",
@@ -29,6 +30,7 @@ const AdminSidebar = ({
 				<>
 					<AdminFeaturedImage
 						avatar={avatar}
+						avatarFormat={avatarFormat}
 						multipleFiles={multipleFiles}
 						onModel={onModel}
 						files={files}

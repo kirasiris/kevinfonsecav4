@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import AdminCardHeaderMenu from "@/components/admin/admincardheadermenu";
-import Single from "./single";
+import Single from "./questionsingle";
 import NumericPagination from "@/layout/numericpagination";
 import NothingFoundAlert from "@/layout/nothingfoundalert";
 import ErrorPage from "@/layout/errorpage";
@@ -148,10 +148,10 @@ const QuestionList = ({
 			{objects?.data?.length > 0 ? (
 				<>
 					<ul className="list-group list-group-flush">
-						{objects?.data?.map((quiz) => (
+						{objects?.data?.map((question) => (
 							<Single
-								key={quiz._id}
-								object={quiz}
+								key={question._id}
+								object={question}
 								handleDraft={handleDraft}
 								handlePublish={handlePublish}
 								handleTrash={handleTrash}

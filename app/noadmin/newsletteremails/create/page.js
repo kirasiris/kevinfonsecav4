@@ -1,71 +1,75 @@
 import {
 	fetchurl,
 	getAuthTokenOnServer,
-	getUserEmailOnServer,
-	getUserIdOnServer,
-	getUserUsernameOnServer,
+	getUserOnServer,
 } from "@/helpers/setTokenOnServer";
 import { redirect } from "next/navigation";
-import AdminSidebar from "@/components/admin/myfinaladminsidebar";
+// import AdminSidebar from "@/components/admin/myfinaladminsidebar";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
 
-async function getFiles(params) {
-	const res = await fetchurl(`/files${params}`, "GET", "no-cache");
-	return res;
-}
-
-async function getCategories(params) {
-	const res = await fetchurl(`/categories${params}`, "GET", "no-cache");
+async function getUsersSubscribed(params) {
+	const res = await fetchurl(
+		`/newslettersubscribers${params}`,
+		"GET",
+		"no-cache"
+	);
 	return res;
 }
 
 const CreateEmail = async ({ params, searchParams }) => {
 	const token = await getAuthTokenOnServer();
-	const userId = await getUserIdOnServer();
-	const username = await getUserUsernameOnServer();
-	const email = await getUserEmailOnServer();
+	const auth = await getUserOnServer();
 
-	const auth = {
-		id: userId?.value,
-		username: username?.value,
-		email: email?.value,
-	};
+	const users = await getUsersSubscribed(
+		`?page=${searchParams.page || 1}&limit=${searchParams.limit || 10}&sort=${
+			searchParams.sort || "-createdAt"
+		}`
+	);
 
-	const files = await getFiles(`?page=1&limit=100&sort=-createdAt`);
-	const categories = await getCategories(`?categoryType=blog`);
-
-	const addBlog = async (formData) => {
+	const addEmail = async (formData) => {
 		"use server";
 		const rawFormData = {
-			title: formData.get("title"),
+			users: formData.getAll("users"),
 			text: formData.get("text"),
-			featured: formData.get("featured"),
-			embedding: formData.get("embedding"),
-			category: formData.get("category"),
-			commented: formData.get("commented"),
-			password: formData.get("password"),
+			subject: formData.get("subject"),
 			status: formData.get("status"),
-			fullWidth: formData.get("fullWidth"),
-			files: { avatar: formData.get("file") },
 		};
-		await fetchurl(`/blogs`, "POST", "no-cache", {
+		await fetchurl(`/newsletteremails`, "POST", "no-cache", {
 			...rawFormData,
-			postType: "blog",
+			website: "beFree",
 		});
-		redirect(`/noadmin/blogs`);
+		redirect(`/noadmin/newsletteremails`);
 	};
 
 	return (
-		<form className="row" action={addBlog}>
+		<form className="row" action={addEmail}>
 			<div className="col">
-				<label htmlFor="blog-title" className="form-label">
-					Title
+				<label htmlFor="users" className="form-label">
+					To
+				</label>
+				<select
+					id="users"
+					name="users"
+					defaultValue=""
+					className="form-control"
+					multiple
+				>
+					{users?.data
+						.filter((user) => user.email !== auth?.email)
+						.map((user) => (
+							<option key={user._id} value={user.name + "|" + user.email}>
+								{user?.email}
+							</option>
+						))}
+				</select>
+				<label htmlFor="subject" className="form-label">
+					Subject
 				</label>
 				<input
-					id="blog-title"
-					name="title"
-					defaultValue="Untitled"
+					id="subject"
+					name="subject"
+					defaultValue="Subject"
 					type="text"
 					className="form-control mb-3"
 					placeholder=""
@@ -75,6 +79,7 @@ const CreateEmail = async ({ params, searchParams }) => {
 				</label>
 				<MyTextArea
 					auth={auth}
+					token={token}
 					id="text"
 					name="text"
 					onModel="NewsletterEmail"
@@ -85,25 +90,20 @@ const CreateEmail = async ({ params, searchParams }) => {
 				/>
 			</div>
 			<div className="col-lg-3">
-				<AdminSidebar
-					displayCategoryField={true}
-					displayAvatar={true}
-					// avatar={files?.selected?._id}
-					status="draft"
-					fullWidth={true}
-					password=""
-					featured={true}
-					commented={true}
-					embedding={true}
-					github_readme={""}
-					category={undefined}
-					categories={[]}
-					multipleFiles={false}
-					onModel={"NewsletterEmail"}
-					files={[]}
-					auth={undefined}
-					token={undefined}
-				/>
+				<label htmlFor="status" className="form-label">
+					Status
+				</label>
+				<select
+					id="status"
+					name="status"
+					defaultValue="draft"
+					className="form-control"
+				>
+					<option value={`draft`}>Draft</option>
+					<option value={`published`}>Published</option>
+					<option value={`trash`}>Trash</option>
+					<option value={`scheduled`}>Scheduled</option>
+				</select>
 				<br />
 				<FormButtons />
 			</div>

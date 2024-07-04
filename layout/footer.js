@@ -13,7 +13,7 @@ const Footer = ({
 		<footer className={`py-5 mt-4 bg-dark ${classes}`} style={styles}>
 			<div className="container">
 				<p className="m-0 text-center text-white d-flex align-items-center justify-content-center">
-					Made&nbsp;with&nbsp;&#10084;&nbsp;&#38;&nbsp;&#9749;&nbsp;by&nbsp;KEVIN&nbsp;URIEL&nbsp;
+					&lt;/&gt;&nbsp;made&nbsp;with&nbsp;&#10084;&nbsp;&#38;&nbsp;&#9749;&nbsp;by&nbsp;KEVIN&nbsp;URIEL&nbsp;
 					<ToggleTheme />
 				</p>
 				<hr />

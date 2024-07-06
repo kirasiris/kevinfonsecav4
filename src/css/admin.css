@@ -181,3 +181,12 @@ a.blog-relative-time-status__link {
 	margin: 5vh auto 5vh;
 	text-align: center;
 }
+
+/* ---------------------------------------------------
+  FROALA
+----------------------------------------------------- */
+.fr-wrapper p a,
+.fr-wrapper a {
+	color: #0096dd;
+	text-decoration: underline;
+}

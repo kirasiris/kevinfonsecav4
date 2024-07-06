@@ -1,6 +1,7 @@
 "use client";
 import he from "he";
 import { useEffect, useState } from "react";
+
 const ParseHtml = ({ text = "", classList = "" }) => {
 	const [decodedText, setDecodedText] = useState("");
 

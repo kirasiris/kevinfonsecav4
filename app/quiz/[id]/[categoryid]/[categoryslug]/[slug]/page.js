@@ -7,16 +7,13 @@ import Loading from "@/app/quiz/loading";
 import ExportModal from "@/components/global/exportmodal";
 import AuthorBox from "@/components/global/authorbox";
 // import CommentBox from "@/components/global/commentbox";
-import ParseHtml from "@/layout/parseHtml";
+// import ParseHtml from "@/layout/parseHtml";
 import ReportModal from "@/components/global/reportmodal";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import Globalcontent from "@/layout/content";
 import ArticleHeader from "@/components/global/articleheader";
-
-async function getAuthenticatedUser() {
-	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
-	return res;
-}
+import NewsletterForm from "@/components/global/newsletter";
+import ParseHtml from "@/layout/parseHtml";
 
 async function getQuiz(params) {
 	const res = await fetchurl(`/quizzes${params}`, "GET", "no-cache");
@@ -46,7 +43,7 @@ const QuizRead = async ({ params, searchParams }) => {
 			<div className="d-grid gap-2 col-12 mt-3 mb-3">
 				<Link
 					href={{
-						pathname: `/quiz/${quiz.data._id}/${quiz?.data.category?._id}/${quiz?.data.category?.slug}/${quiz.data.slug}/question/single`,
+						pathname: `/quiz/${quiz?.data?._id}/${quiz?.data?.category?._id}/${quiz?.data?.category?.slug}/${quiz?.data?.slug}/question/single`,
 						query: {
 							page: 1,
 						},
@@ -65,10 +62,9 @@ const QuizRead = async ({ params, searchParams }) => {
 			<div className="d-grid gap-2 col-12 mt-3 mb-3">
 				<Link
 					href={{
-						pathname: `/quiz/${quiz.data._id}/${quiz?.data.category?._id}/${quiz?.data.category?.slug}/${quiz.data.slug}/question/multiple`,
+						pathname: `/quiz/${quiz?.data?._id}/${quiz?.data?.category?._id}/${quiz?.data?.category?.slug}/${quiz?.data?.slug}/question/multiple`,
 						query: {
 							page: 1,
-							limit: 1,
 						},
 					}}
 					passHref
@@ -106,9 +102,10 @@ const QuizRead = async ({ params, searchParams }) => {
 									/>
 								</figure>
 								<section>
-									{quiz.data.singlePage ? singlePageLink() : multiplePageLink()}
+									{quiz?.data?.singlePage && singlePageLink()}
+									{!quiz?.data?.singlePage && multiplePageLink()}
 									<h2>Instructions</h2>
-									<ParseHtml text={quiz.data.text} />
+									<ParseHtml text={quiz?.data?.text} />
 									<ul className="list-group mt-2">
 										<li className="list-group-item">
 											<p className="m-0">
@@ -146,8 +143,12 @@ const QuizRead = async ({ params, searchParams }) => {
 											</p>
 										</li>
 									</ul>
-									{quiz.data.singlePage ? singlePageLink() : multiplePageLink()}
-									<hr />
+									{quiz?.data?.singlePage && singlePageLink()}
+									{!quiz?.data?.singlePage && multiplePageLink()}
+									<NewsletterForm
+										sectionClassList="text-bg-dark text-center pt-3 pb-3 mb-4"
+										headingClassList=""
+									/>
 									<div className="float-start">
 										{quiz?.data?.category && (
 											<ExportModal

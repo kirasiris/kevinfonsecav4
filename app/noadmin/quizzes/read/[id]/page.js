@@ -83,7 +83,7 @@ const ReadQuiz = async ({ params, searchParams }) => {
 				<div className="card rounded-0">
 					<QuestionList
 						allLink={`/noadmin/quizzes/read/${quiz?.data?._id}`}
-						pageText="Quizzes"
+						pageText="Questions"
 						addLink={`/noadmin/quizzes/question/${quiz?.data?._id}/create`}
 						searchOn={`/noadmin/quizzes/read/${quiz?.data?._id}`}
 						objects={questions}

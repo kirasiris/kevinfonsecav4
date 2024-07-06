@@ -46,7 +46,9 @@ const ExportModal = ({
 				animation={true}
 			>
 				<Modal.Header closeButton>
-					<Modal.Title>Export - {object?.title || "Object"}</Modal.Title>
+					<Modal.Title>
+						Export&nbsp;-&nbsp;{object?.title || "Object"}
+					</Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
 					<Form.Control readOnly disabled value={linkToShare} />

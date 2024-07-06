@@ -103,11 +103,11 @@ const BlogRead = async ({ params, searchParams }) => {
 									<AuthorBox author={blog?.data?.user} />
 									<CommentBox
 										auth={auth?.data}
-										authorization={auth?.authorizationTokens}
-										user={blog?.data?.user}
 										postId={blog?.data?._id}
 										secondPostId={blog?.data?._id}
+										parentId={undefined}
 										isVisible={blog?.data?.commented}
+										postType="blog"
 										onModel="Blog"
 									/>
 								</section>

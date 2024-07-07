@@ -36,6 +36,7 @@ const Single = ({ object = {}, objectData = {}, setObjectData = () => {} }) => {
 											if (item.question === object?._id) {
 												return {
 													question: object?._id,
+													questionanswers: object?.answers,
 													correctanswer: object?.correctAnswer,
 													answerbyuser: key,
 												};
@@ -55,6 +56,7 @@ const Single = ({ object = {}, objectData = {}, setObjectData = () => {} }) => {
 														...updatedChosen,
 														{
 															question: object?._id,
+															questionanswers: object?.answers,
 															correctanswer: object?.correctAnswer,
 															answerbyuser: key,
 														},

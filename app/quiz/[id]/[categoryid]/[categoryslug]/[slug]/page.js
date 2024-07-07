@@ -109,34 +109,37 @@ const QuizRead = async ({ params, searchParams }) => {
 									<ul className="list-group mt-2">
 										<li className="list-group-item">
 											<p className="m-0">
-												Number of questions: {questions.data?.length || "0"}
+												Number&nbsp;of&nbsp;questions:&nbsp;
+												{questions.data?.length || "0"}
 											</p>
 										</li>
 										<li className="list-group-item">
 											<p className="m-0">
-												Category: {quiz.data.category?.title || "No category"}
+												Category:&nbsp;
+												{quiz.data.category?.title || "No category"}
 											</p>
 										</li>
 										<li className="list-group-item">
-											<p className="m-0">Duration: {quiz.data.duration}</p>
+											<p className="m-0">Duration:&nbsp;{quiz.data.duration}</p>
 										</li>
 										<li className="list-group-item">
 											<p className="m-0">
-												Minimum score: {quiz.data.minimumSocre}
-											</p>
-										</li>
-										<li className="list-group-item">
-											<p className="m-0">
-												Maximum score: {quiz.data.maximumScore}
+												Minimum&nbsp;score:&nbsp;{quiz.data.minimumScore}
 											</p>
 										</li>
 										<li className="list-group-item">
 											<p className="m-0">
-												Attempts allowed: {quiz.data.attempts}
+												Maximum&nbsp;score:&nbsp;{quiz.data.maximumScore}
 											</p>
 										</li>
 										<li className="list-group-item">
 											<p className="m-0">
+												Attempts&nbsp;allowed:&nbsp;{quiz.data.attempts}
+											</p>
+										</li>
+										<li className="list-group-item">
+											<p className="m-0">
+												Format:&nbsp;
 												{quiz.data.singlePage
 													? "Single page"
 													: "Multiple pages"}

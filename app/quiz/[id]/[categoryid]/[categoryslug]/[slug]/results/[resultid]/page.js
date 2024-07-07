@@ -36,25 +36,38 @@ const QuizResultsRead = async ({ params, searchParams }) => {
 		);
 	};
 
-	const fetchQuotes = () => {
+	const fetchQuotes = (params = "") => {
 		const quotes = [
 			{
 				message:
 					"Failure is a part of the process. You just learn to pick yourself back up.",
 				author: "Michelle Obama",
+				type: "fail",
 			},
 			{
 				message:
 					"The secret of life is to fall seven times and to get up eight times.",
 				author: "Paulo Coelho",
+				type: "fail",
 			},
 			{
 				message: "Failure is another stepping stone to greatness",
 				author: "Oprah Winfrey",
+				type: "fail",
+			},
+			{
+				message: "CONGRATS!!!!. I KNEW YOU COULD MAKE IT",
+				author: "Keanu Reeves",
+				type: "pass",
 			},
 		];
 
-		const randomIndex = Math.floor(Math.random() * quotes.length);
+		const filterQuotesByType = (quoteType) => {
+			return quotes.filter((q) => q.type === quoteType);
+		};
+
+		const filteredQuotes = filterQuotesByType(params);
+		const randomIndex = Math.floor(Math.random() * filteredQuotes.length);
 
 		return (
 			<>
@@ -67,7 +80,7 @@ const QuizResultsRead = async ({ params, searchParams }) => {
 						{quotes[randomIndex].message}
 					</p>
 					<cite className="failted-test-quotes-cite">
-						-&nbsp;{quotes[randomIndex].author}
+						-&nbsp;{quotes[randomIndex].author}....{quotes[randomIndex].type}
 					</cite>
 				</blockquote>
 			</>
@@ -91,8 +104,14 @@ const QuizResultsRead = async ({ params, searchParams }) => {
 											<ul className="list-group mt-2 mb-3">
 												<li className="list-group-item">
 													<p className="m-0">
-														Student&nbsp;Name:&nbsp;
+														Name:&nbsp;
 														{quizresult.data.name || "Uknown"}
+													</p>
+												</li>
+												<li className="list-group-item">
+													<p className="m-0">
+														Email:&nbsp;
+														{quizresult.data.email || "john@doe.com"}
 													</p>
 												</li>
 												<li className="list-group-item">
@@ -113,16 +132,68 @@ const QuizResultsRead = async ({ params, searchParams }) => {
 														{quizresult.data?.totalQuestions || "0"}
 													</p>
 												</li>
-												<li className="list-group-item">
-													<p className="m-0">
-														Final&nbsp;grade:&nbsp;
-														{quizresult.data?.grade || "FAIL"}
-													</p>
-												</li>
+												{quizresult.data?.score >=
+													quizresult.data?.minimumScore && (
+													<li className="list-group-item text-bg-success">
+														<p className="m-0">
+															Final&nbsp;grade:&nbsp;
+															{quizresult.data?.grade || "FAIL"}
+														</p>
+													</li>
+												)}
+												{quizresult.data?.score <
+													quizresult.data?.minimumScore && (
+													<li className="list-group-item text-bg-danger">
+														<p className="m-0">
+															Final&nbsp;grade:&nbsp;
+															{quizresult.data?.grade || "FAIL"}
+														</p>
+													</li>
+												)}
 											</ul>
 										</div>
 										<div className="col">
-											{quizresult.data.grade === "FAIL" && fetchQuotes()}
+											{quizresult.data.grade === "PASS" && fetchQuotes("pass")}
+											{quizresult.data.grade === "FAIL" && fetchQuotes("fail")}
+											<div className="card">
+												<div className="card-header">
+													Review&nbsp;your&nbsp;Results
+												</div>
+												<ul className="list-group list-group-flush">
+													{quizresult.data.chosen.map((questions, index) => (
+														<div key={questions.question._id}>
+															<li className={`list-group-item ${index}`}>
+																{questions.question.title}
+																{questions.questionanswers.map(
+																	(object, index) => (
+																		<ul key={index}>
+																			<li
+																				key={object.A}
+																				className={
+																					questions.correctanswer ===
+																						questions.answerbyuser && "correct"
+																				}
+																			>
+																				A:&nbsp;{object.A}
+																			</li>
+																			<li key={object.B}>B:&nbsp;{object.B}</li>
+																			<li key={object.C}>C:&nbsp;{object.C}</li>
+																			<li key={object.D}>D:&nbsp;{object.D}</li>
+																		</ul>
+																	)
+																)}
+															</li>
+															<li className="list-group-item text-bg-success">
+																Correct&nbsp;answer:
+																{questions.correctanswer}
+															</li>
+															<li className="list-group-item text-bg-primary">
+																Given&nbsp;answer:&nbsp;{questions.answerbyuser}
+															</li>
+														</div>
+													))}
+												</ul>
+											</div>
 										</div>
 									</div>
 									{!quizresult?.data?.singlePage && multiplePageLink()}

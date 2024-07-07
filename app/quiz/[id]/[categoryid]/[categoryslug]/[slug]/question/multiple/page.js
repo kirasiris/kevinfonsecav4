@@ -46,6 +46,7 @@ const QuizMultiplePageRead = async ({ params, searchParams }) => {
 							<article>
 								<section className="mb-4">
 									<List
+										object={quiz}
 										objects={questions}
 										params={params}
 										searchParams={searchParams}

@@ -87,7 +87,7 @@ const BlogRead = async ({ params, searchParams }) => {
 									<div className="float-start">
 										{blog?.data?.category && (
 											<ExportModal
-												linkToShare={`localhost:3000/blog/${blog?.data?._id}/${blog?.data?.category?._id}/${blog?.data?.category.slug}/${blog?.data?.slug}`}
+												linkToShare={`/blog/${blog?.data?._id}/${blog?.data?.category?._id}/${blog?.data?.category.slug}/${blog?.data?.slug}`}
 												object={blog?.data}
 											/>
 										)}

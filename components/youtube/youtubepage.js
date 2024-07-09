@@ -6,6 +6,7 @@ import Carousel from "react-bootstrap/Carousel";
 import RelatedCarousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import DisplayYoutubeInfoModal from "./displayyoutubeinfomodal";
+import NewsletterForm from "../global/newsletter";
 
 const YouTubePage = ({ searchParams, pushTo = true }) => {
 	const router = useRouter();
@@ -319,6 +320,10 @@ const YouTubePage = ({ searchParams, pushTo = true }) => {
 								</RelatedCarousel>
 							</>
 						)}
+						<NewsletterForm
+							sectionClassList="text-bg-dark text-center pt-3 pb-3 mt-4 mb-4"
+							headingClassList=""
+						/>
 					</div>
 					<div className="col-lg-6">
 						<input
@@ -337,7 +342,9 @@ const YouTubePage = ({ searchParams, pushTo = true }) => {
 							<>
 								<hr />
 								<h2>Videos found ({list.length})...</h2>
-								<p>Data gets deleted on the 15 of each month</p>
+								<p className="p-3 text-bg-danger">
+									Data gets deleted on the 15 of each month
+								</p>
 								<hr />
 							</>
 						)}

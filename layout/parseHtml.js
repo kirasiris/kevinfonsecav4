@@ -2,7 +2,7 @@
 import he from "he";
 import { useEffect, useState } from "react";
 
-const ParseHtml = ({ text = "", classList = "" }) => {
+const ParseHtml = ({ text = "", classList = "", styleList = {} }) => {
 	const [decodedText, setDecodedText] = useState("");
 
 	useEffect(() => {
@@ -14,6 +14,7 @@ const ParseHtml = ({ text = "", classList = "" }) => {
 			<div
 				dangerouslySetInnerHTML={{ __html: decodedText }}
 				className={classList}
+				style={styleList}
 			/>
 		);
 	}

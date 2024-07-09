@@ -8,14 +8,15 @@ import AuthorBox from "@/components/global/authorbox";
 import CommentBox from "@/components/global/commentbox";
 import ParseHtml from "@/layout/parseHtml";
 import ReportModal from "@/components/global/reportmodal";
-import { fetchurl } from "@/helpers/setTokenOnServer";
+import { fetchurl, getUserOnServer } from "@/helpers/setTokenOnServer";
 import Globalcontent from "@/layout/content";
 import ArticleHeader from "@/components/global/articleheader";
+import NewsletterForm from "@/components/global/newsletter";
 
-async function getAuthenticatedUser() {
-	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
-	return res;
-}
+// async function getAuthenticatedUser() {
+// 	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
+// 	return res;
+// }
 
 async function getForum(params) {
 	const res = await fetchurl(`/forums${params}`, "GET", "no-cache");
@@ -29,7 +30,7 @@ async function updateViews(params) {
 }
 
 const ForumRead = async ({ params, searchParams }) => {
-	const auth = await getAuthenticatedUser();
+	const auth = await getUserOnServer();
 
 	const getForumsData = getForum(`/${params.id}`);
 	await updateViews(`/${params.id}`);
@@ -51,10 +52,13 @@ const ForumRead = async ({ params, searchParams }) => {
 								/>
 								<section className="mb-5">
 									<ParseHtml text={forum?.data?.text} />
-									<hr />
+									<NewsletterForm
+										sectionClassList="text-bg-dark text-center pt-3 pb-3 mb-4"
+										headingClassList=""
+									/>
 									<div className="float-start">
 										<ExportModal
-											linkToShare={`localhost:3000/forum/${forum?.data?._id}/${forum?.data?.category}/${forum?.data?.sub_category}/${forum?.data?.slug}`}
+											linkToShare={`/forum/${forum?.data?._id}/${forum?.data?.category}/${forum?.data?.sub_category}/${forum?.data?.slug}`}
 											object={forum?.data}
 										/>
 									</div>

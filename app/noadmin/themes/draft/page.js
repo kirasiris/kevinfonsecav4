@@ -13,20 +13,18 @@ async function getThemes(params) {
 }
 
 const AdminThemesDraftIndex = async ({ params, searchParams }) => {
-	const themes = await getThemes(
-		`?page=${searchParams.page || 1}&limit=${searchParams.limit || 10}&sort=${
-			searchParams.sort || "-createdAt"
-		}`
-	);
+	const page = searchParams.page || 1;
+	const limit = searchParams.limit || 10;
+	const sort = searchParams.sort || "-createdAt";
+
+	const themes = await getThemes(`?page=${page}&limit=${limit}&sort=${sort}`);
 
 	const draftIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/themes/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/themes/draft?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/themes/draft?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -35,9 +33,7 @@ const AdminThemesDraftIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/themes/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/themes/draft?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/themes/draft?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -46,9 +42,7 @@ const AdminThemesDraftIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/themes/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/themes/draft?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/themes/draft?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -57,9 +51,7 @@ const AdminThemesDraftIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/themes/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/themes/draft?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/themes/draft?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -68,9 +60,7 @@ const AdminThemesDraftIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/themes/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`/noadmin/themes/draft?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/themes/draft?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -79,9 +69,7 @@ const AdminThemesDraftIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/themes/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/themes/draft?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/themes/draft?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -90,9 +78,7 @@ const AdminThemesDraftIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/themes/deleteall/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`/noadmin/themes/draft?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/themes/draft?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 

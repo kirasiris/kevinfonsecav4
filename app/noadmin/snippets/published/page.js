@@ -13,10 +13,12 @@ async function getSnippets(params) {
 }
 
 const AdminSnippetsPublishedIndex = async ({ params, searchParams }) => {
+	const page = searchParams.page || 1;
+	const limit = searchParams.limit || 10;
+	const sort = searchParams.sort || "-createdAt";
+
 	const snippets = await getSnippets(
-		`?page=${searchParams.page || 1}&limit=${searchParams.limit || 10}&sort=${
-			searchParams.sort || "-createdAt"
-		}`
+		`?page=${page}&limit=${limit}&sort=${sort}`
 	);
 
 	const draftIt = async (id) => {
@@ -24,9 +26,7 @@ const AdminSnippetsPublishedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/snippets/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/snippets/published?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/snippets/published?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -35,9 +35,7 @@ const AdminSnippetsPublishedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/snippets/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/snippets/published?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/snippets/published?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -46,9 +44,7 @@ const AdminSnippetsPublishedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/snippets/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/snippets/published?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/snippets/published?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -57,9 +53,7 @@ const AdminSnippetsPublishedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/snippets/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/snippets/published?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/snippets/published?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -68,9 +62,7 @@ const AdminSnippetsPublishedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/snippets/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`/noadmin/snippets/published?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/snippets/published?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -79,9 +71,7 @@ const AdminSnippetsPublishedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/snippets/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/snippets/published?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/snippets/published?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -90,9 +80,7 @@ const AdminSnippetsPublishedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/snippets/deleteall/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`/noadmin/snippets/published?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/snippets/published?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 

@@ -6,10 +6,10 @@ import { fetchurl } from "@/helpers/setTokenOnServer";
 import Globalcontent from "@/layout/content";
 import List from "@/components/quiz/multiplepagequestionlist";
 
-async function getAuthenticatedUser() {
-	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
-	return res;
-}
+// async function getAuthenticatedUser() {
+// 	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
+// 	return res;
+// }
 
 async function getQuiz(params) {
 	const res = await fetchurl(`/quizzes${params}`, "GET", "no-cache");
@@ -23,7 +23,7 @@ async function getQuestions(params) {
 }
 
 const QuizMultiplePageRead = async ({ params, searchParams }) => {
-	const auth = await getAuthenticatedUser();
+	// const auth = await getAuthenticatedUser();
 
 	const getQuizzesData = getQuiz(`/${params.id}`);
 

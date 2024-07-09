@@ -7,6 +7,7 @@ import { vscodeDark } from "@uiw/codemirror-theme-vscode";
 import Image from "next/image";
 import { useEffect } from "react";
 import { fetchurl } from "@/helpers/setTokenOnServer";
+import NewsletterForm from "../global/newsletter";
 
 const OpenGraphViewerPage = ({ searchParams }) => {
 	const router = useRouter();
@@ -206,6 +207,10 @@ const OpenGraphViewerPage = ({ searchParams }) => {
 						theme={vscodeDark}
 						extensions={[loadLanguage("html")]}
 						readOnly
+					/>
+					<NewsletterForm
+						sectionClassList="text-bg-dark text-center pt-3 pb-3 mt-4 mb-4"
+						headingClassList=""
 					/>
 				</div>
 				<div className="col-lg-4">

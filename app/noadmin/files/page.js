@@ -4,6 +4,10 @@ import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
 import { revalidatePath } from "next/cache";
 
 const AdminFilesIndex = async ({ params, searchParams }) => {
+	const page = searchParams.page || 1;
+	const limit = searchParams.limit || 50;
+	const sort = searchParams.sort || "-createdAt";
+
 	const handleDelete = async (id, publicId) => {
 		"use server";
 		// const rawFormData = {}
@@ -13,33 +17,21 @@ const AdminFilesIndex = async ({ params, searchParams }) => {
 			"DELETE",
 			"no-cache"
 		);
-		revalidatePath(
-			`/noadmin/files?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 50
-			}&sort=${searchParams.sort || "-createdAt"}`
-		);
+		revalidatePath(`/noadmin/files?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const handleTrashAll = async () => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/files/deleteall`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/files?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 50
-			}&sort=${searchParams.sort || "-createdAt"}`
-		);
+		revalidatePath(`/noadmin/files?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const handleDeleteAll = async () => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/files/deleteall`, "DELETE", "no-cache");
-		revalidatePath(
-			`/noadmin/files?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 50
-			}&sort=${searchParams.sort || "-createdAt"}`
-		);
+		revalidatePath(`/noadmin/files?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	return (

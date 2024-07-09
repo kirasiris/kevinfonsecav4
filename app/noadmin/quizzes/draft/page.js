@@ -13,20 +13,18 @@ async function getQuizzes(params) {
 }
 
 const AdminQuizzesDraftIndex = async ({ params, searchParams }) => {
-	const quizzes = await getQuizzes(
-		`?page=${searchParams.page || 1}&limit=${searchParams.limit || 10}&sort=${
-			searchParams.sort || "-createdAt"
-		}`
-	);
+	const page = searchParams.page || 1;
+	const limit = searchParams.limit || 10;
+	const sort = searchParams.sort || "-createdAt";
+
+	const quizzes = await getQuizzes(`?page=${page}&limit=${limit}&sort=${sort}`);
 
 	const draftIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/quizzes/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/quizzes/draft?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/quizzes/draft?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -35,9 +33,7 @@ const AdminQuizzesDraftIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/quizzes/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/quizzes/draft?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/quizzes/draft?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -46,9 +42,7 @@ const AdminQuizzesDraftIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/quizzes/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/quizzes/draft?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/quizzes/draft?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -57,9 +51,7 @@ const AdminQuizzesDraftIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/quizzes/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/quizzes/draft?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/quizzes/draft?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -68,9 +60,7 @@ const AdminQuizzesDraftIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/quizzes/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`/noadmin/quizzes/draft?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/quizzes/draft?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -79,9 +69,7 @@ const AdminQuizzesDraftIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/quizzes/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/quizzes/draft?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/quizzes/draft?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -90,9 +78,7 @@ const AdminQuizzesDraftIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/quizzes/deleteall/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`/noadmin/quizzes/draft?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/quizzes/draft?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 

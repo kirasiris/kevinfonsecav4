@@ -3,7 +3,7 @@ import {
 	getAuthTokenOnServer,
 	getUserOnServer,
 } from "@/helpers/setTokenOnServer";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import AdminSidebar from "@/components/admin/myfinaladminsidebar";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import OnboardingLink from "@/components/dashboard/onboardinglink";
@@ -16,6 +16,7 @@ async function getFiles(params) {
 
 async function getCourse(params) {
 	const res = await fetchurl(`/courses${params}`, "GET", "no-cache");
+	if (!res.success) notFound();
 	return res;
 }
 

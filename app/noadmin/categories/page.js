@@ -11,8 +11,12 @@ async function getCategories(params) {
 }
 
 const AdminCategoriesIndex = async ({ params, searchParams }) => {
+	const page = searchParams.page || 1;
+	const limit = searchParams.limit || 10;
+	const sort = searchParams.sort || "-createdAt";
+
 	const categories = await getCategories(
-		`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+		`?page=${page}&limit=${limit}&sort=${sort}`
 	);
 	const createCategory = async (formData) => {
 		"use server";
@@ -22,72 +26,56 @@ const AdminCategoriesIndex = async ({ params, searchParams }) => {
 			parentCategory: formData.get("parentCategory"),
 		};
 		await fetchurl(`/categories`, "POST", "no-cache", rawFormData);
-		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
-		);
+		revalidatePath(`?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const draftIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/categories/${id}/draftit`, "PUT", "no-cache");
-		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
-		);
+		revalidatePath(`?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const publishIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/categories/${id}/publishit`, "PUT", "no-cache");
-		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
-		);
+		revalidatePath(`?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const trashIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/categories/${id}/trashit`, "PUT", "no-cache");
-		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
-		);
+		revalidatePath(`?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const scheduleIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/categories/${id}/scheduleit`, "PUT", "no-cache");
-		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
-		);
+		revalidatePath(`?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const handleDelete = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/categories/${id}/permanently`, "DELETE", "no-cache");
-		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
-		);
+		revalidatePath(`?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const handleTrashAll = async () => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/categories/deleteall`, "PUT", "no-cache");
-		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
-		);
+		revalidatePath(`?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const handleDeleteAll = async () => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/categories/deleteall/permanently`, "DELETE", "no-cache");
-		revalidatePath(
-			`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
-		);
+		revalidatePath(`?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	return (

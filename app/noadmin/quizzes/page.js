@@ -9,87 +9,59 @@ async function getQuizzes(params) {
 }
 
 const AdminQuizzesIndex = async ({ params, searchParams }) => {
-	const quizzes = await getQuizzes(
-		`?page=${searchParams.page || 1}&limit=${searchParams.limit || 10}&sort=${
-			searchParams.sort || "-createdAt"
-		}`
-	);
+	const page = searchParams.page || 1;
+	const limit = searchParams.limit || 10;
+	const sort = searchParams.sort || "-createdAt";
+
+	const quizzes = await getQuizzes(`?page=${page}&limit=${limit}&sort=${sort}`);
 
 	const draftIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/quizzes/${id}/draftit`, "PUT", "no-cache");
-		revalidatePath(
-			`?page=${searchParams.page || 1}&limit=${searchParams.limit || 10}&sort=${
-				searchParams.sort || "-createdAt"
-			}`
-		);
+		revalidatePath(`?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const publishIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/quizzes/${id}/publishit`, "PUT", "no-cache");
-		revalidatePath(
-			`?page=${searchParams.page || 1}&limit=${searchParams.limit || 10}&sort=${
-				searchParams.sort || "-createdAt"
-			}`
-		);
+		revalidatePath(`?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const trashIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/quizzes/${id}/trashit`, "PUT", "no-cache");
-		revalidatePath(
-			`?page=${searchParams.page || 1}&limit=${searchParams.limit || 10}&sort=${
-				searchParams.sort || "-createdAt"
-			}`
-		);
+		revalidatePath(`?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const scheduleIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/quizzes/${id}/scheduleit`, "PUT", "no-cache");
-		revalidatePath(
-			`?page=${searchParams.page || 1}&limit=${searchParams.limit || 10}&sort=${
-				searchParams.sort || "-createdAt"
-			}`
-		);
+		revalidatePath(`?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const handleDelete = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/quizzes/${id}/permanently`, "DELETE", "no-cache");
-		revalidatePath(
-			`?page=${searchParams.page || 1}&limit=${searchParams.limit || 10}&sort=${
-				searchParams.sort || "-createdAt"
-			}`
-		);
+		revalidatePath(`?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const handleTrashAll = async () => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/quizzes/deleteall`, "PUT", "no-cache");
-		revalidatePath(
-			`?page=${searchParams.page || 1}&limit=${searchParams.limit || 10}&sort=${
-				searchParams.sort || "-createdAt"
-			}`
-		);
+		revalidatePath(`?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const handleDeleteAll = async () => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/quizzes/deleteall/permanently`, "DELETE", "no-cache");
-		revalidatePath(
-			`?page=${searchParams.page || 1}&limit=${searchParams.limit || 10}&sort=${
-				searchParams.sort || "-createdAt"
-			}`
-		);
+		revalidatePath(`?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	return (

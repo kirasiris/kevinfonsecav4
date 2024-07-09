@@ -3,18 +3,19 @@ import {
 	getAuthTokenOnServer,
 	getUserOnServer,
 } from "@/helpers/setTokenOnServer";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import AdminSidebar from "@/components/admin/myfinaladminsidebar";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
 
-async function getFiles(params) {
-	const res = await fetchurl(`/files${params}`, "GET", "no-cache");
-	return res;
-}
+// async function getFiles(params) {
+// 	const res = await fetchurl(`/files${params}`, "GET", "no-cache");
+// 	return res;
+// }
 
 async function getQuestion(params) {
 	const res = await fetchurl(`/questions${params}`, "GET", "no-cache");
+	if (!res.success) notFound();
 	return res;
 }
 
@@ -24,7 +25,7 @@ const UpdateQuestion = async ({ params, searchParams }) => {
 
 	const question = await getQuestion(`/${params.id}`);
 
-	const files = await getFiles(`?page=1&limit=100&sort=-createdAt`);
+	// const files = await getFiles(`?page=1&limit=100&sort=-createdAt`);
 
 	const upgradeQuestion = async (formData) => {
 		"use server";
@@ -40,7 +41,7 @@ const UpdateQuestion = async ({ params, searchParams }) => {
 				C: formData.get("answersC"),
 				D: formData.get("answersD"),
 			},
-			files: { avatar: formData.get("file") },
+			// files: { avatar: formData.get("file") },
 		};
 
 		await fetchurl(`/questions/${params.id}`, "PUT", "no-cache", rawFormData);
@@ -139,8 +140,8 @@ const UpdateQuestion = async ({ params, searchParams }) => {
 			<div className="col-lg-3">
 				<AdminSidebar
 					displayCategoryField={false}
-					displayAvatar={true}
-					avatar={question?.data?.files?.avatar}
+					displayAvatar={false}
+					avatar={undefined}
 					avatarFormat={"any"}
 					status={question?.data?.status}
 					fullWidth={false}
@@ -153,7 +154,7 @@ const UpdateQuestion = async ({ params, searchParams }) => {
 					categories={[]}
 					multipleFiles={false}
 					onModel={"Question"}
-					files={files}
+					files={[]}
 					auth={auth}
 					token={token}
 				/>

@@ -13,20 +13,18 @@ async function getBlogs(params) {
 }
 
 const AdminBlogsTrashedIndex = async ({ params, searchParams }) => {
-	const blogs = await getBlogs(
-		`?page=${searchParams.page || 1}&limit=${searchParams.limit || 10}&sort=${
-			searchParams.sort || "-createdAt"
-		}`
-	);
+	const page = searchParams.page || 1;
+	const limit = searchParams.limit || 10;
+	const sort = searchParams.sort || "-createdAt";
+
+	const blogs = await getBlogs(`?page=${page}&limit=${limit}&sort=${sort}`);
 
 	const draftIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/blogs/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/blogs/trashed?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/blogs/trashed?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -35,9 +33,7 @@ const AdminBlogsTrashedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/blogs/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/blogs/trashed?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/blogs/trashed?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -46,9 +42,7 @@ const AdminBlogsTrashedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/blogs/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/blogs/trashed?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/blogs/trashed?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -57,9 +51,7 @@ const AdminBlogsTrashedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/blogs/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/blogs/trashed?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/blogs/trashed?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -68,9 +60,7 @@ const AdminBlogsTrashedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/blogs/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`/noadmin/blogs/trashed?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/blogs/trashed?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -79,9 +69,7 @@ const AdminBlogsTrashedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/blogs/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/blogs/trashed?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/blogs/trashed?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -90,9 +78,7 @@ const AdminBlogsTrashedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/blogs/deleteall/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`/noadmin/blogs/trashed?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/blogs/trashed?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 

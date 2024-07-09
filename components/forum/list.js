@@ -1,4 +1,4 @@
-import { getUserIdOnServer } from "@/helpers/setTokenOnServer";
+import { getUserOnServer } from "@/helpers/setTokenOnServer";
 import Single from "./single";
 import NumericPagination from "@/layout/numericpagination";
 import NothingFoundAlert from "@/layout/nothingfoundalert";
@@ -12,13 +12,13 @@ const List = async ({
 	params = {},
 	searchParams = {},
 }) => {
-	const userId = await getUserIdOnServer();
+	const auth = await getUserOnServer();
 
 	return (
 		<div className="container">
 			<div className="row">
 				<Globalcontent>
-					{userId !== undefined &&
+					{auth?.userId !== undefined &&
 						params.category !== undefined &&
 						params.subcategory !== undefined && (
 							<Form params={params} searchParams={searchParams} />

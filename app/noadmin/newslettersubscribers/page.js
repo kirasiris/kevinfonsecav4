@@ -13,10 +13,12 @@ async function getNewsletterSubscribers(params) {
 }
 
 const AdminNewsletterSubscribersIndex = async ({ params, searchParams }) => {
+	const page = searchParams.page || 1;
+	const limit = searchParams.limit || 10;
+	const sort = searchParams.sort || "-createdAt";
+
 	const newslettersubscribers = await getNewsletterSubscribers(
-		`?page=${searchParams.page || 1}&limit=${searchParams.limit || 10}&sort=${
-			searchParams.sort || "-createdAt"
-		}`
+		`?page=${page}&limit=${limit}&sort=${sort}`
 	);
 
 	// const draftIt = async (id) => {

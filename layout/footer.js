@@ -13,7 +13,22 @@ const Footer = ({
 		<footer className={`py-5 mt-4 bg-dark ${classes}`} style={styles}>
 			<div className="container">
 				<p className="m-0 text-center text-white d-flex align-items-center justify-content-center">
-					&lt;/&gt;&nbsp;made&nbsp;with&nbsp;&#10084;&nbsp;&#38;&nbsp;&#9749;&nbsp;by&nbsp;KEVIN&nbsp;URIEL&nbsp;
+					<button className="btn btn-light btn-sm" type="button">
+						&lt;/&gt;
+					</button>
+					&nbsp;made&nbsp;with&nbsp;
+					<button className="btn btn-light btn-sm" type="button">
+						&#10084;
+					</button>
+					&nbsp;&#38;&nbsp;
+					<button className="btn btn-light btn-sm" type="button">
+						&#9749;
+					</button>
+					&nbsp;by&nbsp;
+					<a href={process.env.websiteUrl} className="btn btn-secondary btn-sm">
+						KEVIN&nbsp;URIEL
+					</a>
+					&nbsp;
 					<ToggleTheme />
 				</p>
 				<hr />
@@ -32,16 +47,18 @@ const Footer = ({
 								.map((p, index) => (
 									<li key={index} className="nav-item mb-2">
 										{p.target === "_self" ? (
-											<Link
-												href={{
-													pathname: decodeURI(`${canonical}${p.url}`),
-													query: {},
-												}}
-												passHref
-												legacyBehavior
-											>
-												{p.title}
-											</Link>
+											<>
+												<Link
+													href={{
+														pathname: decodeURI(`${canonical}${p.url}`),
+														query: {},
+													}}
+													passHref
+													legacyBehavior
+												>
+													{p.title}
+												</Link>
+											</>
 										) : (
 											<a href={p.url} target="_blank" rel="noreferrer noopener">
 												{p.title}

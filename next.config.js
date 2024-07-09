@@ -44,7 +44,9 @@ const nextConfig = {
 	},
 	env: {
 		apiUrl: `http://localhost:5000/api/v1`,
+		websiteUrl: `https://kevinurielfonseca.github.io`,
 		mapboxToken: `pk.eyJ1Ijoia2lyYXNpcmlzIiwiYSI6ImNsMW5zd3huMTB3cGMzZXF1MjBtNDNyam8ifQ.Y9omxfTV8-WjjHhDI6ZHbQ`,
+		githubToken: `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`,
 	},
 	headers: async () => {
 		return [
@@ -58,10 +60,6 @@ const nextConfig = {
 					{
 						key: `kevins-web-security`,
 						value: `Do not ever try to paste anything within the console of your browser!`,
-					},
-					{
-						key: `kevins-web-facts`,
-						value: `Backticks are better than single quotes ('') or double quotes ("")`,
 					},
 					{
 						key: `kevins-web-random`,

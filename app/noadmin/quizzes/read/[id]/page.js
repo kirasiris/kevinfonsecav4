@@ -3,9 +3,11 @@ import ParseHtml from "@/layout/parseHtml";
 import QuestionList from "@/components/admin/quizzes/questionlist";
 import { revalidatePath } from "next/cache";
 import Image from "next/image";
+import { notFound } from "next/navigation";
 
 async function getQuiz(params) {
 	const res = await fetchurl(`/quizzes${params}`, "GET", "no-cache");
+	if (!res.success) notFound();
 	return res;
 }
 
@@ -15,11 +17,13 @@ async function getQuestions(params) {
 }
 
 const ReadQuiz = async ({ params, searchParams }) => {
+	const page = searchParams.page || 1;
+	const limit = searchParams.limit || 10;
+	const sort = searchParams.sort || "orderingNumber";
+
 	const quiz = await getQuiz(`/${params.id}`);
 	const questions = await getQuestions(
-		`?resourceId=${quiz?.data?._id}&page=${searchParams.page || 1}&limit=${
-			searchParams.limit || 10
-		}&sort=${searchParams.sort || "orderingNumber"}`
+		`?resourceId=${quiz?.data?._id}&page=${page}&limit=${limit}&sort=${sort}`
 	);
 
 	const draftIt = async (id) => {

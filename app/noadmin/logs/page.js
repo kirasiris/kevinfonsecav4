@@ -9,32 +9,24 @@ async function getLogs(params) {
 }
 
 const AdminLogsIndex = async ({ params, searchParams }) => {
-	const logs = await getLogs(
-		`?page=${searchParams.page || 1}&limit=${searchParams.limit || 10}&sort=${
-			searchParams.sort || "-createdAt"
-		}`
-	);
+	const page = searchParams.page || 1;
+	const limit = searchParams.limit || 10;
+	const sort = searchParams.sort || "-createdAt";
+
+	const logs = await getLogs(`?page=${page}&limit=${limit}&sort=${sort}`);
 
 	const handleDelete = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/logs/${id}`, "DELETE", "no-cache");
-		revalidatePath(
-			`/noadmin/logs?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
-		);
+		revalidatePath(`/noadmin/logs?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const handleDeleteAll = async () => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/logs/deleteall`, "DELETE", "no-cache");
-		revalidatePath(
-			`/noadmin/logs?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
-		);
+		revalidatePath(`/noadmin/logs?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	return (

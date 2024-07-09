@@ -1,10 +1,12 @@
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import ParseHtml from "@/layout/parseHtml";
+import { notFound } from "next/navigation";
 // import ArticleHeader from "@/components/global/articleheader";
 // import Image from "next/image";
 
 async function getEmails(params) {
 	const res = await fetchurl(`/emails${params}`, "GET", "no-cache");
+	if (!res.success) notFound();
 	return res;
 }
 

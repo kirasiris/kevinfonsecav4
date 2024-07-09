@@ -35,7 +35,7 @@ async function getReadMe(repoName) {
 			method: "GET",
 			accept: "application/vnd.github+json",
 			headers: {
-				Authorization: "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",
+				Authorization: process.env.githubToken,
 			},
 			cache: "no-store",
 		}
@@ -63,6 +63,7 @@ async function getReadMe(repoName) {
 				console.log("Error coming from setTokenOnServer file", err);
 			}
 		});
+
 	return response;
 }
 
@@ -83,7 +84,7 @@ const ThemeRead = async ({ params, searchParams }) => {
 	};
 
 	const readme = readMEDecoder(
-		readMeResponse.content ? readMeResponse.content : "Tm8gcmVhZE1FIGZpbGU="
+		readMeResponse.content || "Tm8gcmVhZE1FIGZpbGU="
 	);
 
 	return (
@@ -115,7 +116,7 @@ const ThemeRead = async ({ params, searchParams }) => {
 									<div className="float-start">
 										{theme?.data?.category && (
 											<ExportModal
-												linkToShare={`localhost:3000/theme/${theme?.data?._id}/${theme?.data?.category?._id}/${theme?.data?.category.slug}/${theme?.data?.slug}`}
+												linkToShare={`/theme/${theme?.data?._id}/${theme?.data?.category?._id}/${theme?.data?.category.slug}/${theme?.data?.slug}`}
 												object={theme?.data}
 											/>
 										)}

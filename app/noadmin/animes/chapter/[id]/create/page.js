@@ -9,7 +9,7 @@ import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
 
 async function getFiles(params) {
-	const res = await fetchurl(`/files${params}`, "GET", "force-cache");
+	const res = await fetchurl(`/files${params}`, "GET", "no-cache");
 	return res;
 }
 

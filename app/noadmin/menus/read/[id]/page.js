@@ -2,9 +2,11 @@ import { fetchurl } from "@/helpers/setTokenOnServer";
 import ParseHtml from "@/layout/parseHtml";
 import PageList from "@/components/admin/menus/pagelist";
 import { revalidatePath } from "next/cache";
+import { notFound } from "next/navigation";
 
 async function getMenu(params) {
 	const res = await fetchurl(`/menus${params}`, "GET", "no-cache");
+	if (!res.success) notFound();
 	return res;
 }
 
@@ -14,11 +16,13 @@ async function getPages(params) {
 }
 
 const ReadMenu = async ({ params, searchParams }) => {
+	const page = searchParams.page || 1;
+	const limit = searchParams.limit || 10;
+	const sort = searchParams.sort || "orderingNumber";
+
 	const menu = await getMenu(`/${params.id}`);
 	const pages = await getPages(
-		`?resourceId=${menu?.data?._id}&page=${searchParams.page || 1}&limit=${
-			searchParams.limit || 10
-		}&sort=${searchParams.sort || "orderingNumber"}`
+		`?resourceId=${menu?.data?._id}&page=${page}&limit=${limit}&sort=${sort}`
 	);
 
 	const draftIt = async (id) => {

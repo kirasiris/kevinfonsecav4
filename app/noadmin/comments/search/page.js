@@ -9,10 +9,13 @@ async function getComments(params) {
 }
 
 const AdminCommentsSearchIndex = async ({ params, searchParams }) => {
+	const keyword = searchParams.keyword || "";
+	const page = searchParams.page || 1;
+	const limit = searchParams.limit || 10;
+	const sort = searchParams.sort || "-createdAt";
+
 	const comments = await getComments(
-		`?keyword=${searchParams.keyword}&page=${searchParams.page || 1}&limit=${
-			searchParams.limit || 10
-		}&sort=${searchParams.sort || "-createdAt"}`
+		`?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 	);
 
 	const draftIt = async (id) => {
@@ -20,11 +23,7 @@ const AdminCommentsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/comments/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/comments/search?keyword=${searchParams.keyword}&page=${
-				searchParams.page || 1
-			}&limit=${searchParams.limit || 10}&sort=${
-				searchParams.sort || "-createdAt"
-			}`
+			`/noadmin/comments/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -33,11 +32,7 @@ const AdminCommentsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/comments/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/comments/search?keyword=${searchParams.keyword}&page=${
-				searchParams.page || 1
-			}&limit=${searchParams.limit || 10}&sort=${
-				searchParams.sort || "-createdAt"
-			}`
+			`/noadmin/comments/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -46,11 +41,7 @@ const AdminCommentsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/comments/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/comments/search?keyword=${searchParams.keyword}&page=${
-				searchParams.page || 1
-			}&limit=${searchParams.limit || 10}&sort=${
-				searchParams.sort || "-createdAt"
-			}`
+			`/noadmin/comments/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -59,11 +50,7 @@ const AdminCommentsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/comments/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/comments/search?keyword=${searchParams.keyword}&page=${
-				searchParams.page || 1
-			}&limit=${searchParams.limit || 10}&sort=${
-				searchParams.sort || "-createdAt"
-			}`
+			`/noadmin/comments/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -72,11 +59,7 @@ const AdminCommentsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/comments/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`/noadmin/comments/search?keyword=${searchParams.keyword}&page=${
-				searchParams.page || 1
-			}&limit=${searchParams.limit || 10}&sort=${
-				searchParams.sort || "-createdAt"
-			}`
+			`/noadmin/comments/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -85,11 +68,7 @@ const AdminCommentsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/comments/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/comments/search?keyword=${searchParams.keyword}&page=${
-				searchParams.page || 1
-			}&limit=${searchParams.limit || 10}&sort=${
-				searchParams.sort || "-createdAt"
-			}`
+			`/noadmin/comments/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -98,11 +77,7 @@ const AdminCommentsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/comments/deleteall/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`/noadmin/comments/search?keyword=${searchParams.keyword}&page=${
-				searchParams.page || 1
-			}&limit=${searchParams.limit || 10}&sort=${
-				searchParams.sort || "-createdAt"
-			}`
+			`/noadmin/comments/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 

@@ -73,7 +73,7 @@ const CourseRead = async ({ params, searchParams }) => {
 				isAdmin={false}
 				searchParams={searchParams}
 				isIndex={true}
-				linkToShare={`localhost:3000/course/${course?.data?._id}`}
+				linkToShare={`/course/${course?.data?._id}`}
 				postType="course"
 				onModel="Course"
 			/>

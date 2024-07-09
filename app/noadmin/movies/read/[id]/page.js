@@ -3,9 +3,11 @@ import ParseHtml from "@/layout/parseHtml";
 import VideoList from "@/components/admin/movies/videolist";
 import { revalidatePath } from "next/cache";
 import Image from "next/image";
+import { notFound } from "next/navigation";
 
 async function getMovie(params) {
 	const res = await fetchurl(`/playlists${params}`, "GET", "no-cache");
+	if (!res.success) notFound();
 	return res;
 }
 
@@ -15,10 +17,12 @@ async function getVideo(params) {
 }
 
 const ReadMovie = async ({ params, searchParams }) => {
+	const page = searchParams.page || 1;
+	const limit = searchParams.limit || 10;
+	const sort = searchParams.sort || "orderingNumber";
+
 	const movie = await getMovie(`/${params.id}`);
-	const videos = await getVideo(
-		`?resourceId=${movie?.data?._id}&sort=orderingNumber`
-	);
+	const videos = await getVideo(`?resourceId=${movie?.data?._id}&sort=${sort}`);
 
 	const draftIt = async (id) => {
 		"use server";

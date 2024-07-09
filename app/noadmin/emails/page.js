@@ -9,87 +9,59 @@ async function getEmails(params) {
 }
 
 const AdminEmailsIndex = async ({ params, searchParams }) => {
-	const emails = await getEmails(
-		`?page=${searchParams.page || 1}&limit=${searchParams.limit || 10}&sort=${
-			searchParams.sort || "-createdAt"
-		}`
-	);
+	const page = searchParams.page || 1;
+	const limit = searchParams.limit || 10;
+	const sort = searchParams.sort || "-createdAt";
+
+	const emails = await getEmails(`?page=${page}&limit=${limit}&sort=${sort}`);
 
 	const draftIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/emails/${id}/draftit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/emails?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
-		);
+		revalidatePath(`/noadmin/emails?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const publishIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/emails/${id}/publishit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/emails?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
-		);
+		revalidatePath(`/noadmin/emails?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const trashIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/emails/${id}/trashit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/emails?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
-		);
+		revalidatePath(`/noadmin/emails?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const scheduleIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/emails/${id}/scheduleit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/emails?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
-		);
+		revalidatePath(`/noadmin/emails?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const handleDelete = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/emails/${id}/permanently`, "DELETE", "no-cache");
-		revalidatePath(
-			`/noadmin/emails?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
-		);
+		revalidatePath(`/noadmin/emails?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const handleTrashAll = async () => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/emails/deleteall`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/emails?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
-		);
+		revalidatePath(`/noadmin/emails?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const handleDeleteAll = async () => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/emails/deleteall/permanently`, "DELETE", "no-cache");
-		revalidatePath(
-			`/noadmin/emails?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
-		);
+		revalidatePath(`/noadmin/emails?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	return (

@@ -9,11 +9,11 @@ async function getUsers(params) {
 }
 
 const AdminUsersIndex = async ({ params, searchParams }) => {
-	const users = await getUsers(
-		`?page=${searchParams.page || 1}&limit=${searchParams.limit || 10}&sort=${
-			searchParams.sort || "-createdAt"
-		}`
-	);
+	const page = searchParams.page || 1;
+	const limit = searchParams.limit || 10;
+	const sort = searchParams.sort || "-createdAt";
+
+	const users = await getUsers(`?page=${page}&limit=${limit}&sort=${sort}`);
 
 	const assignStripeCustomerId = async (id) => {
 		"use server";
@@ -25,11 +25,7 @@ const AdminUsersIndex = async ({ params, searchParams }) => {
 				website: "beFree",
 			}
 		);
-		revalidatePath(
-			`/noadmin/users?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
-		);
+		revalidatePath(`/noadmin/users?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const assignStripeAccountId = async (id) => {
@@ -42,11 +38,7 @@ const AdminUsersIndex = async ({ params, searchParams }) => {
 				website: "beFree",
 			}
 		);
-		revalidatePath(
-			`/noadmin/users?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
-		);
+		revalidatePath(`/noadmin/users?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const assignStripeId = async (id) => {
@@ -60,11 +52,7 @@ const AdminUsersIndex = async ({ params, searchParams }) => {
 				website: "beFree",
 			}
 		);
-		revalidatePath(
-			`/noadmin/users?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
-		);
+		revalidatePath(`/noadmin/users?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const updateStripeSellerAccount = async (id) => {
@@ -75,43 +63,27 @@ const AdminUsersIndex = async ({ params, searchParams }) => {
 			"PUT",
 			"no-cache"
 		);
-		revalidatePath(
-			`/noadmin/users?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
-		);
+		revalidatePath(`/noadmin/users?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const handleDelete = async (id) => {
 		"use server";
 		await fetchurl(`/users/${id}/permanently`, "DELETE", "no-cache");
-		revalidatePath(
-			`/noadmin/users?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
-		);
+		revalidatePath(`/noadmin/users?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const handleTrashAll = async () => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/users/deleteall`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/users?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
-		);
+		revalidatePath(`/noadmin/users?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const handleDeleteAll = async () => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/users/deleteall/permanently`, "DELETE", "no-cache");
-		revalidatePath(
-			`/noadmin/users?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
-		);
+		revalidatePath(`/noadmin/users?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	return (

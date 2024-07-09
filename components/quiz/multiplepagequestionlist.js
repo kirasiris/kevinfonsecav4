@@ -130,7 +130,7 @@ const List = ({
 					)}
 					{objects?.countAll === objects?.pagination?.current && (
 						<button
-							className="btn btn-secondary btn-sm w-100"
+							className="btn btn-secondary btn-sm w-100 mt-3"
 							type="submit"
 							disabled={
 								selectedOptionsData.name.length > 0 &&

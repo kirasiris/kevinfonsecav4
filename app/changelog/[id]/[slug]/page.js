@@ -3,17 +3,19 @@ import { notFound } from "next/navigation";
 import Header from "@/layout/header";
 import Loading from "@/app/blog/loading";
 import ParseHtml from "@/layout/parseHtml";
-import CommentBox from "@/components/global/commentbox";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import AuthorBox from "@/components/global/authorbox";
+import NewsletterForm from "@/components/global/newsletter";
+import ExportModal from "@/components/global/exportmodal";
+import ReportModal from "@/components/global/reportmodal";
 
 async function getAuthenticatedUser() {
-	const res = await fetchurl(`/v1/auth/me`, "GET", "no-cache");
+	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
 	return res;
 }
 
 async function getChangelog(params) {
-	const res = await fetchurl(`/v1/changelogs${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/changelogs${params}`, "GET", "no-cache");
 	if (!res.success) notFound();
 	return res;
 }
@@ -35,22 +37,30 @@ const ChangelogRead = async ({ params }) => {
 								<h1>{changelog?.data?.title}</h1>
 								<div className="text-muted fst-italic mb-2">
 									Posted on {changelog?.data?.createdAt} by{" "}
-									{changelog?.data?.user.username}
+									{changelog?.data?.user?.username}
 								</div>
 							</header>
 							<section className="mb-5">
 								<ParseHtml text={changelog?.data?.text} />
-								<AuthorBox author={changelog?.data?.user} />
-								<CommentBox
-									auth={auth?.data}
-									authorization={auth?.authorizationTokens}
-									user={changelog?.data?.user}
-									postId={changelog?.data?._id}
-									secondPostId={changelog?.data?._id}
-									isVisible={changelog?.data?.commented}
-									postType="changelog"
-									onModel="Changelog"
+								<NewsletterForm
+									sectionClassList="text-bg-dark text-center pt-3 pb-3 mb-4"
+									headingClassList=""
 								/>
+								<div className="float-start">
+									<ExportModal
+										linkToShare={`/changelog/${changelog?.data?._id}/${changelog?.data?.slug}`}
+										object={changelog?.data}
+									/>
+								</div>
+								<div className="float-end">
+									<ReportModal
+										postId={changelog?.data?._id}
+										postType="changelog"
+										onModel="Changelog"
+									/>
+								</div>
+								<div style={{ clear: "both" }} />
+								<AuthorBox author={changelog?.data?.user} />
 							</section>
 						</article>
 					</div>

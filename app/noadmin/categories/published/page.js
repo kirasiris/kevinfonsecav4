@@ -15,11 +15,14 @@ async function getCategories(params) {
 }
 
 const AdminCategoriesPublishedIndex = async ({ params, searchParams }) => {
+	const page = searchParams.page || 1;
+	const limit = searchParams.limit || 10;
+	const sort = searchParams.sort || "-createdAt";
+
 	const categories = await getCategories(
-		`?page=${searchParams.page || 1}&limit=${searchParams.limit || 10}&sort=${
-			searchParams.sort || "-createdAt"
-		}`
+		`?page=${page}&limit=${limit}&sort=${sort}`
 	);
+
 	const createCategory = async (formData) => {
 		"use server";
 		const rawFormData = {
@@ -29,9 +32,7 @@ const AdminCategoriesPublishedIndex = async ({ params, searchParams }) => {
 		};
 		await fetchurl(`/categories`, "POST", "no-cache", rawFormData);
 		revalidatePath(
-			`/noadmin/categories/published?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/categories/published?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -40,9 +41,7 @@ const AdminCategoriesPublishedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/categories/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/categories/published?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/categories/published?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -51,9 +50,7 @@ const AdminCategoriesPublishedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/categories/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/categories/published?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/categories/published?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -62,9 +59,7 @@ const AdminCategoriesPublishedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/categories/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/categories/published?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/categories/published?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -73,9 +68,7 @@ const AdminCategoriesPublishedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/categories/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/categories/published?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/categories/published?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -84,9 +77,7 @@ const AdminCategoriesPublishedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/categories/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`/noadmin/categories/published?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/categories/published?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -95,9 +86,7 @@ const AdminCategoriesPublishedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/categories/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/categories/published?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/categories/published?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -106,9 +95,7 @@ const AdminCategoriesPublishedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/categories/deleteall/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`/noadmin/categories/published?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/categories/published?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 

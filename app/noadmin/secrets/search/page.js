@@ -10,10 +10,13 @@ async function getSecrets(params) {
 }
 
 const AdminSecretsSearchIndex = async ({ params, searchParams }) => {
+	const keyword = searchParams.keyword || "";
+	const page = searchParams.page || 1;
+	const limit = searchParams.limit || 10;
+	const sort = searchParams.sort || "-createdAt";
+
 	const secrets = await getSecrets(
-		`?keyword=${searchParams.keyword}&page=${searchParams.page || 1}&limit=${
-			searchParams.limit || 10
-		}&sort=${searchParams.sort || "-createdAt"}`
+		`?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 	);
 
 	const draftIt = async (id) => {
@@ -21,11 +24,7 @@ const AdminSecretsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/extras/secrets/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/secrets/search?keyword=${searchParams.keyword}&page=${
-				searchParams.page || 1
-			}&limit=${searchParams.limit || 10}&sort=${
-				searchParams.sort || "-createdAt"
-			}`
+			`/noadmin/secrets/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -34,11 +33,7 @@ const AdminSecretsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/extras/secrets/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/secrets/search?keyword=${searchParams.keyword}&page=${
-				searchParams.page || 1
-			}&limit=${searchParams.limit || 10}&sort=${
-				searchParams.sort || "-createdAt"
-			}`
+			`/noadmin/secrets/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -47,11 +42,7 @@ const AdminSecretsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/extras/secrets/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/secrets/search?keyword=${searchParams.keyword}&page=${
-				searchParams.page || 1
-			}&limit=${searchParams.limit || 10}&sort=${
-				searchParams.sort || "-createdAt"
-			}`
+			`/noadmin/secrets/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -60,11 +51,7 @@ const AdminSecretsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/extras/secrets/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/secrets/search?keyword=${searchParams.keyword}&page=${
-				searchParams.page || 1
-			}&limit=${searchParams.limit || 10}&sort=${
-				searchParams.sort || "-createdAt"
-			}`
+			`/noadmin/secrets/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -73,11 +60,7 @@ const AdminSecretsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/extras/secrets/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`/noadmin/secrets/search?keyword=${searchParams.keyword}&page=${
-				searchParams.page || 1
-			}&limit=${searchParams.limit || 10}&sort=${
-				searchParams.sort || "-createdAt"
-			}`
+			`/noadmin/secrets/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -86,11 +69,7 @@ const AdminSecretsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/extras/secrets/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/secrets/search?keyword=${searchParams.keyword}&page=${
-				searchParams.page || 1
-			}&limit=${searchParams.limit || 10}&sort=${
-				searchParams.sort || "-createdAt"
-			}`
+			`/noadmin/secrets/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -103,11 +82,7 @@ const AdminSecretsSearchIndex = async ({ params, searchParams }) => {
 			"no-cache"
 		);
 		revalidatePath(
-			`/noadmin/secrets/search?keyword=${searchParams.keyword}&page=${
-				searchParams.page || 1
-			}&limit=${searchParams.limit || 10}&sort=${
-				searchParams.sort || "-createdAt"
-			}`
+			`/noadmin/secrets/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 

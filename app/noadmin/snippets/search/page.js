@@ -9,10 +9,13 @@ async function getSnippets(params) {
 }
 
 const AdminSnippetsSearchIndex = async ({ params, searchParams }) => {
+	const keyword = searchParams.keyword || "";
+	const page = searchParams.page || 1;
+	const limit = searchParams.limit || 10;
+	const sort = searchParams.sort || "-createdAt";
+
 	const snippets = await getSnippets(
-		`?keyword=${searchParams.keyword}&page=${searchParams.page || 1}&limit=${
-			searchParams.limit || 10
-		}&sort=${searchParams.sort || "-createdAt"}`
+		`?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 	);
 
 	const draftIt = async (id) => {
@@ -20,11 +23,7 @@ const AdminSnippetsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/snippets/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/snippets/search?keyword=${searchParams.keyword}&page=${
-				searchParams.page || 1
-			}&limit=${searchParams.limit || 10}&sort=${
-				searchParams.sort || "-createdAt"
-			}`
+			`/noadmin/snippets/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -33,11 +32,7 @@ const AdminSnippetsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/snippets/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/snippets/search?keyword=${searchParams.keyword}&page=${
-				searchParams.page || 1
-			}&limit=${searchParams.limit || 10}&sort=${
-				searchParams.sort || "-createdAt"
-			}`
+			`/noadmin/snippets/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -46,11 +41,7 @@ const AdminSnippetsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/snippets/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/snippets/search?keyword=${searchParams.keyword}&page=${
-				searchParams.page || 1
-			}&limit=${searchParams.limit || 10}&sort=${
-				searchParams.sort || "-createdAt"
-			}`
+			`/noadmin/snippets/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -59,11 +50,7 @@ const AdminSnippetsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/snippets/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/snippets/search?keyword=${searchParams.keyword}&page=${
-				searchParams.page || 1
-			}&limit=${searchParams.limit || 10}&sort=${
-				searchParams.sort || "-createdAt"
-			}`
+			`/noadmin/snippets/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -72,11 +59,7 @@ const AdminSnippetsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/snippets/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`/noadmin/snippets/search?keyword=${searchParams.keyword}&page=${
-				searchParams.page || 1
-			}&limit=${searchParams.limit || 10}&sort=${
-				searchParams.sort || "-createdAt"
-			}`
+			`/noadmin/snippets/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -85,11 +68,7 @@ const AdminSnippetsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/snippets/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/snippets/search?keyword=${searchParams.keyword}&page=${
-				searchParams.page || 1
-			}&limit=${searchParams.limit || 10}&sort=${
-				searchParams.sort || "-createdAt"
-			}`
+			`/noadmin/snippets/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -98,11 +77,7 @@ const AdminSnippetsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/snippets/deleteall/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`/noadmin/snippets/search?keyword=${searchParams.keyword}&page=${
-				searchParams.page || 1
-			}&limit=${searchParams.limit || 10}&sort=${
-				searchParams.sort || "-createdAt"
-			}`
+			`/noadmin/snippets/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 

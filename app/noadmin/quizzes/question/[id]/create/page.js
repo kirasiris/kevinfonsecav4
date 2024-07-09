@@ -8,16 +8,16 @@ import AdminSidebar from "@/components/admin/myfinaladminsidebar";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
 
-async function getFiles(params) {
-	const res = await fetchurl(`/files${params}`, "GET", "no-cache");
-	return res;
-}
+// async function getFiles(params) {
+// 	const res = await fetchurl(`/files${params}`, "GET", "no-cache");
+// 	return res;
+// }
 
 const CreateQuestion = async ({ params, searchParams }) => {
 	const token = await getAuthTokenOnServer();
 	const auth = await getUserOnServer();
 
-	const files = await getFiles(`?page=1&limit=100&sort=-createdAt`);
+	// const files = await getFiles(`?page=1&limit=100&sort=-createdAt`);
 
 	const addQuestion = async (formData) => {
 		"use server";
@@ -33,7 +33,7 @@ const CreateQuestion = async ({ params, searchParams }) => {
 				C: formData.get("answersC"),
 				D: formData.get("answersD"),
 			},
-			files: { avatar: formData.get("file") },
+			// files: { avatar: formData.get("file") },
 		};
 
 		await fetchurl(`/questions`, "POST", "no-cache", {
@@ -136,7 +136,7 @@ const CreateQuestion = async ({ params, searchParams }) => {
 			<div className="col-lg-3">
 				<AdminSidebar
 					displayCategoryField={false}
-					displayAvatar={true}
+					displayAvatar={false}
 					// avatar={files?.selected?._id}
 					avatarFormat={"any"}
 					status="draft"
@@ -150,7 +150,7 @@ const CreateQuestion = async ({ params, searchParams }) => {
 					categories={[]}
 					multipleFiles={false}
 					onModel={"Question"}
-					files={files}
+					files={[]}
 					auth={auth}
 					token={token}
 				/>

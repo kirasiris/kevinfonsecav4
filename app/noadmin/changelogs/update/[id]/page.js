@@ -3,12 +3,13 @@ import {
 	getAuthTokenOnServer,
 	getUserOnServer,
 } from "@/helpers/setTokenOnServer";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import MyTextArea from "@/components/global/mytextarea";
 import FormButtons from "@/components/global/formbuttons";
 
 async function getChangelog(params) {
 	const res = await fetchurl(`/changelogs${params}`, "GET", "no-cache");
+	if (!res.success) notFound();
 	return res;
 }
 

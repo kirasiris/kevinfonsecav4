@@ -11,11 +11,11 @@ async function getQuotes(params) {
 }
 
 const AdminQuotesIndex = async ({ params, searchParams }) => {
-	const quotes = await getQuotes(
-		`?page=${searchParams.page || 1}&limit=${searchParams.limit || 10}&sort=${
-			searchParams.sort || "-createdAt"
-		}`
-	);
+	const page = searchParams.page || 1;
+	const limit = searchParams.limit || 10;
+	const sort = searchParams.sort || "-createdAt";
+
+	const quotes = await getQuotes(`?page=${page}&limit=${limit}&sort=${sort}`);
 
 	const createQuote = async (formData) => {
 		"use server";
@@ -30,77 +30,49 @@ const AdminQuotesIndex = async ({ params, searchParams }) => {
 		};
 
 		await fetchurl(`/extras/quotes`, "POST", "no-cache", rawFormData);
-		revalidatePath(
-			`/noadmin/quotes?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
-		);
+		revalidatePath(`/noadmin/quotes?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const draftIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/extras/quotes/${id}/draftit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/quotes?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
-		);
+		revalidatePath(`/noadmin/quotes?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const publishIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/extras/quotes/${id}/publishit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/quotes?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
-		);
+		revalidatePath(`/noadmin/quotes?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const trashIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/extras/quotes/${id}/trashit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/quotes?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
-		);
+		revalidatePath(`/noadmin/quotes?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const scheduleIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/extras/quotes/${id}/scheduleit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/quotes?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
-		);
+		revalidatePath(`/noadmin/quotes?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const handleDelete = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/extras/quotes/${id}/permanently`, "DELETE", "no-cache");
-		revalidatePath(
-			`/noadmin/quotes?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
-		);
+		revalidatePath(`/noadmin/quotes?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const handleTrashAll = async () => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/extras/quotes/deleteall`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/quotes?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
-		);
+		revalidatePath(`/noadmin/quotes?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const handleDeleteAll = async () => {
@@ -111,11 +83,7 @@ const AdminQuotesIndex = async ({ params, searchParams }) => {
 			"DELETE",
 			"no-cache"
 		);
-		revalidatePath(
-			`/noadmin/quotes?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
-		);
+		revalidatePath(`/noadmin/quotes?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	return (

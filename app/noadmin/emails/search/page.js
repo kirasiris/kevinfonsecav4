@@ -9,10 +9,13 @@ async function getEmails(params) {
 }
 
 const AdminEmailsSearchIndex = async ({ params, searchParams }) => {
+	const keyword = searchParams.keyword || "";
+	const page = searchParams.page || 1;
+	const limit = searchParams.limit || 10;
+	const sort = searchParams.sort || "-createdAt";
+
 	const emails = await getEmails(
-		`?keyword=${searchParams.keyword}&page=${searchParams.page || 1}&limit=${
-			searchParams.limit || 10
-		}&sort=${searchParams.sort || "-createdAt"}`
+		`?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 	);
 
 	const draftIt = async (id) => {
@@ -20,11 +23,7 @@ const AdminEmailsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/emails/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/emails/search?keyword=${searchParams.keyword}&page=${
-				searchParams.page || 1
-			}&limit=${searchParams.limit || 10}&sort=${
-				searchParams.sort || "-createdAt"
-			}`
+			`/noadmin/emails/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -33,11 +32,7 @@ const AdminEmailsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/emails/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/emails/search?keyword=${searchParams.keyword}&page=${
-				searchParams.page || 1
-			}&limit=${searchParams.limit || 10}&sort=${
-				searchParams.sort || "-createdAt"
-			}`
+			`/noadmin/emails/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -46,11 +41,7 @@ const AdminEmailsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/emails/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/emails/search?keyword=${searchParams.keyword}&page=${
-				searchParams.page || 1
-			}&limit=${searchParams.limit || 10}&sort=${
-				searchParams.sort || "-createdAt"
-			}`
+			`/noadmin/emails/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -59,11 +50,7 @@ const AdminEmailsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/emails/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/emails/search?keyword=${searchParams.keyword}&page=${
-				searchParams.page || 1
-			}&limit=${searchParams.limit || 10}&sort=${
-				searchParams.sort || "-createdAt"
-			}`
+			`/noadmin/emails/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -72,11 +59,7 @@ const AdminEmailsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/emails/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`/noadmin/emails/search?keyword=${searchParams.keyword}&page=${
-				searchParams.page || 1
-			}&limit=${searchParams.limit || 10}&sort=${
-				searchParams.sort || "-createdAt"
-			}`
+			`/noadmin/emails/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -85,11 +68,7 @@ const AdminEmailsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/emails/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/emails/search?keyword=${searchParams.keyword}&page=${
-				searchParams.page || 1
-			}&limit=${searchParams.limit || 10}&sort=${
-				searchParams.sort || "-createdAt"
-			}`
+			`/noadmin/emails/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -98,11 +77,7 @@ const AdminEmailsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/emails/deleteall/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`/noadmin/emails/search?keyword=${searchParams.keyword}&page=${
-				searchParams.page || 1
-			}&limit=${searchParams.limit || 10}&sort=${
-				searchParams.sort || "-createdAt"
-			}`
+			`/noadmin/emails/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 

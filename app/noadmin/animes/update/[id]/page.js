@@ -3,7 +3,7 @@ import {
 	getAuthTokenOnServer,
 	getUserOnServer,
 } from "@/helpers/setTokenOnServer";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import AdminSidebar from "@/components/admin/myfinaladminsidebar";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
@@ -20,6 +20,7 @@ async function getCategories(params) {
 
 async function getAnime(params) {
 	const res = await fetchurl(`/playlists${params}`, "GET", "no-cache");
+	if (!res.success) notFound();
 	return res;
 }
 

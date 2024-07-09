@@ -1,10 +1,12 @@
 import Image from "next/image";
+import { notFound } from "next/navigation";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import ParseHtml from "@/layout/parseHtml";
 import ArticleHeader from "@/components/global/articleheader";
 
 async function getCategory(params) {
 	const res = await fetchurl(`/categories${params}`, "GET", "no-cache");
+	if (!res.success) notFound();
 	return res;
 }
 

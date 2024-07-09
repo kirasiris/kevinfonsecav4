@@ -1,27 +1,14 @@
-import Image from "next/image";
 import ParseHtml from "@/layout/parseHtml";
 
 const Single = ({ object = {}, objectData = {}, setObjectData = () => {} }) => {
 	return (
 		<div className="row">
-			<div className={`col ${object?._id}`}>
-				<figure>
-					<Image
-						src={
-							object?.files?.avatar?.location?.secure_location ||
-							`https://source.unsplash.com/random/300x200`
-						}
-						className="img-fluid w-100 rounded-0"
-						alt={`${object?.title}'s featured image`}
-						width={`300`}
-						height={`200`}
-					/>
-				</figure>
-				<ParseHtml text={object?.text} />
-			</div>
-			<div className="col-lg-8">
+			<div className={`col-lg-12 ${object?._id}`}>
 				<div className="card">
 					<div className="card-header">{object?.title}</div>
+					<div className="card-body">
+						<ParseHtml text={object?.text} />
+					</div>
 					<ul className="list-group list-group-flush">
 						{Object.entries(object?.answers).map(([key, value]) => (
 							<li key={key} className="list-group-item">

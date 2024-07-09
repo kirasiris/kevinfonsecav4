@@ -9,10 +9,12 @@ async function getSettings(params) {
 }
 
 const AdminSettingsIndex = async ({ params, searchParams }) => {
+	const page = searchParams.page || 1;
+	const limit = searchParams.limit || 10;
+	const sort = searchParams.sort || "-createdAt";
+
 	const settings = await getSettings(
-		`?page=${searchParams.page || 1}&limit=${searchParams.limit || 10}&sort=${
-			searchParams.sort || "-createdAt"
-		}`
+		`?page=${page}&limit=${limit}&sort=${sort}`
 	);
 
 	const draftIt = async (id) => {
@@ -20,9 +22,7 @@ const AdminSettingsIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/settings/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/settings?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/settings?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -31,9 +31,7 @@ const AdminSettingsIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/settings/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/settings?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/settings?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -42,9 +40,7 @@ const AdminSettingsIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/settings/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/settings?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/settings?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -53,9 +49,7 @@ const AdminSettingsIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/settings/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/settings?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/settings?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -64,9 +58,7 @@ const AdminSettingsIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/settings/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`/noadmin/settings?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/settings?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -75,9 +67,7 @@ const AdminSettingsIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/settings/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/settings?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/settings?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -86,9 +76,7 @@ const AdminSettingsIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/settings/deleteall/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`/noadmin/settings?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/settings?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 

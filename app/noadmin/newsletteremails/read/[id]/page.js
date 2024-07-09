@@ -2,9 +2,11 @@ import Image from "next/image";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import ParseHtml from "@/layout/parseHtml";
 import ArticleHeader from "@/components/global/articleheader";
+import { notFound } from "next/navigation";
 
 async function getNewsletterEmail(params) {
 	const res = await fetchurl(`/newsletteremails${params}`, "GET", "no-cache");
+	if (!res.success) notFound();
 	return res;
 }
 

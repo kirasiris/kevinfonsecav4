@@ -46,7 +46,7 @@ const VideoIndex = async ({ params, searchParams }) => {
 				params={params}
 				searchParams={searchParams}
 				isIndex={true}
-				linkToShare={`localhost:3000/video/${playlist?.data?._id}`}
+				linkToShare={`/video/${playlist?.data?._id}`}
 				postType="playlist"
 				onModel="Playlist"
 			/>

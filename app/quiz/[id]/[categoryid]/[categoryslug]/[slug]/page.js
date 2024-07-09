@@ -155,7 +155,7 @@ const QuizRead = async ({ params, searchParams }) => {
 									<div className="float-start">
 										{quiz?.data?.category && (
 											<ExportModal
-												linkToShare={`localhost:3000/quiz/${quiz?.data?._id}/${quiz?.data?.category?._id}/${quiz?.data?.category.slug}/${quiz?.data?.slug}`}
+												linkToShare={`/quiz/${quiz?.data?._id}/${quiz?.data?.category?._id}/${quiz?.data?.category.slug}/${quiz?.data?.slug}`}
 												object={quiz?.data}
 											/>
 										)}

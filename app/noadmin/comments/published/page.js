@@ -13,10 +13,12 @@ async function getComments(params) {
 }
 
 const AdminCommentsPublishedIndex = async ({ params, searchParams }) => {
+	const page = searchParams.page || 1;
+	const limit = searchParams.limit || 10;
+	const sort = searchParams.sort || "-createdAt";
+
 	const comments = await getComments(
-		`?page=${searchParams.page || 1}&limit=${searchParams.limit || 10}&sort=${
-			searchParams.sort || "-createdAt"
-		}`
+		`?page=${page}&limit=${limit}&sort=${sort}`
 	);
 
 	const draftIt = async (id) => {
@@ -24,9 +26,7 @@ const AdminCommentsPublishedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/comments/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/comments/published?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/comments/published?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -35,9 +35,7 @@ const AdminCommentsPublishedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/comments/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/comments/published?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/comments/published?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -46,9 +44,7 @@ const AdminCommentsPublishedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/comments/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/comments/published?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/comments/published?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -57,9 +53,7 @@ const AdminCommentsPublishedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/comments/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/comments/published?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/comments/published?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -68,9 +62,7 @@ const AdminCommentsPublishedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/comments/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`/noadmin/comments/published?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/comments/published?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -79,9 +71,7 @@ const AdminCommentsPublishedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/comments/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/comments/published?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/comments/published?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -90,9 +80,7 @@ const AdminCommentsPublishedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/comments/deleteall/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`/noadmin/comments/published?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/comments/published?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 

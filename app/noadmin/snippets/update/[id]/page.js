@@ -1,5 +1,5 @@
 import { fetchurl } from "@/helpers/setTokenOnServer";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import AdminSidebar from "@/components/admin/myfinaladminsidebar";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import LiveCode from "@/components/admin/snippets/livecode";
@@ -7,6 +7,7 @@ import FormButtons from "@/components/global/formbuttons";
 
 async function getSnippet(params) {
 	const res = await fetchurl(`/snippets${params}`, "GET", "no-cache");
+	if (!res.success) notFound();
 	return res;
 }
 

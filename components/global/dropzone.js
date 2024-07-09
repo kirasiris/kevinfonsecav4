@@ -37,7 +37,7 @@ const UseDropzone = ({
 						await axios.put(
 							`${process.env.apiUrl}/uploads/uploadobject`,
 							{
-								userId: auth?.id,
+								userId: auth?.userId,
 								username: auth?.username,
 								userEmail: auth?.email,
 								onModel: onModel,

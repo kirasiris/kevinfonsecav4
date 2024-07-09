@@ -51,11 +51,16 @@ const ExportModal = ({
 					</Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
-					<Form.Control readOnly disabled value={linkToShare} />
+					<Form.Control
+						readOnly
+						disabled
+						value={`${process.env.websiteUrl}${linkToShare}`}
+					/>
 					<hr />
 					<pre>
 						<code>
-							&lt;iframe src=&rdquo;{linkToShare}&rdquo; title=&rdquo;
+							&lt;iframe src=&rdquo;{`${process.env.websiteUrl}${linkToShare}`}
+							&rdquo; title=&rdquo;
 							{object?.title}&rdquo;&gt;&lt;/iframe&gt;
 						</code>
 					</pre>
@@ -64,7 +69,7 @@ const ExportModal = ({
 						<EmailIcon size={iconSize} />
 					</EmailShareButton>
 					<FacebookShareButton
-						url={linkToShare}
+						url={`${process.env.websiteUrl}${linkToShare}`}
 						title={
 							object.title
 								? `beFree - ` + object.title
@@ -74,7 +79,7 @@ const ExportModal = ({
 						<FacebookIcon size={iconSize} />
 					</FacebookShareButton>
 					<TwitterShareButton
-						url={linkToShare}
+						url={`${process.env.websiteUrl}${linkToShare}`}
 						title={
 							object.title
 								? `beFree - ` + object.title
@@ -84,7 +89,7 @@ const ExportModal = ({
 						<TwitterIcon size={iconSize} />
 					</TwitterShareButton>
 					<RedditShareButton
-						url={linkToShare}
+						url={`${process.env.websiteUrl}${linkToShare}`}
 						title={
 							object.title
 								? `beFree - ` + object.title
@@ -94,7 +99,7 @@ const ExportModal = ({
 						<RedditIcon size={iconSize} />
 					</RedditShareButton>
 					<WhatsappShareButton
-						url={linkToShare}
+						url={`${process.env.websiteUrl}${linkToShare}`}
 						title={
 							object.title
 								? `beFree - ` + object.title
@@ -104,7 +109,7 @@ const ExportModal = ({
 						<WhatsappIcon size={iconSize} />
 					</WhatsappShareButton>
 					<PinterestShareButton
-						url={linkToShare}
+						url={`${process.env.websiteUrl}${linkToShare}`}
 						title={
 							object.title
 								? `beFree - ` + object.title
@@ -114,7 +119,7 @@ const ExportModal = ({
 						<PinterestIcon size={iconSize} />
 					</PinterestShareButton>
 					<LinkedinShareButton
-						url={linkToShare}
+						url={`${process.env.websiteUrl}${linkToShare}`}
 						title={
 							object.title
 								? `beFree - ` + object.title
@@ -124,7 +129,7 @@ const ExportModal = ({
 						<LinkedinIcon size={iconSize} />
 					</LinkedinShareButton>
 					<TelegramShareButton
-						url={linkToShare}
+						url={`${process.env.websiteUrl}${linkToShare}`}
 						title={
 							object.title
 								? `beFree - ` + object.title

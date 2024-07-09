@@ -63,7 +63,7 @@ const JobRead = async ({ params, searchParams }) => {
 									<div className="float-start">
 										{job?.data?.category && (
 											<ExportModal
-												linkToShare={`localhost:3000/job/${job?.data?._id}/${job?.data?.slug}`}
+												linkToShare={`/job/${job?.data?._id}/${job?.data?.slug}`}
 												object={job?.data}
 											/>
 										)}

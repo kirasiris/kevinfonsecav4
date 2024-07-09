@@ -3,7 +3,7 @@ import {
 	getAuthTokenOnServer,
 	getUserOnServer,
 } from "@/helpers/setTokenOnServer";
-import { redirect } from "next/navigation";
+import { redirect, notFound } from "next/navigation";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import Image from "next/image";
 // import Plyr from "plyr";
@@ -11,6 +11,7 @@ import FormButtons from "@/components/global/formbuttons";
 
 async function getFile(params) {
 	const res = await fetchurl(`/files${params}`, "GET", "no-cache");
+	if (!res.success) notFound();
 	return res;
 }
 

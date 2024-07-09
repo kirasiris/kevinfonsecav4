@@ -1,11 +1,12 @@
 import { fetchurl } from "@/helpers/setTokenOnServer";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import AdminSidebar from "@/components/admin/myfinaladminsidebar";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
 
 async function getPage(params) {
 	const res = await fetchurl(`/pages${params}`, "GET", "no-cache");
+	if (!res.success) notFound();
 	return res;
 }
 

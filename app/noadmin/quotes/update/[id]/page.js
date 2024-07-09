@@ -4,9 +4,11 @@ import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
 import List from "@/components/admin/quotes/list";
 import { revalidatePath } from "next/cache";
+import { notFound } from "next/navigation";
 
 async function getQuotes(params) {
 	const res = await fetchurl(`/extras/quotes${params}`, "GET", "no-cache");
+	if (!res.success) notFound();
 	return res;
 }
 

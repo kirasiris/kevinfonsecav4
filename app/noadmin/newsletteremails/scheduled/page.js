@@ -16,10 +16,12 @@ const AdminNewsletterEmailsScheduledIndex = async ({
 	params,
 	searchParams,
 }) => {
+	const page = searchParams.page || 1;
+	const limit = searchParams.limit || 10;
+	const sort = searchParams.sort || "-createdAt";
+
 	const newsletteremails = await getNewsletterEmails(
-		`?page=${searchParams.page || 1}&limit=${searchParams.limit || 10}&sort=${
-			searchParams.sort || "-createdAt"
-		}`
+		`?page=${page}&limit=${limit}&sort=${sort}`
 	);
 
 	const draftIt = async (id) => {
@@ -27,11 +29,7 @@ const AdminNewsletterEmailsScheduledIndex = async ({
 		// const rawFormData = {}
 		await fetchurl(`/newsletteremails/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/newsletteremails/scheduled?page=${
-				searchParams.page || 1
-			}&limit=${searchParams.limit || 10}&sort=${
-				searchParams.sort || "-createdAt"
-			}`
+			`/noadmin/newsletteremails/scheduled?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -40,11 +38,7 @@ const AdminNewsletterEmailsScheduledIndex = async ({
 		// const rawFormData = {}
 		await fetchurl(`/newsletteremails/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/newsletteremails/scheduled?page=${
-				searchParams.page || 1
-			}&limit=${searchParams.limit || 10}&sort=${
-				searchParams.sort || "-createdAt"
-			}`
+			`/noadmin/newsletteremails/scheduled?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -53,11 +47,7 @@ const AdminNewsletterEmailsScheduledIndex = async ({
 		// const rawFormData = {}
 		await fetchurl(`/newsletteremails/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/newsletteremails/scheduled?page=${
-				searchParams.page || 1
-			}&limit=${searchParams.limit || 10}&sort=${
-				searchParams.sort || "-createdAt"
-			}`
+			`/noadmin/newsletteremails/scheduled?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -66,11 +56,7 @@ const AdminNewsletterEmailsScheduledIndex = async ({
 		// const rawFormData = {}
 		await fetchurl(`/newsletteremails/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/newsletteremails/scheduled?page=${
-				searchParams.page || 1
-			}&limit=${searchParams.limit || 10}&sort=${
-				searchParams.sort || "-createdAt"
-			}`
+			`/noadmin/newsletteremails/scheduled?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -79,11 +65,7 @@ const AdminNewsletterEmailsScheduledIndex = async ({
 		// const rawFormData = {}
 		await fetchurl(`/newsletteremails/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`/noadmin/newsletteremails/scheduled?page=${
-				searchParams.page || 1
-			}&limit=${searchParams.limit || 10}&sort=${
-				searchParams.sort || "-createdAt"
-			}`
+			`/noadmin/newsletteremails/scheduled?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -92,11 +74,7 @@ const AdminNewsletterEmailsScheduledIndex = async ({
 		// const rawFormData = {}
 		await fetchurl(`/newsletteremails/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/newsletteremails/scheduled?page=${
-				searchParams.page || 1
-			}&limit=${searchParams.limit || 10}&sort=${
-				searchParams.sort || "-createdAt"
-			}`
+			`/noadmin/newsletteremails/scheduled?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -109,11 +87,7 @@ const AdminNewsletterEmailsScheduledIndex = async ({
 			"no-cache"
 		);
 		revalidatePath(
-			`/noadmin/newsletteremails/scheduled?page=${
-				searchParams.page || 1
-			}&limit=${searchParams.limit || 10}&sort=${
-				searchParams.sort || "-createdAt"
-			}`
+			`/noadmin/newsletteremails/scheduled?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 

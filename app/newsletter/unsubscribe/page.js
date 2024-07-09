@@ -1,6 +1,5 @@
 import { Suspense } from "react";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import Loading from "@/app/blog/loading";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import NewsletterForm from "@/components/global/newsletter";

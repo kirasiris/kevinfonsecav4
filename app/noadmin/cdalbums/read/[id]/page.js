@@ -7,9 +7,11 @@ import ParseHtml from "@/layout/parseHtml";
 import SongList from "@/components/admin/cdalbums/songlist";
 import { revalidatePath } from "next/cache";
 import UseDropzone from "@/components/admin/cdalbums/songdropzone";
+import { notFound } from "next/navigation";
 
 async function getCDAlbum(params) {
 	const res = await fetchurl(`/playlists${params}`, "GET", "no-cache");
+	if (!res.success) notFound();
 	return res;
 }
 
@@ -22,11 +24,13 @@ const ReadCDAlbum = async ({ params, searchParams }) => {
 	const token = await getAuthTokenOnServer();
 	const auth = await getUserOnServer();
 
+	const page = searchParams.page || 1;
+	const limit = searchParams.limit || 10;
+	const sort = searchParams.sort || "-createdAt";
+
 	const cdalbum = await getCDAlbum(`/${params.id}`);
 	const songs = await getSongs(
-		`?resourceId=${cdalbum?.data?._id}&page=${searchParams.page || 1}&limit=${
-			searchParams.limit || 10
-		}&sort=${searchParams.sort || "-createdAt"}`
+		`?resourceId=${cdalbum?.data?._id}&page=${page}&limit=${limit}&sort=${sort}`
 	);
 
 	const draftIt = async (id) => {

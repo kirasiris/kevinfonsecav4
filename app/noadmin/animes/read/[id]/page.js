@@ -8,9 +8,11 @@ import ChapterList from "@/components/admin/animes/chapterlist";
 import { revalidatePath } from "next/cache";
 import Image from "next/image";
 import UseDropzone from "@/components/admin/animes/chapterdropzone";
+import { notFound } from "next/navigation";
 
 async function getAnime(params) {
 	const res = await fetchurl(`/playlists${params}`, "GET", "no-cache");
+	if (!res.success) notFound();
 	return res;
 }
 
@@ -23,11 +25,13 @@ const ReadAnime = async ({ params, searchParams }) => {
 	const token = await getAuthTokenOnServer();
 	const auth = await getUserOnServer();
 
+	const page = searchParams.page || 1;
+	const limit = searchParams.limit || 10;
+	const sort = searchParams.sort || "orderingNumber";
+
 	const anime = await getAnime(`/${params.id}`);
 	const chapters = await getChapters(
-		`?resourceId=${anime?.data?._id}&page=${searchParams.page || 1}&limit=${
-			searchParams.limit || 10
-		}&sort=${searchParams.sort || "orderingNumber"}`
+		`?resourceId=${anime?.data?._id}&page=${page}&limit=${limit}&sort=${sort}`
 	);
 
 	const draftIt = async (id) => {

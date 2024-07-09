@@ -16,21 +16,19 @@ async function getCourses(params) {
 }
 
 const AdminCoursesTrashedIndex = async ({ params, searchParams }) => {
+	const page = searchParams.page || 1;
+	const limit = searchParams.limit || 10;
+	const sort = searchParams.sort || "-createdAt";
+
 	const stripeChargesEnabled = await getUserStripeChargesEnabled();
-	const courses = await getCourses(
-		`?page=${searchParams.page || 1}&limit=${searchParams.limit || 10}&sort=${
-			searchParams.sort || "-createdAt"
-		}`
-	);
+	const courses = await getCourses(`?page=${page}&limit=${limit}&sort=${sort}`);
 
 	const draftIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/courses/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/courses/trashed?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/courses/trashed?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -39,9 +37,7 @@ const AdminCoursesTrashedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/courses/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/courses/trashed?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/courses/trashed?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -50,9 +46,7 @@ const AdminCoursesTrashedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/courses/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/courses/trashed?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/courses/trashed?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -61,9 +55,7 @@ const AdminCoursesTrashedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/courses/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/courses/trashed?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/courses/trashed?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -72,9 +64,7 @@ const AdminCoursesTrashedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/courses/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`/noadmin/courses/trashed?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/courses/trashed?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -83,9 +73,7 @@ const AdminCoursesTrashedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/courses/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/courses/trashed?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/courses/trashed?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -94,9 +82,7 @@ const AdminCoursesTrashedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/courses/deleteall/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`/noadmin/courses/trashed?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/courses/trashed?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 

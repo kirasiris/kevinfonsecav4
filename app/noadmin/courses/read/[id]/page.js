@@ -3,9 +3,11 @@ import ParseHtml from "@/layout/parseHtml";
 import LessonList from "@/components/admin/courses/lessonlist";
 import { revalidatePath } from "next/cache";
 import Image from "next/image";
+import { notFound } from "next/navigation";
 
 async function getCourse(params) {
 	const res = await fetchurl(`/courses${params}`, "GET", "no-cache");
+	if (!res.success) notFound();
 	return res;
 }
 
@@ -15,11 +17,13 @@ async function getLessons(params) {
 }
 
 const ReadCourse = async ({ params, searchParams }) => {
+	const page = searchParams.page || 1;
+	const limit = searchParams.limit || 10;
+	const sort = searchParams.sort || "orderingNumber";
+
 	const course = await getCourse(`/${params.id}`);
 	const lessons = await getLessons(
-		`?resourceId=${course?.data?._id}&page=${searchParams.page || 1}&limit=${
-			searchParams.limit || 10
-		}&sort=${searchParams.sort || "orderingNumber"}`
+		`?resourceId=${course?.data?._id}&page=${page}&limit=${limit}&sort=${sort}`
 	);
 
 	const draftIt = async (id) => {

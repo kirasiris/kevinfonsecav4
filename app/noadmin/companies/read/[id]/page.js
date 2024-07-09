@@ -4,9 +4,11 @@ import JobList from "@/components/admin/companies/joblist";
 import { revalidatePath } from "next/cache";
 import Image from "next/image";
 import Map from "@/components/global/map";
+import { notFound } from "next/navigation";
 
 async function getCompany(params) {
 	const res = await fetchurl(`/companies${params}`, "GET", "no-cache");
+	if (!res.success) notFound();
 	return res;
 }
 
@@ -16,11 +18,13 @@ async function getJobs(params) {
 }
 
 const ReadCompany = async ({ params, searchParams }) => {
+	const page = searchParams.page || 1;
+	const limit = searchParams.limit || 10;
+	const sort = searchParams.sort || "-createdAt";
+
 	const company = await getCompany(`/${params.id}`);
 	const jobs = await getJobs(
-		`?resourceId=${company?.data?._id}&page=${searchParams.page || 1}&limit=${
-			searchParams.limit || 10
-		}&sort=${searchParams.sort || "-createdAt"}`
+		`?resourceId=${company?.data?._id}&page=${page}&limit=${limit}&sort=${sort}`
 	);
 
 	const draftIt = async (id) => {

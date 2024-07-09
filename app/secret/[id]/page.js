@@ -63,7 +63,7 @@ const SecretRead = async ({ params, searchParams }) => {
 									<hr />
 									<div className="float-start">
 										<ExportModal
-											linkToShare={`localhost:3000/secret/${secret?.data?._id}`}
+											linkToShare={`/secret/${secret?.data?._id}`}
 											object={secret?.data}
 										/>
 									</div>

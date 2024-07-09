@@ -13,20 +13,18 @@ async function getForums(params) {
 }
 
 const AdminForumsDraftIndex = async ({ params, searchParams }) => {
-	const forums = await getForums(
-		`?page=${searchParams.page || 1}&limit=${searchParams.limit || 10}&sort=${
-			searchParams.sort || "-createdAt"
-		}`
-	);
+	const page = searchParams.page || 1;
+	const limit = searchParams.limit || 10;
+	const sort = searchParams.sort || "-createdAt";
+
+	const forums = await getForums(`?page=${page}&limit=${limit}&sort=${sort}`);
 
 	const draftIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/forums/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/forums/draft?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/forums/draft?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -35,9 +33,7 @@ const AdminForumsDraftIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/forums/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/forums/draft?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/forums/draft?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -46,9 +42,7 @@ const AdminForumsDraftIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/forums/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/forums/draft?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/forums/draft?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -57,9 +51,7 @@ const AdminForumsDraftIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/forums/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/forums/draft?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/forums/draft?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -68,9 +60,7 @@ const AdminForumsDraftIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/forums/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`/noadmin/forums/draft?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/forums/draft?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -79,9 +69,7 @@ const AdminForumsDraftIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/forums/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/forums/draft?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/forums/draft?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -90,9 +78,7 @@ const AdminForumsDraftIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/forums/deleteall/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`/noadmin/forums/draft?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/forums/draft?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 

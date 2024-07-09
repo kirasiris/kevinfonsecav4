@@ -10,76 +10,52 @@ async function getSecrets(params) {
 }
 
 const AdminSecretsIndex = async ({ params, searchParams }) => {
-	const secrets = await getSecrets(
-		`?page=${searchParams.page || 1}&limit=${searchParams.limit || 10}&sort=${
-			searchParams.sort || "-createdAt"
-		}`
-	);
+	const page = searchParams.page || 1;
+	const limit = searchParams.limit || 10;
+	const sort = searchParams.sort || "-createdAt";
+
+	const secrets = await getSecrets(`?page=${page}&limit=${limit}&sort=${sort}`);
 
 	const draftIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/extras/secrets/${id}/draftit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/secrets?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
-		);
+		revalidatePath(`/noadmin/secrets?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const publishIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/extras/secrets/${id}/publishit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/secrets?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
-		);
+		revalidatePath(`/noadmin/secrets?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const trashIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/extras/secrets/${id}/trashit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/secrets?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
-		);
+		revalidatePath(`/noadmin/secrets?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const scheduleIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/extras/secrets/${id}/scheduleit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/secrets?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
-		);
+		revalidatePath(`/noadmin/secrets?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const handleDelete = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/extras/secrets/${id}/permanently`, "DELETE", "no-cache");
-		revalidatePath(
-			`/noadmin/secrets?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
-		);
+		revalidatePath(`/noadmin/secrets?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const handleTrashAll = async () => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/extras/secrets/deleteall`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/secrets?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
-		);
+		revalidatePath(`/noadmin/secrets?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const handleDeleteAll = async () => {
@@ -90,11 +66,7 @@ const AdminSecretsIndex = async ({ params, searchParams }) => {
 			"DELETE",
 			"no-cache"
 		);
-		revalidatePath(
-			`/noadmin/secrets?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
-		);
+		revalidatePath(`/noadmin/secrets?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	return (

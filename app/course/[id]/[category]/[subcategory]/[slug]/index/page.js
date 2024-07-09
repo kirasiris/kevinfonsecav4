@@ -74,7 +74,7 @@ const CourseLessonsIndex = async ({ params, searchParams }) => {
 				isAdmin={false}
 				searchParams={searchParams}
 				isIndex={true}
-				linkToShare={`localhost:3000/course/${course?.data?._id}/${course?.data?.category}/${course?.data?.sub_category}/${course?.data?.slug}/index`}
+				linkToShare={`/course/${course?.data?._id}/${course?.data?.category}/${course?.data?.sub_category}/${course?.data?.slug}/index`}
 				postType="course"
 				onModel="Course"
 			/>

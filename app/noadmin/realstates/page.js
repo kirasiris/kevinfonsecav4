@@ -9,10 +9,12 @@ async function getRealStates(params) {
 }
 
 const AdminRealStatesIndex = async ({ params, searchParams }) => {
+	const page = searchParams.page || 1;
+	const limit = searchParams.limit || 10;
+	const sort = searchParams.sort || "-createdAt";
+
 	const realstates = await getRealStates(
-		`?page=${searchParams.page || 1}&limit=${searchParams.limit || 10}&sort=${
-			searchParams.sort || "-createdAt"
-		}`
+		`?page=${page}&limit=${limit}&sort=${sort}`
 	);
 
 	const draftIt = async (id) => {
@@ -20,9 +22,7 @@ const AdminRealStatesIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/realstates/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/realstates?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/realstates?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -31,9 +31,7 @@ const AdminRealStatesIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/realstates/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/realstates?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/realstates?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -42,9 +40,7 @@ const AdminRealStatesIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/realstates/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/realstates?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/realstates?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -53,9 +49,7 @@ const AdminRealStatesIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/realstates/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/realstates?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/realstates?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -64,9 +58,7 @@ const AdminRealStatesIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/realstates/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`/noadmin/realstates?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/realstates?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -75,9 +67,7 @@ const AdminRealStatesIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/realstates/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/realstates?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/realstates?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -86,9 +76,7 @@ const AdminRealStatesIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/realstates/deleteall/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`/noadmin/realstates?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/realstates?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 

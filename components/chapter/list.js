@@ -9,6 +9,7 @@ import Globalcontent from "@/layout/content";
 import Globalsidebar from "@/layout/sidebar";
 import Image from "next/image";
 import PreviewModal from "./previewmodal";
+import NewsletterForm from "../global/newsletter";
 
 const List = ({
 	auth = {},
@@ -108,7 +109,10 @@ const List = ({
 											</div>
 										)}
 									</div>
-									<hr />
+									<NewsletterForm
+										sectionClassList="text-bg-dark text-center pt-3 pb-3 mb-4"
+										headingClassList=""
+									/>
 									<div className="float-start">
 										<ExportModal
 											linkToShare={linkToShare}

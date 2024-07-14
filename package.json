@@ -69,6 +69,7 @@
     "axios": "^1.7.2",
     "base-64": "^1.0.0",
     "depcheck": "^1.4.7",
+    "disqus-react": "^1.1.5",
     "froala-editor": "^4.2.0",
     "he": "^1.2.0",
     "lodash": "^4.17.21",

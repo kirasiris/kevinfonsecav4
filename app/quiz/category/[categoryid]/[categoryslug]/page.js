@@ -18,8 +18,9 @@ async function getCategories(params) {
 }
 
 const QuizCategoryIndex = async ({ params, searchParams }) => {
-	const limit = searchParams.limit || 10;
 	const page = searchParams.page || 1;
+	const limit = searchParams.limit || 10;
+	const sort = searchParams.sort || "-createdAt";
 	const decrypt = searchParams.decrypt === "true" ? "&decrypt=true" : "";
 
 	const getFeaturedQuizData = getFeaturedQuiz(
@@ -27,7 +28,7 @@ const QuizCategoryIndex = async ({ params, searchParams }) => {
 	);
 
 	const getQuizzesData = getQuizzes(
-		`?page=${page}&limit=${limit}&sort=-createdAt&status=published&category=${params.categoryid}${decrypt}`
+		`?page=${page}&limit=${limit}&sort=${sort}&status=published&category=${params.categoryid}${decrypt}`
 	);
 
 	const getCategoriesData = getCategories(`?categoryType=quiz`);

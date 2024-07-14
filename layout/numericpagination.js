@@ -5,66 +5,79 @@ import { useRouter } from "next/navigation";
 
 const NumericPagination = ({
 	totalPages,
-	page = 1,
-	limit = 10,
-	keyword,
-	sortby = `-createdAt`,
-	decrypt = false,
+	searchParams = {},
 	siblings,
-	postType = "",
 	isAdmin = true,
 }) => {
+	const keyword = searchParams.keyword;
+	const page = searchParams.page || 1;
+	const limit = searchParams.limit || 10;
+	const sort = searchParams.sort || "-createdAt";
+	const decrypt = searchParams.decrypt || "";
+	const random = searchParams.random || "";
+	const email = searchParams.email || "";
+	const posttype = searchParams.postType || "";
+
+	// Initialize router
 	const router = useRouter();
+
 	// If query postType is found
-	const comesPostType =
-		postType !== "" && postType !== undefined ? `&postType=${postType}` : "";
+	const postTypeQuery =
+		posttype !== "" && posttype !== undefined ? `&postType=${posttype}` : "";
 	// If query keyword is found
-	const myKeyword =
+	const keywordQuery =
 		keyword !== "" && keyword !== undefined ? `&keyword=${keyword}` : "";
 	// If query decrypt is found
-	const myDecrypt = decrypt ? "&decrypt=true" : "";
+	const decryptQuery = decrypt === "true" ? "&decrypt=true" : "";
+	// If query random is found
+	const randomQuery = random === "true" ? "&random=true" : "";
+	// If query email is found
+	const emailQuery = email ? `&email=${email}` : "";
 	// Add them all together
-	const newParams = `&sort=${sortby}${comesPostType}${myKeyword}${myDecrypt}`;
+	const newParams = `&sort=${sort}${postTypeQuery}${keywordQuery}${randomQuery}${decryptQuery}${emailQuery}`;
 	let pageNo;
-	if (page <= totalPages) {
+	if (page <= Number(totalPages)) {
 		pageNo = page;
 	} else {
 		pageNo = page;
 	}
 
 	const paginationRange = (siblings) => {
-		let totalPagesNoInArray = 7 + siblings;
-		if (totalPagesNoInArray >= totalPages) {
-			return _.range(1, totalPages + 1);
+		let totalPagesNoInArray = 7 + Number(siblings);
+		if (totalPagesNoInArray >= Number(totalPages)) {
+			return _.range(1, Number(totalPages) + 1);
 		}
 
-		let leftSiblingsIndex = Math.max(pageNo - siblings, 1);
-		let rightSiblingsIndex = Math.min(pageNo + siblings, totalPages);
+		let leftSiblingsIndex = Math.max(pageNo - Number(siblings), 1);
+		let rightSiblingsIndex = Math.min(
+			pageNo + Number(siblings),
+			Number(totalPages)
+		);
 
 		let showLeftDots = leftSiblingsIndex > 2;
-		let showRightDots = rightSiblingsIndex < totalPages - 2;
+		let showRightDots = rightSiblingsIndex < Number(totalPages) - 2;
 
 		if (!showLeftDots && showRightDots) {
-			let leftItemsCount = 3 + 2 * siblings;
+			let leftItemsCount = 3 + 2 * Number(siblings);
 			let leftRange = _.range(1, leftItemsCount + 1);
-			return [...leftRange, "...", totalPages];
+			return [...leftRange, "...", Number(totalPages)];
 		} else if (showLeftDots && !showRightDots) {
-			let rightItemsCount = 3 + 2 * siblings;
+			let rightItemsCount = 3 + 2 * Number(siblings);
 			let rightRange = _.range(
-				totalPages - rightItemsCount + 1,
-				totalPages + 1
+				Number(totalPages) - rightItemsCount + 1,
+				Number(totalPages) + 1
 			);
 			return [1, "...", ...rightRange];
 		} else {
 			let middleRange = _.range(leftSiblingsIndex, rightSiblingsIndex + 1);
-			return [1, "...", ...middleRange, "...", totalPages];
+			return [1, "...", ...middleRange, "...", Number(totalPages)];
 		}
 	};
 
 	let array = paginationRange(siblings);
 
 	const handlePageLimit = (value) => {
-		router.push(`?page=${pageNo}&limit=${value}${newParams}`);
+		router.push(`?page=${Number(pageNo)}&limit=${Number(value)}${newParams}`);
 	};
 
 	const selectLimit = () => {
@@ -94,25 +107,26 @@ const NumericPagination = ({
 		<div className="pagination-container d-flex align-items-center justify-content-end">
 			{isAdmin && selectLimit()}
 			<ul className="pagination justify-content-end m-0 my-1 mx-1">
-				<li className="page-item">
+				<li className={`page-item ${Number(pageNo) - 1 === 0 && `disabled`}`}>
 					<Link
-						href={`?page=1&limit=${limit}${newParams}`}
+						href={`?page=1&limit=${Number(limit)}${newParams}`}
 						passHref
 						legacyBehavior
 					>
 						<a className="page-link">&laquo;&nbsp;First</a>
 					</Link>
 				</li>
-				<li className="page-item">
+				<li className={`page-item ${Number(pageNo) - 1 === 0 && `disabled`}`}>
 					<Link
-						href={`?page=${Number(pageNo) - 1}&limit=${limit}${newParams}`}
+						href={`?page=${Number(pageNo) - 1}&limit=${Number(
+							limit
+						)}${newParams}`}
 						passHref
 						legacyBehavior
 					>
 						<a className="page-link">&lsaquo;&nbsp;Previous</a>
 					</Link>
 				</li>
-
 				{array.map((index) => {
 					return (
 						<li
@@ -123,7 +137,7 @@ const NumericPagination = ({
 						>
 							{index === "&laquo;" ? (
 								<Link
-									href={`?page=1&limit=${limit}${newParams}`}
+									href={`?page=1&limit=${Number(limit)}${newParams}`}
 									passHref
 									legacyBehavior
 								>
@@ -136,7 +150,9 @@ const NumericPagination = ({
 							) : index === "&lsaquo;" ? (
 								pageNo !== 1 && (
 									<Link
-										href={`?page=${pageNo - 1}&limit=${limit}${newParams}`}
+										href={`?page=${Number(pageNo) - 1}&limit=${Number(
+											limit
+										)}${newParams}`}
 										passHref
 										legacyBehavior
 									>
@@ -152,7 +168,9 @@ const NumericPagination = ({
 							) : index === "&rsaquo;" ? (
 								pageNo !== totalPages && (
 									<Link
-										href={`?page=${pageNo + 1}&limit=${limit}${newParams}`}
+										href={`?page=${Number(pageNo) + 1}&limit=${Number(
+											limit
+										)}${newParams}`}
 										passHref
 										legacyBehavior
 									>
@@ -167,7 +185,9 @@ const NumericPagination = ({
 								)
 							) : index === "&raquo;" ? (
 								<Link
-									href={`?page=${totalPages}&limit=${limit}${newParams}`}
+									href={`?page=${Number(totalPages)}&limit=${Number(
+										limit
+									)}${newParams}`}
 									passHref
 									legacyBehavior
 								>
@@ -179,7 +199,7 @@ const NumericPagination = ({
 								</Link>
 							) : (
 								<Link
-									href={`?page=${index}&limit=${limit}${newParams}`}
+									href={`?page=${index}&limit=${Number(limit)}${newParams}`}
 									passHref
 									legacyBehavior
 								>
@@ -193,18 +213,30 @@ const NumericPagination = ({
 						</li>
 					);
 				})}
-				<li className="page-item">
+				<li
+					className={`page-item ${
+						Number(pageNo) === Number(totalPages) && "disabled"
+					}`}
+				>
 					<Link
-						href={`?page=${Number(pageNo) + 1}&limit=${limit}${newParams}`}
+						href={`?page=${Number(pageNo) + 1}&limit=${Number(
+							limit
+						)}${newParams}`}
 						passHref
 						legacyBehavior
 					>
 						<a className="page-link">&rsaquo;&nbsp;Next</a>
 					</Link>
 				</li>
-				<li className="page-item">
+				<li
+					className={`page-item ${
+						Number(pageNo) === Number(totalPages) && "disabled"
+					}`}
+				>
 					<Link
-						href={`?page=${totalPages}&limit=${limit}${newParams}`}
+						href={`?page=${Number(totalPages)}&limit=${Number(
+							limit
+						)}${newParams}`}
 						passHref
 						legacyBehavior
 					>

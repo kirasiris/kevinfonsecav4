@@ -8,16 +8,9 @@ import AdminSidebar from "@/components/admin/myfinaladminsidebar";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
 
-async function getFiles(params) {
-	const res = await fetchurl(`/files${params}`, "GET", "force-cache");
-	return res;
-}
-
 const CreateJob = async ({ params, searchParams }) => {
 	const token = await getAuthTokenOnServer();
 	const auth = await getUserOnServer();
-
-	const files = await getFiles(`?page=1&limit=100&sort=-createdAt`);
 
 	// Redirect if not company
 	// !auth?.data?.hasCompany && redirect(`/noadmin/companies`);
@@ -251,7 +244,7 @@ const CreateJob = async ({ params, searchParams }) => {
 					categories={[]}
 					multipleFiles={false}
 					onModel={"Job"}
-					files={files}
+					files={[]}
 					auth={auth}
 					token={token}
 				/>

@@ -13,8 +13,8 @@ const ParseHtml = ({ text = "", classList = "", styleList = {} }) => {
 		return (
 			<div
 				dangerouslySetInnerHTML={{ __html: decodedText }}
-				className={classList}
-				style={styleList}
+				className={classList || undefined}
+				style={styleList || undefined}
 			/>
 		);
 	}

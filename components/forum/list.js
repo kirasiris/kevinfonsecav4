@@ -42,12 +42,8 @@ const List = async ({
 										objects?.pagination?.totalpages ||
 										Math.ceil(objects?.data?.length / searchParams.limit)
 									}
-									page={searchParams.page}
-									limit={searchParams.limit}
-									keyword={searchParams.keyword}
-									sortby="-createdAt"
+									searchParams={searchParams}
 									siblings={1}
-									// postType="blog"
 								/>
 							</>
 						) : (

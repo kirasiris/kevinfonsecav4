@@ -23,8 +23,10 @@ async function getQuotes() {
 }
 
 const BlogSearchIndex = async ({ params, searchParams }) => {
-	const limit = searchParams.limit || 10;
 	const page = searchParams.page || 1;
+	const limit = searchParams.limit || 10;
+	const sort = searchParams.page || "-createdAt";
+	const postType = searchParams.postType || "blog";
 	const decrypt = searchParams.decrypt === "true" ? "&decrypt=true" : "";
 
 	const getFeaturedBlogsData = getFeaturedBlog(
@@ -32,7 +34,7 @@ const BlogSearchIndex = async ({ params, searchParams }) => {
 	);
 
 	const getBlogsData = getBlogs(
-		`?page=${page}&limit=${limit}&sort=-createdAt&postType=blog&status=published&keyword=${searchParams.keyword}${decrypt}`
+		`?page=${page}&limit=${limit}&sort=${sort}&postType=${postType}&status=published&keyword=${searchParams.keyword}${decrypt}`
 	);
 
 	const getCategoriesData = getCategories(`?categoryType=blog`);

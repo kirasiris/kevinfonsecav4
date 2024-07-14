@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import Header from "@/layout/header";
 import Loading from "@/app/quiz/loading";
-import { fetchurl } from "@/helpers/setTokenOnServer";
+import { fetchurl, getUserOnServer } from "@/helpers/setTokenOnServer";
 import Globalcontent from "@/layout/content";
 import List from "@/components/quiz/multiplepagequestionlist";
 
@@ -23,12 +23,17 @@ async function getQuestions(params) {
 }
 
 const QuizMultiplePageRead = async ({ params, searchParams }) => {
-	// const auth = await getAuthenticatedUser();
+	const page = searchParams.page || 1;
+	const limit = searchParams.limit || 1;
+	const sort = searchParams.sort || "-createdAt";
+	const decrypt = searchParams.decrypt === "true" ? "&decrypt=true" : "";
+
+	const auth = await getUserOnServer();
 
 	const getQuizzesData = getQuiz(`/${params.id}`);
 
 	const getQuestionsData = getQuestions(
-		`?resourceId=${params.id}&page=${searchParams.page}&limit=1&sort=-createdAt&status=published&decrypt=true`
+		`?resourceId=${params.id}&page=${page}&limit=${limit}&sort=${sort}&status=published&decrypt=true`
 	);
 
 	const [quiz, questions] = await Promise.all([

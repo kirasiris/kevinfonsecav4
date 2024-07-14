@@ -1,13 +1,8 @@
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import Loading from "@/app/blog/loading";
-import { fetchurl } from "@/helpers/setTokenOnServer";
+import { fetchurl, getUserOnServer } from "@/helpers/setTokenOnServer";
 import LiveCode from "@/components/admin/snippets/livecode";
-
-async function getAuthenticatedUser() {
-	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
-	return res;
-}
 
 async function getSnippet(params) {
 	const res = await fetchurl(`/snippets${params}`, "GET", "no-cache");
@@ -16,7 +11,7 @@ async function getSnippet(params) {
 }
 
 const SnippetRead = async ({ params, searchParams }) => {
-	const auth = await getAuthenticatedUser();
+	const auth = await getUserOnServer();
 
 	const getSnippetsData = getSnippet(`/${params.id}`);
 

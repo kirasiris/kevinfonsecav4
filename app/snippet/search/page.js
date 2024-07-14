@@ -13,8 +13,9 @@ async function getSnippets(params) {
 }
 
 const SnippetSearchIndex = async ({ params, searchParams }) => {
-	const limit = searchParams.limit || 10;
 	const page = searchParams.page || 1;
+	const limit = searchParams.limit || 10;
+	const sort = searchParams.sort || "-createdAt";
 	const decrypt = searchParams.decrypt === "true" ? "&decrypt=true" : "";
 
 	const getFeaturedSnippetsData = getFeaturedSnippet(
@@ -22,7 +23,7 @@ const SnippetSearchIndex = async ({ params, searchParams }) => {
 	);
 
 	const getSnippetsData = getSnippets(
-		`?page=${page}&limit=${limit}&sort=-createdAt&status=published&keyword=${searchParams.keyword}${decrypt}`
+		`?page=${page}&limit=${limit}&sort=${sort}&status=published&keyword=${searchParams.keyword}${decrypt}`
 	);
 
 	const [featured, snippets] = await Promise.all([

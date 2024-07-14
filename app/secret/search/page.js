@@ -8,12 +8,13 @@ async function getSecrets(params) {
 }
 
 const SecretSearchIndex = async ({ params, searchParams }) => {
-	const limit = searchParams.limit || 10;
 	const page = searchParams.page || 1;
+	const limit = searchParams.limit || 10;
+	const sort = searchParams.sort || "-createdAt";
 	const decrypt = searchParams.decrypt === "true" ? "&decrypt=true" : "";
 
 	const getSecretsData = getSecrets(
-		`?keyword=${searchParams.keyword}&age=${searchParams.age}&sex=${searchParams.sex}&nsfw=${searchParams.nsfw}&page=${page}&limit=${limit}&sort=-createdAt&status=published${decrypt}`
+		`?keyword=${searchParams.keyword}&age=${searchParams.age}&sex=${searchParams.sex}&nsfw=${searchParams.nsfw}&page=${page}&limit=${limit}&sort=${sort}&status=published${decrypt}`
 	);
 
 	const [secrets] = await Promise.all([getSecretsData]);

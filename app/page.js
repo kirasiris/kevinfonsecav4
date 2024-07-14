@@ -21,15 +21,20 @@ async function getThemes(params) {
 	return res;
 }
 
-const HomeIndex = async () => {
+const HomeIndex = async ({ params, searchParams }) => {
+	const page = searchParams.page || 1;
+	const limit = searchParams.limit || 10;
+	const sort = searchParams.sort || "-createdAt";
+	const decrypt = searchParams.decrypt === "true" ? "&decrypt=true" : "";
+
 	const settings = await getSetting(`6519d7b34d26360354527e9a`);
 
 	const getBlogsData = getBlogs(
-		`?page=1&limit=6&sort=-createdAt&postType=blog&status=published`
+		`?page=${sort}&limit=6&sort=${sort}&postType=blog&status=published`
 	);
 
 	const getThemesData = getThemes(
-		`?page=1&limit=3&sort=-createdAt&postType=theme&status=published`
+		`?page=${sort}&limit=3&sort=${sort}&postType=theme&status=published`
 	);
 
 	const [blogs, themes] = await Promise.all([getBlogsData, getThemesData]);

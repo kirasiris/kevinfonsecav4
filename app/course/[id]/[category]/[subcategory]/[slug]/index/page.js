@@ -1,14 +1,9 @@
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import Loading from "@/app/blog/loading";
-import { fetchurl } from "@/helpers/setTokenOnServer";
+import { fetchurl, getUserOnServer } from "@/helpers/setTokenOnServer";
 import List from "@/components/chapter/list";
 import Jumbotron from "@/components/course/jumbotron";
-
-async function getAuthenticatedUser() {
-	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
-	return res;
-}
 
 async function getCourse(params) {
 	const res = await fetchurl(`/courses${params}`, "GET", "no-cache");
@@ -27,10 +22,12 @@ async function getCourseStudents(params) {
 }
 
 const CourseLessonsIndex = async ({ params, searchParams }) => {
-	const auth = await getAuthenticatedUser();
-	const limit = searchParams.limit || 10;
 	const page = searchParams.page || 1;
+	const limit = searchParams.limit || 1000;
+	const sort = searchParams.sort || "-createdAt";
 	const decrypt = searchParams.decrypt === "true" ? "&decrypt=true" : "";
+
+	const auth = await getUserOnServer();
 
 	const getCoursesData = getCourse(`/${params.id}`);
 
@@ -39,13 +36,13 @@ const CourseLessonsIndex = async ({ params, searchParams }) => {
 	);
 
 	const getCourseStudentsData = getCourseStudents(
-		`?resourceId=${params.id}&page=${page}&limit=${limit}&sort=-createdAt&onModel=Course${decrypt}`
+		`?resourceId=${params.id}&page=${page}&limit=${limit}&sort=${sort}&onModel=Course${decrypt}`
 	);
 
 	const verifyUserEnrollment = getCourseStudents(
-		`?user=${
-			auth?.data ? auth.data?._id : `62ec7926a554425c9e03782d`
-		}&resourceId=${params.id}&onModel=Course`
+		`?user=${auth ? auth.userId : `62ec7926a554425c9e03782d`}&resourceId=${
+			params.id
+		}&onModel=Course`
 	);
 
 	const [course, lessons, enrolledstudents, verifyAuthEnrollment] =

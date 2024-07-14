@@ -59,9 +59,7 @@ const List = ({
 				onModel: "Quiz",
 				website: "beFree",
 			});
-			router.push(
-				`/quiz/${params.id}/${params.categoryid}/${params.categoryslug}/${params.slug}/results/${res?.data?._id}`
-			);
+			router.push(`/quiz/results/${res?.data?._id}`);
 		} catch (err) {
 			console.log(err);
 		}
@@ -148,14 +146,8 @@ const List = ({
 						objects?.pagination?.totalpages ||
 						Math.ceil(objects?.data?.length / searchParams.limit)
 					}
-					page={searchParams.page}
-					limit={1}
-					keyword={searchParams.keyword}
-					sortby="-createdAt"
-					decrypt={false}
+					searchParams={searchParams}
 					siblings={1}
-					postType=""
-					isAdmin={false}
 				/>
 			</>
 		)

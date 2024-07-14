@@ -8,12 +8,13 @@ async function getForums(params) {
 }
 
 const ForumCategorySubCategoryIndex = async ({ params, searchParams }) => {
-	const limit = searchParams.limit || 32;
 	const page = searchParams.page || 1;
+	const limit = searchParams.limit || 32;
+	const sort = searchParams.sort || "-createdAt";
 	const decrypt = searchParams.decrypt === "true" ? "&decrypt=true" : "";
 
 	const getForumsData = getForums(
-		`?page=${page}&limit=${limit}&sort=-createdAt&status=published&category=${params.category}&sub_category=${params.subcategory}${decrypt}`
+		`?page=${page}&limit=${limit}&sort=${sort}&status=published&category=${params.category}&sub_category=${params.subcategory}${decrypt}`
 	);
 
 	const [forums] = await Promise.all([getForumsData]);

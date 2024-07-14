@@ -10,15 +10,10 @@ import AuthorBox from "@/components/global/authorbox";
 import CommentBox from "@/components/global/commentbox";
 import ParseHtml from "@/layout/parseHtml";
 import ReportModal from "@/components/global/reportmodal";
-import { fetchurl } from "@/helpers/setTokenOnServer";
+import { fetchurl, getUserOnServer } from "@/helpers/setTokenOnServer";
 import Globalcontent from "@/layout/content";
 import ArticleHeader from "@/components/global/articleheader";
 import LiveCode from "@/components/admin/snippets/livecode";
-
-async function getAuthenticatedUser() {
-	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
-	return res;
-}
 
 async function getSnippet(params) {
 	const res = await fetchurl(`/snippets${params}`, "GET", "no-cache");
@@ -27,7 +22,7 @@ async function getSnippet(params) {
 }
 
 const SnippetRead = async ({ params, searchParams }) => {
-	const auth = await getAuthenticatedUser();
+	const auth = await getUserOnServer();
 
 	const getSnippetsData = getSnippet(`/${params.id}`);
 

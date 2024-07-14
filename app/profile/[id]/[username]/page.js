@@ -5,6 +5,7 @@ import {
 	getAuthTokenOnServer,
 	getUserEmailOnServer,
 	getUserIdOnServer,
+	getUserOnServer,
 	getUserUsernameOnServer,
 } from "@/helpers/setTokenOnServer";
 import Loading from "@/app/profile/loading";
@@ -37,20 +38,6 @@ async function getPosts(params) {
 // }
 
 const ProfileRead = async ({ params, searchParams }) => {
-	const token = await getAuthTokenOnServer();
-	const userId = await getUserIdOnServer();
-	const username = await getUserUsernameOnServer();
-	const email = await getUserEmailOnServer();
-
-	const auth = {
-		id: userId?.value,
-		username: username?.value,
-		email: email?.value,
-		token: token?.value,
-	};
-
-	const profile = await getProfile(`/${params.id}`);
-
 	const limit = searchParams.limit || 10;
 	const page = searchParams.page || 1;
 	const subtype = searchParams.subType
@@ -58,6 +45,22 @@ const ProfileRead = async ({ params, searchParams }) => {
 		: "";
 	const decrypt =
 		searchParams.decrypt === "true" ? "&decrypt=true" : "&decrypt=true";
+
+	// const token = await getAuthTokenOnServer();
+	// const userId = await getUserIdOnServer();
+	// const username = await getUserUsernameOnServer();
+	// const email = await getUserEmailOnServer();
+
+	// const auth = {
+	// 	id: userId?.value,
+	// 	username: username?.value,
+	// 	email: email?.value,
+	// 	token: token?.value,
+	// };
+
+	const auth = await getUserOnServer();
+
+	const profile = await getProfile(`/${params.id}`);
 
 	const stories = await getPosts(
 		`?user=${params.id}&page=${page}&limit=${limit}&sort=-createdAt&status=published&postType=story`

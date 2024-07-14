@@ -10,14 +10,13 @@ import AuthorBox from "@/components/global/authorbox";
 import CommentBox from "@/components/global/commentbox";
 import ParseHtml from "@/layout/parseHtml";
 import ReportModal from "@/components/global/reportmodal";
-import { fetchurl } from "@/helpers/setTokenOnServer";
+import { fetchurl, getUserOnServer } from "@/helpers/setTokenOnServer";
 import Globalcontent from "@/layout/content";
 import ArticleHeader from "@/components/global/articleheader";
-
-async function getAuthenticatedUser() {
-	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
-	return res;
-}
+import NewsletterForm from "@/components/global/newsletter";
+import MyFinalCommentForm from "@/components/global/myfinalcommentform";
+import DisqusComments from "@/components/global/disquscomments";
+import { revalidatePath } from "next/cache";
 
 async function getSecret(params) {
 	const res = await fetchurl(`/extras/secrets${params}`, "GET", "no-cache");
@@ -26,7 +25,7 @@ async function getSecret(params) {
 }
 
 const SecretRead = async ({ params, searchParams }) => {
-	const auth = await getAuthenticatedUser();
+	const auth = await getUserOnServer();
 
 	const getSecretsData = getSecret(`/${params.id}`);
 
@@ -60,7 +59,10 @@ const SecretRead = async ({ params, searchParams }) => {
 								</figure> */}
 								<section className="mb-5">
 									<ParseHtml text={secret?.data?.text} />
-									<hr />
+									<NewsletterForm
+										sectionClassList="text-bg-dark text-center pt-3 pb-3 mb-4"
+										headingClassList=""
+									/>
 									<div className="float-start">
 										<ExportModal
 											linkToShare={`/secret/${secret?.data?._id}`}

@@ -13,8 +13,9 @@ async function getCourses(params) {
 }
 
 const CourseSearchIndex = async ({ params, searchParams }) => {
-	const limit = searchParams.limit || 32;
 	const page = searchParams.page || 1;
+	const limit = searchParams.limit || 32;
+	const sort = searchParams.sort || "-createdAt";
 	const decrypt = searchParams.decrypt === "true" ? "&decrypt=true" : "";
 
 	const getFeaturedCoursesData = getFeaturedCourse(
@@ -22,7 +23,7 @@ const CourseSearchIndex = async ({ params, searchParams }) => {
 	);
 
 	const getCoursesData = getCourses(
-		`?page=${page}&limit=${limit}&sort=-createdAt&status=published&keyword=${searchParams.keyword}${decrypt}`
+		`?page=${page}&limit=${limit}&sort=${sort}&status=published&keyword=${searchParams.keyword}${decrypt}`
 	);
 
 	const [featured, courses] = await Promise.all([

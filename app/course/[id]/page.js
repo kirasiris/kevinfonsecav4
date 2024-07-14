@@ -28,8 +28,10 @@ async function getCourseStudents(params) {
 
 const CourseRead = async ({ params, searchParams }) => {
 	const auth = await getAuthenticatedUser();
-	const limit = searchParams.limit || 10;
+
 	const page = searchParams.page || 1;
+	const limit = searchParams.limit || 10;
+	const sort = searchParams.sort || "-createdAt";
 	const decrypt = searchParams.decrypt === "true" ? "&decrypt=true" : "";
 
 	const getCoursesData = getCourse(`/${params.id}`);
@@ -38,7 +40,7 @@ const CourseRead = async ({ params, searchParams }) => {
 	);
 
 	const getCourseStudentsData = getCourseStudents(
-		`?resourceId=${params.id}&page=${page}&limit=${limit}&sort=-createdAt&onModel=Course${decrypt}`
+		`?resourceId=${params.id}&page=${page}&limit=${limit}&sort=${sort}&onModel=Course${decrypt}`
 	);
 
 	const verifyUserEnrollment = getCourseStudents(

@@ -18,8 +18,9 @@ async function getCategories(params) {
 }
 
 const ThemeIndex = async ({ params, searchParams }) => {
-	const limit = searchParams.limit || 10;
 	const page = searchParams.page || 1;
+	const limit = searchParams.limit || 10;
+	const sort = searchParams.sort || "-createdAt";
 	const decrypt = searchParams.decrypt === "true" ? "&decrypt=true" : "";
 
 	const getFeaturedThemesData = getFeaturedTheme(
@@ -27,7 +28,7 @@ const ThemeIndex = async ({ params, searchParams }) => {
 	);
 
 	const getThemesData = getThemes(
-		`?page=${page}&limit=${limit}&sort=-createdAt&postType=theme&status=published${decrypt}`
+		`?page=${page}&limit=${limit}&sort=${sort}&postType=theme&status=published${decrypt}`
 	);
 
 	const getCategoriesData = getCategories(`?categoryType=theme`);

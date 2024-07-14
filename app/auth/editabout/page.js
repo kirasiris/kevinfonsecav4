@@ -182,6 +182,8 @@ const UpdateAbout = async ({ params, searchParams }) => {
 									Bio
 								</label>
 								<MyTextArea
+									auth={undefined}
+									token={undefined}
 									id="text"
 									name="text"
 									onModel="User"

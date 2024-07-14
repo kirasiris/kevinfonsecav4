@@ -24,21 +24,6 @@ const Single = ({
 								{object?.title}
 							</Link>
 						</h5>
-						<p className="card-text">
-							{object?.experience_level}
-							{object?.job_type.map((value, index) => value)}
-							{object?.remote}
-							{object?.shift_and_schedule.map((value, index) => value)}
-							{object?.encouraged_to_apply}
-							{object?.starting_at}
-							{object?.provides_training.toString()}
-							{object?.security_clearance.toString()}
-						</p>
-						{typeof object?.text === "object" ? (
-							"TEXT IS EITHER ENCRYPTED OR PASSWORD PROTECTED"
-						) : (
-							<ParseHtml text={object?.text} classList="card-text" />
-						)}
 						<hr />
 						<Link
 							href={`/job/${object?._id}/${object?.slug}`}

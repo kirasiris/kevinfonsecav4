@@ -25,20 +25,22 @@ async function getCourseComments(params) {
 }
 
 const CourseCommentsIndex = async ({ params, searchParams }) => {
-	const auth = await getAuthenticatedUser();
-	const limit = searchParams.limit || 10;
 	const page = searchParams.page || 1;
+	const limit = searchParams.limit || 10;
+	const sort = searchParams.sort || "-createdAt";
 	// const decrypt = searchParams.decrypt === "true" ? "&decrypt=true" : "";
+
+	const auth = await getAuthenticatedUser();
 
 	const getCoursesData = getCourse(`/${params.id}`);
 
 	const getCourseCommentsData = getCourseComments(
-		`?resourceId=${params.id}&page=${page}&limit=${limit}&sort=-createdAt&onModel=Course&decrypt=true`
+		`?resourceId=${params.id}&page=${page}&limit=${limit}&sort=${sort}&onModel=Course&decrypt=true`
 	);
 
 	const verifyUserEnrollment = getCourseStudents(
 		`?user=${
-			auth?.data ? auth.data?._id : `62ec7926a554425c9e03782d`
+			auth?.data ? auth?.data?._id : `62ec7926a554425c9e03782d`
 		}&resourceId=${params.id}&onModel=Course`
 	);
 

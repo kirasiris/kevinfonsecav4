@@ -31,7 +31,7 @@ const PostNew = async ({
 		);
 	};
 
-	return (
+	return auth?.userId !== undefined ? (
 		<form action={addPost}>
 			<div className="card">
 				<div className="card-header">
@@ -98,6 +98,7 @@ const PostNew = async ({
 						placeholder="Untitled"
 					/>
 					<br />
+					{console.log(auth)}
 					<MyTextArea
 						auth={auth}
 						id="text"
@@ -119,13 +120,33 @@ const PostNew = async ({
 					)}
 				</div>
 				<div className="card-footer">
-					{/* <button className="btn btn-secondary btn-sm" type="submit">
-						Submit
-					</button> */}
 					<FormButtons />
 				</div>
 			</div>
 		</form>
+	) : (
+		<div className="card">
+			<div className="card-header">Sorry! :/</div>
+			<div
+				className="card-body align-content-center align-items-center card-body d-flex m-auto"
+				style={{
+					height: "280px",
+				}}
+			>
+				<Link
+					href={{
+						pathname: `/auth/login`,
+						query: {
+							returnpage: `/profile/${object?.data?._id}/`,
+						},
+					}}
+					passHref
+					legacyBehavior
+				>
+					<a className="btn btn-secondary btn-sm">Login to Post</a>
+				</Link>
+			</div>
+		</div>
 	);
 };
 

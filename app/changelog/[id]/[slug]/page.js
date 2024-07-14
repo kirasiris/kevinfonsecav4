@@ -3,16 +3,11 @@ import { notFound } from "next/navigation";
 import Header from "@/layout/header";
 import Loading from "@/app/blog/loading";
 import ParseHtml from "@/layout/parseHtml";
-import { fetchurl } from "@/helpers/setTokenOnServer";
+import { fetchurl, getUserOnServer } from "@/helpers/setTokenOnServer";
 import AuthorBox from "@/components/global/authorbox";
 import NewsletterForm from "@/components/global/newsletter";
 import ExportModal from "@/components/global/exportmodal";
 import ReportModal from "@/components/global/reportmodal";
-
-async function getAuthenticatedUser() {
-	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
-	return res;
-}
 
 async function getChangelog(params) {
 	const res = await fetchurl(`/changelogs${params}`, "GET", "no-cache");
@@ -21,7 +16,7 @@ async function getChangelog(params) {
 }
 
 const ChangelogRead = async ({ params }) => {
-	const auth = await getAuthenticatedUser();
+	const auth = await getUserOnServer();
 	const getChangelogsData = getChangelog(`/${params.id}`);
 
 	const [changelog] = await Promise.all([getChangelogsData]);

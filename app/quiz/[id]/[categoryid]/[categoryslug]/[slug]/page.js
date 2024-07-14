@@ -27,10 +27,15 @@ async function getQuestions(params) {
 }
 
 const QuizRead = async ({ params, searchParams }) => {
+	const page = searchParams.page || 1;
+	const limit = searchParams.limit || 15;
+	const sort = searchParams.sort || "-createdAt";
+	const decrypt = searchParams.decrypt === "true" ? "&decrypt=true" : "";
+
 	const getQuizzesData = getQuiz(`/${params.id}`);
 
 	const getQuestionsData = getQuestions(
-		`?resourceId=${params.id}&page=${params.page}&sort=-createdAt&status=published`
+		`?resourceId=${params.id}&page=${page}&limit=${limit}&sort=${sort}&status=published`
 	);
 
 	const [quiz, questions] = await Promise.all([

@@ -87,7 +87,7 @@ const Post = ({
 
 			<article className={`${object?._id} mb-3`}>
 				<div className="card">
-					<div className="card-header d-flex justify-content-between">
+					<div className="card-header d-flex justify-content-between align-items-center">
 						<div className="float-start">
 							<Link
 								href={{
@@ -104,7 +104,7 @@ const Post = ({
 								<a>
 									<Image
 										src={object?.user?.files?.avatar?.location?.secure_location}
-										className="rounded-5 me-3"
+										className="rounded-5"
 										width={35}
 										height={35}
 										alt={`${object.user.username}'s avatar`}
@@ -114,6 +114,19 @@ const Post = ({
 									/>
 								</a>
 							</Link>
+						</div>
+						<div className="float-middle text-center">
+							<Link
+								href={{
+									pathname: `/post/${object?._id}`,
+									query: {},
+								}}
+								passHref
+								legacyBehavior
+							>
+								<a>{object?.title}</a>
+							</Link>
+							&nbsp;by&nbsp;
 							<Link
 								href={{
 									pathname: `/profile/${object.user._id}/${object.user.username}`,
@@ -127,30 +140,6 @@ const Post = ({
 								legacyBehavior
 							>
 								<a>{object?.user?.username}</a>
-							</Link>
-							<div
-								style={{
-									position: "absolute",
-									left: "66px",
-									top: "30px",
-									// bottom: "455px",
-								}}
-							>
-								<small className="me-1">
-									{calculateTimeSincePublished(object?.createdAt)}
-								</small>
-							</div>
-						</div>
-						<div className="float-middle">
-							<Link
-								href={{
-									pathname: `/post/${object?._id}/${object?.slug}`,
-									query: {},
-								}}
-								passHref
-								legacyBehavior
-							>
-								<a>{object?.title}</a>
 							</Link>
 						</div>
 						<div className="float-end">
@@ -246,9 +235,14 @@ const Post = ({
 						</div>
 					</div>
 					<div
-						className={`card-body ${
-							(object?.files?.length >= 1 || images?.length >= 1) && `p-0`
-						}`}
+						className={`card-body${
+							object.subType === "audios" ||
+							object.subType === "maps" ||
+							object.subType === "photos" ||
+							object.subType === "videos"
+								? ` p-0`
+								: ""
+						}${object.subType === "photos" ? " card-post-body" : ""}`}
 					>
 						{object.subType === "audios" ? (
 							<>
@@ -283,7 +277,11 @@ const Post = ({
 							<Default object={object} />
 						)}
 					</div>
-					<div className="card-footer">
+					<div className="card-footer d-flex justify-content-between align-items-center">
+						<div className="float-start"></div>
+						<div className="float-middle">
+							{calculateTimeSincePublished(object?.createdAt)}
+						</div>
 						<div className="float-end">
 							<ExportModal
 								object={object}

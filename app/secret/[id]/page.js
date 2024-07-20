@@ -71,7 +71,7 @@ const SecretRead = async ({ params, searchParams }) => {
 									</div>
 									<div className="float-end">
 										<ReportModal
-											postId={secret?.data?._id}
+											resourceId={secret?.data?._id}
 											postType="secret"
 											onModel="Secret"
 										/>

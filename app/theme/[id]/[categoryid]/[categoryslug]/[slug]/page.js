@@ -156,7 +156,7 @@ const ThemeRead = async ({ params, searchParams }) => {
 									</div>
 									<div className="float-end">
 										<ReportModal
-											postId={theme?.data?._id}
+											resourceId={theme?.data?._id}
 											postType="theme"
 											onModel="Blog"
 										/>

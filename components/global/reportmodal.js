@@ -4,7 +4,11 @@ import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 
-const ReportModal = ({ postId = null, postType = ``, onModel = `` }) => {
+const ReportModal = ({
+	resourceId = null,
+	postType = undefined,
+	onModel = `Blog`,
+}) => {
 	const [reportModal, setReportModal] = useState(false);
 
 	const [reportData, setReportData] = useState({
@@ -23,9 +27,9 @@ const ReportModal = ({ postId = null, postType = ``, onModel = `` }) => {
 
 	const sendReport = async (e) => {
 		e.preventDefault();
-		await fetchurl(`/reports/${postId}`, "POST", "no-cache", {
+		await fetchurl(`/reports/${resourceId}`, "POST", "no-cache", {
 			...reportData,
-			type: postType,
+			postType: postType,
 			onModel: onModel,
 			website: "beFree",
 		});

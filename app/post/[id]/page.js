@@ -1,8 +1,9 @@
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import Header from "@/layout/header";
-import Sidebar from "@/layout/job/sidebar";
+import Sidebar from "@/layout/blog/sidebar";
 import Loading from "@/app/blog/loading";
 import ExportModal from "@/components/global/exportmodal";
 import AuthorBox from "@/components/global/authorbox";
@@ -16,15 +17,9 @@ import NewsletterForm from "@/components/global/newsletter";
 import MyFinalCommentForm from "@/components/global/myfinalcommentform";
 import DisqusComments from "@/components/global/disquscomments";
 import { revalidatePath } from "next/cache";
-import Map from "@/components/global/map";
 
-async function getAuthenticatedUser() {
-	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
-	return res;
-}
-
-async function getJob(params) {
-	const res = await fetchurl(`/jobs${params}`, "GET", "no-cache");
+async function getPost(params) {
+	const res = await fetchurl(`/posts${params}`, "GET", "no-cache");
 	if (!res.success) notFound();
 	return res;
 }
@@ -34,7 +29,7 @@ async function getComments(params) {
 	return res;
 }
 
-const JobRead = async ({ params, searchParams }) => {
+const PostRead = async ({ params, searchParams }) => {
 	const page = searchParams.page || 1;
 	const limit = searchParams.limit || 15;
 	const sort = searchParams.sort || "-createdAt";
@@ -42,13 +37,13 @@ const JobRead = async ({ params, searchParams }) => {
 
 	const auth = await getUserOnServer();
 
-	const getJobsData = getJob(`/${params.id}`);
+	const getPostsData = getPost(`/${params.id}`);
 
 	const getCommentsData = getComments(
 		`?resourceId=${params.id}&page=${page}&limit=${limit}&sort=${sort}&status=published&decrypt=true`
 	);
 
-	const [job, comments] = await Promise.all([getJobsData, getCommentsData]);
+	const [blog, comments] = await Promise.all([getPostsData, getCommentsData]);
 
 	// Draft It
 
@@ -63,7 +58,7 @@ const JobRead = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/comments/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`/job/${job?.data?._id}/${job?.data?.category?._id}/${job?.data?.category?.slug}/${job?.data?.slug}`
+			`/blog/${blog?.data?._id}/${blog?.data?.category?._id}/${blog?.data?.category?.slug}/${blog?.data?.slug}`
 		);
 	};
 
@@ -73,59 +68,65 @@ const JobRead = async ({ params, searchParams }) => {
 
 	return (
 		<Suspense fallback={<Loading />}>
-			<Header title={job.data.title} />
+			<Header title={blog.data.title} />
 			<div className="container">
-				{job.data.status === "published" || searchParams.isAdmin === "true" ? (
+				{blog.data.status === "published" || searchParams.isAdmin === "true" ? (
 					<div className="row">
-						<Globalcontent containerClasses={`col-lg-8`}>
+						<Globalcontent containerClasses={`col-lg-12`}>
 							<article>
-								<ArticleHeader object={job} url={`/job/${job?.data?.slug}`} />
-								{/* <figure className="mb-4">
+								<ArticleHeader
+									object={blog}
+									url={`/blog/category/${blog?.data?.category?._id}/${blog?.data?.category?.slug}`}
+								/>
+								<figure className="mb-4">
 									<Image
 										className="img-fluid"
 										src={
-											job?.data?.files?.avatar?.location?.secure_location ||
+											blog?.data?.files?.avatar?.location?.secure_location ||
 											`https://source.unsplash.com/random/1200x900`
 										}
-										alt={`${job?.data?.files?.avatar?.location?.filename}'s featured image`}
+										alt={`${blog?.data?.files?.avatar?.location?.filename}'s featured image`}
 										width={1200}
 										height={900}
 										priority
 									/>
-								</figure> */}
+								</figure>
 								<section className="mb-5">
-									<ParseHtml text={job?.data?.text} />
-									<Map object={job?.data} />
+									<ParseHtml text={blog?.data?.text} />
 									<NewsletterForm
-										sectionClassList="text-bg-dark text-center pt-3 pb-3 mt-4 mb-4"
+										sectionClassList="text-bg-dark text-center pt-3 pb-3 mb-4"
 										headingClassList=""
 									/>
 									<div className="float-start">
 										<ExportModal
-											linkToShare={`/job/${job?.data?._id}/${job?.data?.slug}`}
-											object={job?.data}
+											linkToShare={`/post/${blog?.data?._id}`}
+											object={blog?.data}
 										/>
 									</div>
 									<div className="float-end">
 										<ReportModal
-											resourceId={job?.data?._id}
-											postType="job"
-											onModel="Job"
+											resourceId={blog?.data?._id}
+											postType="post"
+											onModel="Post"
 										/>
 									</div>
 									<div style={{ clear: "both" }} />
-									<AuthorBox author={job?.data?.user} />
+									<AuthorBox author={blog?.data?.user} />
 									<div className="comments">
-										{/* HERE GOES THE DISQUS COMMENTS */}
-										{job?.data?.commented ? (
+										<DisqusComments
+											auth={auth}
+											object={blog}
+											returtopageurl={`/post/${blog?.data?._id}`}
+										/>
+										{blog?.data?.commented ? (
 											<>
 												{auth?.userId ? (
 													<MyFinalCommentForm
-														resourceId={job?.data?._id}
+														resourceId={blog?.data?._id}
 														parentId={undefined}
-														returtopageurl={`/job/${job?.data?._id}/${job?.data?.slug}`}
-														postType="job"
-														onModel="Job"
+														returtopageurl={`/post/${blog?.data?._id}`}
+														postType="post"
+														onModel="Post"
 													/>
 												) : (
 													<div className="alert alert-info">
@@ -133,7 +134,7 @@ const JobRead = async ({ params, searchParams }) => {
 															href={{
 																pathname: `/auth/login`,
 																query: {
-																	returnpage: `/job/${job?.data?._id}/${job?.data?.slug}`,
+																	returnpage: `/blog/${blog?.data?._id}/${blog?.data?.category?._id}/${blog?.data?.category.slug}/${blog?.data?.slug}`,
 																},
 															}}
 															passHref
@@ -145,7 +146,7 @@ const JobRead = async ({ params, searchParams }) => {
 												)}
 												<CommentBox
 													auth={auth}
-													allLink={`/comment?resourceId=${job?.data?._id}&page=1&limit=15&sort=-createdAt&status=published`}
+													allLink={`/comment?resourceId=${blog?.data?._id}&page=1&limit=15&sort=-createdAt&status=published`}
 													pageText="Comments"
 													objects={comments}
 													searchParams={searchParams}
@@ -167,7 +168,6 @@ const JobRead = async ({ params, searchParams }) => {
 								</section>
 							</article>
 						</Globalcontent>
-						<Sidebar />
 					</div>
 				) : (
 					<p>Not visible</p>
@@ -177,4 +177,4 @@ const JobRead = async ({ params, searchParams }) => {
 	);
 };
 
-export default JobRead;
+export default PostRead;

@@ -1,15 +1,10 @@
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
-import { fetchurl } from "@/helpers/setTokenOnServer";
+import { fetchurl, getUserOnServer } from "@/helpers/setTokenOnServer";
 import Loading from "@/app/profile/loading";
 import PicturesList from "@/components/profile/pictureslist";
 import Sidebar from "@/components/profile/sidebar";
 import Jumbotron from "@/components/profile/jumbotron";
-
-async function getAuthenticatedUser() {
-	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
-	return res;
-}
 
 async function getProfile(params) {
 	const res = await fetchurl(`/users${params}`, "GET", "no-cache");
@@ -23,20 +18,21 @@ async function getMedias(params) {
 }
 
 const ProfilePhotosIndex = async ({ params, searchParams }) => {
-	const auth = await getAuthenticatedUser();
+	const auth = await getUserOnServer();
 
 	const getProfilesData = getProfile(`/${params.id}`);
 
 	const limit = searchParams.limit || 50;
 	const page = searchParams.page || 1;
+	const sort = "-createdAt";
 	const decrypt = searchParams.decrypt === "true" ? "&decrypt=true" : "";
 
 	const getSidebarMediasData = getMedias(
-		`?user=${params.id}&page=1&limit=9&sort=-createdAt&album=posts${decrypt}`
+		`?user=${params.id}&page=1&limit=9&sort=${sort}&album=posts${decrypt}`
 	);
 
 	const getMediasData = getMedias(
-		`?user=${params.id}&page=${page}&limit=${limit}&sort=-createdAt${decrypt}`
+		`?user=${params.id}&page=${page}&limit=${limit}&sort=${sort}${decrypt}`
 	);
 
 	const [profile, sidebarphotos, files] = await Promise.all([

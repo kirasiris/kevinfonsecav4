@@ -22,6 +22,13 @@ const Map = ({ object = {} }) => {
 								"Map design by <a href='https://kevinurielfonseca.me/' target='_blank'>Kevin Uriel Fonseca</a>",
 						})
 					);
+					// Disable map zoom when using scroll
+					// map.scrollZoom.disable();
+					// Fullscreen
+					// map.addControl(new mapboxgl.FullscreenControl());
+					// Add zoom and rotation controls to the map.
+					// map.addControl(new mapboxgl.NavigationControl());
+					// Marker
 					new mapboxgl.Marker({
 						color: "#ff0000",
 						draggable: false,

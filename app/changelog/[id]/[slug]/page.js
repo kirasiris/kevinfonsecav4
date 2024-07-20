@@ -49,7 +49,7 @@ const ChangelogRead = async ({ params }) => {
 								</div>
 								<div className="float-end">
 									<ReportModal
-										postId={changelog?.data?._id}
+										resourceId={changelog?.data?._id}
 										postType="changelog"
 										onModel="Changelog"
 									/>

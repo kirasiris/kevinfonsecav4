@@ -128,7 +128,7 @@ const BlogRead = async ({ params, searchParams }) => {
 									</div>
 									<div className="float-end">
 										<ReportModal
-											postId={blog?.data?._id}
+											resourceId={blog?.data?._id}
 											postType="blog"
 											onModel="Blog"
 										/>

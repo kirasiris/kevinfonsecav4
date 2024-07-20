@@ -112,6 +112,7 @@ const NumericPagination = ({
 						href={`?page=1&limit=${Number(limit)}${newParams}`}
 						passHref
 						legacyBehavior
+						scroll={false}
 					>
 						<a className="page-link">&laquo;&nbsp;First</a>
 					</Link>
@@ -123,6 +124,7 @@ const NumericPagination = ({
 						)}${newParams}`}
 						passHref
 						legacyBehavior
+						scroll={false}
 					>
 						<a className="page-link">&lsaquo;&nbsp;Previous</a>
 					</Link>
@@ -140,6 +142,7 @@ const NumericPagination = ({
 									href={`?page=1&limit=${Number(limit)}${newParams}`}
 									passHref
 									legacyBehavior
+									scroll={false}
 								>
 									<a
 										className={`page-link${index === "..." ? " disabled" : ""}`}
@@ -155,6 +158,7 @@ const NumericPagination = ({
 										)}${newParams}`}
 										passHref
 										legacyBehavior
+										scroll={false}
 									>
 										<a
 											className={`page-link${
@@ -173,6 +177,7 @@ const NumericPagination = ({
 										)}${newParams}`}
 										passHref
 										legacyBehavior
+										scroll={false}
 									>
 										<a
 											className={`page-link${
@@ -190,6 +195,7 @@ const NumericPagination = ({
 									)}${newParams}`}
 									passHref
 									legacyBehavior
+									scroll={false}
 								>
 									<a
 										className={`page-link${index === "..." ? " disabled" : ""}`}
@@ -202,6 +208,7 @@ const NumericPagination = ({
 									href={`?page=${index}&limit=${Number(limit)}${newParams}`}
 									passHref
 									legacyBehavior
+									scroll={false}
 								>
 									<a
 										className={`page-link${index === "..." ? " disabled" : ""}`}
@@ -224,6 +231,7 @@ const NumericPagination = ({
 						)}${newParams}`}
 						passHref
 						legacyBehavior
+						scroll={false}
 					>
 						<a className="page-link">&rsaquo;&nbsp;Next</a>
 					</Link>
@@ -239,6 +247,7 @@ const NumericPagination = ({
 						)}${newParams}`}
 						passHref
 						legacyBehavior
+						scroll={false}
 					>
 						<a className="page-link">&raquo;&nbsp;Last</a>
 					</Link>

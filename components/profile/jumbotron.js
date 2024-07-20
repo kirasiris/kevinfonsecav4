@@ -48,11 +48,11 @@ const Jumbotron = ({
 					</div>
 				</div>
 			</header>
-			<div className="bg-dark mb-4">
+			<div className="profile-navbar bg-dark mb-4">
 				<div className="container">
 					<div className="row">
 						<div className="col-lg-12">
-							<nav className="nav">
+							<nav className="nav d-block">
 								<Link
 									href={{
 										pathname: `/profile/${object?.data?._id}/${object?.data?.username}`,
@@ -152,11 +152,7 @@ const Jumbotron = ({
 								<Link
 									href={{
 										pathname: `/profile/${object?.data?._id}/${object?.data?.username}/map`,
-										query: {
-											page: 1,
-											limit: 10,
-											sort: `-createdAt`,
-										},
+										query: {},
 									}}
 									passHref
 									legacyBehavior

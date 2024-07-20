@@ -65,6 +65,8 @@ const Map = ({ object = {} }) => {
 						map.scrollZoom.disable();
 						// Fullscreen
 						map.addControl(new mapboxgl.FullscreenControl());
+						// Add zoom and rotation controls to the map.
+						map.addControl(new mapboxgl.NavigationControl());
 						// Layer switch
 						const layerSelector = document.getElementById("map-style-selector");
 						layerSelector.addEventListener("change", function () {

@@ -9,15 +9,10 @@ import AuthorBox from "@/components/global/authorbox";
 // import CommentBox from "@/components/global/commentbox";
 import ParseHtml from "@/layout/parseHtml";
 import ReportModal from "@/components/global/reportmodal";
-import { fetchurl } from "@/helpers/setTokenOnServer";
+import { fetchurl, getUserOnServer } from "@/helpers/setTokenOnServer";
 import Globalcontent from "@/layout/content";
 import ArticleHeader from "@/components/global/articleheader";
 import Jumbotron from "@/components/profile/jumbotron";
-
-async function getAuthenticatedUser() {
-	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
-	return res;
-}
 
 async function getProfile(params) {
 	const res = await fetchurl(`/users${params}`, "GET", "no-cache");
@@ -32,7 +27,7 @@ async function getMedias(params) {
 }
 
 const ProfilePhotoRead = async ({ params, searchParams }) => {
-	const auth = await getAuthenticatedUser();
+	const auth = await getUserOnServer();
 
 	const getProfilesData = getProfile(`/${params.id}`);
 

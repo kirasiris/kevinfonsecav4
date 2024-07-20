@@ -167,7 +167,7 @@ const QuizRead = async ({ params, searchParams }) => {
 									</div>
 									<div className="float-end">
 										<ReportModal
-											postId={quiz?.data?._id}
+											resourceId={quiz?.data?._id}
 											postType="quiz"
 											onModel="Quiz"
 										/>

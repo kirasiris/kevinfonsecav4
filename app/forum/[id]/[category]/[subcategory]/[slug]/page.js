@@ -99,7 +99,7 @@ const ForumRead = async ({ params, searchParams }) => {
 									</div>
 									<div className="float-end">
 										<ReportModal
-											postId={forum?.data?._id}
+											resourceId={forum?.data?._id}
 											postType="forum"
 											onModel="Forum"
 										/>

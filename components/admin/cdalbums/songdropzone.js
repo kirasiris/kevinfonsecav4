@@ -21,7 +21,9 @@ const UseDropzone = ({
 	const router = useRouter();
 	const [uploadPercentage, setUploadPercentage] = useState(0);
 
-	return (auth?.id !== "" && auth?.id !== undefined && auth?.id !== null) ||
+	return (auth?.userId !== "" &&
+		auth?.userId !== undefined &&
+		auth?.userId !== null) ||
 		(auth?.username !== "" &&
 			auth?.username !== undefined &&
 			auth?.username !== null) ||
@@ -31,7 +33,8 @@ const UseDropzone = ({
 		<>
 			<UseProgress percentage={uploadPercentage} />
 			<Dropzone
-				// accept={}
+				accept={{ "audio/*": [".mp3"] }}
+				multiple={multipleFiles}
 				onDrop={async (acceptedFiles) => {
 					for (let i = 0; i < acceptedFiles.length; i++) {
 						const res = await axios.put(
@@ -99,7 +102,6 @@ const UseDropzone = ({
 							{...getInputProps({
 								id,
 								name,
-								multiple: { multipleFiles },
 							})}
 						/>
 						<div className="dropzone-icons">

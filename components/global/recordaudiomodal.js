@@ -14,7 +14,8 @@ import Waveform from "@/layout/waveform";
 import UseProgress from "./useprogress";
 
 const RecordAudioModal = ({
-	auth,
+	auth = {},
+	token = null,
 	objectData,
 	setObjectData,
 	onModel = "Blog",
@@ -72,7 +73,7 @@ const RecordAudioModal = ({
 		const res = await axios.put(
 			`${process.env.apiUrl}/uploads/uploadObject`,
 			{
-				userId: auth?.id,
+				userId: auth?.userId,
 				username: auth?.username,
 				userEmail: auth?.email,
 				onModel: onModel,
@@ -80,7 +81,7 @@ const RecordAudioModal = ({
 			},
 			{
 				headers: {
-					Authorization: `Bearer ${auth?.token}`,
+					Authorization: `Bearer ${token?.value}`,
 					"Content-Type": "multipart/form-data",
 				},
 				onUploadProgress: (ProgressEvent) => {

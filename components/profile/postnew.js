@@ -1,38 +1,56 @@
+"use client";
 import Image from "next/image";
 import Link from "next/link";
-import FormButtons from "../global/formbuttons";
 import { fetchurl } from "@/helpers/setTokenOnServer";
-import MyTextArea from "@/components/global/myfinaltextarea";
-import { revalidatePath } from "next/cache";
+import UseDropzone from "./post/postdropzone";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
-const PostNew = async ({
+const PostNew = ({
 	auth = {},
+	token = null,
 	object = {},
-	params = {},
+	params = [],
 	searchParams = {},
+	revalidateUrl = "",
 }) => {
-	const addPost = async (formData) => {
-		"use server";
-		const rawFormData = {
-			privacy: formData.get("privacy"),
-			title: formData.get("title"),
-			text: formData.get("text"),
-			address: formData.get("address"),
+	const router = useRouter();
+
+	const [postData, setPostData] = useState({
+		postedto: auth?.userId !== params.id ? params.id : undefined,
+		privacy: "public",
+		title: "",
+		text: "",
+		address: "",
+		subType: searchParams.subType || undefined,
+		files: [],
+	});
+
+	const { privacy, title, text, address } = postData;
+
+	const resetForm = () => {
+		setPostData({
+			postedto: auth?.userId !== params.id ? params.id : undefined,
+			privacy: "public",
+			title: "",
+			text: "",
+			address: "",
 			subType: searchParams.subType || undefined,
-		};
-		console.log("data from postnew file", rawFormData);
-		await fetchurl(`/posts`, "POST", "no-cache", rawFormData);
-		revalidatePath(
-			`/profile/${params.id}/${params.username}?page=${
-				searchParams.page || 1
-			}&limit=${searchParams.limit || 100}&sort=${
-				searchParams.sort || `-createdAt`
-			}${(searchParams.subType && `&subType=${searchParams.subType}`) || ""}`
-		);
+			files: [],
+		});
+	};
+
+	const randomId = Math.random();
+
+	const addPost = async (e) => {
+		e.preventDefault();
+		await fetchurl(`/posts`, "POST", "no-cache", postData);
+		resetForm();
+		router.push(`${revalidateUrl}&new=${randomId}`, { scroll: false });
 	};
 
 	return auth?.userId !== undefined ? (
-		<form action={addPost}>
+		<form onSubmit={addPost}>
 			<div className="card">
 				<div className="card-header">
 					<div className="float-start">
@@ -78,7 +96,13 @@ const PostNew = async ({
 							id="privacy"
 							name="privacy"
 							className="form-control"
-							defaultValue="public"
+							defaultValue={privacy}
+							onChange={(e) => {
+								setPostData({
+									...postData,
+									privacy: e.target.value,
+								});
+							}}
 						>
 							<option value="only-me">Only me</option>
 							<option value="public">Everyone can see</option>
@@ -92,35 +116,86 @@ const PostNew = async ({
 					<input
 						id="title"
 						name="title"
-						defaultValue=""
+						defaultValue={title}
+						onChange={(e) => {
+							setPostData({
+								...postData,
+								title: e.target.value,
+							});
+						}}
 						type="text"
-						className="form-control"
+						className="form-control mb-3"
 						placeholder="Untitled"
 					/>
-					<br />
-					{console.log(auth)}
-					<MyTextArea
-						auth={auth}
+					<textarea
 						id="text"
 						name="text"
-						onModel="Post"
-						advancedTextEditor={false}
-						customPlaceholder="Share something new. Now with #hashtags support, YAY!!!"
-						defaultValue=""
+						className="form-control"
+						rows="5"
+						placeholder="Share something new. Now with #hashtags support, YAY!!!"
+						defaultValue={text}
+						onChange={(e) => {
+							setPostData({
+								...postData,
+								text: e.target.value,
+							});
+						}}
 					/>
+					{searchParams.subType === "photos" && (
+						<UseDropzone
+							auth={auth}
+							token={token}
+							accepted={{ "image/*": [".png", ".jpeg", ".jpg"] }}
+							id="file"
+							name="file"
+							multipleFiles={true}
+							onModel="User"
+							object={object?.data}
+							objectData={postData}
+							setObjectData={setPostData}
+						/>
+					)}
+					{searchParams.subType === "videos" && (
+						<UseDropzone
+							auth={auth}
+							token={token}
+							accepted={{ "video/*": [".mp4", ".avi"] }}
+							id="file"
+							name="file"
+							multipleFiles={false}
+							onModel="User"
+							object={object?.data}
+							objectData={postData}
+							setObjectData={setPostData}
+						/>
+					)}
+					{searchParams.subType === "audios" && <>Audios</>}
+					{searchParams.subType === "files" && <>Files</>}
 					{searchParams.subType === "maps" && (
 						<input
 							id="address"
 							name="address"
-							defaultValue=""
+							defaultValue={address}
+							onChange={(e) => {
+								setPostData({
+									...postData,
+									address: e.target.value,
+								});
+							}}
 							type="text"
 							className="form-control mt-3"
-							placeholder=""
+							placeholder="Enter address"
 						/>
 					)}
 				</div>
 				<div className="card-footer">
-					<FormButtons />
+					<button
+						type="submit"
+						className="btn btn-secondary btn-sm"
+						disabled={title.length > 0 && text.length > 0 ? !true : !false}
+					>
+						Submit
+					</button>
 				</div>
 			</div>
 		</form>
@@ -137,7 +212,7 @@ const PostNew = async ({
 					href={{
 						pathname: `/auth/login`,
 						query: {
-							returnpage: `/profile/${object?.data?._id}/`,
+							returnpage: `/profile/${object?.data?._id}/${object?.data?.username}?page=1&limit=100&sort=-createdAt`,
 						},
 					}}
 					passHref

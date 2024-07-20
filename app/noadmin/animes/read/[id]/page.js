@@ -103,7 +103,7 @@ const ReadAnime = async ({ params, searchParams }) => {
 					name={"file"}
 					multipleFiles={false}
 					onModel="Playlist"
-					objectIpRoute={`http://localhost:5000/api/v1/videos`}
+					objectIpRoute={`${process.env.apiUrl}/videos`}
 					object={anime?.data}
 					objectData={{
 						resourceId: anime?.data?._id,

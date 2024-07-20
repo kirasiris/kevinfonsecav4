@@ -21,7 +21,9 @@ const UseDropzone = ({
 	console.log("Auth in @/components/global/dropzone file", auth);
 	console.log("Token in @/components/global/dropzone file", token);
 
-	return (auth?.id !== "" && auth?.id !== undefined && auth?.id !== null) ||
+	return (auth?.userId !== "" &&
+		auth?.userId !== undefined &&
+		auth?.userId !== null) ||
 		(auth?.username !== "" &&
 			auth?.username !== undefined &&
 			auth?.username !== null) ||

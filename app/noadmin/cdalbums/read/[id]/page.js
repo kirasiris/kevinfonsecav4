@@ -100,7 +100,7 @@ const ReadCDAlbum = async ({ params, searchParams }) => {
 					name={"file"}
 					multipleFiles={false}
 					onModel="Playlist"
-					objectIpRoute={`http://localhost:5000/api/v1/songs`}
+					objectIpRoute={`${process.env.apiUrl}/songs`}
 					object={cdalbum?.data}
 					objectData={{
 						resourceId: cdalbum?.data?._id,

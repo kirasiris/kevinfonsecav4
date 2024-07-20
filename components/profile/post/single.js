@@ -7,7 +7,6 @@ import DeleteModal from "@/components/global/deletemodal";
 import { calculateTimeSincePublished } from "@/helpers/utilities";
 import Loading from "@/app/profile/loading";
 import ExportModal from "@/components/global/exportmodal";
-// import SingleCardHeader from "./postdata/header";
 import Audio from "./audio";
 import Map from "./map";
 import Text from "./text";
@@ -39,10 +38,56 @@ const Post = ({
 
 	return (
 		<Suspense fallback={<Loading />}>
+			{object?.postedto !== "" &&
+				object?.postedto !== undefined &&
+				object?.postedto !== null && (
+					<div className="d-flex justify-content-center">
+						<p className="m-0">
+							Posted&nbsp;on&nbsp;
+							<Link
+								href={{
+									pathname: `/profile/${object.postedto._id}/${object.postedto.username}`,
+									query: {
+										page: 1,
+										limit: 100,
+										sort: "-createdAt",
+									},
+								}}
+								passHref
+								legacyBehavior
+							>
+								<a>{object?.postedto?.username}</a>
+							</Link>
+						</p>
+					</div>
+				)}
+			{object?.postedfrom !== "" &&
+				object?.postedfrom !== undefined &&
+				object?.postedfrom !== null && (
+					<div className="d-flex justify-content-center">
+						<p className="m-0">
+							Shared&nbsp;from&nbsp;
+							<Link
+								href={{
+									pathname: `/profile/${object.postedfrom._id}/${object.postedfrom.username}`,
+									query: {
+										page: 1,
+										limit: 100,
+										sort: "-createdAt",
+									},
+								}}
+								passHref
+								legacyBehavior
+							>
+								<a>{object?.postedfrom?.username}</a>
+							</Link>
+						</p>
+					</div>
+				)}
+
 			<article className={`${object?._id} mb-3`}>
 				<div className="card">
-					{/* <SingleCardHeader object={object} /> */}
-					<div className="card-header">
+					<div className="card-header d-flex justify-content-between">
 						<div className="float-start">
 							<Link
 								href={{
@@ -58,7 +103,7 @@ const Post = ({
 							>
 								<a>
 									<Image
-										src={object.user.files.avatar.location.secure_location}
+										src={object?.user?.files?.avatar?.location?.secure_location}
 										className="rounded-5 me-3"
 										width={35}
 										height={35}
@@ -69,44 +114,57 @@ const Post = ({
 									/>
 								</a>
 							</Link>
+							<Link
+								href={{
+									pathname: `/profile/${object.user._id}/${object.user.username}`,
+									query: {
+										page: 1,
+										limit: 100,
+										sort: "-createdAt",
+									},
+								}}
+								passHref
+								legacyBehavior
+							>
+								<a>{object?.user?.username}</a>
+							</Link>
+							<div
+								style={{
+									position: "absolute",
+									left: "66px",
+									top: "30px",
+									// bottom: "455px",
+								}}
+							>
+								<small className="me-1">
+									{calculateTimeSincePublished(object?.createdAt)}
+								</small>
+							</div>
 						</div>
-						<Link
-							href={{
-								pathname: `/profile/${object.user._id}/${object.user.username}`,
-								query: {
-									page: 1,
-									limit: 100,
-									sort: "-createdAt",
-								},
-							}}
-							passHref
-							legacyBehavior
-						>
-							<a>{object?.user?.username}</a>
-						</Link>
-						<div
-							style={{
-								position: "absolute",
-								left: "66px",
-								bottom: "455px",
-							}}
-						>
-							<small className="me-1">
-								{calculateTimeSincePublished(object?.createdAt)}
-							</small>
+						<div className="float-middle">
+							<Link
+								href={{
+									pathname: `/post/${object?._id}/${object?.slug}`,
+									query: {},
+								}}
+								passHref
+								legacyBehavior
+							>
+								<a>{object?.title}</a>
+							</Link>
 						</div>
-						{auth?.id === object?.user?._id && (
-							<div className="float-end">
-								<DropdownButton title="" variant="secondary" size="sm">
+						<div className="float-end">
+							{auth?.userId === object?.user?._id && (
+								<DropdownButton title="..." variant="secondary" size="sm">
 									<button className="dropdown-item btn btn-sm">
-										Edit post
+										Edit&nbsp;post
 									</button>
 									{!object?.featured && (
 										<button
 											className="dropdown-item btn btn-sm"
 											onClick={() => handleFeature(object._id)}
 										>
-											Feature post
+											Feature&nbsp;post
 										</button>
 									)}
 									{object?.featured && (
@@ -114,7 +172,7 @@ const Post = ({
 											className="dropdown-item btn btn-sm"
 											onClick={() => handleUnfeature(object._id)}
 										>
-											Unfeature post
+											Unfeature&nbsp;post
 										</button>
 									)}
 									{!object?.hidden && (
@@ -122,7 +180,7 @@ const Post = ({
 											className="dropdown-item btn btn-sm"
 											onClick={() => handleHide(object._id)}
 										>
-											Hide post
+											Hide&nbsp;post
 										</button>
 									)}
 									{object?.hidden && (
@@ -130,7 +188,7 @@ const Post = ({
 											className="dropdown-item btn btn-sm"
 											onClick={() => handleUnhide(object._id)}
 										>
-											Unhide post
+											Unhide&nbsp;post
 										</button>
 									)}
 									{!object?.commented && (
@@ -138,7 +196,7 @@ const Post = ({
 											className="dropdown-item btn btn-sm"
 											onClick={() => handleCommented(object._id)}
 										>
-											Enable comments
+											Enable&nbsp;comments
 										</button>
 									)}
 									{object?.commented && (
@@ -146,7 +204,7 @@ const Post = ({
 											className="dropdown-item btn btn-sm"
 											onClick={() => handleUncommented(object._id)}
 										>
-											Disable comments
+											Disable&nbsp;comments
 										</button>
 									)}
 									<NavDropdown.Divider />
@@ -184,8 +242,8 @@ const Post = ({
 										setTotalResults={setTotalResults}
 									/>
 								</DropdownButton>
-							</div>
-						)}
+							)}
+						</div>
 					</div>
 					<div
 						className={`card-body ${
@@ -193,30 +251,44 @@ const Post = ({
 						}`}
 					>
 						{object.subType === "audios" ? (
-							<Audio object={object} />
+							<>
+								<ParseHtml text={object.text} classList="p-1" />
+								<Audio object={object} />
+							</>
 						) : object.subType === "files" ? (
-							<File object={object} />
+							<>
+								<ParseHtml text={object.text} classList="p-1" />
+								<File object={object} />
+							</>
 						) : object.subType === "maps" ? (
 							<>
-								{/* <Text object={object} /> */}
 								<ParseHtml text={object.text} classList="p-1" />
 								<Map object={object} />
 							</>
 						) : object.subType === "photos" ? (
-							<Photo object={object} />
+							<>
+								<ParseHtml text={object.text} classList="p-1" />
+								<Photo object={object} />
+							</>
 						) : object.subType === undefined ? (
 							<Default object={object} />
 						) : object.subType === "text" ? (
-							<Text object={object} />
+							<Text object={object} classList="p-1" />
 						) : object.subType === "videos" ? (
-							<Video object={object} />
+							<>
+								<ParseHtml text={object.text} classList="p-1" />
+								<Video object={object} />
+							</>
 						) : (
 							<Default object={object} />
 						)}
 					</div>
 					<div className="card-footer">
 						<div className="float-end">
-							<ExportModal object={object} />
+							<ExportModal
+								object={object}
+								linkToShare={`/post/${object?._id}/${object?.slug}`}
+							/>
 						</div>
 					</div>
 				</div>

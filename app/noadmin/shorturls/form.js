@@ -1,4 +1,4 @@
-import { fetchurl, getUserIdOnServer } from "@/helpers/setTokenOnServer";
+import { fetchurl, getUserOnServer } from "@/helpers/setTokenOnServer";
 import FormButtons from "@/components/global/formbuttons";
 import { revalidatePath } from "next/cache";
 import MyTextArea from "@/components/global/myfinaltextarea";
@@ -12,10 +12,10 @@ const Form = async ({ params, searchParams, revalidateUrl = `` }) => {
 			text: formData.get("text"),
 		};
 
-		const userId = await getUserIdOnServer();
+		const auth = await getUserOnServer();
 
 		await fetchurl(
-			`/extras/shorturls${userId ? `?user=${userId.value}` : ``}`,
+			`/extras/shorturls${auth ? `?user=${auth?.userId}` : ``}`,
 			"POST",
 			"no-cache",
 			rawFormData

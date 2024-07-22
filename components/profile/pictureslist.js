@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Single from "./singlepicture";
+import Single from "./post/photo";
 import NumericPagination from "@/layout/numericpagination";
 import NothingFoundAlert from "@/layout/nothingfoundalert";
 import Globalcontent from "@/layout/content";

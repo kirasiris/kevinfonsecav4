@@ -1,27 +1,22 @@
-import {
-	fetchurl,
-	getUserIdOnServer,
-	getUserStripeChargesEnabled,
-} from "@/helpers/setTokenOnServer";
+import { fetchurl, getUserOnServer } from "@/helpers/setTokenOnServer";
 import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
 import List from "@/components/dashboard/courses/list";
 import { revalidatePath } from "next/cache";
 
-const userId = await getUserIdOnServer();
-
 async function getCoursesPublished(params) {
-	const res = await fetchurl(
-		`/courses?user=${userId.value}${params}`,
-		"GET",
-		"no-cache"
-	);
+	const res = await fetchurl(`/courses${params}`, "GET", "no-cache");
 	return res;
 }
 
 const DashboardCoursesIndex = async ({ params, searchParams }) => {
-	const stripeChargesEnabled = await getUserStripeChargesEnabled();
+	const page = searchParams.page || 1;
+	const limit = searchParams.limit || 10;
+	const sort = searchParams.sort || "-createdAt";
+
+	const auth = await getUserOnServer();
+
 	const courses = await getCoursesPublished(
-		`&page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+		`?user=${auth?.userId}&page=${page}&limit=${limit}&sort=${sort}`
 	);
 
 	const draftIt = async (id) => {
@@ -29,7 +24,7 @@ const DashboardCoursesIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/courses/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
-			`&page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+			`?user=${auth?.userId}&page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -38,7 +33,7 @@ const DashboardCoursesIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/courses/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
-			`&page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+			`?user=${auth?.userId}&page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -47,7 +42,7 @@ const DashboardCoursesIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/courses/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
-			`&page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+			`?user=${auth?.userId}&page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -56,7 +51,7 @@ const DashboardCoursesIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/courses/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
-			`&page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+			`?user=${auth?.userId}&page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -65,7 +60,7 @@ const DashboardCoursesIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/courses/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`&page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+			`?user=${auth?.userId}&page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -74,7 +69,7 @@ const DashboardCoursesIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/courses/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`&page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+			`?user=${auth?.userId}&page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -83,7 +78,7 @@ const DashboardCoursesIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/courses/deleteall/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`&page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+			`?user=${auth?.userId}&page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -98,7 +93,7 @@ const DashboardCoursesIndex = async ({ params, searchParams }) => {
 			/>
 			<div className="card rounded-0">
 				<List
-					stripeChargesEnabled={stripeChargesEnabled.value}
+					stripeChargesEnabled={auth?.userStripeChargesEnabled}
 					allLink="/dashboard/courses"
 					pageText="Courses"
 					addLink="/dashboard/courses/create"

@@ -35,8 +35,6 @@ const OpenGraphViewerPage = ({ searchParams }) => {
 			openGraphData
 		);
 
-		console.log(res);
-
 		setCheckWebsiteBtnText(checkWebsiteBtnText);
 		setOpenGraphData({
 			...openGraphData,

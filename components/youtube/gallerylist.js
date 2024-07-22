@@ -4,6 +4,7 @@ import Loading from "@/app/blog/loading";
 import Tabs from "react-bootstrap/Tabs";
 import Tab from "react-bootstrap/Tab";
 import Carousel from "react-bootstrap/Carousel";
+import Image from "next/image";
 
 const GalleryList = ({ object = {} }) => {
 	return (
@@ -35,7 +36,8 @@ const GalleryList = ({ object = {} }) => {
 						<Carousel>
 							{object.thumbnails.map((thumbnail, index) => (
 								<Carousel.Item key={index}>
-									<img src={thumbnail} className="d-block w-100" />
+									xD
+									{/* <Image src={thumbnail} className="d-block w-100" /> */}
 								</Carousel.Item>
 							))}
 						</Carousel>

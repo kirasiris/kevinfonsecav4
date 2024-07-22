@@ -1,27 +1,22 @@
-import {
-	fetchurl,
-	getUserIdOnServer,
-	getUserStripeChargesEnabled,
-} from "@/helpers/setTokenOnServer";
+import { fetchurl, getUserOnServer } from "@/helpers/setTokenOnServer";
 import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
 import List from "@/components/dashboard/memberships/list";
 import { revalidatePath } from "next/cache";
 
-const userId = await getUserIdOnServer();
-
 async function getMembershipsPublished(params) {
-	const res = await fetchurl(
-		`/courses?user=${userId.value}${params}`,
-		"GET",
-		"no-cache"
-	);
+	const res = await fetchurl(`/courses${params}`, "GET", "no-cache");
 	return res;
 }
 
 const DashboardMembershipsIndex = async ({ params, searchParams }) => {
-	const stripeChargesEnabled = await getUserStripeChargesEnabled();
+	const page = searchParams.page || 1;
+	const limit = searchParams.limit || 10;
+	const sort = searchParams.sort || "-createdAt";
+
+	const auth = await getUserOnServer();
+
 	const memberships = await getMembershipsPublished(
-		`&page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+		`?user=${auth?.userId}&page=${page}&limit=${limit}&sort=${sort}`
 	);
 
 	const activateIt = async (formData) => {
@@ -55,7 +50,7 @@ const DashboardMembershipsIndex = async ({ params, searchParams }) => {
 			"no-cache"
 		);
 		revalidatePath(
-			`&page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+			`?user=${auth?.userId}&page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -64,7 +59,7 @@ const DashboardMembershipsIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/extras/stripe/memberships/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`&page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+			`?user=${auth?.userId}&page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -77,7 +72,7 @@ const DashboardMembershipsIndex = async ({ params, searchParams }) => {
 			"no-cache"
 		);
 		revalidatePath(
-			`&page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+			`?user=${auth?.userId}&page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -92,7 +87,7 @@ const DashboardMembershipsIndex = async ({ params, searchParams }) => {
 			/>
 			<div className="card rounded-0">
 				<List
-					stripeChargesEnabled={stripeChargesEnabled.value}
+					stripeChargesEnabled={auth?.userStripeChargesEnabled}
 					allLink="/dashboard/memberships"
 					pageText="Memberships"
 					addLink="/dashboard/memberships/create"

@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import AdminCardHeaderMenu from "@/components/admin/admincardheadermenu";
-import Single from "./chaptersingle";
+import Single from "./videosingle";
 import NumericPagination from "@/layout/numericpagination";
 import NothingFoundAlert from "@/layout/nothingfoundalert";
 import ErrorPage from "@/layout/errorpage";

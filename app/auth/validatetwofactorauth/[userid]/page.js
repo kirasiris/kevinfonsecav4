@@ -1,7 +1,6 @@
 import {
 	fetchurl,
 	setAuthTokenOnServer,
-	setUserIdOnServer,
 	setUserOnServer,
 } from "@/helpers/setTokenOnServer";
 import { redirect } from "next/navigation";

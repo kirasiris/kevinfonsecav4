@@ -1,7 +1,4 @@
-import {
-	fetchurl,
-	getUserStripeChargesEnabled,
-} from "@/helpers/setTokenOnServer";
+import { fetchurl, getUserOnServer } from "@/helpers/setTokenOnServer";
 import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
 import List from "@/components/admin/courses/list";
 import { revalidatePath } from "next/cache";
@@ -20,7 +17,7 @@ const AdminCoursesTrashedIndex = async ({ params, searchParams }) => {
 	const limit = searchParams.limit || 10;
 	const sort = searchParams.sort || "-createdAt";
 
-	const stripeChargesEnabled = await getUserStripeChargesEnabled();
+	const auth = await getUserOnServer();
 	const courses = await getCourses(`?page=${page}&limit=${limit}&sort=${sort}`);
 
 	const draftIt = async (id) => {
@@ -99,7 +96,7 @@ const AdminCoursesTrashedIndex = async ({ params, searchParams }) => {
 			/>
 			<div className="card rounded-0">
 				<List
-					stripeChargesEnabled={stripeChargesEnabled.value}
+					stripeChargesEnabled={auth?.userStripeChargesEnabled}
 					allLink="/noadmin/courses"
 					pageText="Courses"
 					addLink="/noadmin/courses/create"

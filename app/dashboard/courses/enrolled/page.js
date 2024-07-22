@@ -1,13 +1,11 @@
-import { fetchurl, getUserIdOnServer } from "@/helpers/setTokenOnServer";
+import { fetchurl, getUserOnServer } from "@/helpers/setTokenOnServer";
 import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
 import List from "@/components/dashboard/subscribers/list";
 import { revalidatePath } from "next/cache";
 
-const userId = await getUserIdOnServer();
-
 async function getCoursesEnrolled(params) {
 	const res = await fetchurl(
-		`/subscribers?user=${userId.value}&onModel=Course${params}`,
+		`/subscribers${params}&onModel=Course`,
 		"GET",
 		"no-cache"
 	);
@@ -15,8 +13,14 @@ async function getCoursesEnrolled(params) {
 }
 
 const DashboardCoursesEnrolledIndex = async ({ params, searchParams }) => {
+	const page = searchParams.page || 1;
+	const limit = searchParams.limit || 10;
+	const sort = searchParams.sort || "-createdAt";
+
+	const auth = await getUserOnServer();
+
 	const subscribers = await getCoursesEnrolled(
-		`&page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+		`?user=${auth?.userId}&page=${page}&limit=${limit}&sort=${sort}`
 	);
 
 	const handleDelete = async (id) => {
@@ -24,7 +28,7 @@ const DashboardCoursesEnrolledIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/subscribers/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`&page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+			`?user=${auth?.userId}&page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -33,7 +37,7 @@ const DashboardCoursesEnrolledIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/subscribers/deleteall/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`&page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
+			`?user=${auth?.userId}&page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 

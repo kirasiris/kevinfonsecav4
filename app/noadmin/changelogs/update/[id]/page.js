@@ -4,7 +4,7 @@ import {
 	getUserOnServer,
 } from "@/helpers/setTokenOnServer";
 import { notFound, redirect } from "next/navigation";
-import MyTextArea from "@/components/global/mytextarea";
+import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
 
 async function getChangelog(params) {

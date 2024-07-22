@@ -18,7 +18,7 @@ const ToggleTheme = () => {
 		}
 	}, []);
 
-	const toggleTheme = (color) => {
+	const changeTheme = (color) => {
 		if (color === "dark-mode") {
 			localStorage.setItem("themeColor", color);
 			document.body.classList.remove(`ligth-mode`);
@@ -41,7 +41,7 @@ const ToggleTheme = () => {
 		<span
 			style={{ fontSize: "24px" }}
 			onClick={() =>
-				toggleTheme(themeColor === "ligth-mode" ? "dark-mode" : "ligth-mode")
+				changeTheme(themeColor === "ligth-mode" ? "dark-mode" : "ligth-mode")
 			}
 		>
 			{themeColor === `ligth-mode` ? <>🌞</> : <>🌕</>}

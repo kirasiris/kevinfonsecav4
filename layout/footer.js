@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import ToggleTheme from "./toggletheme";
+import ToggleTheme from "@/layout/toggletheme";
 
 const Footer = ({
 	auth = {},

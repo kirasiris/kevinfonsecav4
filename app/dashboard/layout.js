@@ -1,4 +1,3 @@
-import "react-calendar/dist/Calendar.css";
 import "@/src/css/admin.css";
 import AdminMenu from "@/layout/dashboard/sidebar";
 import { redirect } from "next/navigation";

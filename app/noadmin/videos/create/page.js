@@ -1,11 +1,10 @@
-"use client";
-import { fetchurl } from "@/helpers/setTokenOnServer";
-import { useRouter } from "next/navigation";
-import { useState, useEffect, useContext } from "react";
-import { toast } from "react-toastify";
-import AdminSidebar from "@/components/admin/myfinaladminsidebar";
-import MyTextArea from "@/components/global/myfinaltextarea";
-import Calendar from "react-calendar";
+// "use client";
+// import { fetchurl } from "@/helpers/setTokenOnServer";
+// import { useRouter } from "next/navigation";
+// import { useState, useEffect, useContext } from "react";
+// import { toast } from "react-toastify";
+// import AdminSidebar from "@/components/admin/myfinaladminsidebar";
+// import MyTextArea from "@/components/global/myfinaltextarea";
 
 const CreateVideo = () => {
 	// const { auth, files } = useContext(AuthContext);

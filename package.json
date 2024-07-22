@@ -80,7 +80,6 @@
     "qrcode.react": "^3.1.0",
     "react": "^18",
     "react-bootstrap": "^2.10.2",
-    "react-calendar": "^5.0.0",
     "react-dom": "^18",
     "react-dropzone": "^14.2.3",
     "react-froala-wysiwyg": "^4.2.0",

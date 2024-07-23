@@ -27,7 +27,7 @@ const HomeIndex = async ({ params, searchParams }) => {
 	const sort = searchParams.sort || "-createdAt";
 	const decrypt = searchParams.decrypt === "true" ? "&decrypt=true" : "";
 
-	const settings = await getSetting(`6519d7b34d26360354527e9a`);
+	const settings = await getSetting(process.env.settingsId);
 
 	const getBlogsData = getBlogs(
 		`?page=${sort}&limit=6&sort=${sort}&postType=blog&status=published`

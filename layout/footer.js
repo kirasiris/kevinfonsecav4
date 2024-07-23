@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import ToggleTheme from "./toggletheme";
+import Toggletheme from "./toggletheme";
 
 const Footer = ({
 	auth = {},
@@ -29,7 +29,7 @@ const Footer = ({
 						KEVIN&nbsp;URIEL
 					</a>
 					&nbsp;
-					<ToggleTheme />
+					<Toggletheme />
 				</p>
 				<hr />
 				<div

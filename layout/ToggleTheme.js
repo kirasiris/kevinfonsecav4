@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 
-const ToggleTheme = () => {
+const Toggletheme = () => {
 	const [appearanceData, setAppearanceData] = useState({
 		themeColor: "ligth-mode",
 	});
@@ -49,4 +49,4 @@ const ToggleTheme = () => {
 	);
 };
 
-export default ToggleTheme;
+export default Toggletheme;

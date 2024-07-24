@@ -97,13 +97,16 @@ export const fetchurl = async (
 		] = `multipart/form-data; boundary=${data._boundary}`;
 	}
 
-	const response = await fetch(isRemote ? url : `${process.env.apiUrl}${url}`, {
-		method: method,
-		cache: cache,
-		body: method !== "GET" && method !== "HEAD" ? requestBody : null,
-		signal: signal,
-		headers: customHeaders,
-	})
+	const response = await fetch(
+		isRemote ? url : `${process.env.NEXT_PUBLIC_apiUrl}${url}`,
+		{
+			method: method,
+			cache: cache,
+			body: method !== "GET" && method !== "HEAD" ? requestBody : null,
+			signal: signal,
+			headers: customHeaders,
+		}
+	)
 		.then(async (res) => {
 			if (!res.ok) {
 				// check if there was JSON

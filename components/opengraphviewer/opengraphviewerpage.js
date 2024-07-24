@@ -13,8 +13,8 @@ const OpenGraphViewerPage = ({ searchParams }) => {
 	const router = useRouter();
 	const [openGraphData, setOpenGraphData] = useState({
 		url: ``,
-		title: ``,
-		text: ``,
+		title: `Untitled`,
+		text: `No description`,
 		image: `https://setwan.bimakota.go.id/assets/images/no-image.png`,
 		type: ``,
 		domain: ``,

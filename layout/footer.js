@@ -6,7 +6,7 @@ const Footer = ({
 	auth = {},
 	classes = "",
 	styles = {},
-	canonical = "",
+	canonical = process.env.NEXT_PUBLIC_WEBSITE_URL,
 	menus = [],
 }) => {
 	return (
@@ -25,7 +25,10 @@ const Footer = ({
 						&#9749;
 					</button>
 					&nbsp;by&nbsp;
-					<a href={process.env.websiteUrl} className="btn btn-secondary btn-sm">
+					<a
+						href={process.env.NEXT_PUBLIC_WEBSITE_URL}
+						className="btn btn-secondary btn-sm"
+					>
 						KEVIN&nbsp;URIEL
 					</a>
 					&nbsp;

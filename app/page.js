@@ -28,7 +28,7 @@ const HomeIndex = async ({ params, searchParams }) => {
 	const sort = searchParams.sort || "-createdAt";
 	const decrypt = searchParams.decrypt === "true" ? "&decrypt=true" : "";
 
-	const settings = await getSetting(process.env.settingsId);
+	const settings = await getSetting(process.env.NEXT_PUBLIC_SETTINGS_ID);
 
 	const getBlogsData = getBlogs(
 		`?page=${sort}&limit=6&sort=${sort}&postType=blog&status=published`
@@ -47,8 +47,8 @@ const HomeIndex = async ({ params, searchParams }) => {
 				description={settings.data.text}
 				favicon={settings.data.favicon}
 				postImage={settings.data.showcase_image}
-				imageWidth=""
-				imageHeight=""
+				imageWidth="800"
+				imageHeight="450"
 				videoWidth=""
 				videoHeight=""
 				card="summary"
@@ -59,7 +59,7 @@ const HomeIndex = async ({ params, searchParams }) => {
 				createdAt={settings.data.createdAt}
 				updatedAt={settings.data.updatedAt}
 				locales=""
-				posType=""
+				posType="website"
 			/>
 			<Header
 				title={settings.data.title}

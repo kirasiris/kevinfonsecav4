@@ -8,6 +8,7 @@ import AuthorBox from "@/components/global/authorbox";
 import NewsletterForm from "@/components/global/newsletter";
 import ExportModal from "@/components/global/exportmodal";
 import ReportModal from "@/components/global/reportmodal";
+import Head from "@/app/head";
 
 async function getChangelog(params) {
 	const res = await fetchurl(`/changelogs${params}`, "GET", "no-cache");
@@ -23,6 +24,25 @@ const ChangelogRead = async ({ params }) => {
 
 	return (
 		<Suspense fallback={<Loading />}>
+			<Head
+				title={changelog.data.title}
+				description={changelog.data.text}
+				// favicon=""
+				postImage=""
+				imageWidth=""
+				imageHeight=""
+				videoWidth=""
+				videoHeight=""
+				card="summary"
+				robots=""
+				category=""
+				url={`/changelog/${changelog.data._id}/${changelog.data.slug}`}
+				author={changelog.data.user.name}
+				createdAt={changelog.data.createdAt}
+				updatedAt={changelog.data.updatedAt}
+				locales=""
+				posType="changelog"
+			/>
 			<Header title={changelog?.data?.title} />
 			<div className="container">
 				<div className="row">

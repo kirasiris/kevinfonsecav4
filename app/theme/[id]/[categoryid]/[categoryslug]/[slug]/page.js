@@ -17,8 +17,9 @@ import Globalcontent from "@/layout/content";
 import ArticleHeader from "@/components/global/articleheader";
 import NewsletterForm from "@/components/global/newsletter";
 import MyFinalCommentForm from "@/components/global/myfinalcommentform";
-import { revalidatePath } from "next/cache";
 import DisqusComments from "@/components/global/disquscomments";
+import { revalidatePath } from "next/cache";
+import Head from "@/app/head";
 
 async function getTheme(params) {
 	const res = await fetchurl(`/themes${params}`, "GET", "no-cache");
@@ -122,6 +123,25 @@ const ThemeRead = async ({ params, searchParams }) => {
 
 	return (
 		<Suspense fallback={<Loading />}>
+			<Head
+				title={theme.data.title}
+				description={theme.data.text}
+				// favicon=""
+				postImage={theme.data.files.avatar.location.secure_location}
+				imageWidth=""
+				imageHeight=""
+				videoWidth=""
+				videoHeight=""
+				card="summary"
+				robots=""
+				category={theme.data.category.title}
+				url={`/theme/${theme.data._id}/${theme.data.category._id}/${theme.data.category.slug}/${theme.data.slug}`}
+				author={theme.data.user.name}
+				createdAt={theme.data.createdAt}
+				updatedAt={theme.data.updatedAt}
+				locales=""
+				posType="theme"
+			/>
 			<Header title={theme.data.title} />
 			<div className="container">
 				{theme.data.status === "published" ||

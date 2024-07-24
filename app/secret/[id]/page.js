@@ -17,6 +17,7 @@ import NewsletterForm from "@/components/global/newsletter";
 import MyFinalCommentForm from "@/components/global/myfinalcommentform";
 import DisqusComments from "@/components/global/disquscomments";
 import { revalidatePath } from "next/cache";
+import Head from "@/app/head";
 
 async function getSecret(params) {
 	const res = await fetchurl(`/extras/secrets${params}`, "GET", "no-cache");
@@ -33,6 +34,25 @@ const SecretRead = async ({ params, searchParams }) => {
 
 	return (
 		<Suspense fallback={<Loading />}>
+			<Head
+				title={secret.data.age + " - " + secret.data.sex}
+				description={secret.data.text}
+				// favicon=""
+				postImage=""
+				imageWidth=""
+				imageHeight=""
+				videoWidth=""
+				videoHeight=""
+				card="summary"
+				robots=""
+				category=""
+				url={`/secret/${secret.data._id}`}
+				author="Kevin Uriel Fonseca"
+				createdAt={secret.data.createdAt}
+				updatedAt={secret.data.updatedAt}
+				locales=""
+				posType="secret"
+			/>
 			{/* <Header title={secret.data.title} /> */}
 			<div className="container mt-4">
 				{secret.data.status === "published" ||

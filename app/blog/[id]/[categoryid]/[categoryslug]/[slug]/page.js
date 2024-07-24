@@ -17,6 +17,7 @@ import NewsletterForm from "@/components/global/newsletter";
 import MyFinalCommentForm from "@/components/global/myfinalcommentform";
 import DisqusComments from "@/components/global/disquscomments";
 import { revalidatePath } from "next/cache";
+import Head from "@/app/head";
 
 async function getBlog(params) {
 	const res = await fetchurl(`/blogs${params}`, "GET", "no-cache");
@@ -87,6 +88,25 @@ const BlogRead = async ({ params, searchParams }) => {
 
 	return (
 		<Suspense fallback={<Loading />}>
+			<Head
+				title={blog.data.title}
+				description={blog.data.text}
+				// favicon=""
+				postImage={blog.data.files.avatar.location.secure_location}
+				imageWidth=""
+				imageHeight=""
+				videoWidth=""
+				videoHeight=""
+				card="summary"
+				robots=""
+				category={blog.data.category.title}
+				url={`/blog/${blog.data._id}/${blog.data.category._id}/${blog.data.category.slug}/${blog.data.slug}`}
+				author={blog.data.user.name}
+				createdAt={blog.data.createdAt}
+				updatedAt={blog.data.updatedAt}
+				locales=""
+				posType="blog"
+			/>
 			<Header title={blog.data.title} />
 			<div className="container">
 				{blog.data.status === "published" || searchParams.isAdmin === "true" ? (

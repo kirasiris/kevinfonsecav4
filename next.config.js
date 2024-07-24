@@ -29,7 +29,7 @@ const nextConfig = {
 	},
 	env: {
 		apiUrl: `https://befree.herokuapp.com/api/v1`,
-		websiteUrl: `https://kevinurielfonseca.github.io`,
+		websiteUrl: `https://kevinfonseca.vercel.app`,
 		mapboxToken: `pk.eyJ1Ijoia2lyYXNpcmlzIiwiYSI6ImNsMW5zd3huMTB3cGMzZXF1MjBtNDNyam8ifQ.Y9omxfTV8-WjjHhDI6ZHbQ`,
 		githubToken: `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`,
 		settingsId: `6519d7b34d26360354527e9a`,

@@ -16,6 +16,7 @@ import NewsletterForm from "@/components/global/newsletter";
 import MyFinalCommentForm from "@/components/global/myfinalcommentform";
 import DisqusComments from "@/components/global/disquscomments";
 import { revalidatePath } from "next/cache";
+import Head from "@/app/head";
 
 async function getForum(params) {
 	const res = await fetchurl(`/forums${params}`, "GET", "no-cache");
@@ -74,6 +75,25 @@ const ForumRead = async ({ params, searchParams }) => {
 
 	return (
 		<Suspense fallback={<Loading />}>
+			<Head
+				title={forum.data.title}
+				description={forum.data.text}
+				// favicon=""
+				postImage=""
+				imageWidth=""
+				imageHeight=""
+				videoWidth=""
+				videoHeight=""
+				card="summary"
+				robots=""
+				category={forum.data.category.title}
+				url={`/forum/${forum.data._id}/${forum.data.category}/${forum.data.sub_category}/${forum.data.slug}`}
+				author={forum.data.user.name}
+				createdAt={forum.data.createdAt}
+				updatedAt={forum.data.updatedAt}
+				locales=""
+				posType="forum"
+			/>
 			<Header title={forum.data.title} />
 			<div className="container">
 				{forum.data.status === "published" ||

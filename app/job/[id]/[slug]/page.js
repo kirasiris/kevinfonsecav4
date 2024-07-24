@@ -16,6 +16,7 @@ import NewsletterForm from "@/components/global/newsletter";
 import MyFinalCommentForm from "@/components/global/myfinalcommentform";
 import DisqusComments from "@/components/global/disquscomments";
 import { revalidatePath } from "next/cache";
+import Head from "@/app/head";
 import Map from "@/components/global/map";
 
 async function getAuthenticatedUser() {
@@ -73,6 +74,25 @@ const JobRead = async ({ params, searchParams }) => {
 
 	return (
 		<Suspense fallback={<Loading />}>
+			<Head
+				title={job.data.title}
+				description={job.data.text}
+				// favicon=""
+				postImage=""
+				imageWidth=""
+				imageHeight=""
+				videoWidth=""
+				videoHeight=""
+				card="summary"
+				robots=""
+				category=""
+				url={`/job/${job.data._id}/${job.data.slug}`}
+				author={job.data.user.name}
+				createdAt={job.data.createdAt}
+				updatedAt={job.data.updatedAt}
+				locales=""
+				posType="job"
+			/>
 			<Header title={job.data.title} />
 			<div className="container">
 				{job.data.status === "published" || searchParams.isAdmin === "true" ? (

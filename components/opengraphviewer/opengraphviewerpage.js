@@ -201,7 +201,7 @@ const OpenGraphViewerPage = ({ searchParams }) => {
 <meta name="twitter:title" content="${title || ""}">
 <meta name="twitter:description" content="${text || ""}">
 <meta name="twitter:image" content="${image || ""}">
-<!-- Meta Tags Generated via https://www.kevinurielfonseca.me/opengraphviewer -->`}
+<!-- Meta Tags Generated via ${process.env.websiteUrl}/opengraphviewer -->`}
 						theme={vscodeDark}
 						extensions={[loadLanguage("html")]}
 						readOnly

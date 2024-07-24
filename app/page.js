@@ -5,6 +5,7 @@ import SingleTheme from "@/components/theme/single";
 import NewsletterForm from "@/components/global/newsletter";
 import ErrorPage from "@/layout/errorpage";
 import { fetchurl } from "@/helpers/setTokenOnServer";
+import Head from "./head";
 
 async function getSetting(params) {
 	const res = await fetchurl(`/settings/${params}`, "GET", "no-cache");
@@ -41,6 +42,25 @@ const HomeIndex = async ({ params, searchParams }) => {
 
 	return settings.data.maintenance === false ? (
 		<>
+			<Head
+				title={settings.data.title}
+				description={settings.data.text}
+				favicon={settings.data.favicon}
+				postImage={settings.data.showcase_image}
+				imageWidth=""
+				imageHeight=""
+				videoWidth=""
+				videoHeight=""
+				card="summary"
+				robots=""
+				category=""
+				url={`/`}
+				author={settings.data.author}
+				createdAt={settings.data.createdAt}
+				updatedAt={settings.data.updatedAt}
+				locales=""
+				posType=""
+			/>
 			<Header
 				title={settings.data.title}
 				description={settings.data.text}

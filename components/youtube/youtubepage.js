@@ -3,10 +3,12 @@ import { fetchurl } from "@/helpers/setTokenOnServer";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import Carousel from "react-bootstrap/Carousel";
-import RelatedCarousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import DisplayYoutubeInfoModal from "./displayyoutubeinfomodal";
 import NewsletterForm from "../global/newsletter";
+import Image from "next/image";
+import RelatedCarousel from "react-multi-carousel";
+import "react-multi-carousel/lib/styles.css";
 
 const YouTubePage = ({ searchParams, pushTo = true }) => {
 	const router = useRouter();
@@ -252,7 +254,13 @@ const YouTubePage = ({ searchParams, pushTo = true }) => {
 							<Carousel>
 								{video?.thumbnails.map((thumbnail, index) => (
 									<Carousel.Item key={index}>
-										<img src={`${thumbnail}`} className="d-block w-100" />
+										<Image
+											src={thumbnail}
+											alt="xd"
+											width={1248}
+											height={698}
+											className="d-block w-100"
+										/>
 									</Carousel.Item>
 								))}
 							</Carousel>
@@ -270,19 +278,17 @@ const YouTubePage = ({ searchParams, pushTo = true }) => {
 												target="_blank"
 												rel="noreferrer noopener"
 											>
-												<img
-													key={related.id}
+												<Image
 													src={
 														related.thumbnails[related.thumbnails.length - 1]
 															.url
 													}
-													alt={`${related}'s thumbnail`}
-													title="imagem"
-													style={{
-														width: 400,
-														height: "auto",
-													}}
 													className="p-1"
+													alt={`${related.author.name}'s thumbnail`}
+													title={related.title}
+													width={100}
+													height={100}
+													style={{ width: "100%", height: "auto" }}
 												/>
 											</a>
 											<br />
@@ -293,21 +299,24 @@ const YouTubePage = ({ searchParams, pushTo = true }) => {
 														target="_blank"
 														rel="noreferrer noopener"
 													>
-														<img
+														<Image
 															src={
 																related.author.thumbnails[
 																	related.author.thumbnails.length - 1
 																].url
 															}
-															style={{ width: "45px" }}
-															className="mt-2 mb-1"
-														/>{" "}
+															className="mt-2 mb-1 me-1"
+															alt={`${related.author.name}'s thumbnail`}
+															title={related.author.name}
+															width={100}
+															height={100}
+															style={{ width: "45px", height: "auto" }}
+														/>
 														{related.author.name}
 													</a>
 													<br />
 												</>
 											)}
-
 											<a
 												href={`https://www.youtube.com/watch?v=${related.id}`}
 												target="_blank"

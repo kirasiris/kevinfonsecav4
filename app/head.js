@@ -4,7 +4,7 @@ export default async function Head({
 	title = ``,
 	description = ``,
 	favicon = "",
-	postImage = ``,
+	postImage = `https://w0.peakpx.com/wallpaper/61/145/HD-wallpaper-m4-carbine-assault-rifle-m4-rifle-gun-assault-rifle-weapon-carbine.jpg`,
 	imageWidth = ``,
 	imageHeight = ``,
 	videoWidth = "1873",

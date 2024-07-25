@@ -11,5 +11,9 @@ async function getSetting(params) {
 export default async function Layout({ children }) {
 	const settings = await getSetting(process.env.NEXT_PUBLIC_SETTINGS_ID);
 
-	return settings?.data?.maintenance === false ? children : <ErrorPage />;
+	return settings.data && settings.data.maintenance === false ? (
+		children
+	) : (
+		<ErrorPage />
+	);
 }

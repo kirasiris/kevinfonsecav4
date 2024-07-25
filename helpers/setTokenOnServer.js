@@ -98,7 +98,7 @@ export const fetchurl = async (
 	}
 
 	const response = await fetch(
-		isRemote ? url : `${process.env.NEXT_PUBLIC_apiUrl}${url}`,
+		isRemote ? url : `${process.env.NEXT_PUBLIC_API_URL}${url}`,
 		{
 			method: method,
 			cache: cache,

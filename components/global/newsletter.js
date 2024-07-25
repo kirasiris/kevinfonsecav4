@@ -8,15 +8,16 @@ const NewsletterForm = ({
 }) => {
 	const [newsletters, setNewsletters] = useState([]);
 
+	const fetchNewsletters = async (params = "") => {
+		const res = await fetchurl(
+			`/newslettersubscribers${params}`,
+			"GET",
+			"no-cache"
+		);
+		setNewsletters(res?.data);
+	};
+
 	useEffect(() => {
-		const fetchNewsletters = async (params = "") => {
-			const res = await fetchurl(
-				`/newslettersubscribers${params}`,
-				"GET",
-				"no-cache"
-			);
-			setNewsletters(res?.data);
-		};
 		fetchNewsletters(``);
 	}, []);
 
@@ -37,7 +38,7 @@ const NewsletterForm = ({
 				...newsletterData,
 				website: "beFree",
 			});
-			newsletters.length += 1;
+			await fetchNewsletters(``);
 			setEmailBtnTxt(emailBtnTxt);
 			resetForm();
 		} catch (err) {

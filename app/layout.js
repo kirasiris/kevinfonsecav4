@@ -34,20 +34,19 @@ export default async function RootLayout({ children }) {
 				title={settings?.data?.title}
 				description={settings?.data?.text}
 				favicon={settings?.data?.favicon}
-				canonical={settings?.data?.site_url}
 			/>
 			<body>
 				<Menu
 					auth={auth}
 					title={settings?.data?.title}
 					logo={settings?.data?.logo}
-					canonical={settings?.data?.site_url}
+					canonical={process.env.NEXT_PUBLIC_WEBSITE_URL}
 					menus={menus?.data}
 				/>
 				<main>{children}</main>
 				<Footer
 					auth={auth}
-					canonical={settings?.data?.site_url}
+					canonical={process.env.NEXT_PUBLIC_WEBSITE_URL}
 					menus={menus?.data}
 				/>
 			</body>

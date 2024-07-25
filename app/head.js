@@ -26,7 +26,7 @@ export default async function Head({
 			{description !== "" && <meta name="description" content={description} />}
 			<meta content="width=device-width, initial-scale=1" name="viewport" />
 			<link rel="icon" href={favicon} />
-			<link rel="canonical" href={process.env.websiteUrl} />
+			<link rel="canonical" href={process.env.NEXT_PUBLIC_WEBSITE_URL} />
 			{locales?.length > 0 &&
 				locales.map((locale, i) => (
 					<meta property="og:locale" key={i} content={locale} />
@@ -35,7 +35,7 @@ export default async function Head({
 				locales.map((locale, i) => (
 					<link
 						rel="alternate"
-						href={process.env.websiteUrl + "/" + locale}
+						href={process.env.NEXT_PUBLIC_WEBSITE_URL + "/" + locale}
 						key={locale}
 						hrefLang={locale}
 					/>
@@ -46,7 +46,10 @@ export default async function Head({
 				<meta property="og:description" content={description} />
 			)}
 			{url !== "" && (
-				<meta property="og:url" content={process.env.websiteUrl + url} />
+				<meta
+					property="og:url"
+					content={process.env.NEXT_PUBLIC_WEBSITE_URL + url}
+				/>
 			)}
 			{title !== "" && <meta property="og:site_name" content={`${title}`} />}
 			{author !== "" && <meta property="article:author" content={author} />}
@@ -85,7 +88,10 @@ export default async function Head({
 			{title !== "" && <meta name="twitter:title" content={title} />}
 			<meta name="twitter:site" content={`@kirasiris`} />
 			{url !== "" && (
-				<meta property="twitter:url" content={process.env.websiteUrl + url} />
+				<meta
+					property="twitter:url"
+					content={process.env.NEXT_PUBLIC_WEBSITE_URL + url}
+				/>
 			)}
 			{videoWidth !== "" && (
 				<meta property="twitter:player:width" content={videoWidth} />

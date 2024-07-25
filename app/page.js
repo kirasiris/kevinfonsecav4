@@ -40,7 +40,7 @@ const HomeIndex = async ({ params, searchParams }) => {
 
 	const [blogs, themes] = await Promise.all([getBlogsData, getThemesData]);
 
-	return settings?.data && settings.data.maintenance === false ? (
+	return settings.data.maintenance === false ? (
 		<>
 			<Head
 				title={settings.data.title}

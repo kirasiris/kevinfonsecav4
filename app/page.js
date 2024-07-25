@@ -40,7 +40,7 @@ const HomeIndex = async ({ params, searchParams }) => {
 
 	const [blogs, themes] = await Promise.all([getBlogsData, getThemesData]);
 
-	return settings.data.maintenance === false ? (
+	return settings.data?.maintenance === false ? (
 		<>
 			<Head
 				title={settings.data.title}
@@ -54,7 +54,7 @@ const HomeIndex = async ({ params, searchParams }) => {
 				card="summary"
 				robots=""
 				category=""
-				url={`/`}
+				url="/"
 				author={settings.data.author}
 				createdAt={settings.data.createdAt}
 				updatedAt={settings.data.updatedAt}

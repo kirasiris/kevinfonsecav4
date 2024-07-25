@@ -5,7 +5,7 @@ const robots = () => {
 			allow: "/",
 			disallow: "/private/",
 		},
-		sitemap: "https://acme.com/sitemap.xml",
+		sitemap: "https://kevinfonseca.vercel.app/sitemap.xml",
 	};
 };
 

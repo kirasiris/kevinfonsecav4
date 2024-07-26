@@ -30,6 +30,17 @@ const StripeSettings = async ({ params, searchParams }) => {
 		revalidatePath(`/auth/stripe`);
 	};
 
+	const fetchStripeAccountSettings = async (formData) => {
+		"use server";
+		// const rawFormData = {}
+		const res = await fetchurl(
+			`/extras/stripe/accounts/payoutsettings`,
+			"GET",
+			"no-cache"
+		);
+		redirect(res.data.url);
+	};
+
 	return (
 		<div className="container my-4">
 			<div className="row">
@@ -90,6 +101,29 @@ const StripeSettings = async ({ params, searchParams }) => {
 									<li className="list-group-item">
 										Latest&nbsp;Checkout&nbsp;Link:&nbsp;
 										<code>{auth.data.stripe.latestStripeCheckoutLink}</code>
+									</li>
+								)}
+							{auth.data.stripe.stripeOnboardingLink !== "" &&
+								auth.data.stripe.stripeOnboardingLink !== undefined &&
+								auth.data.stripe.stripeOnboardingLink !== null && (
+									<li className="list-group-item">
+										<p className="m-0">
+											Update&nbsp;your&nbsp;Stripe&nbsp;account&nbsp;details&nbsp;or&nbsp;view&nbsp;your&nbsp;previous&nbsp;payouts.
+										</p>
+										<form action={fetchStripeAccountSettings}>
+											<button
+												type="submit"
+												className="btn btn-secondary btn-sm my-2"
+											>
+												Payout&nbsp;settings
+											</button>
+										</form>
+										<p className="m-0">
+											You&nbsp;have&nbsp;to&nbsp;
+											<b className="text-bg-primary text-decoration-underline">
+												wait&nbsp;a&nbsp;few&nbsp;seconds&nbsp;after&nbsp;clicking&nbsp;the&nbsp;link&nbsp;above&nbsp;before&nbsp;being&nbsp;redirected.
+											</b>
+										</p>
 									</li>
 								)}
 						</ul>

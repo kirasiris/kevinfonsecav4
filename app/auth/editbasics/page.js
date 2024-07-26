@@ -81,14 +81,17 @@ const UpdateBasics = async ({ params, searchParams }) => {
 								<label htmlFor="workstatus" className="form-label">
 									Work&nbsp;Status
 								</label>
-								<input
+								<select
 									id="workstatus"
 									name="workstatus"
-									type="text"
 									className="form-control mb-3"
-									placeholder="employeed, unemployeed, nini"
 									defaultValue={auth?.data?.workstatus}
-								/>
+								>
+									<option value="nini">Nini</option>
+									<option value="student">Student</option>
+									<option value="unemployed">Unemployed</option>
+									<option value="employed">Employed</option>
+								</select>
 								<label htmlFor="website" className="form-label">
 									Website
 								</label>

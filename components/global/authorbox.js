@@ -42,76 +42,90 @@ const AuthorBox = ({ author = {}, imageWidth = "64", imageHeight = "64" }) => {
 					{author?.username}
 				</Link>
 				<ParseHtml text={author?.bio} />
-				{author?.social?.facebook !== "" && (
-					<a
-						href={author?.social?.facebook}
-						target="_blank"
-						rel="noreferrer noopener"
-						className="btn btn-link btn-sm me-1"
-					>
-						<FaFacebook />
-					</a>
-				)}
-				{author?.social?.instagram !== "" && (
-					<a
-						href={author?.social?.instagram}
-						target="_blank"
-						rel="noreferrer noopener"
-						className="btn btn-link btn-sm me-1"
-					>
-						<FaInstagram />
-					</a>
-				)}
-				{author?.social?.linkedin !== "" && (
-					<a
-						href={author?.social?.linkedin}
-						target="_blank"
-						rel="noreferrer noopener"
-						className="btn btn-link btn-sm me-1"
-					>
-						<FaLinkedin />
-					</a>
-				)}
-				{author?.social?.steamId !== "" && (
-					<a
-						href={author?.social?.steamId}
-						target="_blank"
-						rel="noreferrer noopener"
-						className="btn btn-link btn-sm me-1"
-					>
-						<FaSteam />
-					</a>
-				)}
-				{author?.social?.twitter !== "" && (
-					<a
-						href={author?.social?.twitter}
-						target="_blank"
-						rel="noreferrer noopener"
-						className="btn btn-link btn-sm me-1"
-					>
-						<FaTwitter />
-					</a>
-				)}
-				{author?.social?.xboxId !== "" && (
-					<a
-						href={author?.social?.xboxId}
-						target="_blank"
-						rel="noreferrer noopener"
-						className="btn btn-link btn-sm me-1"
-					>
-						<FaXbox />
-					</a>
-				)}
-				{author?.social?.youtube !== "" && (
-					<a
-						href={author?.social?.youtube}
-						target="_blank"
-						rel="noreferrer noopener"
-						className="btn btn-link btn-sm me-1"
-					>
-						<FaYoutube />
-					</a>
-				)}
+				{author?.social?.facebook !== "" &&
+					author?.social?.facebook !== undefined &&
+					author?.social?.facebook !== null && (
+						<a
+							href={author?.social?.facebook}
+							target="_blank"
+							rel="noreferrer noopener"
+							className="btn btn-link btn-sm me-1"
+						>
+							<FaFacebook />
+						</a>
+					)}
+				{author?.social?.instagram !== "" &&
+					author?.social?.instagram !== undefined &&
+					author?.social?.instagram !== null && (
+						<a
+							href={author?.social?.instagram}
+							target="_blank"
+							rel="noreferrer noopener"
+							className="btn btn-link btn-sm me-1"
+						>
+							<FaInstagram />
+						</a>
+					)}
+				{author?.social?.linkedIn !== "" &&
+					author?.social?.linkedIn !== undefined &&
+					author?.social?.linkedIn !== null && (
+						<a
+							href={author?.social?.linkedIn}
+							target="_blank"
+							rel="noreferrer noopener"
+							className="btn btn-link btn-sm me-1"
+						>
+							<FaLinkedin />
+						</a>
+					)}
+				{author?.social?.steamId !== "" &&
+					author?.social?.steamId !== undefined &&
+					author?.social?.steamId !== null && (
+						<a
+							href={author?.social?.steamId}
+							target="_blank"
+							rel="noreferrer noopener"
+							className="btn btn-link btn-sm me-1"
+						>
+							<FaSteam />
+						</a>
+					)}
+				{author?.social?.twitter !== "" &&
+					author?.social?.twitter !== undefined &&
+					author?.social?.twitter !== null && (
+						<a
+							href={author?.social?.twitter}
+							target="_blank"
+							rel="noreferrer noopener"
+							className="btn btn-link btn-sm me-1"
+						>
+							<FaTwitter />
+						</a>
+					)}
+				{author?.social?.xboxId !== "" &&
+					author?.social?.xboxId !== undefined &&
+					author?.social?.xboxId !== null && (
+						<a
+							href={author?.social?.xboxId}
+							target="_blank"
+							rel="noreferrer noopener"
+							className="btn btn-link btn-sm me-1"
+						>
+							<FaXbox />
+						</a>
+					)}
+				{author?.social?.youtube !== "" &&
+					author?.social?.youtube !== undefined &&
+					author?.social?.youtube !== null && (
+						<a
+							href={author?.social?.youtube}
+							target="_blank"
+							rel="noreferrer noopener"
+							className="btn btn-link btn-sm me-1"
+						>
+							<FaYoutube />
+						</a>
+					)}
 			</div>
 		</div>
 	);

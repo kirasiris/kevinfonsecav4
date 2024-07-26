@@ -23,7 +23,7 @@ import {
 
 const ExportModal = ({
 	object = {},
-	linkToShare = "https://demo.com/",
+	linkToShare = process.env.NEXT_PUBLIC_WEBSITE_URL,
 	iconSize = "45",
 }) => {
 	const [showExportModal, setShowExportModal] = useState(false);
@@ -54,12 +54,13 @@ const ExportModal = ({
 					<Form.Control
 						readOnly
 						disabled
-						value={`${process.env.websiteUrl}${linkToShare}`}
+						value={`${process.env.NEXT_PUBLIC_WEBSITE_URL}${linkToShare}`}
 					/>
 					<hr />
 					<pre>
 						<code>
-							&lt;iframe src=&rdquo;{`${process.env.websiteUrl}${linkToShare}`}
+							&lt;iframe src=&rdquo;
+							{`${process.env.NEXT_PUBLIC_WEBSITE_URL}${linkToShare}`}
 							&rdquo; title=&rdquo;
 							{object?.title}&rdquo;&gt;&lt;/iframe&gt;
 						</code>
@@ -69,7 +70,7 @@ const ExportModal = ({
 						<EmailIcon size={iconSize} />
 					</EmailShareButton>
 					<FacebookShareButton
-						url={`${process.env.websiteUrl}${linkToShare}`}
+						url={`${process.env.NEXT_PUBLIC_WEBSITE_URL}${linkToShare}`}
 						title={
 							object.title
 								? `beFree - ` + object.title
@@ -79,7 +80,7 @@ const ExportModal = ({
 						<FacebookIcon size={iconSize} />
 					</FacebookShareButton>
 					<TwitterShareButton
-						url={`${process.env.websiteUrl}${linkToShare}`}
+						url={`${process.env.NEXT_PUBLIC_WEBSITE_URL}${linkToShare}`}
 						title={
 							object.title
 								? `beFree - ` + object.title
@@ -89,7 +90,7 @@ const ExportModal = ({
 						<TwitterIcon size={iconSize} />
 					</TwitterShareButton>
 					<RedditShareButton
-						url={`${process.env.websiteUrl}${linkToShare}`}
+						url={`${process.env.NEXT_PUBLIC_WEBSITE_URL}${linkToShare}`}
 						title={
 							object.title
 								? `beFree - ` + object.title
@@ -99,7 +100,7 @@ const ExportModal = ({
 						<RedditIcon size={iconSize} />
 					</RedditShareButton>
 					<WhatsappShareButton
-						url={`${process.env.websiteUrl}${linkToShare}`}
+						url={`${process.env.NEXT_PUBLIC_WEBSITE_URL}${linkToShare}`}
 						title={
 							object.title
 								? `beFree - ` + object.title
@@ -109,7 +110,7 @@ const ExportModal = ({
 						<WhatsappIcon size={iconSize} />
 					</WhatsappShareButton>
 					<PinterestShareButton
-						url={`${process.env.websiteUrl}${linkToShare}`}
+						url={`${process.env.NEXT_PUBLIC_WEBSITE_URL}${linkToShare}`}
 						title={
 							object.title
 								? `beFree - ` + object.title
@@ -119,7 +120,7 @@ const ExportModal = ({
 						<PinterestIcon size={iconSize} />
 					</PinterestShareButton>
 					<LinkedinShareButton
-						url={`${process.env.websiteUrl}${linkToShare}`}
+						url={`${process.env.NEXT_PUBLIC_WEBSITE_URL}${linkToShare}`}
 						title={
 							object.title
 								? `beFree - ` + object.title
@@ -129,7 +130,7 @@ const ExportModal = ({
 						<LinkedinIcon size={iconSize} />
 					</LinkedinShareButton>
 					<TelegramShareButton
-						url={`${process.env.websiteUrl}${linkToShare}`}
+						url={`${process.env.NEXT_PUBLIC_WEBSITE_URL}${linkToShare}`}
 						title={
 							object.title
 								? `beFree - ` + object.title

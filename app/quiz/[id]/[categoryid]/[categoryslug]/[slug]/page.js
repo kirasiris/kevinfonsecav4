@@ -14,6 +14,7 @@ import Globalcontent from "@/layout/content";
 import ArticleHeader from "@/components/global/articleheader";
 import NewsletterForm from "@/components/global/newsletter";
 import ParseHtml from "@/layout/parseHtml";
+import Head from "@/app/head";
 
 async function getQuiz(params) {
 	const res = await fetchurl(`/quizzes${params}`, "GET", "no-cache");
@@ -83,6 +84,25 @@ const QuizRead = async ({ params, searchParams }) => {
 
 	return (
 		<Suspense fallback={<Loading />}>
+			<Head
+				title={quiz.data.title}
+				description={quiz.data.text}
+				// favicon=""
+				postImage={quiz.data.files.avatar.location.secure_location}
+				imageWidth=""
+				imageHeight=""
+				videoWidth=""
+				videoHeight=""
+				card="summary"
+				robots=""
+				category={quiz.data.category.title}
+				url={`/quiz/${quiz.data._id}/${quiz.data.category._id}/${quiz.data.category.slug}/${quiz.data.slug}`}
+				author={quiz.data.user.name}
+				createdAt={quiz.data.createdAt}
+				updatedAt={quiz.data.updatedAt}
+				locales=""
+				posType="quiz"
+			/>
 			<Header title={quiz.data.title} />
 			<div className="container">
 				{quiz.data.status === "published" || searchParams.isAdmin === "true" ? (

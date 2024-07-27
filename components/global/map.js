@@ -28,7 +28,7 @@ const Map = ({ object = {} }) => {
 				strategy="lazyOnload"
 				onLoad={() => {
 					// Token
-					mapboxgl.accessToken = process.env.mapboxToken;
+					mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 					if (!mapboxgl.supported()) {
 						const map = document.getElementById("mapbox");
 						map.style.height = "350px";

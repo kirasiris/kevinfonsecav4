@@ -37,7 +37,7 @@ async function getReadMe(repoName) {
 			method: "GET",
 			accept: "application/vnd.github+json",
 			headers: {
-				Authorization: process.env.githubToken,
+				Authorization: process.env.NEXT_PUBLIC_GITHUB_TOKEN,
 			},
 			cache: "no-store",
 		}

@@ -8,8 +8,7 @@ const Map = ({ object = {} }) => {
 				src="https://api.mapbox.com/mapbox-gl-js/v3.2.0/mapbox-gl.js"
 				strategy="lazyOnload"
 				onLoad={() => {
-					mapboxgl.accessToken =
-						"pk.eyJ1Ijoia2lyYXNpcmlzIiwiYSI6ImNsMW5zd3huMTB3cGMzZXF1MjBtNDNyam8ifQ.Y9omxfTV8-WjjHhDI6ZHbQ";
+					mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 					const map = new mapboxgl.Map({
 						container: `mapbox-${object?._id}`,
 						style: "mapbox://styles/mapbox/standard",

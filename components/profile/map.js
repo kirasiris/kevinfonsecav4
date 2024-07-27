@@ -1,33 +1,15 @@
 "use client";
-import { CgStyle } from "react-icons/cg";
 import Script from "next/script";
 
 const Map = ({ objects = [] }) => {
 	return (
 		<>
-			{/* <div className="input-group mb-3">
-				<span className="input-group-text">
-					<CgStyle />
-				</span>
-				<div className="form-floating">
-					<select id="map-style-selector" className="form-control">
-						<option value="satellite-streets-v12">Satellite Streets</option>
-						<option value="light-v11">Light</option>
-						<option value="dark-v11">Dark</option>
-						<option value="streets-v12" defaultChecked>
-							Streets
-						</option>
-						<option value="outdoors-v12">Outdoors</option>
-					</select>
-					<label htmlFor="map-style-selector">Map Style</label>
-				</div>
-			</div> */}
 			<Script
 				src="https://api.mapbox.com/mapbox-gl-js/v3.2.0/mapbox-gl.js"
 				strategy="lazyOnload"
 				onLoad={() => {
 					// Token
-					mapboxgl.accessToken = process.env.mapboxToken;
+					mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 					if (!mapboxgl.supported()) {
 						const map = document.getElementById("mapbox");
 						map.style.height = "350px";

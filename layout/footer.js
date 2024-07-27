@@ -12,28 +12,32 @@ const Footer = ({
 	return (
 		<footer className={`py-5 mt-4 bg-dark ${classes}`} style={styles}>
 			<div className="container">
-				<p className="m-0 text-center text-white d-flex align-items-center justify-content-center">
-					<button className="btn btn-light btn-sm" type="button">
-						&lt;/&gt;
-					</button>
-					&nbsp;made&nbsp;with&nbsp;
-					<button className="btn btn-light btn-sm" type="button">
-						&#10084;
-					</button>
-					&nbsp;&#38;&nbsp;
-					<button className="btn btn-light btn-sm" type="button">
-						&#9749;
-					</button>
-					&nbsp;by&nbsp;
-					<a
-						href={process.env.NEXT_PUBLIC_WEBSITE_URL}
-						className="btn btn-secondary btn-sm"
-					>
-						KEVIN&nbsp;URIEL
-					</a>
-					&nbsp;
-					<Newtoggletheme />
-				</p>
+				<div className="text-center text-white">
+					<p>
+						<button className="btn btn-light btn-sm" type="button">
+							&lt;/&gt;
+						</button>
+						&nbsp;made&nbsp;with&nbsp;
+						<button className="btn btn-light btn-sm" type="button">
+							&#10084;
+						</button>
+						&nbsp;&#38;&nbsp;
+						<button className="btn btn-light btn-sm" type="button">
+							&#9749;
+						</button>
+					</p>
+					<p>
+						BY&nbsp;
+						<a
+							href={process.env.NEXT_PUBLIC_WEBSITE_URL}
+							className="btn btn-secondary btn-sm"
+						>
+							KEVIN&nbsp;URIEL
+						</a>
+						&nbsp;
+						<Newtoggletheme />
+					</p>
+				</div>
 				<hr />
 				<div
 					className="row text-white"

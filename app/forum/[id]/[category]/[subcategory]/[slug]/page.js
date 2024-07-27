@@ -6,14 +6,12 @@ import Sidebar from "@/layout/forum/sidebar";
 import Loading from "@/app/blog/loading";
 import ExportModal from "@/components/global/exportmodal";
 import AuthorBox from "@/components/global/authorbox";
-import CommentBox from "@/components/global/myfinalcommentbox";
 import ParseHtml from "@/layout/parseHtml";
 import ReportModal from "@/components/global/reportmodal";
 import { fetchurl, getUserOnServer } from "@/helpers/setTokenOnServer";
 import Globalcontent from "@/layout/content";
 import ArticleHeader from "@/components/global/articleheader";
 import NewsletterForm from "@/components/global/newsletter";
-import MyFinalCommentForm from "@/components/global/myfinalcommentform";
 import DisqusComments from "@/components/global/disquscomments";
 import { revalidatePath } from "next/cache";
 import Head from "@/app/head";
@@ -128,56 +126,9 @@ const ForumRead = async ({ params, searchParams }) => {
 									<AuthorBox author={forum?.data?.user} />
 									<div className="comments">
 										<DisqusComments
-											auth={auth}
 											object={forum}
-											returtopageurl={`/forum/${forum?.data?._id}/${forum?.data?.category?._id}/${forum?.data?.category?.slug}/${forum?.data?.slug}`}
+											objecturl={`/forum/${forum?.data?._id}/${forum?.data?.category?._id}/${forum?.data?.category?.slug}/${forum?.data?.slug}`}
 										/>
-										{forum?.data?.commented ? (
-											<>
-												{auth?.userId ? (
-													<MyFinalCommentForm
-														resourceId={forum?.data?._id}
-														parentId={undefined}
-														returtopageurl={`/forum/${forum?.data?._id}/${forum?.data?.category?._id}/${forum?.data?.category?.slug}/${forum?.data?.slug}`}
-														postType="forum"
-														onModel="Forum"
-													/>
-												) : (
-													<div className="alert alert-info">
-														<Link
-															href={{
-																pathname: `/auth/login`,
-																query: {
-																	returnpage: `/forum/${forum?.data?._id}/${forum?.data?.category?._id}/${forum?.data?.category.slug}/${forum?.data?.slug}`,
-																},
-															}}
-															passHref
-															legacyBehavior
-														>
-															<a>You need to login first</a>
-														</Link>
-													</div>
-												)}
-												<CommentBox
-													auth={auth}
-													allLink={`/comment?resourceId=${forum?.data?._id}&page=1&limit=15&sort=-createdAt&status=published`}
-													pageText="Comments"
-													objects={comments}
-													searchParams={searchParams}
-													handleDraft={undefined}
-													handlePublish={undefined}
-													handleTrash={undefined}
-													handleSchedule={undefined}
-													handleDelete={handleDelete}
-													handleTrashAllFunction={undefined}
-													handleDeleteAllFunction={undefined}
-												/>
-											</>
-										) : (
-											<div className="alert alert-danger">
-												Comments are closed
-											</div>
-										)}
 									</div>
 								</section>
 							</article>

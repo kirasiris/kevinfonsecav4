@@ -6,7 +6,6 @@ import Header from "@/layout/header";
 import Loading from "@/app/quiz/loading";
 import ExportModal from "@/components/global/exportmodal";
 import AuthorBox from "@/components/global/authorbox";
-// import CommentBox from "@/components/global/commentbox";
 // import ParseHtml from "@/layout/parseHtml";
 import ReportModal from "@/components/global/reportmodal";
 import { fetchurl } from "@/helpers/setTokenOnServer";
@@ -15,6 +14,7 @@ import ArticleHeader from "@/components/global/articleheader";
 import NewsletterForm from "@/components/global/newsletter";
 import ParseHtml from "@/layout/parseHtml";
 import Head from "@/app/head";
+import DisqusComments from "@/components/global/disquscomments";
 
 async function getQuiz(params) {
 	const res = await fetchurl(`/quizzes${params}`, "GET", "no-cache");
@@ -194,15 +194,12 @@ const QuizRead = async ({ params, searchParams }) => {
 									</div>
 									<div style={{ clear: "both" }} />
 									<AuthorBox author={quiz?.data?.user} />
-									{/* <CommentBox
-										auth={auth.data}
-										user={quiz?.data?.user}
-										postId={quiz?.data?._id}
-										secondPostId={quiz?.data?._id}
-										isVisible={quiz?.data?.commented}
-										postType="quiz"
-										onModel="Quiz"
-									/> */}
+									<div className="comments">
+										<DisqusComments
+											object={quiz}
+											objecturl={`/quiz/${quiz?.data?._id}/${quiz?.data?.category?._id}/${quiz?.data?.category?.slug}/${quiz?.data?.slug}`}
+										/>
+									</div>
 								</section>
 							</article>
 						</Globalcontent>

@@ -9,6 +9,7 @@ import NewsletterForm from "@/components/global/newsletter";
 import ExportModal from "@/components/global/exportmodal";
 import ReportModal from "@/components/global/reportmodal";
 import Head from "@/app/head";
+import DisqusComments from "@/components/global/disquscomments";
 
 async function getChangelog(params) {
 	const res = await fetchurl(`/changelogs${params}`, "GET", "no-cache");
@@ -58,7 +59,7 @@ const ChangelogRead = async ({ params }) => {
 							<section className="mb-5">
 								<ParseHtml text={changelog?.data?.text} />
 								<NewsletterForm
-									sectionClassList="text-bg-dark text-center pt-3 pb-3 mb-4"
+									sectionClassList="text-bg-dark text-center pt-3 pb-3 mt-4 mb-4"
 									headingClassList=""
 								/>
 								<div className="float-start">
@@ -76,6 +77,12 @@ const ChangelogRead = async ({ params }) => {
 								</div>
 								<div style={{ clear: "both" }} />
 								<AuthorBox author={changelog?.data?.user} />
+								<div className="comments">
+									<DisqusComments
+										object={changelog}
+										objecturl={`/changelog/${changelog?.data?._id}/${changelog?.data?.slug}`}
+									/>
+								</div>
 							</section>
 						</article>
 					</div>

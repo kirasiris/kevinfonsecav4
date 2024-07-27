@@ -24,7 +24,7 @@ async function getMenus(params) {
 
 export default async function RootLayout({ children }) {
 	const auth = await getAuthenticatedUser();
-	const settings = await getSetting(`6519d7b34d26360354527e9a`);
+	const settings = await getSetting(process.env.NEXT_PUBLIC_SETTINGS_ID);
 	const menus = await getMenus(`?page=1&status=published`);
 
 	return (

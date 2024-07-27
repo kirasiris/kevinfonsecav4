@@ -2,15 +2,17 @@ import { fetchurl } from "@/helpers/setTokenOnServer";
 import { redirect } from "next/navigation";
 import FormButtons from "@/components/global/formbuttons";
 import { revalidatePath } from "next/cache";
+import MyTextArea from "@/components/global/myfinaltextarea";
 
 const Form = async ({ params, searchParams }) => {
 	const createSecret = async (formData) => {
 		"use server";
 		const rawFormData = {
+			title: formData.get("title"),
+			text: formData.get("text"),
+			password: formData.get("password"),
 			age: formData.get("age"),
 			sex: formData.get("sex"),
-			password: formData.get("password"),
-			text: formData.get("text"),
 			nsfw: formData.get("nsfw"),
 		};
 
@@ -26,6 +28,40 @@ const Form = async ({ params, searchParams }) => {
 	return (
 		<div className="d-grid gap-2 mb-4">
 			<form action={createSecret}>
+				<label htmlFor="blog-title" className="form-label">
+					Title
+				</label>
+				<input
+					id="blog-title"
+					name="title"
+					defaultValue="Untitled"
+					type="text"
+					className="form-control mb-3"
+					placeholder=""
+				/>
+				<label htmlFor="text" className="form-label">
+					Text
+				</label>
+				<MyTextArea
+					auth={undefined}
+					token={undefined}
+					id="text"
+					name="text"
+					onModel="Secret"
+					advancedTextEditor={false}
+					customPlaceholder="No description"
+					defaultValue="No description"
+				/>
+				<label htmlFor="password" className="form-label">
+					Password
+				</label>
+				<input
+					id="password"
+					name="password"
+					type="password"
+					className="form-control mb-3"
+					placeholder="******"
+				/>
 				<label htmlFor="age" className="form-label">
 					Age
 				</label>
@@ -46,16 +82,6 @@ const Form = async ({ params, searchParams }) => {
 					<option value={`female`}>Female</option>
 					<option value={`non-binary`}>Non-binary</option>
 				</select>
-				<label htmlFor="password" className="form-label">
-					Password
-				</label>
-				<input
-					id="password"
-					name="password"
-					type="password"
-					className="form-control mb-3"
-					placeholder="******"
-				/>
 				<label htmlFor="nsfw" className="form-label">
 					NSFW
 				</label>
@@ -63,16 +89,6 @@ const Form = async ({ params, searchParams }) => {
 					<option value={true}>Yes</option>
 					<option value={false}>No</option>
 				</select>
-				<label htmlFor="text" className="form-label">
-					Text
-				</label>
-				<textarea
-					id="text"
-					name="text"
-					className="form-control"
-					placeholder={`Here goes the message`}
-					rows={`3`}
-				/>
 				<br />
 				<FormButtons />
 			</form>

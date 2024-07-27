@@ -136,53 +136,10 @@ const JobRead = async ({ params, searchParams }) => {
 									<div style={{ clear: "both" }} />
 									<AuthorBox author={job?.data?.user} />
 									<div className="comments">
-										{/* HERE GOES THE DISQUS COMMENTS */}
-										{job?.data?.commented ? (
-											<>
-												{auth?.userId ? (
-													<MyFinalCommentForm
-														resourceId={job?.data?._id}
-														parentId={undefined}
-														returtopageurl={`/job/${job?.data?._id}/${job?.data?.slug}`}
-														postType="job"
-														onModel="Job"
-													/>
-												) : (
-													<div className="alert alert-info">
-														<Link
-															href={{
-																pathname: `/auth/login`,
-																query: {
-																	returnpage: `/job/${job?.data?._id}/${job?.data?.slug}`,
-																},
-															}}
-															passHref
-															legacyBehavior
-														>
-															<a>You need to login first</a>
-														</Link>
-													</div>
-												)}
-												<CommentBox
-													auth={auth}
-													allLink={`/comment?resourceId=${job?.data?._id}&page=1&limit=15&sort=-createdAt&status=published`}
-													pageText="Comments"
-													objects={comments}
-													searchParams={searchParams}
-													handleDraft={undefined}
-													handlePublish={undefined}
-													handleTrash={undefined}
-													handleSchedule={undefined}
-													handleDelete={handleDelete}
-													handleTrashAllFunction={undefined}
-													handleDeleteAllFunction={undefined}
-												/>
-											</>
-										) : (
-											<div className="alert alert-danger">
-												Comments are closed
-											</div>
-										)}
+										<DisqusComments
+											object={job}
+											objecturl={`/job/${job?.data?._id}/${job?.data?.slug}`}
+										/>
 									</div>
 								</section>
 							</article>

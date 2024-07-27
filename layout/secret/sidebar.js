@@ -24,6 +24,26 @@ const Sidebar = ({}) => {
 
 	return (
 		<Globalsidebar>
+			<div className="card mb-4">
+				<div className="card-header">Unlock NSFW</div>
+				<div className="card-body">
+					<Link
+						href={{
+							pathname: `/secret`,
+							query: {
+								page: 1,
+								limit: 32,
+								sort: "-createdAt",
+								decrypt: true,
+							},
+						}}
+						passHref
+						legacyBehavior
+					>
+						<a>NSFW</a>
+					</Link>
+				</div>
+			</div>
 			{/* Search box */}
 			<div className="card mb-4">
 				<div className="card-header">Search</div>
@@ -104,7 +124,7 @@ const Sidebar = ({}) => {
 						</select>
 						<button
 							type="submit"
-							className="btn btn-secondary"
+							className="btn btn-secondary btn-sm"
 							disabled={keyword.length > 0 ? !true : !false}
 						>
 							Go!

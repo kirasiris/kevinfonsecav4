@@ -9,14 +9,12 @@ import Sidebar from "@/layout/theme/sidebar";
 import Loading from "@/app/theme/loading";
 import ExportModal from "@/components/global/exportmodal";
 import AuthorBox from "@/components/global/authorbox";
-import CommentBox from "@/components/global/myfinalcommentbox";
 import ParseHtml from "@/layout/parseHtml";
 import ReportModal from "@/components/global/reportmodal";
 import { fetchurl, getUserOnServer } from "@/helpers/setTokenOnServer";
 import Globalcontent from "@/layout/content";
 import ArticleHeader from "@/components/global/articleheader";
 import NewsletterForm from "@/components/global/newsletter";
-import MyFinalCommentForm from "@/components/global/myfinalcommentform";
 import DisqusComments from "@/components/global/disquscomments";
 import { revalidatePath } from "next/cache";
 import Head from "@/app/head";
@@ -185,56 +183,9 @@ const ThemeRead = async ({ params, searchParams }) => {
 									<AuthorBox author={theme?.data?.user} />
 									<div className="comments">
 										<DisqusComments
-											auth={auth}
 											object={theme}
-											returtopageurl={`/theme/${theme?.data?._id}/${theme?.data?.category?._id}/${theme?.data?.category.slug}/${theme?.data?.slug}`}
+											objecturl={`/theme/${theme?.data?._id}/${theme?.data?.category?._id}/${theme?.data?.category.slug}/${theme?.data?.slug}`}
 										/>
-										{theme?.data?.commented ? (
-											<>
-												{auth?.userId ? (
-													<MyFinalCommentForm
-														resourceId={theme?.data?._id}
-														parentId={undefined}
-														returtopageurl={`/theme/${theme?.data?._id}/${theme?.data?.category?._id}/${theme?.data?.category.slug}/${theme?.data?.slug}`}
-														postType="blog"
-														onModel="Blog"
-													/>
-												) : (
-													<div className="alert alert-info">
-														<Link
-															href={{
-																pathname: `/auth/login`,
-																query: {
-																	returnpage: `/theme/${theme?.data?._id}/${theme?.data?.category?._id}/${theme?.data?.category.slug}/${theme?.data?.slug}`,
-																},
-															}}
-															passHref
-															legacyBehavior
-														>
-															<a>You need to login first</a>
-														</Link>
-													</div>
-												)}
-												<CommentBox
-													auth={auth}
-													allLink={`/comment?resourceId=${theme?.data?._id}&page=1&limit=15&sort=-createdAt&status=published`}
-													pageText="Comments"
-													objects={comments}
-													searchParams={searchParams}
-													handleDraft={undefined}
-													handlePublish={undefined}
-													handleTrash={undefined}
-													handleSchedule={undefined}
-													handleDelete={handleDelete}
-													handleTrashAllFunction={undefined}
-													handleDeleteAllFunction={undefined}
-												/>
-											</>
-										) : (
-											<div className="alert alert-danger">
-												Comments are closed
-											</div>
-										)}
 									</div>
 								</section>
 							</article>

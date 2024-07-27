@@ -8,8 +8,12 @@ const ArticleHeader = ({ object = {}, url = `#!` }) => {
 			<h1>{object?.data?.title}</h1>
 			<div className="text-muted fst-italic mb-2">
 				Posted&nbsp;on&nbsp;{formatDateWithoutTime(object?.data?.createdAt)}
-				&nbsp;by&nbsp;
-				{object?.data?.user?.username}
+				{object?.data?.user?.username && (
+					<>
+						&nbsp;by&nbsp;
+						{object?.data?.user?.username}
+					</>
+				)}
 			</div>
 			{object?.data?.category && (
 				<Link

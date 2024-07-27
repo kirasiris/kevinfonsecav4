@@ -1,7 +1,7 @@
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import { notFound } from "next/navigation";
 import Jumbotron from "@/components/course/jumbotron";
-import List from "@/components/course/commentlist";
+import DisqusComments from "@/components/global/disquscomments";
 
 async function getAuthenticatedUser() {
 	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
@@ -59,7 +59,10 @@ const CourseCommentsIndex = async ({ params, searchParams }) => {
 				imageWidth="440"
 				imageHeight="570"
 			/>
-			<List objects={comments} searchParams={searchParams} />
+			<DisqusComments
+				object={course}
+				objecturl={`/course/${course?.data?._id}/comments`}
+			/>
 		</>
 	);
 };

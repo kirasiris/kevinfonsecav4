@@ -7,14 +7,12 @@ import Sidebar from "@/layout/blog/sidebar";
 import Loading from "@/app/blog/loading";
 import ExportModal from "@/components/global/exportmodal";
 import AuthorBox from "@/components/global/authorbox";
-import CommentBox from "@/components/global/myfinalcommentbox";
 import ParseHtml from "@/layout/parseHtml";
 import ReportModal from "@/components/global/reportmodal";
 import { fetchurl, getUserOnServer } from "@/helpers/setTokenOnServer";
 import Globalcontent from "@/layout/content";
 import ArticleHeader from "@/components/global/articleheader";
 import NewsletterForm from "@/components/global/newsletter";
-import MyFinalCommentForm from "@/components/global/myfinalcommentform";
 import DisqusComments from "@/components/global/disquscomments";
 import { revalidatePath } from "next/cache";
 
@@ -118,52 +116,6 @@ const PostRead = async ({ params, searchParams }) => {
 											object={blog}
 											returtopageurl={`/post/${blog?.data?._id}`}
 										/>
-										{blog?.data?.commented ? (
-											<>
-												{auth?.userId ? (
-													<MyFinalCommentForm
-														resourceId={blog?.data?._id}
-														parentId={undefined}
-														returtopageurl={`/post/${blog?.data?._id}`}
-														postType="post"
-														onModel="Post"
-													/>
-												) : (
-													<div className="alert alert-info">
-														<Link
-															href={{
-																pathname: `/auth/login`,
-																query: {
-																	returnpage: `/blog/${blog?.data?._id}/${blog?.data?.category?._id}/${blog?.data?.category.slug}/${blog?.data?.slug}`,
-																},
-															}}
-															passHref
-															legacyBehavior
-														>
-															<a>You need to login first</a>
-														</Link>
-													</div>
-												)}
-												<CommentBox
-													auth={auth}
-													allLink={`/comment?resourceId=${blog?.data?._id}&page=1&limit=15&sort=-createdAt&status=published`}
-													pageText="Comments"
-													objects={comments}
-													searchParams={searchParams}
-													handleDraft={undefined}
-													handlePublish={undefined}
-													handleTrash={undefined}
-													handleSchedule={undefined}
-													handleDelete={handleDelete}
-													handleTrashAllFunction={undefined}
-													handleDeleteAllFunction={undefined}
-												/>
-											</>
-										) : (
-											<div className="alert alert-danger">
-												Comments are closed
-											</div>
-										)}
 									</div>
 								</section>
 							</article>

@@ -1,8 +1,8 @@
 {
-  "name": "kevinfonsecav-next",
+  "name": "kevinfonsecav4-next",
   "version": "4.0.0",
   "description": "The Open Minded Social Network",
-  "private": true,
+  "private": false,
   "scripts": {
     "dev": "next dev",
     "build": "next build",

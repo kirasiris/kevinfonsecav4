@@ -7,7 +7,6 @@ import Sidebar from "@/layout/snippet/sidebar";
 import Loading from "@/app/blog/loading";
 import ExportModal from "@/components/global/exportmodal";
 import AuthorBox from "@/components/global/authorbox";
-import CommentBox from "@/components/global/commentbox";
 import ParseHtml from "@/layout/parseHtml";
 import ReportModal from "@/components/global/reportmodal";
 import { fetchurl, getUserOnServer } from "@/helpers/setTokenOnServer";

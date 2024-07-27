@@ -1,8 +1,6 @@
-// import Image from "next/image";
 import Link from "next/link";
 import ParseHtml from "@/layout/parseHtml";
 import AuthorBox from "@/components/global/authorbox";
-// import CommentBox from "@/components/global/commentbox";
 import ExportModal from "@/components/global/exportmodal";
 import ReportModal from "@/components/global/reportmodal";
 import Globalcontent from "@/layout/content";
@@ -10,6 +8,7 @@ import Globalsidebar from "@/layout/sidebar";
 import Image from "next/image";
 import PreviewModal from "./previewmodal";
 import NewsletterForm from "../global/newsletter";
+import DisqusComments from "../global/disquscomments";
 
 const List = ({
 	auth = {},
@@ -129,15 +128,12 @@ const List = ({
 
 									<div style={{ clear: "both" }} />
 									<AuthorBox author={object?.data?.user} />
-									{/* <CommentBox
-										auth={auth.data}
-										authorization={auth.authorizationTokens}
-										user={object?.data?.user}
-										postId={object?.data?._id}
-										secondPostId={object?.data?._id}
-										isVisible={object?.data?.commented}
-										onModel="Course"
-									/> */}
+									<div className="comments">
+										<DisqusComments
+											object={object}
+											objecturl={`/course/${object?.data?._id}`}
+										/>
+									</div>
 								</>
 							)}
 						</article>

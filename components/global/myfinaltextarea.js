@@ -119,7 +119,7 @@ const MyTextArea = ({
 								data.append("onModel", onModel);
 								data.append("file", images[0]);
 								await axios.put(
-									`${process.env.apiUrl}/uploads/uploadobject`,
+									`${process.env.NEXT_PUBLIC_API_URL}/uploads/uploadobject`,
 									data,
 									{
 										headers: {
@@ -174,7 +174,7 @@ const MyTextArea = ({
 								data.append("onModel", onModel);
 								data.append("file", videos[0]);
 								await axios.put(
-									`${process.env.apiUrl}/uploads/uploadobject`,
+									`${process.env.NEXT_PUBLIC_API_URL}/uploads/uploadobject`,
 									data,
 									{
 										headers: {

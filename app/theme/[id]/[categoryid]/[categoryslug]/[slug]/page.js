@@ -123,7 +123,7 @@ const ThemeRead = async ({ params, searchParams }) => {
 		<Suspense fallback={<Loading />}>
 			<Head
 				title={theme.data.title}
-				description={theme.data.text}
+				description={theme.data.excerpt || theme.data.text}
 				// favicon=""
 				postImage={theme.data.files.avatar.location.secure_location}
 				imageWidth=""

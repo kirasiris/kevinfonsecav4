@@ -88,7 +88,7 @@ const BlogRead = async ({ params, searchParams }) => {
 		<Suspense fallback={<Loading />}>
 			<Head
 				title={blog.data.title}
-				description={blog.data.text}
+				description={blog.data.excerpt || blog.data.text}
 				// favicon=""
 				postImage={blog.data.files.avatar.location.secure_location}
 				imageWidth=""

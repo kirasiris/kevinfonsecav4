@@ -86,7 +86,7 @@ const QuizRead = async ({ params, searchParams }) => {
 		<Suspense fallback={<Loading />}>
 			<Head
 				title={quiz.data.title}
-				description={quiz.data.text}
+				description={quiz.data.excerpt || quiz.data.text}
 				// favicon=""
 				postImage={quiz.data.files.avatar.location.secure_location}
 				imageWidth=""

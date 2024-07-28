@@ -74,7 +74,7 @@ const JobRead = async ({ params, searchParams }) => {
 		<Suspense fallback={<Loading />}>
 			<Head
 				title={job.data.title}
-				description={job.data.text}
+				description={job.data.excerpt || job.data.text}
 				// favicon=""
 				postImage=""
 				imageWidth=""

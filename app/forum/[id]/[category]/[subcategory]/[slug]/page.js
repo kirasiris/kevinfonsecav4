@@ -75,7 +75,7 @@ const ForumRead = async ({ params, searchParams }) => {
 		<Suspense fallback={<Loading />}>
 			<Head
 				title={forum.data.title}
-				description={forum.data.text}
+				description={forum.data.excerpt || forum.data.text}
 				// favicon=""
 				postImage=""
 				imageWidth=""

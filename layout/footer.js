@@ -4,13 +4,13 @@ import Newtoggletheme from "./newtoggletheme";
 
 const Footer = ({
 	auth = {},
-	classes = "",
-	styles = {},
+	classList = "",
+	styleList = {},
 	canonical = process.env.NEXT_PUBLIC_WEBSITE_URL,
 	menus = [],
 }) => {
 	return (
-		<footer className={`py-5 mt-4 bg-dark ${classes}`} style={styles}>
+		<footer className={`py-5 mt-4 bg-dark ${classList}`} style={styleList}>
 			<div className="container">
 				<div className="text-center text-white">
 					<p>
@@ -46,7 +46,7 @@ const Footer = ({
 					}}
 				>
 					<div className="col-lg-3">
-						<h5>Menu</h5>
+						<h5>About</h5>
 						<ul className="nav flex-column">
 							{menus
 								.filter((m) => m?.resourceId?.slug === "footer-1")
@@ -132,7 +132,7 @@ const Footer = ({
 						</ul>
 					</div>
 					<div className="col-lg-3">
-						<h5>About</h5>
+						<h5>Menu</h5>
 						<ul className="nav flex-column">
 							{menus
 								.filter((m) => m?.resourceId?.slug === "footer-4")

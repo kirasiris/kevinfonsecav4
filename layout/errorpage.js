@@ -16,7 +16,10 @@ const ErrorPage = ({ statusCode, statusCodeMessage = "" }) => {
 						</p>
 						<p>
 							—{" "}
-							<a className="btn btn-link" href="mailto:kebin1421@hotmail.com">
+							<a
+								className="btn btn-link"
+								href={`mailto:${process.env.NEXT_PUBLIC_WEBSITE_EMAIL}`}
+							>
 								Kevin Uriel Fonseca
 							</a>
 						</p>

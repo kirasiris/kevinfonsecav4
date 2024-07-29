@@ -38,14 +38,15 @@ const Newtoggletheme = () => {
 	};
 
 	return (
-		<span
-			style={{ fontSize: "24px" }}
+		<button
+			className="btn btn-secondary btn-sm"
 			onClick={() =>
 				changeTheme(themeColor === "ligth-mode" ? "dark-mode" : "ligth-mode")
 			}
+			type="button"
 		>
 			{themeColor === `ligth-mode` ? <>🌞</> : <>🌕</>}
-		</span>
+		</button>
 	);
 };
 

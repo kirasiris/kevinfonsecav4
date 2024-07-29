@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import Newtoggletheme from "./newtoggletheme";
+import Image from "next/image";
 
 const Footer = ({
 	auth = {},
@@ -73,6 +74,21 @@ const Footer = ({
 										)}
 									</li>
 								))}
+							<li className="list-group-item mb-2">
+								<a
+									href="http://validator.w3.org/feed/check.cgi"
+									target="_blank"
+									rel="noreferrer noopener"
+								>
+									<Image
+										src="/valid-rss-rogers.png"
+										alt="[Valid RSS]"
+										title="Validate my RSS feed"
+										width={88}
+										height={31}
+									/>
+								</a>
+							</li>
 						</ul>
 					</div>
 					<div className="col-lg-3">

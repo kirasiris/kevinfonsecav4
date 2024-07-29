@@ -106,14 +106,19 @@ export default async function Head({
 				src="https://kit.fontawesome.com/4cde37f226.js"
 				crossOrigin="anonymous"
 				async
+				defer={true}
 			/>
 			<link
 				href="https://api.mapbox.com/mapbox-gl-js/v3.2.0/mapbox-gl.css"
 				rel="stylesheet"
 				precedence="default"
-				media="all"
-			></link>
-			<Script src="https://code.iconify.design/1/1.0.7/iconify.min.js" async />
+				media="print and screen and speech"
+			/>
+			<Script
+				src="https://code.iconify.design/1/1.0.7/iconify.min.js"
+				async
+				defer={true}
+			/>
 		</>
 	);
 }

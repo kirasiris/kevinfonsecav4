@@ -3,7 +3,7 @@ const robots = () => {
 		rules: {
 			userAgent: "*",
 			allow: "/",
-			disallow: "/private/",
+			disallow: ["/noadmin", "/dashboard", "playground"],
 		},
 		sitemap: "https://kevinfonseca.vercel.app/blog/sitemap.xml",
 	};

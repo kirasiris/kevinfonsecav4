@@ -101,7 +101,13 @@ export default async function Head({
 			)}
 			{postImage !== `` && <meta name="twitter:image" content={postImage} />}
 			<meta name="twitter:creator" content={`@kirasiris`} />
-			{cssLink && <link rel="stylesheet" href={cssLink} media="all"></link>}
+			{cssLink && (
+				<link
+					rel="stylesheet"
+					href={cssLink}
+					media="print and screen and speech"
+				/>
+			)}
 			<Script
 				src="https://kit.fontawesome.com/4cde37f226.js"
 				crossOrigin="anonymous"

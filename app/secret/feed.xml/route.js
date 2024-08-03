@@ -3,14 +3,14 @@ import { fetchurl } from "@/helpers/setTokenOnServer";
 
 export async function GET() {
 	const allSecrets = await fetchurl(
-		`/extras/secrets?status=published`,
+		`/extras/secrets?limit=10&status=published`,
 		"GET",
 		"no-cache"
 	);
 
 	const feedOptions = {
 		title: `${process.env.NEXT_PUBLIC_WEBSITE_NAME} | Secrets's RSS Feed`,
-		description: `Export everyone's secrets to your website!`,
+		description: process.env.NEXT_PUBLIC_WEBSITE_DESCRIPTION,
 		feed_url: `${process.env.NEXT_PUBLIC_WEBSITE_URL}/secret/feed.xml`,
 		site_url: process.env.NEXT_PUBLIC_WEBSITE_URL,
 		copyright: `All rights reserved ${new Date().getFullYear()}, ${
@@ -34,7 +34,7 @@ export async function GET() {
 		})
 	);
 
-	return new Response(feed.xml(), {
+	return new Response(feed.xml({ indent: true }), {
 		headers: {
 			"Content-Type": "application/atom+xml; charset=utf-8",
 		},

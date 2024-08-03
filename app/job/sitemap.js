@@ -1,7 +1,11 @@
 import { fetchurl } from "@/helpers/setTokenOnServer";
 
 const Sitemap = async () => {
-	const allJobs = await fetchurl(`/jobs?status=published`, "GET", "no-cache");
+	const allJobs = await fetchurl(
+		`/jobs?limit=10&status=published`,
+		"GET",
+		"no-cache"
+	);
 
 	const jobs = allJobs.data.map((doc) => {
 		return {

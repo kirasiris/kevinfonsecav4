@@ -2,7 +2,7 @@ import { fetchurl } from "@/helpers/setTokenOnServer";
 
 const Sitemap = async () => {
 	const allBlogs = await fetchurl(
-		`/blogs?postType=blog&status=published`,
+		`/blogs?limit=10&postType=blog&status=published`,
 		"GET",
 		"no-cache"
 	);

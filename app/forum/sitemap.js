@@ -2,7 +2,7 @@ import { fetchurl } from "@/helpers/setTokenOnServer";
 
 const Sitemap = async () => {
 	const allForums = await fetchurl(
-		`/forums?status=published`,
+		`/forums?limit=10&status=published`,
 		"GET",
 		"no-cache"
 	);

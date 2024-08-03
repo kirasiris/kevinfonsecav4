@@ -2,7 +2,7 @@ import { fetchurl } from "@/helpers/setTokenOnServer";
 
 const Sitemap = async () => {
 	const allSecrets = await fetchurl(
-		`/extras/secrets?status=published`,
+		`/extras/secrets?limit=10&status=published`,
 		"GET",
 		"no-cache"
 	);

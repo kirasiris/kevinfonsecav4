@@ -1,4 +1,4 @@
-﻿import $ from "jquery";
+import $ from "jquery";
 
 var uri = `${process.env.NEXT_PUBLIC_WEBSITE_URL}/mfs100/`; //Secure
 // var uri = "http://localhost:8004/mfs100/"; //Non-Secure

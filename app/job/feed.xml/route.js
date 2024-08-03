@@ -2,11 +2,15 @@ import RSS from "rss";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 
 export async function GET() {
-	const allJobs = await fetchurl(`/jobs?status=published`, "GET", "no-cache");
+	const allJobs = await fetchurl(
+		`/jobs?limit=10&status=published`,
+		"GET",
+		"no-cache"
+	);
 
 	const feedOptions = {
 		title: `${process.env.NEXT_PUBLIC_WEBSITE_NAME} | Job's RSS Feed`,
-		description: `Export my job articles to your website!`,
+		description: process.env.NEXT_PUBLIC_WEBSITE_DESCRIPTION,
 		feed_url: `${process.env.NEXT_PUBLIC_WEBSITE_URL}/job/feed.xml`,
 		site_url: process.env.NEXT_PUBLIC_WEBSITE_URL,
 		copyright: `All rights reserved ${new Date().getFullYear()}, ${
@@ -30,7 +34,7 @@ export async function GET() {
 		})
 	);
 
-	return new Response(feed.xml(), {
+	return new Response(feed.xml({ indent: true }), {
 		headers: {
 			"Content-Type": "application/atom+xml; charset=utf-8",
 		},

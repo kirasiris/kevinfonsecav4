@@ -93,7 +93,8 @@ ADMIN STATUSES MENU
 /*****************************
 DISQUS
 *****************************/
-#disqus_recommendations {
+body.dark-mode #disqus_recommendations > iframe > html > body.dark {
+	background-color: #0000002d !important;
 }
 
 /*****************************
@@ -653,6 +654,7 @@ body.dark-mode .btn-secondary {
 }
 
 body.dark-mode .card-header {
+	color: #00ff00;
 	border-bottom: 1px solid #dee2e6;
 	background-color: #212529;
 }

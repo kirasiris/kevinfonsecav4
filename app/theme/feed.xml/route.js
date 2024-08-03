@@ -3,14 +3,14 @@ import { fetchurl } from "@/helpers/setTokenOnServer";
 
 export async function GET() {
 	const allThemes = await fetchurl(
-		`/themes?postType=theme&status=published`,
+		`/themes?limit=10&postType=theme&status=published`,
 		"GET",
 		"no-cache"
 	);
 
 	const feedOptions = {
 		title: `${process.env.NEXT_PUBLIC_WEBSITE_NAME} | Theme's RSS Feed`,
-		description: `Export my projects to your website!`,
+		description: process.env.NEXT_PUBLIC_WEBSITE_DESCRIPTION,
 		feed_url: `${process.env.NEXT_PUBLIC_WEBSITE_URL}/theme/feed.xml`,
 		site_url: process.env.NEXT_PUBLIC_WEBSITE_URL,
 		copyright: `All rights reserved ${new Date().getFullYear()}, ${
@@ -34,7 +34,7 @@ export async function GET() {
 		})
 	);
 
-	return new Response(feed.xml(), {
+	return new Response(feed.xml({ indent: true }), {
 		headers: {
 			"Content-Type": "application/atom+xml; charset=utf-8",
 		},

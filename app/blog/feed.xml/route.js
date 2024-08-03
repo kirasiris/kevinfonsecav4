@@ -27,7 +27,7 @@ export async function GET() {
 		feed.item({
 			guid: doc._id,
 			title: doc.title,
-			link: `${process.env.NEXT_PUBLIC_WEBSITE_URL}/blog/${doc._id}/${doc.category._id}/${doc.category.slug}/${doc.slug}`,
+			link: `<a href={${process.env.NEXT_PUBLIC_WEBSITE_URL}/blog/${doc._id}/${doc.category._id}/${doc.category.slug}/${doc.slug}}>${doc.title}</a>`,
 			description: doc.excerpt,
 			author: doc.user.username,
 			date: doc.createdAt,

@@ -59,10 +59,15 @@ const ExportModal = ({
 					<hr />
 					<pre>
 						<code>
-							&lt;iframe src=&rdquo;
-							{`${process.env.NEXT_PUBLIC_WEBSITE_URL}${linkToShare}`}
-							&rdquo; title=&rdquo;
-							{object?.title}&rdquo;&gt;&lt;/iframe&gt;
+							<iframe
+								src={`${process.env.NEXT_PUBLIC_WEBSITE_URL}${linkToShare}`}
+								srcDoc={`${process.env.NEXT_PUBLIC_WEBSITE_URL}${linkToShare}`}
+								title={object?.title}
+								style={{
+									width: "100%",
+									height: "25px",
+								}}
+							/>
 						</code>
 					</pre>
 					<hr />

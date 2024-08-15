@@ -1,3 +1,4 @@
+import "react-toastify/dist/ReactToastify.css";
 import "@/src/css/bootstrap.css";
 // import "@/src/js/bootstrap.js";
 import "@/src/css/global.css";

@@ -91,13 +91,6 @@ ADMIN STATUSES MENU
 }
 
 /*****************************
-DISQUS
-*****************************/
-body.dark-mode #disqus_recommendations > iframe > html > body.dark {
-	background-color: #0000002d !important;
-}
-
-/*****************************
 ANIMES
 *****************************/
 

@@ -1,7 +1,8 @@
 "use client";
 import Link from "next/link";
-import Newtoggletheme from "./newtoggletheme";
 import Image from "next/image";
+import { ToastContainer } from "react-toastify";
+import Newtoggletheme from "./newtoggletheme";
 
 const Footer = ({
 	auth = {},
@@ -193,6 +194,7 @@ const Footer = ({
 					</div>
 				</div>
 			</div>
+			<ToastContainer />
 		</footer>
 	);
 };

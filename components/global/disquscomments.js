@@ -7,7 +7,7 @@ const DisqusComments = ({ object = {}, objecturl = `` }) => {
 			{object?.data?.commented ? (
 				<>
 					<CommentCount
-						shortname="kevin-fonseca"
+						shortname="kevinfonseca"
 						config={{
 							url: objecturl,
 							identifier: object?.data?._id,
@@ -17,7 +17,7 @@ const DisqusComments = ({ object = {}, objecturl = `` }) => {
 						Comments
 					</CommentCount>
 					<DiscussionEmbed
-						shortname="kevin-fonseca"
+						shortname="kevinfonseca"
 						config={{
 							url: objecturl,
 							identifier: object?.data?._id,

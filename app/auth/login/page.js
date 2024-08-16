@@ -45,9 +45,7 @@ const Login = async ({ params, searchParams }) => {
 		const loadUser = await fetchurl(`/auth/me`, "GET", "no-cache");
 		await setUserOnServer(loadUser?.data);
 		// alert("Login was a success");
-		searchParams?.returnpage
-			? redirect(searchParams.returnpage)
-			: redirect(`/auth/profile`);
+		redirect(searchParams.returnpage || `/auth/profile`);
 	};
 
 	return (

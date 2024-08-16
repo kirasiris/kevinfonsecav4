@@ -4,6 +4,8 @@ import { revalidatePath } from "next/cache";
 import MyTextArea from "@/components/global/myfinaltextarea";
 
 const Form = async ({ params, searchParams, revalidateUrl = `` }) => {
+	const auth = await getUserOnServer();
+
 	const addShortUrl = async (formData) => {
 		"use server";
 		const rawFormData = {
@@ -11,8 +13,6 @@ const Form = async ({ params, searchParams, revalidateUrl = `` }) => {
 			longUrl: formData.get("longUrl"),
 			text: formData.get("text"),
 		};
-
-		const auth = await getUserOnServer();
 
 		await fetchurl(
 			`/extras/shorturls${auth ? `?user=${auth?.userId}` : ``}`,

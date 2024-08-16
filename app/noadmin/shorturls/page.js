@@ -99,11 +99,7 @@ const AdminShortUrlsIndex = async ({ params, searchParams }) => {
 			<Form
 				params={params}
 				searchParams={searchParams}
-				revalidateUrl={`/noadmin/shorturls?page=${
-					searchParams.page || 1
-				}&limit=${searchParams.limit || 10}&sort=${
-					searchParams.sort || "-createdAt"
-				}`}
+				revalidateUrl={`/noadmin/shorturls?page=${page}&limit=${limit}&sort=${sort}`}
 			/>
 			<div className="card rounded-0">
 				<List

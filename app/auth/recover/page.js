@@ -30,9 +30,7 @@ const Recover = async ({ params, searchParams }) => {
 		console.log(
 			`An email has been sent to ${rawFormData.email} associated with this account.`
 		);
-		searchParams?.returnpage
-			? redirect(searchParams.returnpage)
-			: redirect(`/auth/login`);
+		redirect(searchParams.returnpage || `/auth/login`);
 	};
 
 	return (

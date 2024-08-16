@@ -52,9 +52,7 @@ const ResetPassword = async ({ params, searchParams }) => {
 
 		// alert("New password has been created")
 
-		searchParams?.returnpage
-			? redirect(searchParams.returnpage)
-			: redirect(`/auth/login`);
+		redirect(searchParams.returnpage || `/auth/login`);
 	};
 
 	return (

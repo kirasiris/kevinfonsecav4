@@ -90,7 +90,7 @@ const YouTubePage = ({ searchParams, pushTo = true }) => {
 		if (searchParams._id && searchParams.videoId) {
 			const fetchYouTube = async (id, videoId) => {
 				const res = await fetchurl(`/extras/youtube/${id}/${videoId}`);
-				setVideo(res.data);
+				setVideo(res?.data);
 			};
 			fetchYouTube(searchParams._id, searchParams.videoId).then((result) => {
 				setVideoData({
@@ -107,8 +107,8 @@ const YouTubePage = ({ searchParams, pushTo = true }) => {
 		const fetchYouTubes = async (id, videoId) => {
 			const res = await fetchurl(`/extras/youtube`, "GET", "no-cache");
 			// !id && !videoId && setVideo(res?.data[0]);
-			setVideo(res.data[0]); // Display the most recent video
-			setVideos(res.data); // The set rest of them
+			setVideo(res?.data[0]); // Display the most recent video
+			setVideos(res?.data); // The set rest of them
 		};
 		fetchYouTubes(searchParams._id, searchParams.videoId);
 		// fetchYouTubes();
@@ -116,7 +116,7 @@ const YouTubePage = ({ searchParams, pushTo = true }) => {
 
 	const loadVideo = async (id, videoId) => {
 		const res = await fetchurl(`/extras/youtube/${id}/${videoId}`);
-		setVideo(res.data);
+		setVideo(res?.data);
 		pushTo && router.push(`/youtube?_id=${id}&videoId=${videoId}`);
 	};
 
@@ -218,9 +218,9 @@ const YouTubePage = ({ searchParams, pushTo = true }) => {
 							</button>
 						</div>
 						{activeTab.video ? (
-							video.videoEmbedUrl !== "" &&
-							video.videoEmbedUrl !== undefined &&
-							video.videoEmbedUrl !== null ? (
+							video?.videoEmbedUrl !== "" &&
+							video?.videoEmbedUrl !== undefined &&
+							video?.videoEmbedUrl !== null ? (
 								<>
 									<div className="ratio ratio-16x9">
 										<iframe

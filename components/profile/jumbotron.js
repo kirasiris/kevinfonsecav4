@@ -75,22 +75,6 @@ const Jumbotron = ({
 								</Link>
 								<Link
 									href={{
-										pathname: `/profile/${object?.data?._id}/${object?.data?.username}/information`,
-										query: {},
-									}}
-									passHref
-									legacyBehavior
-								>
-									<a
-										className={`nav-link ${isActive(
-											`/profile/${object?.data?._id}/${object?.data?.username}/information`
-										)}`}
-									>
-										Information
-									</a>
-								</Link>
-								<Link
-									href={{
 										pathname: `/profile/${object?.data?._id}/${object?.data?.username}/socials/friends`,
 										query: {
 											page: 1,

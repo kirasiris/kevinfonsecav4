@@ -24,7 +24,7 @@ const Register = async ({ params, searchParams }) => {
 			email: formData.get("email"),
 			password: formData.get("password"),
 			password2: formData.get("password2"),
-			text: formData.get("text"),
+			// text: formData.get("text"),
 		};
 		if (rawFormData.password !== rawFormData.password2) {
 			// alert("Passwords do not match");
@@ -115,7 +115,7 @@ const Register = async ({ params, searchParams }) => {
 										className="form-control mb-3"
 										placeholder="******"
 									/>
-									<label htmlFor="text" className="form-label">
+									{/* <label htmlFor="text" className="form-label">
 										Introduce Yourself!
 									</label>
 									<MyTextArea
@@ -124,7 +124,7 @@ const Register = async ({ params, searchParams }) => {
 										onModel="User"
 										advancedTextEditor={false}
 										customPlaceholder="Let's get to know you!"
-									/>
+									/> */}
 									<br />
 									<FormButtons />
 								</form>

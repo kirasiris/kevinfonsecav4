@@ -42,8 +42,12 @@ const Login = async ({ params, searchParams }) => {
 		// Else continue,
 		// furthermore, setAuthTokenOnServer needs to be prior to setAuthToken (client version)
 		await setAuthTokenOnServer(res?.token);
-		const loadUser = await fetchurl(`/auth/me`, "GET", "no-cache");
-		await setUserOnServer(loadUser?.data);
+
+		const loadUser = async () => await fetchurl(`/auth/me`, "GET", "default");
+		const loadedUser = await loadUser();
+
+		await setUserOnServer(await loadedUser?.data);
+
 		// alert("Login was a success");
 		redirect(searchParams.returnpage || `/auth/profile`);
 	};
@@ -87,7 +91,7 @@ const Login = async ({ params, searchParams }) => {
 										name="password"
 										type="password"
 										className="form-control mb-3"
-										placeholder="******"
+										placeholder="********"
 									/>
 									<br />
 									<FormButtons />

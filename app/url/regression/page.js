@@ -28,7 +28,8 @@ const UrlRegressionIndex = async ({ params, searchParams }) => {
 
 		await fetchurl(`/extras/shorturls`, "POST", "no-cache", rawFormData);
 
-		revalidatePath(`/url/regression?page=${page}&limit=${limit}&sort=${sort}`);
+		// revalidatePath(`/url/regression?page=${page}&limit=${limit}&sort=${sort}`);
+		revalidatePath(`/url/regression`);
 	};
 
 	return (

@@ -7,7 +7,11 @@ import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
 
 async function getUrls(params) {
-	const res = await fetchurl(`/extras/shorturls${params}`, "GET", "no-cache");
+	const res = await fetchurl(
+		`/extras/tools/urls/regression${params}`,
+		"GET",
+		"no-cache"
+	);
 	return res;
 }
 
@@ -26,10 +30,14 @@ const UrlRegressionIndex = async ({ params, searchParams }) => {
 			text: formData.get("text"),
 		};
 
-		await fetchurl(`/extras/shorturls`, "POST", "no-cache", rawFormData);
+		await fetchurl(
+			`/extras/tools/urls/regression`,
+			"POST",
+			"no-cache",
+			rawFormData
+		);
 
-		// revalidatePath(`/url/regression?page=${page}&limit=${limit}&sort=${sort}`);
-		revalidatePath(`/url/regression`);
+		revalidatePath(`/url/regression?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	return (

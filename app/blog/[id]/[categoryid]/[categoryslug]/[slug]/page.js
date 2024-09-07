@@ -110,7 +110,7 @@ const BlogRead = async ({ params, searchParams }) => {
 				{blog.data.status === "published" || searchParams.isAdmin === "true" ? (
 					<div className="row">
 						<Globalcontent
-							containerClasses={`col-lg-${blog.data.fullWidth ? "12" : "8"}`}
+							containerClasses={`col-lg-${blog?.data?.fullWidth ? "12" : "8"}`}
 						>
 							<article>
 								<ArticleHeader
@@ -153,16 +153,16 @@ const BlogRead = async ({ params, searchParams }) => {
 									</div>
 									<div style={{ clear: "both" }} />
 									<AuthorBox author={blog?.data?.user} />
-									<div className="comments">
+									{blog?.data?.commented && (
 										<DisqusComments
 											object={blog}
 											objecturl={`/blog/${blog?.data?._id}/${blog?.data?.category?._id}/${blog?.data?.category?.slug}/${blog?.data?.slug}`}
 										/>
-									</div>
+									)}
 								</section>
 							</article>
 						</Globalcontent>
-						{blog.data.fullWidth !== true && (
+						{blog?.data?.fullWidth !== true && (
 							<Sidebar quotes={quotes} categories={categories} />
 						)}
 					</div>

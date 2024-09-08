@@ -133,12 +133,10 @@ const JobRead = async ({ params, searchParams }) => {
 									</div>
 									<div style={{ clear: "both" }} />
 									<AuthorBox author={job?.data?.user} />
-									<div className="comments">
-										<DisqusComments
-											object={job}
-											objecturl={`/job/${job?.data?._id}/${job?.data?.slug}`}
-										/>
-									</div>
+									<DisqusComments
+										object={job}
+										objecturl={`/job/${job?.data?._id}/${job?.data?.slug}`}
+									/>
 								</section>
 							</article>
 						</Globalcontent>

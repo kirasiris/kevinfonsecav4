@@ -5,13 +5,9 @@ import Image from "next/image";
 import Loading from "@/app/blog/loading";
 import ParseHtml from "@/layout/parseHtml";
 import ReportModal from "@/components/global/reportmodal";
-import { fetchurl } from "@/helpers/setTokenOnServer";
+import { fetchurl, getUserOnServer } from "@/helpers/setTokenOnServer";
 import { formatDateWithoutTime } from "@/helpers/utilities";
-
-async function getAuthenticatedUser() {
-	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
-	return res;
-}
+import DisqusComments from "@/components/global/disquscomments";
 
 async function getVideo(params) {
 	const res = await fetchurl(`/videos${params}`, "GET", "no-cache");
@@ -25,7 +21,7 @@ async function updateViews(params) {
 }
 
 const VideoRead = async ({ params, searchParams }) => {
-	const auth = await getAuthenticatedUser();
+	const auth = await getUserOnServer();
 
 	const getVideosData = getVideo(`/${params.id}`);
 	await updateViews(`/${params.id}`);
@@ -176,14 +172,10 @@ const VideoRead = async ({ params, searchParams }) => {
 							</div>
 						</div>
 						<hr />
-						{/* <CommentBox
-						user={blog?.data?.user}
-						postId={blog?.data?._id}
-						secondPostId={blog?.data?._id}
-						isVisible={blog?.data?.commented}
-						postType="blog"
-						onModel="Blog"
-					/> */}
+						<DisqusComments
+							object={video}
+							objecturl={`/video/${video?.data?._id}`}
+						/>
 					</div>
 					<div className="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-xs-12 d-none d-sm-none d-md-none d-lg-block dm-xl-block">
 						SIDEBAR

@@ -153,12 +153,10 @@ const BlogRead = async ({ params, searchParams }) => {
 									</div>
 									<div style={{ clear: "both" }} />
 									<AuthorBox author={blog?.data?.user} />
-									{blog?.data?.commented && (
-										<DisqusComments
-											object={blog}
-											objecturl={`/blog/${blog?.data?._id}/${blog?.data?.category?._id}/${blog?.data?.category?.slug}/${blog?.data?.slug}`}
-										/>
-									)}
+									<DisqusComments
+										object={blog}
+										objecturl={`/blog/${blog?.data?._id}/${blog?.data?.category?._id}/${blog?.data?.category?.slug}/${blog?.data?.slug}`}
+									/>
 								</section>
 							</article>
 						</Globalcontent>

@@ -9,6 +9,7 @@ import { fetchurl } from "@/helpers/setTokenOnServer";
 import { formatDateWithoutTime } from "@/helpers/utilities";
 import Menu from "@/components/course/menu";
 import VideoList from "@/components/course/videolist";
+import DisqusComments from "@/components/global/disquscomments";
 
 async function getAuthenticatedUser() {
 	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
@@ -233,14 +234,10 @@ const VideoRead = async ({ params, searchParams }) => {
 							</div>
 						</div>
 						<hr />
-						{/* <CommentBox
-						user={blog?.data?.user}
-						postId={blog?.data?._id}
-						secondPostId={blog?.data?._id}
-						isVisible={blog?.data?.commented}
-						postType="blog"
-						onModel="Blog"
-					/> */}
+						<DisqusComments
+							object={course}
+							objecturl={`/course/${course?.data?._id}/${course?.data?.category}/${course?.data?.sub_category}`}
+						/>
 					</div>
 					<div className="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-xs-12 d-none d-sm-none d-md-none d-lg-block dm-xl-block">
 						SIDEBAR

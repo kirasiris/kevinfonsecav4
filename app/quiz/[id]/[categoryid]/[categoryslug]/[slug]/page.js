@@ -194,12 +194,10 @@ const QuizRead = async ({ params, searchParams }) => {
 									</div>
 									<div style={{ clear: "both" }} />
 									<AuthorBox author={quiz?.data?.user} />
-									<div className="comments">
-										<DisqusComments
-											object={quiz}
-											objecturl={`/quiz/${quiz?.data?._id}/${quiz?.data?.category?._id}/${quiz?.data?.category?.slug}/${quiz?.data?.slug}`}
-										/>
-									</div>
+									<DisqusComments
+										object={quiz}
+										objecturl={`/quiz/${quiz?.data?._id}/${quiz?.data?.category?._id}/${quiz?.data?.category?.slug}/${quiz?.data?.slug}`}
+									/>
 								</section>
 							</article>
 						</Globalcontent>

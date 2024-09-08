@@ -77,12 +77,10 @@ const ChangelogRead = async ({ params }) => {
 								</div>
 								<div style={{ clear: "both" }} />
 								<AuthorBox author={changelog?.data?.user} />
-								<div className="comments">
-									<DisqusComments
-										object={changelog}
-										objecturl={`/changelog/${changelog?.data?._id}/${changelog?.data?.slug}`}
-									/>
-								</div>
+								<DisqusComments
+									object={changelog}
+									objecturl={`/changelog/${changelog?.data?._id}/${changelog?.data?.slug}`}
+								/>
 							</section>
 						</article>
 					</div>

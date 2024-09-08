@@ -124,12 +124,10 @@ const ForumRead = async ({ params, searchParams }) => {
 									</div>
 									<div style={{ clear: "both" }} />
 									<AuthorBox author={forum?.data?.user} />
-									<div className="comments">
-										<DisqusComments
-											object={forum}
-											objecturl={`/forum/${forum?.data?._id}/${forum?.data?.category?._id}/${forum?.data?.category?.slug}/${forum?.data?.slug}`}
-										/>
-									</div>
+									<DisqusComments
+										object={forum}
+										objecturl={`/forum/${forum?.data?._id}/${forum?.data?.category?._id}/${forum?.data?.category?.slug}/${forum?.data?.slug}`}
+									/>
 								</section>
 							</article>
 						</Globalcontent>

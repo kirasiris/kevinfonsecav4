@@ -13,6 +13,7 @@ import { fetchurl, getUserOnServer } from "@/helpers/setTokenOnServer";
 import Globalcontent from "@/layout/content";
 import ArticleHeader from "@/components/global/articleheader";
 import Jumbotron from "@/components/profile/jumbotron";
+import DisqusComments from "@/components/global/disquscomments";
 
 async function getProfile(params) {
 	const res = await fetchurl(`/users${params}`, "GET", "no-cache");
@@ -93,15 +94,10 @@ const ProfilePhotoRead = async ({ params, searchParams }) => {
 								</div>
 								<div style={{ clear: "both" }} />
 								<AuthorBox author={profile?.data} />
-								{/* <CommentBox
-										auth={auth.data}
-										user={file?.data?.user}
-										postId={file?.data?._id}
-										secondPostId={file?.data?._id}
-										isVisible={file?.data?.commented}
-										postType="file"
-										onModel="File"
-									/> */}
+								<DisqusComments
+									object={file}
+									objecturl={`/profile/${profile?.data?._id}/${profile?.data?.username}/photos/${file?.data?._id}`}
+								/>
 							</section>
 						</article>
 					</Globalcontent>

@@ -181,12 +181,10 @@ const ThemeRead = async ({ params, searchParams }) => {
 									</div>
 									<div style={{ clear: "both" }} />
 									<AuthorBox author={theme?.data?.user} />
-									<div className="comments">
-										<DisqusComments
-											object={theme}
-											objecturl={`/theme/${theme?.data?._id}/${theme?.data?.category?._id}/${theme?.data?.category.slug}/${theme?.data?.slug}`}
-										/>
-									</div>
+									<DisqusComments
+										object={theme}
+										objecturl={`/theme/${theme?.data?._id}/${theme?.data?.category?._id}/${theme?.data?.category.slug}/${theme?.data?.slug}`}
+									/>
 								</section>
 							</article>
 						</Globalcontent>

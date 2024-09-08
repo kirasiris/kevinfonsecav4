@@ -95,12 +95,10 @@ const SecretRead = async ({ params, searchParams }) => {
 									</div>
 									<div style={{ clear: "both" }} />
 									{/* <AuthorBox author={secret?.data?.user} /> */}
-									<div className="comments">
-										<DisqusComments
-											object={secret}
-											objecturl={`/secret/${secret?.data?._id}`}
-										/>
-									</div>
+									<DisqusComments
+										object={secret}
+										objecturl={`/secret/${secret?.data?._id}`}
+									/>
 								</section>
 							</article>
 						</Globalcontent>

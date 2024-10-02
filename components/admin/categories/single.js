@@ -2,6 +2,7 @@
 import Link from "next/link";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import DeleteModal from "@/components/global/deletemodal";
+import { formatDateWithoutTime } from "@/helpers/utilities";
 
 const Single = ({
 	linkTo = "",
@@ -33,7 +34,13 @@ const Single = ({
 						</Link>
 					</h1>
 					<div className="blog-item__meta">
-						<span>{object.parentCategory ? "Sub Category" : "Category"}</span>
+						<span className="badge bg-dark me-1">
+							{object.parentCategory ? "Sub Category" : "Category"}
+						</span>
+						<span className="badge bg-dark me-1">
+							{formatDateWithoutTime(object.createdAt)}
+						</span>
+						<span className="badge bg-dark me-1">{object.status}</span>
 					</div>
 				</div>
 				<div className="blog-actions-ellipsis-menu">

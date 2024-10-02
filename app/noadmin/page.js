@@ -1,5 +1,3 @@
-import QuickBlogDraft from "@/components/admin/quickblogdraft";
-import QuickQuoteDraft from "@/components/admin/quickquotedraft";
 import DynamicCards from "@/components/global/dynamiccards";
 import Header from "@/layout/header";
 import { fetchurl } from "@/helpers/setTokenOnServer";
@@ -415,10 +413,6 @@ const AdminHome = async ({ params, searchParams }) => {
 							There&apos;s nothing in your spam queue at the moment.
 						</div>
 					</div>
-				</div>
-				<div className="col">
-					<QuickBlogDraft />
-					<QuickQuoteDraft />
 				</div>
 			</div>
 		</>

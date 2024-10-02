@@ -2,6 +2,7 @@
 import Link from "next/link";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import DeleteModal from "@/components/global/deletemodal";
+import { formatDateWithoutTime } from "@/helpers/utilities";
 
 const Single = ({
 	object = {},
@@ -55,7 +56,7 @@ const Single = ({
 											className="blog-relative-time-status__time-text"
 											dateTime={object.createdAt}
 										>
-											{object.createdAt}
+											{formatDateWithoutTime(object.createdAt)}
 										</time>
 									</span>
 								</a>

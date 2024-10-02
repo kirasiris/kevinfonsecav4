@@ -5,7 +5,11 @@ import { revalidatePath } from "next/cache";
 import Form from "./form";
 
 async function getShortUrls(params) {
-	const res = await fetchurl(`/extras/shorturls${params}`, "GET", "no-cache");
+	const res = await fetchurl(
+		`/extras/tools/urls/regression${params}`,
+		"GET",
+		"no-cache"
+	);
 	return res;
 }
 
@@ -21,7 +25,11 @@ const AdminShortUrlsIndex = async ({ params, searchParams }) => {
 	const draftIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/extras/shorturls/${id}/draftit`, "PUT", "no-cache");
+		await fetchurl(
+			`/extras/tools/urls/regression/${id}/draftit`,
+			"PUT",
+			"no-cache"
+		);
 		revalidatePath(
 			`/noadmin/shorturls?page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -30,7 +38,11 @@ const AdminShortUrlsIndex = async ({ params, searchParams }) => {
 	const publishIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/extras/shorturls/${id}/publishit`, "PUT", "no-cache");
+		await fetchurl(
+			`/extras/tools/urls/regression/${id}/publishit`,
+			"PUT",
+			"no-cache"
+		);
 		revalidatePath(
 			`/noadmin/shorturls?page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -39,7 +51,11 @@ const AdminShortUrlsIndex = async ({ params, searchParams }) => {
 	const trashIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/extras/shorturls/${id}/trashit`, "PUT", "no-cache");
+		await fetchurl(
+			`/extras/tools/urls/regression/${id}/trashit`,
+			"PUT",
+			"no-cache"
+		);
 		revalidatePath(
 			`/noadmin/shorturls?page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -48,7 +64,11 @@ const AdminShortUrlsIndex = async ({ params, searchParams }) => {
 	const scheduleIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/extras/shorturls/${id}/scheduleit`, "PUT", "no-cache");
+		await fetchurl(
+			`/extras/tools/urls/regression/${id}/scheduleit`,
+			"PUT",
+			"no-cache"
+		);
 		revalidatePath(
 			`/noadmin/shorturls?page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -57,7 +77,11 @@ const AdminShortUrlsIndex = async ({ params, searchParams }) => {
 	const handleDelete = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/extras/shorturls/${id}/permanently`, "DELETE", "no-cache");
+		await fetchurl(
+			`/extras/tools/urls/regression/${id}/permanently`,
+			"DELETE",
+			"no-cache"
+		);
 		revalidatePath(
 			`/noadmin/shorturls?page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -66,7 +90,11 @@ const AdminShortUrlsIndex = async ({ params, searchParams }) => {
 	const handleTrashAll = async () => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/extras/shorturls/deleteall`, "PUT", "no-cache");
+		await fetchurl(
+			`/extras/tools/urls/regression/${id}/all`,
+			"PUT",
+			"no-cache"
+		);
 		revalidatePath(
 			`/noadmin/shorturls?page=${page}&limit=${limit}&sort=${sort}`
 		);

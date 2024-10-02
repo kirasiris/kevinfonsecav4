@@ -32,9 +32,9 @@ const Single = ({
 						{object?.title}
 					</a>
 				</Link>
-				<span className="badge bg-secondary me-1">{object?.rel}</span>
+				<span className="badge bg-dark me-1">{object?.rel}</span>
 				<span className="badge bg-dark me-1">{object?.target}</span>
-				<span className="badge bg-info me-1">{object?.status}</span>
+				<span className="badge bg-dark me-1">{object?.status}</span>
 			</div>
 			<div className="float-end">
 				<div className="blog-item__panel">

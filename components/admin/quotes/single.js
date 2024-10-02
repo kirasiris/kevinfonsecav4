@@ -2,6 +2,7 @@
 import Link from "next/link";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import DeleteModal from "@/components/global/deletemodal";
+import { formatDateWithoutTime } from "@/helpers/utilities";
 
 const Single = ({
 	object = {},
@@ -18,7 +19,7 @@ const Single = ({
 		<li className="list-group-item">
 			<div className="blog-item__panel">
 				<div className="blog-item__detail">
-					<div className="blog-item__info"></div>
+					<div className="blog-item__info">{object.text}</div>
 					<h1 className="blog-item__title">
 						<Link
 							href={{
@@ -32,7 +33,10 @@ const Single = ({
 						</Link>
 					</h1>
 					<div className="blog-item__meta">
-						<span>{object.text}</span>
+						<span className="badge bg-dark me-1">
+							{formatDateWithoutTime(object.createdAt)}
+						</span>
+						<span className="badge bg-dark me-1">{object.status}</span>
 					</div>
 				</div>
 				<div className="blog-actions-ellipsis-menu">

@@ -2,6 +2,7 @@
 import Link from "next/link";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import DeleteModal from "@/components/global/deletemodal";
+import { formatDateWithoutTime } from "@/helpers/utilities";
 
 const Single = ({
 	object = {},
@@ -37,6 +38,10 @@ const Single = ({
 						<span className="blog-item__meta-time-status">
 							{object.nsfw ? "Not safe for work" : "Safe for work"}
 						</span>
+						<span className="badge bg-dark me-1">
+							{formatDateWithoutTime(object.createdAt)}
+						</span>
+						<span className="badge bg-dark me-1">{object.status}</span>
 					</div>
 				</div>
 				<div className="blog-actions-ellipsis-menu">

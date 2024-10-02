@@ -1,7 +1,9 @@
 "use client";
+import React from "react";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Link from "next/link";
 import Image from "next/image";
-import { ToastContainer } from "react-toastify";
 import Newtoggletheme from "./newtoggletheme";
 
 const Footer = ({

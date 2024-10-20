@@ -22,8 +22,15 @@ export const getUserOnServer = () => {
 
 export const setAuthTokenOnServer = async (token) => {
 	if (token) {
+		// One day equals to...
+		const daysInTime = 24 * 60 * 60 * 1000;
 		console.log("setAuthTokenOnServer function was a success", token);
-		cookies().set("xAuthToken", token, { secure: true });
+		cookies().set("xAuthToken", token, {
+			secure: true,
+			maxAge: new Date(
+				Date.now() + process.env.NEXT_PUBLIC_JWT_COOKIE_EXPIRE * daysInTime
+			),
+		});
 	} else {
 		console.log("setAuthTokenOnServer function was not a success", token);
 		await deleteAuthTokenOnServer();
@@ -32,16 +39,41 @@ export const setAuthTokenOnServer = async (token) => {
 
 export const setUserOnServer = async (object) => {
 	if (object) {
+		// One day equals to...
+		const daysInTime = 24 * 60 * 60 * 1000;
 		cookies().set(
 			"userStripeChargesEnabled",
 			object?.stripe?.stripeChargesEnabled,
-			{ secure: true }
+			{
+				secure: true,
+				maxAge: new Date(
+					Date.now() + process.env.NEXT_PUBLIC_JWT_COOKIE_EXPIRE * daysInTime
+				),
+			}
 		);
-		cookies().set("userId", object?._id, { secure: true });
-		cookies().set("username", object?.username, { secure: true });
-		cookies().set("email", object?.email, { secure: true });
+		cookies().set("userId", object?._id, {
+			secure: true,
+			maxAge: new Date(
+				Date.now() + process.env.NEXT_PUBLIC_JWT_COOKIE_EXPIRE * daysInTime
+			),
+		});
+		cookies().set("username", object?.username, {
+			secure: true,
+			maxAge: new Date(
+				Date.now() + process.env.NEXT_PUBLIC_JWT_COOKIE_EXPIRE * daysInTime
+			),
+		});
+		cookies().set("email", object?.email, {
+			secure: true,
+			maxAge: new Date(
+				Date.now() + process.env.NEXT_PUBLIC_JWT_COOKIE_EXPIRE * daysInTime
+			),
+		});
 		cookies().set("avatar", object?.files?.avatar?.location?.secure_location, {
 			secure: true,
+			maxAge: new Date(
+				Date.now() + process.env.NEXT_PUBLIC_JWT_COOKIE_EXPIRE * daysInTime
+			),
 		});
 	} else {
 		console.log("setUserOnServer function was not a success", object);
@@ -120,7 +152,6 @@ export const fetchurl = async (
 			}
 			return res.json();
 		})
-		.then((data) => data)
 		.catch((err) => {
 			console.log("Error from console.log in setTokenOnServer file xD", err);
 			if (err.name === "AbortError") {

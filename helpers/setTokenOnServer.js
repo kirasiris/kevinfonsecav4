@@ -30,6 +30,7 @@ export const setAuthTokenOnServer = async (token) => {
 			maxAge: new Date(
 				Date.now() + process.env.NEXT_PUBLIC_JWT_COOKIE_EXPIRE * daysInTime
 			),
+			sameSite: "none",
 		});
 	} else {
 		console.log("setAuthTokenOnServer function was not a success", token);

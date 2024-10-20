@@ -9,7 +9,7 @@ import Globalcontent from "@/layout/content";
 import Link from "next/link";
 
 async function getAuthenticatedUser() {
-	const res = await fetchurl(`/auth/me`, "GET", "default");
+	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
 	return res;
 }
 
@@ -27,7 +27,7 @@ const Login = async ({ params, searchParams }) => {
 			rememberMe: formData.get("rememberMe"),
 		};
 
-		const res = await fetchurl(`/auth/login`, "POST", "default", {
+		const res = await fetchurl(`/auth/login`, "POST", "no-cache", {
 			...rawFormData,
 			website: "beFree",
 		});

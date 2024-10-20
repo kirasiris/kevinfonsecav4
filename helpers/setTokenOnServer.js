@@ -109,6 +109,7 @@ export const fetchurl = async (
 	let customHeaders = {
 		Authorization: `Bearer ${token?.value}`,
 		"Content-Type": "application/json",
+		credentials: "include",
 	};
 
 	if (

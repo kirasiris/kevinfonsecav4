@@ -65,7 +65,7 @@ const UpdatePage = async ({ params, searchParams }) => {
 					id="text"
 					name="text"
 					onModel="Page"
-					advancedTextEditor={false}
+					advancedTextEditor={true}
 					customPlaceholder="No description"
 					defaultValue={page.data.text}
 				/>

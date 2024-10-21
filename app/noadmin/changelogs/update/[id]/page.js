@@ -28,6 +28,7 @@ const UpdateChangelog = async ({ params, searchParams }) => {
 			status: formData.get("status"),
 			postType: formData.getAll("postType"),
 			version: formData.get("version"),
+			project: formData.get("project"),
 		};
 		await fetchurl(`/changelogs/${params.id}`, "PUT", "no-cache", rawFormData);
 		redirect(`/noadmin/changelogs`);
@@ -71,25 +72,46 @@ const UpdateChangelog = async ({ params, searchParams }) => {
 					className="form-control mb-3"
 					placeholder=""
 				/>
-				<label htmlFor="postType" className="form-label">
-					Post type
-				</label>
-				<select
-					id="postType"
-					name="postType"
-					defaultValue={changelog?.data?.postType}
-					className="form-control"
-					multiple
-				>
-					<option value={`bug`}>Bug</option>
-					<option value={`dependencies`}>Dependencies</option>
-					<option value={`duplicate`}>Duplicate</option>
-					<option value={`enhancement`}>Enhancement</option>
-					<option value={`help`}>Help</option>
-					<option value={`invalid`}>Invalid</option>
-					<option value={`question`}>Question</option>
-					<option value={`wontfix`}>Wontfix</option>
-				</select>
+				<div className="row">
+					<div className="col">
+						<label htmlFor="postType" className="form-label">
+							Post type
+						</label>
+						<select
+							id="postType"
+							name="postType"
+							defaultValue={changelog?.data?.postType}
+							className="form-control"
+							multiple
+						>
+							<option value={`bug`}>Bug</option>
+							<option value={`dependencies`}>Dependencies</option>
+							<option value={`duplicate`}>Duplicate</option>
+							<option value={`enhancement`}>Enhancement</option>
+							<option value={`help`}>Help</option>
+							<option value={`invalid`}>Invalid</option>
+							<option value={`question`}>Question</option>
+							<option value={`wontfix`}>Wontfix</option>
+						</select>
+					</div>
+					<div className="col">
+						<label htmlFor="project" className="form-label">
+							Project
+						</label>
+						<select
+							id="project"
+							name="project"
+							defaultValue={changelog?.data?.project}
+							className="form-control"
+						>
+							<option value={`all`}>All</option>
+							<option value={`personal`}>Personal</option>
+							<option value={`anonymous-secrets-app`}>
+								Anonymous Secrets App
+							</option>
+						</select>
+					</div>
+				</div>
 				<label htmlFor="status" className="form-label">
 					Status
 				</label>

@@ -8,10 +8,12 @@ async function getSecrets(params) {
 }
 
 const SecretIndex = async ({ params, searchParams }) => {
-	const page = searchParams.page || 1;
-	const limit = searchParams.limit || 10;
-	const sort = searchParams.sort || "-createdAt";
-	const decrypt = searchParams.decrypt === "true" ? "&decrypt=true" : "";
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+	const page = awtdSearchParams.page || 1;
+	const limit = awtdSearchParams.limit || 10;
+	const sort = awtdSearchParams.sort || "-createdAt";
+	const decrypt = awtdSearchParams.decrypt === "true" ? "&decrypt=true" : "";
 
 	const getSecretsData = getSecrets(
 		`?page=${page}&limit=${limit}&sort=${sort}&status=published${decrypt}`
@@ -25,7 +27,7 @@ const SecretIndex = async ({ params, searchParams }) => {
 				title="Welcome to Secrets"
 				description="You're seeing secrets from people age 13 to 100"
 			/>
-			<List objects={secrets} searchParams={searchParams} />
+			<List objects={secrets} searchParams={awtdSearchParams} />
 		</>
 	);
 };

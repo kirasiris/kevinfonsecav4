@@ -10,6 +10,9 @@ async function getAuthenticatedUser() {
 }
 
 const VerifyTwoFactorAuthentication = async ({ params, searchParams }) => {
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+
 	const auth = await getAuthenticatedUser();
 
 	// Redirect if user is not logged in
@@ -22,7 +25,7 @@ const VerifyTwoFactorAuthentication = async ({ params, searchParams }) => {
 			token: formData.get("token"),
 		};
 
-		const userid = params.userid;
+		const userid = awtdParams.userid;
 
 		if (!userid) {
 			redirect(`/auth/profile`);

@@ -13,17 +13,19 @@ async function getSnippets(params) {
 }
 
 const SnippetCategoryIndex = async ({ params, searchParams }) => {
-	const page = searchParams.page || 1;
-	const limit = searchParams.limit || 10;
-	const sort = searchParams.sort || "-createdAt";
-	const decrypt = searchParams.decrypt === "true" ? "&decrypt=true" : "";
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+	const page = awtdSearchParams.page || 1;
+	const limit = awtdSearchParams.limit || 10;
+	const sort = awtdSearchParams.sort || "-createdAt";
+	const decrypt = awtdSearchParams.decrypt === "true" ? "&decrypt=true" : "";
 
 	const getFeaturedSnippetsData = getFeaturedSnippet(
 		`?featured=true&status=published${decrypt}`
 	);
 
 	const getSnippetsData = getSnippets(
-		`?page=${page}&limit=${limit}&sort=${sort}&status=published&category=${params.categoryid}${decrypt}`
+		`?page=${page}&limit=${limit}&sort=${sort}&status=published&category=${awtdParams.categoryid}${decrypt}`
 	);
 
 	const [featured, snippets] = await Promise.all([
@@ -31,7 +33,7 @@ const SnippetCategoryIndex = async ({ params, searchParams }) => {
 		getSnippetsData,
 	]);
 
-	const capitalizeWord = params.categoryslug;
+	const capitalizeWord = awtdParams.categoryslug;
 
 	return (
 		<>
@@ -45,7 +47,7 @@ const SnippetCategoryIndex = async ({ params, searchParams }) => {
 			<List
 				featured={featured}
 				objects={snippets}
-				searchParams={searchParams}
+				searchParams={awtdSearchParams}
 			/>
 		</>
 	);

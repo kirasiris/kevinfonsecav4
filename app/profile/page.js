@@ -8,9 +8,11 @@ async function getProfiles(params) {
 }
 
 const ProfileIndex = async ({ params, searchParams }) => {
-	const limit = searchParams.limit || 10;
-	const page = searchParams.page || 1;
-	const decrypt = searchParams.decrypt === "true" ? "&decrypt=true" : "";
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+	const limit = awtdSearchParams.limit || 10;
+	const page = awtdSearchParams.page || 1;
+	const decrypt = awtdSearchParams.decrypt === "true" ? "&decrypt=true" : "";
 
 	const getProfilesData = getProfiles(
 		`?page=${page}&limit=${limit}&sort=-createdAt&isEmailConfirmed=true${decrypt}`
@@ -24,7 +26,7 @@ const ProfileIndex = async ({ params, searchParams }) => {
 				title="Welcome to my Users Page"
 				description="Find out the community's members and become friends"
 			/>
-			<ProfilesList objects={profiles} searchParams={searchParams} />
+			<ProfilesList objects={profiles} searchParams={awtdSearchParams} />
 		</>
 	);
 };

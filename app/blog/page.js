@@ -23,11 +23,12 @@ async function getQuotes() {
 }
 
 const BlogIndex = async ({ params, searchParams }) => {
-	const page = searchParams.page || 1;
-	const limit = searchParams.limit || 10;
-	const sort = searchParams.sort || "-createdAt";
-	const postType = searchParams.postType || "blog";
-	const decrypt = searchParams.decrypt === "true" ? "&decrypt=true" : "";
+	const awtdSearchParams = await searchParams;
+	const page = awtdSearchParams.page || 1;
+	const limit = awtdSearchParams.limit || 10;
+	const sort = awtdSearchParams.sort || "-createdAt";
+	const postType = awtdSearchParams.postType || "blog";
+	const decrypt = awtdSearchParams.decrypt === "true" ? "&decrypt=true" : "";
 
 	const getFeaturedBlogsData = getFeaturedBlog(
 		`?featured=true&postType=blog&status=published${decrypt}`
@@ -57,7 +58,7 @@ const BlogIndex = async ({ params, searchParams }) => {
 			<List
 				featured={featured}
 				objects={blogs}
-				searchParams={searchParams}
+				searchParams={awtdSearchParams}
 				categories={categories}
 				quotes={quotes}
 			/>

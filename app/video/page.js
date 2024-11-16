@@ -13,9 +13,11 @@ async function getCategories(params) {
 }
 
 const PlaylistIndex = async ({ params, searchParams }) => {
-	const limit = searchParams.limit || 32;
-	const page = searchParams.page || 1;
-	const decrypt = searchParams.decrypt === "true" ? "&decrypt=true" : "";
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+	const limit = awtdSearchParams.limit || 32;
+	const page = awtdSearchParams.page || 1;
+	const decrypt = awtdSearchParams.decrypt === "true" ? "&decrypt=true" : "";
 
 	const getPlaylistsData = getPlaylists(
 		`?page=${page}&limit=${limit}&sort=-createdAt&playlistType=video&status=published${decrypt}`
@@ -36,7 +38,7 @@ const PlaylistIndex = async ({ params, searchParams }) => {
 			/>
 			<List
 				objects={playlists}
-				searchParams={searchParams}
+				searchParams={awtdSearchParams}
 				categories={categories}
 			/>
 		</>

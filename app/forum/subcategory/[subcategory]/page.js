@@ -8,18 +8,20 @@ async function getForums(params) {
 }
 
 const ForumSubCategoryIndex = async ({ params, searchParams }) => {
-	const page = searchParams.page || 1;
-	const limit = searchParams.limit || 32;
-	const sort = searchParams.sort || "-createdAt";
-	const decrypt = searchParams.decrypt === "true" ? "&decrypt=true" : "";
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+	const page = awtdSearchParams.page || 1;
+	const limit = awtdSearchParams.limit || 32;
+	const sort = awtdSearchParams.sort || "-createdAt";
+	const decrypt = awtdSearchParams.decrypt === "true" ? "&decrypt=true" : "";
 
 	const getForumsData = getForums(
-		`?page=${page}&limit=${limit}&sort=${sort}&status=published&sub_category=${params.subcategory}${decrypt}`
+		`?page=${page}&limit=${limit}&sort=${sort}&status=published&sub_category=${awtdParams.subcategory}${decrypt}`
 	);
 
 	const [forums] = await Promise.all([getForumsData]);
 
-	const capitalizeWord = params.subcategory;
+	const capitalizeWord = awtdParams.subcategory;
 
 	return (
 		<>
@@ -33,8 +35,8 @@ const ForumSubCategoryIndex = async ({ params, searchParams }) => {
 			<List
 				featured={{}}
 				objects={forums}
-				params={params}
-				searchParams={searchParams}
+				params={awtdParams}
+				searchParams={awtdSearchParams}
 			/>
 		</>
 	);

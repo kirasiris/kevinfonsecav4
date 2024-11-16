@@ -28,14 +28,17 @@ async function getMedias(params) {
 }
 
 const ProfilePhotoRead = async ({ params, searchParams }) => {
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+
 	const auth = await getUserOnServer();
 
-	const getProfilesData = getProfile(`/${params.id}`);
+	const getProfilesData = getProfile(`/${awtdParams.id}`);
 
-	const getMediasData = getMedias(`/${params.pictureid}`);
+	const getMediasData = getMedias(`/${awtdParams.pictureid}`);
 
 	const getSidebarMediasData = getMedias(
-		`?user=${params.id}&page=1&limit=9&sort=-createdAt&album=posts`
+		`?user=${awtdParams.id}&page=1&limit=9&sort=-createdAt&album=posts`
 	);
 
 	const [profile, file, sidebarphotos] = await Promise.all([

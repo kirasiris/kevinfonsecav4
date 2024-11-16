@@ -19,13 +19,15 @@ async function getVerification(params) {
 }
 
 const ThankYouRead = async ({ params, searchParams }) => {
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
 	const auth = await getAuthenticatedUser();
 
 	// Redirect if user is not loggedIn
 	(auth?.error?.statusCode === 401 || !auth?.data?.isOnline) &&
-		redirect(`/auth/login?returnpage=/thankyou/${params.id}`);
+		redirect(`/auth/login?returnpage=/thankyou/${awtdParams.id}`);
 
-	await getVerification(`/${params.id}`);
+	await getVerification(`/${awtdParams.id}`);
 
 	return (
 		<Suspense fallback={<Loading />}>

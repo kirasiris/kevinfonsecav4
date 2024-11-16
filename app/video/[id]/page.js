@@ -21,10 +21,13 @@ async function updateViews(params) {
 }
 
 const VideoRead = async ({ params, searchParams }) => {
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+
 	const auth = await getUserOnServer();
 
-	const getVideosData = getVideo(`/${params.id}`);
-	await updateViews(`/${params.id}`);
+	const getVideosData = getVideo(`/${awtdParams.id}`);
+	await updateViews(`/${awtdParams.id}`);
 
 	const [video] = await Promise.all([getVideosData]);
 

@@ -20,17 +20,20 @@ async function getPosts(params) {
 }
 
 const ProfileMapIndex = async ({ params, searchParams }) => {
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+
 	const auth = await getUserOnServer();
 
-	const profile = await getProfile(`/${params.id}`);
+	const profile = await getProfile(`/${awtdParams.id}`);
 
-	const limit = searchParams.limit || 50;
-	const page = searchParams.page || 1;
+	const limit = awtdSearchParams.limit || 50;
+	const page = awtdSearchParams.page || 1;
 	const sort = "-createdAt";
-	const decrypt = searchParams.decrypt === "true" ? "&decrypt=true" : "";
+	const decrypt = awtdSearchParams.decrypt === "true" ? "&decrypt=true" : "";
 
 	const posts = await getPosts(
-		`?user=${params.id}&page=${page}&limit=${limit}&sort=${sort}&status=published&postType=post&subType=maps`
+		`?user=${awtdParams.id}&page=${page}&limit=${limit}&sort=${sort}&status=published&postType=post&subType=maps`
 	);
 
 	return (

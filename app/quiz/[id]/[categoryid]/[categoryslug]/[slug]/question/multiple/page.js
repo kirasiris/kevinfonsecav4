@@ -23,17 +23,19 @@ async function getQuestions(params) {
 }
 
 const QuizMultiplePageRead = async ({ params, searchParams }) => {
-	const page = searchParams.page || 1;
-	const limit = searchParams.limit || 1;
-	const sort = searchParams.sort || "-createdAt";
-	const decrypt = searchParams.decrypt === "true" ? "&decrypt=true" : "";
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+	const page = awtdSearchParams.page || 1;
+	const limit = awtdSearchParams.limit || 1;
+	const sort = awtdSearchParams.sort || "-createdAt";
+	const decrypt = awtdSearchParams.decrypt === "true" ? "&decrypt=true" : "";
 
 	const auth = await getUserOnServer();
 
-	const getQuizzesData = getQuiz(`/${params.id}`);
+	const getQuizzesData = getQuiz(`/${awtdParams.id}`);
 
 	const getQuestionsData = getQuestions(
-		`?resourceId=${params.id}&page=${page}&limit=${limit}&sort=${sort}&status=published&decrypt=true`
+		`?resourceId=${awtdParams.id}&page=${page}&limit=${limit}&sort=${sort}&status=published&decrypt=true`
 	);
 
 	const [quiz, questions] = await Promise.all([
@@ -45,7 +47,8 @@ const QuizMultiplePageRead = async ({ params, searchParams }) => {
 		<Suspense fallback={<Loading />}>
 			<Header title={quiz.data.title} />
 			<div className="container">
-				{quiz.data.status === "published" || searchParams.isAdmin === "true" ? (
+				{quiz.data.status === "published" ||
+				awtdSearchParams.isAdmin === "true" ? (
 					<div className="row">
 						<Globalcontent containerClasses="col-lg-12">
 							<article>
@@ -53,8 +56,8 @@ const QuizMultiplePageRead = async ({ params, searchParams }) => {
 									<List
 										object={quiz}
 										objects={questions}
-										params={params}
-										searchParams={searchParams}
+										params={awtdParams}
+										searchParams={awtdSearchParams}
 									/>
 								</section>
 							</article>

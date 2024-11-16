@@ -18,17 +18,19 @@ async function getCategories(params) {
 }
 
 const QuizSearchIndex = async ({ params, searchParams }) => {
-	const page = searchParams.page || 1;
-	const limit = searchParams.limit || 10;
-	const sort = searchParams.sort || "-createdAt";
-	const decrypt = searchParams.decrypt === "true" ? "&decrypt=true" : "";
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+	const page = awtdSearchParams.page || 1;
+	const limit = awtdSearchParams.limit || 10;
+	const sort = awtdSearchParams.sort || "-createdAt";
+	const decrypt = awtdSearchParams.decrypt === "true" ? "&decrypt=true" : "";
 
 	const getFeaturedQuizData = getFeaturedQuiz(
 		`?featured=true&status=published${decrypt}`
 	);
 
 	const getQuizzesData = getQuizzes(
-		`?page=${page}&limit=${limit}&sort=${sort}&status=published&keyword=${searchParams.keyword}${decrypt}`
+		`?page=${page}&limit=${limit}&sort=${sort}&status=published&keyword=${awtdSearchParams.keyword}${decrypt}`
 	);
 
 	const getCategoriesData = getCategories(`?categoryType=quiz`);
@@ -42,13 +44,13 @@ const QuizSearchIndex = async ({ params, searchParams }) => {
 	return (
 		<>
 			<Header
-				title={`${searchParams.keyword}`}
+				title={`${awtdSearchParams.keyword}`}
 				description="Search results..."
 			/>
 			<List
 				featured={featured}
 				objects={quizzes}
-				searchParams={searchParams}
+				searchParams={awtdSearchParams}
 				categories={categories}
 			/>
 		</>

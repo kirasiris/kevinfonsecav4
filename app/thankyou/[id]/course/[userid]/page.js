@@ -26,15 +26,18 @@ async function getUserAndSubscribeToCourse(id = "") {
 }
 
 const ThankYouRead = async ({ params, searchParams }) => {
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+
 	const auth = await getAuthenticatedUser();
 
 	// Redirect if user is not loggedIn
 	(auth?.error?.statusCode === 401 || !auth?.data?.isOnline) &&
 		redirect(
-			`/auth/login?returnpage=/thankyou/${params.id}/course/${params.userid}?returnpage=${searchParams.returnpage}`
+			`/auth/login?returnpage=/thankyou/${awtdParams.id}/course/${awtdParams.userid}?returnpage=${searchParams.returnpage}`
 		);
 
-	await getUserAndSubscribeToCourse(params.id);
+	await getUserAndSubscribeToCourse(awtdParams.id);
 
 	return (
 		<Suspense fallback={<Loading />}>

@@ -13,10 +13,12 @@ async function getJobs(params) {
 }
 
 const JobIndex = async ({ params, searchParams }) => {
-	const page = searchParams.page || 1;
-	const limit = searchParams.limit || 10;
-	const sort = searchParams.sort || "-createdAt";
-	const decrypt = searchParams.decrypt === "true" ? "&decrypt=true" : "";
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+	const page = awtdSearchParams.page || 1;
+	const limit = awtdSearchParams.limit || 10;
+	const sort = awtdSearchParams.sort || "-createdAt";
+	const decrypt = awtdSearchParams.decrypt === "true" ? "&decrypt=true" : "";
 
 	const getFeaturedJobsData = getFeaturedJob(
 		`?featured=true&status=published${decrypt}`
@@ -37,7 +39,11 @@ const JobIndex = async ({ params, searchParams }) => {
 				title="Welcome to my Jobs"
 				description="Find and Apply to Programming Jobs"
 			/>
-			<List featured={featured} objects={jobs} searchParams={searchParams} />
+			<List
+				featured={featured}
+				objects={jobs}
+				searchParams={awtdSearchParams}
+			/>
 		</>
 	);
 };

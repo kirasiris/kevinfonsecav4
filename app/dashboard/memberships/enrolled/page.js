@@ -13,6 +13,8 @@ async function getUserMembershipsEnrolled(params) {
 }
 
 const DashboardMembershipsEnrolledIndex = async ({ params, searchParams }) => {
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
 	const page = searchParams.page || 1;
 	const limit = searchParams.limit || 10;
 	const sort = searchParams.sort || "-createdAt";
@@ -59,7 +61,7 @@ const DashboardMembershipsEnrolledIndex = async ({ params, searchParams }) => {
 					addLink="/dashboard/memberships/create"
 					searchOn="/dashboard/memberships"
 					objects={memberships}
-					searchParams={searchParams}
+					searchParams={awtdSearchParams}
 					handleDraft={undefined}
 					handlePublish={undefined}
 					handleTrash={undefined}

@@ -8,13 +8,15 @@ async function getSecrets(params) {
 }
 
 const SecretSearchIndex = async ({ params, searchParams }) => {
-	const page = searchParams.page || 1;
-	const limit = searchParams.limit || 10;
-	const sort = searchParams.sort || "-createdAt";
-	const decrypt = searchParams.decrypt === "true" ? "&decrypt=true" : "";
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+	const page = awtdSearchParams.page || 1;
+	const limit = awtdSearchParams.limit || 10;
+	const sort = awtdSearchParams.sort || "-createdAt";
+	const decrypt = awtdSearchParams.decrypt === "true" ? "&decrypt=true" : "";
 
 	const getSecretsData = getSecrets(
-		`?keyword=${searchParams.keyword}&age=${searchParams.age}&sex=${searchParams.sex}&nsfw=${searchParams.nsfw}&page=${page}&limit=${limit}&sort=${sort}&status=published${decrypt}`
+		`?keyword=${awtdSearchParams.keyword}&age=${awtdSearchParams.age}&sex=${awtdSearchParams.sex}&nsfw=${awtdSearchParams.nsfw}&page=${page}&limit=${limit}&sort=${sort}&status=published${decrypt}`
 	);
 
 	const [secrets] = await Promise.all([getSecretsData]);
@@ -22,10 +24,10 @@ const SecretSearchIndex = async ({ params, searchParams }) => {
 	return (
 		<>
 			<Header
-				title={`${searchParams.keyword}`}
+				title={`${awtdSearchParams.keyword}`}
 				description="Search results..."
 			/>
-			<List objects={secrets} searchParams={searchParams} />
+			<List objects={secrets} searchParams={awtdSearchParams} />
 		</>
 	);
 };

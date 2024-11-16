@@ -11,9 +11,12 @@ async function getSnippet(params) {
 }
 
 const SnippetRead = async ({ params, searchParams }) => {
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+
 	const auth = await getUserOnServer();
 
-	const getSnippetsData = getSnippet(`/${params.id}`);
+	const getSnippetsData = getSnippet(`/${awtdParams.id}`);
 
 	const [snippet] = await Promise.all([getSnippetsData]);
 
@@ -38,7 +41,7 @@ const SnippetRead = async ({ params, searchParams }) => {
 			</style>
 			<Suspense fallback={<Loading />}>
 				{snippet.data.status === "published" ||
-				searchParams.isAdmin === "true" ? (
+				awtdSearchParams.isAdmin === "true" ? (
 					<LiveCode
 						object={snippet?.data}
 						title={snippet?.data?.title}

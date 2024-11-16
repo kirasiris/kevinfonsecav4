@@ -19,9 +19,11 @@ async function getPage(params) {
 }
 
 const PageRead = async ({ params, searchParams }) => {
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
 	// Here goes auth
 
-	const getPagesData = getPage(`/${params.id}`);
+	const getPagesData = getPage(`/${awtdParams.id}`);
 
 	const [page] = await Promise.all([getPagesData]);
 
@@ -60,7 +62,8 @@ const PageRead = async ({ params, searchParams }) => {
 			/>
 			<Header title={page.data.title} />
 			<div className="container">
-				{page.data.status === "published" || searchParams.isAdmin === "true" ? (
+				{page.data.status === "published" ||
+				awtdSearchParams.isAdmin === "true" ? (
 					<div className="row">
 						<Globalcontent containerClasses={`col-lg-12`}>
 							<article>

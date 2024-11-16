@@ -18,18 +18,20 @@ async function getCategories(params) {
 }
 
 const ThemeCategoryIndex = async ({ params, searchParams }) => {
-	const page = searchParams.page || 1;
-	const limit = searchParams.limit || 10;
-	const sort = searchParams.sort || "-createdAt";
-	const postType = searchParams.postType || "theme";
-	const decrypt = searchParams.decrypt === "true" ? "&decrypt=true" : "";
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+	const page = awtdSearchParams.page || 1;
+	const limit = awtdSearchParams.limit || 10;
+	const sort = awtdSearchParams.sort || "-createdAt";
+	const postType = awtdSearchParams.postType || "theme";
+	const decrypt = awtdSearchParams.decrypt === "true" ? "&decrypt=true" : "";
 
 	const getFeaturedThemesData = getFeaturedTheme(
 		`?featured=true&postType=${postType}&status=published${decrypt}`
 	);
 
 	const getThemesData = getThemes(
-		`?page=${page}&limit=${limit}&sort=${sort}&postType=${postType}&status=published&category=${params.categoryid}${decrypt}`
+		`?page=${page}&limit=${limit}&sort=${sort}&postType=${postType}&status=published&category=${awtdParams.categoryid}${decrypt}`
 	);
 
 	const getCategoriesData = getCategories(`?categoryType=theme`);
@@ -40,7 +42,7 @@ const ThemeCategoryIndex = async ({ params, searchParams }) => {
 		getCategoriesData,
 	]);
 
-	const capitalizeWord = params.categoryslug;
+	const capitalizeWord = awtdParams.categoryslug;
 
 	return (
 		<>
@@ -54,7 +56,7 @@ const ThemeCategoryIndex = async ({ params, searchParams }) => {
 			<List
 				featured={featured}
 				objects={themes}
-				searchParams={searchParams}
+				searchParams={awtdSearchParams}
 				categories={categories}
 			/>
 		</>

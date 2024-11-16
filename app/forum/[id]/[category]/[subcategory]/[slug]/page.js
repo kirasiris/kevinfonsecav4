@@ -33,20 +33,22 @@ async function updateViews(params) {
 }
 
 const ForumRead = async ({ params, searchParams }) => {
-	const page = searchParams.page || 1;
-	const limit = searchParams.limit || 15;
-	const sort = searchParams.sort || "-createdAt";
-	const decrypt = searchParams.decrypt === "true" ? "&decrypt=true" : "";
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+	const page = awtdSearchParams.page || 1;
+	const limit = awtdSearchParams.limit || 15;
+	const sort = awtdSearchParams.sort || "-createdAt";
+	const decrypt = awtdSearchParams.decrypt === "true" ? "&decrypt=true" : "";
 
 	const auth = await getUserOnServer();
 
-	const getForumsData = getForum(`/${params.id}`);
+	const getForumsData = getForum(`/${awtdParams.id}`);
 
 	const getCommentsData = getComments(
-		`?resourceId=${params.id}&page=${page}&limit=${limit}&sort=${sort}&status=published&decrypt=true`
+		`?resourceId=${awtdParams.id}&page=${page}&limit=${limit}&sort=${sort}&status=published&decrypt=true`
 	);
 
-	await updateViews(`/${params.id}`);
+	await updateViews(`/${awtdParams.id}`);
 
 	const [forum, comments] = await Promise.all([getForumsData, getCommentsData]);
 
@@ -95,7 +97,7 @@ const ForumRead = async ({ params, searchParams }) => {
 			<Header title={forum.data.title} />
 			<div className="container">
 				{forum.data.status === "published" ||
-				searchParams.isAdmin === "true" ? (
+				awtdSearchParams.isAdmin === "true" ? (
 					<div className="row">
 						<Globalcontent containerClasses={`col-lg-8`}>
 							<article>

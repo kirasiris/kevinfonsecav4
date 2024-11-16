@@ -44,28 +44,31 @@ async function updateViews(params) {
 }
 
 const VideoRead = async ({ params, searchParams }) => {
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+
 	const auth = await getAuthenticatedUser();
 
 	// Redirect if user is not loggedIn
 	(auth?.error?.statusCode === 401 || !auth?.data?.isOnline) &&
 		redirect(
-			`/auth/login?returnpage=/course/${params.id}/${params.category}/${params.subcategory}/${params.slug}/video/${params.videoid}`
+			`/auth/login?returnpage=/course/${awtdParams.id}/${awtdParams.category}/${awtdParams.subcategory}/${awtdParams.slug}/video/${awtdParams.videoid}`
 		);
 
-	const getCoursesData = getCourse(`/${params.id}`);
+	const getCoursesData = getCourse(`/${awtdParams.id}`);
 	const getCourseLessonsData = getCourseLessons(
-		`?resourceId=${params.id}&sort=orderingNumber&onModel=Course`
+		`?resourceId=${awtdParams.id}&sort=orderingNumber&onModel=Course`
 	);
 
 	// Verify if user is enrolled (it means if course is not free, user should have paid and/or enrolled already)
 	const verifyUserEnrollment = getCourseStudents(
 		`?user=${
 			auth?.data ? auth.data?._id : `62ec7926a554425c9e03782d`
-		}&resourceId=${params.id}&onModel=Course`
+		}&resourceId=${awtdParams.id}&onModel=Course`
 	);
 
-	const getVideosData = getVideo(`/${params.videoid}`);
-	await updateViews(`/${params.videoid}`);
+	const getVideosData = getVideo(`/${awtdParams.videoid}`);
+	await updateViews(`/${awtdParams.videoid}`);
 
 	const [course, lessons, verifyAuthEnrollment, video] = await Promise.all([
 		getCoursesData,

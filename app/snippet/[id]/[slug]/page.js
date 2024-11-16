@@ -21,9 +21,12 @@ async function getSnippet(params) {
 }
 
 const SnippetRead = async ({ params, searchParams }) => {
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+
 	const auth = await getUserOnServer();
 
-	const getSnippetsData = getSnippet(`/${params.id}`);
+	const getSnippetsData = getSnippet(`/${awtdParams.id}`);
 
 	const [snippet] = await Promise.all([getSnippetsData]);
 
@@ -32,7 +35,7 @@ const SnippetRead = async ({ params, searchParams }) => {
 			<Header title={snippet.data.title} />
 			<div className="container">
 				{snippet.data.status === "published" ||
-				searchParams.isAdmin === "true" ? (
+				awtdSearchParams.isAdmin === "true" ? (
 					<div className="row">
 						<Globalcontent containerClasses={`col-lg-12`}>
 							<article>WORK IN PROGRESS</article>

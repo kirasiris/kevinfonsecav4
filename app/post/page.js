@@ -8,11 +8,13 @@ async function getPosts(params) {
 }
 
 const PostIndex = async ({ params, searchParams }) => {
-	const page = searchParams.page || 1;
-	const limit = searchParams.limit || 10;
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+	const page = awtdSearchParams.page || 1;
+	const limit = awtdSearchParams.limit || 10;
 	const sort = "-createdAt";
 	const decrypt =
-		searchParams.decrypt === "true" ? "&decrypt=true" : "&decrypt=true";
+		awtdSearchParams.decrypt === "true" ? "&decrypt=true" : "&decrypt=true";
 
 	const getPostsData = getPosts(
 		`?page=${page}&limit=${limit}&sort=${sort}&status=published&postType=post${decrypt}`
@@ -28,7 +30,11 @@ const PostIndex = async ({ params, searchParams }) => {
 			/>
 			<div className="container">
 				<div className="row">
-					<List params={params} objects={posts} searchParams={searchParams} />
+					<List
+						params={params}
+						objects={posts}
+						searchParams={awtdSearchParams}
+					/>
 				</div>
 			</div>
 		</>

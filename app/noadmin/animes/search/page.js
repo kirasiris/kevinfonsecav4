@@ -13,10 +13,12 @@ async function getPlaylists(params) {
 }
 
 const AdminAnimesSearchIndex = async ({ params, searchParams }) => {
-	const keyword = searchParams.keyword || "";
-	const page = searchParams.page || 1;
-	const limit = searchParams.limit || 10;
-	const sort = searchParams.sort || "-createdAt";
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+	const keyword = awtdSearchParams.keyword || "";
+	const page = awtdSearchParams.page || 1;
+	const limit = awtdSearchParams.limit || 10;
+	const sort = awtdSearchParams.sort || "-createdAt";
 
 	const animes = await getPlaylists(
 		`?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
@@ -103,7 +105,7 @@ const AdminAnimesSearchIndex = async ({ params, searchParams }) => {
 					addLink="/noadmin/animes/create"
 					searchOn="/noadmin/animes"
 					objects={animes}
-					searchParams={searchParams}
+					searchParams={awtdSearchParams}
 					handleDraft={draftIt}
 					handlePublish={publishIt}
 					handleTrash={trashIt}

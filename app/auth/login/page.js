@@ -14,6 +14,9 @@ async function getAuthenticatedUser() {
 }
 
 const Login = async ({ params, searchParams }) => {
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+
 	const auth = await getAuthenticatedUser();
 
 	// Redirect if user is not logged in
@@ -49,7 +52,7 @@ const Login = async ({ params, searchParams }) => {
 		await setUserOnServer(await loadedUser?.data);
 
 		// alert("Login was a success");
-		redirect(searchParams.returnpage || `/auth/profile`);
+		redirect(awtdSearchParams.returnpage || `/auth/profile`);
 	};
 
 	return (

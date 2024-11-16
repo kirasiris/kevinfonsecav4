@@ -17,7 +17,9 @@ async function RemoveEmailFromNewsletters(email = "") {
 }
 
 const UnsubscribeFromNewsletter = async ({ params, searchParams }) => {
-	await RemoveEmailFromNewsletters(searchParams.email);
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+	await RemoveEmailFromNewsletters(awtdSearchParams.email);
 	return (
 		<Suspense fallback={<Loading />}>
 			<div

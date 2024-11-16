@@ -13,17 +13,20 @@ async function getCourses(params) {
 }
 
 const CourseSubCategoryIndex = async ({ params, searchParams }) => {
-	const page = searchParams.page || 1;
-	const limit = searchParams.limit || 32;
-	const sort = searchParams.sort || "-createdAt";
-	const decrypt = searchParams.decrypt === "true" ? "&decrypt=true" : "";
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+
+	const page = awtdSearchParams.page || 1;
+	const limit = awtdSearchParams.limit || 32;
+	const sort = awtdSearchParams.sort || "-createdAt";
+	const decrypt = awtdSearchParams.decrypt === "true" ? "&decrypt=true" : "";
 
 	const getFeaturedCoursesData = getFeaturedCourse(
 		`?featured=true&status=published${decrypt}`
 	);
 
 	const getCoursesData = getCourses(
-		`?page=${page}&limit=${limit}&sort=${sort}&status=published&sub_category=${params.subcategory}${decrypt}`
+		`?page=${page}&limit=${limit}&sort=${sort}&status=published&sub_category=${awtdParams.subcategory}${decrypt}`
 	);
 
 	const [featured, courses] = await Promise.all([
@@ -31,7 +34,7 @@ const CourseSubCategoryIndex = async ({ params, searchParams }) => {
 		getCoursesData,
 	]);
 
-	const capitalizeWord = params.subcategory;
+	const capitalizeWord = awtdParams.subcategory;
 
 	return (
 		<>
@@ -42,7 +45,11 @@ const CourseSubCategoryIndex = async ({ params, searchParams }) => {
 					.join(" ")} Courses`}
 				description="Learn everything about my programming and life journey"
 			/>
-			<List featured={featured} objects={courses} searchParams={searchParams} />
+			<List
+				featured={featured}
+				objects={courses}
+				searchParams={awtdSearchParams}
+			/>
 		</>
 	);
 };

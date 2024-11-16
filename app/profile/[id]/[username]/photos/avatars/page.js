@@ -18,21 +18,24 @@ async function getMedias(params) {
 }
 
 const ProfilePhotoAvatarsIndex = async ({ params, searchParams }) => {
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+
 	const auth = await getUserOnServer();
 
-	const getProfilesData = getProfile(`/${params.id}`);
+	const getProfilesData = getProfile(`/${awtdParams.id}`);
 
-	const limit = searchParams.limit || 50;
-	const page = searchParams.page || 1;
+	const limit = awtdSearchParams.limit || 50;
+	const page = awtdSearchParams.page || 1;
 	const sort = "-createdAt";
-	const decrypt = searchParams.decrypt === "true" ? "&decrypt=true" : "";
+	const decrypt = awtdSearchParams.decrypt === "true" ? "&decrypt=true" : "";
 
 	const getSidebarMediasData = getMedias(
-		`?user=${params.id}&page=1&limit=9&sort=${sort}&album=posts${decrypt}`
+		`?user=${awtdParams.id}&page=1&limit=9&sort=${sort}&album=posts${decrypt}`
 	);
 
 	const getMediasData = getMedias(
-		`?user=${params.id}&page=${page}&limit=${limit}&sort=${sort}&album=profile-avatars${decrypt}`
+		`?user=${awtdParams.id}&page=${page}&limit=${limit}&sort=${sort}&album=profile-avatars${decrypt}`
 	);
 
 	const [profile, sidebarphotos, files] = await Promise.all([
@@ -60,7 +63,7 @@ const ProfilePhotoAvatarsIndex = async ({ params, searchParams }) => {
 					<PicturesList
 						object={profile}
 						objects={files}
-						searchParams={searchParams}
+						searchParams={awtdSearchParams}
 					/>
 				</div>
 			</div>

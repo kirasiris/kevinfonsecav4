@@ -3,9 +3,12 @@ import { redirect } from "next/navigation";
 import FormButtons from "@/components/global/formbuttons";
 
 const UpdateConfirmEmail = async ({ params, searchParams }) => {
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+
 	const confirmAccount = async (formData) => {
 		"use server";
-		const confirmtoken = params.confirmtoken;
+		const confirmtoken = awtdParams.confirmtoken;
 		if (!confirmtoken) {
 			// alert("There was an error, please try again");
 			console.log("There was an error, plase try again");

@@ -16,9 +16,11 @@ async function getUrls(params) {
 }
 
 const UrlRegressionIndex = async ({ params, searchParams }) => {
-	const page = searchParams.page || 1;
-	const limit = searchParams.limit || 10;
-	const sort = searchParams.sort || "-createdAt";
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+	const page = awtdSearchParams.page || 1;
+	const limit = awtdSearchParams.limit || 10;
+	const sort = awtdSearchParams.sort || "-createdAt";
 
 	const shorturls = await getUrls(`?page=${page}&limit=${limit}&sort=${sort}`);
 
@@ -93,7 +95,7 @@ const UrlRegressionIndex = async ({ params, searchParams }) => {
 							Data gets deleted on the 15 of each month
 						</p>
 						<div className="card rounded-0">
-							<List objects={shorturls} searchParams={searchParams} />
+							<List objects={shorturls} searchParams={awtdSearchParams} />
 						</div>
 					</Globalcontent>
 				</div>

@@ -14,6 +14,8 @@ async function getFiles(params) {
 }
 
 const CreateChapter = async ({ params, searchParams }) => {
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
 	const token = await getAuthTokenOnServer();
 	const auth = await getUserOnServer();
 
@@ -40,10 +42,10 @@ const CreateChapter = async ({ params, searchParams }) => {
 		};
 		await fetchurl(`/videos`, "POST", "no-cache", {
 			...rawFormData,
-			resourceId: params.id,
+			resourceId: awtdParams.id,
 			onModel: "Playlist",
 		});
-		redirect(`/noadmin/animes/read/${params.id}`);
+		redirect(`/noadmin/animes/read/${awtdParams.id}`);
 	};
 
 	return (

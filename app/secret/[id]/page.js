@@ -23,9 +23,11 @@ async function getSecret(params) {
 }
 
 const SecretRead = async ({ params, searchParams }) => {
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
 	const auth = await getUserOnServer();
 
-	const getSecretsData = getSecret(`/${params.id}`);
+	const getSecretsData = getSecret(`/${awtdParams.id}`);
 
 	const [secret] = await Promise.all([getSecretsData]);
 
@@ -53,7 +55,7 @@ const SecretRead = async ({ params, searchParams }) => {
 			<Header title={secret.data.title} />
 			<div className="container mt-4">
 				{secret.data.status === "published" ||
-				searchParams.isAdmin === "true" ? (
+				awtdSearchParams.isAdmin === "true" ? (
 					<div className="row">
 						<Globalcontent>
 							<article>

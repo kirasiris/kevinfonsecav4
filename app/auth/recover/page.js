@@ -10,6 +10,9 @@ async function getAuthenticatedUser() {
 }
 
 const Recover = async ({ params, searchParams }) => {
+	// const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+
 	const auth = await getAuthenticatedUser();
 
 	// Redirect if user is not logged in
@@ -30,7 +33,7 @@ const Recover = async ({ params, searchParams }) => {
 		console.log(
 			`An email has been sent to ${rawFormData.email} associated with this account.`
 		);
-		redirect(searchParams.returnpage || `/auth/login`);
+		redirect(awtdSearchParams.returnpage || `/auth/login`);
 	};
 
 	return (

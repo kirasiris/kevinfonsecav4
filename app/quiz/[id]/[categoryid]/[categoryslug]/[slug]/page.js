@@ -28,15 +28,17 @@ async function getQuestions(params) {
 }
 
 const QuizRead = async ({ params, searchParams }) => {
-	const page = searchParams.page || 1;
-	const limit = searchParams.limit || 15;
-	const sort = searchParams.sort || "-createdAt";
-	const decrypt = searchParams.decrypt === "true" ? "&decrypt=true" : "";
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+	const page = awtdSearchParams.page || 1;
+	const limit = awtdSearchParams.limit || 15;
+	const sort = awtdSearchParams.sort || "-createdAt";
+	const decrypt = awtdSearchParams.decrypt === "true" ? "&decrypt=true" : "";
 
-	const getQuizzesData = getQuiz(`/${params.id}`);
+	const getQuizzesData = getQuiz(`/${awtdParams.id}`);
 
 	const getQuestionsData = getQuestions(
-		`?resourceId=${params.id}&page=${page}&limit=${limit}&sort=${sort}&status=published`
+		`?resourceId=${awtdParams.id}&page=${page}&limit=${limit}&sort=${sort}&status=published`
 	);
 
 	const [quiz, questions] = await Promise.all([
@@ -105,7 +107,8 @@ const QuizRead = async ({ params, searchParams }) => {
 			/>
 			<Header title={quiz.data.title} />
 			<div className="container">
-				{quiz.data.status === "published" || searchParams.isAdmin === "true" ? (
+				{quiz.data.status === "published" ||
+				awtdSearchParams.isAdmin === "true" ? (
 					<div className="row">
 						<Globalcontent containerClasses="col-lg-12">
 							<article>

@@ -23,10 +23,11 @@ async function getThemes(params) {
 }
 
 const HomeIndex = async ({ params, searchParams }) => {
-	const page = searchParams.page || 1;
-	const limit = searchParams.limit || 10;
-	const sort = searchParams.sort || "-createdAt";
-	const decrypt = searchParams.decrypt === "true" ? "&decrypt=true" : "";
+	const awtdSearchParams = await searchParams;
+	const page = awtdSearchParams.page || 1;
+	const limit = awtdSearchParams.limit || 10;
+	const sort = awtdSearchParams.sort || "-createdAt";
+	const decrypt = awtdSearchParams.decrypt === "true" ? "&decrypt=true" : "";
 
 	const settings = await getSetting(process.env.NEXT_PUBLIC_SETTINGS_ID);
 
@@ -40,7 +41,7 @@ const HomeIndex = async ({ params, searchParams }) => {
 
 	const [blogs, themes] = await Promise.all([getBlogsData, getThemesData]);
 
-	return settings.data.maintenance === false ? (
+	return settings.data?.maintenance === false ? (
 		<>
 			<Head
 				title={settings.data.title}

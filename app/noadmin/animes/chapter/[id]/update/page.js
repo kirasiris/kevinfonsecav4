@@ -15,6 +15,8 @@ async function getFiles(params) {
 }
 
 const UpdateChapter = async ({ params, searchParams }) => {
+	const awtdParams = await params;
+	// const awtdSearchParams = await searchParams;
 	const token = await getAuthTokenOnServer();
 	const auth = await getUserOnServer();
 
@@ -38,7 +40,7 @@ const UpdateChapter = async ({ params, searchParams }) => {
 			orderingNumber: formData.get("orderingNumber"),
 			files: { video_url: formData.get("file") },
 		};
-		await fetchurl(`/videos/${params}`, "PUT", "no-cache", rawFormData);
+		await fetchurl(`/videos/${awtdParams}`, "PUT", "no-cache", rawFormData);
 		redirect(`/noadmin/animes/read/${anime?.data?._id}`);
 	};
 

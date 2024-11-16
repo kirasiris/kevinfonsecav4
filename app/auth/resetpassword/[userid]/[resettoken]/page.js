@@ -9,6 +9,9 @@ async function getAuthenticatedUser() {
 }
 
 const ResetPassword = async ({ params, searchParams }) => {
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+
 	const auth = await getAuthenticatedUser();
 
 	// Redirect if user is not logged in
@@ -27,8 +30,8 @@ const ResetPassword = async ({ params, searchParams }) => {
 			return;
 		}
 
-		const userid = params.userid;
-		const resettoken = params.resettoken;
+		const userid = awtdParams.userid;
+		const resettoken = awtdParams.resettoken;
 
 		if (!userid || !resettoken) {
 			// alert(
@@ -52,7 +55,7 @@ const ResetPassword = async ({ params, searchParams }) => {
 
 		// alert("New password has been created")
 
-		redirect(searchParams.returnpage || `/auth/login`);
+		redirect(awtdSearchParams.returnpage || `/auth/login`);
 	};
 
 	return (

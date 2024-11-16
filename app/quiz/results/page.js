@@ -8,13 +8,15 @@ async function getQuizzesResult(params) {
 }
 
 const QuizzesResultIndex = async ({ params, searchParams }) => {
-	const page = searchParams.page || 1;
-	const limit = searchParams.limit || 10;
-	const sort = searchParams.sort || "-createdAt";
-	const decrypt = searchParams.decrypt === "true" ? "&decrypt=true" : "";
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+	const page = awtdSearchParams.page || 1;
+	const limit = awtdSearchParams.limit || 10;
+	const sort = awtdSearchParams.sort || "-createdAt";
+	const decrypt = awtdSearchParams.decrypt === "true" ? "&decrypt=true" : "";
 
 	const getResultsData = getQuizzesResult(
-		`?page=${page}&limit=${limit}&sort=${sort}&email=${searchParams.email}${decrypt}`
+		`?page=${page}&limit=${limit}&sort=${sort}&email=${awtdSearchParams.email}${decrypt}`
 	);
 
 	const [results] = await Promise.all([getResultsData]);
@@ -22,10 +24,10 @@ const QuizzesResultIndex = async ({ params, searchParams }) => {
 	return (
 		<>
 			<Header
-				title={`Quizzes result of ${searchParams.email}`}
+				title={`Quizzes result of ${awtdSearchParams.email}`}
 				description="Keep the good job!"
 			/>
-			<List objects={results} searchParams={searchParams} />
+			<List objects={results} searchParams={awtdSearchParams} />
 		</>
 	);
 };

@@ -8,10 +8,11 @@ async function getForums(params) {
 }
 
 const ForumIndex = async ({ params, searchParams }) => {
-	const page = searchParams.page || 1;
-	const limit = searchParams.limit || 10;
-	const sort = searchParams.sort || "-createdAt";
-	const decrypt = searchParams.decrypt === "true" ? "&decrypt=true" : "";
+	const awtdSearchParams = await searchParams;
+	const page = awtdSearchParams.page || 1;
+	const limit = awtdSearchParams.limit || 10;
+	const sort = awtdSearchParams.sort || "-createdAt";
+	const decrypt = awtdSearchParams.decrypt === "true" ? "&decrypt=true" : "";
 
 	const getForumsData = getForums(
 		`?page=${page}&limit=${limit}&sort=${sort}&status=published${decrypt}`
@@ -29,7 +30,7 @@ const ForumIndex = async ({ params, searchParams }) => {
 				featured={{}}
 				objects={forums}
 				params={params}
-				searchParams={searchParams}
+				searchParams={awtdSearchParams}
 			/>
 		</>
 	);

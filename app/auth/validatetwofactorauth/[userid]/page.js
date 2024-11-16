@@ -8,13 +8,16 @@ import Globalcontent from "@/layout/content";
 import FormButtons from "@/components/global/formbuttons";
 
 const ValidateTwoFactorAuthentication = async ({ params, searchParams }) => {
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+
 	const validateTwoFactorAuthToken = async (formData) => {
 		"use server";
 		const rawFormData = {
 			token: formData.get("token"),
 		};
 
-		const userid = params.userid;
+		const userid = awtdParams.userid;
 
 		if (!userid) {
 			redirect(`/auth/login`);

@@ -4,6 +4,9 @@ import { getUserOnServer } from "@/helpers/setTokenOnServer";
 import Waveform from "@/layout/waveform";
 
 const PlaygroundIndex = async ({ params, searchParams }) => {
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+
 	const auth = await getUserOnServer();
 
 	return (

@@ -13,7 +13,9 @@ async function getQuizResult(params) {
 }
 
 const QuizResultsRead = async ({ params, searchParams }) => {
-	const getQuizResultsData = getQuizResult(`/${params.resultid}`);
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+	const getQuizResultsData = getQuizResult(`/${awtdParams.resultid}`);
 
 	const [quizresult] = await Promise.all([getQuizResultsData]);
 
@@ -66,7 +68,7 @@ const QuizResultsRead = async ({ params, searchParams }) => {
 			return quotes.filter((q) => q.type === quoteType);
 		};
 
-		const filteredQuotes = filterQuotesByType(params);
+		const filteredQuotes = filterQuotesByType(awtdParams);
 		const randomIndex = Math.floor(Math.random() * filteredQuotes.length);
 
 		return (
@@ -92,7 +94,7 @@ const QuizResultsRead = async ({ params, searchParams }) => {
 			<Header title={quizresult.data.resourceId.title} />
 			<div className="container">
 				{quizresult.data.resourceId.status === "published" ||
-				searchParams.isAdmin === "true" ? (
+				awtdSearchParams.isAdmin === "true" ? (
 					<div className="row">
 						<Globalcontent containerClasses="col-lg-12">
 							<article>

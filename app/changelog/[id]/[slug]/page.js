@@ -18,8 +18,10 @@ async function getChangelog(params) {
 }
 
 const ChangelogRead = async ({ params }) => {
+	const awtdParams = await params;
+
 	const auth = await getUserOnServer();
-	const getChangelogsData = getChangelog(`/${params.id}`);
+	const getChangelogsData = getChangelog(`/${awtdParams.id}`);
 
 	const [changelog] = await Promise.all([getChangelogsData]);
 

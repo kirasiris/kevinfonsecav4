@@ -23,18 +23,19 @@ async function getQuotes() {
 }
 
 const BlogSearchIndex = async ({ params, searchParams }) => {
-	const page = searchParams.page || 1;
-	const limit = searchParams.limit || 10;
-	const sort = searchParams.page || "-createdAt";
-	const postType = searchParams.postType || "blog";
-	const decrypt = searchParams.decrypt === "true" ? "&decrypt=true" : "";
+	const awtdSearchParams = await searchParams;
+	const page = awtdSearchParams.page || 1;
+	const limit = awtdSearchParams.limit || 10;
+	const sort = awtdSearchParams.page || "-createdAt";
+	const postType = awtdSearchParams.postType || "blog";
+	const decrypt = awtdSearchParams.decrypt === "true" ? "&decrypt=true" : "";
 
 	const getFeaturedBlogsData = getFeaturedBlog(
 		`?featured=true&postType=blog&status=published${decrypt}`
 	);
 
 	const getBlogsData = getBlogs(
-		`?page=${page}&limit=${limit}&sort=${sort}&postType=${postType}&status=published&keyword=${searchParams.keyword}${decrypt}`
+		`?page=${page}&limit=${limit}&sort=${sort}&postType=${postType}&status=published&keyword=${awtdSearchParams.keyword}${decrypt}`
 	);
 
 	const getCategoriesData = getCategories(`?categoryType=blog`);
@@ -51,13 +52,13 @@ const BlogSearchIndex = async ({ params, searchParams }) => {
 	return (
 		<>
 			<Header
-				title={`${searchParams.keyword}`}
+				title={`${awtdSearchParams.keyword}`}
 				description="Search results..."
 			/>
 			<List
 				featured={featured}
 				objects={blogs}
-				searchParams={searchParams}
+				searchParams={awtdSearchParams}
 				categories={categories}
 				quotes={quotes}
 			/>

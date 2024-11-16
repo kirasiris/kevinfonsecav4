@@ -23,9 +23,10 @@ async function getQuotes() {
 }
 
 const AnimeIndex = async ({ params, searchParams }) => {
-	const limit = searchParams.limit || 10;
-	const page = searchParams.page || 1;
-	const decrypt = searchParams.decrypt === "true" ? "&decrypt=true" : "";
+	const awtdSearchParams = await searchParams;
+	const limit = awtdSearchParams.limit || 10;
+	const page = awtdSearchParams.page || 1;
+	const decrypt = awtdSearchParams.decrypt === "true" ? "&decrypt=true" : "";
 
 	const getFeaturedAnimesData = getFeaturedAnime(
 		`?featured=true&onairtype=anime&status=published${decrypt}`
@@ -55,7 +56,7 @@ const AnimeIndex = async ({ params, searchParams }) => {
 			<List
 				featured={featured}
 				objects={animes}
-				searchParams={searchParams}
+				searchParams={awtdSearchParams}
 				categories={categories}
 			/>
 		</>

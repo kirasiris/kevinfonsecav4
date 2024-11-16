@@ -28,20 +28,23 @@ async function getFollowings(params) {
 }
 
 const ProfileFollowingIndex = async ({ params, searchParams }) => {
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+
 	const auth = await getAuthenticatedUser();
 
-	const getProfilesData = getProfile(`/${params.id}`);
+	const getProfilesData = getProfile(`/${awtdParams.id}`);
 
-	const limit = searchParams.limit || 50;
-	const page = searchParams.page || 1;
-	const decrypt = searchParams.decrypt === "true" ? "&decrypt=true" : "";
+	const limit = awtdSearchParams.limit || 50;
+	const page = awtdSearchParams.page || 1;
+	const decrypt = awtdSearchParams.decrypt === "true" ? "&decrypt=true" : "";
 
 	const getSidebarMediasData = getMedias(
-		`?user=${params.id}&page=1&limit=9&sort=-createdAt&album=posts${decrypt}`
+		`?user=${awtdParams.id}&page=1&limit=9&sort=-createdAt&album=posts${decrypt}`
 	);
 
 	const getFollowingData = getFollowings(
-		`?user=${params.id}&page=${page}&limit=${limit}&sort=-createdAt`
+		`?user=${awtdParams.id}&page=${page}&limit=${limit}&sort=-createdAt`
 	);
 
 	const [profile, sidebarphotos, followings] = await Promise.all([
@@ -66,7 +69,7 @@ const ProfileFollowingIndex = async ({ params, searchParams }) => {
 			<div className="container">
 				<div className="row">
 					<Sidebar object={profile} objects={sidebarphotos} />
-					<FollowingList objects={followings} searchParams={searchParams} />
+					<FollowingList objects={followings} searchParams={awtdSearchParams} />
 				</div>
 			</div>
 		</Suspense>

@@ -2,6 +2,8 @@ import Header from "@/layout/header";
 import YouTubePage from "@/components/youtube/youtubepage";
 
 const YouTubeIndex = async ({ searchParams }) => {
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
 	return (
 		<>
 			<Header
@@ -11,7 +13,7 @@ const YouTubeIndex = async ({ searchParams }) => {
 					marginBottom: "0px !important",
 				}}
 			/>
-			<YouTubePage searchParams={searchParams} pushTo={true} />
+			<YouTubePage searchParams={awtdSearchParams} pushTo={true} />
 		</>
 	);
 };

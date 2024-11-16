@@ -9,10 +9,11 @@ async function getChangelogs(params) {
 }
 
 const ChangelogIndex = async ({ params, searchParams }) => {
-	const page = searchParams.page || 1;
-	const limit = searchParams.limit || 1000;
-	const sort = searchParams.sort || "-createdAt";
-	const decrypt = searchParams.decrypt === "true" ? "&decrypt=true" : "";
+	const awtdSearchParams = await searchParams;
+	const page = awtdSearchParams.page || 1;
+	const limit = awtdSearchParams.limit || 1000;
+	const sort = awtdSearchParams.sort || "-createdAt";
+	const decrypt = awtdSearchParams.decrypt === "true" ? "&decrypt=true" : "";
 
 	const getChangelogsData = getChangelogs(
 		`?page=${page}&limit=${limit}&sort=${sort}&status=published${decrypt}`
@@ -30,7 +31,7 @@ const ChangelogIndex = async ({ params, searchParams }) => {
 				title="Changelog"
 				description="Here you can see every change that is taking place with the development of this app!"
 			/>
-			<List objects={changelogs} searchParams={searchParams} />
+			<List objects={changelogs} searchParams={awtdSearchParams} />
 		</>
 	);
 };

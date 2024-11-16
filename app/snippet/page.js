@@ -13,10 +13,12 @@ async function getSnippets(params) {
 }
 
 const SnippetIndex = async ({ params, searchParams }) => {
-	const page = searchParams.page || 1;
-	const limit = searchParams.limit || 10;
-	const sort = searchParams.sort || "-createdAt";
-	const decrypt = searchParams.decrypt === "true" ? "&decrypt=true" : "";
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+	const page = awtdSearchParams.page || 1;
+	const limit = awtdSearchParams.limit || 10;
+	const sort = awtdSearchParams.sort || "-createdAt";
+	const decrypt = awtdSearchParams.decrypt === "true" ? "&decrypt=true" : "";
 
 	const getFeaturedSnippetsData = getFeaturedSnippet(
 		`?featured=true&status=published${decrypt}`
@@ -40,7 +42,7 @@ const SnippetIndex = async ({ params, searchParams }) => {
 			<List
 				featured={featured}
 				objects={snippets}
-				searchParams={searchParams}
+				searchParams={awtdSearchParams}
 			/>
 		</>
 	);

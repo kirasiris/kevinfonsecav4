@@ -28,20 +28,23 @@ async function getFriends(params) {
 }
 
 const ProfileFriendsIndex = async ({ params, searchParams }) => {
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+
 	const auth = await getAuthenticatedUser();
 
-	const getProfilesData = getProfile(`/${params.id}`);
+	const getProfilesData = getProfile(`/${awtdParams.id}`);
 
-	const limit = searchParams.limit || 50;
-	const page = searchParams.page || 1;
-	const decrypt = searchParams.decrypt === "true" ? "&decrypt=true" : "";
+	const limit = awtdSearchParams.limit || 50;
+	const page = awtdSearchParams.page || 1;
+	const decrypt = awtdSearchParams.decrypt === "true" ? "&decrypt=true" : "";
 
 	const getSidebarMediasData = getMedias(
-		`?user=${params.id}&page=1&limit=9&sort=-createdAt&album=posts${decrypt}`
+		`?user=${awtdParams.id}&page=1&limit=9&sort=-createdAt&album=posts${decrypt}`
 	);
 
 	const getFriendsData = getFriends(
-		`?user=${params.id}&page=${page}&limit=${limit}&sort=-createdAt`
+		`?user=${awtdParams.id}&page=${page}&limit=${limit}&sort=-createdAt`
 	);
 
 	const [profile, sidebarphotos, friends] = await Promise.all([
@@ -69,7 +72,7 @@ const ProfileFriendsIndex = async ({ params, searchParams }) => {
 					<FriendsList
 						object={profile}
 						objects={friends}
-						searchParams={searchParams}
+						searchParams={awtdSearchParams}
 					/>
 				</div>
 			</div>

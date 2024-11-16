@@ -24,11 +24,14 @@ async function getPlaylistChapters(params) {
 }
 
 const VideoIndex = async ({ params, searchParams }) => {
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+
 	const auth = await getAuthenticatedUser();
 
-	const getPlaylistsData = getPlaylists(`/${params.id}`);
+	const getPlaylistsData = getPlaylists(`/${awtdParams.id}`);
 	const getPlaylistChaptersData = getPlaylistChapters(
-		`?resourceId=${params.id}&onModel=Playlist`
+		`?resourceId=${awtdParams.id}&onModel=Playlist`
 	);
 
 	const [playlist, chapters] = await Promise.all([
@@ -43,8 +46,8 @@ const VideoIndex = async ({ params, searchParams }) => {
 				object={playlist}
 				objects={chapters}
 				isAdmin={false}
-				params={params}
-				searchParams={searchParams}
+				params={awtdParams}
+				searchParams={awtdSearchParams}
 				isIndex={true}
 				linkToShare={`/video/${playlist?.data?._id}`}
 				postType="playlist"

@@ -27,26 +27,29 @@ async function getCourseStudents(params) {
 }
 
 const CourseRead = async ({ params, searchParams }) => {
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+
 	const auth = await getAuthenticatedUser();
 
-	const page = searchParams.page || 1;
-	const limit = searchParams.limit || 10;
-	const sort = searchParams.sort || "-createdAt";
-	const decrypt = searchParams.decrypt === "true" ? "&decrypt=true" : "";
+	const page = awtdSearchParams.page || 1;
+	const limit = awtdSearchParams.limit || 10;
+	const sort = awtdSearchParams.sort || "-createdAt";
+	const decrypt = awtdSearchParams.decrypt === "true" ? "&decrypt=true" : "";
 
-	const getCoursesData = getCourse(`/${params.id}`);
+	const getCoursesData = getCourse(`/${awtdParams.id}`);
 	const getCourseLessonsData = getCourseLessons(
-		`?resourceId=${params.id}&sort=orderingNumber&onModel=Course`
+		`?resourceId=${awtdParams.id}&sort=orderingNumber&onModel=Course`
 	);
 
 	const getCourseStudentsData = getCourseStudents(
-		`?resourceId=${params.id}&page=${page}&limit=${limit}&sort=${sort}&onModel=Course${decrypt}`
+		`?resourceId=${awtdParams.id}&page=${page}&limit=${limit}&sort=${sort}&onModel=Course${decrypt}`
 	);
 
 	const verifyUserEnrollment = getCourseStudents(
 		`?user=${
 			auth?.data ? auth.data?._id : `62ec7926a554425c9e03782d`
-		}&resourceId=${params.id}&onModel=Course`
+		}&resourceId=${awtdParams.id}&onModel=Course`
 	);
 
 	const [course, lessons, enrolledstudents, verifyAuthEnrollment] =
@@ -73,7 +76,7 @@ const CourseRead = async ({ params, searchParams }) => {
 				objects={lessons}
 				students={enrolledstudents}
 				isAdmin={false}
-				searchParams={searchParams}
+				searchParams={awtdSearchParams}
 				isIndex={true}
 				linkToShare={`/course/${course?.data?._id}`}
 				postType="course"

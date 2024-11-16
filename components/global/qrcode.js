@@ -1,11 +1,11 @@
 "use client";
-import QRCode from "qrcode.react";
+import { QRCodeSVG } from "qrcode.react";
 
 const QRC = ({ value = `` }) => {
 	return (
-		<QRCode
+		<QRCodeSVG
 			value={value}
-			includeMargin={true}
+			marginSize={4}
 			size={200}
 			level={`L`}
 			imageSettings={{

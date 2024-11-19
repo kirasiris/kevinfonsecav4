@@ -14,6 +14,8 @@ async function getFiles(params) {
 }
 
 const CreateSong = async ({ params, searchParams }) => {
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
 	const token = await getAuthTokenOnServer();
 	const auth = await getUserOnServer();
 
@@ -38,10 +40,10 @@ const CreateSong = async ({ params, searchParams }) => {
 		};
 		await fetchurl(`/songs`, "POST", "no-cache", {
 			...rawFormData,
-			resourceId: params.id,
+			resourceId: awtdParams.id,
 			onModel: "Playlist",
 		});
-		redirect(`/noadmin/cdalbums/read/${params.id}`);
+		redirect(`/noadmin/cdalbums/read/${awtdParams.id}`);
 	};
 
 	return (

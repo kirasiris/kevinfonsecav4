@@ -20,10 +20,12 @@ async function getMembership(params) {
 }
 
 const UpdateMembership = async ({ params, searchParams }) => {
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
 	const token = await getAuthTokenOnServer();
 	const auth = await getUserOnServer();
 
-	const membership = await getMembership(`/${params.id}`);
+	const membership = await getMembership(`/${awtdParams.id}`);
 
 	// Redirect if not charges enabled
 	!auth?.userStripeChargesEnabled && <OnboardingLink auth={auth} />;
@@ -44,7 +46,7 @@ const UpdateMembership = async ({ params, searchParams }) => {
 		};
 
 		await fetchurl(
-			`/extras/stripe/memberships/${params.id}`,
+			`/extras/stripe/memberships/${awtdParams.id}`,
 			"PUT",
 			"no-cache",
 			{

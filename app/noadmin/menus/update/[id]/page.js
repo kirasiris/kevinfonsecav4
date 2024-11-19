@@ -11,7 +11,9 @@ async function getMenu(params) {
 }
 
 const UpdateMenu = async ({ params, searchParams }) => {
-	const menu = await getMenu(`/${params.id}`);
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+	const menu = await getMenu(`/${awtdParams.id}`);
 
 	const upgradeMenu = async (formData) => {
 		"use server";
@@ -21,7 +23,7 @@ const UpdateMenu = async ({ params, searchParams }) => {
 			position: formData.get("position"),
 			status: formData.get("status"),
 		};
-		await fetchurl(`/menus/${params.id}`, "PUT", "no-cache", rawFormData);
+		await fetchurl(`/menus/${awtdParams.id}`, "PUT", "no-cache", rawFormData);
 		redirect(`/noadmin/menus`);
 	};
 

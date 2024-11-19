@@ -21,10 +21,12 @@ async function getCourse(params) {
 }
 
 const UpdateCourse = async ({ params, searchParams }) => {
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
 	const token = await getAuthTokenOnServer();
 	const auth = await getUserOnServer();
 
-	const course = await getCourse(`/${params.id}`);
+	const course = await getCourse(`/${awtdParams.id}`);
 
 	const files = await getFiles(`?page=1&limit=100&sort=-createdAt`);
 
@@ -50,7 +52,7 @@ const UpdateCourse = async ({ params, searchParams }) => {
 			status: formData.get("status"),
 			files: { avatar: formData.get("file") },
 		};
-		await fetchurl(`/courses/${params.id}`, "PUT", "no-cache", rawFormData);
+		await fetchurl(`/courses/${awtdParams.id}`, "PUT", "no-cache", rawFormData);
 		redirect(`/noadmin/courses`);
 	};
 

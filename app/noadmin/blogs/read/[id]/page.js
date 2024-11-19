@@ -9,7 +9,9 @@ async function getBlog(params) {
 }
 
 const ReadBlog = async ({ params, searchParams }) => {
-	const blog = await getBlog(`/${params.id}`);
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+	const blog = await getBlog(`/${awtdParams.id}`);
 
 	return (
 		<div className="row">

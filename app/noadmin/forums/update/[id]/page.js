@@ -15,10 +15,12 @@ async function getForum(params) {
 }
 
 const UpdateForum = async ({ params, searchParams }) => {
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
 	const token = await getAuthTokenOnServer();
 	const auth = await getUserOnServer();
 
-	const forum = await getForum(`/${params.id}`);
+	const forum = await getForum(`/${awtdParams.id}`);
 
 	// FILES
 	// CATEGORIES
@@ -37,7 +39,7 @@ const UpdateForum = async ({ params, searchParams }) => {
 			status: formData.get("status"),
 			// files: { avatar: formData.get("file") },
 		};
-		await fetchurl(`/forums/${params.id}`, "PUT", "no-cache", rawFormData);
+		await fetchurl(`/forums/${awtdParams.id}`, "PUT", "no-cache", rawFormData);
 		redirect(`/noadmin/forums`);
 	};
 

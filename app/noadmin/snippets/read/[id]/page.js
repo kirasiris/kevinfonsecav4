@@ -9,7 +9,9 @@ async function getSnippet(params) {
 }
 
 const ReadSnippet = async ({ params, searchParams }) => {
-	const snippet = await getSnippet(`/${params.id}`);
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+	const snippet = await getSnippet(`/${awtdParams.id}`);
 
 	return (
 		<div className="row">

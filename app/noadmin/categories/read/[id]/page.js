@@ -11,7 +11,9 @@ async function getCategory(params) {
 }
 
 const ReadCategory = async ({ params, searchParams }) => {
-	const category = await getCategory(`/${params.id}`);
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+	const category = await getCategory(`/${awtdParams.id}`);
 
 	return (
 		<div className="row">

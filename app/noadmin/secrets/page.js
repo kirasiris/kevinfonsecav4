@@ -10,9 +10,11 @@ async function getSecrets(params) {
 }
 
 const AdminSecretsIndex = async ({ params, searchParams }) => {
-	const page = searchParams.page || 1;
-	const limit = searchParams.limit || 10;
-	const sort = searchParams.sort || "-createdAt";
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+	const page = awtdSearchParams.page || 1;
+	const limit = awtdSearchParams.limit || 10;
+	const sort = awtdSearchParams.sort || "-createdAt";
 
 	const secrets = await getSecrets(`?page=${page}&limit=${limit}&sort=${sort}`);
 
@@ -81,10 +83,12 @@ const AdminSecretsIndex = async ({ params, searchParams }) => {
 				categoryType=""
 			/>
 			<Form
-				searchParams={searchParams}
-				revalidateUrl={`/noadmin/secrets?page=${searchParams.page || 1}&limit=${
-					searchParams.limit || 10
-				}&sort=${searchParams.sort || "-createdAt"}`}
+				searchParams={awtdSearchParams}
+				revalidateUrl={`/noadmin/secrets?page=${
+					awtdSearchParams.page || 1
+				}&limit=${awtdSearchParams.limit || 10}&sort=${
+					awtdSearchParams.sort || "-createdAt"
+				}`}
 			/>
 			<div className="card rounded-0">
 				<List
@@ -93,7 +97,7 @@ const AdminSecretsIndex = async ({ params, searchParams }) => {
 					addLink="/noadmin/secrets/create"
 					searchOn="/noadmin/secrets"
 					objects={secrets}
-					searchParams={searchParams}
+					searchParams={awtdSearchParams}
 					handleDraft={draftIt}
 					handlePublish={publishIt}
 					handleTrash={trashIt}

@@ -10,7 +10,9 @@ async function getSetting(params) {
 }
 
 const UpdateSetting = async ({ params, searchParams }) => {
-	const setting = await getSetting(`/${params.id}`);
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+	const setting = await getSetting(`/${awtdParams.id}`);
 	const upgradeSetting = async (formData) => {
 		"use server";
 		const rawFormData = {
@@ -29,7 +31,7 @@ const UpdateSetting = async ({ params, searchParams }) => {
 			language: formData.get("language"),
 			google_api: formData.get("google_api"),
 		};
-		await fetchurl(`/settings/${params.id}`, "PUT", "no-cache", {
+		await fetchurl(`/settings/${awtdParams.id}`, "PUT", "no-cache", {
 			...rawFormData,
 			social: {
 				facebook: formData.get("facebook"),

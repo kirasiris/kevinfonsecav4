@@ -15,10 +15,12 @@ async function getComment(params) {
 }
 
 const UpdateComment = async ({ params, searchParams }) => {
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
 	const token = await getAuthTokenOnServer();
 	const auth = await getUserOnServer();
 
-	const comment = await getComment(`/${params.id}`);
+	const comment = await getComment(`/${awtdParams.id}`);
 
 	const upgradeComment = async (formData) => {
 		"use server";
@@ -27,7 +29,12 @@ const UpdateComment = async ({ params, searchParams }) => {
 			text: formData.get("text"),
 			status: formData.get("status"),
 		};
-		await fetchurl(`/comments/${params.id}`, "PUT", "no-cache", rawFormData);
+		await fetchurl(
+			`/comments/${awtdParams.id}`,
+			"PUT",
+			"no-cache",
+			rawFormData
+		);
 		redirect(`/noadmin/comments`);
 	};
 

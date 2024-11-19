@@ -25,10 +25,12 @@ async function getMovie(params) {
 }
 
 const UpdateMovie = async ({ params, searchParams }) => {
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
 	const token = await getAuthTokenOnServer();
 	const auth = await getUserOnServer();
 
-	const movie = await getMovie(`/${params.id}`);
+	const movie = await getMovie(`/${awtdParams.id}`);
 
 	const files = await getFiles(`?page=1&limit=100&sort=-createdAt`);
 	const categories = await getCategories(`?categoryType=movie`);
@@ -46,7 +48,7 @@ const UpdateMovie = async ({ params, searchParams }) => {
 			status: formData.get("status"),
 			files: { avatar: formData.get("file") },
 		};
-		await fetchurl(`/playlists/${params.id}`, "PUT", "no-cache", {
+		await fetchurl(`/playlists/${awtdParams.id}`, "PUT", "no-cache", {
 			...rawFormData,
 			onairtype: "movie",
 			playlistType: "video",

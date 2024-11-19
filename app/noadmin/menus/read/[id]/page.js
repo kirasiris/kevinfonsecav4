@@ -16,9 +16,11 @@ async function getPages(params) {
 }
 
 const ReadMenu = async ({ params, searchParams }) => {
-	const page = searchParams.page || 1;
-	const limit = searchParams.limit || 10;
-	const sort = searchParams.sort || "orderingNumber";
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+	const page = awtdSearchParams.page || 1;
+	const limit = awtdSearchParams.limit || 10;
+	const sort = awtdSearchParams.sort || "orderingNumber";
 
 	const menu = await getMenu(`/${params.id}`);
 	const pages = await getPages(
@@ -90,7 +92,7 @@ const ReadMenu = async ({ params, searchParams }) => {
 						addLink={`/noadmin/menus/page/${menu?.data?._id}/create`}
 						searchOn={`/noadmin/menus/read/${menu?.data?._id}`}
 						objects={pages}
-						searchParams={searchParams}
+						searchParams={awtdSearchParams}
 						handleDraft={draftIt}
 						handlePublish={publishIt}
 						handleTrash={trashIt}

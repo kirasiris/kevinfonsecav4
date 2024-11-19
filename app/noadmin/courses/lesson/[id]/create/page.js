@@ -14,6 +14,8 @@ async function getFiles(params) {
 }
 
 const CreateLesson = async ({ params, searchParams }) => {
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
 	const token = await getAuthTokenOnServer();
 	const auth = await getUserOnServer();
 
@@ -39,10 +41,10 @@ const CreateLesson = async ({ params, searchParams }) => {
 		};
 		await fetchurl(`/videos`, "POST", "no-cache", {
 			...rawFormData,
-			resourceId: params.id,
+			resourceId: awtdParams.id,
 			onModel: "Course",
 		});
-		redirect(`/noadmin/courses/read/${params.id}`);
+		redirect(`/noadmin/courses/read/${awtdParams.id}`);
 	};
 
 	return (

@@ -12,7 +12,9 @@ async function getSnippet(params) {
 }
 
 const UpdateSnippet = async ({ params, searchParams }) => {
-	const snippet = await getSnippet(`/${params.id}`);
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+	const snippet = await getSnippet(`/${awtdParams.id}`);
 
 	const upgradeSnippet = async (formData) => {
 		"use server";
@@ -26,7 +28,12 @@ const UpdateSnippet = async ({ params, searchParams }) => {
 			commented: formData.get("commented"),
 			status: formData.get("status"),
 		};
-		await fetchurl(`/snippets/${params.id}`, "PUT", "no-cache", rawFormData);
+		await fetchurl(
+			`/snippets/${awtdParams.id}`,
+			"PUT",
+			"no-cache",
+			rawFormData
+		);
 		redirect(`/noadmin/snippets`);
 	};
 

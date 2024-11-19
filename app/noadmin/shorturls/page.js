@@ -14,9 +14,11 @@ async function getShortUrls(params) {
 }
 
 const AdminShortUrlsIndex = async ({ params, searchParams }) => {
-	const page = searchParams.page || 1;
-	const limit = searchParams.limit || 10;
-	const sort = searchParams.sort || "-createdAt";
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+	const page = awtdSearchParams.page || 1;
+	const limit = awtdSearchParams.limit || 10;
+	const sort = awtdSearchParams.sort || "-createdAt";
 
 	const shorturls = await getShortUrls(
 		`?page=${page}&limit=${limit}&sort=${sort}`
@@ -126,7 +128,7 @@ const AdminShortUrlsIndex = async ({ params, searchParams }) => {
 			/>
 			<Form
 				params={params}
-				searchParams={searchParams}
+				searchParams={awtdSearchParams}
 				revalidateUrl={`/noadmin/shorturls?page=${page}&limit=${limit}&sort=${sort}`}
 			/>
 			<div className="card rounded-0">
@@ -136,7 +138,7 @@ const AdminShortUrlsIndex = async ({ params, searchParams }) => {
 					addLink="/noadmin/shorturls/create"
 					searchOn="/noadmin/shorturls"
 					objects={shorturls}
-					searchParams={searchParams}
+					searchParams={awtdSearchParams}
 					handleDraft={draftIt}
 					handlePublish={publishIt}
 					handleTrash={trashIt}

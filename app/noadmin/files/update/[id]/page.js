@@ -16,10 +16,12 @@ async function getFile(params) {
 }
 
 const UpdateFile = async ({ params, searchParams }) => {
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
 	const token = await getAuthTokenOnServer();
 	const auth = await getUserOnServer();
 
-	const file = await getFile(`/${params.id}`);
+	const file = await getFile(`/${awtdParams.id}`);
 
 	const upgradeFile = async (formData) => {
 		"use server";
@@ -30,7 +32,7 @@ const UpdateFile = async ({ params, searchParams }) => {
 			text: formData.get("text"),
 		};
 
-		await fetchurl(`/files/${params.id}`, "PUT", "no-cache", rawFormData);
+		await fetchurl(`/files/${awtdParams.id}`, "PUT", "no-cache", rawFormData);
 		redirect("/noadmin/files");
 	};
 

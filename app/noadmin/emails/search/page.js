@@ -9,10 +9,12 @@ async function getEmails(params) {
 }
 
 const AdminEmailsSearchIndex = async ({ params, searchParams }) => {
-	const keyword = searchParams.keyword || "";
-	const page = searchParams.page || 1;
-	const limit = searchParams.limit || 10;
-	const sort = searchParams.sort || "-createdAt";
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+	const keyword = awtdSearchParams.keyword || "";
+	const page = awtdSearchParams.page || 1;
+	const limit = awtdSearchParams.limit || 10;
+	const sort = awtdSearchParams.sort || "-createdAt";
 
 	const emails = await getEmails(
 		`?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
@@ -99,7 +101,7 @@ const AdminEmailsSearchIndex = async ({ params, searchParams }) => {
 					addLink="/noadmin/emails/create"
 					searchOn="/noadmin/emails"
 					objects={emails}
-					searchParams={searchParams}
+					searchParams={awtdSearchParams}
 					handleDraft={draftIt}
 					handlePublish={publishIt}
 					handleTrash={trashIt}

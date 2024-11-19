@@ -11,7 +11,9 @@ async function getRealState(params) {
 }
 
 const ReadRealState = async ({ params, searchParams }) => {
-	const realstate = await getRealState(`/${params.id}`);
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+	const realstate = await getRealState(`/${awtdParams.id}`);
 
 	return (
 		<div className="row">

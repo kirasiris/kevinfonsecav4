@@ -13,11 +13,13 @@ async function getQuotes(params) {
 }
 
 const UpdateQuote = async ({ params, searchParams }) => {
-	const quote = await getQuotes(`/${params.id}`);
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+	const quote = await getQuotes(`/${awtdParams.id}`);
 	const quotes = await getQuotes(
-		`?page=${searchParams.page || 1}&limit=${searchParams.limit || 10}&sort=${
-			searchParams.sort || "-createdAt"
-		}`
+		`?page=${awtdSearchParams.page || 1}&limit=${
+			awtdSearchParams.limit || 10
+		}&sort=${awtdSearchParams.sort || "-createdAt"}`
 	);
 
 	const upgradeQuote = async (formData) => {
@@ -33,15 +35,15 @@ const UpdateQuote = async ({ params, searchParams }) => {
 		};
 
 		await fetchurl(
-			`/extras/quotes/${params.id}`,
+			`/extras/quotes/${awtdParams.id}`,
 			"PUT",
 			"no-cache",
 			rawFormData
 		);
 		revalidatePath(
-			`/noadmin/quotes?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/quotes?page=${awtdSearchParams.page || 1}&limit=${
+				awtdSearchParams.limit || 10
+			}&sort=${awtdSearchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -50,9 +52,9 @@ const UpdateQuote = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/extras/quotes/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/quotes?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/quotes?page=${awtdSearchParams.page || 1}&limit=${
+				awtdSearchParams.limit || 10
+			}&sort=${awtdSearchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -61,9 +63,9 @@ const UpdateQuote = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/extras/quotes/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/quotes?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/quotes?page=${awtdSearchParams.page || 1}&limit=${
+				awtdSearchParams.limit || 10
+			}&sort=${awtdSearchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -72,9 +74,9 @@ const UpdateQuote = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/extras/quotes/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/quotes?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/quotes?page=${awtdSearchParams.page || 1}&limit=${
+				awtdSearchParams.limit || 10
+			}&sort=${awtdSearchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -83,9 +85,9 @@ const UpdateQuote = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/extras/quotes/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/quotes?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/quotes?page=${awtdSearchParams.page || 1}&limit=${
+				awtdSearchParams.limit || 10
+			}&sort=${awtdSearchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -94,9 +96,9 @@ const UpdateQuote = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/extras/quotes/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`/noadmin/quotes?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/quotes?page=${awtdSearchParams.page || 1}&limit=${
+				awtdSearchParams.limit || 10
+			}&sort=${awtdSearchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -105,9 +107,9 @@ const UpdateQuote = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/extras/quotes/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/quotes?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/quotes?page=${awtdSearchParams.page || 1}&limit=${
+				awtdSearchParams.limit || 10
+			}&sort=${awtdSearchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -120,9 +122,9 @@ const UpdateQuote = async ({ params, searchParams }) => {
 			"no-cache"
 		);
 		revalidatePath(
-			`/noadmin/quotes?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/quotes?page=${awtdSearchParams.page || 1}&limit=${
+				awtdSearchParams.limit || 10
+			}&sort=${awtdSearchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -233,7 +235,7 @@ const UpdateQuote = async ({ params, searchParams }) => {
 							addLink="/noadmin/quotes"
 							searchOn="/noadmin/quotes"
 							objects={quotes}
-							searchParams={searchParams}
+							searchParams={awtdSearchParams}
 							handleDraft={draftIt}
 							handlePublish={publishIt}
 							handleTrash={trashIt}

@@ -24,15 +24,17 @@ async function getNewsletterEmail(params) {
 }
 
 const UpdateEmail = async ({ params, searchParams }) => {
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
 	const token = await getAuthTokenOnServer();
 	const auth = await getUserOnServer();
 
-	const newsletteremail = await getNewsletterEmail(`/${params.id}`);
+	const newsletteremail = await getNewsletterEmail(`/${awtdParams.id}`);
 
 	const users = await getUsersSubscribed(
-		`?page=${searchParams.page || 1}&limit=${searchParams.limit || 10}&sort=${
-			searchParams.sort || "-createdAt"
-		}`
+		`?page=${awtdSearchParams.page || 1}&limit=${
+			awtdSearchParams.limit || 10
+		}&sort=${awtdSearchParams.sort || "-createdAt"}`
 	);
 
 	const upgradeEmail = async (formData) => {
@@ -44,7 +46,7 @@ const UpdateEmail = async ({ params, searchParams }) => {
 			status: formData.get("status"),
 		};
 		await fetchurl(
-			`/newsletteremails/${params.id}`,
+			`/newsletteremails/${awtdParams.id}`,
 			"PUT",
 			"no-cache",
 			rawFormData

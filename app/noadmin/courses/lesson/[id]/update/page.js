@@ -20,10 +20,12 @@ async function getLesson(params) {
 }
 
 const UpdateLesson = async ({ params, searchParams }) => {
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
 	const token = await getAuthTokenOnServer();
 	const auth = await getUserOnServer();
 
-	const lesson = await getLesson(`/${params.id}`);
+	const lesson = await getLesson(`/${awtdParams.id}`);
 
 	const getFilesData = getFiles(`?page=1&limit=100&sort=-createdAt`);
 
@@ -46,7 +48,7 @@ const UpdateLesson = async ({ params, searchParams }) => {
 			files: { video_url: formData.get("file") },
 			address: "4442 Jackson Blvd, Columbia, SC 29209",
 		};
-		await fetchurl(`/videos/${params.id}`, "PUT", "no-cache", rawFormData);
+		await fetchurl(`/videos/${awtdParams.id}`, "PUT", "no-cache", rawFormData);
 		redirect(`/noadmin/courses/read/${lesson?.data?.resourceId}`);
 	};
 

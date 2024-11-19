@@ -11,7 +11,10 @@ async function getPage(params) {
 }
 
 const UpdatePage = async ({ params, searchParams }) => {
-	const page = await getPage(`/${params.id}`);
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+
+	const page = await getPage(`/${awtdParams.id}`);
 
 	const upgradePage = async (formData) => {
 		"use server";
@@ -27,7 +30,7 @@ const UpdatePage = async ({ params, searchParams }) => {
 			password: formData.get("password"),
 			status: formData.get("status"),
 		};
-		await fetchurl(`/pages/${params.id}`, "PUT", "no-cache", rawFormData);
+		await fetchurl(`/pages/${awtdParams.id}`, "PUT", "no-cache", rawFormData);
 		redirect(`/noadmin/menus/read/${page?.data?.resourceId}`);
 	};
 

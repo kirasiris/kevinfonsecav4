@@ -14,11 +14,13 @@ async function getChangelog(params) {
 }
 
 const UpdateChangelog = async ({ params, searchParams }) => {
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
 	const token = await getAuthTokenOnServer();
 
 	const auth = await getUserOnServer();
 
-	const changelog = await getChangelog(`/${params.id}`);
+	const changelog = await getChangelog(`/${awtdParams.id}`);
 
 	const upgradeChangelog = async (formData) => {
 		"use server";
@@ -30,7 +32,12 @@ const UpdateChangelog = async ({ params, searchParams }) => {
 			version: formData.get("version"),
 			project: formData.get("project"),
 		};
-		await fetchurl(`/changelogs/${params.id}`, "PUT", "no-cache", rawFormData);
+		await fetchurl(
+			`/changelogs/${awtdParams.id}`,
+			"PUT",
+			"no-cache",
+			rawFormData
+		);
 		redirect(`/noadmin/changelogs`);
 	};
 

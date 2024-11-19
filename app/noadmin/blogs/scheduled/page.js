@@ -13,9 +13,11 @@ async function getBlogs(params) {
 }
 
 const AdminBlogsScheduledIndex = async ({ params, searchParams }) => {
-	const page = searchParams.page || 1;
-	const limit = searchParams.limit || 10;
-	const sort = searchParams.sort || "-createdAt";
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+	const page = awtdSearchParams.page || 1;
+	const limit = awtdSearchParams.limit || 10;
+	const sort = awtdSearchParams.sort || "-createdAt";
 
 	const blogs = await getBlogs(`?page=${page}&limit=${limit}&sort=${sort}`);
 
@@ -100,7 +102,7 @@ const AdminBlogsScheduledIndex = async ({ params, searchParams }) => {
 					addLink="/noadmin/blogs/create"
 					searchOn="/noadmin/blogs"
 					objects={blogs}
-					searchParams={searchParams}
+					searchParams={awtdSearchParams}
 					handleDraft={draftIt}
 					handlePublish={publishIt}
 					handleTrash={trashIt}

@@ -20,10 +20,12 @@ async function getRealState(params) {
 }
 
 const UpdateRealState = async ({ params, searchParams }) => {
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
 	const token = await getAuthTokenOnServer();
 	const auth = await getUserOnServer();
 
-	const realstate = await getRealState(`/${params.id}`);
+	const realstate = await getRealState(`/${awtdParams.id}`);
 
 	const files = await getFiles(`?page=1&limit=100&sort=-createdAt`);
 
@@ -47,7 +49,12 @@ const UpdateRealState = async ({ params, searchParams }) => {
 			files: { avatar: formData.get("file") },
 		};
 
-		await fetchurl(`/realstates/${params.id}`, "PUT", "no-cache", rawFormData);
+		await fetchurl(
+			`/realstates/${awtdParams.id}`,
+			"PUT",
+			"no-cache",
+			rawFormData
+		);
 		redirect(`/noadmin/realstates`);
 	};
 

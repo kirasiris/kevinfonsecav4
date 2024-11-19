@@ -10,10 +10,12 @@ async function getShortUrls(params) {
 }
 
 const AdminShortUrlsSearchIndex = async ({ params, searchParams }) => {
-	const keyword = searchParams.keyword || "";
-	const page = searchParams.page || 1;
-	const limit = searchParams.limit || 10;
-	const sort = searchParams.sort || "-createdAt";
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+	const keyword = awtdSearchParams.keyword || "";
+	const page = awtdSearchParams.page || 1;
+	const limit = awtdSearchParams.limit || 10;
+	const sort = awtdSearchParams.sort || "-createdAt";
 
 	const shorturls = await getShortUrls(
 		`?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
@@ -98,12 +100,12 @@ const AdminShortUrlsSearchIndex = async ({ params, searchParams }) => {
 				categoryType=""
 			/>
 			<Form
-				searchParams={searchParams}
+				searchParams={awtdSearchParams}
 				revalidateUrl={`/noadmin/shorturls/search?keyword=${
-					searchParams.keyword
-				}&page=${searchParams.page || 1}&limit=${
-					searchParams.limit || 10
-				}&sort=${searchParams.sort || "-createdAt"}`}
+					awtdSearchParams.keyword
+				}&page=${awtdSearchParams.page || 1}&limit=${
+					awtdSearchParams.limit || 10
+				}&sort=${awtdSearchParams.sort || "-createdAt"}`}
 			/>
 			<div className="card rounded-0">
 				<List
@@ -112,7 +114,7 @@ const AdminShortUrlsSearchIndex = async ({ params, searchParams }) => {
 					addLink="/noadmin/shorturls/create"
 					searchOn="/noadmin/shorturls"
 					objects={shorturls}
-					searchParams={searchParams}
+					searchParams={awtdSearchParams}
 					handleDraft={draftIt}
 					handlePublish={publishIt}
 					handleTrash={trashIt}

@@ -13,9 +13,11 @@ async function getPlaylists(params) {
 }
 
 const AdminMoviesIndex = async ({ params, searchParams }) => {
-	const page = searchParams.page || 1;
-	const limit = searchParams.limit || 10;
-	const sort = searchParams.sort || "-createdAt";
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+	const page = awtdSearchParams.page || 1;
+	const limit = awtdSearchParams.limit || 10;
+	const sort = awtdSearchParams.sort || "-createdAt";
 
 	const movies = await getPlaylists(
 		`?page=${page}&limit=${limit}&sort=${sort}`
@@ -88,7 +90,7 @@ const AdminMoviesIndex = async ({ params, searchParams }) => {
 					addLink="/noadmin/movies/create"
 					searchOn="/noadmin/movies"
 					objects={movies}
-					searchParams={searchParams}
+					searchParams={awtdSearchParams}
 					handleDraft={draftIt}
 					handlePublish={publishIt}
 					handleTrash={trashIt}

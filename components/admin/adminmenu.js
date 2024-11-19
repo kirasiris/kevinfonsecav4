@@ -99,6 +99,11 @@ const AdminMenu = () => {
 						<a>Newsletter Emails</a>
 					</Link>
 				</li>
+				<li className={`list-group-item ${isActive(`/noadmin/polls`)}`}>
+					<Link href={"/noadmin/polls"} passHref legacyBehavior>
+						<a>Polls</a>
+					</Link>
+				</li>
 				<li
 					className={`list-group-item ${isActive(
 						`/noadmin/newslettersubscribers`

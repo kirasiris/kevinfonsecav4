@@ -18,13 +18,15 @@ async function getUsersSubscribed(params) {
 }
 
 const CreateEmail = async ({ params, searchParams }) => {
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
 	const token = await getAuthTokenOnServer();
 	const auth = await getUserOnServer();
 
 	const users = await getUsersSubscribed(
-		`?page=${searchParams.page || 1}&limit=${searchParams.limit || 10}&sort=${
-			searchParams.sort || "-createdAt"
-		}`
+		`?page=${awtdSearchParams.page || 1}&limit=${
+			awtdSearchParams.limit || 10
+		}&sort=${awtdSearchParams.sort || "-createdAt"}`
 	);
 
 	const addEmail = async (formData) => {

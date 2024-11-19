@@ -13,9 +13,11 @@ async function getRealStates(params) {
 }
 
 const AdminRealStatesTrashedIndex = async ({ params, searchParams }) => {
-	const page = searchParams.page || 1;
-	const limit = searchParams.limit || 10;
-	const sort = searchParams.sort || "-createdAt";
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+	const page = awtdSearchParams.page || 1;
+	const limit = awtdSearchParams.limit || 10;
+	const sort = awtdSearchParams.sort || "-createdAt";
 
 	const realstates = await getRealStates(
 		`?page=${page}&limit=${limit}&sort=${sort}`
@@ -102,7 +104,7 @@ const AdminRealStatesTrashedIndex = async ({ params, searchParams }) => {
 					addLink="/noadmin/realstates/create"
 					searchOn="/noadmin/realstates"
 					objects={realstates}
-					searchParams={searchParams}
+					searchParams={awtdSearchParams}
 					handleDraft={draftIt}
 					handlePublish={publishIt}
 					handleTrash={trashIt}

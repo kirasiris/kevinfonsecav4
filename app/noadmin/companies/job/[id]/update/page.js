@@ -15,10 +15,12 @@ async function getJob(params) {
 }
 
 const UpdateJob = async ({ params, searchParams }) => {
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
 	const token = await getAuthTokenOnServer();
 	const auth = await getUserOnServer();
 
-	const job = await getJob(`/${params.id}`);
+	const job = await getJob(`/${awtdParams.id}`);
 
 	// Redirect if not company
 	// !auth?.data?.hasCompany && redirect(`/noadmin/companies`);
@@ -44,7 +46,7 @@ const UpdateJob = async ({ params, searchParams }) => {
 			status: formData.get("status"),
 		};
 
-		await fetchurl(`/jobs/${params.id}`, "PUT", "no-cache", {
+		await fetchurl(`/jobs/${awtdParams.id}`, "PUT", "no-cache", {
 			...rawFormData,
 			website: "beFree",
 		});

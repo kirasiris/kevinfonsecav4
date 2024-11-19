@@ -8,7 +8,9 @@ async function getReport(params) {
 }
 
 const ReadReport = async ({ params, searchParams }) => {
-	const report = await getReport(`/${params.id}`);
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+	const report = await getReport(`/${awtdParams.id}`);
 
 	const blogLink = () => {
 		return (

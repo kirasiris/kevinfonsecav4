@@ -11,7 +11,9 @@ async function getEmails(params) {
 }
 
 const ReadEmail = async ({ params, searchParams }) => {
-	const email = await getEmails(`/${params.id}`);
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+	const email = await getEmails(`/${awtdParams.id}`);
 
 	return (
 		<div className="row">

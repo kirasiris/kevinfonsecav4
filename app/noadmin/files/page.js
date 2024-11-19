@@ -4,9 +4,11 @@ import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
 import { revalidatePath } from "next/cache";
 
 const AdminFilesIndex = async ({ params, searchParams }) => {
-	const page = searchParams.page || 1;
-	const limit = searchParams.limit || 50;
-	const sort = searchParams.sort || "-createdAt";
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+	const page = awtdSearchParams.page || 1;
+	const limit = awtdSearchParams.limit || 50;
+	const sort = awtdSearchParams.sort || "-createdAt";
 
 	const handleDelete = async (id, publicId) => {
 		"use server";
@@ -47,8 +49,8 @@ const AdminFilesIndex = async ({ params, searchParams }) => {
 			/>
 			<div className="card rounded-0">
 				<AdminMediaLibrary
-					params={params}
-					searchParams={searchParams}
+					params={awtdParams}
+					searchParams={awtdSearchParams}
 					handleDelete={handleDelete}
 					handleTrashAllFunction={handleTrashAll}
 					handleDeleteAllFunction={handleDeleteAll}

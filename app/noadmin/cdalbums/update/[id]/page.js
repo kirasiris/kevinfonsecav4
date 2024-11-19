@@ -20,10 +20,12 @@ async function getCDAlbum(params) {
 }
 
 const UpdateCDAlbum = async ({ params, searchParams }) => {
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
 	const token = await getAuthTokenOnServer();
 	const auth = await getUserOnServer();
 
-	const cdalbum = await getCDAlbum(`/${params.id}`);
+	const cdalbum = await getCDAlbum(`/${awtdParams.id}`);
 
 	// FILES
 	const categories = await getCategories(`?categoryType=album`);
@@ -41,7 +43,7 @@ const UpdateCDAlbum = async ({ params, searchParams }) => {
 			status: formData.get("status"),
 			// files: { avatar: formData.get("file") },
 		};
-		await fetchurl(`/playlists/${params.id}`, "PUT", "no-cache", {
+		await fetchurl(`/playlists/${awtdParams.id}`, "PUT", "no-cache", {
 			...rawFormData,
 			onairstatus: "finished",
 			onairtype: "cd-album",

@@ -24,10 +24,12 @@ async function getBlog(params) {
 }
 
 const UpdateBlog = async ({ params, searchParams }) => {
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
 	const token = await getAuthTokenOnServer();
 	const auth = await getUserOnServer();
 
-	const blog = await getBlog(`/${params.id}`);
+	const blog = await getBlog(`/${awtdParams.id}`);
 
 	const files = await getFiles(`?page=1&limit=100&sort=-createdAt`);
 	const categories = await getCategories(`?categoryType=blog`);
@@ -46,7 +48,7 @@ const UpdateBlog = async ({ params, searchParams }) => {
 			fullWidth: formData.get("fullWidth"),
 			files: { avatar: formData.get("file") },
 		};
-		await fetchurl(`/blogs/${params.id}`, "PUT", "no-cache", rawFormData);
+		await fetchurl(`/blogs/${awtdParams.id}`, "PUT", "no-cache", rawFormData);
 		redirect(`/noadmin/blogs`);
 	};
 

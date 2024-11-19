@@ -17,11 +17,13 @@ async function getQuestions(params) {
 }
 
 const ReadQuiz = async ({ params, searchParams }) => {
-	const page = searchParams.page || 1;
-	const limit = searchParams.limit || 10;
-	const sort = searchParams.sort || "orderingNumber";
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+	const page = awtdSearchParams.page || 1;
+	const limit = awtdSearchParams.limit || 10;
+	const sort = awtdSearchParams.sort || "orderingNumber";
 
-	const quiz = await getQuiz(`/${params.id}`);
+	const quiz = await getQuiz(`/${awtdParams.id}`);
 	const questions = await getQuestions(
 		`?resourceId=${quiz?.data?._id}&page=${page}&limit=${limit}&sort=${sort}`
 	);
@@ -30,49 +32,49 @@ const ReadQuiz = async ({ params, searchParams }) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/questions/${id}/draftit`, "PUT", "no-cache");
-		revalidatePath(`/noadmin/quizzes/read/${params.id}`);
+		revalidatePath(`/noadmin/quizzes/read/${awtdParams.id}`);
 	};
 
 	const publishIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/questions/${id}/publishit`, "PUT", "no-cache");
-		revalidatePath(`/noadmin/quizzes/read/${params.id}`);
+		revalidatePath(`/noadmin/quizzes/read/${awtdParams.id}`);
 	};
 
 	const trashIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/questions/${id}/trashit`, "PUT", "no-cache");
-		revalidatePath(`/noadmin/quizzes/read/${params.id}`);
+		revalidatePath(`/noadmin/quizzes/read/${awtdParams.id}`);
 	};
 
 	const scheduleIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/questions/${id}/scheduleit`, "PUT", "no-cache");
-		revalidatePath(`/noadmin/quizzes/read/${params.id}`);
+		revalidatePath(`/noadmin/quizzes/read/${awtdParams.id}`);
 	};
 
 	const handleDelete = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/questions/${id}/permanently`, "DELETE", "no-cache");
-		revalidatePath(`/noadmin/quizzes/read/${params.id}`);
+		revalidatePath(`/noadmin/quizzes/read/${awtdParams.id}`);
 	};
 
 	const handleTrashAll = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/questions/deleteall`, "PUT", "no-cache");
-		revalidatePath(`/noadmin/quizzes/read/${params.id}`);
+		revalidatePath(`/noadmin/quizzes/read/${awtdParams.id}`);
 	};
 
 	const handleDeleteAll = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/questions/deleteall/permanently`, "DELETE", "no-cache");
-		revalidatePath(`/noadmin/quizzes/read/${params.id}`);
+		revalidatePath(`/noadmin/quizzes/read/${awtdParams.id}`);
 	};
 
 	return (
@@ -91,7 +93,7 @@ const ReadQuiz = async ({ params, searchParams }) => {
 						addLink={`/noadmin/quizzes/question/${quiz?.data?._id}/create`}
 						searchOn={`/noadmin/quizzes/read/${quiz?.data?._id}`}
 						objects={questions}
-						searchParams={searchParams}
+						searchParams={awtdSearchParams}
 						handleDraft={draftIt}
 						handlePublish={publishIt}
 						handleTrash={trashIt}

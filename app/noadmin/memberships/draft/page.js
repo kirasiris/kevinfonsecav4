@@ -13,9 +13,11 @@ async function getMembershipsPublished(params) {
 }
 
 const AdminMembershipsDraftIndex = async ({ params, searchParams }) => {
-	const page = searchParams.page || 1;
-	const limit = searchParams.limit || 10;
-	const sort = searchParams.sort || "-createdAt";
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+	const page = awtdSearchParams.page || 1;
+	const limit = awtdSearchParams.limit || 10;
+	const sort = awtdSearchParams.sort || "-createdAt";
 
 	const auth = await getUserOnServer();
 	const memberships = await getMembershipsPublished(
@@ -100,7 +102,7 @@ const AdminMembershipsDraftIndex = async ({ params, searchParams }) => {
 					addLink="/noadmin/memberships/create"
 					searchOn="/noadmin/memberships"
 					objects={memberships}
-					searchParams={searchParams}
+					searchParams={awtdSearchParams}
 					handleDraft={undefined}
 					handlePublish={undefined}
 					handleTrash={undefined}

@@ -20,10 +20,12 @@ async function getCompany(params) {
 }
 
 const UpdateCompany = async ({ params, searchParams }) => {
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
 	const token = await getAuthTokenOnServer();
 	const auth = await getUserOnServer();
 
-	const company = await getCompany(`/${params.id}`);
+	const company = await getCompany(`/${awtdParams.id}`);
 
 	const files = await getFiles(`?page=1&limit=100&sort=-createdAt`);
 
@@ -37,7 +39,12 @@ const UpdateCompany = async ({ params, searchParams }) => {
 			status: formData.get("status"),
 			files: { avatar: formData.get("file") },
 		};
-		await fetchurl(`/companies/${params.id}`, "PUT", "no-cache", rawFormData);
+		await fetchurl(
+			`/companies/${awtdParams.id}`,
+			"PUT",
+			"no-cache",
+			rawFormData
+		);
 		redirect("/noadmin/companies");
 	};
 

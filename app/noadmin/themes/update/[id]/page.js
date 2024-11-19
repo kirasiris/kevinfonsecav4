@@ -25,10 +25,12 @@ async function getTheme(params) {
 }
 
 const UpdateTheme = async ({ params, searchParams }) => {
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
 	const token = await getAuthTokenOnServer();
 	const auth = await getUserOnServer();
 
-	const theme = await getTheme(`/${params.id}`);
+	const theme = await getTheme(`/${awtdParams.id}`);
 
 	const files = await getFiles(`?page=1&limit=100&sort=-createdAt`);
 	const categories = await getCategories(`?categoryType=theme`);
@@ -48,7 +50,7 @@ const UpdateTheme = async ({ params, searchParams }) => {
 			github_readme: formData.get("github_readme"),
 			files: { avatar: formData.get("file") },
 		};
-		await fetchurl(`/themes/${params.id}`, "PUT", "no-cache", rawFormData);
+		await fetchurl(`/themes/${awtdParams.id}`, "PUT", "no-cache", rawFormData);
 		redirect(`/noadmin/themes`);
 	};
 

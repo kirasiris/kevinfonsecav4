@@ -25,10 +25,12 @@ async function getQuiz(params) {
 }
 
 const UpdateQuiz = async ({ params, searchParams }) => {
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
 	const token = await getAuthTokenOnServer();
 	const auth = await getUserOnServer();
 
-	const quiz = await getQuiz(`/${params.id}`);
+	const quiz = await getQuiz(`/${awtdParams.id}`);
 
 	const files = await getFiles(`?page=1&limit=100&sort=-createdAt`);
 	const categories = await getCategories(`?categoryType=quiz`);
@@ -52,7 +54,7 @@ const UpdateQuiz = async ({ params, searchParams }) => {
 			singlePage: formData.get("singlePage"),
 			files: { avatar: formData.get("file") },
 		};
-		await fetchurl(`/quizzes/${params.id}`, "PUT", "no-cache", rawFormData);
+		await fetchurl(`/quizzes/${awtdParams.id}`, "PUT", "no-cache", rawFormData);
 		redirect(`/noadmin/quizzes`);
 	};
 

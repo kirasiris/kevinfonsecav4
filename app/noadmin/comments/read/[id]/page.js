@@ -11,7 +11,9 @@ async function getComment(params) {
 }
 
 const ReadComment = async ({ params, searchParams }) => {
-	const comment = await getComment(`/${params.id}`);
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+	const comment = await getComment(`/${awtdParams.id}`);
 
 	return (
 		<div className="row">

@@ -14,6 +14,8 @@ import FormButtons from "@/components/global/formbuttons";
 // }
 
 const CreateQuestion = async ({ params, searchParams }) => {
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
 	const token = await getAuthTokenOnServer();
 	const auth = await getUserOnServer();
 
@@ -38,10 +40,10 @@ const CreateQuestion = async ({ params, searchParams }) => {
 
 		await fetchurl(`/questions`, "POST", "no-cache", {
 			...rawFormData,
-			resourceId: params.id,
+			resourceId: awtdParams.id,
 			onModel: "Quiz",
 		});
-		redirect(`/noadmin/quizzes/read/${params.id}`);
+		redirect(`/noadmin/quizzes/read/${awtdParams.id}`);
 	};
 
 	return (

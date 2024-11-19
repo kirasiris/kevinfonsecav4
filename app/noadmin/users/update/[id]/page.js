@@ -14,10 +14,12 @@ async function getUsers(params) {
 }
 
 const UpdateUser = async ({ params, searchParams }) => {
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
 	const token = await getAuthTokenOnServer();
 	const auth = await getUserOnServer();
 
-	const user = await getUsers(`/${params.id}`);
+	const user = await getUsers(`/${awtdParams.id}`);
 
 	const users = await getUsers(`?isEmailConfirmed=true`);
 
@@ -44,7 +46,7 @@ const UpdateUser = async ({ params, searchParams }) => {
 			website: formData.get("website"),
 			// files: { avatar: formData.get("file") },
 		};
-		await fetchurl(`/users/${params.id}`, "PUT", "no-cache", rawFormData);
+		await fetchurl(`/users/${awtdParams.id}`, "PUT", "no-cache", rawFormData);
 		redirect(`/noadmin/users`);
 	};
 

@@ -13,9 +13,11 @@ async function getNewsletterSubscribers(params) {
 }
 
 const AdminNewsletterSubscribersIndex = async ({ params, searchParams }) => {
-	const page = searchParams.page || 1;
-	const limit = searchParams.limit || 10;
-	const sort = searchParams.sort || "-createdAt";
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+	const page = awtdSearchParams.page || 1;
+	const limit = awtdSearchParams.limit || 10;
+	const sort = awtdSearchParams.sort || "-createdAt";
 
 	const newslettersubscribers = await getNewsletterSubscribers(
 		`?page=${page}&limit=${limit}&sort=${sort}`
@@ -26,9 +28,9 @@ const AdminNewsletterSubscribersIndex = async ({ params, searchParams }) => {
 	// 	// const rawFormData = {}
 	// 	await fetchurl(`/newslettersubscribers/${id}/draftit`, "PUT", "no-cache");
 	// 	revalidatePath(
-	// 		`/noadmin/newslettersubscribers?page=${searchParams.page || 1}&limit=${
-	// 			searchParams.limit || 10
-	// 		}&sort=${searchParams.sort || "-createdAt"}`
+	// 		`/noadmin/newslettersubscribers?page=${awtdSearchParams.page || 1}&limit=${
+	// 			awtdSearchParams.limit || 10
+	// 		}&sort=${awtdSearchParams.sort || "-createdAt"}`
 	// 	);
 	// };
 
@@ -37,9 +39,9 @@ const AdminNewsletterSubscribersIndex = async ({ params, searchParams }) => {
 	// 	// const rawFormData = {}
 	// 	await fetchurl(`/newslettersubscribers/${id}/publishit`, "PUT", "no-cache");
 	// 	revalidatePath(
-	// 		`/noadmin/newslettersubscribers?page=${searchParams.page || 1}&limit=${
-	// 			searchParams.limit || 10
-	// 		}&sort=${searchParams.sort || "-createdAt"}`
+	// 		`/noadmin/newslettersubscribers?page=${awtdSearchParams.page || 1}&limit=${
+	// 			awtdSearchParams.limit || 10
+	// 		}&sort=${awtdSearchParams.sort || "-createdAt"}`
 	// 	);
 	// };
 
@@ -48,9 +50,9 @@ const AdminNewsletterSubscribersIndex = async ({ params, searchParams }) => {
 	// 	// const rawFormData = {}
 	// 	await fetchurl(`/newslettersubscribers/${id}/trashit`, "PUT", "no-cache");
 	// 	revalidatePath(
-	// 		`/noadmin/newslettersubscribers?page=${searchParams.page || 1}&limit=${
-	// 			searchParams.limit || 10
-	// 		}&sort=${searchParams.sort || "-createdAt"}`
+	// 		`/noadmin/newslettersubscribers?page=${awtdSearchParams.page || 1}&limit=${
+	// 			awtdSearchParams.limit || 10
+	// 		}&sort=${awtdSearchParams.sort || "-createdAt"}`
 	// 	);
 	// };
 
@@ -59,9 +61,9 @@ const AdminNewsletterSubscribersIndex = async ({ params, searchParams }) => {
 	// 	// const rawFormData = {}
 	// 	await fetchurl(`/newslettersubscribers/${id}/scheduleit`, "PUT", "no-cache");
 	// 	revalidatePath(
-	// 		`/noadmin/newslettersubscribers?page=${searchParams.page || 1}&limit=${
-	// 			searchParams.limit || 10
-	// 		}&sort=${searchParams.sort || "-createdAt"}`
+	// 		`/noadmin/newslettersubscribers?page=${awtdSearchParams.page || 1}&limit=${
+	// 			awtdSearchParams.limit || 10
+	// 		}&sort=${awtdSearchParams.sort || "-createdAt"}`
 	// 	);
 	// };
 
@@ -74,9 +76,11 @@ const AdminNewsletterSubscribersIndex = async ({ params, searchParams }) => {
 			"no-cache"
 		);
 		revalidatePath(
-			`/noadmin/newslettersubscribers?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/newslettersubscribers?page=${
+				awtdSearchParams.page || 1
+			}&limit=${awtdSearchParams.limit || 10}&sort=${
+				awtdSearchParams.sort || "-createdAt"
+			}`
 		);
 	};
 
@@ -85,9 +89,9 @@ const AdminNewsletterSubscribersIndex = async ({ params, searchParams }) => {
 	// 	// const rawFormData = {}
 	// 	await fetchurl(`/newslettersubscribers/deleteall`, "PUT", "no-cache");
 	// 	revalidatePath(
-	// 		`/noadmin/newslettersubscribers?page=${searchParams.page || 1}&limit=${
-	// 			searchParams.limit || 10
-	// 		}&sort=${searchParams.sort || "-createdAt"}`
+	// 		`/noadmin/newslettersubscribers?page=${awtdSearchParams.page || 1}&limit=${
+	// 			awtdSearchParams.limit || 10
+	// 		}&sort=${awtdSearchParams.sort || "-createdAt"}`
 	// 	);
 	// };
 
@@ -100,9 +104,11 @@ const AdminNewsletterSubscribersIndex = async ({ params, searchParams }) => {
 			"no-cache"
 		);
 		revalidatePath(
-			`/noadmin/newslettersubscribers?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/newslettersubscribers?page=${
+				awtdSearchParams.page || 1
+			}&limit=${awtdSearchParams.limit || 10}&sort=${
+				awtdSearchParams.sort || "-createdAt"
+			}`
 		);
 	};
 
@@ -124,7 +130,7 @@ const AdminNewsletterSubscribersIndex = async ({ params, searchParams }) => {
 					addLink=""
 					searchOn="/noadmin/newslettersubscribers"
 					objects={newslettersubscribers}
-					searchParams={searchParams}
+					searchParams={awtdSearchParams}
 					handleDraft={undefined}
 					handlePublish={undefined}
 					handleTrash={undefined}

@@ -13,10 +13,12 @@ async function getThemes(params) {
 }
 
 const AdminThemesSearchIndex = async ({ params, searchParams }) => {
-	const keyword = searchParams.keyword || "";
-	const page = searchParams.page || 1;
-	const limit = searchParams.limit || 10;
-	const sort = searchParams.sort || "-createdAt";
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+	const keyword = awtdSearchParams.keyword || "";
+	const page = awtdSearchParams.page || 1;
+	const limit = awtdSearchParams.limit || 10;
+	const sort = awtdSearchParams.sort || "-createdAt";
 
 	const themes = await getThemes(
 		`?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
@@ -103,7 +105,7 @@ const AdminThemesSearchIndex = async ({ params, searchParams }) => {
 					addLink="/noadmin/themes/create"
 					searchOn="/noadmin/themes"
 					objects={themes}
-					searchParams={searchParams}
+					searchParams={awtdSearchParams}
 					handleDraft={draftIt}
 					handlePublish={publishIt}
 					handleTrash={trashIt}

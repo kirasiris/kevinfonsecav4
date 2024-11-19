@@ -13,9 +13,11 @@ async function getMenus(params) {
 }
 
 const AdminMenusPublishedIndex = async ({ params, searchParams }) => {
-	const page = searchParams.page || 1;
-	const limit = searchParams.limit || 10;
-	const sort = searchParams.sort || "-createdAt";
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+	const page = awtdSearchParams.page || 1;
+	const limit = awtdSearchParams.limit || 10;
+	const sort = awtdSearchParams.sort || "-createdAt";
 
 	const menus = await getMenus(`?page=${page}&limit=${limit}&sort=${sort}`);
 
@@ -100,7 +102,7 @@ const AdminMenusPublishedIndex = async ({ params, searchParams }) => {
 					addLink="/noadmin/menus/create"
 					searchOn="/noadmin/menus"
 					objects={menus}
-					searchParams={searchParams}
+					searchParams={awtdSearchParams}
 					handleDraft={draftIt}
 					handlePublish={publishIt}
 					handleTrash={trashIt}

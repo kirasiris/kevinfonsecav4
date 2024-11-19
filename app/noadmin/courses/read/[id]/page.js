@@ -17,9 +17,11 @@ async function getLessons(params) {
 }
 
 const ReadCourse = async ({ params, searchParams }) => {
-	const page = searchParams.page || 1;
-	const limit = searchParams.limit || 10;
-	const sort = searchParams.sort || "orderingNumber";
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+	const page = awtdSearchParams.page || 1;
+	const limit = awtdSearchParams.limit || 10;
+	const sort = awtdSearchParams.sort || "orderingNumber";
 
 	const course = await getCourse(`/${params.id}`);
 	const lessons = await getLessons(
@@ -95,7 +97,7 @@ const ReadCourse = async ({ params, searchParams }) => {
 						addLink={`/noadmin/courses/lesson/${course?.data?._id}/create`}
 						searchOn={`/noadmin/courses/read/${course?.data?._id}`}
 						objects={lessons}
-						searchParams={searchParams}
+						searchParams={awtdSearchParams}
 						handleDraft={draftIt}
 						handlePublish={publishIt}
 						handleTrash={trashIt}

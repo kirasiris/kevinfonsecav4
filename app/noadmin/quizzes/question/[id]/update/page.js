@@ -20,10 +20,12 @@ async function getQuestion(params) {
 }
 
 const UpdateQuestion = async ({ params, searchParams }) => {
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
 	const token = await getAuthTokenOnServer();
 	const auth = await getUserOnServer();
 
-	const question = await getQuestion(`/${params.id}`);
+	const question = await getQuestion(`/${awtdParams.id}`);
 
 	// const files = await getFiles(`?page=1&limit=100&sort=-createdAt`);
 
@@ -44,7 +46,12 @@ const UpdateQuestion = async ({ params, searchParams }) => {
 			// files: { avatar: formData.get("file") },
 		};
 
-		await fetchurl(`/questions/${params.id}`, "PUT", "no-cache", rawFormData);
+		await fetchurl(
+			`/questions/${awtdParams.id}`,
+			"PUT",
+			"no-cache",
+			rawFormData
+		);
 		redirect(`/noadmin/quizzes/read/${question?.data?.resourceId}`);
 	};
 

@@ -8,10 +8,12 @@ async function getChangelogs(params) {
 }
 
 const AdminChangelogsSearchIndex = async ({ params, searchParams }) => {
-	const keyword = searchParams.keyword || "";
-	const page = searchParams.page || 1;
-	const limit = searchParams.limit || 10;
-	const sort = searchParams.sort || "-createdAt";
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+	const keyword = awtdSearchParams.keyword || "";
+	const page = awtdSearchParams.page || 1;
+	const limit = awtdSearchParams.limit || 10;
+	const sort = awtdSearchParams.sort || "-createdAt";
 
 	const changelogs = await getChangelogs(
 		`?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
@@ -96,7 +98,7 @@ const AdminChangelogsSearchIndex = async ({ params, searchParams }) => {
 					addLink="/noadmin/changelogs"
 					searchOn="/noadmin/changelogs"
 					objects={changelogs}
-					searchParams={searchParams}
+					searchParams={awtdSearchParams}
 					handleDraft={draftIt}
 					handlePublish={publishIt}
 					handleTrash={trashIt}

@@ -13,12 +13,14 @@ async function getCategories(params) {
 }
 
 const UpdateCategory = async ({ params, searchParams }) => {
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
 	const category = await getCategories(`/${params.id}`);
 
 	const categories = await getCategories(
-		`?page=${searchParams.page || 1}&limit=${searchParams.limit || 10}&sort=${
-			searchParams.sort || "-createdAt"
-		}`
+		`?page=${awtdSearchParams.page || 1}&limit=${
+			awtdSearchParams.limit || 10
+		}&sort=${awtdSearchParams.sort || "-createdAt"}`
 	);
 	const upgradeCategory = async (formData) => {
 		"use server";
@@ -29,9 +31,9 @@ const UpdateCategory = async ({ params, searchParams }) => {
 		};
 		await fetchurl(`/categories/${params.id}`, "PUT", "no-cache", rawFormData);
 		revalidatePath(
-			`/noadmin/categories?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/categories?page=${awtdSearchParams.page || 1}&limit=${
+				awtdSearchParams.limit || 10
+			}&sort=${awtdSearchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -40,9 +42,9 @@ const UpdateCategory = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/categories/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/categories?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/categories?page=${awtdSearchParams.page || 1}&limit=${
+				awtdSearchParams.limit || 10
+			}&sort=${awtdSearchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -51,9 +53,9 @@ const UpdateCategory = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/categories/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/categories?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/categories?page=${awtdSearchParams.page || 1}&limit=${
+				awtdSearchParams.limit || 10
+			}&sort=${awtdSearchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -62,9 +64,9 @@ const UpdateCategory = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/categories/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/categories?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/categories?page=${awtdSearchParams.page || 1}&limit=${
+				awtdSearchParams.limit || 10
+			}&sort=${awtdSearchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -73,9 +75,9 @@ const UpdateCategory = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/categories/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/categories?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/categories?page=${awtdSearchParams.page || 1}&limit=${
+				awtdSearchParams.limit || 10
+			}&sort=${awtdSearchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -84,9 +86,9 @@ const UpdateCategory = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/categories/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`/noadmin/categories?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/categories?page=${awtdSearchParams.page || 1}&limit=${
+				awtdSearchParams.limit || 10
+			}&sort=${awtdSearchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -95,9 +97,9 @@ const UpdateCategory = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/categories/deleteall`, "PUT", "no-cache", {});
 		revalidatePath(
-			`/noadmin/categories?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/categories?page=${awtdSearchParams.page || 1}&limit=${
+				awtdSearchParams.limit || 10
+			}&sort=${awtdSearchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -182,7 +184,7 @@ const UpdateCategory = async ({ params, searchParams }) => {
 							addLink="/noadmin/categories"
 							searchOn="/noadmin/categories"
 							objects={categories}
-							searchParams={searchParams}
+							searchParams={awtdSearchParams}
 							handleDraft={draftIt}
 							handlePublish={publishIt}
 							handleTrash={trashIt}

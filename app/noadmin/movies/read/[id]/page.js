@@ -17,60 +17,62 @@ async function getVideo(params) {
 }
 
 const ReadMovie = async ({ params, searchParams }) => {
-	const page = searchParams.page || 1;
-	const limit = searchParams.limit || 10;
-	const sort = searchParams.sort || "orderingNumber";
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+	const page = awtdSearchParams.page || 1;
+	const limit = awtdSearchParams.limit || 10;
+	const sort = awtdSearchParams.sort || "orderingNumber";
 
-	const movie = await getMovie(`/${params.id}`);
+	const movie = await getMovie(`/${awtdParams.id}`);
 	const videos = await getVideo(`?resourceId=${movie?.data?._id}&sort=${sort}`);
 
 	const draftIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/videos/${id}/draftit`, "PUT", "no-cache");
-		revalidatePath(`/noadmin/movies/read/${params.id}`);
+		revalidatePath(`/noadmin/movies/read/${awtdParams.id}`);
 	};
 
 	const publishIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/videos/${id}/publishit`, "PUT", "no-cache");
-		revalidatePath(`/noadmin/movies/read/${params.id}`);
+		revalidatePath(`/noadmin/movies/read/${awtdParams.id}`);
 	};
 
 	const trashIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/videos/${id}/trashit`, "PUT", "no-cache");
-		revalidatePath(`/noadmin/movies/read/${params.id}`);
+		revalidatePath(`/noadmin/movies/read/${awtdParams.id}`);
 	};
 
 	const scheduleIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/videos/${id}/scheduleit`, "PUT", "no-cache");
-		revalidatePath(`/noadmin/movies/read/${params.id}`);
+		revalidatePath(`/noadmin/movies/read/${awtdParams.id}`);
 	};
 
 	const handleDelete = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/videos/${id}/permanently`, "DELETE", "no-cache");
-		revalidatePath(`/noadmin/movies/read/${params.id}`);
+		revalidatePath(`/noadmin/movies/read/${awtdParams.id}`);
 	};
 
 	const handleTrashAll = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/songs/deleteall`, "PUT", "no-cache");
-		revalidatePath(`/noadmin/movies/read/${params.id}`);
+		revalidatePath(`/noadmin/movies/read/${awtdParams.id}`);
 	};
 
 	const handleDeleteAll = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/songs/deleteall/permanently`, "DELETE", "no-cache");
-		revalidatePath(`/noadmin/movies/read/${params.id}`);
+		revalidatePath(`/noadmin/movies/read/${awtdParams.id}`);
 	};
 	return (
 		<div className="row">
@@ -88,7 +90,7 @@ const ReadMovie = async ({ params, searchParams }) => {
 						addLink={`/noadmin/movies/video/${movie?.data?._id}/create`}
 						searchOn={`/noadmin/movies/read/${movie?.data?._id}`}
 						objects={videos}
-						searchParams={searchParams}
+						searchParams={awtdSearchParams}
 						handleDraft={draftIt}
 						handlePublish={publishIt}
 						handleTrash={trashIt}

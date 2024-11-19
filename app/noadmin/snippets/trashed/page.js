@@ -13,9 +13,11 @@ async function getSnippets(params) {
 }
 
 const AdminSnippetsTrashedIndex = async ({ params, searchParams }) => {
-	const page = searchParams.page || 1;
-	const limit = searchParams.limit || 10;
-	const sort = searchParams.sort || "-createdAt";
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+	const page = awtdSearchParams.page || 1;
+	const limit = awtdSearchParams.limit || 10;
+	const sort = awtdSearchParams.sort || "-createdAt";
 
 	const snippets = await getSnippets(
 		`?page=${page}&limit=${limit}&sort=${sort}`
@@ -102,7 +104,7 @@ const AdminSnippetsTrashedIndex = async ({ params, searchParams }) => {
 					addLink="/noadmin/snippets/create"
 					searchOn="/noadmin/snippets"
 					objects={snippets}
-					searchParams={searchParams}
+					searchParams={awtdSearchParams}
 					handleDraft={draftIt}
 					handlePublish={publishIt}
 					handleTrash={trashIt}

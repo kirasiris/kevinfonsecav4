@@ -9,10 +9,12 @@ async function getComments(params) {
 }
 
 const AdminCommentsSearchIndex = async ({ params, searchParams }) => {
-	const keyword = searchParams.keyword || "";
-	const page = searchParams.page || 1;
-	const limit = searchParams.limit || 10;
-	const sort = searchParams.sort || "-createdAt";
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+	const keyword = awtdSearchParams.keyword || "";
+	const page = awtdSearchParams.page || 1;
+	const limit = awtdSearchParams.limit || 10;
+	const sort = awtdSearchParams.sort || "-createdAt";
 
 	const comments = await getComments(
 		`?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
@@ -97,7 +99,7 @@ const AdminCommentsSearchIndex = async ({ params, searchParams }) => {
 					addLink="/noadmin/comments/create"
 					searchOn="/noadmin/comments"
 					objects={comments}
-					searchParams={searchParams}
+					searchParams={awtdSearchParams}
 					handleDraft={draftIt}
 					handlePublish={publishIt}
 					handleTrash={trashIt}

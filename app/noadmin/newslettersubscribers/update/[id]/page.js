@@ -21,7 +21,11 @@ async function getNewsletterSubscriber(params) {
 }
 
 const UpdateNewsletterSubscriber = async ({ params, searchParams }) => {
-	const newslettersubscriber = await getNewsletterSubscriber(`/${params.id}`);
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+	const newslettersubscriber = await getNewsletterSubscriber(
+		`/${awtdParams.id}`
+	);
 
 	const upgradeNewsletterSubscriber = async (formData) => {
 		"use server";
@@ -29,7 +33,7 @@ const UpdateNewsletterSubscriber = async ({ params, searchParams }) => {
 			email: formData.get("email"),
 		};
 		await fetchurl(
-			`/newslettersubscribers/${params.id}`,
+			`/newslettersubscribers/${awtdParams.id}`,
 			"PUT",
 			"no-cache",
 			rawFormData

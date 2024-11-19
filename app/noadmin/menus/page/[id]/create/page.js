@@ -5,6 +5,9 @@ import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
 
 const CreatePage = async ({ params, searchParams }) => {
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+
 	const addPage = async (formData) => {
 		"use server";
 		const rawFormData = {
@@ -21,9 +24,9 @@ const CreatePage = async ({ params, searchParams }) => {
 		};
 		await fetchurl(`/pages`, "POST", "no-cache", {
 			...rawFormData,
-			resourceId: params.id,
+			resourceId: awtdParams.id,
 		});
-		redirect(`/noadmin/menus/read/${params.id}`);
+		redirect(`/noadmin/menus/read/${awtdParams.id}`);
 	};
 
 	return (

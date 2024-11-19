@@ -20,10 +20,12 @@ async function getFiles(params) {
 }
 
 const UpdateSong = async ({ params, searchParams }) => {
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
 	const token = await getAuthTokenOnServer();
 	const auth = await getUserOnServer();
 
-	const song = await getSong(`/${params.id}`);
+	const song = await getSong(`/${awtdParams.id}`);
 
 	const files = await getFiles(`?page=1&limit=100&sort=-createdAt`);
 
@@ -44,7 +46,7 @@ const UpdateSong = async ({ params, searchParams }) => {
 			orderingNumber: formData.get("orderingNumber"),
 			files: { avatar: formData.get("file") },
 		};
-		await fetchurl(`/songs/${params.id}`, "PUT", "no-cache", rawFormData);
+		await fetchurl(`/songs/${awtdParams.id}`, "PUT", "no-cache", rawFormData);
 		redirect(`/noadmin/cdalbums/read/${song?.data?.resourceId}`);
 	};
 

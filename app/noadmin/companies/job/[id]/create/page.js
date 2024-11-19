@@ -9,6 +9,8 @@ import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
 
 const CreateJob = async ({ params, searchParams }) => {
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
 	const token = await getAuthTokenOnServer();
 	const auth = await getUserOnServer();
 
@@ -37,10 +39,10 @@ const CreateJob = async ({ params, searchParams }) => {
 		};
 		await fetchurl(`/jobs`, "POST", "no-cache", {
 			...rawFormData,
-			resourceId: params.id,
+			resourceId: awtdParams.id,
 			website: "beFree",
 		});
-		redirect(`/noadmin/companies/read/${params.id}`);
+		redirect(`/noadmin/companies/read/${awtdParams.id}`);
 	};
 
 	return (

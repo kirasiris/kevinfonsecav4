@@ -2,7 +2,7 @@ import Header from "@/layout/header";
 import Head from "@/app/head";
 import OpenGraphViewerPage from "@/components/opengraphviewer/opengraphviewerpage";
 
-const OpenGraphViewerIndex = async ({ searchParams }) => {
+const OpenGraphViewerIndex = async ({ params, searchParams }) => {
 	const awtdParams = await params;
 	const awtdSearchParams = await searchParams;
 	return (

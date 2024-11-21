@@ -164,29 +164,34 @@ const QuizResultsRead = async ({ params, searchParams }) => {
 												<ul className="list-group list-group-flush">
 													{quizresult.data.chosen.map((questions, index) => (
 														<div key={questions.question._id}>
+															{/* Question Title */}
 															<li className={`list-group-item ${index}`}>
 																{questions.question.title}
-																{questions.questionanswers.map(
-																	(object, index) => (
-																		<ul key={index}>
-																			<li
-																				key={object.A}
-																				className={
-																					questions.correctanswer ===
-																						questions.answerbyuser && "correct"
-																				}
-																			>
-																				A:&nbsp;{object.A}
-																			</li>
-																			<li key={object.B}>B:&nbsp;{object.B}</li>
-																			<li key={object.C}>C:&nbsp;{object.C}</li>
-																			<li key={object.D}>D:&nbsp;{object.D}</li>
-																		</ul>
-																	)
-																)}
+
+																{/* Iterate over the single object in questionanswers */}
+																{Object.entries(
+																	questions.questionanswers[0]
+																).map(([key, value]) => (
+																	<ul key={key}>
+																		<li
+																			className={`list-group-item ${
+																				questions.correctanswer === key
+																					? "correct"
+																					: questions.answerbyuser === key
+																					? "selected"
+																					: ""
+																			}`}
+																		>
+																			{/* Render answer key and text */}
+																			{key}:&nbsp;{value.text}
+																		</li>
+																	</ul>
+																))}
 															</li>
+
+															{/* Correct and Given Answers */}
 															<li className="list-group-item text-bg-success">
-																Correct&nbsp;answer:
+																Correct&nbsp;answer:&nbsp;
 																{questions.correctanswer}
 															</li>
 															<li className="list-group-item text-bg-primary">

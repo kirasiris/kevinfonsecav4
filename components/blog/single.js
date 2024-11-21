@@ -42,12 +42,11 @@ const Single = ({
 								{object?.title || "Untitled"}
 							</Link>
 						</h2>
-
-						{typeof object?.text === "object" ? (
+						{/* {typeof object?.text === "object" ? (
 							"TEXT IS EITHER ENCRYPTED OR PASSWORD PROTECTED"
 						) : (
-							<ParseHtml text={object?.text} classList="card-text" />
-						)}
+							<ParseHtml text={object?.excerpt} classList="card-text" />
+						)} */}
 						<hr />
 						<Link
 							href={`/blog/${object?._id}/${object?.category?._id}/${object?.category?.slug}/${object?.slug}`}

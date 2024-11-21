@@ -1,7 +1,7 @@
 import Header from "@/layout/header";
 import YouTubePage from "@/components/youtube/youtubepage";
 
-const YouTubeIndex = async ({ searchParams }) => {
+const YouTubeIndex = async ({ params, searchParams }) => {
 	const awtdParams = await params;
 	const awtdSearchParams = await searchParams;
 	return (

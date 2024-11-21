@@ -87,9 +87,18 @@ const YouTubePage = ({ searchParams, pushTo = true }) => {
 	};
 
 	useEffect(() => {
+		const abortController = new AbortController();
 		if (searchParams._id && searchParams.videoId) {
 			const fetchYouTube = async (id, videoId) => {
-				const res = await fetchurl(`/extras/youtube/${id}/${videoId}`);
+				const res = await fetchurl(
+					`/extras/youtube/${id}/${videoId}`,
+					"GET",
+					"default",
+					{},
+					abortController.signal,
+					false,
+					false
+				);
 				setVideo(res?.data);
 			};
 			fetchYouTube(searchParams._id, searchParams.videoId).then((result) => {
@@ -100,18 +109,30 @@ const YouTubePage = ({ searchParams, pushTo = true }) => {
 				});
 			});
 		}
-		return () => {};
+		// return () => {};
+		return () => abortController.abort();
 	}, [searchParams._id, searchParams.videoId]);
 
 	useEffect(() => {
+		const abortController = new AbortController();
+
 		const fetchYouTubes = async (id, videoId) => {
-			const res = await fetchurl(`/extras/youtube`, "GET", "no-cache");
+			const res = await fetchurl(
+				`/extras/youtube`,
+				"GET",
+				"default",
+				{},
+				abortController.signal,
+				false,
+				false
+			);
 			// !id && !videoId && setVideo(res?.data[0]);
 			setVideo(res?.data[0]); // Display the most recent video
 			setVideos(res?.data); // The set rest of them
 		};
 		fetchYouTubes(searchParams._id, searchParams.videoId);
 		// fetchYouTubes();
+		return () => abortController.abort();
 	}, []);
 
 	const loadVideo = async (id, videoId) => {

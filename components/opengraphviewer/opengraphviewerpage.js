@@ -45,7 +45,7 @@ const OpenGraphViewerPage = ({ searchParams }) => {
 			domain: new URL(res?.data["og:url"]).hostname,
 		});
 
-		router.push(`/opengraphviewer?_id=${res?.data._id}`);
+		router.push(`/opengraphviewer?_id=${res?.data?._id}`);
 	};
 
 	useEffect(() => {

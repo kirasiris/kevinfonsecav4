@@ -57,7 +57,8 @@ const Single = ({ object = {}, objectData = {}, setObjectData = () => {} }) => {
 									)}
 								/>
 								&nbsp;
-								<label htmlFor={key}>{value}</label>
+								<label htmlFor={key}>{value.text}</label>{" "}
+								{/* Access the `text` property */}
 							</li>
 						))}
 					</ul>

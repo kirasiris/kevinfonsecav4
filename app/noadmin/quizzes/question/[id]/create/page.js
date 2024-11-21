@@ -23,19 +23,27 @@ const CreateQuestion = async ({ params, searchParams }) => {
 
 	const addQuestion = async (formData) => {
 		"use server";
+		// Handle answers
+		const answers = formData.getAll("answers");
+		let options = {};
+
+		answers.forEach((text, index) => {
+			if (text.trim()) {
+				const key = String.fromCharCode(65 + index); // Initialize keys 'A', 'B', 'C', etc
+				options[key] = {
+					text,
+					votes: 0, // Initialize with 0 votes
+					voters: [], // Initialize with no voters
+				};
+			}
+		});
 		const rawFormData = {
 			title: formData.get("title"),
 			text: formData.get("text"),
 			password: formData.get("password"),
 			status: formData.get("status"),
 			correctAnswer: formData.get("correctAnswer"),
-			answers: {
-				A: formData.get("answersA"),
-				B: formData.get("answersB"),
-				C: formData.get("answersC"),
-				D: formData.get("answersD"),
-			},
-			// files: { avatar: formData.get("file") },
+			answers: options,
 		};
 
 		await fetchurl(`/questions`, "POST", "no-cache", {
@@ -91,7 +99,7 @@ const CreateQuestion = async ({ params, searchParams }) => {
 						</label>
 						<input
 							id="answersA"
-							name="answersA"
+							name="answers"
 							defaultValue=""
 							type="text"
 							className="form-control mb-3"
@@ -102,7 +110,7 @@ const CreateQuestion = async ({ params, searchParams }) => {
 						</label>
 						<input
 							id="answersB"
-							name="answersB"
+							name="answers"
 							defaultValue=""
 							type="text"
 							className="form-control mb-3"
@@ -115,7 +123,7 @@ const CreateQuestion = async ({ params, searchParams }) => {
 						</label>
 						<input
 							id="answersC"
-							name="answersC"
+							name="answers"
 							defaultValue=""
 							type="text"
 							className="form-control mb-3"
@@ -126,7 +134,7 @@ const CreateQuestion = async ({ params, searchParams }) => {
 						</label>
 						<input
 							id="answersD"
-							name="answersD"
+							name="answers"
 							defaultValue=""
 							type="text"
 							className="form-control mb-3"

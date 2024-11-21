@@ -13,6 +13,10 @@ a {
 	text-decoration: none !important;
 }
 
+article a {
+	color: #0d6efd;
+}
+
 pre {
 	box-sizing: border-box;
 	white-space: pre-wrap;
@@ -677,6 +681,7 @@ body.dark-mode a,
 body.dark-mode p,
 body.dark-mode .card-header,
 body.dark-mode .btn-secondary {
+	color: #00cc00;
 	text-shadow: 0 0 20px #00cc00;
 }
 
@@ -729,7 +734,7 @@ body.dark-mode p,
 body.dark-mode .btn-link,
 body.dark-mode .bg-secondary,
 body.dark-mode .page-link {
-	color: #00cc00;
+	color: #ffffff;
 }
 
 body.dark-mode .badge {

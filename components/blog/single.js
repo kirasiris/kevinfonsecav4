@@ -14,7 +14,7 @@ const Single = ({
 	return (
 		<Suspense fallback={<Loading />}>
 			<article className={`${object?._id} ${fullWidth ? "col" : "col-lg-6"}`}>
-				<div className={`card ${object?.featured && "text-bg-primary"} mb-4`}>
+				<div className={`card ${object?.featured && "text-bg-dark"} mb-4`}>
 					<Link
 						href={`/blog/${object?._id}/${object?.category?._id}/${object?.category?.slug}/${object?.slug}`}
 						passHref

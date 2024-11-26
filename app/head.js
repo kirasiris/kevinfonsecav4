@@ -108,6 +108,12 @@ export default async function Head({
 					media="print and screen and speech"
 				/>
 			)}
+			<meta name="google-adsense-account" content="ca-pub-7136941557526274" />
+			<Script
+				async
+				src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7136941557526274"
+				crossOrigin="anonymous"
+			/>
 			<Script
 				src="https://kit.fontawesome.com/4cde37f226.js"
 				crossOrigin="anonymous"

@@ -134,6 +134,12 @@ const QuizResultsRead = async ({ params, searchParams }) => {
 														{quizresult.data?.totalQuestions || "0"}
 													</p>
 												</li>
+												<li className="list-group-item">
+													<p className="m-0">
+														Percentage:&nbsp;
+														{quizresult.data?.percentageScore || "0.00"}
+													</p>
+												</li>
 												{quizresult.data?.score >=
 													quizresult.data?.minimumScore && (
 													<li className="list-group-item text-bg-success">

@@ -716,6 +716,7 @@ body.dark-mode .card {
 body.dark-mode .modal-content,
 body.dark-mode .btn-dark,
 body.dark-mode .card-body {
+	color: #00ff00;
 	background-color: #222;
 }
 

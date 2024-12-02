@@ -3,7 +3,6 @@ import Image from "next/image";
 import Link from "next/link";
 import Loading from "@/app/realstate/loading";
 import ParseHtml from "@/layout/parseHtml";
-import { formatDateWithoutTime } from "@/helpers/utilities";
 
 const Single = ({ object = {}, imageWidth = "415", imageHeight = "207" }) => {
 	return (

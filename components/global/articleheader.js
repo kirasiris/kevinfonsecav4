@@ -1,6 +1,6 @@
 "use client";
-import { formatDateWithoutTime } from "@/helpers/utilities";
 import Link from "next/link";
+import { formatDateWithoutTime } from "befree-utilities";
 
 const ArticleHeader = ({ object = {}, url = `#!` }) => {
 	return (

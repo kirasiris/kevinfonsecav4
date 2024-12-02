@@ -10,7 +10,7 @@ import { fetchurl } from "@/helpers/setTokenOnServer";
 const Sidebar = ({ quotes = [], categories = [] }) => {
 	const router = useRouter();
 	const [forecast, setForecast] = useState({});
-	const [error, setError] = useState(false);
+	const [, setError] = useState(false);
 	const [searchParams, setSearchParams] = useState({
 		keyword: "",
 	});

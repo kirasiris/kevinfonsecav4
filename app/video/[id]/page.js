@@ -2,11 +2,11 @@ import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
+import { formatDateWithoutTime } from "befree-utilities";
 import Loading from "@/app/blog/loading";
 import ParseHtml from "@/layout/parseHtml";
 import ReportModal from "@/components/global/reportmodal";
 import { fetchurl, getUserOnServer } from "@/helpers/setTokenOnServer";
-import { formatDateWithoutTime } from "@/helpers/utilities";
 import DisqusComments from "@/components/global/disquscomments";
 
 async function getVideo(params) {

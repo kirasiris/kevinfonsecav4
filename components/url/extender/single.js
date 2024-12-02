@@ -1,9 +1,5 @@
 import { Suspense } from "react";
-import Image from "next/image";
-import Link from "next/link";
 import Loading from "@/app/blog/loading";
-import ParseHtml from "@/layout/parseHtml";
-import { formatDateWithoutTime } from "@/helpers/utilities";
 
 const Single = ({
 	object = {},

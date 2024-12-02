@@ -1,5 +1,5 @@
 import { fetchurl } from "@/helpers/setTokenOnServer";
-import { stripeCurrencyFormatter } from "@/helpers/utilities";
+import { stripeCurrencyFormatter } from "befree-utilities";
 import { redirect } from "next/navigation";
 
 async function getBalance() {

@@ -1,8 +1,8 @@
 "use client";
 import Link from "next/link";
 import DropdownButton from "react-bootstrap/DropdownButton";
+import { formatDateWithoutTime } from "befree-utilities";
 import DeleteModal from "@/components/global/deletemodal";
-import { formatDateWithoutTime } from "@/helpers/utilities";
 
 const Single = ({
 	linkTo = "",

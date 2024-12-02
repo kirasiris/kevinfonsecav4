@@ -60,7 +60,7 @@ const MyTextArea = ({
 		},
 	});
 
-	const element = document.getElementById(id);
+	const element = document.getElementById(`hidden-${id}`);
 	if (element) {
 		tributeJS.attach(element);
 	} else {
@@ -69,7 +69,7 @@ const MyTextArea = ({
 
 	return advancedTextEditor ? (
 		<>
-			<input id={id} name={name} type="hidden" />
+			<input id={`hidden-${id}`} name={name} type="hidden" />
 			<div id={id} name={name} className="froala-editor-wrapper">
 				<FroalaEditorComponent
 					tag="textarea"
@@ -93,7 +93,7 @@ const MyTextArea = ({
 						},
 						events: {
 							keypress: function () {
-								const hiddentextarea = document.getElementById(id);
+								const hiddentextarea = document.getElementById(`hidden-${id}`);
 								hiddentextarea.setAttribute("value", this.html.get());
 							},
 							// contentChanged: function () {

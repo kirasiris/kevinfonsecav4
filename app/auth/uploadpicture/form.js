@@ -7,7 +7,7 @@ import UseProgress from "@/components/global/useprogress";
 import axios from "axios";
 import { Modal } from "react-bootstrap";
 import Webcam from "react-webcam";
-import { b64toBlob } from "@/helpers/utilities";
+import { base64toBlob } from "befree-utilities";
 
 const videoConstraints = {
 	facingMode: "user",
@@ -29,7 +29,7 @@ const Form = ({ auth = {} }) => {
 			e.preventDefault();
 			try {
 				const src = webcamRef.current.getScreenshot();
-				const blob = b64toBlob(src);
+				const blob = base64toBlob(src);
 				setBtnTxt("Submit...");
 				const token = await getAuthTokenOnServer();
 				const res = await axios.put(

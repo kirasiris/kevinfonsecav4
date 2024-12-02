@@ -2,9 +2,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import DropdownButton from "react-bootstrap/DropdownButton";
+import { formatDateWithoutTime } from "befree-utilities";
 import DeleteModal from "@/components/global/deletemodal";
 import Waveform from "@/layout/waveform";
-import { formatDateWithoutTime } from "@/helpers/utilities";
 
 const Single = ({
 	object = {},

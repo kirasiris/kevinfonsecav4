@@ -1,11 +1,8 @@
 import { Suspense } from "react";
 import Link from "next/link";
+import { calculateTimeSincePublished } from "befree-utilities";
 import Loading from "@/app/blog/loading";
 import ParseHtml from "@/layout/parseHtml";
-import {
-	calculateTimeSincePublished,
-	formatDateWithoutTime,
-} from "@/helpers/utilities";
 
 const Single = ({
 	object = {},

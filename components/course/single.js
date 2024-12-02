@@ -2,8 +2,8 @@
 import { Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { formatDateWithoutTime } from "befree-utilities";
 import Loading from "@/app/course/loading";
-import { formatDateWithoutTime } from "@/helpers/utilities";
 
 const Single = ({ object = {}, imageWidth = "415", imageHeight = "207" }) => {
 	return (

@@ -1,7 +1,8 @@
 import { Suspense } from "react";
 import Link from "next/link";
+import { formatDateWithoutTime } from "befree-utilities";
 import Loading from "@/app/quiz/loading";
-import { formatDateWithoutTime } from "@/helpers/utilities";
+
 const Single = ({ object = {} }) => {
 	return (
 		<Suspense fallback={<Loading />}>

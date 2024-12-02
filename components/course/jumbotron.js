@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import Image from "next/image";
 import Link from "next/link";
 import { loadStripe } from "@stripe/stripe-js";
-import { currencyFormatter, formatDateWithoutTime } from "@/helpers/utilities";
+import { currencyFormatter, formatDateWithoutTime } from "befree-utilities";
 import Menu from "./menu";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 

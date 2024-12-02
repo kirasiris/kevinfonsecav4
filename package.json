@@ -67,6 +67,7 @@
     "@uiw/react-codemirror": "^4.23.6",
     "axios": "^1.7.7",
     "base-64": "^1.0.0",
+    "befree-utilities": "^1.0.3",
     "depcheck": "^1.4.7",
     "disqus-react": "^1.1.5",
     "froala-editor": "^4.3.0",

@@ -1,6 +1,6 @@
 "use client";
-import { fetchurl } from "@/helpers/setTokenOnServer";
 import { useEffect, useState } from "react";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 
 const NewsletterForm = ({
 	sectionClassList = `py-5`,

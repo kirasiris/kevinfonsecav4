@@ -48,7 +48,8 @@
     "mern-stack",
     "webrtc",
     "wrtc",
-    "code-snippets"
+    "code-snippets",
+    "movies"
   ],
   "author": "Kevin Uriel Fonseca",
   "license": "MIT",

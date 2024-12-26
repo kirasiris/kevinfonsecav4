@@ -4,7 +4,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Link from "next/link";
 import Image from "next/image";
-import Newtoggletheme from "./newtoggletheme";
+import Toggletheme from "./toggletheme";
 
 const Footer = ({
 	auth = {},
@@ -39,7 +39,7 @@ const Footer = ({
 							KEVIN&nbsp;URIEL
 						</a>
 						&nbsp;
-						<Newtoggletheme />
+						<Toggletheme />
 					</p>
 				</div>
 				<hr />

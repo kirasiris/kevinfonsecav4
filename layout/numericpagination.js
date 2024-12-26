@@ -135,7 +135,7 @@ const NumericPagination = ({
 							key={index}
 							className={`page-item${
 								Number(index) === Number(pageNo) ? " active" : ""
-							}`}
+							} d-none d-md-block d-lg-block d-xl-block d-xxl-block`}
 						>
 							{index === "&laquo;" ? (
 								<Link

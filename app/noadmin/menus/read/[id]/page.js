@@ -22,7 +22,7 @@ const ReadMenu = async ({ params, searchParams }) => {
 	const limit = awtdSearchParams.limit || 10;
 	const sort = awtdSearchParams.sort || "orderingNumber";
 
-	const menu = await getMenu(`/${params.id}`);
+	const menu = await getMenu(`/${awtdParams.id}`);
 	const pages = await getPages(
 		`?resourceId=${menu?.data?._id}&page=${page}&limit=${limit}&sort=${sort}`
 	);
@@ -31,49 +31,49 @@ const ReadMenu = async ({ params, searchParams }) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/pages/${id}/draftit`, "PUT", "no-cache");
-		revalidatePath(`/noadmin/menus/read/${params.id}`);
+		revalidatePath(`/noadmin/menus/read/${awtdParams.id}`);
 	};
 
 	const publishIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/pages/${id}/publishit`, "PUT", "no-cache");
-		revalidatePath(`/noadmin/menus/read/${params.id}`);
+		revalidatePath(`/noadmin/menus/read/${awtdParams.id}`);
 	};
 
 	const trashIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/pages/${id}/trashit`, "PUT", "no-cache");
-		revalidatePath(`/noadmin/menus/read/${params.id}`);
+		revalidatePath(`/noadmin/menus/read/${awtdParams.id}`);
 	};
 
 	const scheduleIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/pages/${id}/scheduleit`, "PUT", "no-cache");
-		revalidatePath(`/noadmin/menus/read/${params.id}`);
+		revalidatePath(`/noadmin/menus/read/${awtdParams.id}`);
 	};
 
 	const handleDelete = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/pages/${id}/permanently`, "DELETE", "no-cache");
-		revalidatePath(`/noadmin/menus/read/${params.id}`);
+		revalidatePath(`/noadmin/menus/read/${awtdParams.id}`);
 	};
 
 	const handleTrashAll = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/pages/deleteall`, "PUT", "no-cache");
-		revalidatePath(`/noadmin/menus/read/${params.id}`);
+		revalidatePath(`/noadmin/menus/read/${awtdParams.id}`);
 	};
 
 	const handleDeleteAll = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/pages/deleteall/permanently`, "DELETE", "no-cache");
-		revalidatePath(`/noadmin/menus/read/${params.id}`);
+		revalidatePath(`/noadmin/menus/read/${awtdParams.id}`);
 	};
 
 	return (

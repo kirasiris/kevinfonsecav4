@@ -104,6 +104,11 @@ const AdminMenu = () => {
 						<a>Polls</a>
 					</Link>
 				</li>
+				<li className={`list-group-item ${isActive(`/noadmin/qrcodes`)}`}>
+					<Link href={"/noadmin/qrcodes"} passHref legacyBehavior>
+						<a>QR Code Generator</a>
+					</Link>
+				</li>
 				<li
 					className={`list-group-item ${isActive(
 						`/noadmin/newslettersubscribers`

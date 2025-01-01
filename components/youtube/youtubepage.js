@@ -9,12 +9,15 @@ import NewsletterForm from "../global/newsletter";
 import Image from "next/image";
 import RelatedCarousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
+import { checkEmptyObject } from "befree-utilities";
 
 const YouTubePage = ({ searchParams, pushTo = true }) => {
 	const router = useRouter();
 
 	const [video, setVideo] = useState({});
 	const [videos, setVideos] = useState([]);
+	const [loading, setLoading] = useState(false);
+	const [loadingVideos, setLoadingVideos] = useState(true);
 
 	const [videoData, setVideoData] = useState({
 		video_url: ``,
@@ -87,36 +90,38 @@ const YouTubePage = ({ searchParams, pushTo = true }) => {
 	};
 
 	useEffect(() => {
+		setLoading(true);
 		const abortController = new AbortController();
-		if (searchParams._id && searchParams.videoId) {
-			const fetchYouTube = async (id, videoId) => {
-				const res = await fetchurl(
-					`/extras/youtube/${id}/${videoId}`,
-					"GET",
-					"default",
-					{},
-					abortController.signal,
-					false,
-					false
-				);
+		const fetchYouTube = async (id, videoId) => {
+			const res = await fetchurl(
+				`/extras/youtube/${id}/${videoId}`,
+				"GET",
+				"default",
+				{},
+				abortController.signal,
+				false,
+				false
+			);
+			if (res?.data) {
 				setVideo(res?.data);
-			};
-			fetchYouTube(searchParams._id, searchParams.videoId).then((result) => {
-				setVideoData({
-					...videoData,
-					video_url: result?.data.video_url,
-					download_video: result?.data.download_video,
-				});
-			});
+				setVideoData((prev) => ({
+					...prev,
+					...res.data,
+				}));
+				setLoading(false);
+			}
+		};
+		if (searchParams?._id && searchParams?.videoId) {
+			fetchYouTube(searchParams._id, searchParams.videoId);
 		}
-		// return () => {};
 		return () => abortController.abort();
 	}, [searchParams._id, searchParams.videoId]);
 
 	useEffect(() => {
+		setLoading(true);
+		setLoadingVideos(true);
 		const abortController = new AbortController();
-
-		const fetchYouTubes = async (id, videoId) => {
+		const fetchYouTubes = async () => {
 			const res = await fetchurl(
 				`/extras/youtube`,
 				"GET",
@@ -127,11 +132,14 @@ const YouTubePage = ({ searchParams, pushTo = true }) => {
 				false
 			);
 			// !id && !videoId && setVideo(res?.data[0]);
-			setVideo(res?.data[0]); // Display the most recent video
+			if (checkEmptyObject(searchParams)) {
+				setVideo(res?.data[0]); // Display the most recent video
+			}
 			setVideos(res?.data); // The set rest of them
+			setLoading(false);
+			setLoadingVideos(false);
 		};
-		fetchYouTubes(searchParams._id, searchParams.videoId);
-		// fetchYouTubes();
+		fetchYouTubes();
 		return () => abortController.abort();
 	}, []);
 
@@ -239,9 +247,11 @@ const YouTubePage = ({ searchParams, pushTo = true }) => {
 							</button>
 						</div>
 						{activeTab.video ? (
-							video?.videoEmbedUrl !== "" &&
-							video?.videoEmbedUrl !== undefined &&
-							video?.videoEmbedUrl !== null ? (
+							loading ? (
+								<p>Loading video</p>
+							) : video?.videoEmbedUrl !== "" &&
+							  video?.videoEmbedUrl !== undefined &&
+							  video?.videoEmbedUrl !== null ? (
 								<>
 									<div className="ratio ratio-16x9">
 										<iframe
@@ -385,7 +395,9 @@ const YouTubePage = ({ searchParams, pushTo = true }) => {
 								overflowY: "auto",
 							}}
 						>
-							{list?.length > 0 ? (
+							{loadingVideos ? (
+								<div className="alert alert-dark m-0 rounded-0">Loading...</div>
+							) : list?.length > 0 ? (
 								<ul className="list-group list-group-flush">
 									{list?.map(
 										(video) =>

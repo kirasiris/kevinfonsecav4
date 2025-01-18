@@ -1,0 +1,196 @@
+@import url("https://fonts.googleapis.com/css?family=Roboto:400,300,300italic,400italic,700,700italic&subset=latin,vietnamese,latin-ext,cyrillic,cyrillic-ext,greek-ext,greek");
+@import url("https://fonts.googleapis.com/css?family=Oswald:400,300,700&subset=latin,latin-ext");
+@import url("https://fonts.googleapis.com/css?family=Montserrat:400,700");
+@import url("https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300,300italic,700&subset=latin,greek,greek-ext,vietnamese,cyrillic-ext,cyrillic,latin-ext");
+
+.blog-item__panel {
+	align-items: center;
+	background: #ffffff;
+	box-sizing: border-box;
+	display: flex;
+	justify-content: space-between;
+	padding: 0 16px;
+}
+
+.blog-item__detail {
+	word-wrap: break-word;
+	margin-right: auto;
+	padding: 16px 0;
+	position: relative;
+	width: calc(100% - 50px);
+	word-break: break-word;
+}
+
+.blog-item__title {
+	font-size: 1.25rem;
+	font-weight: 600;
+	line-height: 1.2;
+	margin: 0;
+	padding: 0;
+}
+
+.blog-item__title-link {
+	color: #3c434a;
+	display: block;
+	padding-bottom: 2px;
+	padding-right: 8px;
+}
+
+.blog-type-list__blog-thumbnail-wrapper {
+	align-self: stretch;
+	display: none;
+	margin: 8px 0;
+	overflow: hidden;
+	position: relative;
+	width: 80px;
+}
+
+.has-image {
+	display: block;
+}
+
+.blog-type-list__blog-thumbnail-link {
+	display: block;
+	height: 100%;
+}
+
+.blog-type-list__blog-thumbnail {
+	height: 100%;
+	left: 50%;
+	max-height: 80px;
+	max-width: none;
+	position: absolute;
+	top: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.blog-actions-ellipsis-menu {
+	display: flex;
+	flex-shrink: 0;
+	margin-left: 8px;
+}
+
+.ellipsis-menu {
+	display: flex;
+}
+
+.blog-item__meta-time-status {
+	display: inline-block;
+	margin-right: 16px;
+}
+
+.blog-relative-time-status {
+	display: inline-block;
+}
+
+a.blog-relative-time-status__link {
+	color: #646970;
+}
+
+.blog-relative-time-status__time {
+	align-items: center;
+	display: inline-flex;
+	margin-right: 0.9166666667em;
+}
+
+.blog-item__meta ul {
+	vertical-align: middle;
+}
+
+.blog-action-counts {
+	display: inline-block;
+	list-style: none;
+	margin: 0;
+}
+
+/* ---------------------------------------------------
+  PAGINATION
+----------------------------------------------------- */
+.pagination-container > select {
+	width: 100px;
+	height: 37px;
+}
+
+.pagination-container > select:hover,
+.pagination-container > select > option:hover,
+.page-item:hover {
+	cursor: pointer;
+}
+/* ---------------------------------------------------
+  FROALA-EDITOR
+----------------------------------------------------- */
+.froala-editor-wrapper:focus-visible {
+	border-radius: 11px;
+}
+/* ---------------------------------------------------
+  TRIBUTEJS
+----------------------------------------------------- */
+.tribute-container {
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: auto;
+	max-height: 300px;
+	max-width: 500px;
+	overflow: auto;
+	display: block;
+	z-index: 999999;
+}
+.tribute-container ul {
+	margin: 0;
+	margin-top: 2px;
+	padding: 0;
+	list-style: none;
+	background: #efefef;
+}
+.tribute-container li {
+	padding: 5px 5px;
+	cursor: pointer;
+}
+.tribute-container li.highlight,
+.tribute-container li:hover {
+	background: #ddd;
+}
+.tribute-container li span {
+	font-weight: bold;
+}
+.tribute-container li.no-match {
+	cursor: default;
+}
+.tribute-container .menu-highlighted {
+	font-weight: bold;
+}
+/* ---------------------------------------------------
+  DROPZONE
+----------------------------------------------------- */
+.dropzone {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 20px;
+	border-width: 2px;
+	border-radius: 2px;
+	border-style: dashed;
+	background-color: #fafafa;
+	color: #bdbdbd;
+	outline: none;
+	transition: border 0.24s ease-in-out;
+}
+
+.dropzone-icons {
+	margin: 5vh auto 5vh;
+	text-align: center;
+}
+
+body.dark-mode .dropzone {
+	background-color: #212529;
+}
+
+/* ---------------------------------------------------
+  FROALA
+----------------------------------------------------- */
+.fr-wrapper p a,
+.fr-wrapper a {
+	color: #0096dd;
+	text-decoration: underline;
+}

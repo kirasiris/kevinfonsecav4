@@ -76,7 +76,7 @@ const CommentForm = ({
 								type="url"
 								className="form-control mb-3"
 								required
-								placeholder="Webiste"
+								placeholder="Website"
 							/>
 						</>
 					)}

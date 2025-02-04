@@ -39,6 +39,7 @@ const CreateBlog = async ({ params, searchParams }) => {
 			fullWidth: formData.get("fullWidth"),
 			files: { avatar: formData.get("file") },
 		};
+
 		await fetchurl(`/blogs`, "POST", "no-cache", {
 			...rawFormData,
 			postType: "blog",
@@ -68,10 +69,10 @@ const CreateBlog = async ({ params, searchParams }) => {
 					token={token}
 					id="text"
 					name="text"
+					defaultValue="No description..."
 					onModel="Blog"
 					advancedTextEditor={true}
 					customPlaceholder="No description"
-					defaultValue="No description..."
 				/>
 			</div>
 			<div className="col-lg-3">

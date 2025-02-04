@@ -1,13 +1,17 @@
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import Header from "@/layout/header";
-import List from "@/components/quiz/resultlist";
+import List from "@/components/qrcode/resultlist";
 
-async function getQuizzesResult(params) {
-	const res = await fetchurl(`/quizresults${params}`, "GET", "no-cache");
+async function getQRCodeGeneratorResult(params) {
+	const res = await fetchurl(
+		`/extras/tools/qrcodes${params}`,
+		"GET",
+		"no-cache"
+	);
 	return res;
 }
 
-const QuizzesResultIndex = async ({ params, searchParams }) => {
+const QRCodeGeneratorResultIndex = async ({ params, searchParams }) => {
 	const awtdParams = await params;
 	const awtdSearchParams = await searchParams;
 	const page = awtdSearchParams.page || 1;
@@ -15,7 +19,7 @@ const QuizzesResultIndex = async ({ params, searchParams }) => {
 	const sort = awtdSearchParams.sort || "-createdAt";
 	const decrypt = awtdSearchParams.decrypt === "true" ? "&decrypt=true" : "";
 
-	const getResultsData = getQuizzesResult(
+	const getResultsData = getQRCodeGeneratorResult(
 		`?page=${page}&limit=${limit}&sort=${sort}&email=${awtdSearchParams.email}${decrypt}`
 	);
 
@@ -24,12 +28,12 @@ const QuizzesResultIndex = async ({ params, searchParams }) => {
 	return (
 		<>
 			<Header
-				title={`Quizzes results of ${awtdSearchParams.email}`}
-				description="Keep the good job!"
+				title={`QrCode results of ${awtdSearchParams.email}`}
+				description="Check your previous qrcodes!"
 			/>
 			<List objects={results} searchParams={awtdSearchParams} />
 		</>
 	);
 };
 
-export default QuizzesResultIndex;
+export default QRCodeGeneratorResultIndex;

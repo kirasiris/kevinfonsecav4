@@ -74,10 +74,10 @@ const UpdateBlog = async ({ params, searchParams }) => {
 					token={token}
 					id="text"
 					name="text"
+					defaultValue={blog?.data?.text}
 					onModel="Blog"
 					advancedTextEditor={true}
 					customPlaceholder="No description"
-					defaultValue={blog?.data?.text}
 				/>
 			</div>
 			<div className="col-lg-3">

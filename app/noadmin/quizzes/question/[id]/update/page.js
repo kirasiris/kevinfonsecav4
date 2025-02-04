@@ -64,8 +64,6 @@ const UpdateQuestion = async ({ params, searchParams }) => {
 		redirect(`/noadmin/quizzes/read/${question?.data?.resourceId}`);
 	};
 
-	console.log(question);
-
 	return (
 		<form className="row" action={upgradeQuestion}>
 			<div className="col">

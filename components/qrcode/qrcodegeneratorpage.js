@@ -57,7 +57,7 @@ const QRCodeGeneratorPage = ({ searchParams, pushTo = true }) => {
 		setQrCode(res?.data);
 		setBtnText(btnText);
 		resetForm();
-		router.push(`/qrcodes/generator?_id=${res?.data?._id}`, { scroll: false });
+		router.push(`/qrcode/generator?_id=${res?.data?._id}`, { scroll: false });
 	};
 
 	const resetForm = () => {
@@ -92,7 +92,7 @@ const QRCodeGeneratorPage = ({ searchParams, pushTo = true }) => {
 				setQrCode(res.data);
 				setLoading(false);
 			} else {
-				router.push(`/qrcodes/generator`, { scroll: false });
+				router.push(`/qrcode/generator`, { scroll: false });
 			}
 		};
 		if (!checkEmptyObject(searchParams)) {

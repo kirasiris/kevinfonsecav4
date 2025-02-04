@@ -163,11 +163,6 @@ const AdminMenu = () => {
 						<a>Snippets</a>
 					</Link>
 				</li>
-				<li className={`list-group-item ${isActive(`/noadmin/subscribers`)}`}>
-					<Link href={"/noadmin/subscribers"} passHref legacyBehavior>
-						<a>Subscribers</a>
-					</Link>
-				</li>
 				<li className={`list-group-item ${isActive(`/noadmin/themes`)}`}>
 					<Link href={"/noadmin/themes"} passHref legacyBehavior>
 						<a>Themes</a>

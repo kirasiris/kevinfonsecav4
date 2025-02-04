@@ -32,7 +32,7 @@ const Single = ({
 						/>
 					</Link>
 					<div className="card-body">
-						<div className="small text-muted">
+						<div className="small">
 							{formatDateWithoutTime(object?.createdAt)}
 						</div>
 						<h2 className="card-title">

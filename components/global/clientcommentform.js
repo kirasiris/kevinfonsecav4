@@ -53,6 +53,7 @@ const ClientCommentForm = ({
 						return [res.data];
 					}
 				});
+
 				resetForm();
 			} else {
 				console.error("Invalid response data:", res);
@@ -147,7 +148,7 @@ const ClientCommentForm = ({
 								type="url"
 								className="form-control mb-3"
 								required
-								placeholder="Webiste"
+								placeholder="Website"
 								value={website}
 								onChange={(e) => {
 									setNewCommentData({

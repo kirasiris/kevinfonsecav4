@@ -1,10 +1,10 @@
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
+import Link from "next/link";
 import Sidebar from "@/layout/auth/sidebar";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import Globalcontent from "@/layout/content";
 import Loading from "@/app/blog/loading";
-import Link from "next/link";
 import ParseHtml from "@/layout/parseHtml";
 
 async function getAuthenticatedUser() {
@@ -50,11 +50,15 @@ const AuthIndex = async ({ params, searchParams }) => {
 												</li>
 											)}
 											{auth.data.email && (
-												<li className="list-group-item">{auth.data.email}</li>
+												<li className="list-group-item">
+													{auth.data.email}&nbsp;-&nbsp;
+													<span className="badge bg-secondary">primary</span>
+												</li>
 											)}
 											{auth.data.secondaryEmail && (
 												<li className="list-group-item">
-													{auth.data.secondaryEmail}
+													{auth.data.secondaryEmail}&nbsp;-&nbsp;
+													<span className="badge bg-secondary">secondary</span>
 												</li>
 											)}
 											{auth.data.email && (
@@ -97,7 +101,15 @@ const AuthIndex = async ({ params, searchParams }) => {
 											)}
 										</ul>
 									</div>
-									<div className="col-6 mb-4">AVATAR & COVER</div>
+									<div className="col-6 mb-4">
+										<ul className="list-group list-group-flush">
+											<li className="list-group-item text-bg-secondary">
+												<Link href={`/auth/editavatar`} passHref legacyBehavior>
+													AVATAR&nbsp;&&nbsp;COVER
+												</Link>
+											</li>
+										</ul>
+									</div>
 									<div className="col-6 mb-4">
 										<ul className="list-group list-group-flush">
 											<li className="list-group-item text-bg-secondary">
@@ -157,31 +169,31 @@ const AuthIndex = async ({ params, searchParams }) => {
 													passHref
 													legacyBehavior
 												>
-													<a>NOTIFICATIONS ON WEBSITE</a>
+													<a>NOTIFICATIONS&nbsp;ON&nbsp;WEBSITE</a>
 												</Link>
 											</li>
 											<li className="list-group-item">
-												Blog Responses (
+												Blog&nbsp;Responses&nbsp;(
 												{auth.data.settings.notifications.comments.fromBlogNotification.toString()}
 												)
 											</li>
 											<li className="list-group-item">
-												Post Responses (
+												Post&nbsp;Responses&nbsp;(
 												{auth.data.settings.notifications.comments.fromPostNotification.toString()}
 												)
 											</li>
 											<li className="list-group-item">
-												Video Responses (
+												Video&nbsp;Responses&nbsp;(
 												{auth.data.settings.notifications.comments.fromVideoNotification.toString()}
 												)
 											</li>
 											<li className="list-group-item">
-												File Responses (
+												File&nbsp;Responses&nbsp;(
 												{auth.data.settings.notifications.comments.fromMediaNotification.toString()}
 												)
 											</li>
 											<li className="list-group-item">
-												Channel Responses (
+												Channel&nbsp;Responses&nbsp;(
 												{
 													auth.data.settings.notifications.comments
 														.fromProducerNotification
@@ -189,12 +201,12 @@ const AuthIndex = async ({ params, searchParams }) => {
 												)
 											</li>
 											<li className="list-group-item">
-												Job Responses (
+												Job&nbsp;Responses&nbsp;(
 												{auth.data.settings.notifications.comments.fromJobNotification.toString()}
 												)
 											</li>
 											<li className="list-group-item">
-												Comment Responses (
+												Comment&nbsp;Responses&nbsp;(
 												{auth.data.settings.notifications.comments.fromCommentNotification.toString()}
 												)
 											</li>
@@ -208,7 +220,7 @@ const AuthIndex = async ({ params, searchParams }) => {
 													passHref
 													legacyBehavior
 												>
-													<a>NOTIFICATIONS BY EMAIL</a>
+													<a>NOTIFICATIONS&nbsp;BY&nbsp;EMAIL</a>
 												</Link>
 											</li>
 										</ul>
@@ -252,7 +264,7 @@ const AuthIndex = async ({ params, searchParams }) => {
 													passHref
 													legacyBehavior
 												>
-													<a>DELETE ACCOUNT (ITS A LINK)</a>
+													<a>DELETE&nbsp;ACCOUNT&nbsp;(ITS&nbsp;A&nbsp;LINK)</a>
 												</Link>
 											</li>
 										</ul>

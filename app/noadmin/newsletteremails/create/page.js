@@ -53,7 +53,7 @@ const CreateEmail = async ({ params, searchParams }) => {
 				<select
 					id="users"
 					name="users"
-					defaultValue=""
+					defaultValue={[]}
 					className="form-control"
 					multiple
 				>

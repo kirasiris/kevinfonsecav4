@@ -94,9 +94,12 @@ const Single = ({
 									</a>
 								</Link>
 							) : (
-								<button className="btn btn-secondary btn-sm">
+								<a
+									href={`mailto:${object?.email}`}
+									className="btn btn-secondary btn-sm"
+								>
 									{object?.name}
-								</button>
+								</a>
 							)}
 						</div>
 						{!checkEmptyObject(auth) && auth?.userId === object?.user?._id && (

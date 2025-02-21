@@ -13,7 +13,7 @@ export default async function Head({
 	robots = "",
 	category = "",
 	url = "",
-	author = "Kevin Uriel Azuara Fonseca",
+	author = "Kevin Uriel Fonseca",
 	createdAt = "",
 	updatedAt = "",
 	locales = "",

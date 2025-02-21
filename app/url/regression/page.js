@@ -5,6 +5,7 @@ import List from "@/components/url/regression/list";
 import Globalcontent from "@/layout/content";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
+import Head from "@/app/head";
 
 async function getUrls(params) {
 	const res = await fetchurl(
@@ -44,6 +45,10 @@ const UrlRegressionIndex = async ({ params, searchParams }) => {
 
 	return (
 		<>
+			<Head
+				title="URL Regression"
+				description="Tired of long URLs?. Try to shorten them!"
+			/>
 			<Header
 				title="URL Regression"
 				description="Tired of long URLs?. Try to shorten them!"

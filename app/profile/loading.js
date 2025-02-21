@@ -1,5 +1,5 @@
 const Loading = () => {
-	return <>Loading posts...</>;
+	return <>Loading users...</>;
 };
 
 export default Loading;

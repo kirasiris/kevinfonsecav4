@@ -26,6 +26,7 @@ const CommentRead = async ({ params, searchParams }) => {
 	console.log(comment);
 	// return (
 	// 	<Suspense fallback={<Loading />}>
+	//      <Head />
 	// 		<Header title={comment.data.title} />
 	// 		<div className="container">
 	// 			{comment.data.status === "published" ||

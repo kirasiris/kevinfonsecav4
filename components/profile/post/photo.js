@@ -10,7 +10,7 @@ const Photo = ({ object = {} }) => {
 			className="p-0 d-block w-100"
 			width={450}
 			height={450}
-			style={{ objectFit: "cover" }}
+			style={{ objectFit: "cover", height: "max-content" }}
 		/>
 	) : (
 		<Carousel>

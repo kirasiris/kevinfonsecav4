@@ -103,7 +103,7 @@ const ReportModal = ({
 						>
 							Close
 						</button>
-						<button className="btn btn-primary btn-sm" type="submit">
+						<button className="btn btn-secondary btn-sm" type="submit">
 							Submit
 						</button>
 					</Modal.Footer>

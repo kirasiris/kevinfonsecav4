@@ -12,6 +12,7 @@ import Jumbotron from "@/components/profile/jumbotron";
 import { revalidatePath } from "next/cache";
 import Globalcontent from "@/layout/content";
 import PostNew from "@/components/profile/postnew";
+import Head from "@/app/head";
 
 async function getProfile(params) {
 	const res = await fetchurl(`/users${params}`, "GET", "no-cache");
@@ -185,6 +186,27 @@ const ProfileRead = async ({ params, searchParams }) => {
 
 	return (
 		<Suspense fallback={<Loading />}>
+			<Head
+				title={profile.data.username}
+				description={profile.data.bio}
+				postImage={
+					profile.data.files.avatar.location.secure_location ||
+					`https://source.unsplash.com/random/168x168`
+				}
+				imageWidth="168"
+				imageHeight="168"
+				videoWidth=""
+				videoHeight=""
+				card="summary"
+				robots=""
+				category=""
+				url={`/profile/${profile.data._id}/${profile.data.username}`}
+				author={profile.data.name}
+				createdAt={profile.data.createdAt}
+				updatedAt={profile.data.updatedAt}
+				locales=""
+				posType="user"
+			/>
 			<Jumbotron
 				object={profile}
 				headerStyle={{

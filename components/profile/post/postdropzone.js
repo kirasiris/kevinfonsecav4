@@ -57,7 +57,7 @@ const UseDropzone = ({
 					// Upload files
 					const uploadPromises = acceptedFiles.map(async (file) => {
 						const res = await axios.put(
-							`${process.env.apiUrl}/uploads/uploadobject`,
+							`${process.env.NEXT_PUBLIC_API_URL}/uploads/uploadobject`,
 							{
 								userId: auth?.userId,
 								username: auth?.username,

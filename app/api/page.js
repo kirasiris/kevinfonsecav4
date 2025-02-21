@@ -3,7 +3,7 @@ import Header from "@/layout/header";
 import NewsletterForm from "@/components/global/newsletter";
 import ErrorPage from "@/layout/errorpage";
 import { fetchurl } from "@/helpers/setTokenOnServer";
-import Head from "../head";
+import Head from "@/app/head";
 
 async function getSetting(params) {
 	const res = await fetchurl(`/settings/${params}`, "GET", "no-cache");

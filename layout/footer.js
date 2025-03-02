@@ -7,7 +7,6 @@ import Image from "next/image";
 import Toggletheme from "./toggletheme";
 
 const Footer = ({
-	auth = {},
 	classList = "",
 	styleList = {},
 	canonical = process.env.NEXT_PUBLIC_WEBSITE_URL,

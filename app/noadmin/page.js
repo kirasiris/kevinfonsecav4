@@ -175,7 +175,7 @@ const AdminHome = async ({ params, searchParams }) => {
 	return (
 		<>
 			<Header
-				title={`Welcome back!`}
+				title={`Welcome back!, Root`}
 				description="This is the place where you have the full control of your website. Feel free to play with it as you like!"
 			/>
 			<div className="row">

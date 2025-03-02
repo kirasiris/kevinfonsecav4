@@ -1,6 +1,4 @@
 "use client";
-import NProgress from "nprogress";
-import "../node_modules/nprogress/nprogress.css";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -8,16 +6,11 @@ import Navbar from "react-bootstrap/Navbar";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import { deleteAuthTokenOnServer } from "@/helpers/setTokenOnServer";
-import { Router } from "next/router";
-
-Router.onRouteChangeStart = (url) => NProgress.start();
-Router.onRouteChangeComplete = (url) => NProgress.done();
-Router.onRouteChangeError = (url) => NProgress.done();
 
 const Menu = ({
 	auth = {},
 	title = "",
-	logo = "https://getbootstrap.com/docs/5.3/assets/brand/bootstrap-logo.svg",
+	logo = "https://www.fullstackpython.com/img/logos/bootstrap.png",
 	canonical = "/",
 	menus = [],
 }) => {

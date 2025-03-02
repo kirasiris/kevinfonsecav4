@@ -25,7 +25,7 @@ export default async function Head({
 			{title !== "" && <title>{title}</title>}
 			{description !== "" && <meta name="description" content={description} />}
 			<meta content="width=device-width, initial-scale=1" name="viewport" />
-			<link rel="icon" href={favicon} />
+			{favicon !== "" && <link rel="icon" href={favicon} />}
 			<link rel="canonical" href={process.env.NEXT_PUBLIC_WEBSITE_URL} />
 			{locales?.length > 0 &&
 				locales.map((locale, i) => (

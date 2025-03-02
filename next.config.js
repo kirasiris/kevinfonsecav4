@@ -4,8 +4,7 @@ const nextConfig = {
 	// distDir: "dist",
 	compress: true,
 	devIndicators: {
-		buildActivityPosition: "bottom-right",
-		buildActivity: true,
+		position: "bottom-right",
 	},
 	// logging: {
 	// 	fetches: {

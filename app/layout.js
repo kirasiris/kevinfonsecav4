@@ -30,7 +30,6 @@ export default async function RootLayout({ children }) {
 	return (
 		<html lang="en">
 			<Head
-				auth={auth}
 				title={settings?.data?.title}
 				description={settings?.data?.text}
 				favicon={settings?.data?.favicon}
@@ -45,7 +44,6 @@ export default async function RootLayout({ children }) {
 				/>
 				<main>{children}</main>
 				<Footer
-					auth={auth}
 					canonical={process.env.NEXT_PUBLIC_WEBSITE_URL}
 					menus={menus?.data}
 				/>

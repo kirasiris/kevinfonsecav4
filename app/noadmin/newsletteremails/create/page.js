@@ -37,10 +37,7 @@ const CreateEmail = async ({ params, searchParams }) => {
 			subject: formData.get("subject"),
 			status: formData.get("status"),
 		};
-		await fetchurl(`/newsletteremails`, "POST", "no-cache", {
-			...rawFormData,
-			website: "beFree",
-		});
+		await fetchurl(`/newsletteremails`, "POST", "no-cache", rawFormData);
 		redirect(`/noadmin/newsletteremails`);
 	};
 

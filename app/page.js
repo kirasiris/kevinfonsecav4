@@ -25,18 +25,18 @@ async function getThemes(params) {
 const HomeIndex = async ({ params, searchParams }) => {
 	const awtdSearchParams = await searchParams;
 	const page = awtdSearchParams.page || 1;
-	const limit = awtdSearchParams.limit || 10;
+	const limit = awtdSearchParams.limit || 6;
 	const sort = awtdSearchParams.sort || "-createdAt";
 	const decrypt = awtdSearchParams.decrypt === "true" ? "&decrypt=true" : "";
 
 	const settings = await getSetting(process.env.NEXT_PUBLIC_SETTINGS_ID);
 
 	const getBlogsData = getBlogs(
-		`?page=${sort}&limit=6&sort=${sort}&postType=blog&status=published`
+		`?page=${page}&limit=${limit}&sort=${sort}&postType=blog&status=published`
 	);
 
 	const getThemesData = getThemes(
-		`?page=${sort}&limit=3&sort=${sort}&postType=theme&status=published`
+		`?page=${page}&limit=${limit}&sort=${sort}&postType=theme&status=published`
 	);
 
 	const [blogs, themes] = await Promise.all([getBlogsData, getThemesData]);

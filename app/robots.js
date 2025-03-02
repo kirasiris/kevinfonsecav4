@@ -5,7 +5,7 @@ const robots = () => {
 			allow: "/",
 			disallow: ["/noadmin", "/dashboard", "playground"],
 		},
-		sitemap: "https://kevinfonseca.vercel.app/blog/sitemap.xml",
+		sitemap: "https://kevinurielfonseca.me/blog/sitemap.xml",
 	};
 };
 

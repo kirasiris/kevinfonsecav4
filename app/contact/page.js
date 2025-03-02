@@ -65,6 +65,7 @@ const ContactIndex = async ({ params, searchParams }) => {
 								Subject
 							</label>
 							<select id="subject" name="subject" className="form-control">
+								<option value={`none`}>Choose an option</option>
 								<option value={`suggestion`}>Suggestion</option>
 								<option value={`bug`}>Bug</option>
 								<option value={`review`}>Review</option>

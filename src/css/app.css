@@ -42,11 +42,10 @@ blockquote {
 	border-left: 5px solid #eee;
 }
 
-.fr-class-code,
 code {
 	padding: 2px 4px;
 	font-size: 90%;
-	color: #c7254e;
+	color: #c7254e !important;
 	background-color: #f9f2f4;
 	border-radius: 4px;
 }

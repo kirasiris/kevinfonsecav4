@@ -62,14 +62,18 @@
     "eslint": "^9.18.0",
     "eslint-config-next": "^15.1.5"
   },
+  "overrides": {
+    "@tinymce/tinymce-react": {
+      "react": "$react",
+      "react-dom": "$react-dom"
+    }
+  },
   "dependencies": {
-    "@blocknote/core": "^0.23.1",
-    "@blocknote/mantine": "^0.23.1",
-    "@blocknote/react": "^0.23.1",
     "@codemirror/lang-css": "^6.3.1",
     "@codemirror/lang-html": "^6.4.9",
     "@codemirror/lang-javascript": "^6.2.2",
     "@stripe/stripe-js": "^5.5.0",
+    "@tinymce/tinymce-react": "^6.0.0",
     "@uiw/codemirror-extensions-langs": "^4.23.7",
     "@uiw/codemirror-theme-vscode": "^4.23.7",
     "@uiw/react-codemirror": "^4.23.7",

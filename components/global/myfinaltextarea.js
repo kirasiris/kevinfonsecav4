@@ -2,10 +2,8 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import he from "he";
-import "@blocknote/core/fonts/inter.css";
-import "@blocknote/mantine/style.css";
-import { useCreateBlockNote } from "@blocknote/react";
-import { BlockNoteView } from "@blocknote/mantine";
+import { Editor } from "@tinymce/tinymce-react";
+import { Nav, Tab } from "react-bootstrap";
 
 const MyTextArea = ({
 	auth = {},
@@ -16,7 +14,17 @@ const MyTextArea = ({
 	onModel = "Blog",
 	advancedTextEditor = true,
 	customPlaceholder = "Share something new. Now with #hashtags support, YAY!!!",
+	charactersLimit = 99999,
 }) => {
+	// Never delete these lines below
+	const sizeLimit = charactersLimit ?? 99999;
+	const [html, setHtml] = useState(he.decode(defaultValue ?? ""));
+	const [length, setLength] = useState(0);
+
+	useEffect(() => {
+		setHtml(html ?? "");
+	}, [html]);
+
 	const uploadFile = async (file) => {
 		console.log("Auth from image.beforeUpload event", auth);
 		const data = new FormData();
@@ -40,49 +48,143 @@ const MyTextArea = ({
 		return res?.data?.data.location.secure_location;
 	};
 
-	const editor = useCreateBlockNote({ uploadFile });
-
-	const [html, setHtml] = useState(he.decode(defaultValue));
-
-	// This is for creating html data
-	const onChange = async () => {
-		const blocks = await editor.blocksToFullHTML(editor.document);
-		setHtml(blocks);
+	// Never delete these lines above
+	const handleInit = (evt, editor) => {
+		setLength(editor.getContent({ format: "text" }).length);
 	};
 
-	useEffect(() => {
-		onChange();
-	}, []);
-
-	// This is for updating html data
-	useEffect(() => {
-		async function loadInitialHTML() {
-			const blocks = await editor.tryParseHTMLToBlocks(html);
-			editor.replaceBlocks(editor.document, blocks);
-			setHtml(blocks);
+	const handleUpdate = (value, editor) => {
+		const length = editor.getContent({ format: "text" }).length;
+		if (length <= sizeLimit) {
+			setHtml(value);
+			setLength(length);
 		}
-		loadInitialHTML();
-	}, [editor]);
+	};
 
-	return advancedTextEditor ? (
-		<>
-			<input
-				id={`hidden-${id}`}
-				name={name}
-				defaultValue={html}
-				type="hidden"
-			/>
-			<BlockNoteView editor={editor} onChange={onChange} />
-		</>
-	) : (
-		<textarea
-			id={id}
-			name={name}
-			className="form-control"
-			rows="5"
-			placeholder={customPlaceholder}
-			defaultValue={defaultValue}
-		/>
+	const handleBeforeAddUndo = (evt, editor) => {
+		const length = editor.getContent({ format: "text" }).length;
+		// note that this is the opposite test as in handleUpdate
+		// because we are determining when to deny adding an undo level
+		if (length > sizeLimit) {
+			evt.preventDefault();
+		}
+	};
+
+	return (
+		<Tab.Container defaultActiveKey="htmlcontent">
+			<Nav variant="pills" className="nav-justified mb-3">
+				<Nav.Item>
+					<Nav.Link eventKey="htmlcontent">HTML</Nav.Link>
+				</Nav.Item>
+				<Nav.Item>
+					<Nav.Link eventKey="jsoncontent">JSON Content</Nav.Link>
+				</Nav.Item>
+			</Nav>
+			<Tab.Content>
+				<Tab.Pane eventKey="htmlcontent">
+					{advancedTextEditor ? (
+						<>
+							<input
+								id={`hidden-${id}`}
+								name={name}
+								defaultValue={html}
+								type="hidden"
+							/>
+							<div className="dcs">
+								<Editor
+									apiKey="rwwujsoifkpg0p6yqw7b07ifndqwd8ks1jnkjf4gx36v4jyc"
+									initialValue={defaultValue}
+									value={html}
+									onInit={handleInit}
+									onEditorChange={handleUpdate}
+									onBeforeAddUndo={handleBeforeAddUndo}
+									init={{
+										skin: "bootstrap",
+										icons: "bootstrap",
+										plugins: [
+											// Core editing features
+											"anchor",
+											"autolink",
+											"charmap",
+											"codesample",
+											"emoticons",
+											"image",
+											"link",
+											"lists",
+											"media",
+											"searchreplace",
+											"table",
+											"visualblocks",
+											"wordcount",
+											// Your account includes a free trial of TinyMCE premium features
+											// Try the most popular premium features until Mar 16, 2025:
+											// "checklist",
+											// "mediaembed",
+											// "casechange",
+											// "export",
+											// "formatpainter",
+											// "pageembed",
+											// "a11ychecker",
+											// "tinymcespellchecker",
+											// "permanentpen",
+											// "powerpaste",
+											// "advtable",
+											// "advcode",
+											// "editimage",
+											// "advtemplate",
+											// "mentions",
+											// "tinycomments",
+											// "tableofcontents",
+											// "footnotes",
+											// "mergetags",
+											// "autocorrect",
+											// "typography",
+											// "inlinecss",
+											// "markdown",
+											// "importword",
+											// "exportword",
+											// "exportpdf",
+										],
+										toolbar:
+											"undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat",
+										tinycomments_mode: "embedded",
+										tinycomments_author: "Author name",
+										setup: (editor) => {
+											editor.on("init", () => {
+												editor.getContainer().style.transition =
+													"border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out";
+											});
+											editor.on("focus", () => {
+												editor.getContainer().style.boxShadow =
+													"0 0 0 .2rem rgba(0, 123, 255, .25)";
+												editor.getContainer().style.borderColor = "#80bdff";
+											});
+											editor.on("blur", () => {
+												editor.getContainer().style.boxShadow = "";
+												editor.getContainer().style.borderColor = "";
+											});
+										},
+									}}
+								/>
+							</div>
+							<p>Remaining: {sizeLimit - length}</p>
+						</>
+					) : (
+						<textarea
+							id={id}
+							name={name}
+							className="form-control"
+							rows="5"
+							placeholder={customPlaceholder}
+							defaultValue={defaultValue}
+						/>
+					)}
+				</Tab.Pane>
+				<Tab.Pane eventKey="jsoncontent">
+					<pre>{JSON.stringify({ html }, 4, null)}</pre>
+				</Tab.Pane>
+			</Tab.Content>
+		</Tab.Container>
 	);
 };
 

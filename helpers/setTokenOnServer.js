@@ -27,11 +27,12 @@ export const setAuthTokenOnServer = async (token) => {
 		const daysInTime = 24 * 60 * 60 * 1000;
 		console.log("setAuthTokenOnServer function was a success", token);
 		myCookies.set("xAuthToken", token, {
-			secure: true,
+			secure: process.env.NEXT_PUBLIC_API_ENV === "production" ? true : false,
 			maxAge: new Date(
 				Date.now() + process.env.NEXT_PUBLIC_JWT_COOKIE_EXPIRE * daysInTime
 			),
-			sameSite: "lax",
+			sameSite:
+				process.env.NEXT_PUBLIC_API_ENV === "production" ? "none" : "lax",
 		});
 	} else {
 		console.log("setAuthTokenOnServer function was not a success", token);
@@ -48,32 +49,32 @@ export const setUserOnServer = async (object) => {
 			"userStripeChargesEnabled",
 			object?.stripe?.stripeChargesEnabled,
 			{
-				secure: true,
+				secure: process.env.NEXT_PUBLIC_API_ENV === "production" ? true : false,
 				maxAge: new Date(
 					Date.now() + process.env.NEXT_PUBLIC_JWT_COOKIE_EXPIRE * daysInTime
 				),
 			}
 		);
 		myCookies.set("userId", object?._id, {
-			secure: true,
+			secure: process.env.NEXT_PUBLIC_API_ENV === "production" ? true : false,
 			maxAge: new Date(
 				Date.now() + process.env.NEXT_PUBLIC_JWT_COOKIE_EXPIRE * daysInTime
 			),
 		});
 		myCookies.set("username", object?.username, {
-			secure: true,
+			secure: process.env.NEXT_PUBLIC_API_ENV === "production" ? true : false,
 			maxAge: new Date(
 				Date.now() + process.env.NEXT_PUBLIC_JWT_COOKIE_EXPIRE * daysInTime
 			),
 		});
 		myCookies.set("email", object?.email, {
-			secure: true,
+			secure: process.env.NEXT_PUBLIC_API_ENV === "production" ? true : false,
 			maxAge: new Date(
 				Date.now() + process.env.NEXT_PUBLIC_JWT_COOKIE_EXPIRE * daysInTime
 			),
 		});
 		myCookies.set("avatar", object?.files?.avatar?.location?.secure_location, {
-			secure: true,
+			secure: process.env.NEXT_PUBLIC_API_ENV === "production" ? true : false,
 			maxAge: new Date(
 				Date.now() + process.env.NEXT_PUBLIC_JWT_COOKIE_EXPIRE * daysInTime
 			),

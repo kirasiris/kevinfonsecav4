@@ -26,9 +26,9 @@ const nextConfig = {
 			},
 		],
 	},
-	headers: async () => {
-		return [];
-	},
+	// headers: async () => {
+	// 	return [];
+	// },
 	rewrites: async () => {
 		return [
 			{

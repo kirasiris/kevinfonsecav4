@@ -30,10 +30,26 @@ const Login = async ({ params, searchParams }) => {
 			rememberMe: formData.get("rememberMe"),
 		};
 
-		const res = await fetchurl(`/auth/login`, "POST", "no-cache", {
-			...rawFormData,
-			website: "beFree",
-		});
+		// const res = await fetchurl(
+		// 	`/auth/login`,
+		// 	"POST",
+		// 	"no-cache",
+		// 	{
+		// 		...rawFormData,
+		// 		website: "beFree",
+		// 	}
+		// );
+
+		const res = await fetch(
+			`${process.env.NEXT_PUBLIC_WEBSITE_URL}/api/proxy/auth/login`,
+			{
+				method: "POST",
+				body: { ...rawFormData, website: "beFree" },
+				credentials: "include",
+			}
+		);
+
+		console.log("Response", rawFormData, res);
 
 		if (res?.data) {
 			redirect(`/auth/validatetwofactorauth/${res?.data?._id}`);

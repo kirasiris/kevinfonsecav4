@@ -132,6 +132,7 @@ const CreateLesson = async ({ params, searchParams }) => {
 					github_readme={""}
 					category={undefined}
 					categories={[]}
+					multiple_categories={false}
 					multipleFiles={false}
 					onModel={"Lesson"}
 					files={files}

@@ -180,6 +180,7 @@ const UpdateQuiz = async ({ params, searchParams }) => {
 					github_readme={""}
 					category={quiz?.data?.category?._id || quiz?.data?.category}
 					categories={categories.data}
+					multiple_categories={false}
 					multipleFiles={false}
 					onModel={"Quiz"}
 					files={files}

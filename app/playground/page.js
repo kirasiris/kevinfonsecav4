@@ -1,13 +1,20 @@
+import Calendar from "@/components/global/calendar";
 import UseDropzone from "@/components/global/dropzone";
 import RecordAudioModal from "@/components/global/recordaudiomodal";
-import { getUserOnServer } from "@/helpers/setTokenOnServer";
+import { fetchurl, getUserOnServer } from "@/helpers/setTokenOnServer";
 import Waveform from "@/layout/waveform";
+
+async function getSetting(params) {
+	const res = await fetchurl(`/settings/${params}`, "GET", "default");
+	return res;
+}
 
 const PlaygroundIndex = async ({ params, searchParams }) => {
 	const awtdParams = await params;
 	const awtdSearchParams = await searchParams;
 
 	const auth = await getUserOnServer();
+	const settings = await getSetting(process.env.NEXT_PUBLIC_SETTINGS_ID);
 
 	return (
 		<div className="container">
@@ -20,6 +27,7 @@ const PlaygroundIndex = async ({ params, searchParams }) => {
 				mediaAlbum=""
 			/>
 			<UseDropzone />
+			<Calendar settings={settings} />
 		</div>
 	);
 };

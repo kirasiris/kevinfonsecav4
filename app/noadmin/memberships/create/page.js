@@ -321,6 +321,7 @@ const CreateMembership = async ({ params, searchParams }) => {
 					github_readme={""}
 					category={undefined}
 					categories={[]}
+					multiple_categories={false}
 					multipleFiles={false}
 					onModel={"Membership"}
 					files={[]}

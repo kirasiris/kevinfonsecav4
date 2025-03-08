@@ -41,7 +41,7 @@ const UpdateMovie = async ({ params, searchParams }) => {
 			title: formData.get("title"),
 			text: formData.get("text"),
 			featured: formData.get("featured"),
-			category: formData.get("category"),
+			category: formData.getAll("category"),
 			commented: formData.get("commented"),
 			password: formData.get("password"),
 			onairstatus: formData.get("onairstatus"),
@@ -116,6 +116,7 @@ const UpdateMovie = async ({ params, searchParams }) => {
 					github_readme={""}
 					category={movie?.data?.category?._id || movie?.data?.category}
 					categories={categories?.data}
+					multiple_categories={false}
 					multipleFiles={false}
 					onModel={"Playlist"}
 					files={files}

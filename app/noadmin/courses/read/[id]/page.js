@@ -23,7 +23,7 @@ const ReadCourse = async ({ params, searchParams }) => {
 	const limit = awtdSearchParams.limit || 10;
 	const sort = awtdSearchParams.sort || "orderingNumber";
 
-	const course = await getCourse(`/${params.id}`);
+	const course = await getCourse(`/${awtdParams.id}`);
 	const lessons = await getLessons(
 		`?resourceId=${course?.data?._id}&page=${page}&limit=${limit}&sort=${sort}`
 	);
@@ -32,35 +32,35 @@ const ReadCourse = async ({ params, searchParams }) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/videos/${id}/draftit`, "PUT", "no-cache");
-		revalidatePath(`/noadmin/courses/read/${params.id}`);
+		revalidatePath(`/noadmin/courses/read/${awtdParams.id}`);
 	};
 
 	const publishIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/videos/${id}/publishit`, "PUT", "no-cache");
-		revalidatePath(`/noadmin/courses/read/${params.id}`);
+		revalidatePath(`/noadmin/courses/read/${awtdParams.id}`);
 	};
 
 	const trashIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/videos/${id}/trashit`, "PUT", "no-cache");
-		revalidatePath(`/noadmin/courses/read/${params.id}`);
+		revalidatePath(`/noadmin/courses/read/${awtdParams.id}`);
 	};
 
 	const scheduleIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/videos/${id}/scheduleit`, "PUT", "no-cache");
-		revalidatePath(`/noadmin/courses/read/${params.id}`);
+		revalidatePath(`/noadmin/courses/read/${awtdParams.id}`);
 	};
 
 	const handleDelete = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/videos/${id}/permanently`, "DELETE", "no-cache");
-		revalidatePath(`/noadmin/courses/read/${params.id}`);
+		revalidatePath(`/noadmin/courses/read/${awtdParams.id}`);
 	};
 
 	const handleTrashAll = async (id) => {
@@ -69,7 +69,7 @@ const ReadCourse = async ({ params, searchParams }) => {
 		await fetchurl(`/videos/deleteall`, "PUT", "no-cache", {
 			onModel: "Course",
 		});
-		revalidatePath(`/noadmin/courses/read/${params.id}`);
+		revalidatePath(`/noadmin/courses/read/${awtdParams.id}`);
 	};
 
 	const handleDeleteAll = async (id) => {
@@ -78,12 +78,12 @@ const ReadCourse = async ({ params, searchParams }) => {
 		await fetchurl(`/videos/deleteall/permanently`, "DELETE", "no-cache", {
 			onModel: "Course",
 		});
-		revalidatePath(`/noadmin/courses/read/${params.id}`);
+		revalidatePath(`/noadmin/courses/read/${awtdParams.id}`);
 	};
 
 	return (
 		<div className="row">
-			<div className="col-lg-8">
+			<div className="col-lg-10">
 				<div className="card rounded-0 mb-3">
 					<div className="card-header">{course?.data?.title || "Untitled"}</div>
 					<div className="card-body">
@@ -108,7 +108,7 @@ const ReadCourse = async ({ params, searchParams }) => {
 					/>
 				</div>
 			</div>
-			<div className="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-xs-12 d-none d-sm-none d-md-none d-lg-block dm-xl-block">
+			<div className="col-xl-2 col-lg-2 col-md-2 col-sm-12 col-xs-12 d-none d-sm-none d-md-none d-lg-block dm-xl-block">
 				<figure className="mb-3 bg-dark">
 					<Image
 						className="img-fluid p-3"

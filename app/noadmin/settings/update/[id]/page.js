@@ -33,6 +33,13 @@ const UpdateSetting = async ({ params, searchParams }) => {
 		};
 		await fetchurl(`/settings/${awtdParams.id}`, "PUT", "no-cache", {
 			...rawFormData,
+			calendar: {
+				availableDays: formData.getAll("available_days"),
+				timeRange: {
+					start: formData.get("start_range"),
+					end: formData.get("end_range"),
+				},
+			},
 			social: {
 				facebook: formData.get("facebook"),
 				twitter: formData.get("twitter"),
@@ -78,7 +85,7 @@ const UpdateSetting = async ({ params, searchParams }) => {
 					className="form-control mb-3"
 					placeholder=""
 				/>
-				<label htmlFor="blog-text multipurpose-textarea" className="form-label">
+				<label htmlFor="text" className="form-label">
 					Text
 				</label>
 				<MyTextArea
@@ -289,6 +296,53 @@ const UpdateSetting = async ({ params, searchParams }) => {
 					className="form-control mb-3"
 					placeholder=""
 				/>
+				<div className="row">
+					<h1>Calendar</h1>
+					<div className="col">
+						<label htmlFor="available_days" className="form-label">
+							Available Days
+						</label>
+						<select
+							id="available_days"
+							name="available_days"
+							defaultValue={setting?.data?.calendar?.availableDays}
+							className="form-control"
+							multiple
+						>
+							<option value={`0`}>Sunday</option>
+							<option value={`1`}>Monday</option>
+							<option value={`2`}>Tuesday</option>
+							<option value={`3`}>Wednesday</option>
+							<option value={`4`}>Thursday</option>
+							<option value={`5`}>Friday</option>
+							<option value={`6`}>Saturday</option>
+						</select>
+					</div>
+					<div className="col">
+						<label htmlFor="start_range" className="form-label">
+							Start Range
+						</label>
+						<input
+							id="start_range"
+							name="start_range"
+							defaultValue={setting?.data?.calendar?.timeRange?.start}
+							type="text"
+							className="form-control mb-3"
+							placeholder="00:00"
+						/>
+						<label htmlFor="end_range" className="form-label">
+							End Range
+						</label>
+						<input
+							id="end_range"
+							name="end_range"
+							defaultValue={setting?.data?.calendar?.timeRange?.end}
+							type="text"
+							className="form-control mb-3"
+							placeholder="23:59"
+						/>
+					</div>
+				</div>
 				<div className="row">
 					<h1>Ads</h1>
 					<div className="col">

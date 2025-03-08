@@ -10,7 +10,7 @@ const CreateMenu = async ({ params, searchParams }) => {
 		const rawFormData = {
 			title: formData.get("title"),
 			text: formData.get("text"),
-			position: formData.get("position"),
+			position: formData.getAll("position"),
 			status: formData.get("status"),
 		};
 		await fetchurl(`/menus`, "POST", "no-cache", rawFormData);
@@ -52,6 +52,7 @@ const CreateMenu = async ({ params, searchParams }) => {
 					name="position"
 					defaultValue="top"
 					className="form-control"
+					multiple
 				>
 					<option value={`top`}>Top</option>
 					<option value={`bottom`}>Bottom</option>
@@ -72,6 +73,7 @@ const CreateMenu = async ({ params, searchParams }) => {
 					github_readme={""}
 					category={undefined}
 					categories={[]}
+					multiple_categories={false}
 					multipleFiles={false}
 					onModel={"Menu"}
 					files={[]}

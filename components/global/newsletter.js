@@ -59,7 +59,7 @@ const NewsletterForm = ({
 				<h2
 					className={`${headingClassList} page-section-heading display-5 text-uppercase`}
 				>
-					Subscribe&nbsp;to&nbsp;our&nbsp;Newsletter
+					Newsletter
 				</h2>
 				<p>
 					Join&nbsp;other&nbsp;{newsletters?.length || "0"}

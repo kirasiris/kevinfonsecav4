@@ -31,9 +31,9 @@ const CreateRealState = async ({ params, searchParams }) => {
 			bathrooms: formData.get("bathrooms"),
 			squarefeet: formData.get("squarefeet"),
 			isSold: formData.get("isSold"),
-			businessType: formData.get("businessType"),
+			businessType: formData.getAll("businessType"),
 			type: formData.get("type"),
-			amenities: Array.from(formData.getAll("amenities")),
+			amenities: formData.getAll("amenities"),
 			password: formData.get("password"),
 			status: formData.get("status"),
 			files: { avatar: formData.get("file") },
@@ -204,6 +204,7 @@ const CreateRealState = async ({ params, searchParams }) => {
 							name="businessType"
 							defaultValue="sale"
 							className="form-control"
+							multiple
 						>
 							<option value={`sale`}>Sale</option>
 							<option value={`rent`}>Rent</option>
@@ -439,6 +440,7 @@ const CreateRealState = async ({ params, searchParams }) => {
 					github_readme={""}
 					category={undefined}
 					categories={[]}
+					multiple_categories={false}
 					multipleFiles={false}
 					onModel={"RealState"}
 					files={files}

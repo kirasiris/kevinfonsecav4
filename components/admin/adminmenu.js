@@ -62,6 +62,11 @@ const AdminMenu = () => {
 						<a>Emails</a>
 					</Link>
 				</li>
+				<li className={`list-group-item ${isActive(`/noadmin/events`)}`}>
+					<Link href={"/noadmin/events"} passHref legacyBehavior>
+						<a>Events</a>
+					</Link>
+				</li>
 				<li className={`list-group-item ${isActive(`/noadmin/files`)}`}>
 					<Link href={"/noadmin/files"} passHref legacyBehavior>
 						<a>Files</a>

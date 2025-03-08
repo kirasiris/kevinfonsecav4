@@ -17,6 +17,7 @@ const List = ({
 	handlePublish = () => {},
 	handleTrash = () => {},
 	handleSchedule = () => {},
+	handleFeature = () => {},
 	handleDelete = () => {},
 	handleTrashAllFunction = () => {},
 	handleDeleteAllFunction = () => {},
@@ -82,6 +83,21 @@ const List = ({
 			<ErrorPage
 				statusCodeMessage={
 					"The handleSchedule parameter is not a function!. Please try again"
+				}
+			/>
+		);
+	}
+
+	if (
+		typeof handleFeature !== "function" &&
+		handleFeature !== "" &&
+		handleFeature !== undefined &&
+		handleFeature !== null
+	) {
+		return (
+			<ErrorPage
+				statusCodeMessage={
+					"The handleFeature parameter is not a function!. Please try again"
 				}
 			/>
 		);
@@ -156,6 +172,7 @@ const List = ({
 								handlePublish={handlePublish}
 								handleTrash={handleTrash}
 								handleSchedule={handleSchedule}
+								handleFeature={handleFeature}
 								handleDelete={handleDelete}
 								objects={newobjects.data}
 								setObjects={setNewObjects}

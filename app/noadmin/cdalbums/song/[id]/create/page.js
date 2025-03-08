@@ -145,6 +145,7 @@ const CreateSong = async ({ params, searchParams }) => {
 					github_readme={""}
 					category={undefined}
 					categories={[]}
+					multiple_categories={false}
 					multipleFiles={false}
 					onModel={"Song"}
 					files={files}

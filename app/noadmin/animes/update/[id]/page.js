@@ -41,7 +41,7 @@ const UpdateAnime = async ({ params, searchParams }) => {
 			title: formData.get("title"),
 			text: formData.get("text"),
 			featured: formData.get("featured"),
-			category: formData.get("category"),
+			category: formData.getAll("category"),
 			commented: formData.get("commented"),
 			password: formData.get("password"),
 			onairstatus: formData.get("onairstatus"),
@@ -116,6 +116,7 @@ const UpdateAnime = async ({ params, searchParams }) => {
 					github_readme={""}
 					category={anime?.data?.category?._id || anime?.data?.category}
 					categories={categories?.data}
+					multiple_categories={true}
 					multipleFiles={false}
 					onModel={"Playlist"}
 					files={files}

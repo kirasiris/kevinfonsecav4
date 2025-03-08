@@ -90,6 +90,7 @@ const CreateTheme = async ({ params, searchParams }) => {
 					github_readme={"#"}
 					category={undefined}
 					categories={categories.data}
+					multiple_categories={false}
 					multipleFiles={false}
 					onModel={"Blog"}
 					files={files}

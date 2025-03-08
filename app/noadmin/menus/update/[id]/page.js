@@ -20,7 +20,7 @@ const UpdateMenu = async ({ params, searchParams }) => {
 		const rawFormData = {
 			title: formData.get("title"),
 			text: formData.get("text"),
-			position: formData.get("position"),
+			position: formData.getAll("position"),
 			status: formData.get("status"),
 		};
 		await fetchurl(`/menus/${awtdParams.id}`, "PUT", "no-cache", rawFormData);
@@ -82,6 +82,7 @@ const UpdateMenu = async ({ params, searchParams }) => {
 					github_readme={""}
 					category={undefined}
 					categories={[]}
+					multiple_categories={false}
 					multipleFiles={false}
 					onModel={"Menu"}
 					files={[]}

@@ -95,6 +95,7 @@ const UpdateCDAlbum = async ({ params, searchParams }) => {
 					github_readme={""}
 					category={cdalbum?.data?.category?._id || cdalbum?.data?.category}
 					categories={categories?.data}
+					multiple_categories={false}
 					multipleFiles={false}
 					onModel={"Playlist"}
 					files={[]}

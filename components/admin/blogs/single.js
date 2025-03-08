@@ -11,6 +11,7 @@ const Single = ({
 	handlePublish,
 	handleTrash,
 	handleSchedule,
+	handleFeature,
 	handleDelete,
 	objects,
 	setObjects,
@@ -38,6 +39,9 @@ const Single = ({
 							{formatDateWithoutTime(object.createdAt)}
 						</span>
 						<span className="badge bg-dark me-1">{object.status}</span>
+						{object.featured && (
+							<span className="badge bg-dark me-1">featured</span>
+						)}
 					</div>
 				</div>
 				<div className="blog-type-list__blog-thumbnail-wrapper has-image d-none d-md-block d-lg-block d-xl-block d-xxl-block">
@@ -102,6 +106,14 @@ const Single = ({
 							>
 								Schedule&nbsp;It
 							</button>
+							<button
+								className="dropdown-item btn btn-sm"
+								onClick={() => handleFeature(object._id)}
+							>
+								Feature&nbsp;It
+							</button>
+
+							<hr />
 							<DeleteModal
 								id={object._id ? object._id : object._id}
 								action={handleDelete}

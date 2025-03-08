@@ -320,6 +320,7 @@ const CreateCourse = async ({ params, searchParams }) => {
 					github_readme={""}
 					category={undefined}
 					categories={[]}
+					multiple_categories={false}
 					multipleFiles={false}
 					onModel={"Course"}
 					files={files}

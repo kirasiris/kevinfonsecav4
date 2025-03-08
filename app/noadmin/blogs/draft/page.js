@@ -57,6 +57,13 @@ const AdminBlogsDraftIndex = async ({ params, searchParams }) => {
 		);
 	};
 
+	const featureIt = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/blogs/${id}/featureit`, "PUT", "no-cache");
+		revalidatePath(`/noadmin/blogs?page=${page}&limit=${limit}&sort=${sort}`);
+	};
+
 	const handleDelete = async (id) => {
 		"use server";
 		// const rawFormData = {}
@@ -107,6 +114,7 @@ const AdminBlogsDraftIndex = async ({ params, searchParams }) => {
 					handlePublish={publishIt}
 					handleTrash={trashIt}
 					handleSchedule={scheduleIt}
+					handleFeature={featureIt}
 					handleDelete={handleDelete}
 					handleTrashAllFunction={handleTrashAll}
 					handleDeleteAllFunction={handleDeleteAll}

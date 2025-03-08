@@ -95,6 +95,7 @@ const UpdateBlog = async ({ params, searchParams }) => {
 					github_readme={""}
 					category={blog?.data?.category?._id || blog?.data?.category}
 					categories={categories.data}
+					multiple_categories={false}
 					multipleFiles={false}
 					onModel={"Blog"}
 					files={files}

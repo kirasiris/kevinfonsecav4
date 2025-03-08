@@ -33,6 +33,10 @@ const Single = ({
 						{object?.title}
 					</a>
 				</Link>
+				<span className="badge bg-dark ms-1">{object.status}</span>
+				{object.featured && (
+					<span className="badge bg-dark me-1">featured</span>
+				)}
 			</div>
 			<div className="float-end">
 				<div className="blog-item__panel">

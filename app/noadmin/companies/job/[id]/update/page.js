@@ -32,10 +32,10 @@ const UpdateJob = async ({ params, searchParams }) => {
 			text: formData.get("text"),
 			featured: formData.get("featured"),
 			positionFilled: formData.get("positionFilled"),
-			experience_level: formData.get("experience_level"),
-			job_type: formData.get("job_type"),
-			remote: formData.get("remote"),
-			shift_and_schedule: formData.get("shift_and_schedule"),
+			experience_level: formData.getAll("experience_level"),
+			job_type: formData.getAll("job_type"),
+			remote: formData.getAll("remote"),
+			shift_and_schedule: formData.getAll("shift_and_schedule"),
 			encouraged_to_apply: formData.get("encouraged_to_apply"),
 			starting_at: formData.get("starting_at"),
 			provides_training: formData.get("provides_training"),
@@ -115,6 +115,7 @@ const UpdateJob = async ({ params, searchParams }) => {
 							name="experience_level"
 							defaultValue={job?.data?.experience_level}
 							className="form-control"
+							multiple
 						>
 							<option value={"graduate"}>Graduate</option>
 							<option value={"entry"}>Entry</option>
@@ -186,6 +187,7 @@ const UpdateJob = async ({ params, searchParams }) => {
 							name="remote"
 							defaultValue={job?.data?.remote}
 							className="form-control"
+							multiple
 						>
 							<option value={`hybrid`}>Hybrid</option>
 							<option value={`remote`}>Remote</option>
@@ -199,15 +201,6 @@ const UpdateJob = async ({ params, searchParams }) => {
 							id="shift_and_schedule"
 							name="shift_and_schedule"
 							defaultValue={job?.data?.shift_and_schedule}
-							// onChange={(e) => {
-							// 	const selectedOptions = Array.from(
-							// 		e.target.selectedOptions
-							// 	).map((option) => option.value);
-							// 	setJobData({
-							// 		...jobData,
-							// 		shift_and_schedule: selectedOptions,
-							// 	});
-							// }}
 							className="form-control"
 							multiple
 						>
@@ -262,6 +255,7 @@ const UpdateJob = async ({ params, searchParams }) => {
 					github_readme={""}
 					category={undefined}
 					categories={[]}
+					multiple_categories={false}
 					multipleFiles={false}
 					onModel={"Job"}
 					files={[]}

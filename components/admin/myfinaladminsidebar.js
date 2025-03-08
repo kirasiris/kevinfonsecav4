@@ -16,6 +16,7 @@ const AdminSidebar = ({
 	github_readme = "",
 	category = undefined,
 	categories = [],
+	multiple_categories = false,
 	multipleFiles = false,
 	onModel = "Blog",
 	files = [],
@@ -161,13 +162,14 @@ const AdminSidebar = ({
 			{displayCategoryField && (
 				<>
 					<label htmlFor="category" className="form-label">
-						Category {console.log(categories)}
+						Category
 					</label>
 					<select
 						id="category"
 						name="category"
 						defaultValue={category}
 						className="form-control"
+						multiple={multiple_categories}
 					>
 						{categories
 							// .filter((c) => c.parentCategory === undefined)

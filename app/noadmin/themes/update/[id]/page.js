@@ -97,6 +97,7 @@ const UpdateTheme = async ({ params, searchParams }) => {
 					github_readme={theme?.data?.github_readme}
 					category={theme?.data?.category?._id || theme?.data?.category}
 					categories={categories.data}
+					multiple_categories={false}
 					multipleFiles={false}
 					onModel={"Blog"}
 					files={files}

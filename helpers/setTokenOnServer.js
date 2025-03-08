@@ -115,6 +115,7 @@ export const fetchurl = async (
 		Authorization: `Bearer ${token?.value}`,
 		"Content-Type": "application/json",
 		credentials: "include",
+		host: "befree.herokuapp.com",
 	};
 
 	if (
@@ -149,9 +150,16 @@ export const fetchurl = async (
 			body: method !== "GET" && method !== "HEAD" ? requestBody : null,
 			signal: signal,
 			headers: customHeaders,
+			redirect: "manual",
 		}
 	)
 		.then(async (res) => {
+			// Might need to delete
+			if (res.status === 303) {
+				const redirectUrl = res.headers.get("Location");
+				console.log("redirection", redirectUrl);
+				return fetch(redirectUrl, { method, headers: customHeaders });
+			}
 			if (!res.ok) {
 				// check if there was JSON
 				const contentType = res.headers.get("Content-Type");
@@ -165,12 +173,12 @@ export const fetchurl = async (
 			return res.json();
 		})
 		.catch((err) => {
-			console.log("Error from console.log in setTokenOnServer file xD", err);
+			console.log("Error from console.log in fetchurl file xD", err);
 			if (err.name === "AbortError") {
 				console.log("successfully aborted");
 			} else {
 				// handle error
-				console.log("Error coming from setTokenOnServer file xD", err);
+				console.log("Error coming from fetchurl file xD", err);
 			}
 			return err;
 		});

@@ -6,9 +6,21 @@ import Globalcontent from "@/layout/content";
 import Globalsidebar from "@/layout/sidebar";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import QRC from "../global/qrcode";
+import Link from "next/link";
 
 const QRCodeGeneratorPage = ({ searchParams, pushTo = true }) => {
 	const router = useRouter();
+
+	const [searchEmailParams, setEmailSearchParams] = useState({
+		keyword: "",
+	});
+
+	const { keyword } = searchEmailParams;
+
+	const searchData = async (e) => {
+		e.preventDefault();
+		router.push(`/qrcode/results?email=${keyword}`);
+	};
 
 	const [qrcode, setQrCode] = useState({});
 	const [loading, setLoading] = useState(false);
@@ -308,6 +320,32 @@ const QRCodeGeneratorPage = ({ searchParams, pushTo = true }) => {
 					</Globalsidebar>
 					<Globalcontent containerClasses="col-lg-8">
 						<div className="card rounded-0">
+							<div className="card-header">
+								<div className="d-flex align-items-center">
+									<button className="btn btn-link btn-sm">
+										Find your QR Codes:
+									</button>
+									<form
+										onSubmit={searchData}
+										className="d-none d-md-block d-lg-block d-xl-block d-xxl-block"
+									>
+										<input
+											id="keyword"
+											name="keyword"
+											value={keyword}
+											onChange={(e) => {
+												setEmailSearchParams({
+													...searchEmailParams,
+													keyword: e.target.value,
+												});
+											}}
+											type="text"
+											className="form-control"
+											placeholder="Enter email"
+										/>
+									</form>
+								</div>
+							</div>
 							<div className="align-content-center border border-5 d-flex justify-content-center">
 								{loading ? (
 									<p>Loading...</p>

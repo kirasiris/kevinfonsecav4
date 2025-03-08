@@ -70,7 +70,7 @@ const MyTextArea = ({
 		}
 	};
 
-	return (
+	return advancedTextEditor ? (
 		<Tab.Container defaultActiveKey="htmlcontent">
 			<Nav variant="pills" className="nav-justified mb-3">
 				<Nav.Item>
@@ -82,109 +82,112 @@ const MyTextArea = ({
 			</Nav>
 			<Tab.Content>
 				<Tab.Pane eventKey="htmlcontent">
-					{advancedTextEditor ? (
-						<>
-							<input
-								id={`hidden-${id}`}
-								name={name}
-								defaultValue={html}
-								type="hidden"
-							/>
-							<div className="dcs">
-								<Editor
-									apiKey="rwwujsoifkpg0p6yqw7b07ifndqwd8ks1jnkjf4gx36v4jyc"
-									initialValue={defaultValue}
-									value={html}
-									onInit={handleInit}
-									onEditorChange={handleUpdate}
-									onBeforeAddUndo={handleBeforeAddUndo}
-									init={{
-										skin: "bootstrap",
-										icons: "bootstrap",
-										plugins: [
-											// Core editing features
-											"anchor",
-											"autolink",
-											"charmap",
-											"codesample",
-											"emoticons",
-											"image",
-											"link",
-											"lists",
-											"media",
-											"searchreplace",
-											"table",
-											"visualblocks",
-											"wordcount",
-											// Your account includes a free trial of TinyMCE premium features
-											// Try the most popular premium features until Mar 16, 2025:
-											// "checklist",
-											// "mediaembed",
-											// "casechange",
-											// "export",
-											// "formatpainter",
-											// "pageembed",
-											// "a11ychecker",
-											// "tinymcespellchecker",
-											// "permanentpen",
-											// "powerpaste",
-											// "advtable",
-											// "advcode",
-											// "editimage",
-											// "advtemplate",
-											// "mentions",
-											// "tinycomments",
-											// "tableofcontents",
-											// "footnotes",
-											// "mergetags",
-											// "autocorrect",
-											// "typography",
-											// "inlinecss",
-											// "markdown",
-											// "importword",
-											// "exportword",
-											// "exportpdf",
-										],
-										toolbar:
-											"undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat",
-										tinycomments_mode: "embedded",
-										tinycomments_author: "Author name",
-										setup: (editor) => {
-											editor.on("init", () => {
-												editor.getContainer().style.transition =
-													"border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out";
-											});
-											editor.on("focus", () => {
-												editor.getContainer().style.boxShadow =
-													"0 0 0 .2rem rgba(0, 123, 255, .25)";
-												editor.getContainer().style.borderColor = "#80bdff";
-											});
-											editor.on("blur", () => {
-												editor.getContainer().style.boxShadow = "";
-												editor.getContainer().style.borderColor = "";
-											});
-										},
-									}}
-								/>
-							</div>
-							<p>Remaining: {sizeLimit - length}</p>
-						</>
-					) : (
-						<textarea
-							id={id}
-							name={name}
-							className="form-control"
-							rows="5"
-							placeholder={customPlaceholder}
-							defaultValue={defaultValue}
+					<input
+						id={`hidden-${id}`}
+						name={name}
+						defaultValue={html}
+						type="hidden"
+					/>
+					<div className="dcs">
+						<Editor
+							apiKey="rwwujsoifkpg0p6yqw7b07ifndqwd8ks1jnkjf4gx36v4jyc"
+							initialValue={defaultValue}
+							value={html}
+							onInit={handleInit}
+							onEditorChange={handleUpdate}
+							onBeforeAddUndo={handleBeforeAddUndo}
+							init={{
+								skin: "bootstrap",
+								icons: "bootstrap",
+								plugins: [
+									// Core editing features
+									"anchor",
+									"autolink",
+									"charmap",
+									"codesample",
+									"emoticons",
+									"image",
+									"link",
+									"lists",
+									"media",
+									"searchreplace",
+									"table",
+									"visualblocks",
+									"wordcount",
+									// Your account includes a free trial of TinyMCE premium features
+									// Try the most popular premium features until Mar 16, 2025:
+									// "checklist",
+									// "mediaembed",
+									// "casechange",
+									// "export",
+									// "formatpainter",
+									// "pageembed",
+									// "a11ychecker",
+									// "tinymcespellchecker",
+									// "permanentpen",
+									// "powerpaste",
+									// "advtable",
+									// "advcode",
+									// "editimage",
+									// "advtemplate",
+									// "mentions",
+									// "tinycomments",
+									// "tableofcontents",
+									// "footnotes",
+									// "mergetags",
+									// "autocorrect",
+									// "typography",
+									// "inlinecss",
+									// "markdown",
+									// "importword",
+									// "exportword",
+									// "exportpdf",
+								],
+								toolbar:
+									"undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat",
+								tinycomments_mode: "embedded",
+								tinycomments_author: "Author name",
+								setup: (editor) => {
+									editor.on("init", () => {
+										editor.getContainer().style.transition =
+											"border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out";
+									});
+									editor.on("focus", () => {
+										editor.getContainer().style.boxShadow =
+											"0 0 0 .2rem rgba(0, 123, 255, .25)";
+										editor.getContainer().style.borderColor = "#80bdff";
+									});
+									editor.on("blur", () => {
+										editor.getContainer().style.boxShadow = "";
+										editor.getContainer().style.borderColor = "";
+									});
+									editor.on("keydown", (e) => {
+										//TURN ENTERY KEY INTO <br>**
+										if (e.which == "13" || e.keyCode == "13") {
+											editor.insertContent("<br> ");
+											e.preventDefault();
+										}
+									});
+								},
+							}}
 						/>
-					)}
+					</div>
+					<p>Remaining: {sizeLimit - length}</p>
 				</Tab.Pane>
 				<Tab.Pane eventKey="jsoncontent">
 					<pre>{JSON.stringify({ html }, 4, null)}</pre>
 				</Tab.Pane>
 			</Tab.Content>
 		</Tab.Container>
+	) : (
+		<textarea
+			id={id}
+			name={name}
+			className="form-control"
+			rows="5"
+			placeholder={customPlaceholder}
+			defaultValue={defaultValue}
+		/>
 	);
 };
 

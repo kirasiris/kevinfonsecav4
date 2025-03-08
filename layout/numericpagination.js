@@ -117,6 +117,7 @@ const NumericPagination = ({
 						<a className="page-link">&laquo;&nbsp;First</a>
 					</Link>
 				</li>
+				{/* Previous page link */}
 				<li className={`page-item ${Number(pageNo) - 1 === 0 && `disabled`}`}>
 					<Link
 						href={`?page=${Number(pageNo) - 1}&limit=${Number(
@@ -126,7 +127,7 @@ const NumericPagination = ({
 						legacyBehavior
 						scroll={false}
 					>
-						<a className="page-link">&lsaquo;&nbsp;Previous</a>
+						<a className="page-link">&lsaquo;&nbsp;</a>
 					</Link>
 				</li>
 				{array.map((index) => {
@@ -220,6 +221,7 @@ const NumericPagination = ({
 						</li>
 					);
 				})}
+				{/* Next page link */}
 				<li
 					className={`page-item ${
 						Number(pageNo) === Number(totalPages) && "disabled"
@@ -233,7 +235,7 @@ const NumericPagination = ({
 						legacyBehavior
 						scroll={false}
 					>
-						<a className="page-link">&rsaquo;&nbsp;Next</a>
+						<a className="page-link">&rsaquo;&nbsp;</a>
 					</Link>
 				</li>
 				<li

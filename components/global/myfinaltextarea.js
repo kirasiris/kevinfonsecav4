@@ -90,7 +90,7 @@ const MyTextArea = ({
 					/>
 					<div className="dcs">
 						<Editor
-							apiKey="rwwujsoifkpg0p6yqw7b07ifndqwd8ks1jnkjf4gx36v4jyc"
+							apiKey={process.env.NEXT_PUBLIC_TINYMCE_TOKEN}
 							initialValue={defaultValue}
 							value={html}
 							onInit={handleInit}

@@ -9,9 +9,9 @@ import UseProgress from "@/components/global/useprogress";
 const UseDropzone = ({
 	auth = {},
 	token = null,
-	id,
-	name,
-	multipleFiles,
+	id = "",
+	name = "",
+	multipleFiles = true,
 	onModel = "Blog",
 	revalidateUrl = ``,
 }) => {

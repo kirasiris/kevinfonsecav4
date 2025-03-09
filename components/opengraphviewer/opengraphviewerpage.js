@@ -9,7 +9,7 @@ import { fetchurl } from "@/helpers/setTokenOnServer";
 import NewsletterForm from "../global/newsletter";
 import { checkEmptyObject } from "befree-utilities";
 
-const OpenGraphViewerPage = ({ searchParams }) => {
+const OpenGraphViewerPage = ({ searchParams = {} }) => {
 	const router = useRouter();
 
 	// const [openGraph, setOpenGraph] = useState({});

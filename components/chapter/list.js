@@ -12,7 +12,7 @@ import NewsletterForm from "../global/newsletter";
 const List = ({
 	auth = {},
 	enrollmentVerification = {},
-	object,
+	object = {},
 	objects = [],
 	students = [],
 	isAdmin = false,

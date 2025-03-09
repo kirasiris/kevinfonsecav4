@@ -7,14 +7,14 @@ import { formatDateWithoutTime } from "befree-utilities";
 
 const Single = ({
 	object = {},
-	handleDraft,
-	handlePublish,
-	handleTrash,
-	handleSchedule,
-	handleDelete,
-	objects,
-	setObjects,
-	setTotalResults,
+	handleDraft = () => {},
+	handlePublish = () => {},
+	handleTrash = () => {},
+	handleSchedule = () => {},
+	handleDelete = () => {},
+	objects = [],
+	setObjects = () => {},
+	setTotalResults = () => {},
 }) => {
 	return (
 		<li className="list-group-item">

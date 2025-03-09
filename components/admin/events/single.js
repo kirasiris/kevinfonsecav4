@@ -8,15 +8,15 @@ import ParseHtml from "@/layout/parseHtml";
 
 const Single = ({
 	object = {},
-	handleDraft,
-	handlePublish,
-	handleTrash,
-	handleSchedule,
-	handleFeature,
-	handleDelete,
-	objects,
-	setObjects,
-	setTotalResults,
+	handleDraft = () => {},
+	handlePublish = () => {},
+	handleTrash = () => {},
+	handleSchedule = () => {},
+	handleFeature = () => {},
+	handleDelete = () => {},
+	objects = [],
+	setObjects = () => {},
+	setTotalResults = () => {},
 }) => {
 	let bgcolor = object.priority === "low" && "bg-secondary text-bg-secondary";
 	bgcolor = object.priority === "medium" && "bg-success text-bg-success";

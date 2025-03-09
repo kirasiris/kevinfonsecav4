@@ -117,6 +117,7 @@ export const fetchurl = async (
 		credentials: "include",
 	};
 
+	// Check if bodyData is a plain object before stringifying
 	if (
 		bodyData &&
 		typeof bodyData === "object" &&
@@ -124,7 +125,6 @@ export const fetchurl = async (
 		bodyData !== null &&
 		!multipart
 	) {
-		// Check if bodyData is a plain object before stringifying
 		requestBody = JSON.stringify(bodyData);
 	}
 

@@ -10,9 +10,10 @@ import NewsletterForm from "../global/newsletter";
 import Image from "next/image";
 import RelatedCarousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
+import ErrorPage from "@/layout/errorpage";
 
 const YouTubePage = ({
-	searchParams,
+	searchParams = {},
 	pushTo = true,
 	pushToLink = "/youtube",
 }) => {

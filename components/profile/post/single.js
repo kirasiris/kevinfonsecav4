@@ -19,21 +19,216 @@ import ParseHtml from "@/layout/parseHtml";
 const Post = ({
 	auth = {},
 	object = {},
-	handleDraft,
-	handlePublish,
-	handleTrash,
-	handleSchedule,
-	handleDelete,
-	handleFeature,
-	handleUnfeature,
-	handleHide,
-	handleUnhide,
-	handleCommented,
-	handleUncommented,
-	objects,
-	setObjects,
-	setTotalResults,
+	handleDraft = () => {},
+	handlePublish = () => {},
+	handleTrash = () => {},
+	handleSchedule = () => {},
+	handleDelete = () => {},
+	handleFeature = () => {},
+	handleUnfeature = () => {},
+	handleHide = () => {},
+	handleUnhide = () => {},
+	handleCommented = () => {},
+	handleUncommented = () => {},
+	objects = [],
+	setObjects = () => {},
+	setTotalResults = () => {},
 }) => {
+	if (
+		typeof handleDraft !== "function" &&
+		handleDraft !== "" &&
+		handleDraft !== undefined &&
+		handleDraft !== null
+	) {
+		return (
+			<ErrorPage
+				statusCodeMessage={
+					"The handleDraft parameter is not a function!. Please try again"
+				}
+			/>
+		);
+	}
+
+	if (
+		typeof handlePublish !== "function" &&
+		handlePublish !== "" &&
+		handlePublish !== undefined &&
+		handlePublish !== null
+	) {
+		return (
+			<ErrorPage
+				statusCodeMessage={
+					"The handlePublish parameter is not a function!. Please try again"
+				}
+			/>
+		);
+	}
+
+	if (
+		typeof handleTrash !== "function" &&
+		handleTrash !== "" &&
+		handleTrash !== undefined &&
+		handleTrash !== null
+	) {
+		return (
+			<ErrorPage
+				statusCodeMessage={
+					"The handleTrash parameter is not a function!. Please try again"
+				}
+			/>
+		);
+	}
+
+	if (
+		typeof handleSchedule !== "function" &&
+		handleSchedule !== "" &&
+		handleSchedule !== undefined &&
+		handleSchedule !== null
+	) {
+		return (
+			<ErrorPage
+				statusCodeMessage={
+					"The handleSchedule parameter is not a function!. Please try again"
+				}
+			/>
+		);
+	}
+
+	if (
+		typeof handleDelete !== "function" &&
+		handleDelete !== "" &&
+		handleDelete !== undefined &&
+		handleDelete !== null
+	) {
+		return (
+			<ErrorPage
+				statusCodeMessage={
+					"The handleDelete parameter is not a function!. Please try again"
+				}
+			/>
+		);
+	}
+
+	if (
+		typeof handleFeature !== "function" &&
+		handleFeature !== "" &&
+		handleFeature !== undefined &&
+		handleFeature !== null
+	) {
+		return (
+			<ErrorPage
+				statusCodeMessage={
+					"The handleFeature parameter is not a function!. Please try again"
+				}
+			/>
+		);
+	}
+
+	if (
+		typeof handleUnfeature !== "function" &&
+		handleUnfeature !== "" &&
+		handleUnfeature !== undefined &&
+		handleUnfeature !== null
+	) {
+		return (
+			<ErrorPage
+				statusCodeMessage={
+					"The handleUnfeature parameter is not a function!. Please try again"
+				}
+			/>
+		);
+	}
+
+	if (
+		typeof handleHide !== "function" &&
+		handleHide !== "" &&
+		handleHide !== undefined &&
+		handleHide !== null
+	) {
+		return (
+			<ErrorPage
+				statusCodeMessage={
+					"The handleHide parameter is not a function!. Please try again"
+				}
+			/>
+		);
+	}
+
+	if (
+		typeof handleUnhide !== "function" &&
+		handleUnhide !== "" &&
+		handleUnhide !== undefined &&
+		handleUnhide !== null
+	) {
+		return (
+			<ErrorPage
+				statusCodeMessage={
+					"The handleUnhide parameter is not a function!. Please try again"
+				}
+			/>
+		);
+	}
+
+	if (
+		typeof handleCommented !== "function" &&
+		handleCommented !== "" &&
+		handleCommented !== undefined &&
+		handleCommented !== null
+	) {
+		return (
+			<ErrorPage
+				statusCodeMessage={
+					"The handleCommented parameter is not a function!. Please try again"
+				}
+			/>
+		);
+	}
+
+	if (
+		typeof handleUncommented !== "function" &&
+		handleUncommented !== "" &&
+		handleUncommented !== undefined &&
+		handleUncommented !== null
+	) {
+		return (
+			<ErrorPage
+				statusCodeMessage={
+					"The handleUncommented parameter is not a function!. Please try again"
+				}
+			/>
+		);
+	}
+
+	if (
+		typeof setObjects !== "function" &&
+		setObjects !== "" &&
+		setObjects !== undefined &&
+		setObjects !== null
+	) {
+		return (
+			<ErrorPage
+				statusCodeMessage={
+					"The setObjects parameter is not a function!. Please try again"
+				}
+			/>
+		);
+	}
+
+	if (
+		typeof setTotalResults !== "function" &&
+		setTotalResults !== "" &&
+		setTotalResults !== undefined &&
+		setTotalResults !== null
+	) {
+		return (
+			<ErrorPage
+				statusCodeMessage={
+					"The setTotalResults parameter is not a function!. Please try again"
+				}
+			/>
+		);
+	}
+
 	const images = ["https://source.unsplash.com/random/1200x900"];
 
 	return (

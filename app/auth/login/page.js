@@ -44,7 +44,7 @@ const Login = async ({ params, searchParams }) => {
 
 		// Else continue,
 		// furthermore, setAuthTokenOnServer needs to be prior to setAuthToken (client version)
-		setAuthTokenOnServer(res?.token);
+		await setAuthTokenOnServer(res?.token);
 
 		const loadUser = async () => await fetchurl(`/auth/me`, "GET", "default");
 		const loadedUser = await loadUser();
@@ -52,7 +52,7 @@ const Login = async ({ params, searchParams }) => {
 		await setUserOnServer(await loadedUser?.data);
 
 		// alert("Login was a success");
-		// redirect(awtdSearchParams.returnpage || `/auth/profile`);
+		redirect(awtdSearchParams.returnpage || `/auth/profile`);
 	};
 
 	return (

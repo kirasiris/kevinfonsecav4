@@ -10,11 +10,11 @@ const DeleteModal = ({
 	as = `button`,
 	size = `sm`,
 	classStr = ``,
-	action,
-	action2,
-	setObjects,
+	action = () => {},
+	action2 = () => {},
+	setObjects = () => {},
 	objects = [],
-	setTotalResults,
+	setTotalResults = () => {},
 }) => {
 	const [confirmDeleteModal, setConfirmDeleteModal] = useState(false);
 	const [, setError] = useState(false);

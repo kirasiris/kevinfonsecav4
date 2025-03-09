@@ -63,7 +63,7 @@ const List = ({
 					{/* Featured list */}
 					{featured?.data?.length > 0 &&
 						featured.data.map((featured) => (
-							<Single key={featured._id} object={featured} fullWidth={true} />
+							<Single key={featured._id} object={featured} />
 						))}
 					{/* Blog list */}
 					<div className="row">
@@ -71,7 +71,7 @@ const List = ({
 							<>
 								{objects?.data?.length > 0 &&
 									objects.data?.map((theme) => (
-										<Single key={theme._id} theme={theme} />
+										<Single key={theme._id} object={theme} />
 									))}
 								<NumericPagination
 									totalPages={

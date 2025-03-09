@@ -16,8 +16,8 @@ import UseProgress from "./useprogress";
 const RecordAudioModal = ({
 	auth = {},
 	token = null,
-	objectData,
-	setObjectData,
+	objectData = {},
+	setObjectData = () => {},
 	onModel = "Blog",
 }) => {
 	const [audioRecordModal, setAudioRecordModal] = useState(false);

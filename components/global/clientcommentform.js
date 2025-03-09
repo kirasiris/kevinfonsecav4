@@ -10,7 +10,7 @@ const ClientCommentForm = ({
 	postType = "blog",
 	onModel = "Blog",
 	objects = [],
-	setObjects,
+	setObjects = () => {},
 }) => {
 	const [newCommentData, setNewCommentData] = useState({
 		title: "",

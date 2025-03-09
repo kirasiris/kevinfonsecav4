@@ -2,7 +2,7 @@
 import { useState } from "react";
 import Modal from "react-bootstrap/Modal";
 
-const TrashAllModal = ({ action }) => {
+const TrashAllModal = ({ action = () => {} }) => {
 	const [confirmTrashAllModal, setConfirmTrashAllModal] = useState(false);
 
 	const deleteObject = async (e) => {

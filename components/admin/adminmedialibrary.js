@@ -15,11 +15,11 @@ const AdminMediaLibrary = async ({
 	name = "single",
 	multipleFiles = true,
 	onModel = "Blog",
-	params,
-	searchParams,
-	handleDelete,
-	handleTrashAllFunction,
-	handleDeleteAllFunction,
+	params = [],
+	searchParams = {},
+	handleDelete = () => {},
+	handleTrashAllFunction = () => {},
+	handleDeleteAllFunction = () => {},
 }) => {
 	const token = await getAuthTokenOnServer();
 	const auth = await getUserOnServer();

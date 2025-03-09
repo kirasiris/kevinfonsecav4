@@ -13,8 +13,8 @@ const AdminCardHeaderMenu = ({
 	totalResults = 0,
 	addLink = "#",
 	searchOn = "/noadmin",
-	handleTrashAllFunction,
-	handleDeleteAllFunction,
+	handleTrashAllFunction = () => {},
+	handleDeleteAllFunction = () => {},
 	classList = "",
 }) => {
 	const router = useRouter();

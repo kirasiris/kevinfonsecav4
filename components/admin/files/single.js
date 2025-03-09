@@ -6,12 +6,12 @@ import DeleteModal from "@/components/global/deletemodal";
 
 const Single = ({
 	object = {},
-	handleDelete,
+	handleDelete = () => {},
 	objects = [],
-	setObjects,
-	setTotalResults,
-	setSelectedObject,
-	setShowMediaModel,
+	setObjects = () => {},
+	setTotalResults = () => {},
+	setSelectedObject = () => {},
+	setShowMediaModel = () => {},
 }) => {
 	/*
 	 *

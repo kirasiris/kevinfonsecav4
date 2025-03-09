@@ -2,7 +2,7 @@
 import { useState } from "react";
 import Modal from "react-bootstrap/Modal";
 
-const LessonPreviewModal = ({ object }) => {
+const LessonPreviewModal = ({ object = {} }) => {
 	const [previewModal, setPreviewModal] = useState(false);
 
 	return (

@@ -6,12 +6,12 @@ import DeleteModal from "@/components/global/deletemodal";
 
 const Single = ({
 	object = {},
-	handleActivate,
-	handleDisactivate,
-	handleDelete,
-	objects,
-	setObjects,
-	setTotalResults,
+	handleActivate = () => {},
+	handleDisactivate = () => {},
+	handleDelete = () => {},
+	objects = [],
+	setObjects = () => {},
+	setTotalResults = () => {},
 }) => {
 	return (
 		<li className="list-group-item">

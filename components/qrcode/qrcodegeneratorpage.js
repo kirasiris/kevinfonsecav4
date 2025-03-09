@@ -8,7 +8,7 @@ import { fetchurl } from "@/helpers/setTokenOnServer";
 import QRC from "../global/qrcode";
 import Link from "next/link";
 
-const QRCodeGeneratorPage = ({ searchParams, pushTo = true }) => {
+const QRCodeGeneratorPage = ({ searchParams = {}, pushTo = true }) => {
 	const router = useRouter();
 
 	const [searchEmailParams, setEmailSearchParams] = useState({

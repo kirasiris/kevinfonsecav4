@@ -5,10 +5,10 @@ import ParseHtml from "@/layout/parseHtml";
 
 const Single = ({
 	object = {},
-	handleDelete,
-	objects,
-	setObjects,
-	setTotalResults,
+	handleDelete = () => {},
+	objects = [],
+	setObjects = () => {},
+	setTotalResults = () => {},
 }) => {
 	return (
 		<Accordion>

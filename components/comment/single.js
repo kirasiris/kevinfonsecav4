@@ -14,14 +14,14 @@ import ClientCommentForm from "../global/clientcommentform";
 const Single = ({
 	auth = {},
 	object = {},
-	handleDraft,
-	handlePublish,
-	handleTrash,
-	handleSchedule,
-	handleDelete,
-	objects,
-	setObjects,
-	setTotalResults,
+	handleDraft = () => {},
+	handlePublish = () => {},
+	handleTrash = () => {},
+	handleSchedule = () => {},
+	handleDelete = () => {},
+	objects = [],
+	setObjects = () => {},
+	setTotalResults = () => {},
 }) => {
 	const [replyButton, setReplyButton] = useState("Reply");
 	const [openCommentForm, setOpenCommentForm] = useState(false);

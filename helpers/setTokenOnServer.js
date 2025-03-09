@@ -87,7 +87,7 @@ export const setUserOnServer = async (object) => {
 
 export const deleteAuthTokenOnServer = async () => {
 	const myCookies = await cookies();
-	await fetchurl(`/auth/logout`, "GET", "no-cache");
+	await fetchurl(`/auth/logout`, "POST", "no-cache");
 	myCookies.delete("xAuthToken");
 	myCookies.delete("userStripeChargesEnabled");
 	myCookies.delete("userId");

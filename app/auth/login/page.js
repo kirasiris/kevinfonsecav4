@@ -62,7 +62,7 @@ const Login = async ({ params, searchParams }) => {
 		console.log("Si llego aqui x5", res);
 
 		// alert("Login was a success");
-		// redirect(awtdSearchParams.returnpage || `/auth/profile`);
+		redirect(awtdSearchParams.returnpage || `/auth/profile`);
 	};
 
 	return (

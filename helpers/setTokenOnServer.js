@@ -115,7 +115,6 @@ export const fetchurl = async (
 		Authorization: `Bearer ${token?.value}`,
 		"Content-Type": "application/json",
 		credentials: "include",
-		host: "befree.herokuapp.com",
 	};
 
 	if (
@@ -157,7 +156,6 @@ export const fetchurl = async (
 			// Might need to delete
 			if (res.status === 303) {
 				const redirectUrl = res.headers.get("Location");
-				console.log("redirection", redirectUrl);
 				return fetch(redirectUrl, { method, headers: customHeaders });
 			}
 			if (!res.ok) {

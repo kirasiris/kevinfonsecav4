@@ -35,34 +35,24 @@ const Login = async ({ params, searchParams }) => {
 			website: "beFree",
 		});
 
-		console.log("Si llego aqui x1", res);
-
 		if (res?.data) {
 			redirect(`/auth/validatetwofactorauth/${res?.data?._id}`);
 		}
 
-		console.log("Si llego aqui x2", res);
-
 		// If not success, stop
 		if (!res?.success) return;
 
-		console.log("Si llego aqui x3", res);
-
 		// Else continue,
 		// furthermore, setAuthTokenOnServer needs to be prior to setAuthToken (client version)
-		await setAuthTokenOnServer(res?.token);
-
-		console.log("Si llego aqui x4", res);
+		setAuthTokenOnServer(res?.token);
 
 		const loadUser = async () => await fetchurl(`/auth/me`, "GET", "default");
 		const loadedUser = await loadUser();
 
 		await setUserOnServer(await loadedUser?.data);
 
-		console.log("Si llego aqui x5", res);
-
 		// alert("Login was a success");
-		redirect(awtdSearchParams.returnpage || `/auth/profile`);
+		// redirect(awtdSearchParams.returnpage || `/auth/profile`);
 	};
 
 	return (

@@ -15,6 +15,7 @@ import Photo from "./photo";
 import Video from "./video";
 import Default from "./default";
 import ParseHtml from "@/layout/parseHtml";
+import ErrorPage from "@/layout/errorpage";
 
 const Post = ({
 	auth = {},

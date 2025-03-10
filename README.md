@@ -1,6 +1,6 @@
 # Welcome to Kevin's Web
 
-![Kevin's Web - The only place to be yourself](screenshot.png)
+![Kevin's Web - Geek, Game and Veteran](screenshot.png)
 
 This is a [Kevin's Web](https://kevinurielfonseca.me/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 

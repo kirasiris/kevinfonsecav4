@@ -29,14 +29,6 @@ const nextConfig = {
 	// headers: async () => {
 	// 	return [];
 	// },
-	rewrites: async () => {
-		return [
-			{
-				source: "/api/proxy/:path*",
-				destination: "https://befree.herokuapp.com/api/v1/:path*",
-			},
-		];
-	},
 };
 
 module.exports = nextConfig;

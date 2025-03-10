@@ -112,7 +112,7 @@ const HomeIndex = async ({ params, searchParams }) => {
 						</h2>
 						<div className="row">
 							{themes.data.map((theme) => (
-								<SingleTheme key={theme._id} theme={theme} />
+								<SingleTheme key={theme._id} object={theme} />
 							))}
 						</div>
 					</div>

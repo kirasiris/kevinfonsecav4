@@ -33,7 +33,7 @@ const Login = async ({ params, searchParams }) => {
 		const res = await fetchurl(
 			`/auth/login`,
 			"POST",
-			"no-cache",
+			"default",
 			{
 				...rawFormData,
 				website: "beFree",

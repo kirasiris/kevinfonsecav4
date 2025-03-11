@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 
 async function getComments(params) {
 	const res = await fetchurl(
-		`/comments${params}&status=scheduled`,
+		`/comments${params}&status=scheduled&postType=comment`,
 		"GET",
 		"no-cache"
 	);

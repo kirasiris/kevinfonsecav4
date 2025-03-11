@@ -4,7 +4,11 @@ import List from "@/components/admin/comments/list";
 import { revalidatePath } from "next/cache";
 
 async function getComments(params) {
-	const res = await fetchurl(`/comments${params}`, "GET", "no-cache");
+	const res = await fetchurl(
+		`/comments${params}&postType=comment`,
+		"GET",
+		"no-cache"
+	);
 	return res;
 }
 

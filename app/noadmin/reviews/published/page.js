@@ -1,34 +1,32 @@
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
-import List from "@/components/admin/comments/list";
+import List from "@/components/admin/reviews/list";
 import { revalidatePath } from "next/cache";
 
-async function getComments(params) {
+async function getReviews(params) {
 	const res = await fetchurl(
-		`/comments${params}&status=draft&postType=comment`,
+		`/comments${params}&status=published&postType=review`,
 		"GET",
 		"no-cache"
 	);
 	return res;
 }
 
-const AdminCommentsDraftIndex = async ({ params, searchParams }) => {
+const AdminReviewsPublishedIndex = async ({ params, searchParams }) => {
 	const awtdParams = await params;
 	const awtdSearchParams = await searchParams;
 	const page = awtdSearchParams.page || 1;
 	const limit = awtdSearchParams.limit || 10;
 	const sort = awtdSearchParams.sort || "-createdAt";
 
-	const comments = await getComments(
-		`?page=${page}&limit=${limit}&sort=${sort}`
-	);
+	const reviews = await getReviews(`?page=${page}&limit=${limit}&sort=${sort}`);
 
 	const draftIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/comments/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/comments/draft?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/reviews/published?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -37,7 +35,7 @@ const AdminCommentsDraftIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/comments/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/comments/draft?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/reviews/published?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -46,7 +44,7 @@ const AdminCommentsDraftIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/comments/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/comments/draft?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/reviews/published?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -55,7 +53,7 @@ const AdminCommentsDraftIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/comments/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/comments/draft?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/reviews/published?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -64,7 +62,7 @@ const AdminCommentsDraftIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/comments/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`/noadmin/comments/draft?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/reviews/published?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -73,7 +71,7 @@ const AdminCommentsDraftIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/comments/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/comments/draft?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/reviews/published?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -82,26 +80,26 @@ const AdminCommentsDraftIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/comments/deleteall/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`/noadmin/comments/draft?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/reviews/published?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
 	return (
 		<>
 			<AdminStatusesMenu
-				allLink="/noadmin/comments"
-				publishedLink="/noadmin/comments/published"
-				draftLink="/noadmin/comments/draft"
-				scheduledLink="/noadmin/comments/scheduled"
-				trashedLink="/noadmin/comments/trashed"
+				allLink="/noadmin/reviews"
+				publishedLink="/noadmin/reviews/published"
+				draftLink="/noadmin/reviews/draft"
+				scheduledLink="/noadmin/reviews/scheduled"
+				trashedLink="/noadmin/reviews/trashed"
 			/>
 			<div className="card rounded-0">
 				<List
-					allLink="/noadmin/comments"
-					pageText="Comments"
-					addLink="/noadmin/comments/create"
-					searchOn="/noadmin/comments"
-					objects={comments}
+					allLink="/noadmin/reviews"
+					pageText="Reviews"
+					addLink="/noadmin/reviews/create"
+					searchOn="/noadmin/reviews"
+					objects={reviews}
 					searchParams={awtdSearchParams}
 					handleDraft={draftIt}
 					handlePublish={publishIt}
@@ -116,4 +114,4 @@ const AdminCommentsDraftIndex = async ({ params, searchParams }) => {
 	);
 };
 
-export default AdminCommentsDraftIndex;
+export default AdminReviewsPublishedIndex;

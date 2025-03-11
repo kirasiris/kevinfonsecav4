@@ -1,8 +1,13 @@
 "use client";
+import React, { useEffect, useState } from "react";
 import he from "he";
-import { useEffect, useState } from "react";
 
-const ParseHtml = ({ text = "", classList = "", styleList = {} }) => {
+const ParseHtml = ({
+	text = "",
+	classList = "",
+	styleList = {},
+	parseAs = "div",
+}) => {
 	const [decodedText, setDecodedText] = useState("");
 
 	useEffect(() => {
@@ -10,13 +15,11 @@ const ParseHtml = ({ text = "", classList = "", styleList = {} }) => {
 	}, [text]);
 
 	if (typeof window !== undefined) {
-		return (
-			<div
-				dangerouslySetInnerHTML={{ __html: decodedText }}
-				className={classList || undefined}
-				style={styleList || undefined}
-			/>
-		);
+		return React.createElement(parseAs, {
+			dangerouslySetInnerHTML: { __html: decodedText },
+			className: classList || undefined,
+			style: styleList || undefined,
+		});
 	}
 };
 

@@ -1,4 +1,5 @@
 import Script from "next/script";
+import AdBlockingRecovery from "@/components/global/adblockingrecovery";
 
 export default async function Head({
 	title = ``,
@@ -21,7 +22,7 @@ export default async function Head({
 	cssLink,
 }) {
 	return (
-		<>
+		<head>
 			{title !== "" && <title>{title}</title>}
 			{description !== "" && <meta name="description" content={description} />}
 			<meta content="width=device-width, initial-scale=1" name="viewport" />
@@ -114,6 +115,12 @@ export default async function Head({
 				src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7136941557526274"
 				crossOrigin="anonymous"
 			/>
+			{/* Ad Blocking Recovery */}
+			<Script
+				src="https://fundingchoicesmessages.google.com/i/pub-7136941557526274?ers=1"
+				async
+			/>
+			<AdBlockingRecovery />
 			<Script
 				src="https://kit.fontawesome.com/4cde37f226.js"
 				crossOrigin="anonymous"
@@ -131,6 +138,6 @@ export default async function Head({
 				async
 				defer={true}
 			/>
-		</>
+		</head>
 	);
 }

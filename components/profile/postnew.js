@@ -44,7 +44,11 @@ const PostNew = ({
 
 	const addPost = async (e) => {
 		e.preventDefault();
-		await fetchurl(`/posts`, "POST", "no-cache", postData);
+		await fetchurl(`/posts`, "POST", "no-cache", {
+			...postData,
+			commented: true,
+			status: "published",
+		});
 		resetForm();
 		router.push(`${revalidateUrl}&new=${randomId}`, { scroll: false });
 	};

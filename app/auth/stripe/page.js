@@ -38,8 +38,7 @@ const StripeSettings = async ({ params, searchParams }) => {
 			"GET",
 			"no-cache"
 		);
-		console.log("response from fetching stripe account settings", res);
-		// redirect(res.data.url);
+		redirect(res.data.url);
 	};
 
 	return (
@@ -101,29 +100,25 @@ const StripeSettings = async ({ params, searchParams }) => {
 										<code>{auth.data.stripe.latestStripeCheckoutLink}</code>
 									</li>
 								)}
-							{auth.data.stripe.stripeOnboardingLink !== "" &&
-								auth.data.stripe.stripeOnboardingLink !== undefined &&
-								auth.data.stripe.stripeOnboardingLink !== null && (
-									<li className="list-group-item">
-										<p className="m-0">
-											Update&nbsp;your&nbsp;Stripe&nbsp;account&nbsp;details&nbsp;or&nbsp;view&nbsp;your&nbsp;previous&nbsp;payouts.
-										</p>
-										<form action={fetchStripeAccountSettings}>
-											<button
-												type="submit"
-												className="btn btn-secondary btn-sm my-2"
-											>
-												Payout&nbsp;settings
-											</button>
-										</form>
-										<p className="m-0">
-											You&nbsp;have&nbsp;to&nbsp;
-											<b className="text-bg-primary text-decoration-underline">
-												wait&nbsp;a&nbsp;few&nbsp;seconds&nbsp;after&nbsp;clicking&nbsp;the&nbsp;link&nbsp;above&nbsp;before&nbsp;being&nbsp;redirected.
-											</b>
-										</p>
-									</li>
-								)}
+							<li className="list-group-item">
+								<p className="m-0">
+									Update&nbsp;your&nbsp;Stripe&nbsp;account&nbsp;details&nbsp;or&nbsp;view&nbsp;your&nbsp;previous&nbsp;payouts.
+								</p>
+								<form action={fetchStripeAccountSettings}>
+									<button
+										type="submit"
+										className="btn btn-secondary btn-sm my-2"
+									>
+										Payout&nbsp;settings
+									</button>
+								</form>
+								<p className="m-0">
+									You&nbsp;have&nbsp;to&nbsp;
+									<b className="text-bg-primary text-decoration-underline">
+										wait&nbsp;a&nbsp;few&nbsp;seconds&nbsp;after&nbsp;clicking&nbsp;the&nbsp;link&nbsp;above&nbsp;before&nbsp;being&nbsp;redirected.
+									</b>
+								</p>
+							</li>
 						</ul>
 					</div>
 				</Globalcontent>

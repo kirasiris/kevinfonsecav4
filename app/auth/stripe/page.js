@@ -53,18 +53,15 @@ const StripeSettings = async ({ params, searchParams }) => {
 								<p className="m-1">Stripe&nbsp;Settings</p>
 							</div>
 							<div className="float-end">
-								{auth.data.stripe.stripeOnboardingLink !== "" &&
-									auth.data.stripe.stripeOnboardingLink !== undefined &&
-									auth.data.stripe.stripeOnboardingLink !== null && (
-										<form action={assignStripeOnBoardingLink}>
-											<button
-												type="submit"
-												className="btn btn-secondary btn-sm"
-											>
-												Request OnBoardLink
-											</button>
-										</form>
-									)}
+								{(auth.data.stripe.stripeOnboardingLink === "" ||
+									auth.data.stripe.stripeOnboardingLink === undefined ||
+									auth.data.stripe.stripeOnboardingLink === null) && (
+									<form action={assignStripeOnBoardingLink}>
+										<button type="submit" className="btn btn-secondary btn-sm">
+											Request OnBoardLink
+										</button>
+									</form>
+								)}
 							</div>
 						</div>
 						<ul className="list-group list-group-flush">

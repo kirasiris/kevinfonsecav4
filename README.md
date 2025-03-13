@@ -160,8 +160,8 @@ return (
             required
             placeholder=""
         />
+        <FormButtons />
     </form>
-    <FormButtons />
 )
 
 // FormButtons.js COMPONENTs

@@ -11,6 +11,7 @@ const Single = ({
 	handleAssignStripeAccountId = () => {},
 	handleAssignStripeId = () => {},
 	handleUpdateStripeSellerAccount = () => {},
+	handleAssignStripeOnBoardingLink = () => {},
 	handleDelete = () => {},
 	objects = [],
 	setObjects = () => {},
@@ -66,6 +67,20 @@ const Single = ({
 				<div className="blog-actions-ellipsis-menu">
 					<span className="ellipsis-menu">
 						<DropdownButton title="Options" variant="secondary">
+							<Link
+								href={{
+									pathname: `/noadmin/users/read/${object._id}`,
+									query: {
+										isAdmin: true,
+									},
+								}}
+								passHref
+								legacyBehavior
+							>
+								<a className="dropdown-item btn btn-link" target="_blank">
+									View&nbsp;It
+								</a>
+							</Link>
 							{(object?.stripe?.stripeCustomerId === `` ||
 								object?.stripe?.stripeCustomerId === undefined ||
 								object?.stripe?.stripeCustomerId === null) && (
@@ -109,20 +124,18 @@ const Single = ({
 										Update&nbsp;Stripe&nbsp;Seller&nbsp;Account?
 									</button>
 								)}
-							<Link
-								href={{
-									pathname: `/noadmin/users/read/${object._id}`,
-									query: {
-										isAdmin: true,
-									},
-								}}
-								passHref
-								legacyBehavior
-							>
-								<a className="dropdown-item btn btn-link" target="_blank">
-									View&nbsp;It
-								</a>
-							</Link>
+
+							{(object.stripe?.stripeOnboardingLink === `` ||
+								object.stripe?.stripeOnboardingLink === undefined ||
+								object.stripe?.stripeOnboardingLink === null) && (
+								<button
+									className="dropdown-item btn btn-sm"
+									onClick={() => handleAssignStripeOnBoardingLink(object._id)}
+								>
+									Request OnBoardLink
+								</button>
+							)}
+
 							<DeleteModal
 								id={object._id ? object._id : object._id}
 								action={handleDelete}

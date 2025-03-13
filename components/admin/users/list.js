@@ -17,6 +17,7 @@ const List = ({
 	handleAssignStripeAccountId = () => {},
 	handleAssignStripeId = () => {},
 	handleUpdateStripeSellerAccount = () => {},
+	handleAssignStripeOnBoardingLink = () => {},
 	handleDelete = () => {},
 	handleDeleteAllFunction = () => {},
 }) => {
@@ -87,6 +88,21 @@ const List = ({
 	}
 
 	if (
+		typeof handleAssignStripeOnBoardingLink !== "function" &&
+		handleAssignStripeOnBoardingLink !== "" &&
+		handleAssignStripeOnBoardingLink !== undefined &&
+		handleAssignStripeOnBoardingLink !== null
+	) {
+		return (
+			<ErrorPage
+				statusCodeMessage={
+					"The handleAssignStripeOnBoardingLink parameter is not a function!. Please try again"
+				}
+			/>
+		);
+	}
+
+	if (
 		typeof handleDelete !== "function" &&
 		handleDelete !== "" &&
 		handleDelete !== undefined &&
@@ -141,6 +157,9 @@ const List = ({
 								handleAssignStripeId={handleAssignStripeId}
 								handleUpdateStripeSellerAccount={
 									handleUpdateStripeSellerAccount
+								}
+								handleAssignStripeOnBoardingLink={
+									handleAssignStripeOnBoardingLink
 								}
 								handleDelete={handleDelete}
 								objects={newobjects.data}

@@ -68,6 +68,20 @@ const AdminUsersIndex = async ({ params, searchParams }) => {
 		revalidatePath(`/noadmin/users?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
+	const assignStripeOnBoardingLink = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(
+			`/extras/stripe/accounts/${id}/assignstripeonboardinglink`,
+			"PUT",
+			"no-cache",
+			{
+				website: process.env.NEXT_PUBLIC_WEBSITE_NAME,
+			}
+		);
+		revalidatePath(`/noadmin/users?page=${page}&limit=${limit}&sort=${sort}`);
+	};
+
 	const handleDelete = async (id) => {
 		"use server";
 		await fetchurl(`/users/${id}/permanently`, "DELETE", "no-cache");
@@ -104,6 +118,7 @@ const AdminUsersIndex = async ({ params, searchParams }) => {
 					handleAssignStripeAccountId={assignStripeAccountId}
 					handleAssignStripeId={assignStripeId}
 					handleUpdateStripeSellerAccount={updateStripeSellerAccount}
+					handleAssignStripeOnBoardingLink={assignStripeOnBoardingLink}
 					handleDelete={handleDelete}
 					handleDeleteAllFunction={handleDeleteAll}
 				/>

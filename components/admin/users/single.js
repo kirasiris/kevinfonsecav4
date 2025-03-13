@@ -7,10 +7,10 @@ import DeleteModal from "@/components/global/deletemodal";
 
 const Single = ({
 	object = {},
-	handleStripeCustomerId = () => {},
-	handleStripeAccountId = () => {},
-	handleStripeId = () => {},
-	handleSellerAccount = () => {},
+	handleAssignStripeCustomerId = () => {},
+	handleAssignStripeAccountId = () => {},
+	handleAssignStripeId = () => {},
+	handleUpdateStripeSellerAccount = () => {},
 	handleDelete = () => {},
 	objects = [],
 	setObjects = () => {},
@@ -71,7 +71,7 @@ const Single = ({
 								object?.stripe?.stripeCustomerId === null) && (
 								<button
 									className="dropdown-item btn btn-sm"
-									onClick={() => handleStripeCustomerId(object._id)}
+									onClick={() => handleAssignStripeCustomerId(object._id)}
 								>
 									Assign&nbsp;Stripe&nbsp;Customer&nbsp;Id
 								</button>
@@ -81,7 +81,7 @@ const Single = ({
 								object?.stripe?.stripeAccountId === null) && (
 								<button
 									className="dropdown-item btn btn-sm"
-									onClick={() => handleStripeAccountId(object._id)}
+									onClick={() => handleAssignStripeAccountId(object._id)}
 								>
 									Assign&nbsp;Stripe&nbsp;Account&nbsp;Id
 								</button>
@@ -94,7 +94,7 @@ const Single = ({
 									object?.stripe?.stripeAccountId === null) && (
 									<button
 										className="dropdown-item btn btn-sm"
-										onClick={() => handleStripeId(object._id)}
+										onClick={() => handleAssignStripeId(object._id)}
 									>
 										Assign&nbsp;Stripe&nbsp;Customer&nbsp;and&nbsp;Account&nbsp;Ids
 									</button>
@@ -104,7 +104,7 @@ const Single = ({
 								object.stripe?.stripeAccountId !== null && (
 									<button
 										className="dropdown-item btn btn-sm"
-										onClick={() => handleSellerAccount(object._id)}
+										onClick={() => handleUpdateStripeSellerAccount(object._id)}
 									>
 										Update&nbsp;Stripe&nbsp;Seller&nbsp;Account?
 									</button>

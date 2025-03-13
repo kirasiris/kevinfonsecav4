@@ -1,7 +1,7 @@
+import { revalidatePath } from "next/cache";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
 import List from "@/components/admin/users/list";
-import { revalidatePath } from "next/cache";
 
 async function getUsers(params) {
 	const res = await fetchurl(`/users${params}`, "GET", "no-cache");
@@ -74,13 +74,6 @@ const AdminUsersIndex = async ({ params, searchParams }) => {
 		revalidatePath(`/noadmin/users?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
-	const handleTrashAll = async () => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/users/deleteall`, "PUT", "no-cache");
-		revalidatePath(`/noadmin/users?page=${page}&limit=${limit}&sort=${sort}`);
-	};
-
 	const handleDeleteAll = async () => {
 		"use server";
 		// const rawFormData = {}
@@ -92,10 +85,10 @@ const AdminUsersIndex = async ({ params, searchParams }) => {
 		<>
 			<AdminStatusesMenu
 				allLink="/noadmin/users"
-				publishedLink="/noadmin/users/published"
-				draftLink="/noadmin/users/draft"
-				scheduledLink="/noadmin/users/scheduled"
-				trashedLink="/noadmin/users/trashed"
+				publishedLink=""
+				draftLink=""
+				scheduledLink=""
+				trashedLink=""
 				categoriesLink=""
 				categoryType=""
 			/>
@@ -107,12 +100,11 @@ const AdminUsersIndex = async ({ params, searchParams }) => {
 					searchOn="/noadmin/users"
 					objects={users}
 					searchParams={awtdSearchParams}
-					handleDraft={undefined}
-					handlePublish={undefined}
-					handleTrash={undefined}
-					handleSchedule={undefined}
+					handleAssignStripeCustomerId={assignStripeCustomerId}
+					handleAssignStripeAccountId={assignStripeAccountId}
+					handleAssignStripeId={assignStripeId}
+					handleUpdateStripeSellerAccount={updateStripeSellerAccount}
 					handleDelete={handleDelete}
-					handleTrashAllFunction={handleTrashAll}
 					handleDeleteAllFunction={handleDeleteAll}
 				/>
 			</div>

@@ -13,12 +13,11 @@ const List = ({
 	searchOn = "",
 	objects = [],
 	searchParams = {},
-	handleDraft = () => {},
-	handlePublish = () => {},
-	handleTrash = () => {},
-	handleSchedule = () => {},
+	handleAssignStripeCustomerId = () => {},
+	handleAssignStripeAccountId = () => {},
+	handleAssignStripeId = () => {},
+	handleUpdateStripeSellerAccount = () => {},
 	handleDelete = () => {},
-	handleTrashAllFunction = () => {},
 	handleDeleteAllFunction = () => {},
 }) => {
 	const [newobjects, setNewObjects] = useState(objects);
@@ -28,60 +27,60 @@ const List = ({
 	});
 
 	if (
-		typeof handleDraft !== "function" &&
-		handleDraft !== "" &&
-		handleDraft !== undefined &&
-		handleDraft !== null
+		typeof handleAssignStripeCustomerId !== "function" &&
+		handleAssignStripeCustomerId !== "" &&
+		handleAssignStripeCustomerId !== undefined &&
+		handleAssignStripeCustomerId !== null
 	) {
 		return (
 			<ErrorPage
 				statusCodeMessage={
-					"The handleDraft parameter is not a function!. Please try again"
+					"The handleAssignStripeCustomerId parameter is not a function!. Please try again"
 				}
 			/>
 		);
 	}
 
 	if (
-		typeof handlePublish !== "function" &&
-		handlePublish !== "" &&
-		handlePublish !== undefined &&
-		handlePublish !== null
+		typeof handleAssignStripeAccountId !== "function" &&
+		handleAssignStripeAccountId !== "" &&
+		handleAssignStripeAccountId !== undefined &&
+		handleAssignStripeAccountId !== null
 	) {
 		return (
 			<ErrorPage
 				statusCodeMessage={
-					"The handlePublish parameter is not a function!. Please try again"
+					"The handleAssignStripeAccountId parameter is not a function!. Please try again"
 				}
 			/>
 		);
 	}
 
 	if (
-		typeof handleTrash !== "function" &&
-		handleTrash !== "" &&
-		handleTrash !== undefined &&
-		handleTrash !== null
+		typeof handleAssignStripeId !== "function" &&
+		handleAssignStripeId !== "" &&
+		handleAssignStripeId !== undefined &&
+		handleAssignStripeId !== null
 	) {
 		return (
 			<ErrorPage
 				statusCodeMessage={
-					"The handleTrash parameter is not a function!. Please try again"
+					"The handleAssignStripeId parameter is not a function!. Please try again"
 				}
 			/>
 		);
 	}
 
 	if (
-		typeof handleSchedule !== "function" &&
-		handleSchedule !== "" &&
-		handleSchedule !== undefined &&
-		handleSchedule !== null
+		typeof handleUpdateStripeSellerAccount !== "function" &&
+		handleUpdateStripeSellerAccount !== "" &&
+		handleUpdateStripeSellerAccount !== undefined &&
+		handleUpdateStripeSellerAccount !== null
 	) {
 		return (
 			<ErrorPage
 				statusCodeMessage={
-					"The handleSchedule parameter is not a function!. Please try again"
+					"The handleUpdateStripeSellerAccount parameter is not a function!. Please try again"
 				}
 			/>
 		);
@@ -97,21 +96,6 @@ const List = ({
 			<ErrorPage
 				statusCodeMessage={
 					"The handleDelete parameter is not a function!. Please try again"
-				}
-			/>
-		);
-	}
-
-	if (
-		typeof handleTrashAllFunction !== "function" &&
-		handleTrashAllFunction !== "" &&
-		handleTrashAllFunction !== undefined &&
-		handleTrashAllFunction !== null
-	) {
-		return (
-			<ErrorPage
-				statusCodeMessage={
-					"The handleTrashAllFunction parameter is not a function!. Please try again"
 				}
 			/>
 		);
@@ -141,7 +125,7 @@ const List = ({
 				totalResults={objects?.countAll}
 				addLink={addLink}
 				searchOn={searchOn}
-				handleTrashAllFunction={handleTrashAllFunction}
+				handleTrashAllFunction={handleAssignStripeId}
 				handleDeleteAllFunction={handleDeleteAllFunction}
 				classList=""
 			/>
@@ -152,10 +136,12 @@ const List = ({
 							<Single
 								key={user._id}
 								object={user}
-								handleDraft={handleDraft}
-								handlePublish={handlePublish}
-								handleTrash={handleTrash}
-								handleSchedule={handleSchedule}
+								handleAssignStripeCustomerId={handleAssignStripeCustomerId}
+								handleAssignStripeAccountId={handleAssignStripeAccountId}
+								handleAssignStripeId={handleAssignStripeId}
+								handleUpdateStripeSellerAccount={
+									handleUpdateStripeSellerAccount
+								}
 								handleDelete={handleDelete}
 								objects={newobjects.data}
 								setObjects={setNewObjects}

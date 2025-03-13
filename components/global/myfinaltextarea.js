@@ -183,10 +183,12 @@ const MyTextArea = ({
 		<textarea
 			id={id}
 			name={name}
-			className="form-control"
-			rows="5"
-			placeholder={customPlaceholder}
 			defaultValue={defaultValue}
+			// type
+			className="form-control"
+			// required
+			// placeholder=""
+			rows="5"
 		/>
 	);
 };

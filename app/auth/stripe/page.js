@@ -24,7 +24,7 @@ const StripeSettings = async ({ params, searchParams }) => {
 			"PUT",
 			"no-cache",
 			{
-				website: "beFree",
+				website: process.env.NEXT_PUBLIC_WEBSITE_NAME,
 			}
 		);
 		revalidatePath(`/auth/stripe`);
@@ -38,7 +38,8 @@ const StripeSettings = async ({ params, searchParams }) => {
 			"GET",
 			"no-cache"
 		);
-		redirect(res.data.url);
+		console.log("response from fetching stripe account settings", res);
+		// redirect(res.data.url);
 	};
 
 	return (

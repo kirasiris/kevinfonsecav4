@@ -5,10 +5,6 @@ import DeleteModal from "@/components/global/deletemodal";
 
 const Single = ({
 	object = {},
-	handleDraft = () => {},
-	handlePublish = () => {},
-	handleTrash = () => {},
-	handleSchedule = () => {},
 	handleDelete = () => {},
 	objects = [],
 	setObjects = () => {},
@@ -54,30 +50,6 @@ const Single = ({
 							>
 								<a className="dropdown-item btn btn-link">View&nbsp;It</a>
 							</Link>
-							<button
-								className="dropdown-item btn btn-sm"
-								onClick={() => handleDraft(object._id)}
-							>
-								Draft&nbsp;It
-							</button>
-							<button
-								className="dropdown-item btn btn-sm"
-								onClick={() => handlePublish(object._id)}
-							>
-								Publish&nbsp;It
-							</button>
-							<button
-								className="dropdown-item btn btn-sm"
-								onClick={() => handleTrash(object._id)}
-							>
-								Trash&nbsp;It
-							</button>
-							<button
-								className="dropdown-item btn btn-sm"
-								onClick={() => handleSchedule(object._id)}
-							>
-								Schedule&nbsp;It
-							</button>
 							<DeleteModal
 								id={object._id ? object._id : object._id}
 								action={handleDelete}

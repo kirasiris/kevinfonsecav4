@@ -13,12 +13,7 @@ const List = ({
 	searchOn = "",
 	objects = [],
 	searchParams = {},
-	handleDraft = () => {},
-	handlePublish = () => {},
-	handleTrash = () => {},
-	handleSchedule = () => {},
 	handleDelete = () => {},
-	handleTrashAllFunction = () => {},
 	handleDeleteAllFunction = () => {},
 }) => {
 	const [newobjects, setNewObjects] = useState(objects);
@@ -26,66 +21,6 @@ const List = ({
 		...objects,
 		countAll: objects?.countAll,
 	});
-
-	if (
-		typeof handleDraft !== "function" &&
-		handleDraft !== "" &&
-		handleDraft !== undefined &&
-		handleDraft !== null
-	) {
-		return (
-			<ErrorPage
-				statusCodeMessage={
-					"The handleDraft parameter is not a function!. Please try again"
-				}
-			/>
-		);
-	}
-
-	if (
-		typeof handlePublish !== "function" &&
-		handlePublish !== "" &&
-		handlePublish !== undefined &&
-		handlePublish !== null
-	) {
-		return (
-			<ErrorPage
-				statusCodeMessage={
-					"The handlePublish parameter is not a function!. Please try again"
-				}
-			/>
-		);
-	}
-
-	if (
-		typeof handleTrash !== "function" &&
-		handleTrash !== "" &&
-		handleTrash !== undefined &&
-		handleTrash !== null
-	) {
-		return (
-			<ErrorPage
-				statusCodeMessage={
-					"The handleTrash parameter is not a function!. Please try again"
-				}
-			/>
-		);
-	}
-
-	if (
-		typeof handleSchedule !== "function" &&
-		handleSchedule !== "" &&
-		handleSchedule !== undefined &&
-		handleSchedule !== null
-	) {
-		return (
-			<ErrorPage
-				statusCodeMessage={
-					"The handleSchedule parameter is not a function!. Please try again"
-				}
-			/>
-		);
-	}
 
 	if (
 		typeof handleDelete !== "function" &&
@@ -97,21 +32,6 @@ const List = ({
 			<ErrorPage
 				statusCodeMessage={
 					"The handleDelete parameter is not a function!. Please try again"
-				}
-			/>
-		);
-	}
-
-	if (
-		typeof handleTrashAllFunction !== "function" &&
-		handleTrashAllFunction !== "" &&
-		handleTrashAllFunction !== undefined &&
-		handleTrashAllFunction !== null
-	) {
-		return (
-			<ErrorPage
-				statusCodeMessage={
-					"The handleTrashAllFunction parameter is not a function!. Please try again"
 				}
 			/>
 		);
@@ -141,7 +61,7 @@ const List = ({
 				totalResults={objects?.countAll}
 				addLink={addLink}
 				searchOn={searchOn}
-				handleTrashAllFunction={handleTrashAllFunction}
+				handleTrashAllFunction={undefined}
 				handleDeleteAllFunction={handleDeleteAllFunction}
 				classList=""
 			/>
@@ -152,10 +72,6 @@ const List = ({
 							<Single
 								key={email._id}
 								object={email}
-								handleDraft={handleDraft}
-								handlePublish={handlePublish}
-								handleTrash={handleTrash}
-								handleSchedule={handleSchedule}
 								handleDelete={handleDelete}
 								objects={newobjects.data}
 								setObjects={setNewObjects}

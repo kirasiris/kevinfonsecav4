@@ -59,6 +59,8 @@ const Login = async ({ params, searchParams }) => {
 
 		await setUserOnServer(await loadedUser?.data);
 
+		console.log("response from loadedUser", loadUser());
+
 		// alert("Login was a success");
 		let returnpage = awtdSearchParams.returnpage || `/auth/profile`;
 
@@ -66,7 +68,7 @@ const Login = async ({ params, searchParams }) => {
 		try {
 			const returnUrl = new URL(returnpage);
 			if (returnUrl.hostname === "armedcodellc.com") {
-				returnpage += `?token=${res?.token}`;
+				returnpage += `?xAuthToken=${res?.token}`;
 			}
 		} catch (error) {
 			console.error("Invalid return URL:", error);

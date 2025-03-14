@@ -22,7 +22,7 @@ export default async function Head({
 	cssLink,
 }) {
 	return (
-		<head>
+		<>
 			{title !== "" && <title>{title}</title>}
 			{description !== "" && <meta name="description" content={description} />}
 			<meta content="width=device-width, initial-scale=1" name="viewport" />
@@ -138,6 +138,6 @@ export default async function Head({
 				async
 				defer={true}
 			/>
-		</head>
+		</>
 	);
 }

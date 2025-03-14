@@ -29,11 +29,13 @@ export default async function RootLayout({ children }) {
 
 	return (
 		<html lang="en">
-			<Head
-				title={settings?.data?.title}
-				description={settings?.data?.text}
-				favicon={settings?.data?.favicon}
-			/>
+			<head>
+				<Head
+					title={settings?.data?.title}
+					description={settings?.data?.text}
+					favicon={settings?.data?.favicon}
+				/>
+			</head>
 			<body>
 				<Menu
 					auth={auth}

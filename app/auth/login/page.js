@@ -60,7 +60,19 @@ const Login = async ({ params, searchParams }) => {
 		await setUserOnServer(await loadedUser?.data);
 
 		// alert("Login was a success");
-		redirect(awtdSearchParams.returnpage || `/auth/profile`);
+		let returnpage = awtdSearchParams.returnpage || `/auth/profile`;
+
+		// Ensure returnpage is only modified if it points to armedcodellc.com
+		try {
+			const returnUrl = new URL(returnpage);
+			if (returnUrl.hostname === "armedcodellc.com") {
+				returnpage += `?token=${res?.token}`;
+			}
+		} catch (error) {
+			console.error("Invalid return URL:", error);
+		}
+
+		redirect(returnpage);
 	};
 
 	return (

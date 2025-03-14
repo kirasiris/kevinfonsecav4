@@ -31,6 +31,11 @@ const ContactForm = () => {
 			setBtnText("Submit");
 			return;
 		}
+		if (res.status === "fail") {
+			toast.error(res.message, "bottom");
+			setBtnText("Submit");
+			return;
+		}
 		setBtnText("Submit");
 		toast.success("Email sent", "bottom");
 		resetForm();

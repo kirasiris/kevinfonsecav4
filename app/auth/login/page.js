@@ -57,9 +57,17 @@ const Login = async ({ params, searchParams }) => {
 		const loadUser = async () => await fetchurl(`/auth/me`, "GET", "default");
 		const loadedUser = await loadUser();
 
-		const sucessfullLogin = await setUserOnServer(await loadedUser?.data);
+		console.log("Loaded user", loadUser);
 
-		console.log("response from loadedUser", sucessfullLogin);
+		await setUserOnServer(await loadedUser?.data);
+
+		const returnedCookies = {
+			userStripeChargesEnabled: await loadUser?.data?.stripe
+				.stripeChargesEnabled,
+			userId: await loadUser?.data?._id,
+		};
+
+		console.log("response from loadedUser", await loadedUser?.data);
 
 		// alert("Login was a success");
 		let returnpage = awtdSearchParams.returnpage || `/auth/profile`;

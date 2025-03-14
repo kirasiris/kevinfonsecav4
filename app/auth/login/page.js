@@ -57,9 +57,9 @@ const Login = async ({ params, searchParams }) => {
 		const loadUser = async () => await fetchurl(`/auth/me`, "GET", "default");
 		const loadedUser = await loadUser();
 
-		await setUserOnServer(await loadedUser?.data);
+		const sucessfullLogin = await setUserOnServer(await loadedUser?.data);
 
-		console.log("response from loadedUser", loadUser());
+		console.log("response from loadedUser", sucessfullLogin);
 
 		// alert("Login was a success");
 		let returnpage = awtdSearchParams.returnpage || `/auth/profile`;

@@ -57,29 +57,14 @@ const Login = async ({ params, searchParams }) => {
 		const loadUser = async () => await fetchurl(`/auth/me`, "GET", "default");
 		const loadedUser = await loadUser();
 
-		console.log("Loaded user", loadUser);
-
 		await setUserOnServer(await loadedUser?.data);
 
-		const returnedCookies = {
-			userStripeChargesEnabled: await loadUser?.data?.stripe
-				.stripeChargesEnabled,
-			userId: await loadUser?.data?._id,
-		};
-
-		console.log("response from loadedUser", await loadedUser?.data);
-
-		// alert("Login was a success");
 		let returnpage = awtdSearchParams.returnpage || `/auth/profile`;
 
 		// Ensure returnpage is only modified if it points to armedcodellc.com
-		try {
-			const returnUrl = new URL(returnpage);
-			if (returnUrl.hostname === "armedcodellc.com") {
-				returnpage += `?xAuthToken=${res?.token}`;
-			}
-		} catch (error) {
-			console.error("Invalid return URL:", error);
+		const returnUrl = new URL(returnpage);
+		if (returnUrl.hostname === "armedcodellc.com") {
+			returnpage += `?xAuthToken=${res?.token}`;
 		}
 
 		redirect(returnpage);

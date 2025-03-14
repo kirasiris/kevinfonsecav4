@@ -54,7 +54,7 @@ const Login = async ({ params, searchParams }) => {
 		// furthermore, setAuthTokenOnServer needs to be prior to setAuthToken (client version)
 		await setAuthTokenOnServer(res?.token);
 
-		const loadUser = async () => await fetchurl(`/auth/me`, "GET", "default");
+		const loadUser = await fetchurl(`/auth/me`, "GET", "default");
 		const loadedUser = await loadUser();
 
 		await setUserOnServer(await loadedUser?.data);
@@ -62,9 +62,13 @@ const Login = async ({ params, searchParams }) => {
 		let returnpage = awtdSearchParams.returnpage || `/auth/profile`;
 
 		// Ensure returnpage is only modified if it points to armedcodellc.com
-		const returnUrl = new URL(returnpage);
-		if (returnUrl.hostname === "armedcodellc.com") {
-			returnpage += `?xAuthToken=${res?.token}`;
+		try {
+			const returnUrl = new URL(returnpage);
+			if (returnUrl.hostname === "armedcodellc.com") {
+				returnpage += `?xAuthToken=${res?.token}`;
+			}
+		} catch (error) {
+			console.error("Invalid return URL:", error);
 		}
 
 		redirect(returnpage);

@@ -55,9 +55,8 @@ const Login = async ({ params, searchParams }) => {
 		await setAuthTokenOnServer(res?.token);
 
 		const loadUser = await fetchurl(`/auth/me`, "GET", "default");
-		const loadedUser = await loadUser();
 
-		await setUserOnServer(await loadedUser?.data);
+		await setUserOnServer(await loadUser?.data);
 
 		let returnpage = awtdSearchParams.returnpage || `/auth/profile`;
 

@@ -9,7 +9,11 @@ async function getAuthenticatedUser() {
 }
 
 async function getCourse(params) {
-	const res = await fetchurl(`/courses${params}`, "GET", "no-cache");
+	const res = await fetchurl(
+		`/extras/stripe/courses${params}`,
+		"GET",
+		"no-cache"
+	);
 	if (!res.success) notFound();
 	return res;
 }
@@ -38,7 +42,7 @@ const CourseStudentsIndex = async ({ params, searchParams }) => {
 
 	const verifyUserEnrollment = getCourseStudents(
 		`?user=${
-			auth?.data ? auth.data?._id : `62ec7926a554425c9e03782d`
+			auth?.data ? auth.data?._id : process.env.NEXT_PUBLIC_ADMIN_ACCOUNT_ID
 		}&resourceId=${awtdParams.id}&onModel=Course`
 	);
 

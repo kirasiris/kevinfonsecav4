@@ -1,9 +1,9 @@
+import { notFound, redirect } from "next/navigation";
 import {
 	fetchurl,
 	getAuthTokenOnServer,
 	getUserOnServer,
 } from "@/helpers/setTokenOnServer";
-import { notFound, redirect } from "next/navigation";
 import AdminSidebar from "@/components/admin/myfinaladminsidebar";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import OnboardingLink from "@/components/dashboard/onboardinglink";
@@ -35,54 +35,44 @@ const UpdateMembership = async ({ params, searchParams }) => {
 		const rawFormData = {
 			title: formData.get("title"),
 			text: formData.get("text"),
-			active: formData.get("active"),
-			// features: formData.get("features"),
-			shippable: formData.get("shippable"),
+			recurring: {
+				interval: formData.get("interval"),
+				interval_count: formData.get("interval_count"),
+			},
+			isFree: formData.get("isFree"),
+			// price: formData.get("price"), // Price is not need on here as Stripe does not let you update prices
+			active: formData.get("active"), // Needed for Stripe
+			tax_behavior: formData.get("tax_behavior"),
 			statement_descriptor: formData.get("statement_descriptor"),
-			unit_label: "digital-good",
 			url: formData.get("url"),
-			livemode: formData.get("livemode"),
 			status: formData.get("status"),
+			custom_membership: formData.get("custom_membership"),
+			project: formData.get("project"),
 		};
 
 		await fetchurl(
 			`/extras/stripe/memberships/${awtdParams.id}`,
 			"PUT",
 			"no-cache",
-			{
-				...rawFormData,
-				default_price_data: {
-					currency: formData.get("currency"),
-					recurring: {
-						interval: formData.get("interval"),
-						interval_count: formData.get("interval_count"),
-					},
-					tax_behavior: formData.get("tax_behavior"),
-					unit_amount: formData.get("unit_amount"),
-				},
-				package_dimensions: {
-					width: formData.get("width"),
-					height: formData.get("height"),
-					length: formData.get("length"),
-					weight: formData.get("weight"),
-				},
-			}
+			rawFormData
 		);
+
 		redirect(`/noadmin/memberships`);
 	};
 
 	return (
 		<form className="row" action={upgradeMembership}>
 			<div className="col">
-				<label htmlFor="blog-title" className="form-label">
+				<label htmlFor="title" className="form-label">
 					Title
 				</label>
 				<input
-					id="blog-title"
+					id="title"
 					name="title"
 					defaultValue={membership?.data?.title}
 					type="text"
 					className="form-control mb-3"
+					required
 					placeholder=""
 				/>
 				<label htmlFor="text" className="form-label">
@@ -93,64 +83,63 @@ const UpdateMembership = async ({ params, searchParams }) => {
 					token={token}
 					id="text"
 					name="text"
+					defaultValue={membership?.data?.text}
 					onModel="Membership"
 					advancedTextEditor={false}
 					customPlaceholder="No description"
-					defaultValue={membership?.data?.text}
+					isRequired={true}
 				/>
 				<div className="row">
 					<div className="col">
-						<label htmlFor="currency" className="form-label">
-							Currency
+						<label htmlFor="isFree" className="form-label">
+							Is it free?
+						</label>
+						<select
+							id="isFree"
+							name="isFree"
+							defaultValue={membership?.data?.isFree}
+							className="form-control"
+						>
+							<option value={true}>Yes</option>
+							<option value={false}>No</option>
+						</select>
+					</div>
+					<div className="col">
+						<label htmlFor="price" className="form-label">
+							Price
 						</label>
 						<input
-							id="currency"
-							name="currency"
-							defaultValue={membership?.data?.default_price_data?.currency}
+							id="price"
+							name="price"
+							defaultValue={membership?.data.price.inHumanFormat}
 							type="text"
 							className="form-control mb-3"
-							placeholder=""
+							placeholder="$10.00 or $10 or 10"
+							disabled
 						/>
 					</div>
 					<div className="col">
-						<label htmlFor="unit_amount" className="form-label">
-							Price (in cents)
+						<label htmlFor="interval_count" className="form-label">
+							Charge Every
 						</label>
-						<input
-							id="unit_amount"
-							name="unit_amount"
-							defaultValue={membership?.data?.default_price_data?.unit_amount}
-							min={1}
-							type="number"
-							className="form-control mb-3"
-							placeholder="How much?"
-						/>
-					</div>
-				</div>
-				<div className="row">
-					<label htmlFor="interval" className="form-label">
-						Charge Every
-					</label>
-					<div className="col">
 						<input
 							id="interval_count"
 							name="interval_count"
-							defaultValue={
-								membership?.data?.default_price_data?.recurring?.interval_count
-							}
-							min={1}
+							defaultValue={membership?.data?.recurring?.interval_count}
+							min="1"
 							type="number"
 							className="form-control mb-3"
 							placeholder="1"
 						/>
 					</div>
 					<div className="col">
+						<label htmlFor="interval" className="form-label">
+							Interval
+						</label>
 						<select
 							id="interval"
 							name="interval"
-							defaultValue={
-								membership?.data?.default_price_data?.recurring?.interval
-							}
+							defaultValue={membership?.data?.recurring?.interval}
 							className="form-control mb-3"
 						>
 							<option value={"day"}>Day</option>
@@ -162,88 +151,18 @@ const UpdateMembership = async ({ params, searchParams }) => {
 				</div>
 				<div className="row">
 					<div className="col">
-						<label htmlFor="width" className="form-label">
-							Width (In inches)
-						</label>
-						<input
-							id="width"
-							name="width"
-							defaultValue={membership?.data?.package_dimensions?.width}
-							min={0}
-							type="number"
-							className="form-control mb-3"
-							placeholder="In inches"
-						/>
-					</div>
-					<div className="col">
-						<label htmlFor="height" className="form-label">
-							Height
-						</label>
-						<input
-							id="height"
-							name="height"
-							defaultValue={membership?.data?.package_dimensions?.height}
-							min={0}
-							type="number"
-							className="form-control mb-3"
-							placeholder="In inches"
-						/>
-					</div>
-					<div className="col">
-						<label htmlFor="length" className="form-label">
-							Length (in inches)
-						</label>
-						<input
-							id="length"
-							name="length"
-							defaultValue={membership?.data?.package_dimensions?.length}
-							min={0}
-							type="number"
-							className="form-control mb-3"
-							placeholder="In inches"
-						/>
-					</div>
-					<div className="col">
-						<label htmlFor="weight" className="form-label">
-							Weight (in ounces)
-						</label>
-						<input
-							id="weight"
-							name="weight"
-							defaultValue={membership?.data?.package_dimensions?.weight}
-							min={0}
-							type="number"
-							className="form-control mb-3"
-							placeholder="In ounces"
-						/>
-					</div>
-				</div>
-				<div className="row">
-					<div className="col">
-						<label htmlFor="shippable" className="form-label">
-							Shipabble
-						</label>
-						<select
-							id="shippable"
-							name="shippable"
-							defaultValue={membership?.data?.shippable}
-							className="form-control mb-3"
-						>
-							<option value={true}>Yes</option>
-							<option value={false}>No</option>
-						</select>
 						<label htmlFor="tax_behavior" className="form-label">
-							Tax Beahavior
+							Tax Behavior (Include taxes on final price?)
 						</label>
 						<select
 							id="tax_behavior"
 							name="tax_behavior"
-							defaultValue={membership?.data?.default_price_data?.tax_behavior}
+							defaultValue={membership?.data?.tax_behavior}
 							className="form-control mb-3"
 						>
-							<option value={"exclusive"}>Exclusive</option>
-							<option value={"inclusive"}>Inclusive</option>
-							<option value={"unspecified"}>Unspecified</option>
+							<option value="exclusive">Exclusive</option>
+							<option value="inclusive">Inclusive</option>
+							<option value="unspecified">Unspecified</option>
 						</select>
 					</div>
 					<div className="col">
@@ -257,37 +176,25 @@ const UpdateMembership = async ({ params, searchParams }) => {
 							className="form-control mb-3"
 							placeholder="This is what will appear in the user's bank statement account"
 						>
-							<option value={"DAILY BFR MEMBRSHP"}>
-								DAILY BEFREE MEMBERSHIP
+							<option value={"DAILY MEMBRSHP"}>
+								DAILY ARMED CODE, LLC MEMBERSHIP
 							</option>
-							<option value={"BIWEEKLY BFR MEMBRSHP"}>
-								BI-WEEKLY BEFREE MEMBERSHIP
+							<option value={"BIWEEKLY MEMBRSHP"}>
+								BI-WEEKLY ARMED CODE, LLC MEMBERSHIP
 							</option>
-							<option value={"MONTHLY BFR MEMBRSHP"}>
-								MONTHLY BEFREE MEMBERSHIP
+							<option value={"MONTHLY MEMBRSHP"}>
+								MONTHLY ARMED CODE, LLC MEMBERSHIP
 							</option>
-							<option value={"YEARLY BFR MEMBRSHP"}>
-								YEARLY BEFREE MEMBERSHIP
+							<option value={"YEARLY MEMBRSHP"}>
+								YEARLY ARMED CODE, LLC MEMBERSHIP
 							</option>
 						</select>
-						<label htmlFor="unit_label" className="form-label">
-							Unit Label
-						</label>
-						<input
-							id="unit_label"
-							name="unit_label"
-							defaultValue={membership?.data?.unit_label}
-							type="text"
-							className="form-control mb-3"
-							placeholder="Category of the product or service offered"
-							disabled
-						/>
 					</div>
 				</div>
 				<div className="row">
 					<div className="col">
 						<label htmlFor="url" className="form-label">
-							Url of the Product or Service Offered
+							Url of the Product Offered
 						</label>
 						<input
 							id="url"
@@ -295,6 +202,7 @@ const UpdateMembership = async ({ params, searchParams }) => {
 							defaultValue={membership?.data?.url}
 							type="text"
 							className="form-control mb-3"
+							required
 							placeholder=""
 						/>
 					</div>
@@ -305,7 +213,7 @@ const UpdateMembership = async ({ params, searchParams }) => {
 						<select
 							id="active"
 							name="active"
-							defaultValue={membership?.data?.active}
+							defaultValue={membership?.data?.active.toString()}
 							className="form-control mb-3"
 						>
 							<option value={true}>Yes</option>
@@ -313,17 +221,32 @@ const UpdateMembership = async ({ params, searchParams }) => {
 						</select>
 					</div>
 					<div className="col">
-						<label htmlFor="livemode" className="form-label">
-							Live Mode
+						<label htmlFor="custom_membership" className="form-label">
+							Custom Plan?
 						</label>
 						<select
-							id="livemode"
-							name="livemode"
-							defaultValue={membership?.data?.livemode}
+							id="custom_membership"
+							name="custom_membership"
+							defaultValue={membership?.data?.custom_membership.toString()}
 							className="form-control mb-3"
 						>
 							<option value={true}>Yes</option>
 							<option value={false}>No</option>
+						</select>
+					</div>
+					<div className="col">
+						<label>Project</label>
+						<select
+							id="project"
+							name="project"
+							defaultValue={membership?.data?.project}
+							className="form-control mb-3"
+						>
+							<option value={"all"}>All</option>
+							<option value={"personal"}>Personal</option>
+							<option value={"armedcodellc"}>Armed Code, LLC</option>
+							<option value={`anonymous-secrets-app`}>Anonymous Secrets</option>
+							<option value={`play-it-now-app`}>Play It Now</option>
 						</select>
 					</div>
 				</div>

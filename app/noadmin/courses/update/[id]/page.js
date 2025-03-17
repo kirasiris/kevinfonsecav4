@@ -15,7 +15,11 @@ async function getFiles(params) {
 }
 
 async function getCourse(params) {
-	const res = await fetchurl(`/courses${params}`, "GET", "no-cache");
+	const res = await fetchurl(
+		`/extras/stripe/courses${params}`,
+		"GET",
+		"no-cache"
+	);
 	if (!res.success) notFound();
 	return res;
 }
@@ -52,7 +56,12 @@ const UpdateCourse = async ({ params, searchParams }) => {
 			status: formData.get("status"),
 			files: { avatar: formData.get("file") },
 		};
-		await fetchurl(`/courses/${awtdParams.id}`, "PUT", "no-cache", rawFormData);
+		await fetchurl(
+			`/extras/stripe/courses/${awtdParams.id}`,
+			"PUT",
+			"no-cache",
+			rawFormData
+		);
 		redirect(`/noadmin/courses`);
 	};
 

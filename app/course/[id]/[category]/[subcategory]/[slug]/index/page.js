@@ -6,7 +6,11 @@ import List from "@/components/chapter/list";
 import Jumbotron from "@/components/course/jumbotron";
 
 async function getCourse(params) {
-	const res = await fetchurl(`/courses${params}`, "GET", "no-cache");
+	const res = await fetchurl(
+		`/extras/stripe/courses${params}`,
+		"GET",
+		"no-cache"
+	);
 	if (!res.success) notFound();
 	return res;
 }

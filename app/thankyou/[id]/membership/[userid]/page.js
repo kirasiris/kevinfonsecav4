@@ -11,13 +11,13 @@ async function getAuthenticatedUser() {
 
 async function getUserAndSubscribeToCourse(id = "") {
 	const res = await fetchurl(
-		`/extras/stripe/subscriptions/courses/${id}/paid`,
+		`/extras/stripe/subscriptions/memberships/${id}/paid`,
 		"PUT",
 		"no-cache",
 		{
 			resourceId: id,
 			status: "published",
-			onModel: "Course",
+			onModel: "Membership",
 			isPaid: true,
 			website: "beFree",
 		}
@@ -34,7 +34,7 @@ const ThankYouRead = async ({ params, searchParams }) => {
 	// Redirect if user is not loggedIn
 	(auth?.error?.statusCode === 401 || !auth?.data?.isOnline) &&
 		redirect(
-			`/auth/login?returnpage=/thankyou/${awtdParams.id}/course/${awtdParams.userid}?returnpage=${searchParams.returnpage}`
+			`/auth/login?returnpage=/thankyou/${awtdParams.id}/membership/${awtdParams.userid}?returnpage=${searchParams.returnpage}`
 		);
 
 	await getUserAndSubscribeToCourse(awtdParams.id);

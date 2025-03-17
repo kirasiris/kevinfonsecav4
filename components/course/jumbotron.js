@@ -17,7 +17,7 @@ const Jumbotron = ({
 	const handleFreeEnrollment = async () => {
 		try {
 			await fetchurl(
-				`/extras/stripe/subscriptions/${object.data._id}/course/free`,
+				`/extras/stripe/subscriptions/courses/${object.data._id}/free`,
 				"PUT",
 				"no-cache",
 				{
@@ -57,7 +57,7 @@ const Jumbotron = ({
 	const handlePaidEnrollment = async () => {
 		try {
 			const res = await fetchurl(
-				`/extras/stripe/subscriptions/${object.data._id}/course/payment`,
+				`/extras/stripe/subscriptions/courses/${object.data._id}/payment`,
 				"POST",
 				"no-cache",
 				{
@@ -71,7 +71,7 @@ const Jumbotron = ({
 
 			// Redirect to stripe
 			const stripe = await loadStripe(
-				"pk_test_4Dk6bq2sILbKjTN6C1lQil0K00oosTHzg5"
+				process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY
 			);
 			stripe.redirectToCheckout({ sessionId: res?.stripe.id });
 		} catch (err) {
@@ -100,7 +100,7 @@ const Jumbotron = ({
 	const handleCancellation = async (e) => {
 		try {
 			await fetchurl(
-				`/extras/stripe/subscriptions/${object.data._id}/course/cancel`,
+				`/extras/stripe/subscriptions/courses/${object.data._id}/cancel`,
 				"PUT",
 				"no-cache"
 			);

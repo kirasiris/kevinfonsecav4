@@ -16,7 +16,11 @@ async function getAuthenticatedUser() {
 }
 
 async function getCourse(params) {
-	const res = await fetchurl(`/courses${params}`, "GET", "no-cache");
+	const res = await fetchurl(
+		`/extras/stripe/courses${params}`,
+		"GET",
+		"no-cache"
+	);
 	if (!res.success) notFound();
 	return res;
 }

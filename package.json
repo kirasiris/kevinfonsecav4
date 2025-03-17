@@ -82,7 +82,7 @@
     "@uiw/codemirror-extensions-langs": "^4.23.7",
     "@uiw/codemirror-theme-vscode": "^4.23.7",
     "@uiw/react-codemirror": "^4.23.7",
-    "axios": "^1.7.9",
+    "axios": "^1.8.3",
     "base-64": "^1.0.0",
     "befree-utilities": "^1.0.4",
     "bootstrap": "^5.3.3",
@@ -104,6 +104,7 @@
     "rrule": "^2.8.1",
     "rss": "^1.2.2",
     "showdown": "^2.1.0",
-    "wavesurfer.js": "^7.8.16"
+    "wavesurfer.js": "^7.8.16",
+    "zod": "^3.24.2"
   }
 }

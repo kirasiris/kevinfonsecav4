@@ -15,6 +15,7 @@ const MyTextArea = ({
 	advancedTextEditor = true,
 	customPlaceholder = "Share something new. Now with #hashtags support, YAY!!!",
 	charactersLimit = 99999,
+	isRequired = false,
 }) => {
 	// Never delete these lines below
 	const sizeLimit = charactersLimit ?? 99999;
@@ -185,8 +186,8 @@ const MyTextArea = ({
 			name={name}
 			defaultValue={defaultValue}
 			// type
-			className="form-control"
-			// required
+			className="form-control mb-3"
+			required={isRequired}
 			// placeholder=""
 			rows="5"
 		/>

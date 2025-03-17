@@ -3,12 +3,20 @@ import Header from "@/layout/header";
 import List from "@/components/course/list";
 
 async function getFeaturedCourse(params) {
-	const res = await fetchurl(`/courses${params}`, "GET", "no-cache");
+	const res = await fetchurl(
+		`/extras/stripe/courses${params}`,
+		"GET",
+		"no-cache"
+	);
 	return res;
 }
 
 async function getCourses(params) {
-	const res = await fetchurl(`/courses${params}`, "GET", "no-cache");
+	const res = await fetchurl(
+		`/extras/stripe/courses${params}`,
+		"GET",
+		"no-cache"
+	);
 	return res;
 }
 

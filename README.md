@@ -194,3 +194,78 @@ const FormButtons = ({ }) => {
 
 export default FormButtons;
 ```
+
+Fully custom server action form without the use of "use client"
+
+```js
+import { z } from 'zod'
+import { redirect } from 'next/navigation'
+
+const loginSchema = z.object({
+  email: z.string().email({ message: 'Invalid email format' }),
+  password: z.string().min(6, { message: 'Password must be at least 6 characters' }),
+  rememberMe: z.union([z.string(), z.null()]).transform(val => val === 'on'),
+})
+
+async function loginAccount(formData) {
+  'use server'
+
+  const rawFormData = {
+    email: formData.get('email'),
+    password: formData.get('password'),
+    rememberMe: formData.get('rememberMe'),
+  }
+
+  const parsed = loginSchema.safeParse(rawFormData)
+
+  if (!parsed.success) {
+    return { error: parsed.error.format() }
+  }
+
+  const validData = parsed.data
+
+  // Simulate API call (replace with actual request)
+  const success = validData.email === 'test@example.com' && validData.password === 'password123'
+
+  if (!success) {
+    return { error: { general: ['Login failed. Please check your credentials.'] } }
+  }
+
+  // On success, redirect to a new page
+  redirect('/dashboard')
+}
+
+export default function LoginForm({ searchParams }) {
+  return (
+    <form action={loginAccount} method="post" onSubmit="handleSubmit(event)">
+      <input type="email" name="email" placeholder="Email" required />
+      {searchParams?.error?.email && <p style={{ color: 'red' }}>{searchParams.error.email}</p>}
+
+      <input type="password" name="password" placeholder="Password" required />
+      {searchParams?.error?.password && <p style={{ color: 'red' }}>{searchParams.error.password}</p>}
+
+      {searchParams?.error?.general && <p style={{ color: 'red' }}>{searchParams.error.general}</p>}
+
+      <button type="submit" id="loginButton">Login</button>
+      <button type="reset" id="resetButton">Reset</button>
+
+      {/* Inline Script to Handle Button State */}
+      <script dangerouslySetInnerHTML={{
+        __html: `
+          function handleSubmit(event) {
+            const button = document.getElementById('loginButton');
+            button.innerText = 'Processing...';
+            button.disabled = true;
+          }
+
+          document.getElementById('resetButton').addEventListener('click', () => {
+            const button = document.getElementById('loginButton');
+            button.innerText = 'Login';
+            button.disabled = false;
+          });
+        `
+      }} />
+    </form>
+  )
+}
+```

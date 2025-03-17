@@ -212,6 +212,14 @@ const List = ({
 							searchParams={searchParams}
 							siblings={1}
 						/>
+						<p className="text-center text-uppercase text-decoration-underline text-bg-primary">
+							NOTE: You need to disactivate them first in order to delete them.
+						</p>
+						<p className="text-center text-uppercase text-decoration-underline text-bg-primary">
+							Furthermore if prices are attached, you will need to archive said
+							prices on Stripe directly!
+						</p>
+						<p>YOU CANNOT DELETE PRICES ON BACKEND, I TRIED!</p>
 					</>
 				) : (
 					<OnboardingLink />

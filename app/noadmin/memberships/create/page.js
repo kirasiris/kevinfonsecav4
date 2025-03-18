@@ -37,6 +37,8 @@ const CreateMembership = async ({ params, searchParams }) => {
 			status: formData.get("status"),
 			custom_membership: formData.get("custom_membership"),
 			project: formData.get("project"),
+			postType: formData.get("postType"),
+			numberOfRequests: formData.get("numberOfRequests"),
 		};
 
 		await fetchurl(
@@ -222,8 +224,12 @@ const CreateMembership = async ({ params, searchParams }) => {
 							<option value={false}>No</option>
 						</select>
 					</div>
+				</div>
+				<div className="row">
 					<div className="col">
-						<label>Project</label>
+						<label htmlFor="project" className="form-label">
+							Project
+						</label>
 						<select
 							id="project"
 							name="project"
@@ -236,6 +242,33 @@ const CreateMembership = async ({ params, searchParams }) => {
 							<option value={`anonymous-secrets-app`}>Anonymous Secrets</option>
 							<option value={`play-it-now-app`}>Play It Now</option>
 						</select>
+					</div>
+					<div className="col">
+						<label htmlFor="postType" className="form-label">
+							Membership type
+						</label>
+						<select
+							id="postType"
+							name="postType"
+							defaultValue="all"
+							className="form-control mb-3"
+						>
+							<option value={"regular"}>Regular</option>
+							<option value={"api-usage"}>API Usage</option>
+						</select>
+					</div>
+					<div className="col">
+						<label htmlFor="numberOfRequests" className="form-label">
+							Number of Requests (if membership type is API Usage)
+						</label>
+						<input
+							id="numberOfRequests"
+							name="numberOfRequests"
+							defaultValue="500"
+							type="number"
+							className="form-control mb-3"
+							placeholder="Please enter integers only (not rounded numbers)"
+						/>
 					</div>
 				</div>
 			</div>

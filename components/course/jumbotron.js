@@ -25,7 +25,7 @@ const Jumbotron = ({
 					status: "published",
 					onModel: "Course",
 					isPaid: true,
-					website: "beFree",
+					website: process.env.NEXT_PUBLIC_WEBSITE_NAME, // THIS IS IMPORTANT FOR DB
 				}
 			);
 
@@ -65,7 +65,7 @@ const Jumbotron = ({
 					status: "published",
 					onModel: "Course",
 					isPaid: false,
-					website: "beFree",
+					website: process.env.NEXT_PUBLIC_WEBSITE_NAME, // THIS IS IMPORTANT FOR DB
 				}
 			);
 

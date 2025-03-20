@@ -52,7 +52,7 @@ const CreateUser = async ({ params, searchParams }) => {
 				steamId: formData.get("steamId"),
 				xboxId: formData.get("xboxId"),
 			},
-			website: "beFree",
+			registeredFrom: process.env.NEXT_PUBLIC_WEBSITE_URL,
 		});
 		redirect(`/noadmin/users`);
 	};

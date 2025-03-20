@@ -28,7 +28,7 @@ const CreateEmail = async ({ params, searchParams }) => {
 	const addEmail = async (formData) => {
 		"use server";
 		const rawFormData = {
-			users: formData.getAll("users"),
+			recipients: formData.getAll("recipients"),
 			text: formData.get("text"),
 			subject: formData.get("subject"),
 			status: formData.get("status"),
@@ -45,12 +45,12 @@ const CreateEmail = async ({ params, searchParams }) => {
 	return (
 		<form className="row" action={addEmail}>
 			<div className="col">
-				<label htmlFor="users" className="form-label">
+				<label htmlFor="recipients" className="form-label">
 					To
 				</label>
 				<select
-					id="users"
-					name="users"
+					id="recipients"
+					name="recipients"
 					defaultValue={[]}
 					className="form-control"
 					multiple

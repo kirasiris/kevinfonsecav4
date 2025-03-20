@@ -309,9 +309,9 @@ const UpdateUser = async ({ params, searchParams }) => {
 							className="form-control"
 						>
 							<option value={`nini`}>Nini</option>
-							<option value={`actor`}>Actor</option>
-							<option value={`actress`}>Actress</option>
+							<option value={`student`}>Student</option>
 							<option value={`unemployed`}>Unemployed</option>
+							<option value={`employed`}>Employed</option>
 						</select>
 					</div>
 				</div>

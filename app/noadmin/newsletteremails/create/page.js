@@ -9,7 +9,7 @@ import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
 
 async function getUsersSubscribed(params) {
-	const res = await fetchurl(`/user${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/users${params}`, "GET", "no-cache");
 	return res;
 }
 

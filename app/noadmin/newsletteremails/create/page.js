@@ -41,6 +41,11 @@ const CreateEmail = async ({ params, searchParams }) => {
 		redirect(`/noadmin/newsletteremails`);
 	};
 
+	console.dir({
+		profiles: users,
+		authenticated: auth,
+	});
+
 	return (
 		<form className="row" action={addEmail}>
 			<div className="col">

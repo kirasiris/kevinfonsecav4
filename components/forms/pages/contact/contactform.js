@@ -23,8 +23,7 @@ const ContactForm = () => {
 		setBtnText(`Processing`);
 		const res = await fetchurl(`/emails`, "POST", "no-cache", {
 			...rawFormData,
-			registeredFrom: process.env.NEXT_PUBLIC_WEBSITE_NAME,
-			registeredAt: process.env.NEXT_PUBLIC_WEBSITE_URL,
+			website: process.env.NEXT_PUBLIC_NO_REPLY_EMAIL, // Needed for DB mass email functionality
 		});
 		if (res.status === "error") {
 			toast.error(res.message, "bottom");

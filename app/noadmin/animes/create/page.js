@@ -42,6 +42,7 @@ const CreateAnime = async ({ params, searchParams }) => {
 			...rawFormData,
 			onairtype: "anime",
 			playlistType: "video",
+			website: process.env.NEXT_PUBLIC_NO_REPLY_EMAIL, // Needed for DB mass email functionality
 		});
 		redirect(`/noadmin/animes`);
 	};

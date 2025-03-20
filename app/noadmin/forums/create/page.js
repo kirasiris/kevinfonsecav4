@@ -29,7 +29,10 @@ const CreateForum = async ({ params, searchParams }) => {
 			status: formData.get("status"),
 			// files: { avatar: formData.get("file") },
 		};
-		await fetchurl(`/forums`, "POST", "no-cache", rawFormData);
+		await fetchurl(`/forums`, "POST", "no-cache", {
+			...rawFormData,
+			website: process.env.NEXT_PUBLIC_NO_REPLY_EMAIL, // Needed for DB mass email functionality
+		});
 		redirect(`/noadmin/forums`);
 	};
 

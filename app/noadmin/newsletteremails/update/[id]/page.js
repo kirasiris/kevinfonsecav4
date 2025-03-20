@@ -40,29 +40,27 @@ const UpdateEmail = async ({ params, searchParams }) => {
 	const upgradeEmail = async (formData) => {
 		"use server";
 		const rawFormData = {
-			users: formData.getAll("users"),
+			recipients: formData.getAll("recipients"),
 			text: formData.get("text"),
 			subject: formData.get("subject"),
 			status: formData.get("status"),
 		};
-		await fetchurl(
-			`/newsletteremails/${awtdParams.id}`,
-			"PUT",
-			"no-cache",
-			rawFormData
-		);
+		await fetchurl(`/newsletteremails/${awtdParams.id}`, "PUT", "no-cache", {
+			...rawFormData,
+			website: process.env.NEXT_PUBLIC_NO_REPLY_EMAIL, // Needed for DB mass email functionality
+		});
 		redirect(`/noadmin/newsletteremails`);
 	};
 
 	return (
 		<form className="row" action={upgradeEmail}>
 			<div className="col">
-				<label htmlFor="users" className="form-label">
+				<label htmlFor="recipients" className="form-label">
 					To
 				</label>
 				<select
-					id="users"
-					name="users"
+					id="recipients"
+					name="recipients"
 					defaultValue={newsletteremail?.data?.users}
 					className="form-control"
 					multiple

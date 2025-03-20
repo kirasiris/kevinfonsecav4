@@ -43,6 +43,7 @@ const CreateTheme = async ({ params, searchParams }) => {
 		await fetchurl(`/themes`, "POST", "no-cache", {
 			...rawFormData,
 			postType: "theme",
+			website: process.env.NEXT_PUBLIC_NO_REPLY_EMAIL, // Needed for DB mass email functionality
 		});
 		redirect(`/noadmin/themes`);
 	};

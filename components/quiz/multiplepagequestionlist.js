@@ -57,7 +57,7 @@ const List = ({
 				...selectedOptionsData,
 				resourceId: params.id,
 				onModel: "Quiz",
-				website: "beFree",
+				website: process.env.NEXT_PUBLIC_NO_REPLY_EMAIL, // Needed for DB mass email functionality
 			});
 			router.push(`/quiz/results/${res?.data?._id}`);
 		} catch (err) {

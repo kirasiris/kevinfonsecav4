@@ -14,7 +14,10 @@ const Form = async ({ params, searchParams }) => {
 			status: "published",
 			commented: true,
 		};
-		await fetchurl(`/forums`, "POST", "no-cache", rawFormData);
+		await fetchurl(`/forums`, "POST", "no-cache", {
+			...rawFormData,
+			website: process.env.NEXT_PUBLIC_NO_REPLY_EMAIL, // Needed for DB mass email functionality
+		});
 		redirect(
 			`/forum/category/${params.category}/subcategory/${params.subcategory}?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
 		);

@@ -35,7 +35,7 @@ const CreateEmail = async ({ params, searchParams }) => {
 		};
 		await fetchurl(`/newsletteremails`, "POST", "no-cache", {
 			...rawFormData,
-			website: process.env.NEXT_PUBLIC_WEBSITE_URL, // Needed for DB mass email functionality
+			website: process.env.NEXT_PUBLIC_NO_REPLY_EMAIL, // Needed for DB mass email functionality
 		});
 		redirect(`/noadmin/newsletteremails`);
 	};

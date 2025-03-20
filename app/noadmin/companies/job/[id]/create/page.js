@@ -40,7 +40,7 @@ const CreateJob = async ({ params, searchParams }) => {
 		await fetchurl(`/jobs`, "POST", "no-cache", {
 			...rawFormData,
 			resourceId: awtdParams.id,
-			website: "beFree",
+			website: process.env.NEXT_PUBLIC_NO_REPLY_EMAIL, // Needed for DB mass email functionality
 		});
 		redirect(`/noadmin/companies/read/${awtdParams.id}`);
 	};

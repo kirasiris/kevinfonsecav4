@@ -52,7 +52,7 @@ const CreateUser = async ({ params, searchParams }) => {
 				steamId: formData.get("steamId"),
 				xboxId: formData.get("xboxId"),
 			},
-			registeredFrom: process.env.NEXT_PUBLIC_WEBSITE_URL,
+			registeredFrom: process.env.NEXT_PUBLIC_NO_REPLY_EMAIL,
 		});
 		redirect(`/noadmin/users`);
 	};

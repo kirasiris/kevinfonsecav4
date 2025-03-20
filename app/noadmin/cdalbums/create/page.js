@@ -43,6 +43,7 @@ const CreateCDAlbum = async ({ params, searchParams }) => {
 			onairstatus: "finished",
 			onairtype: "cd-album",
 			playlistType: "audio",
+			website: process.env.NEXT_PUBLIC_NO_REPLY_EMAIL, // Needed for DB mass email functionality
 		});
 		redirect(`/noadmin/cdalbums`);
 	};

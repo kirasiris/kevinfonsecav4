@@ -36,7 +36,7 @@ const NewsletterForm = ({
 			setEmailBtnTxt("...");
 			await fetchurl(`/newslettersubscribers`, "POST", "no-cache", {
 				...newsletterData,
-				website: "beFree",
+				website: process.env.NEXT_PUBLIC_NO_REPLY_EMAIL, // Needed for DB mass email functionality
 			});
 			await fetchNewsletters(``);
 			setEmailBtnTxt(emailBtnTxt);

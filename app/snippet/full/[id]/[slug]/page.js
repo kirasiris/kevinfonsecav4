@@ -5,7 +5,7 @@ import { fetchurl, getUserOnServer } from "@/helpers/setTokenOnServer";
 import LiveCode from "@/components/admin/snippets/livecode";
 
 async function getSnippet(params) {
-	const res = await fetchurl(`/snippets${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/snippets${params}`, "GET", "no-cache");
 	if (!res.success) notFound();
 	return res;
 }

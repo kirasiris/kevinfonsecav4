@@ -5,7 +5,11 @@ import ArticleHeader from "@/components/global/articleheader";
 import { notFound } from "next/navigation";
 
 async function getNewsletterEmail(params) {
-	const res = await fetchurl(`/newsletteremails${params}`, "GET", "no-cache");
+	const res = await fetchurl(
+		`/global/newsletteremails${params}`,
+		"GET",
+		"no-cache"
+	);
 	if (!res.success) notFound();
 	return res;
 }

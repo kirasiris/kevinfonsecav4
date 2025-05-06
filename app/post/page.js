@@ -3,7 +3,7 @@ import Header from "@/layout/header";
 import List from "@/components/profile/list";
 
 async function getPosts(params) {
-	const res = await fetchurl(`/posts${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/posts${params}`, "GET", "no-cache");
 	return res;
 }
 

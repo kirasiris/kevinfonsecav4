@@ -4,7 +4,7 @@ import ParseHtml from "@/layout/parseHtml";
 import ArticleHeader from "@/components/global/articleheader";
 
 async function getBlog(params) {
-	const res = await fetchurl(`/blogs${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/blogs${params}`, "GET", "no-cache");
 	return res;
 }
 

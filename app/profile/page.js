@@ -3,7 +3,7 @@ import Header from "@/layout/header";
 import ProfilesList from "@/components/profile/profileslist";
 
 async function getProfiles(params) {
-	const res = await fetchurl(`/users${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/users${params}`, "GET", "no-cache");
 	return res;
 }
 

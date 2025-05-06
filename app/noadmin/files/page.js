@@ -13,7 +13,7 @@ const AdminFilesIndex = async ({ params, searchParams }) => {
 	const handleDelete = async (id, publicId) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/files/${id}/permanently`, "DELETE", "no-cache");
+		await fetchurl(`/noadmin/files/${id}/permanently`, "DELETE", "no-cache");
 		await fetchurl(
 			`/uploads/deleteobject?publicId=${publicId}`,
 			"DELETE",
@@ -25,14 +25,14 @@ const AdminFilesIndex = async ({ params, searchParams }) => {
 	const handleTrashAll = async () => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/files/deleteall`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/files/deleteall`, "PUT", "no-cache");
 		revalidatePath(`/noadmin/files?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const handleDeleteAll = async () => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/files/deleteall`, "DELETE", "no-cache");
+		await fetchurl(`/noadmin/files/deleteall`, "DELETE", "no-cache");
 		revalidatePath(`/noadmin/files?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 

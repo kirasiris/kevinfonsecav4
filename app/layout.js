@@ -13,12 +13,12 @@ async function getAuthenticatedUser() {
 }
 
 async function getSetting(params) {
-	const res = await fetchurl(`/settings/${params}`, "GET", "default");
+	const res = await fetchurl(`/global/settings/${params}`, "GET", "default");
 	return res;
 }
 
 async function getMenus(params) {
-	const res = await fetchurl(`/pages${params}`, "GET", "default");
+	const res = await fetchurl(`/global/pages${params}`, "GET", "default");
 	return res;
 }
 

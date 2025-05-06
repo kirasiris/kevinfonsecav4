@@ -25,7 +25,6 @@ const CreatePage = async ({ params, searchParams }) => {
 		await fetchurl(`/pages`, "POST", "no-cache", {
 			...rawFormData,
 			resourceId: awtdParams.id,
-			website: process.env.NEXT_PUBLIC_NO_REPLY_EMAIL, // Needed for DB mass email functionality
 		});
 		redirect(`/noadmin/menus/read/${awtdParams.id}`);
 	};

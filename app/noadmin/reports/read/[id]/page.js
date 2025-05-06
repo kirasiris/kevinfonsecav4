@@ -1,9 +1,9 @@
+import Link from "next/link";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import ParseHtml from "@/layout/parseHtml";
-import Link from "next/link";
 
 async function getReport(params) {
-	const res = await fetchurl(`/reports${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/reports${params}`, "GET", "no-cache");
 	return res;
 }
 

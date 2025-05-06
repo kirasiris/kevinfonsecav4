@@ -3,18 +3,18 @@ import Header from "@/layout/header";
 import List from "@/components/theme/list";
 
 async function getFeaturedTheme(params) {
-	const res = await fetchurl(`/themes${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/themes${params}`, "GET", "no-cache");
 	return res;
 }
 
 async function getThemes(params) {
-	const res = await fetchurl(`/themes${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/themes${params}`, "GET", "no-cache");
 
 	return res;
 }
 
 async function getCategories(params) {
-	const res = await fetchurl(`/categories${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/categories${params}`, "GET", "no-cache");
 	return res;
 }
 

@@ -1,3 +1,5 @@
+import { revalidatePath } from "next/cache";
+import { notFound } from "next/navigation";
 import {
 	fetchurl,
 	getAuthTokenOnServer,
@@ -5,18 +7,16 @@ import {
 } from "@/helpers/setTokenOnServer";
 import ParseHtml from "@/layout/parseHtml";
 import SongList from "@/components/admin/cdalbums/songlist";
-import { revalidatePath } from "next/cache";
 import UseDropzone from "@/components/admin/cdalbums/songdropzone";
-import { notFound } from "next/navigation";
 
 async function getCDAlbum(params) {
-	const res = await fetchurl(`/playlists${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/playlists${params}`, "GET", "no-cache");
 	if (!res.success) notFound();
 	return res;
 }
 
 async function getSongs(params) {
-	const res = await fetchurl(`/songs${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/songs${params}`, "GET", "no-cache");
 	return res;
 }
 
@@ -38,49 +38,53 @@ const ReadCDAlbum = async ({ params, searchParams }) => {
 	const draftIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/songs/${id}/draftit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/songs/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(`/noadmin/cdalbums/read/${awtdParams.id}`);
 	};
 
 	const publishIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/songs/${id}/publishit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/songs/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(`/noadmin/cdalbums/read/${awtdParams.id}`);
 	};
 
 	const trashIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/songs/${id}/trashit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/songs/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(`/noadmin/cdalbums/read/${awtdParams.id}`);
 	};
 
 	const scheduleIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/songs/${id}/scheduleit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/songs/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(`/noadmin/cdalbums/read/${awtdParams.id}`);
 	};
 
 	const handleDelete = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/songs/${id}/permanently`, "DELETE", "no-cache");
+		await fetchurl(`/noadmin/songs/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(`/noadmin/cdalbums/read/${awtdParams.id}`);
 	};
 
 	const handleTrashAll = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/songs/deleteall`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/songs/deleteall`, "PUT", "no-cache");
 		revalidatePath(`/noadmin/cdalbums/read/${awtdParams.id}`);
 	};
 
 	const handleDeleteAll = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/songs/deleteall/permanently`, "DELETE", "no-cache");
+		await fetchurl(
+			`/noadmin/songs/deleteall/permanently`,
+			"DELETE",
+			"no-cache"
+		);
 		revalidatePath(`/noadmin/cdalbums/read/${awtdParams.id}`);
 	};
 

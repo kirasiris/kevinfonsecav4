@@ -13,7 +13,7 @@ import NewsletterForm from "@/components/global/newsletter";
 import Head from "@/app/head";
 
 async function getPage(params) {
-	const res = await fetchurl(`/pages${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/pages${params}`, "GET", "no-cache");
 	if (!res.success) notFound();
 	return res;
 }

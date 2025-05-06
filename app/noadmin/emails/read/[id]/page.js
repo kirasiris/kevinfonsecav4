@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 // import Image from "next/image";
 
 async function getEmails(params) {
-	const res = await fetchurl(`/emails${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/emails${params}`, "GET", "no-cache");
 	if (!res.success) notFound();
 	return res;
 }

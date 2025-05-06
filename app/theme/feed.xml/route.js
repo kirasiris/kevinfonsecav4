@@ -3,7 +3,7 @@ import { fetchurl } from "@/helpers/setTokenOnServer";
 
 export async function GET() {
 	const allThemes = await fetchurl(
-		`/themes?limit=10&postType=theme&status=published`,
+		`/global/themes?limit=10&postType=theme&status=published`,
 		"GET",
 		"no-cache"
 	);

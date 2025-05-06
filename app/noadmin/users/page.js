@@ -4,7 +4,7 @@ import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
 import List from "@/components/admin/users/list";
 
 async function getUsers(params) {
-	const res = await fetchurl(`/users${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/users${params}`, "GET", "no-cache");
 	return res;
 }
 
@@ -84,14 +84,18 @@ const AdminUsersIndex = async ({ params, searchParams }) => {
 
 	const handleDelete = async (id) => {
 		"use server";
-		await fetchurl(`/users/${id}/permanently`, "DELETE", "no-cache");
+		await fetchurl(`/noadmin/users/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(`/noadmin/users?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const handleDeleteAll = async () => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/users/deleteall/permanently`, "DELETE", "no-cache");
+		await fetchurl(
+			`/noadmin/users/deleteall/permanently`,
+			"DELETE",
+			"no-cache"
+		);
 		revalidatePath(`/noadmin/users?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 

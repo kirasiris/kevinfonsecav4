@@ -3,12 +3,12 @@ import Header from "@/layout/header";
 import List from "@/components/video/list";
 
 async function getPlaylists(params) {
-	const res = await fetchurl(`/playlists${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/playlists${params}`, "GET", "no-cache");
 	return res;
 }
 
 async function getCategories(params) {
-	const res = await fetchurl(`/categories${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/categories${params}`, "GET", "no-cache");
 	return res;
 }
 

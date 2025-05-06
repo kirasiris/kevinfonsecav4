@@ -9,13 +9,13 @@ import Globalcontent from "@/layout/content";
 import Link from "next/link";
 
 async function getProfile(params) {
-	const res = await fetchurl(`/users${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/users${params}`, "GET", "no-cache");
 	if (!res.success) notFound();
 	return res;
 }
 
 async function getPosts(params) {
-	const res = await fetchurl(`/posts${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/posts${params}`, "GET", "no-cache");
 	return res;
 }
 

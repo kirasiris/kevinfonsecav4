@@ -5,7 +5,7 @@ import ArticleHeader from "@/components/global/articleheader";
 import { notFound } from "next/navigation";
 
 async function getComment(params) {
-	const res = await fetchurl(`/comments${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/comments${params}`, "GET", "no-cache");
 	if (!res.success) notFound();
 	return res;
 }

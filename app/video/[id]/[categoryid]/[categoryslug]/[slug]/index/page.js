@@ -10,13 +10,13 @@ async function getAuthenticatedUser() {
 }
 
 async function getPlaylists(params) {
-	const res = await fetchurl(`/playlists${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/playlists${params}`, "GET", "no-cache");
 	return res;
 }
 
 async function getPlaylistChapters(params) {
 	const res = await fetchurl(
-		`/videos${params}&sort=-orderingNumber`,
+		`/global/videos${params}&sort=-orderingNumber`,
 		"GET",
 		"no-cache"
 	);

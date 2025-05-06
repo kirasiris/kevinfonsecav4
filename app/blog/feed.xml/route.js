@@ -3,7 +3,7 @@ import { fetchurl } from "@/helpers/setTokenOnServer";
 
 export async function GET() {
 	const allBlogs = await fetchurl(
-		`/blogs?limit=10&postType=blog&status=published`,
+		`/global/blogs?limit=10&postType=blog&status=published`,
 		"GET",
 		"no-cache"
 	);

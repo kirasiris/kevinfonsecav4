@@ -10,7 +10,6 @@ import NewsletterForm from "../global/newsletter";
 import Image from "next/image";
 import RelatedCarousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
-import ErrorPage from "@/layout/errorpage";
 
 const YouTubePage = ({
 	searchParams = {},
@@ -139,7 +138,7 @@ const YouTubePage = ({
 			if (res?.data) {
 				// !id && !videoId && setVideo(res?.data[0]);
 				checkEmptyObject(searchParams) && setVideo(res.data[0]); // Display the most recent video
-				setVideos(res.data); // The set rest of them
+				setVideos(res.data); // Then set the rest of them
 				setLoading(false);
 				setLoadingVideos(false);
 			}

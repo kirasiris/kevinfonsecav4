@@ -1,10 +1,10 @@
+import { revalidatePath } from "next/cache";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
 import List from "@/components/admin/reports/list";
-import { revalidatePath } from "next/cache";
 
 async function getReports(params) {
-	const res = await fetchurl(`/reports${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/reports${params}`, "GET", "no-cache");
 	return res;
 }
 
@@ -20,49 +20,53 @@ const AdminReportsIndex = async ({ params, searchParams }) => {
 	const draftIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/reports/${id}/draftit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/reports/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(`/noadmin/reports?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const publishIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/reports/${id}/publishit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/reports/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(`/noadmin/reports?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const trashIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/reports/${id}/trashit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/reports/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(`/noadmin/reports?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const scheduleIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/reports/${id}/scheduleit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/reports/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(`/noadmin/reports?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const handleDelete = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/reports/${id}/permanently`, "DELETE", "no-cache");
+		await fetchurl(`/noadmin/reports/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(`/noadmin/reports?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const handleTrashAll = async () => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/reports/deleteall`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/reports/deleteall`, "PUT", "no-cache");
 		revalidatePath(`/noadmin/reports?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const handleDeleteAll = async () => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/reports/deleteall/permanently`, "DELETE", "no-cache");
+		await fetchurl(
+			`/noadmin/reports/deleteall/permanently`,
+			"DELETE",
+			"no-cache"
+		);
 		revalidatePath(`/noadmin/reports?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 

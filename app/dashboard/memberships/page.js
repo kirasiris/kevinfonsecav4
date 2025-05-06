@@ -4,7 +4,11 @@ import List from "@/components/dashboard/memberships/list";
 import { revalidatePath } from "next/cache";
 
 async function getMembershipsPublished(params) {
-	const res = await fetchurl(`/courses${params}`, "GET", "no-cache");
+	const res = await fetchurl(
+		`/extras/stripe/courses${params}`,
+		"GET",
+		"no-cache"
+	);
 	return res;
 }
 

@@ -1,11 +1,11 @@
+import { revalidatePath } from "next/cache";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
 import List from "@/components/admin/newslettersubscribers/list";
-import { revalidatePath } from "next/cache";
 
 async function getNewsletterSubscribers(params) {
 	const res = await fetchurl(
-		`/newslettersubscribers${params}`,
+		`/global/newslettersubscribers${params}`,
 		"GET",
 		"no-cache"
 	);
@@ -30,7 +30,7 @@ const AdminNewsletterSubscribersSearchIndex = async ({
 	// const draftIt = async (id) => {
 	// 	"use server";
 	// 	// const rawFormData = {}
-	// 	await fetchurl(`/newslettersubscribers/${id}/draftit`, "PUT", "no-cache");
+	// 	await fetchurl(`/noadmin/newslettersubscribers/${id}/draftit`, "PUT", "no-cache");
 	// 	revalidatePath(
 	// 		`/noadmin/newslettersubscribers?page=${awtdSearchParams.page || 1}&limit=${
 	// 			awtdSearchParams.limit || 10
@@ -41,7 +41,7 @@ const AdminNewsletterSubscribersSearchIndex = async ({
 	// const publishIt = async (id) => {
 	// 	"use server";
 	// 	// const rawFormData = {}
-	// 	await fetchurl(`/newslettersubscribers/${id}/publishit`, "PUT", "no-cache");
+	// 	await fetchurl(`/noadmin/newslettersubscribers/${id}/publishit`, "PUT", "no-cache");
 	// 	revalidatePath(
 	// 		`/noadmin/newslettersubscribers?page=${awtdSearchParams.page || 1}&limit=${
 	// 			awtdSearchParams.limit || 10
@@ -52,7 +52,7 @@ const AdminNewsletterSubscribersSearchIndex = async ({
 	// const trashIt = async (id) => {
 	// 	"use server";
 	// 	// const rawFormData = {}
-	// 	await fetchurl(`/newslettersubscribers/${id}/trashit`, "PUT", "no-cache");
+	// 	await fetchurl(`/noadmin/newslettersubscribers/${id}/trashit`, "PUT", "no-cache");
 	// 	revalidatePath(
 	// 		`/noadmin/newslettersubscribers?page=${awtdSearchParams.page || 1}&limit=${
 	// 			awtdSearchParams.limit || 10
@@ -63,7 +63,7 @@ const AdminNewsletterSubscribersSearchIndex = async ({
 	// const scheduleIt = async (id) => {
 	// 	"use server";
 	// 	// const rawFormData = {}
-	// 	await fetchurl(`/newslettersubscribers/${id}/scheduleit`, "PUT", "no-cache");
+	// 	await fetchurl(`/noadmin/newslettersubscribers/${id}/scheduleit`, "PUT", "no-cache");
 	// 	revalidatePath(
 	// 		`/noadmin/newslettersubscribers?page=${awtdSearchParams.page || 1}&limit=${
 	// 			awtdSearchParams.limit || 10
@@ -75,7 +75,7 @@ const AdminNewsletterSubscribersSearchIndex = async ({
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(
-			`/newslettersubscribers/${id}/permanently`,
+			`/noadmin/newslettersubscribers/${id}/permanently`,
 			"DELETE",
 			"no-cache"
 		);
@@ -91,7 +91,7 @@ const AdminNewsletterSubscribersSearchIndex = async ({
 	// const handleTrashAll = async () => {
 	// 	"use server";
 	// 	// const rawFormData = {}
-	// 	await fetchurl(`/newslettersubscribers/deleteall`, "PUT", "no-cache");
+	// 	await fetchurl(`/noadmin/newslettersubscribers/deleteall`, "PUT", "no-cache");
 	// 	revalidatePath(
 	// 		`/noadmin/newslettersubscribers/search?keyword=${
 	// 			awtdSearchParams.keyword
@@ -105,7 +105,7 @@ const AdminNewsletterSubscribersSearchIndex = async ({
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(
-			`/newslettersubscribers/deleteall/permanently`,
+			`/noadmin/newslettersubscribers/deleteall/permanently`,
 			"DELETE",
 			"no-cache"
 		);

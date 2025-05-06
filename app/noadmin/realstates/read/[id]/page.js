@@ -1,11 +1,11 @@
+import Image from "next/image";
+import { notFound } from "next/navigation";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import ParseHtml from "@/layout/parseHtml";
 import ArticleHeader from "@/components/global/articleheader";
-import Image from "next/image";
-import { notFound } from "next/navigation";
 
 async function getRealState(params) {
-	const res = await fetchurl(`/realstates${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/realstates${params}`, "GET", "no-cache");
 	if (!res.success) notFound();
 	return res;
 }

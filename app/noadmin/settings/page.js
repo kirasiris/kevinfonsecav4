@@ -1,10 +1,10 @@
+import { revalidatePath } from "next/cache";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
 import List from "@/components/admin/settings/list";
-import { revalidatePath } from "next/cache";
 
 async function getSettings(params) {
-	const res = await fetchurl(`/settings${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/settings${params}`, "GET", "no-cache");
 	return res;
 }
 
@@ -22,7 +22,7 @@ const AdminSettingsIndex = async ({ params, searchParams }) => {
 	const draftIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/settings/${id}/draftit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/settings/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
 			`/noadmin/settings?page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -31,7 +31,7 @@ const AdminSettingsIndex = async ({ params, searchParams }) => {
 	const publishIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/settings/${id}/publishit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/settings/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
 			`/noadmin/settings?page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -40,7 +40,7 @@ const AdminSettingsIndex = async ({ params, searchParams }) => {
 	const trashIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/settings/${id}/trashit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/settings/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
 			`/noadmin/settings?page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -49,7 +49,7 @@ const AdminSettingsIndex = async ({ params, searchParams }) => {
 	const scheduleIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/settings/${id}/scheduleit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/settings/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
 			`/noadmin/settings?page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -58,7 +58,7 @@ const AdminSettingsIndex = async ({ params, searchParams }) => {
 	const handleDelete = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/settings/${id}/permanently`, "DELETE", "no-cache");
+		await fetchurl(`/noadmin/settings/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(
 			`/noadmin/settings?page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -67,7 +67,7 @@ const AdminSettingsIndex = async ({ params, searchParams }) => {
 	const handleTrashAll = async () => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/settings/deleteall`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/settings/deleteall`, "PUT", "no-cache");
 		revalidatePath(
 			`/noadmin/settings?page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -76,7 +76,11 @@ const AdminSettingsIndex = async ({ params, searchParams }) => {
 	const handleDeleteAll = async () => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/settings/deleteall/permanently`, "DELETE", "no-cache");
+		await fetchurl(
+			`/noadmin/settings/deleteall/permanently`,
+			"DELETE",
+			"no-cache"
+		);
 		revalidatePath(
 			`/noadmin/settings?page=${page}&limit=${limit}&sort=${sort}`
 		);

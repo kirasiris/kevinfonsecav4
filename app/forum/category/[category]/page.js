@@ -3,7 +3,7 @@ import Header from "@/layout/header";
 import List from "@/components/forum/list";
 
 async function getForums(params) {
-	const res = await fetchurl(`/forums${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/forums${params}`, "GET", "no-cache");
 	return res;
 }
 

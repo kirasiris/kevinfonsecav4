@@ -6,13 +6,13 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 
 async function getMovie(params) {
-	const res = await fetchurl(`/playlists${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/playlists${params}`, "GET", "no-cache");
 	if (!res.success) notFound();
 	return res;
 }
 
 async function getVideo(params) {
-	const res = await fetchurl(`/videos${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/videos${params}`, "GET", "no-cache");
 	return res;
 }
 
@@ -29,49 +29,53 @@ const ReadMovie = async ({ params, searchParams }) => {
 	const draftIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/videos/${id}/draftit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/videos/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(`/noadmin/movies/read/${awtdParams.id}`);
 	};
 
 	const publishIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/videos/${id}/publishit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/videos/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(`/noadmin/movies/read/${awtdParams.id}`);
 	};
 
 	const trashIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/videos/${id}/trashit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/videos/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(`/noadmin/movies/read/${awtdParams.id}`);
 	};
 
 	const scheduleIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/videos/${id}/scheduleit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/videos/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(`/noadmin/movies/read/${awtdParams.id}`);
 	};
 
 	const handleDelete = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/videos/${id}/permanently`, "DELETE", "no-cache");
+		await fetchurl(`/noadmin/videos/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(`/noadmin/movies/read/${awtdParams.id}`);
 	};
 
 	const handleTrashAll = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/songs/deleteall`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/songs/deleteall`, "PUT", "no-cache");
 		revalidatePath(`/noadmin/movies/read/${awtdParams.id}`);
 	};
 
 	const handleDeleteAll = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/songs/deleteall/permanently`, "DELETE", "no-cache");
+		await fetchurl(
+			`/noadmin/songs/deleteall/permanently`,
+			"DELETE",
+			"no-cache"
+		);
 		revalidatePath(`/noadmin/movies/read/${awtdParams.id}`);
 	};
 	return (

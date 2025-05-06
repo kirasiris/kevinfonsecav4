@@ -7,7 +7,7 @@ import { fetchurl } from "@/helpers/setTokenOnServer";
 import Globalcontent from "@/layout/content";
 
 async function getQuizResult(params) {
-	const res = await fetchurl(`/quizresults${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/quizresults${params}`, "GET", "no-cache");
 	if (!res.success) notFound();
 	return res;
 }

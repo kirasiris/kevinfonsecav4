@@ -24,13 +24,13 @@ async function getAuthenticatedUser() {
 }
 
 async function getJob(params) {
-	const res = await fetchurl(`/jobs${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/jobs${params}`, "GET", "no-cache");
 	if (!res.success) notFound();
 	return res;
 }
 
 async function getComments(params) {
-	const res = await fetchurl(`/comments${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/comments${params}`, "GET", "no-cache");
 	return res;
 }
 

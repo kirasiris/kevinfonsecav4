@@ -1,11 +1,11 @@
+import { revalidatePath } from "next/cache";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
 import List from "@/components/admin/themes/list";
-import { revalidatePath } from "next/cache";
 
 async function getThemes(params) {
 	const res = await fetchurl(
-		`/themes${params}&postType=theme`,
+		`/global/themes${params}&postType=theme`,
 		"GET",
 		"no-cache"
 	);
@@ -27,7 +27,7 @@ const AdminThemesSearchIndex = async ({ params, searchParams }) => {
 	const draftIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/themes/${id}/draftit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/themes/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
 			`/noadmin/themes/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -36,7 +36,7 @@ const AdminThemesSearchIndex = async ({ params, searchParams }) => {
 	const publishIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/themes/${id}/publishit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/themes/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
 			`/noadmin/themes/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -45,7 +45,7 @@ const AdminThemesSearchIndex = async ({ params, searchParams }) => {
 	const trashIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/themes/${id}/trashit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/themes/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
 			`/noadmin/themes/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -54,7 +54,7 @@ const AdminThemesSearchIndex = async ({ params, searchParams }) => {
 	const scheduleIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/themes/${id}/scheduleit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/themes/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
 			`/noadmin/themes/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -63,7 +63,7 @@ const AdminThemesSearchIndex = async ({ params, searchParams }) => {
 	const handleDelete = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/themes/${id}/permanently`, "DELETE", "no-cache");
+		await fetchurl(`/noadmin/themes/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(
 			`/noadmin/themes/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -72,7 +72,7 @@ const AdminThemesSearchIndex = async ({ params, searchParams }) => {
 	const handleTrashAll = async () => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/themes/deleteall`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/themes/deleteall`, "PUT", "no-cache");
 		revalidatePath(
 			`/noadmin/themes/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -81,7 +81,11 @@ const AdminThemesSearchIndex = async ({ params, searchParams }) => {
 	const handleDeleteAll = async () => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/themes/deleteall/permanently`, "DELETE", "no-cache");
+		await fetchurl(
+			`/noadmin/themes/deleteall/permanently`,
+			"DELETE",
+			"no-cache"
+		);
 		revalidatePath(
 			`/noadmin/themes/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);

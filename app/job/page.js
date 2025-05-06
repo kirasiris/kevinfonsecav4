@@ -3,12 +3,12 @@ import Header from "@/layout/header";
 import List from "@/components/job/list";
 
 async function getFeaturedJob(params) {
-	const res = await fetchurl(`/jobs${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/jobs${params}`, "GET", "no-cache");
 	return res;
 }
 
 async function getJobs(params) {
-	const res = await fetchurl(`/jobs${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/jobs${params}`, "GET", "no-cache");
 	return res;
 }
 

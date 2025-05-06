@@ -1,7 +1,7 @@
+import { revalidatePath } from "next/cache";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
 import List from "@/components/admin/secrets/list";
-import { revalidatePath } from "next/cache";
 import Form from "../form";
 
 async function getSecrets(params) {

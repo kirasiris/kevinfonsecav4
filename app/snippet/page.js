@@ -3,12 +3,12 @@ import Header from "@/layout/header";
 import List from "@/components/snippet/list";
 
 async function getFeaturedSnippet(params) {
-	const res = await fetchurl(`/snippets${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/snippets${params}`, "GET", "no-cache");
 	return res;
 }
 
 async function getSnippets(params) {
-	const res = await fetchurl(`/snippets${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/snippets${params}`, "GET", "no-cache");
 	return res;
 }
 

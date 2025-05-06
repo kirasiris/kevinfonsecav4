@@ -16,18 +16,18 @@ import ParseHtml from "@/layout/parseHtml";
 import Head from "@/app/head";
 
 async function getQuiz(params) {
-	const res = await fetchurl(`/quizzes${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/quizzes${params}`, "GET", "no-cache");
 	if (!res.success) notFound();
 	return res;
 }
 
 async function getQuestions(params) {
-	const res = await fetchurl(`/questions${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/questions${params}`, "GET", "no-cache");
 	return res;
 }
 
 async function getComments(params) {
-	const res = await fetchurl(`/comments${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/comments${params}`, "GET", "no-cache");
 	return res;
 }
 

@@ -70,8 +70,6 @@ const CourseLessonsIndex = async ({ params, searchParams }) => {
 				imageHeight="570"
 			/>
 			<List
-				auth={auth}
-				enrollmentVerification={verifyAuthEnrollment}
 				object={course}
 				objects={lessons}
 				students={enrolledstudents}

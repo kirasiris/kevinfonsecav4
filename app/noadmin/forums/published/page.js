@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 
 async function getForums(params) {
 	const res = await fetchurl(
-		`/forums${params}&status=published`,
+		`/global/forums${params}&status=published`,
 		"GET",
 		"no-cache"
 	);
@@ -24,7 +24,7 @@ const AdminForumsPublishedIndex = async ({ params, searchParams }) => {
 	const draftIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/forums/${id}/draftit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/forums/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
 			`/noadmin/forums/published?page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -33,7 +33,7 @@ const AdminForumsPublishedIndex = async ({ params, searchParams }) => {
 	const publishIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/forums/${id}/publishit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/forums/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
 			`/noadmin/forums/published?page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -42,7 +42,7 @@ const AdminForumsPublishedIndex = async ({ params, searchParams }) => {
 	const trashIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/forums/${id}/trashit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/forums/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
 			`/noadmin/forums/published?page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -51,7 +51,7 @@ const AdminForumsPublishedIndex = async ({ params, searchParams }) => {
 	const scheduleIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/forums/${id}/scheduleit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/forums/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
 			`/noadmin/forums/published?page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -60,7 +60,7 @@ const AdminForumsPublishedIndex = async ({ params, searchParams }) => {
 	const handleDelete = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/forums/${id}/permanently`, "DELETE", "no-cache");
+		await fetchurl(`/noadmin/forums/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(
 			`/noadmin/forums/published?page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -69,7 +69,7 @@ const AdminForumsPublishedIndex = async ({ params, searchParams }) => {
 	const handleTrashAll = async () => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/forums/deleteall`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/forums/deleteall`, "PUT", "no-cache");
 		revalidatePath(
 			`/noadmin/forums/published?page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -78,7 +78,11 @@ const AdminForumsPublishedIndex = async ({ params, searchParams }) => {
 	const handleDeleteAll = async () => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/forums/deleteall/permanently`, "DELETE", "no-cache");
+		await fetchurl(
+			`/noadmin/forums/deleteall/permanently`,
+			"DELETE",
+			"no-cache"
+		);
 		revalidatePath(
 			`/noadmin/forums/published?page=${page}&limit=${limit}&sort=${sort}`
 		);

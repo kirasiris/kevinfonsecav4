@@ -1,11 +1,11 @@
+import { revalidatePath } from "next/cache";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
 import List from "@/components/admin/newsletteremails/list";
-import { revalidatePath } from "next/cache";
 
 async function getNewsletterEmails(params) {
 	const res = await fetchurl(
-		`/newsletteremails${params}&status=published`,
+		`/global/newsletteremails${params}&status=published`,
 		"GET",
 		"no-cache"
 	);
@@ -29,7 +29,11 @@ const AdminNewsletterEmailsPublishedIndex = async ({
 	const draftIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/newsletteremails/${id}/draftit`, "PUT", "no-cache");
+		await fetchurl(
+			`/noadmin/newsletteremails/${id}/draftit`,
+			"PUT",
+			"no-cache"
+		);
 		revalidatePath(
 			`/noadmin/newsletteremails/published?page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -38,7 +42,11 @@ const AdminNewsletterEmailsPublishedIndex = async ({
 	const publishIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/newsletteremails/${id}/publishit`, "PUT", "no-cache");
+		await fetchurl(
+			`/noadmin/newsletteremails/${id}/publishit`,
+			"PUT",
+			"no-cache"
+		);
 		revalidatePath(
 			`/noadmin/newsletteremails/published?page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -47,7 +55,11 @@ const AdminNewsletterEmailsPublishedIndex = async ({
 	const trashIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/newsletteremails/${id}/trashit`, "PUT", "no-cache");
+		await fetchurl(
+			`/noadmin/newsletteremails/${id}/trashit`,
+			"PUT",
+			"no-cache"
+		);
 		revalidatePath(
 			`/noadmin/newsletteremails/published?page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -56,7 +68,11 @@ const AdminNewsletterEmailsPublishedIndex = async ({
 	const scheduleIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/newsletteremails/${id}/scheduleit`, "PUT", "no-cache");
+		await fetchurl(
+			`/noadmin/newsletteremails/${id}/scheduleit`,
+			"PUT",
+			"no-cache"
+		);
 		revalidatePath(
 			`/noadmin/newsletteremails/published?page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -65,7 +81,11 @@ const AdminNewsletterEmailsPublishedIndex = async ({
 	const handleDelete = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/newsletteremails/${id}/permanently`, "DELETE", "no-cache");
+		await fetchurl(
+			`/noadmin/newsletteremails/${id}/permanently`,
+			"DELETE",
+			"no-cache"
+		);
 		revalidatePath(
 			`/noadmin/newsletteremails/published?page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -74,7 +94,7 @@ const AdminNewsletterEmailsPublishedIndex = async ({
 	const handleTrashAll = async () => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/newsletteremails/deleteall`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/newsletteremails/deleteall`, "PUT", "no-cache");
 		revalidatePath(
 			`/noadmin/newsletteremails/published?page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -84,7 +104,7 @@ const AdminNewsletterEmailsPublishedIndex = async ({
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(
-			`/newsletteremails/deleteall/permanently`,
+			`/noadmin/newsletteremails/deleteall/permanently`,
 			"DELETE",
 			"no-cache"
 		);

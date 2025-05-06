@@ -21,13 +21,13 @@ import CommentBox from "@/components/global/commentbox";
 import CommentForm from "@/components/global/commentform";
 
 async function getTheme(params) {
-	const res = await fetchurl(`/themes${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/themes${params}`, "GET", "no-cache");
 	if (!res.success) notFound();
 	return res;
 }
 
 async function getComments(params) {
-	const res = await fetchurl(`/comments${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/comments${params}`, "GET", "no-cache");
 	return res;
 }
 

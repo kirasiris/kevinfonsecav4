@@ -1,13 +1,13 @@
+import { revalidatePath } from "next/cache";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
 import List from "@/components/admin/categories/list";
-import { revalidatePath } from "next/cache";
 
 async function getCategories(params) {
 	const res = await fetchurl(
-		`/categories${params}&categoryType=quiz`,
+		`/global/categories${params}&categoryType=quiz`,
 		"GET",
 		"no-cache"
 	);
@@ -31,7 +31,7 @@ const AdminPageCategoriesIndex = async ({ params, searchParams }) => {
 			text: formData.get("text"),
 			parentCategory: formData.get("parentCategory"),
 		};
-		await fetchurl(`/categories`, "POST", "no-cache", {
+		await fetchurl(`/noadmin/categories`, "POST", "no-cache", {
 			...rawFormData,
 			categoryType: "quiz",
 		});
@@ -43,7 +43,7 @@ const AdminPageCategoriesIndex = async ({ params, searchParams }) => {
 	const draftIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/categories/${id}/draftit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/categories/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
 			`/noadmin/quizzes/categories?page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -52,7 +52,7 @@ const AdminPageCategoriesIndex = async ({ params, searchParams }) => {
 	const publishIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/categories/${id}/publishit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/categories/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
 			`/noadmin/quizzes/categories?page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -61,7 +61,7 @@ const AdminPageCategoriesIndex = async ({ params, searchParams }) => {
 	const trashIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/categories/${id}/trashit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/categories/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
 			`/noadmin/quizzes/categories?page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -70,7 +70,7 @@ const AdminPageCategoriesIndex = async ({ params, searchParams }) => {
 	const scheduleIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/categories/${id}/scheduleit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/categories/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
 			`/noadmin/quizzes/categories?page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -79,7 +79,11 @@ const AdminPageCategoriesIndex = async ({ params, searchParams }) => {
 	const handleDelete = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/categories/${id}/permanently`, "DELETE", "no-cache");
+		await fetchurl(
+			`/noadmin/categories/${id}/permanently`,
+			"DELETE",
+			"no-cache"
+		);
 		revalidatePath(
 			`/noadmin/quizzes/categories?page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -88,7 +92,7 @@ const AdminPageCategoriesIndex = async ({ params, searchParams }) => {
 	const handleTrashAll = async () => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/categories/deleteall`, "PUT", "no-cache", {
+		await fetchurl(`/noadmin/categories/deleteall`, "PUT", "no-cache", {
 			categoryType: "quiz",
 		});
 		revalidatePath(
@@ -99,9 +103,14 @@ const AdminPageCategoriesIndex = async ({ params, searchParams }) => {
 	const handleDeleteAll = async () => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/categories/deleteall/permanently`, "DELETE", "no-cache", {
-			categoryType: "quiz",
-		});
+		await fetchurl(
+			`/noadmin/categories/deleteall/permanently`,
+			"DELETE",
+			"no-cache",
+			{
+				categoryType: "quiz",
+			}
+		);
 		revalidatePath(
 			`/noadmin/quizzes/categories?page=${page}&limit=${limit}&sort=${sort}`
 		);

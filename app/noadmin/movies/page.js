@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 
 async function getPlaylists(params) {
 	const res = await fetchurl(
-		`/playlists${params}&onairtype=movie`,
+		`/global/playlists${params}&onairtype=movie`,
 		"GET",
 		"no-cache"
 	);
@@ -26,49 +26,57 @@ const AdminMoviesIndex = async ({ params, searchParams }) => {
 	const draftIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/playlists/${id}/draftit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/playlists/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(`/noadmin/movies?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const publishIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/playlists/${id}/publishit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/playlists/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(`/noadmin/movies?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const trashIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/playlists/${id}/trashit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/playlists/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(`/noadmin/movies?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const scheduleIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/playlists/${id}/scheduleit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/playlists/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(`/noadmin/movies?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const handleDelete = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/playlists/${id}/permanently`, "DELETE", "no-cache");
+		await fetchurl(
+			`/noadmin/playlists/${id}/permanently`,
+			"DELETE",
+			"no-cache"
+		);
 		revalidatePath(`/noadmin/movies?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const handleTrashAll = async () => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/playlists/deleteall`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/playlists/deleteall`, "PUT", "no-cache");
 		revalidatePath(`/noadmin/movies?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const handleDeleteAll = async () => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/playlists/deleteall/permanently`, "DELETE", "no-cache");
+		await fetchurl(
+			`/noadmin/playlists/deleteall/permanently`,
+			"DELETE",
+			"no-cache"
+		);
 		revalidatePath(`/noadmin/movies?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 

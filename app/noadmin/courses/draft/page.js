@@ -1,11 +1,11 @@
+import { revalidatePath } from "next/cache";
 import { fetchurl, getUserOnServer } from "@/helpers/setTokenOnServer";
 import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
 import List from "@/components/admin/courses/list";
-import { revalidatePath } from "next/cache";
 
 async function getCourses(params) {
 	const res = await fetchurl(
-		`/courses${params}&status=draft`,
+		`/global/courses${params}&status=draft`,
 		"GET",
 		"no-cache"
 	);
@@ -25,7 +25,7 @@ const AdminCoursesDraftIndex = async ({ params, searchParams }) => {
 	const draftIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/courses/${id}/draftit`, "PUT", "no-cache");
+		await fetchurl(`/extras/stripe/courses/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
 			`/noadmin/courses/draft?page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -34,7 +34,7 @@ const AdminCoursesDraftIndex = async ({ params, searchParams }) => {
 	const publishIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/courses/${id}/publishit`, "PUT", "no-cache");
+		await fetchurl(`/extras/stripe/courses/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
 			`/noadmin/courses/draft?page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -43,7 +43,7 @@ const AdminCoursesDraftIndex = async ({ params, searchParams }) => {
 	const trashIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/courses/${id}/trashit`, "PUT", "no-cache");
+		await fetchurl(`/extras/stripe/courses/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
 			`/noadmin/courses/draft?page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -52,7 +52,11 @@ const AdminCoursesDraftIndex = async ({ params, searchParams }) => {
 	const scheduleIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/courses/${id}/scheduleit`, "PUT", "no-cache");
+		await fetchurl(
+			`/extras/stripe/courses/${id}/scheduleit`,
+			"PUT",
+			"no-cache"
+		);
 		revalidatePath(
 			`/noadmin/courses/draft?page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -61,7 +65,11 @@ const AdminCoursesDraftIndex = async ({ params, searchParams }) => {
 	const handleDelete = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/courses/${id}/permanently`, "DELETE", "no-cache");
+		await fetchurl(
+			`/extras/stripe/courses/${id}/permanently`,
+			"DELETE",
+			"no-cache"
+		);
 		revalidatePath(
 			`/noadmin/courses/draft?page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -70,7 +78,7 @@ const AdminCoursesDraftIndex = async ({ params, searchParams }) => {
 	const handleTrashAll = async () => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/courses/deleteall`, "PUT", "no-cache");
+		await fetchurl(`/extras/stripe/courses/deleteall`, "PUT", "no-cache");
 		revalidatePath(
 			`/noadmin/courses/draft?page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -79,7 +87,11 @@ const AdminCoursesDraftIndex = async ({ params, searchParams }) => {
 	const handleDeleteAll = async () => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/courses/deleteall/permanently`, "DELETE", "no-cache");
+		await fetchurl(
+			`/extras/stripe/courses/deleteall/permanently`,
+			"DELETE",
+			"no-cache"
+		);
 		revalidatePath(
 			`/noadmin/courses/draft?page=${page}&limit=${limit}&sort=${sort}`
 		);

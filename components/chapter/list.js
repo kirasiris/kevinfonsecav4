@@ -10,8 +10,6 @@ import PreviewModal from "./previewmodal";
 import NewsletterForm from "../global/newsletter";
 
 const List = ({
-	auth = {},
-	enrollmentVerification = {},
 	object = {},
 	objects = [],
 	students = [],

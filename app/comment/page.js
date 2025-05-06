@@ -3,7 +3,7 @@ import Header from "@/layout/header";
 import List from "@/components/comment/list";
 
 async function getComments(params) {
-	const res = await fetchurl(`/comments${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/comments${params}`, "GET", "no-cache");
 	return res;
 }
 const CommentIndex = async ({ params, searchParams }) => {

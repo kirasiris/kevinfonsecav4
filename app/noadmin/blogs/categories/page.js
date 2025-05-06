@@ -7,7 +7,7 @@ import { revalidatePath } from "next/cache";
 
 async function getCategories(params) {
 	const res = await fetchurl(
-		`/categories${params}&categoryType=blog`,
+		`/global/categories${params}&categoryType=blog`,
 		"GET",
 		"no-cache"
 	);
@@ -32,7 +32,7 @@ const AdminBlogCategoriesIndex = async ({ params, searchParams }) => {
 			parentCategory: formData.get("parentCategory"),
 		};
 
-		await fetchurl(`/categories`, "POST", "no-cache", {
+		await fetchurl(`/global/categories`, "POST", "no-cache", {
 			...rawFormData,
 			categoryType: "blog",
 		});
@@ -44,7 +44,7 @@ const AdminBlogCategoriesIndex = async ({ params, searchParams }) => {
 	const draftIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/categories/${id}/draftit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/categories/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
 			`/noadmin/blogs/categories?page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -53,7 +53,7 @@ const AdminBlogCategoriesIndex = async ({ params, searchParams }) => {
 	const publishIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/categories/${id}/publishit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/categories/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
 			`/noadmin/blogs/categories?page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -62,7 +62,7 @@ const AdminBlogCategoriesIndex = async ({ params, searchParams }) => {
 	const trashIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/categories/${id}/trashit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/categories/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
 			`/noadmin/blogs/categories?page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -71,7 +71,7 @@ const AdminBlogCategoriesIndex = async ({ params, searchParams }) => {
 	const scheduleIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/categories/${id}/scheduleit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/categories/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
 			`/noadmin/blogs/categories?page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -80,7 +80,11 @@ const AdminBlogCategoriesIndex = async ({ params, searchParams }) => {
 	const handleDelete = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/categories/${id}/permanently`, "DELETE", "no-cache");
+		await fetchurl(
+			`/noadmin/categories/${id}/permanently`,
+			"DELETE",
+			"no-cache"
+		);
 		revalidatePath(
 			`/noadmin/blogs/categories?page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -89,7 +93,7 @@ const AdminBlogCategoriesIndex = async ({ params, searchParams }) => {
 	const handleTrashAll = async () => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/categories/deleteall`, "PUT", "no-cache", {
+		await fetchurl(`/noadmin/categories/deleteall`, "PUT", "no-cache", {
 			categoryType: "blog",
 		});
 		revalidatePath(
@@ -100,9 +104,14 @@ const AdminBlogCategoriesIndex = async ({ params, searchParams }) => {
 	const handleDeleteAll = async () => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/categories/deleteall/permanently`, "DELETE", "no-cache", {
-			categoryType: "blog",
-		});
+		await fetchurl(
+			`/noadmin/categories/deleteall/permanently`,
+			"DELETE",
+			"no-cache",
+			{
+				categoryType: "blog",
+			}
+		);
 		revalidatePath(
 			`/noadmin/blogs/categories?page=${page}&limit=${limit}&sort=${sort}`
 		);

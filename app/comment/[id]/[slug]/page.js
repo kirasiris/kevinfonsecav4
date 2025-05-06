@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import Header from "@/layout/header";
 import Sidebar from "@/layout/blog/sidebar";
-import Loading from "@/app/blog/loading";
+import Loading from "@/app/comment/loading";
 import ExportModal from "@/components/global/exportmodal";
 import AuthorBox from "@/components/global/authorbox";
 import CommentBox from "@/components/global/commentbox";

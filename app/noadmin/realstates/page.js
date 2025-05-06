@@ -1,10 +1,10 @@
+import { revalidatePath } from "next/cache";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
 import List from "@/components/admin/realstates/list";
-import { revalidatePath } from "next/cache";
 
 async function getRealStates(params) {
-	const res = await fetchurl(`/realstates${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/realstates${params}`, "GET", "no-cache");
 	return res;
 }
 
@@ -22,7 +22,7 @@ const AdminRealStatesIndex = async ({ params, searchParams }) => {
 	const draftIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/realstates/${id}/draftit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/realstates/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
 			`/noadmin/realstates?page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -31,7 +31,7 @@ const AdminRealStatesIndex = async ({ params, searchParams }) => {
 	const publishIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/realstates/${id}/publishit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/realstates/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
 			`/noadmin/realstates?page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -40,7 +40,7 @@ const AdminRealStatesIndex = async ({ params, searchParams }) => {
 	const trashIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/realstates/${id}/trashit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/realstates/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
 			`/noadmin/realstates?page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -49,7 +49,7 @@ const AdminRealStatesIndex = async ({ params, searchParams }) => {
 	const scheduleIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/realstates/${id}/scheduleit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/realstates/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
 			`/noadmin/realstates?page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -58,7 +58,11 @@ const AdminRealStatesIndex = async ({ params, searchParams }) => {
 	const handleDelete = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/realstates/${id}/permanently`, "DELETE", "no-cache");
+		await fetchurl(
+			`/noadmin/realstates/${id}/permanently`,
+			"DELETE",
+			"no-cache"
+		);
 		revalidatePath(
 			`/noadmin/realstates?page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -67,7 +71,7 @@ const AdminRealStatesIndex = async ({ params, searchParams }) => {
 	const handleTrashAll = async () => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/realstates/deleteall`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/realstates/deleteall`, "PUT", "no-cache");
 		revalidatePath(
 			`/noadmin/realstates?page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -76,7 +80,11 @@ const AdminRealStatesIndex = async ({ params, searchParams }) => {
 	const handleDeleteAll = async () => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/realstates/deleteall/permanently`, "DELETE", "no-cache");
+		await fetchurl(
+			`/noadmin/realstates/deleteall/permanently`,
+			"DELETE",
+			"no-cache"
+		);
 		revalidatePath(
 			`/noadmin/realstates?page=${page}&limit=${limit}&sort=${sort}`
 		);

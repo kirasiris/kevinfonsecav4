@@ -6,7 +6,7 @@ import List from "@/components/admin/categories/list";
 import { revalidatePath } from "next/cache";
 
 async function getCategories(params) {
-	const res = await fetchurl(`/categories${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/categories${params}`, "GET", "no-cache");
 	return res;
 }
 
@@ -28,7 +28,7 @@ const AdminCategoriesSearchIndex = async ({ params, searchParams }) => {
 			text: formData.get("text"),
 			parentCategory: formData.get("parentCategory"),
 		};
-		await fetchurl(`/categories`, "POST", "no-cache", rawFormData);
+		await fetchurl(`/noadmin/categories`, "POST", "no-cache", rawFormData);
 		revalidatePath(
 			`/noadmin/categories/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -37,7 +37,11 @@ const AdminCategoriesSearchIndex = async ({ params, searchParams }) => {
 	const handleDelete = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/categories/${id}/permanently`, "DELETE", "no-cache");
+		await fetchurl(
+			`/noadmin/categories/${id}/permanently`,
+			"DELETE",
+			"no-cache"
+		);
 		revalidatePath(
 			`/noadmin/categories/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -46,7 +50,7 @@ const AdminCategoriesSearchIndex = async ({ params, searchParams }) => {
 	const handleTrashAll = async () => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/categories/deleteall`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/categories/deleteall`, "PUT", "no-cache");
 		revalidatePath(
 			`/noadmin/categories/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -55,7 +59,11 @@ const AdminCategoriesSearchIndex = async ({ params, searchParams }) => {
 	const handleDeleteAll = async () => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/categories/deleteall/permanently`, "DELETE", "no-cache");
+		await fetchurl(
+			`/noadmin/categories/deleteall/permanently`,
+			"DELETE",
+			"no-cache"
+		);
 		revalidatePath(
 			`/noadmin/categories/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);

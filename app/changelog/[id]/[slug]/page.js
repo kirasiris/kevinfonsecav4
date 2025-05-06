@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import Header from "@/layout/header";
-import Loading from "@/app/blog/loading";
+import Loading from "@/app/changelog/loading";
 import ParseHtml from "@/layout/parseHtml";
 import { fetchurl, getUserOnServer } from "@/helpers/setTokenOnServer";
 import AuthorBox from "@/components/global/authorbox";
@@ -11,7 +11,7 @@ import ReportModal from "@/components/global/reportmodal";
 import Head from "@/app/head";
 
 async function getChangelog(params) {
-	const res = await fetchurl(`/changelogs${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/changelogs${params}`, "GET", "no-cache");
 	if (!res.success) notFound();
 	return res;
 }

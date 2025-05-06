@@ -1,11 +1,11 @@
+import { revalidatePath } from "next/cache";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
 import List from "@/components/admin/companies/list";
-import { revalidatePath } from "next/cache";
 
 async function getCompanies(params) {
 	const res = await fetchurl(
-		`/companies${params}&status=published`,
+		`/global/companies${params}&status=published`,
 		"GET",
 		"no-cache"
 	);
@@ -26,7 +26,7 @@ const AdminCompaniesPublishedIndex = async ({ params, searchParams }) => {
 	const draftIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/companies/${id}/draftit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/companies/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
 			`/noadmin/companies/published?page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -35,7 +35,7 @@ const AdminCompaniesPublishedIndex = async ({ params, searchParams }) => {
 	const publishIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/companies/${id}/publishit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/companies/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
 			`/noadmin/companies/published?page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -44,7 +44,7 @@ const AdminCompaniesPublishedIndex = async ({ params, searchParams }) => {
 	const trashIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/companies/${id}/trashit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/companies/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
 			`/noadmin/companies/published?page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -53,7 +53,7 @@ const AdminCompaniesPublishedIndex = async ({ params, searchParams }) => {
 	const scheduleIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/companies/${id}/scheduleit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/companies/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
 			`/noadmin/companies/published?page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -62,7 +62,11 @@ const AdminCompaniesPublishedIndex = async ({ params, searchParams }) => {
 	const handleDelete = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/companies/${id}/permanently`, "DELETE", "no-cache");
+		await fetchurl(
+			`/noadmin/companies/${id}/permanently`,
+			"DELETE",
+			"no-cache"
+		);
 		revalidatePath(
 			`/noadmin/companies/published?page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -71,7 +75,7 @@ const AdminCompaniesPublishedIndex = async ({ params, searchParams }) => {
 	const handleTrashAll = async () => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/companies/deleteall`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/companies/deleteall`, "PUT", "no-cache");
 		revalidatePath(
 			`/noadmin/companies/published?page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -80,7 +84,11 @@ const AdminCompaniesPublishedIndex = async ({ params, searchParams }) => {
 	const handleDeleteAll = async () => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/companies/deleteall/permanently`, "DELETE", "no-cache");
+		await fetchurl(
+			`/noadmin/companies/deleteall/permanently`,
+			"DELETE",
+			"no-cache"
+		);
 		revalidatePath(
 			`/noadmin/companies/published?page=${page}&limit=${limit}&sort=${sort}`
 		);

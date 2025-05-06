@@ -12,13 +12,13 @@ import List from "@/components/quiz/multiplepagequestionlist";
 // }
 
 async function getQuiz(params) {
-	const res = await fetchurl(`/quizzes${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/quizzes${params}`, "GET", "no-cache");
 	if (!res.success) notFound();
 	return res;
 }
 
 async function getQuestions(params) {
-	const res = await fetchurl(`/questions${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/questions${params}`, "GET", "no-cache");
 	return res;
 }
 

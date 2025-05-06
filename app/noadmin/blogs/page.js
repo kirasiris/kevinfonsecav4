@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 
 async function getBlogs(params) {
 	const res = await fetchurl(
-		`/blogs${params}&postType=blog`,
+		`/global/blogs${params}&postType=blog`,
 		"GET",
 		"no-cache"
 	);
@@ -24,56 +24,60 @@ const AdminBlogsIndex = async ({ params, searchParams }) => {
 	const draftIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/blogs/${id}/draftit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/blogs/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(`/noadmin/blogs?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const publishIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/blogs/${id}/publishit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/blogs/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(`/noadmin/blogs?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const trashIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/blogs/${id}/trashit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/blogs/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(`/noadmin/blogs?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const scheduleIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/blogs/${id}/scheduleit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/blogs/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(`/noadmin/blogs?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const featureIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/blogs/${id}/featureit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/blogs/${id}/featureit`, "PUT", "no-cache");
 		revalidatePath(`/noadmin/blogs?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const handleDelete = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/blogs/${id}/permanently`, "DELETE", "no-cache");
+		await fetchurl(`/noadmin/blogs/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(`/noadmin/blogs?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const handleTrashAll = async () => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/blogs/deleteall`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/blogs/deleteall`, "PUT", "no-cache");
 		revalidatePath(`/noadmin/blogs?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const handleDeleteAll = async () => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/blogs/deleteall/permanently`, "DELETE", "no-cache");
+		await fetchurl(
+			`/noadmin/blogs/deleteall/permanently`,
+			"DELETE",
+			"no-cache"
+		);
 		revalidatePath(`/noadmin/blogs?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 

@@ -8,17 +8,17 @@ import { fetchurl } from "@/helpers/setTokenOnServer";
 import Head from "@/app/head";
 
 async function getSetting(params) {
-	const res = await fetchurl(`/settings/${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/settings/${params}`, "GET", "no-cache");
 	return res;
 }
 
 async function getBlogs(params) {
-	const res = await fetchurl(`/blogs${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/blogs${params}`, "GET", "no-cache");
 	return res;
 }
 
 async function getThemes(params) {
-	const res = await fetchurl(`/themes${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/themes${params}`, "GET", "no-cache");
 	return res;
 }
 

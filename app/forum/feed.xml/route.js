@@ -3,7 +3,7 @@ import { fetchurl } from "@/helpers/setTokenOnServer";
 
 export async function GET() {
 	const allForums = await fetchurl(
-		`/forums?limit=10&status=published`,
+		`/global/forums?limit=10&status=published`,
 		"GET",
 		"no-cache"
 	);

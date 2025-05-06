@@ -4,7 +4,7 @@ import List from "@/components/changelog/list";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 
 async function getChangelogs(params) {
-	const res = await fetchurl(`/changelogs${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/changelogs${params}`, "GET", "no-cache");
 	return res;
 }
 

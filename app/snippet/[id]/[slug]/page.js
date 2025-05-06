@@ -15,7 +15,7 @@ import ArticleHeader from "@/components/global/articleheader";
 import LiveCode from "@/components/admin/snippets/livecode";
 
 async function getSnippet(params) {
-	const res = await fetchurl(`/snippets${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/snippets${params}`, "GET", "no-cache");
 	if (!res.success) notFound();
 	return res;
 }

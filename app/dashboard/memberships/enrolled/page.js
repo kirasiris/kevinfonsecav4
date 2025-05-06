@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 
 async function getUserMembershipsEnrolled(params) {
 	const res = await fetchurl(
-		`/subscribers${params}&onModel=User`,
+		`/extras/stripe/subscribers${params}&onModel=User`,
 		"GET",
 		"no-cache"
 	);

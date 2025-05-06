@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 
 async function getPlaylists(params) {
 	const res = await fetchurl(
-		`/playlists${params}&onairtype=anime`,
+		`/global/playlists${params}&onairtype=anime`,
 		"GET",
 		"no-cache"
 	);
@@ -27,7 +27,7 @@ const AdminAnimesSearchIndex = async ({ params, searchParams }) => {
 	const draftIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/playlists/${id}/draftit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/playlists/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
 			`/noadmin/animes/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -36,7 +36,7 @@ const AdminAnimesSearchIndex = async ({ params, searchParams }) => {
 	const publishIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/playlists/${id}/publishit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/playlists/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
 			`/noadmin/animes/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -45,7 +45,7 @@ const AdminAnimesSearchIndex = async ({ params, searchParams }) => {
 	const trashIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/playlists/${id}/trashit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/playlists/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
 			`/noadmin/animes/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -54,7 +54,7 @@ const AdminAnimesSearchIndex = async ({ params, searchParams }) => {
 	const scheduleIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/playlists/${id}/scheduleit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/playlists/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
 			`/noadmin/animes/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -63,7 +63,11 @@ const AdminAnimesSearchIndex = async ({ params, searchParams }) => {
 	const handleDelete = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/playlists/${id}/permanently`, "DELETE", "no-cache");
+		await fetchurl(
+			`/noadmin/playlists/${id}/permanently`,
+			"DELETE",
+			"no-cache"
+		);
 		revalidatePath(
 			`/noadmin/animes/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -72,7 +76,7 @@ const AdminAnimesSearchIndex = async ({ params, searchParams }) => {
 	const handleTrashAll = async () => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/playlists/deleteall`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/playlists/deleteall`, "PUT", "no-cache");
 		revalidatePath(
 			`/noadmin/animes/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -81,7 +85,11 @@ const AdminAnimesSearchIndex = async ({ params, searchParams }) => {
 	const handleDeleteAll = async () => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/playlists/deleteall/permanently`, "DELETE", "no-cache");
+		await fetchurl(
+			`/noadmin/playlists/deleteall/permanently`,
+			"DELETE",
+			"no-cache"
+		);
 		revalidatePath(
 			`/noadmin/animes/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);

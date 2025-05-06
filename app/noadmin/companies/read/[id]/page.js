@@ -1,19 +1,19 @@
+import { revalidatePath } from "next/cache";
+import Image from "next/image";
+import { notFound } from "next/navigation";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import ParseHtml from "@/layout/parseHtml";
 import JobList from "@/components/admin/companies/joblist";
-import { revalidatePath } from "next/cache";
-import Image from "next/image";
 import Map from "@/components/global/map";
-import { notFound } from "next/navigation";
 
 async function getCompany(params) {
-	const res = await fetchurl(`/companies${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/companies${params}`, "GET", "no-cache");
 	if (!res.success) notFound();
 	return res;
 }
 
 async function getJobs(params) {
-	const res = await fetchurl(`/jobs${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/jobs${params}`, "GET", "no-cache");
 	return res;
 }
 
@@ -32,49 +32,49 @@ const ReadCompany = async ({ params, searchParams }) => {
 	const draftIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/jobs/${id}/draftit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/jobs/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(`/noadmin/companies/read/${awtdParams.id}`);
 	};
 
 	const publishIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/jobs/${id}/publishit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/jobs/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(`/noadmin/companies/read/${awtdParams.id}`);
 	};
 
 	const trashIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/jobs/${id}/trashit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/jobs/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(`/noadmin/companies/read/${awtdParams.id}`);
 	};
 
 	const scheduleIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/jobs/${id}/scheduleit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/jobs/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(`/noadmin/companies/read/${awtdParams.id}`);
 	};
 
 	const handleDelete = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/jobs/${id}/permanently`, "DELETE", "no-cache");
+		await fetchurl(`/noadmin/jobs/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(`/noadmin/companies/read/${awtdParams.id}`);
 	};
 
 	const handleTrashAll = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/jobs/deleteall`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/jobs/deleteall`, "PUT", "no-cache");
 		revalidatePath(`/noadmin/companies/read/${awtdParams.id}`);
 	};
 
 	const handleDeleteAll = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/jobs/deleteall/permanently`, "DELETE", "no-cache");
+		await fetchurl(`/noadmin/jobs/deleteall/permanently`, "DELETE", "no-cache");
 		revalidatePath(`/noadmin/companies/read/${awtdParams.id}`);
 	};
 

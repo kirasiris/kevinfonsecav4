@@ -42,7 +42,6 @@ const CreateMovie = async ({ params, searchParams }) => {
 			...rawFormData,
 			onairtype: "movie",
 			playlistType: "video",
-			website: process.env.NEXT_PUBLIC_NO_REPLY_EMAIL, // Needed for DB mass email functionality
 		});
 		redirect(`/noadmin/movies`);
 	};

@@ -6,7 +6,7 @@ import NewsletterForm from "@/components/global/newsletter";
 
 async function RemoveEmailFromNewsletters(email = "") {
 	const res = await fetchurl(
-		`/newslettersubscribers/email/${email}/permanently`,
+		`/global/newslettersubscribers/${email}/permanently`,
 		"DELETE",
 		"no-cache",
 		{

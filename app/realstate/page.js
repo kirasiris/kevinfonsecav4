@@ -3,12 +3,12 @@ import Header from "@/layout/header";
 import List from "@/components/realstate/list";
 
 async function getFeaturedRealStates(params) {
-	const res = await fetchurl(`/realstates${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/realstates${params}`, "GET", "no-cache");
 	return res;
 }
 
 async function getRealStates(params) {
-	const res = await fetchurl(`/realstates${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/realstates${params}`, "GET", "no-cache");
 	return res;
 }
 

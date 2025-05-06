@@ -6,7 +6,7 @@ import List from "@/components/admin/categories/list";
 import { revalidatePath } from "next/cache";
 
 async function getCategories(params) {
-	const res = await fetchurl(`/categories${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/categories${params}`, "GET", "no-cache");
 	return res;
 }
 
@@ -27,56 +27,64 @@ const AdminCategoriesIndex = async ({ params, searchParams }) => {
 			text: formData.get("text"),
 			parentCategory: formData.get("parentCategory"),
 		};
-		await fetchurl(`/categories`, "POST", "no-cache", rawFormData);
+		await fetchurl(`/noadmin/categories`, "POST", "no-cache", rawFormData);
 		revalidatePath(`?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const draftIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/categories/${id}/draftit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/categories/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(`?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const publishIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/categories/${id}/publishit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/categories/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(`?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const trashIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/categories/${id}/trashit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/categories/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(`?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const scheduleIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/categories/${id}/scheduleit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/categories/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(`?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const handleDelete = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/categories/${id}/permanently`, "DELETE", "no-cache");
+		await fetchurl(
+			`/noadmin/categories/${id}/permanently`,
+			"DELETE",
+			"no-cache"
+		);
 		revalidatePath(`?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const handleTrashAll = async () => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/categories/deleteall`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/categories/deleteall`, "PUT", "no-cache");
 		revalidatePath(`?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const handleDeleteAll = async () => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/categories/deleteall/permanently`, "DELETE", "no-cache");
+		await fetchurl(
+			`/noadmin/categories/deleteall/permanently`,
+			"DELETE",
+			"no-cache"
+		);
 		revalidatePath(`?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 

@@ -4,7 +4,7 @@ import List from "@/components/admin/logs/list";
 import { revalidatePath } from "next/cache";
 
 async function getLogs(params) {
-	const res = await fetchurl(`/logs${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/logs${params}`, "GET", "no-cache");
 	return res;
 }
 
@@ -20,14 +20,14 @@ const AdminLogsIndex = async ({ params, searchParams }) => {
 	const handleDelete = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/logs/${id}`, "DELETE", "no-cache");
+		await fetchurl(`/noadmin/logs/${id}`, "DELETE", "no-cache");
 		revalidatePath(`/noadmin/logs?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const handleDeleteAll = async () => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/logs/deleteall`, "DELETE", "no-cache");
+		await fetchurl(`/noadmin/logs/deleteall`, "DELETE", "no-cache");
 		revalidatePath(`/noadmin/logs?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 

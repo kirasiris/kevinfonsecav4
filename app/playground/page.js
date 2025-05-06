@@ -5,7 +5,7 @@ import { fetchurl, getUserOnServer } from "@/helpers/setTokenOnServer";
 import Waveform from "@/layout/waveform";
 
 async function getSetting(params) {
-	const res = await fetchurl(`/settings/${params}`, "GET", "default");
+	const res = await fetchurl(`/global/settings/${params}`, "GET", "default");
 	return res;
 }
 

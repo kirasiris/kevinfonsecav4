@@ -3,7 +3,7 @@ import Header from "@/layout/header";
 import List from "@/components/quiz/resultlist";
 
 async function getQuizzesResult(params) {
-	const res = await fetchurl(`/quizresults${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/quizresults${params}`, "GET", "no-cache");
 	return res;
 }
 

@@ -48,7 +48,6 @@ const UpdateJob = async ({ params, searchParams }) => {
 
 		await fetchurl(`/jobs/${awtdParams.id}`, "PUT", "no-cache", {
 			...rawFormData,
-			website: "beFree",
 		});
 		redirect(`/noadmin/companies/read/${job?.data?.resourceId}`);
 	};

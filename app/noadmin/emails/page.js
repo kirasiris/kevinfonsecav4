@@ -4,7 +4,7 @@ import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
 import List from "@/components/admin/emails/list";
 
 async function getEmails(params) {
-	const res = await fetchurl(`/emails${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/emails${params}`, "GET", "no-cache");
 	return res;
 }
 
@@ -20,14 +20,18 @@ const AdminEmailsIndex = async ({ params, searchParams }) => {
 	const handleDelete = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/emails/${id}/permanently`, "DELETE", "no-cache");
+		await fetchurl(`/noadmin/emails/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(`/noadmin/emails?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const handleDeleteAll = async () => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/emails/deleteall/permanently`, "DELETE", "no-cache");
+		await fetchurl(
+			`/noadmin/emails/deleteall/permanently`,
+			"DELETE",
+			"no-cache"
+		);
 		revalidatePath(`/noadmin/emails?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 

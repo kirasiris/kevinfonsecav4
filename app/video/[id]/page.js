@@ -9,13 +9,17 @@ import ReportModal from "@/components/global/reportmodal";
 import { fetchurl, getUserOnServer } from "@/helpers/setTokenOnServer";
 
 async function getVideo(params) {
-	const res = await fetchurl(`/videos${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/videos${params}`, "GET", "no-cache");
 	if (!res.success) notFound();
 	return res;
 }
 
 async function updateViews(params) {
-	const res = await fetchurl(`/videos${params}/addview`, "PUT", "no-cache");
+	const res = await fetchurl(
+		`/global/videos${params}/addview`,
+		"PUT",
+		"no-cache"
+	);
 	return res;
 }
 

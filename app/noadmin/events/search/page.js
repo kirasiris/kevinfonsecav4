@@ -4,7 +4,7 @@ import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
 import List from "@/components/admin/events/list";
 
 async function getEvents(params) {
-	const res = await fetchurl(`/events${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/events${params}`, "GET", "no-cache");
 	return res;
 }
 
@@ -23,7 +23,7 @@ const AdminEventsSearchIndex = async ({ params, searchParams }) => {
 	const draftIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/events/${id}/draftit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/events/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
 			`/noadmin/events/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -32,7 +32,7 @@ const AdminEventsSearchIndex = async ({ params, searchParams }) => {
 	const publishIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/events/${id}/publishit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/events/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
 			`/noadmin/events/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -41,7 +41,7 @@ const AdminEventsSearchIndex = async ({ params, searchParams }) => {
 	const trashIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/events/${id}/trashit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/events/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
 			`/noadmin/events/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -50,7 +50,7 @@ const AdminEventsSearchIndex = async ({ params, searchParams }) => {
 	const scheduleIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/events/${id}/scheduleit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/events/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
 			`/noadmin/events/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -59,7 +59,7 @@ const AdminEventsSearchIndex = async ({ params, searchParams }) => {
 	const handleDelete = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/events/${id}/permanently`, "DELETE", "no-cache");
+		await fetchurl(`/noadmin/events/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(
 			`/noadmin/events/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -68,7 +68,7 @@ const AdminEventsSearchIndex = async ({ params, searchParams }) => {
 	const handleTrashAll = async () => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/events/deleteall`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/events/deleteall`, "PUT", "no-cache");
 		revalidatePath(
 			`/noadmin/events/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -77,7 +77,11 @@ const AdminEventsSearchIndex = async ({ params, searchParams }) => {
 	const handleDeleteAll = async () => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/events/deleteall/permanently`, "DELETE", "no-cache");
+		await fetchurl(
+			`/noadmin/events/deleteall/permanently`,
+			"DELETE",
+			"no-cache"
+		);
 		revalidatePath(
 			`/noadmin/events/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);

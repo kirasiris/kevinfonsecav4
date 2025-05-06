@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 
 async function getComments(params) {
 	const res = await fetchurl(
-		`/comments${params}&postType=comment`,
+		`/global/comments${params}&postType=comment`,
 		"GET",
 		"no-cache"
 	);
@@ -27,7 +27,7 @@ const AdminCommentsSearchIndex = async ({ params, searchParams }) => {
 	const draftIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/comments/${id}/draftit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/comments/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
 			`/noadmin/comments/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -36,7 +36,7 @@ const AdminCommentsSearchIndex = async ({ params, searchParams }) => {
 	const publishIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/comments/${id}/publishit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/comments/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
 			`/noadmin/comments/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -45,7 +45,7 @@ const AdminCommentsSearchIndex = async ({ params, searchParams }) => {
 	const trashIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/comments/${id}/trashit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/comments/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
 			`/noadmin/comments/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -54,7 +54,7 @@ const AdminCommentsSearchIndex = async ({ params, searchParams }) => {
 	const scheduleIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/comments/${id}/scheduleit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/comments/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
 			`/noadmin/comments/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -63,7 +63,7 @@ const AdminCommentsSearchIndex = async ({ params, searchParams }) => {
 	const handleDelete = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/comments/${id}/permanently`, "DELETE", "no-cache");
+		await fetchurl(`/noadmin/comments/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(
 			`/noadmin/comments/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -72,7 +72,7 @@ const AdminCommentsSearchIndex = async ({ params, searchParams }) => {
 	const handleTrashAll = async () => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/comments/deleteall`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/comments/deleteall`, "PUT", "no-cache");
 		revalidatePath(
 			`/noadmin/comments/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -81,7 +81,11 @@ const AdminCommentsSearchIndex = async ({ params, searchParams }) => {
 	const handleDeleteAll = async () => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/comments/deleteall/permanently`, "DELETE", "no-cache");
+		await fetchurl(
+			`/noadmin/comments/deleteall/permanently`,
+			"DELETE",
+			"no-cache"
+		);
 		revalidatePath(
 			`/noadmin/comments/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);

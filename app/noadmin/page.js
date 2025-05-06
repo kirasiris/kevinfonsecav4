@@ -3,12 +3,12 @@ import Header from "@/layout/header";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 
 async function getBlogs(params) {
-	const res = await fetchurl(`/blogs${params}`, "GET", "default");
+	const res = await fetchurl(`/global/blogs${params}`, "GET", "default");
 	return res;
 }
 
 async function getThemes(params) {
-	const res = await fetchurl(`/themes${params}`, "GET", "default");
+	const res = await fetchurl(`/global/themes${params}`, "GET", "default");
 	return res;
 }
 

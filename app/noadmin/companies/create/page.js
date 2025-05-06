@@ -32,7 +32,6 @@ const CreateCompany = async ({ params, searchParams }) => {
 
 		await fetchurl(`/companies`, "POST", "no-cache", {
 			...rawFormData,
-			website: process.env.NEXT_PUBLIC_NO_REPLY_EMAIL, // Needed for DB mass email functionality
 		});
 		redirect(`/noadmin/companies`);
 	};

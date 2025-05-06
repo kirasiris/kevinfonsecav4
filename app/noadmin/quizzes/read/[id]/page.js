@@ -1,18 +1,18 @@
-import { fetchurl } from "@/helpers/setTokenOnServer";
-import ParseHtml from "@/layout/parseHtml";
-import QuestionList from "@/components/admin/quizzes/questionlist";
 import { revalidatePath } from "next/cache";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import { fetchurl } from "@/helpers/setTokenOnServer";
+import ParseHtml from "@/layout/parseHtml";
+import QuestionList from "@/components/admin/quizzes/questionlist";
 
 async function getQuiz(params) {
-	const res = await fetchurl(`/quizzes${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/quizzes${params}`, "GET", "no-cache");
 	if (!res.success) notFound();
 	return res;
 }
 
 async function getQuestions(params) {
-	const res = await fetchurl(`/questions${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/questions${params}`, "GET", "no-cache");
 	return res;
 }
 
@@ -31,49 +31,57 @@ const ReadQuiz = async ({ params, searchParams }) => {
 	const draftIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/questions/${id}/draftit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/questions/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(`/noadmin/quizzes/read/${awtdParams.id}`);
 	};
 
 	const publishIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/questions/${id}/publishit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/questions/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(`/noadmin/quizzes/read/${awtdParams.id}`);
 	};
 
 	const trashIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/questions/${id}/trashit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/questions/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(`/noadmin/quizzes/read/${awtdParams.id}`);
 	};
 
 	const scheduleIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/questions/${id}/scheduleit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/questions/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(`/noadmin/quizzes/read/${awtdParams.id}`);
 	};
 
 	const handleDelete = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/questions/${id}/permanently`, "DELETE", "no-cache");
+		await fetchurl(
+			`/noadmin/questions/${id}/permanently`,
+			"DELETE",
+			"no-cache"
+		);
 		revalidatePath(`/noadmin/quizzes/read/${awtdParams.id}`);
 	};
 
 	const handleTrashAll = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/questions/deleteall`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/questions/deleteall`, "PUT", "no-cache");
 		revalidatePath(`/noadmin/quizzes/read/${awtdParams.id}`);
 	};
 
 	const handleDeleteAll = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/questions/deleteall/permanently`, "DELETE", "no-cache");
+		await fetchurl(
+			`/noadmin/questions/deleteall/permanently`,
+			"DELETE",
+			"no-cache"
+		);
 		revalidatePath(`/noadmin/quizzes/read/${awtdParams.id}`);
 	};
 

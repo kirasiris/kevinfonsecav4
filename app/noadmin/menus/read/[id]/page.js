@@ -5,13 +5,13 @@ import { revalidatePath } from "next/cache";
 import { notFound } from "next/navigation";
 
 async function getMenu(params) {
-	const res = await fetchurl(`/menus${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/menus${params}`, "GET", "no-cache");
 	if (!res.success) notFound();
 	return res;
 }
 
 async function getPages(params) {
-	const res = await fetchurl(`/pages${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/pages${params}`, "GET", "no-cache");
 	return res;
 }
 
@@ -30,49 +30,53 @@ const ReadMenu = async ({ params, searchParams }) => {
 	const draftIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/pages/${id}/draftit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/pages/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(`/noadmin/menus/read/${awtdParams.id}`);
 	};
 
 	const publishIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/pages/${id}/publishit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/pages/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(`/noadmin/menus/read/${awtdParams.id}`);
 	};
 
 	const trashIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/pages/${id}/trashit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/pages/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(`/noadmin/menus/read/${awtdParams.id}`);
 	};
 
 	const scheduleIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/pages/${id}/scheduleit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/pages/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(`/noadmin/menus/read/${awtdParams.id}`);
 	};
 
 	const handleDelete = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/pages/${id}/permanently`, "DELETE", "no-cache");
+		await fetchurl(`/noadmin/pages/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(`/noadmin/menus/read/${awtdParams.id}`);
 	};
 
 	const handleTrashAll = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/pages/deleteall`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/pages/deleteall`, "PUT", "no-cache");
 		revalidatePath(`/noadmin/menus/read/${awtdParams.id}`);
 	};
 
 	const handleDeleteAll = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/pages/deleteall/permanently`, "DELETE", "no-cache");
+		await fetchurl(
+			`/noadmin/pages/deleteall/permanently`,
+			"DELETE",
+			"no-cache"
+		);
 		revalidatePath(`/noadmin/menus/read/${awtdParams.id}`);
 	};
 

@@ -23,7 +23,7 @@ const AdminLogsSearchIndex = async ({ params, searchParams }) => {
 	const handleDelete = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/noadmin/logs/${id}`, "DELETE", "no-cache");
+		await fetchurl(`/noadmin/logs/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(
 			`/noadmin/logs/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -32,7 +32,7 @@ const AdminLogsSearchIndex = async ({ params, searchParams }) => {
 	const handleDeleteAll = async () => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/noadmin/logs/deleteall`, "DELETE", "no-cache");
+		await fetchurl(`/noadmin/logs/deleteall/permanently`, "DELETE", "no-cache");
 		revalidatePath(
 			`/noadmin/logs/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);

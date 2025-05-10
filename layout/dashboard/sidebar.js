@@ -13,9 +13,7 @@ const AdminMenu = () => {
 		<div className="col-lg-1 mb-3">
 			<ul className="list-group">
 				<li className={`list-group-item ${isActive(`/dashboard`)}`}>
-					<Link href={"/dashboard"} passHref legacyBehavior>
-						<a>Dashboard</a>
-					</Link>
+					<Link href={"/dashboard"}>Dashboard</Link>
 				</li>
 				<li className={`list-group-item ${isActive(`/dashboard/companies`)}`}>
 					<Link
@@ -23,10 +21,8 @@ const AdminMenu = () => {
 							pathname: "/dashboard/companies",
 							query: {},
 						}}
-						passHref
-						legacyBehavior
 					>
-						<a>Companies</a>
+						Companies
 					</Link>
 				</li>
 				<li className={`list-group-item ${isActive(`/dashboard/courses`)}`}>
@@ -39,10 +35,8 @@ const AdminMenu = () => {
 								sort: "-createdAt",
 							},
 						}}
-						passHref
-						legacyBehavior
 					>
-						<a>Courses</a>
+						Courses
 					</Link>
 				</li>
 				<li className={`list-group-item ${isActive(`/dashboard/events`)}`}>
@@ -55,10 +49,8 @@ const AdminMenu = () => {
 								sort: "-createdAt",
 							},
 						}}
-						passHref
-						legacyBehavior
 					>
-						<a>Events</a>
+						Events
 					</Link>
 				</li>
 				<li className={`list-group-item ${isActive(`/dashboard/files`)}`}>
@@ -71,10 +63,8 @@ const AdminMenu = () => {
 								sort: "-createdAt",
 							},
 						}}
-						passHref
-						legacyBehavior
 					>
-						<a>Files</a>
+						Files
 					</Link>
 				</li>
 				<li className={`list-group-item ${isActive(`/dashboard/forums`)}`}>
@@ -87,10 +77,8 @@ const AdminMenu = () => {
 								sort: "-createdAt",
 							},
 						}}
-						passHref
-						legacyBehavior
 					>
-						<a>Forums</a>
+						Forums
 					</Link>
 				</li>
 				<li className={`list-group-item ${isActive(`/dashboard/jobs`)}`}>
@@ -103,10 +91,8 @@ const AdminMenu = () => {
 								sort: "-createdAt",
 							},
 						}}
-						passHref
-						legacyBehavior
 					>
-						<a>Jobs</a>
+						Jobs
 					</Link>
 				</li>
 				<li className={`list-group-item ${isActive(`/dashboard/memberships`)}`}>
@@ -119,10 +105,8 @@ const AdminMenu = () => {
 								sort: "-createdAt",
 							},
 						}}
-						passHref
-						legacyBehavior
 					>
-						<a>Memberships</a>
+						Memberships
 					</Link>
 				</li>
 				<li
@@ -137,10 +121,8 @@ const AdminMenu = () => {
 								sort: "-createdAt",
 							},
 						}}
-						passHref
-						legacyBehavior
 					>
-						<a>Notifications</a>
+						Notifications
 					</Link>
 				</li>
 				<li className={`list-group-item ${isActive(`/dashboard/posts`)}`}>
@@ -153,10 +135,8 @@ const AdminMenu = () => {
 								sort: "-createdAt",
 							},
 						}}
-						passHref
-						legacyBehavior
 					>
-						<a>Posts</a>
+						Posts
 					</Link>
 				</li>
 				<li className={`list-group-item ${isActive(`/dashboard/realstates`)}`}>
@@ -169,10 +149,8 @@ const AdminMenu = () => {
 								sort: "-createdAt",
 							},
 						}}
-						passHref
-						legacyBehavior
 					>
-						<a>Real States</a>
+						Real States
 					</Link>
 				</li>
 				<li className={`list-group-item ${isActive(`/dashboard/resumes`)}`}>
@@ -185,10 +163,8 @@ const AdminMenu = () => {
 								sort: "-createdAt",
 							},
 						}}
-						passHref
-						legacyBehavior
 					>
-						<a>Resumes</a>
+						Resumes
 					</Link>
 				</li>
 				<li className={`list-group-item ${isActive(`/dashboard/revenue`)}`}>
@@ -197,10 +173,8 @@ const AdminMenu = () => {
 							pathname: "/dashboard/revenue",
 							query: {},
 						}}
-						passHref
-						legacyBehavior
 					>
-						<a>Revenue</a>
+						Revenue
 					</Link>
 				</li>
 				<li className={`list-group-item ${isActive(`/dashboard/snippets`)}`}>
@@ -213,10 +187,8 @@ const AdminMenu = () => {
 								sort: "-createdAt",
 							},
 						}}
-						passHref
-						legacyBehavior
 					>
-						<a>Snippets</a>
+						Snippets
 					</Link>
 				</li>
 				<li className={`list-group-item ${isActive(`/dashboard/users`)}`}>
@@ -229,10 +201,8 @@ const AdminMenu = () => {
 								sort: "-createdAt",
 							},
 						}}
-						passHref
-						legacyBehavior
 					>
-						<a>Users</a>
+						Users
 					</Link>
 				</li>
 				<li className={`list-group-item ${isActive(`/dashboard/weapons`)}`}>
@@ -245,10 +215,8 @@ const AdminMenu = () => {
 								sort: "-createdAt",
 							},
 						}}
-						passHref
-						legacyBehavior
 					>
-						<a>Weapons</a>
+						Weapons
 					</Link>
 				</li>
 				<li
@@ -263,10 +231,8 @@ const AdminMenu = () => {
 								sort: "-createdAt",
 							},
 						}}
-						passHref
-						legacyBehavior
 					>
-						<a>Work Requests</a>
+						Work Requests
 					</Link>
 				</li>
 				<li
@@ -283,10 +249,8 @@ const AdminMenu = () => {
 								sort: "-createdAt",
 							},
 						}}
-						passHref
-						legacyBehavior
 					>
-						<a>Courses Enrolled</a>
+						Courses Enrolled
 					</Link>
 				</li>
 
@@ -304,10 +268,8 @@ const AdminMenu = () => {
 								sort: "-createdAt",
 							},
 						}}
-						passHref
-						legacyBehavior
 					>
-						<a>Memberships Enrolled</a>
+						Memberships Enrolled
 					</Link>
 				</li>
 			</ul>

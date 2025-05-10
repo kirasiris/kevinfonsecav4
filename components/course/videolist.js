@@ -19,15 +19,11 @@ const VideoList = ({ auth = {}, object = {}, objects = [] }) => {
 							<div className="float-start">
 								<Link
 									href={`/course/${object.data._id}/${object.data.category}/${object.data.sub_category}/${object.data.slug}/video/${lesson._id}`}
-									passHref
-									legacyBehavior
 								>
-									<a>
-										<span className="badge bg-secondary me-1">
-											{lesson.orderingNumber}
-										</span>
-										{lesson.title}
-									</a>
+									<span className="badge bg-secondary me-1">
+										{lesson.orderingNumber}
+									</span>
+									{lesson.title}
 								</Link>
 							</div>
 						</li>

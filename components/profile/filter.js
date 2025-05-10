@@ -13,70 +13,63 @@ const Filter = ({ params = {} }) => {
 					pathname: `/profile/${params.id}/${params.username}`,
 					query: { page: 1, limit: 10, sort: "-createdAt" },
 				}}
-				passHref
-				legacyBehavior
+				className="btn btn-secondary btn-sm"
 			>
-				<a className="btn btn-secondary btn-sm">All</a>
+				All
 			</Link>
 			<Link
 				href={{
 					pathname: `/profile/${params.id}/${params.username}`,
 					query: { page: 1, limit: 10, sort: "-createdAt", subType: "text" },
 				}}
-				passHref
-				legacyBehavior
+				className="btn btn-secondary btn-sm"
 			>
-				<a className="btn btn-secondary btn-sm">Text</a>
+				Text
 			</Link>
 			<Link
 				href={{
 					pathname: `/profile/${params.id}/${params.username}`,
 					query: { page: 1, limit: 10, sort: "-createdAt", subType: "photos" },
 				}}
-				passHref
-				legacyBehavior
+				className="btn btn-secondary btn-sm"
 			>
-				<a className="btn btn-secondary btn-sm">Photos</a>
+				Photos
 			</Link>
 			<Link
 				href={{
 					pathname: `/profile/${params.id}/${params.username}`,
 					query: { page: 1, limit: 10, sort: "-createdAt", subType: "videos" },
 				}}
-				passHref
-				legacyBehavior
+				className="btn btn-secondary btn-sm"
 			>
-				<a className="btn btn-secondary btn-sm">Videos</a>
+				Videos
 			</Link>
 			<Link
 				href={{
 					pathname: `/profile/${params.id}/${params.username}`,
 					query: { page: 1, limit: 10, sort: "-createdAt", subType: "audios" },
 				}}
-				passHref
-				legacyBehavior
+				className="btn btn-secondary btn-sm"
 			>
-				<a className="btn btn-secondary btn-sm">Audios</a>
+				Audios
 			</Link>
 			<Link
 				href={{
 					pathname: `/profile/${params.id}/${params.username}`,
 					query: { page: 1, limit: 10, sort: "-createdAt", subType: "files" },
 				}}
-				passHref
-				legacyBehavior
+				className="btn btn-secondary btn-sm"
 			>
-				<a className="btn btn-secondary btn-sm">Files</a>
+				Files
 			</Link>
 			<Link
 				href={{
 					pathname: `/profile/${params.id}/${params.username}`,
 					query: { page: 1, limit: 10, sort: "-createdAt", subType: "maps" },
 				}}
-				passHref
-				legacyBehavior
+				className="btn btn-secondary btn-sm"
 			>
-				<a className="btn btn-secondary btn-sm">Maps</a>
+				Maps
 			</Link>
 		</div>
 	);

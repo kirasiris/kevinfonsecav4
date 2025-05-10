@@ -12,72 +12,48 @@ const Sidebar = () => {
 		<Globalsidebar>
 			<ul className="list-group">
 				<li className={`list-group-item ${isActive(`/auth/profile`)}`}>
-					<Link href={`/auth/profile`} passHref legacyBehavior>
-						<a>Profile</a>
-					</Link>
+					<Link href={`/auth/profile`}>Profile</Link>
 				</li>
 				<li className={`list-group-item ${isActive(`/auth/editbasics`)}`}>
-					<Link href={`/auth/editbasics`} passHref legacyBehavior>
-						<a>Basics</a>
-					</Link>
+					<Link href={`/auth/editbasics`}>Basics</Link>
 				</li>
 				<li className={`list-group-item ${isActive(`/auth/editavatar`)}`}>
-					<Link href={`/auth/editavatar`} passHref legacyBehavior>
-						<a>Avatar&nbsp;&&nbsp;Cover</a>
-					</Link>
+					<Link href={`/auth/editavatar`}>Avatar&nbsp;&&nbsp;Cover</Link>
 				</li>
 				<li className={`list-group-item ${isActive(`/auth/editabout`)}`}>
-					<Link href={`/auth/editabout`} passHref legacyBehavior>
-						<a>About</a>
-					</Link>
+					<Link href={`/auth/editabout`}>About</Link>
 				</li>
 				<li
 					className={`list-group-item ${isActive(`/auth/editnotifications`)}`}
 				>
-					<Link href={`/auth/editnotifications`} passHref legacyBehavior>
-						<a>Notifications</a>
-					</Link>
+					<Link href={`/auth/editnotifications`}>Notifications</Link>
 				</li>
 				<li
 					className={`list-group-item ${isActive(
 						`/auth/editnotificationsemail`
 					)}`}
 				>
-					<Link href={`/auth/editnotificationsemail`} passHref legacyBehavior>
-						<a>Emails</a>
-					</Link>
+					<Link href={`/auth/editnotificationsemail`}>Emails</Link>
 				</li>
 				<li
 					className={`list-group-item ${isActive(
 						`/auth/edittwofactorauthentication`
 					)}`}
 				>
-					<Link
-						href={`/auth/edittwofactorauthentication`}
-						passHref
-						legacyBehavior
-					>
-						<a>2FA</a>
-					</Link>
+					<Link href={`/auth/edittwofactorauthentication`}>2FA</Link>
 				</li>
 				<li className={`list-group-item ${isActive(`/auth/editpasswords`)}`}>
-					<Link href={`/auth/editpasswords`} passHref legacyBehavior>
-						<a>Passwords</a>
-					</Link>
+					<Link href={`/auth/editpasswords`}>Passwords</Link>
 				</li>
 				<li className={`list-group-item ${isActive(`/auth/stripe`)}`}>
-					<Link href={`/auth/stripe`} passHref legacyBehavior>
-						<a>Stripe Settings</a>
-					</Link>
+					<Link href={`/auth/stripe`}>Stripe Settings</Link>
 				</li>
 				<li
 					className={`list-group-item list-group-item-danger ${isActive(
 						`/auth/deleteaccount`
 					)}`}
 				>
-					<Link href={`/auth/deleteaccount`} passHref legacyBehavior>
-						<a>Delete&nbsp;Account</a>
-					</Link>
+					<Link href={`/auth/deleteaccount`}>Delete&nbsp;Account</Link>
 				</li>
 			</ul>
 		</Globalsidebar>

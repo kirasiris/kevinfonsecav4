@@ -155,10 +155,9 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 													sort: `-createdAt`,
 												},
 											}}
-											passHref
-											legacyBehavior
+											className="btn btn-sm btn-link"
 										>
-											<a className="btn btn-sm btn-link">{category.title}</a>
+											{category.title}
 										</Link>
 										<span className="badge bg-secondary rounded-pill">
 											{category.timesUsed}
@@ -182,12 +181,9 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 																	sort: `-createdAt`,
 																},
 															}}
-															passHref
-															legacyBehavior
+															className="btn btn-sm btn-link"
 														>
-															<a className="btn btn-sm btn-link">
-																{childC.title}
-															</a>
+															{childC.title}
 														</Link>
 														<span className="badge bg-secondary rounded-pill">
 															{childC.timesUsed}

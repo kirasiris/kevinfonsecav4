@@ -26,10 +26,9 @@ const AdminStatusesMenu = ({
 						pathname: allLink,
 						query: { page: 1, limit: 10, sort: `-createdAt` },
 					}}
-					passHref
-					legacyBehavior
+					className={`btn ${isActive(allLink)} btn-sm`}
 				>
-					<a className={`btn ${isActive(allLink)} btn-sm`}>All</a>
+					All
 				</Link>
 			)}
 			{publishedLink !== "" &&
@@ -40,10 +39,9 @@ const AdminStatusesMenu = ({
 							pathname: publishedLink,
 							query: { page: 1, limit: 10, sort: `-createdAt` },
 						}}
-						passHref
-						legacyBehavior
+						className={`btn ${isActive(publishedLink)} btn-sm`}
 					>
-						<a className={`btn ${isActive(publishedLink)} btn-sm`}>Published</a>
+						Published
 					</Link>
 				)}
 			{draftLink !== "" && draftLink !== undefined && draftLink !== null && (
@@ -52,10 +50,9 @@ const AdminStatusesMenu = ({
 						pathname: draftLink,
 						query: { page: 1, limit: 10, sort: `-createdAt` },
 					}}
-					passHref
-					legacyBehavior
+					className={`btn ${isActive(draftLink)} btn-sm`}
 				>
-					<a className={`btn ${isActive(draftLink)} btn-sm`}>Draft</a>
+					Draft
 				</Link>
 			)}
 			{scheduledLink !== "" &&
@@ -66,10 +63,9 @@ const AdminStatusesMenu = ({
 							pathname: scheduledLink,
 							query: { page: 1, limit: 10, sort: `-createdAt` },
 						}}
-						passHref
-						legacyBehavior
+						className={`btn ${isActive(scheduledLink)} btn-sm`}
 					>
-						<a className={`btn ${isActive(scheduledLink)} btn-sm`}>Scheduled</a>
+						Scheduled
 					</Link>
 				)}
 			{trashedLink !== "" &&
@@ -80,10 +76,9 @@ const AdminStatusesMenu = ({
 							pathname: trashedLink,
 							query: { page: 1, limit: 10, sort: `-createdAt` },
 						}}
-						passHref
-						legacyBehavior
+						className={`btn ${isActive(trashedLink)} btn-sm`}
 					>
-						<a className={`btn ${isActive(trashedLink)} btn-sm`}>Trashed</a>
+						Trashed
 					</Link>
 				)}
 			{filledLink !== "" && filledLink !== undefined && filledLink !== null && (
@@ -92,10 +87,9 @@ const AdminStatusesMenu = ({
 						pathname: filledLink,
 						query: { page: 1, limit: 10, sort: `-createdAt` },
 					}}
-					passHref
-					legacyBehavior
+					className={`btn ${isActive(filledLink)} btn-sm`}
 				>
-					<a className={`btn ${isActive(filledLink)} btn-sm`}>Filled Out</a>
+					Filled Out
 				</Link>
 			)}
 			{categoriesLink !== "" &&
@@ -109,12 +103,9 @@ const AdminStatusesMenu = ({
 							pathname: categoriesLink,
 							query: { page: 1, limit: 10, categoryType: categoryType },
 						}}
-						passHref
-						legacyBehavior
+						className="btn btn-link btn-sm border-1 border-secondary"
 					>
-						<a className="btn btn-link btn-sm border-1 border-secondary">
-							Categories
-						</a>
+						Categories
 					</Link>
 				)}
 		</div>

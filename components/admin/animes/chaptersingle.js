@@ -23,15 +23,11 @@ const Single = ({
 						pathname: `/noadmin/animes/chapter/${object?._id}/update`,
 						query: {},
 					}}
-					passHref
-					legacyBehavior
 				>
-					<a>
-						<span className="badge bg-secondary me-1">
-							{object?.orderingNumber}
-						</span>
-						{object?.title}
-					</a>
+					<span className="badge bg-secondary me-1">
+						{object?.orderingNumber}
+					</span>
+					{object?.title}
 				</Link>
 				<span className="badge bg-dark ms-1">{object.status}</span>
 				{object.featured && (
@@ -58,10 +54,9 @@ const Single = ({
 											isAdmin: true,
 										},
 									}}
-									passHref
-									legacyBehavior
+									className="dropdown-item btn btn-link"
 								>
-									<a className="dropdown-item btn btn-link">View&nbsp;It</a>
+									View&nbsp;It
 								</Link>
 								<button
 									className="dropdown-item btn btn-sm"

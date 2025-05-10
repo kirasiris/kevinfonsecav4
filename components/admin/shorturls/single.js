@@ -26,10 +26,9 @@ const Single = ({
 								pathname: `/noadmin/shorturls/update/${object._id}`,
 								query: {},
 							}}
-							passHref
-							legacyBehavior
+							className="blog-item__title-link"
 						>
-							<a className="blog-item__title-link">{object.title}</a>
+							{object.title}
 						</Link>
 					</h1>
 					<div className="blog-item__meta">

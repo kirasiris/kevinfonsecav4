@@ -13,8 +13,6 @@ const Single = ({ object = {} }) => {
 						href={{
 							pathname: `/quiz/${object?._id}/${object?.category?._id}/${object?.category?.slug}/${object?.slug}`,
 						}}
-						passHref
-						legacyBehavior
 					>
 						<Image
 							src={
@@ -73,10 +71,9 @@ const Single = ({ object = {} }) => {
 							href={{
 								pathname: `/quiz/${object?._id}/${object?.category?._id}/${object?.category?.slug}/${object?.slug}`,
 							}}
-							passHref
-							legacyBehavior
+							className="float-end"
 						>
-							<a className="float-end">Take&nbsp;test</a>
+							Take&nbsp;test
 						</Link>
 					</div>
 				</div>

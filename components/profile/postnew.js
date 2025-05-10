@@ -67,18 +67,14 @@ const PostNew = ({
 									sort: `-createdAt`,
 								},
 							}}
-							passHref
-							legacyBehavior
 						>
-							<a>
-								<Image
-									src={object?.data?.files?.avatar?.location.secure_location}
-									className="rounded-5"
-									alt={`${object?.data?.username}'s avatar`}
-									width={48}
-									height={48}
-								/>
-							</a>
+							<Image
+								src={object?.data?.files?.avatar?.location.secure_location}
+								className="rounded-5"
+								alt={`${object?.data?.username}'s avatar`}
+								width={48}
+								height={48}
+							/>
 						</Link>
 					</div>
 					<Link
@@ -90,8 +86,6 @@ const PostNew = ({
 								sort: `-createdAt`,
 							},
 						}}
-						passHref
-						legacyBehavior
 					>
 						{object?.data?.username}
 					</Link>

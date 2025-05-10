@@ -25,10 +25,9 @@ const Single = ({
 						<hr />
 						<Link
 							href={`/job/${object?._id}/${object?.slug}`}
-							passHref
-							legacyBehavior
+							className="btn btn-sm btn-secondary"
 						>
-							<a className="btn btn-sm btn-secondary">Read&nbsp;more</a>
+							Read&nbsp;more
 						</Link>
 					</div>
 				</div>

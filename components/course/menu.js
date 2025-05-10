@@ -19,16 +19,11 @@ const Menu = ({ object = {} }) => {
 									pathname: `/course/${object?.data?._id}/${object?.data?.category}/${object?.data?.sub_category}/${object?.data?.slug}/index`,
 									query: {},
 								}}
-								passHref
-								legacyBehavior
+								className={`nav-link${isActive(
+									`/course/${object?.data?._id}/${object?.data?.category}/${object?.data?.sub_category}/${object?.data?.slug}/index`
+								)}`}
 							>
-								<a
-									className={`nav-link${isActive(
-										`/course/${object?.data?._id}/${object?.data?.category}/${object?.data?.sub_category}/${object?.data?.slug}/index`
-									)}`}
-								>
-									Overview
-								</a>
+								Overview
 							</Link>
 							<Link
 								href={{
@@ -39,16 +34,11 @@ const Menu = ({ object = {} }) => {
 										sort: `-createdAt`,
 									},
 								}}
-								passHref
-								legacyBehavior
+								className={`nav-link${isActive(
+									`/course/${object?.data?._id}/students`
+								)}`}
 							>
-								<a
-									className={`nav-link${isActive(
-										`/course/${object?.data?._id}/students`
-									)}`}
-								>
-									Students
-								</a>
+								Students
 							</Link>
 							<Link
 								href={{
@@ -59,16 +49,11 @@ const Menu = ({ object = {} }) => {
 										sort: `-createdAt`,
 									},
 								}}
-								passHref
-								legacyBehavior
+								className={`nav-link${isActive(
+									`/course/${object?.data?._id}/comments`
+								)}`}
 							>
-								<a
-									className={`nav-link${isActive(
-										`/course/${object?.data?._id}/comments`
-									)}`}
-								>
-									Comments
-								</a>
+								Comments
 							</Link>
 						</nav>
 					</div>

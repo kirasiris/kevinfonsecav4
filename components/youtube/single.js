@@ -13,16 +13,11 @@ const Single = ({ object = {} }) => {
 						pathname: `/youtube/watch/${object?._id}/${object?.videoId}`,
 						query: {},
 					}}
-					passHref
-					legacyBehavior
+					style={{
+						marginBottom: "1rem",
+					}}
 				>
-					<a
-						style={{
-							marginBottom: "1rem",
-						}}
-					>
-						{object.title}-{object?.videoId}
-					</a>
+					{object.title}-{object?.videoId}
 				</Link>
 				<br />
 				<br />

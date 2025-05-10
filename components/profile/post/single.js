@@ -249,10 +249,8 @@ const Post = ({
 										sort: "-createdAt",
 									},
 								}}
-								passHref
-								legacyBehavior
 							>
-								<a>{object?.postedto?.username}</a>
+								{object?.postedto?.username}
 							</Link>
 						</p>
 					</div>
@@ -272,10 +270,8 @@ const Post = ({
 										sort: "-createdAt",
 									},
 								}}
-								passHref
-								legacyBehavior
 							>
-								<a>{object?.postedfrom?.username}</a>
+								{object?.postedfrom?.username}
 							</Link>
 						</p>
 					</div>
@@ -294,21 +290,17 @@ const Post = ({
 										sort: "-createdAt",
 									},
 								}}
-								passHref
-								legacyBehavior
 							>
-								<a>
-									<Image
-										src={object?.user?.files?.avatar?.location?.secure_location}
-										className="rounded-5"
-										width={35}
-										height={35}
-										alt={`${object.user.username}'s avatar`}
-										style={{
-											objectFit: "cover",
-										}}
-									/>
-								</a>
+								<Image
+									src={object?.user?.files?.avatar?.location?.secure_location}
+									className="rounded-5"
+									width={35}
+									height={35}
+									alt={`${object.user.username}'s avatar`}
+									style={{
+										objectFit: "cover",
+									}}
+								/>
 							</Link>
 						</div>
 						<div className="float-middle text-center">
@@ -317,10 +309,8 @@ const Post = ({
 									pathname: `/post/${object?._id}`,
 									query: {},
 								}}
-								passHref
-								legacyBehavior
 							>
-								<a>{object?.title}</a>
+								{object?.title}
 							</Link>
 							&nbsp;by&nbsp;
 							<Link
@@ -332,10 +322,8 @@ const Post = ({
 										sort: "-createdAt",
 									},
 								}}
-								passHref
-								legacyBehavior
 							>
-								<a>{object?.user?.username}</a>
+								{object?.user?.username}
 							</Link>
 						</div>
 						<div className="float-end">

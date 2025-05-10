@@ -41,8 +41,6 @@ const Single = ({
 						object.user !== "" ? (
 							<Link
 								href={`/profile/${object?.user?._id}/${object?.user?.username}`}
-								passHref
-								legacyBehavior
 							>
 								<Image
 									src={
@@ -73,11 +71,7 @@ const Single = ({
 					</div>
 					<div className="flex-grow-1 ms-3">
 						<div className="float-start">
-							<Link
-								href={`/comment/${object?._id}/${object?.slug}`}
-								passHref
-								legacyBehavior
-							>
+							<Link href={`/comment/${object?._id}/${object?.slug}`}>
 								{object.title || "Untitled"}
 							</Link>
 							&nbsp;by&nbsp;
@@ -86,12 +80,9 @@ const Single = ({
 							object.user !== "" ? (
 								<Link
 									href={`/profile/${object?.user?._id}/${object?.user?.username}`}
-									passHref
-									legacyBehavior
+									className="btn btn-secondary btn-sm"
 								>
-									<a className="btn btn-secondary btn-sm">
-										{object?.user?.username}
-									</a>
+									{object?.user?.username}
 								</Link>
 							) : (
 								<a

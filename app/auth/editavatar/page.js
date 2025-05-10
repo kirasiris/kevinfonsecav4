@@ -29,11 +29,17 @@ const UpdateAvatar = async ({ params, searchParams }) => {
 							</div>
 							<div className="float-end">
 								<div className="btn-group">
-									<Link href="/auth/uploadpicture" passHref legacyBehavior>
-										<a className="btn btn-secondary btn-sm">Take a picture</a>
+									<Link
+										href="/auth/uploadpicture"
+										className="btn btn-secondary btn-sm"
+									>
+										Take a picture
 									</Link>
-									<Link href="/auth/editcover" passHref legacyBehavior>
-										<a className="btn btn-secondary btn-sm">Update cover</a>
+									<Link
+										href="/auth/editcover"
+										className="btn btn-secondary btn-sm"
+									>
+										Update cover
 									</Link>
 								</div>
 							</div>

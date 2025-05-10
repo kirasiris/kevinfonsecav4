@@ -66,10 +66,8 @@ const Sidebar = ({}) => {
 										sort: `-createdAt`,
 									},
 								}}
-								passHref
-								legacyBehavior
 							>
-								<a className="btn btn-link btn-sm">Development</a>
+								Development
 							</Link>
 							<ul className="list-group list-group-flush">
 								<li className="list-group-item">
@@ -82,10 +80,9 @@ const Sidebar = ({}) => {
 												sort: `-createdAt`,
 											},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-link btn-sm"
 									>
-										<a className="btn btn-link btn-sm">Web Development</a>
+										Web Development
 									</Link>
 								</li>
 								<li className="list-group-item">
@@ -98,10 +95,9 @@ const Sidebar = ({}) => {
 												sort: `-createdAt`,
 											},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-link btn-sm"
 									>
-										<a className="btn btn-link btn-sm">Mobile Development</a>
+										Mobile Development
 									</Link>
 								</li>
 								<li className="list-group-item">
@@ -114,10 +110,9 @@ const Sidebar = ({}) => {
 												sort: `-createdAt`,
 											},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-link btn-sm"
 									>
-										<a className="btn btn-link btn-sm">Programming Languages</a>
+										Programming Languages
 									</Link>
 								</li>
 								<li className="list-group-item">
@@ -130,10 +125,9 @@ const Sidebar = ({}) => {
 												sort: `-createdAt`,
 											},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-link btn-sm"
 									>
-										<a className="btn btn-link btn-sm">Game Development</a>
+										Game Development
 									</Link>
 								</li>
 								<li className="list-group-item">
@@ -146,12 +140,9 @@ const Sidebar = ({}) => {
 												sort: `-createdAt`,
 											},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-link btn-sm"
 									>
-										<a className="btn btn-link btn-sm">
-											Database Design and Development
-										</a>
+										Database Design and Development
 									</Link>
 								</li>
 								<li className="list-group-item">
@@ -164,10 +155,9 @@ const Sidebar = ({}) => {
 												sort: `-createdAt`,
 											},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-link btn-sm"
 									>
-										<a className="btn btn-link btn-sm">Software Testing</a>
+										Software Testing
 									</Link>
 								</li>
 							</ul>
@@ -182,10 +172,8 @@ const Sidebar = ({}) => {
 										sort: `-createdAt`,
 									},
 								}}
-								passHref
-								legacyBehavior
 							>
-								<a className="btn btn-link btn-sm">Business</a>
+								Business
 							</Link>
 							<ul className="list-group list-group-flush">
 								<li className="list-group-item">
@@ -198,10 +186,9 @@ const Sidebar = ({}) => {
 												sort: `-createdAt`,
 											},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-link btn-sm"
 									>
-										<a className="btn btn-link btn-sm">Entrepreneurship</a>
+										Entrepreneurship
 									</Link>
 								</li>
 								<li className="list-group-item">
@@ -214,10 +201,9 @@ const Sidebar = ({}) => {
 												sort: `-createdAt`,
 											},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-link btn-sm"
 									>
-										<a className="btn btn-link btn-sm">Communication</a>
+										Communication
 									</Link>
 								</li>
 								<li className="list-group-item">
@@ -230,10 +216,9 @@ const Sidebar = ({}) => {
 												sort: `-createdAt`,
 											},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-link btn-sm"
 									>
-										<a className="btn btn-link btn-sm">Management</a>
+										Management
 									</Link>
 								</li>
 								<li className="list-group-item">
@@ -246,10 +231,9 @@ const Sidebar = ({}) => {
 												sort: `-createdAt`,
 											},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-link btn-sm"
 									>
-										<a className="btn btn-link btn-sm">Sales</a>
+										Sales
 									</Link>
 								</li>
 								<li className="list-group-item">
@@ -262,10 +246,9 @@ const Sidebar = ({}) => {
 												sort: `-createdAt`,
 											},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-link btn-sm"
 									>
-										<a className="btn btn-link btn-sm">Business Strategy</a>
+										Business Strategy
 									</Link>
 								</li>
 							</ul>
@@ -280,10 +263,8 @@ const Sidebar = ({}) => {
 										sort: `-createdAt`,
 									},
 								}}
-								passHref
-								legacyBehavior
 							>
-								<a className="btn btn-link btn-sm">Finance and Accounting</a>
+								Finance and Accounting
 							</Link>
 							<ul className="list-group list-group-flush">
 								<li className="list-group-item">
@@ -296,12 +277,9 @@ const Sidebar = ({}) => {
 												sort: `-createdAt`,
 											},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-link btn-sm"
 									>
-										<a className="btn btn-link btn-sm">
-											Accounting and Bookkeeping
-										</a>
+										Accounting and Bookkeeping
 									</Link>
 								</li>
 								<li className="list-group-item">
@@ -314,12 +292,9 @@ const Sidebar = ({}) => {
 												sort: `-createdAt`,
 											},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-link btn-sm"
 									>
-										<a className="btn btn-link btn-sm">
-											Cryptocurrency and Blockchain
-										</a>
+										Cryptocurrency and Blockchain
 									</Link>
 								</li>
 								<li className="list-group-item">
@@ -332,10 +307,9 @@ const Sidebar = ({}) => {
 												sort: `-createdAt`,
 											},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-link btn-sm"
 									>
-										<a className="btn btn-link btn-sm">Finance</a>
+										Finance
 									</Link>
 								</li>
 								<li className="list-group-item">
@@ -348,12 +322,9 @@ const Sidebar = ({}) => {
 												sort: `-createdAt`,
 											},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-link btn-sm"
 									>
-										<a className="btn btn-link btn-sm">
-											Financial Modeling and Analysis
-										</a>
+										Financial Modeling and Analysis
 									</Link>
 								</li>
 								<li className="list-group-item">
@@ -366,10 +337,9 @@ const Sidebar = ({}) => {
 												sort: `-createdAt`,
 											},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-link btn-sm"
 									>
-										<a className="btn btn-link btn-sm">Investing and Trading</a>
+										Investing and Trading
 									</Link>
 								</li>
 							</ul>
@@ -384,10 +354,8 @@ const Sidebar = ({}) => {
 										sort: `-createdAt`,
 									},
 								}}
-								passHref
-								legacyBehavior
 							>
-								<a className="btn btn-link btn-sm">IT and Software</a>
+								IT and Software
 							</Link>
 							<ul className="list-group list-group-flush">
 								<li className="list-group-item">
@@ -400,10 +368,9 @@ const Sidebar = ({}) => {
 												sort: `-createdAt`,
 											},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-link btn-sm"
 									>
-										<a className="btn btn-link btn-sm">IT Certifications</a>
+										IT Certifications
 									</Link>
 								</li>
 								<li className="list-group-item">
@@ -416,10 +383,9 @@ const Sidebar = ({}) => {
 												sort: `-createdAt`,
 											},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-link btn-sm"
 									>
-										<a className="btn btn-link btn-sm">Network and Security</a>
+										Network and Security
 									</Link>
 								</li>
 								<li className="list-group-item">
@@ -432,10 +398,9 @@ const Sidebar = ({}) => {
 												sort: `-createdAt`,
 											},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-link btn-sm"
 									>
-										<a className="btn btn-link btn-sm">Hardware</a>
+										Hardware
 									</Link>
 								</li>
 								<li className="list-group-item">
@@ -448,12 +413,9 @@ const Sidebar = ({}) => {
 												sort: `-createdAt`,
 											},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-link btn-sm"
 									>
-										<a className="btn btn-link btn-sm">
-											Operating Systems and Servers
-										</a>
+										Operating Systems and Servers
 									</Link>
 								</li>
 								<li className="list-group-item">
@@ -466,10 +428,9 @@ const Sidebar = ({}) => {
 												sort: `-createdAt`,
 											},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-link btn-sm"
 									>
-										<a className="btn btn-link btn-sm">Other IT and Software</a>
+										Other IT and Software
 									</Link>
 								</li>
 							</ul>
@@ -484,10 +445,8 @@ const Sidebar = ({}) => {
 										sort: `-createdAt`,
 									},
 								}}
-								passHref
-								legacyBehavior
 							>
-								<a className="btn btn-link btn-sm">Office Productivity</a>
+								Office Productivity
 							</Link>
 							<ul className="list-group list-group-flush">
 								<li className="list-group-item">
@@ -500,10 +459,9 @@ const Sidebar = ({}) => {
 												sort: `-createdAt`,
 											},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-link btn-sm"
 									>
-										<a className="btn btn-link btn-sm">Microsoft</a>
+										Microsoft
 									</Link>
 								</li>
 								<li className="list-group-item">
@@ -516,10 +474,9 @@ const Sidebar = ({}) => {
 												sort: `-createdAt`,
 											},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-link btn-sm"
 									>
-										<a className="btn btn-link btn-sm">Apple</a>
+										Apple
 									</Link>
 								</li>
 								<li className="list-group-item">
@@ -532,10 +489,9 @@ const Sidebar = ({}) => {
 												sort: `-createdAt`,
 											},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-link btn-sm"
 									>
-										<a className="btn btn-link btn-sm">Google</a>
+										Google
 									</Link>
 								</li>
 								<li className="list-group-item">
@@ -548,10 +504,9 @@ const Sidebar = ({}) => {
 												sort: `-createdAt`,
 											},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-link btn-sm"
 									>
-										<a className="btn btn-link btn-sm">SAP</a>
+										SAP
 									</Link>
 								</li>
 								<li className="list-group-item">
@@ -564,10 +519,9 @@ const Sidebar = ({}) => {
 												sort: `-createdAt`,
 											},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-link btn-sm"
 									>
-										<a className="btn btn-link btn-sm">Oracle</a>
+										Oracle
 									</Link>
 								</li>
 								<li className="list-group-item">
@@ -580,12 +534,9 @@ const Sidebar = ({}) => {
 												sort: `-createdAt`,
 											},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-link btn-sm"
 									>
-										<a className="btn btn-link btn-sm">
-											Other Office Productivity
-										</a>
+										Other Office Productivity
 									</Link>
 								</li>
 							</ul>
@@ -600,10 +551,8 @@ const Sidebar = ({}) => {
 										sort: `-createdAt`,
 									},
 								}}
-								passHref
-								legacyBehavior
 							>
-								<a className="btn btn-link btn-sm">Personal Development</a>
+								Personal Development
 							</Link>
 							<ul className="list-group list-group-flush">
 								<li className="list-group-item">
@@ -616,12 +565,9 @@ const Sidebar = ({}) => {
 												sort: `-createdAt`,
 											},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-link btn-sm"
 									>
-										<a className="btn btn-link btn-sm">
-											Personal Transformation
-										</a>
+										Personal Transformation
 									</Link>
 								</li>
 								<li className="list-group-item">
@@ -634,10 +580,9 @@ const Sidebar = ({}) => {
 												sort: `-createdAt`,
 											},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-link btn-sm"
 									>
-										<a className="btn btn-link btn-sm">Personal Productivity</a>
+										Personal Productivity
 									</Link>
 								</li>
 								<li className="list-group-item">
@@ -650,10 +595,9 @@ const Sidebar = ({}) => {
 												sort: `-createdAt`,
 											},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-link btn-sm"
 									>
-										<a className="btn btn-link btn-sm">Leadership</a>
+										Leadership
 									</Link>
 								</li>
 								<li className="list-group-item">
@@ -666,10 +610,9 @@ const Sidebar = ({}) => {
 												sort: `-createdAt`,
 											},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-link btn-sm"
 									>
-										<a className="btn btn-link btn-sm">Career Development</a>
+										Career Development
 									</Link>
 								</li>
 								<li className="list-group-item">
@@ -682,12 +625,9 @@ const Sidebar = ({}) => {
 												sort: `-createdAt`,
 											},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-link btn-sm"
 									>
-										<a className="btn btn-link btn-sm">
-											Parenting and Relationships
-										</a>
+										Parenting and Relationships
 									</Link>
 								</li>
 							</ul>
@@ -702,10 +642,8 @@ const Sidebar = ({}) => {
 										sort: `-createdAt`,
 									},
 								}}
-								passHref
-								legacyBehavior
 							>
-								<a className="btn btn-link btn-sm">Design</a>
+								Design
 							</Link>
 							<ul className="list-group list-group-flush">
 								<li className="list-group-item">
@@ -718,10 +656,9 @@ const Sidebar = ({}) => {
 												sort: `-createdAt`,
 											},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-link btn-sm"
 									>
-										<a className="btn btn-link btn-sm">Web Design</a>
+										Web Design
 									</Link>
 								</li>
 								<li className="list-group-item">
@@ -734,12 +671,9 @@ const Sidebar = ({}) => {
 												sort: `-createdAt`,
 											},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-link btn-sm"
 									>
-										<a className="btn btn-link btn-sm">
-											Graphic Design and Illustration
-										</a>
+										Graphic Design and Illustration
 									</Link>
 								</li>
 								<li className="list-group-item">
@@ -752,10 +686,9 @@ const Sidebar = ({}) => {
 												sort: `-createdAt`,
 											},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-link btn-sm"
 									>
-										<a className="btn btn-link btn-sm">Design Tools</a>
+										Design Tools
 									</Link>
 								</li>
 								<li className="list-group-item">
@@ -768,12 +701,9 @@ const Sidebar = ({}) => {
 												sort: `-createdAt`,
 											},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-link btn-sm"
 									>
-										<a className="btn btn-link btn-sm">
-											User Experience Design
-										</a>
+										User Experience Design
 									</Link>
 								</li>
 								<li className="list-group-item">
@@ -786,10 +716,9 @@ const Sidebar = ({}) => {
 												sort: `-createdAt`,
 											},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-link btn-sm"
 									>
-										<a className="btn btn-link btn-sm">Game Design</a>
+										Game Design
 									</Link>
 								</li>
 								<li className="list-group-item">
@@ -802,10 +731,9 @@ const Sidebar = ({}) => {
 												sort: `-createdAt`,
 											},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-link btn-sm"
 									>
-										<a className="btn btn-link btn-sm">3D and Animation</a>
+										3D and Animation
 									</Link>
 								</li>
 							</ul>
@@ -820,10 +748,8 @@ const Sidebar = ({}) => {
 										sort: `-createdAt`,
 									},
 								}}
-								passHref
-								legacyBehavior
 							>
-								<a className="btn btn-link btn-sm">Marketing</a>
+								Marketing
 							</Link>
 							<ul className="list-group list-group-flush">
 								<li className="list-group-item">
@@ -836,10 +762,9 @@ const Sidebar = ({}) => {
 												sort: `-createdAt`,
 											},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-link btn-sm"
 									>
-										<a className="btn btn-link btn-sm">Digital Marketing</a>
+										Digital Marketing
 									</Link>
 								</li>
 								<li className="list-group-item">
@@ -852,12 +777,9 @@ const Sidebar = ({}) => {
 												sort: `-createdAt`,
 											},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-link btn-sm"
 									>
-										<a className="btn btn-link btn-sm">
-											Search Engine Optimization
-										</a>
+										Search Engine Optimization
 									</Link>
 								</li>
 								<li className="list-group-item">
@@ -870,12 +792,9 @@ const Sidebar = ({}) => {
 												sort: `-createdAt`,
 											},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-link btn-sm"
 									>
-										<a className="btn btn-link btn-sm">
-											Social Media Marketing
-										</a>
+										Social Media Marketing
 									</Link>
 								</li>
 								<li className="list-group-item">
@@ -888,10 +807,9 @@ const Sidebar = ({}) => {
 												sort: `-createdAt`,
 											},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-link btn-sm"
 									>
-										<a className="btn btn-link btn-sm">Branding</a>
+										Branding
 									</Link>
 								</li>
 								<li className="list-group-item">
@@ -904,12 +822,9 @@ const Sidebar = ({}) => {
 												sort: `-createdAt`,
 											},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-link btn-sm"
 									>
-										<a className="btn btn-link btn-sm">
-											Marketing Fundamentals
-										</a>
+										Marketing Fundamentals
 									</Link>
 								</li>
 								<li className="list-group-item">
@@ -922,12 +837,9 @@ const Sidebar = ({}) => {
 												sort: `-createdAt`,
 											},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-link btn-sm"
 									>
-										<a className="btn btn-link btn-sm">
-											Marketing Analytics and Automation
-										</a>
+										Marketing Analytics and Automation
 									</Link>
 								</li>
 							</ul>
@@ -942,10 +854,8 @@ const Sidebar = ({}) => {
 										sort: `-createdAt`,
 									},
 								}}
-								passHref
-								legacyBehavior
 							>
-								<a className="btn btn-link btn-sm">Health and Fitness</a>
+								Health and Fitness
 							</Link>
 							<ul className="list-group list-group-flush">
 								<li className="list-group-item">
@@ -958,10 +868,9 @@ const Sidebar = ({}) => {
 												sort: `-createdAt`,
 											},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-link btn-sm"
 									>
-										<a className="btn btn-link btn-sm">Fitness</a>
+										Fitness
 									</Link>
 								</li>
 								<li className="list-group-item">
@@ -974,10 +883,9 @@ const Sidebar = ({}) => {
 												sort: `-createdAt`,
 											},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-link btn-sm"
 									>
-										<a className="btn btn-link btn-sm">General Health</a>
+										General Health
 									</Link>
 								</li>
 								<li className="list-group-item">
@@ -990,10 +898,9 @@ const Sidebar = ({}) => {
 												sort: `-createdAt`,
 											},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-link btn-sm"
 									>
-										<a className="btn btn-link btn-sm">Sports</a>
+										Sports
 									</Link>
 								</li>
 								<li className="list-group-item">
@@ -1006,10 +913,9 @@ const Sidebar = ({}) => {
 												sort: `-createdAt`,
 											},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-link btn-sm"
 									>
-										<a className="btn btn-link btn-sm">Nutrition and Diet</a>
+										Nutrition and Diet
 									</Link>
 								</li>
 								<li className="list-group-item">
@@ -1022,10 +928,9 @@ const Sidebar = ({}) => {
 												sort: `-createdAt`,
 											},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-link btn-sm"
 									>
-										<a className="btn btn-link btn-sm">Yoga</a>
+										Yoga
 									</Link>
 								</li>
 								<li className="list-group-item">
@@ -1038,10 +943,9 @@ const Sidebar = ({}) => {
 												sort: `-createdAt`,
 											},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-link btn-sm"
 									>
-										<a className="btn btn-link btn-sm">Mental Health</a>
+										Mental Health
 									</Link>
 								</li>
 							</ul>
@@ -1056,10 +960,8 @@ const Sidebar = ({}) => {
 										sort: `-createdAt`,
 									},
 								}}
-								passHref
-								legacyBehavior
 							>
-								<a className="btn btn-link btn-sm">Music</a>
+								Music
 							</Link>
 							<ul className="list-group list-group-flush">
 								<li className="list-group-item">
@@ -1072,10 +974,9 @@ const Sidebar = ({}) => {
 												sort: `-createdAt`,
 											},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-link btn-sm"
 									>
-										<a className="btn btn-link btn-sm">Instruments</a>
+										Instruments
 									</Link>
 								</li>
 								<li className="list-group-item">
@@ -1088,10 +989,9 @@ const Sidebar = ({}) => {
 												sort: `-createdAt`,
 											},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-link btn-sm"
 									>
-										<a className="btn btn-link btn-sm">Music Production</a>
+										Music Production
 									</Link>
 								</li>
 								<li className="list-group-item">
@@ -1104,10 +1004,9 @@ const Sidebar = ({}) => {
 												sort: `-createdAt`,
 											},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-link btn-sm"
 									>
-										<a className="btn btn-link btn-sm">Music Fundamentals</a>
+										Music Fundamentals
 									</Link>
 								</li>
 								<li className="list-group-item">
@@ -1120,10 +1019,9 @@ const Sidebar = ({}) => {
 												sort: `-createdAt`,
 											},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-link btn-sm"
 									>
-										<a className="btn btn-link btn-sm">Vocal</a>
+										Vocal
 									</Link>
 								</li>
 								<li className="list-group-item">
@@ -1136,10 +1034,9 @@ const Sidebar = ({}) => {
 												sort: `-createdAt`,
 											},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-link btn-sm"
 									>
-										<a className="btn btn-link btn-sm">Music Techniques</a>
+										Music Techniques
 									</Link>
 								</li>
 								<li className="list-group-item">
@@ -1152,10 +1049,9 @@ const Sidebar = ({}) => {
 												sort: `-createdAt`,
 											},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-link btn-sm"
 									>
-										<a className="btn btn-link btn-sm">Music Software</a>
+										Music Software
 									</Link>
 								</li>
 							</ul>

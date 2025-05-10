@@ -27,12 +27,9 @@ const Single = ({
 								pathname: `/noadmin/comments/update/${object._id}`,
 								query: {},
 							}}
-							passHref
-							legacyBehavior
+							className="blog-item__title-link"
 						>
-							<a className="blog-item__title-link">
-								{object.title || "Untitled"}
-							</a>
+							{object.title || "Untitled"}
 						</Link>
 					</h1>
 					<div className="blog-item__meta">
@@ -52,10 +49,9 @@ const Single = ({
 										isAdmin: true,
 									},
 								}}
-								passHref
-								legacyBehavior
+								className="dropdown-item btn btn-link"
 							>
-								<a className="dropdown-item btn btn-link">View&nbsp;It</a>
+								View&nbsp;It
 							</Link>
 							<button
 								className="dropdown-item btn btn-sm"

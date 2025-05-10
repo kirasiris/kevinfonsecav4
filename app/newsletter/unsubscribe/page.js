@@ -39,8 +39,8 @@ const UnsubscribeFromNewsletter = async ({ params, searchParams }) => {
 									Thank&nbsp;You&nbsp;for&nbsp;being&nbsp;part&nbsp;of&nbsp;the&nbsp;Community!
 								</p>
 								<hr />
-								<Link href={`/`} passHref legacyBehavior>
-									<a className="btn btn-light btn-sm w-100">Home</a>
+								<Link href={`/`} className="btn btn-light btn-sm w-100">
+									Home
 								</Link>
 								<hr />
 								<p className="text-bg-dark text-center text-uppercase">

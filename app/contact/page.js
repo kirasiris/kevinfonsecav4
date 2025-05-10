@@ -1,7 +1,7 @@
 import Header from "@/layout/header";
 import Globalcontent from "@/layout/content";
 import Sidebar from "@/layout/contact/sidebar";
-import ContactForm from "@/components/forms/pages/contact/contactform";
+import ContactForm from "@/components/forms/contact/contactform";
 
 const ContactIndex = async ({ params, searchParams }) => {
 	const address = {

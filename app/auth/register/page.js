@@ -1,6 +1,5 @@
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import { redirect } from "next/navigation";
-import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
 import Globalcontent from "@/layout/content";
 import Link from "next/link";
@@ -135,10 +134,8 @@ const Register = async ({ params, searchParams }) => {
 										pathname: `/auth/login`,
 										query: {},
 									}}
-									passHref
-									legacyBehavior
 								>
-									<a>Login</a>
+									Login
 								</Link>
 								&nbsp;|&nbsp;
 								<Link
@@ -146,10 +143,8 @@ const Register = async ({ params, searchParams }) => {
 										pathname: `/auth/recover`,
 										query: {},
 									}}
-									passHref
-									legacyBehavior
 								>
-									<a>Forgot password?</a>
+									Forgot password?
 								</Link>
 							</div>
 						</div>

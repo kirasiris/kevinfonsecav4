@@ -63,8 +63,6 @@ const Footer = ({
 														pathname: decodeURI(`${canonical}${p.url}`),
 														query: {},
 													}}
-													passHref
-													legacyBehavior
 												>
 													{p.title}
 												</Link>
@@ -107,8 +105,6 @@ const Footer = ({
 													pathname: decodeURI(`${canonical}${p.url}`),
 													query: {},
 												}}
-												passHref
-												legacyBehavior
 											>
 												{p.title}
 											</Link>
@@ -135,8 +131,6 @@ const Footer = ({
 													pathname: decodeURI(`${canonical}${p.url}`),
 													query: {},
 												}}
-												passHref
-												legacyBehavior
 											>
 												{p.title}
 											</Link>
@@ -163,8 +157,6 @@ const Footer = ({
 													pathname: decodeURI(`${canonical}${p.url}`),
 													query: {},
 												}}
-												passHref
-												legacyBehavior
 											>
 												{p.title}
 											</Link>

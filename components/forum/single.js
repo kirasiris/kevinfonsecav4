@@ -2,7 +2,6 @@ import { Suspense } from "react";
 import Link from "next/link";
 import { calculateTimeSincePublished } from "befree-utilities";
 import Loading from "@/app/blog/loading";
-import ParseHtml from "@/layout/parseHtml";
 
 const Single = ({
 	object = {},
@@ -25,10 +24,9 @@ const Single = ({
 							pathname: `/forum/${object._id}/${object.category}/${object.sub_category}/${object.slug}`,
 							query: {},
 						}}
-						passHref
-						legacyBehavior
+						className="btn btn-link btn-sm"
 					>
-						<a className="btn btn-link btn-sm">{object.title}</a>
+						{object.title}
 					</Link>
 				</div>
 				<div className="float-end">

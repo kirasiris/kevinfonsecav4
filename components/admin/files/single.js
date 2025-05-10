@@ -43,10 +43,9 @@ const Single = ({
 						href={{
 							pathname: `/noadmin/files/update/${object._id}`,
 						}}
-						passHref
-						legacyBehavior
+						className="btn btn-secondary btn-sm"
 					>
-						<a className="btn btn-secondary btn-sm">Read&nbsp;more</a>
+						Read&nbsp;more
 					</Link>
 					<DeleteModal
 						id={object._id ? object._id : object._id}
@@ -82,10 +81,9 @@ const Single = ({
 						href={{
 							pathname: `/noadmin/files/update/${object._id}`,
 						}}
-						passHref
-						legacyBehavior
+						className="btn btn-secondary btn-sm"
 					>
-						<a className="btn btn-secondary btn-sm">Read&nbsp;more</a>
+						Read&nbsp;more
 					</Link>
 					<DeleteModal
 						id={object._id ? object._id : object._id}
@@ -120,10 +118,9 @@ const Single = ({
 						href={{
 							pathname: `/noadmin/files/update/${object._id}`,
 						}}
-						passHref
-						legacyBehavior
+						className="btn btn-secondary btn-sm"
 					>
-						<a className="btn btn-secondary btn-sm">Read&nbsp;more</a>
+						Read&nbsp;more
 					</Link>
 					<DeleteModal
 						id={object._id ? object._id : object._id}
@@ -158,10 +155,9 @@ const Single = ({
 						href={{
 							pathname: `/noadmin/files/update/${object._id}`,
 						}}
-						passHref
-						legacyBehavior
+						className="btn btn-secondary btn-sm"
 					>
-						<a className="btn btn-secondary btn-sm">Read&nbsp;more</a>
+						Read&nbsp;more
 					</Link>
 					<DeleteModal
 						id={object._id ? object._id : object._id}

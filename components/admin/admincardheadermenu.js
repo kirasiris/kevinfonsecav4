@@ -41,12 +41,9 @@ const AdminCardHeaderMenu = ({
 							pathname: allLink,
 							query: { page: 1, limit: 10 },
 						}}
-						passHref
-						legacyBehavior
+						className="btn btn-link btn-sm"
 					>
-						<a className="btn btn-link btn-sm">
-							{pageText} - ({currentResults} / {totalResults})
-						</a>
+						{pageText} - ({currentResults} / {totalResults})
 					</Link>
 					<form
 						onSubmit={searchData}
@@ -77,10 +74,9 @@ const AdminCardHeaderMenu = ({
 								pathname: addLink,
 								query: {},
 							}}
-							passHref
-							legacyBehavior
+							className="btn btn-primary btn-sm"
 						>
-							<a className="btn btn-primary btn-sm">Add new</a>
+							Add new
 						</Link>
 					) : (
 						<></>
@@ -91,10 +87,9 @@ const AdminCardHeaderMenu = ({
 								pathname: addLink,
 								query: {},
 							}}
-							passHref
-							legacyBehavior
+							className="btn btn-primary btn-sm"
 						>
-							<a className="btn btn-primary btn-sm">Add new</a>
+							Add new
 						</Link>
 					) : (
 						<></>
@@ -105,10 +100,9 @@ const AdminCardHeaderMenu = ({
 								pathname: addLink,
 								query: {},
 							}}
-							passHref
-							legacyBehavior
+							className="btn btn-primary btn-sm"
 						>
-							<a className="btn btn-primary btn-sm">Add new</a>
+							Add new
 						</Link>
 					)}
 					<TrashAllModal action={handleTrashAllFunction} />

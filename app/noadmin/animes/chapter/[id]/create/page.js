@@ -60,7 +60,7 @@ const CreateChapter = async ({ params, searchParams }) => {
 				stape: formData.get("stape_download"),
 			},
 		};
-		await fetchurl(`/videos`, "POST", "no-cache", {
+		await fetchurl(`/noadmin/videos`, "POST", "no-cache", {
 			...rawFormData,
 			resourceId: awtdParams.id,
 			onModel: "Playlist",

@@ -26,12 +26,9 @@ const Single = ({
 								pathname: `/noadmin/secrets/update/${object._id}`,
 								query: {},
 							}}
-							passHref
-							legacyBehavior
+							className="blog-item__title-link"
 						>
-							<a className="blog-item__title-link">
-								{object.sex}&nbsp;-&nbsp;{object.age}&nbsp;year&apos;s&nbsp;old
-							</a>
+							{object.sex}&nbsp;-&nbsp;{object.age}&nbsp;year&apos;s&nbsp;old
 						</Link>
 					</h1>
 					<div className="blog-item__meta">
@@ -54,12 +51,10 @@ const Single = ({
 										isAdmin: true,
 									},
 								}}
-								passHref
-								legacyBehavior
+								className="dropdown-item btn btn-link"
+								target="_blank"
 							>
-								<a className="dropdown-item btn btn-link" target="_blank">
-									View&nbsp;It
-								</a>
+								View&nbsp;It
 							</Link>
 							<button
 								className="dropdown-item btn btn-sm"

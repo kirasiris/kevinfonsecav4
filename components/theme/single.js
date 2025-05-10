@@ -11,8 +11,6 @@ const Single = ({ object = {} }) => {
 					href={{
 						pathname: `/theme/${object?._id}/${object?.category?._id}/${object?.category?.slug}/${object?.slug}`,
 					}}
-					passHref
-					legacyBehavior
 				>
 					<Image
 						src={

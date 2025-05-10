@@ -15,10 +15,8 @@ const Single = ({ object = {}, imageWidth = "500", imageHeight = "320" }) => {
 						sort: `-createdAt`,
 					},
 				}}
-				passHref
-				legacyBehavior
 			>
-				<a>{children}</a>
+				{children}
 			</Link>
 		);
 	};

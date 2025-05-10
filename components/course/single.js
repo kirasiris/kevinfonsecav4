@@ -14,8 +14,6 @@ const Single = ({ object = {}, imageWidth = "415", imageHeight = "207" }) => {
 					<div className="course-content"></div>
 					<Link
 						href={`/course/${object?._id}/${object?.category}/${object?.sub_category}/${object?.slug}/index`}
-						passHref
-						legacyBehavior
 					>
 						<Image
 							src={
@@ -41,10 +39,9 @@ const Single = ({ object = {}, imageWidth = "415", imageHeight = "207" }) => {
 						</h2>
 						<Link
 							href={`/course/${object?._id}/${object?.category}/${object?.sub_category}/${object?.slug}/index`}
-							passHref
-							legacyBehavior
+							className="btn btn-sm btn-secondary"
 						>
-							<a className="btn btn-sm btn-secondary">Read more</a>
+							Read more
 						</Link>
 					</div>
 				</div>

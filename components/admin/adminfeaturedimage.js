@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import Image from "next/image";
-import { FaFilePdf, FaFileVideo, FaFileAudio } from "react-icons/fa";
+import { FaFilePdf, FaFileVideo } from "react-icons/fa";
 import { Modal } from "react-bootstrap";
 import List from "./files/list";
 

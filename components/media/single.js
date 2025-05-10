@@ -16,10 +16,7 @@
 // 							sort: `-createdAt`,
 // 						},
 // 					}}
-// 					passHref
-// 					legacyBehavior
 // 				>
-// 					<a>
 // 						<Image
 // 							src={
 // 								media?.location.secure_location ||
@@ -29,7 +26,6 @@
 // 							width={imageWidth}
 // 							height={imageHeight}
 // 						/>
-// 					</a>
 // 				</Link>
 // 			</article>
 // 		</Suspense>

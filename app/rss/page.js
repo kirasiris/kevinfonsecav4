@@ -22,16 +22,11 @@ const RSSIndex = async ({ params, searchParams }) => {
 											pathname: `${process.env.NEXT_PUBLIC_WEBSITE_URL}/blog/sitemap.xml`,
 											query: {},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-outline-secondary btn-sm"
+										rel="noreferrer"
+										target="_blank"
 									>
-										<a
-											className="btn btn-outline-secondary btn-sm"
-											rel="noreferrer"
-											target="_blank"
-										>
-											<MdRssFeed color="#ee802f" size="25px" />
-										</a>
+										<MdRssFeed color="#ee802f" size="25px" />
 									</Link>
 								</li>
 								<li className="list-group-item">
@@ -41,16 +36,11 @@ const RSSIndex = async ({ params, searchParams }) => {
 											pathname: `${process.env.NEXT_PUBLIC_WEBSITE_URL}/blog/feed.xml`,
 											query: {},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-outline-secondary btn-sm"
+										rel="noreferrer"
+										target="_blank"
 									>
-										<a
-											className="btn btn-outline-secondary btn-sm"
-											rel="noreferrer"
-											target="_blank"
-										>
-											<MdRssFeed color="#ee802f" size="25px" />
-										</a>
+										<MdRssFeed color="#ee802f" size="25px" />
 									</Link>
 								</li>
 							</ul>
@@ -67,16 +57,11 @@ const RSSIndex = async ({ params, searchParams }) => {
 											pathname: `${process.env.NEXT_PUBLIC_WEBSITE_URL}/theme/sitemap.xml`,
 											query: {},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-outline-secondary btn-sm"
+										rel="noreferrer"
+										target="_blank"
 									>
-										<a
-											className="btn btn-outline-secondary btn-sm"
-											rel="noreferrer"
-											target="_blank"
-										>
-											<MdRssFeed color="#ee802f" size="25px" />
-										</a>
+										<MdRssFeed color="#ee802f" size="25px" />
 									</Link>
 								</li>
 								<li className="list-group-item">
@@ -86,16 +71,11 @@ const RSSIndex = async ({ params, searchParams }) => {
 											pathname: `${process.env.NEXT_PUBLIC_WEBSITE_URL}/theme/feed.xml`,
 											query: {},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-outline-secondary btn-sm"
+										rel="noreferrer"
+										target="_blank"
 									>
-										<a
-											className="btn btn-outline-secondary btn-sm"
-											rel="noreferrer"
-											target="_blank"
-										>
-											<MdRssFeed color="#ee802f" size="25px" />
-										</a>
+										<MdRssFeed color="#ee802f" size="25px" />
 									</Link>
 								</li>
 							</ul>
@@ -112,16 +92,11 @@ const RSSIndex = async ({ params, searchParams }) => {
 											pathname: `${process.env.NEXT_PUBLIC_WEBSITE_URL}/secret/sitemap.xml`,
 											query: {},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-outline-secondary btn-sm"
+										rel="noreferrer"
+										target="_blank"
 									>
-										<a
-											className="btn btn-outline-secondary btn-sm"
-											rel="noreferrer"
-											target="_blank"
-										>
-											<MdRssFeed color="#ee802f" size="25px" />
-										</a>
+										<MdRssFeed color="#ee802f" size="25px" />
 									</Link>
 								</li>
 								<li className="list-group-item">
@@ -131,16 +106,11 @@ const RSSIndex = async ({ params, searchParams }) => {
 											pathname: `${process.env.NEXT_PUBLIC_WEBSITE_URL}/secret/feed.xml`,
 											query: {},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-outline-secondary btn-sm"
+										rel="noreferrer"
+										target="_blank"
 									>
-										<a
-											className="btn btn-outline-secondary btn-sm"
-											rel="noreferrer"
-											target="_blank"
-										>
-											<MdRssFeed color="#ee802f" size="25px" />
-										</a>
+										<MdRssFeed color="#ee802f" size="25px" />
 									</Link>
 								</li>
 							</ul>
@@ -157,16 +127,11 @@ const RSSIndex = async ({ params, searchParams }) => {
 											pathname: `${process.env.NEXT_PUBLIC_WEBSITE_URL}/forum/sitemap.xml`,
 											query: {},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-outline-secondary btn-sm"
+										rel="noreferrer"
+										target="_blank"
 									>
-										<a
-											className="btn btn-outline-secondary btn-sm"
-											rel="noreferrer"
-											target="_blank"
-										>
-											<MdRssFeed color="#ee802f" size="25px" />
-										</a>
+										<MdRssFeed color="#ee802f" size="25px" />
 									</Link>
 								</li>
 								<li className="list-group-item">
@@ -176,16 +141,11 @@ const RSSIndex = async ({ params, searchParams }) => {
 											pathname: `${process.env.NEXT_PUBLIC_WEBSITE_URL}/forum/feed.xml`,
 											query: {},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-outline-secondary btn-sm"
+										rel="noreferrer"
+										target="_blank"
 									>
-										<a
-											className="btn btn-outline-secondary btn-sm"
-											rel="noreferrer"
-											target="_blank"
-										>
-											<MdRssFeed color="#ee802f" size="25px" />
-										</a>
+										<MdRssFeed color="#ee802f" size="25px" />
 									</Link>
 								</li>
 							</ul>
@@ -202,16 +162,11 @@ const RSSIndex = async ({ params, searchParams }) => {
 											pathname: `${process.env.NEXT_PUBLIC_WEBSITE_URL}/job/sitemap.xml`,
 											query: {},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-outline-secondary btn-sm"
+										rel="noreferrer"
+										target="_blank"
 									>
-										<a
-											className="btn btn-outline-secondary btn-sm"
-											rel="noreferrer"
-											target="_blank"
-										>
-											<MdRssFeed color="#ee802f" size="25px" />
-										</a>
+										<MdRssFeed color="#ee802f" size="25px" />
 									</Link>
 								</li>
 								<li className="list-group-item">
@@ -221,16 +176,11 @@ const RSSIndex = async ({ params, searchParams }) => {
 											pathname: `${process.env.NEXT_PUBLIC_WEBSITE_URL}/job/feed.xml`,
 											query: {},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-outline-secondary btn-sm"
+										rel="noreferrer"
+										target="_blank"
 									>
-										<a
-											className="btn btn-outline-secondary btn-sm"
-											rel="noreferrer"
-											target="_blank"
-										>
-											<MdRssFeed color="#ee802f" size="25px" />
-										</a>
+										<MdRssFeed color="#ee802f" size="25px" />
 									</Link>
 								</li>
 							</ul>

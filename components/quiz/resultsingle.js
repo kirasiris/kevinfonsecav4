@@ -19,10 +19,9 @@ const Single = ({ object = {} }) => {
 							pathname: `/quiz/results/${object?._id}`,
 							query: {},
 						}}
-						passHref
-						legacyBehavior
+						className="btn btn-link btn-sm"
 					>
-						<a className="btn btn-link btn-sm">{object?.resourceId.title}</a>
+						{object?.resourceId.title}
 					</Link>
 				</div>
 				<div className="float-end">

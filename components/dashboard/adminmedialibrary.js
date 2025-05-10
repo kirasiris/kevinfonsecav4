@@ -209,12 +209,9 @@ const AdminMediaLibray = ({
 							pathname: "/dashboard/files",
 							query: { page: 1, limit: 10 },
 						}}
-						passHref
-						legacyBehavior
+						className="btn btn-link btn-sm float-start"
 					>
-						<a className="btn btn-link btn-sm float-start">
-							Files - ({currentResults} / {totalResults.files})
-						</a>
+						Files - ({currentResults} / {totalResults.files})
 					</Link>
 					<div className="btn-group float-end">
 						<button

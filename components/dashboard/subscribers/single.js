@@ -26,12 +26,9 @@ const Single = ({
 								pathname: `/course/${object?.resourceId?._id}/${object?.resourceId?.category}/${object?.resourceId?.sub_category}/${object?.resourceId?.slug}/index`,
 								query: {},
 							}}
-							passHref
-							legacyBehavior
+							className="blog-item__title-link"
 						>
-							<a className="blog-item__title-link">
-								{object?.resourceId?.title || "Untitled"}
-							</a>
+							{object?.resourceId?.title || "Untitled"}
 						</Link>
 					</h1>
 					<div className="blog-item__meta">
@@ -44,22 +41,18 @@ const Single = ({
 							pathname: `/course/${object?.resourceId?._id}/${object?.resourceId?.category}/${object?.resourceId?.sub_category}/${object?.resourceId?.slug}/index`,
 							query: {},
 						}}
-						passHref
-						legacyBehavior
+						className="blog-type-list__blog-thumbnail-link"
 					>
-						<a className="blog-type-list__blog-thumbnail-link">
-							<Image
-								src={
-									object?.resourceId?.files?.avatar?.location
-										?.secure_location ||
-									`https://source.unsplash.com/random/83x63`
-								}
-								className="blog-type-list__blog-thumbnail"
-								alt="Blog titles image"
-								width="83"
-								height="63"
-							/>
-						</a>
+						<Image
+							src={
+								object?.resourceId?.files?.avatar?.location?.secure_location ||
+								`https://source.unsplash.com/random/83x63`
+							}
+							className="blog-type-list__blog-thumbnail"
+							alt="Blog titles image"
+							width="83"
+							height="63"
+						/>
 					</Link>
 				</div>
 				<div className="blog-actions-ellipsis-menu">
@@ -70,12 +63,10 @@ const Single = ({
 									pathname: `/course/${object?.resourceId?._id}/${object?.resourceId?.category}/${object?.resourceId?.sub_category}/${object?.resourceId?.slug}/index`,
 									query: {},
 								}}
-								passHref
-								legacyBehavior
+								className="dropdown-item btn btn-link"
+								target="_blank"
 							>
-								<a className="dropdown-item btn btn-link" target="_blank">
-									View&nbsp;It
-								</a>
+								View&nbsp;It
 							</Link>
 							<DeleteModal
 								id={object._id ? object._id : object._id}

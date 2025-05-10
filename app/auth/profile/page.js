@@ -34,9 +34,7 @@ const AuthIndex = async ({ params, searchParams }) => {
 									<div className="col-6 mb-4">
 										<ul className="list-group list-group-flush">
 											<li className="list-group-item text-bg-secondary">
-												<Link href={`/auth/editbasics`} passHref legacyBehavior>
-													<a>BASICS</a>
-												</Link>
+												<Link href={`/auth/editbasics`}>BASICS</Link>
 											</li>
 											{auth.data.username && (
 												<li className="list-group-item">
@@ -104,7 +102,7 @@ const AuthIndex = async ({ params, searchParams }) => {
 									<div className="col-6 mb-4">
 										<ul className="list-group list-group-flush">
 											<li className="list-group-item text-bg-secondary">
-												<Link href={`/auth/editavatar`} passHref legacyBehavior>
+												<Link href={`/auth/editavatar`}>
 													AVATAR&nbsp;&&nbsp;COVER
 												</Link>
 											</li>
@@ -113,9 +111,7 @@ const AuthIndex = async ({ params, searchParams }) => {
 									<div className="col-6 mb-4">
 										<ul className="list-group list-group-flush">
 											<li className="list-group-item text-bg-secondary">
-												<Link href={`/auth/editabout`} passHref legacyBehavior>
-													<a>ABOUT</a>
-												</Link>
+												<Link href={`/auth/editabout`}>ABOUT</Link>
 											</li>
 											{auth.data.name && (
 												<li className="list-group-item">{auth.data.name}</li>
@@ -164,12 +160,8 @@ const AuthIndex = async ({ params, searchParams }) => {
 									<div className="col-6 mb-4">
 										<ul className="list-group list-group-flush">
 											<li className="list-group-item text-bg-secondary">
-												<Link
-													href={`/auth/editnotifications`}
-													passHref
-													legacyBehavior
-												>
-													<a>NOTIFICATIONS&nbsp;ON&nbsp;WEBSITE</a>
+												<Link href={`/auth/editnotifications`}>
+													NOTIFICATIONS&nbsp;ON&nbsp;WEBSITE
 												</Link>
 											</li>
 											<li className="list-group-item">
@@ -215,12 +207,8 @@ const AuthIndex = async ({ params, searchParams }) => {
 									<div className="col-6 mb-4">
 										<ul className="list-group list-group-flush">
 											<li className="list-group-item text-bg-secondary">
-												<Link
-													href={`/auth/editnotificationsemail`}
-													passHref
-													legacyBehavior
-												>
-													<a>NOTIFICATIONS&nbsp;BY&nbsp;EMAIL</a>
+												<Link href={`/auth/editnotificationsemail`}>
+													NOTIFICATIONS&nbsp;BY&nbsp;EMAIL
 												</Link>
 											</li>
 										</ul>
@@ -228,12 +216,8 @@ const AuthIndex = async ({ params, searchParams }) => {
 									<div className="col-6 mb-4">
 										<ul className="list-group list-group-flush">
 											<li className="list-group-item text-bg-secondary">
-												<Link
-													href={`/auth/edittwofactorauthentication`}
-													passHref
-													legacyBehavior
-												>
-													<a>2FA</a>
+												<Link href={`/auth/edittwofactorauthentication`}>
+													2FA
 												</Link>
 											</li>
 											<li className="list-group-item">
@@ -246,25 +230,15 @@ const AuthIndex = async ({ params, searchParams }) => {
 									<div className="col-6 mb-4">
 										<ul className="list-group list-group-flush">
 											<li className="list-group-item text-bg-secondary">
-												<Link
-													href={`/auth/editpassword`}
-													passHref
-													legacyBehavior
-												>
-													<a>PASSWORD</a>
-												</Link>
+												<Link href={`/auth/editpassword`}>PASSWORD</Link>
 											</li>
 										</ul>
 									</div>
 									<div className="col-6 mb-4">
 										<ul className="list-group list-group-flush">
 											<li className="list-group-item text-bg-danger">
-												<Link
-													href={`/auth/deleteaccount`}
-													passHref
-													legacyBehavior
-												>
-													<a>DELETE&nbsp;ACCOUNT&nbsp;(ITS&nbsp;A&nbsp;LINK)</a>
+												<Link href={`/auth/deleteaccount`}>
+													DELETE&nbsp;ACCOUNT&nbsp;(ITS&nbsp;A&nbsp;LINK)
 												</Link>
 											</li>
 										</ul>

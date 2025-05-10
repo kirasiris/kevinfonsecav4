@@ -21,8 +21,6 @@ const Single = ({ object = {}, imageWidth = "415", imageHeight = "207" }) => {
 				>
 					<Link
 						href={`/video/${object?._id}/${object?.category?._id}/${object?.category?.slug}/${object?.slug}/index`}
-						passHref
-						legacyBehavior
 					>
 						<Image
 							src={

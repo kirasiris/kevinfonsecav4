@@ -28,12 +28,9 @@ const Single = ({ object = {}, imageWidth = "415", imageHeight = "207" }) => {
 							<hr />
 							<Link
 								href={`/changelog/${object?._id}/${object?.slug}`}
-								passHref
-								legacyBehavior
+								className="btn btn-link border-secondary"
 							>
-								<a className="btn btn-link border-secondary">
-									&gt;&gt;&nbsp;{object?.title || "Untitled"}
-								</a>
+								&gt;&gt;&nbsp;{object?.title || "Untitled"}
 							</Link>
 						</Accordion.Body>
 					</Accordion.Item>

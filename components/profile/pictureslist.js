@@ -22,10 +22,9 @@ const PicturesList = ({ object = {}, objects = [], searchParams = {} }) => {
 												sort: `-createdAt`,
 											},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-link btn-sm"
 									>
-										<a className="btn btn-link btn-sm">All</a>
+										All
 									</Link>
 									<Link
 										href={{
@@ -36,10 +35,9 @@ const PicturesList = ({ object = {}, objects = [], searchParams = {} }) => {
 												sort: `-createdAt`,
 											},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-link btn-sm"
 									>
-										<a className="btn btn-link btn-sm">Posts</a>
+										Posts
 									</Link>
 									<Link
 										href={{
@@ -50,10 +48,9 @@ const PicturesList = ({ object = {}, objects = [], searchParams = {} }) => {
 												sort: `-createdAt`,
 											},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-link btn-sm"
 									>
-										<a className="btn btn-link btn-sm">Avatars</a>
+										Avatars
 									</Link>
 									<Link
 										href={{
@@ -64,10 +61,9 @@ const PicturesList = ({ object = {}, objects = [], searchParams = {} }) => {
 												sort: `-createdAt`,
 											},
 										}}
-										passHref
-										legacyBehavior
+										className="btn btn-link btn-sm"
 									>
-										<a className="btn btn-link btn-sm">Covers</a>
+										Covers
 									</Link>
 								</div>
 							</div>

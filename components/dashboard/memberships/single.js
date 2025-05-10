@@ -24,10 +24,9 @@ const Single = ({
 								pathname: `/dashboard/memberships/update/${object._id}`,
 								query: {},
 							}}
-							passHref
-							legacyBehavior
+							className="blog-item__title-link"
 						>
-							<a className="blog-item__title-link">{object.title}</a>
+							{object.title}
 						</Link>
 					</h1>
 					<div className="blog-item__meta">
@@ -44,12 +43,10 @@ const Single = ({
 									pathname: `/membership/read/${object._id}`,
 									query: {},
 								}}
-								passHref
-								legacyBehavior
+								className="dropdown-item btn btn-link"
+								target="_blank"
 							>
-								<a className="dropdown-item btn btn-link" target="_blank">
-									View&nbsp;It
-								</a>
+								View&nbsp;It
 							</Link>
 							{!object.active && (
 								<button

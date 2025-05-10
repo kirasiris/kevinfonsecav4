@@ -131,10 +131,9 @@ const Sidebar = ({ object = {}, objects = [] }) => {
 									sort: `-createdAt`,
 								},
 							}}
-							passHref
-							legacyBehavior
+							className="float-end"
 						>
-							<a className="float-end">View&nbsp;all</a>
+							View&nbsp;all
 						</Link>
 					</div>
 					<div className="card-body row g-2 p-0">
@@ -145,25 +144,22 @@ const Sidebar = ({ object = {}, objects = [] }) => {
 									pathname: `/profile/${photo.user._id}/${photo.user.username}/photos/${photo._id}`,
 									query: {},
 								}}
-								passHref
-								legacyBehavior
+								className="col"
 							>
-								<a className="col">
-									<Image
-										src={
-											photo.location.secure_location ||
-											`https://source.unsplash.com/random/150x150`
-										}
-										className={`${index}`}
-										width={130}
-										height={130}
-										alt={`${photo.user.username}'s profile avatars`}
-										style={{
-											objectFit: "cover",
-											margin: "1px",
-										}}
-									/>
-								</a>
+								<Image
+									src={
+										photo.location.secure_location ||
+										`https://source.unsplash.com/random/150x150`
+									}
+									className={`${index}`}
+									width={130}
+									height={130}
+									alt={`${photo.user.username}'s profile avatars`}
+									style={{
+										objectFit: "cover",
+										margin: "1px",
+									}}
+								/>
 							</Link>
 						))}
 					</div>

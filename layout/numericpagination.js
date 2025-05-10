@@ -110,11 +110,10 @@ const NumericPagination = ({
 				<li className={`page-item ${Number(pageNo) - 1 === 0 && `disabled`}`}>
 					<Link
 						href={`?page=1&limit=${Number(limit)}${newParams}`}
-						passHref
-						legacyBehavior
 						scroll={false}
+						className="page-link"
 					>
-						<a className="page-link">&laquo;&nbsp;First</a>
+						&laquo;&nbsp;First
 					</Link>
 				</li>
 				{/* Previous page link */}
@@ -123,11 +122,10 @@ const NumericPagination = ({
 						href={`?page=${Number(pageNo) - 1}&limit=${Number(
 							limit
 						)}${newParams}`}
-						passHref
-						legacyBehavior
+						className="page-link"
 						scroll={false}
 					>
-						<a className="page-link">&lsaquo;&nbsp;</a>
+						&lsaquo;&nbsp;
 					</Link>
 				</li>
 				{array.map((index) => {
@@ -141,15 +139,10 @@ const NumericPagination = ({
 							{index === "&laquo;" ? (
 								<Link
 									href={`?page=1&limit=${Number(limit)}${newParams}`}
-									passHref
-									legacyBehavior
+									className={`page-link${index === "..." ? " disabled" : ""}`}
 									scroll={false}
 								>
-									<a
-										className={`page-link${index === "..." ? " disabled" : ""}`}
-									>
-										{index}
-									</a>
+									{index}
 								</Link>
 							) : index === "&lsaquo;" ? (
 								pageNo !== 1 && (
@@ -157,17 +150,10 @@ const NumericPagination = ({
 										href={`?page=${Number(pageNo) - 1}&limit=${Number(
 											limit
 										)}${newParams}`}
-										passHref
-										legacyBehavior
+										className={`page-link${index === "..." ? " disabled" : ""}`}
 										scroll={false}
 									>
-										<a
-											className={`page-link${
-												index === "..." ? " disabled" : ""
-											}`}
-										>
-											{index}
-										</a>
+										{index}
 									</Link>
 								)
 							) : index === "&rsaquo;" ? (
@@ -176,17 +162,10 @@ const NumericPagination = ({
 										href={`?page=${Number(pageNo) + 1}&limit=${Number(
 											limit
 										)}${newParams}`}
-										passHref
-										legacyBehavior
+										className={`page-link${index === "..." ? " disabled" : ""}`}
 										scroll={false}
 									>
-										<a
-											className={`page-link${
-												index === "..." ? " disabled" : ""
-											}`}
-										>
-											{index}
-										</a>
+										{index}
 									</Link>
 								)
 							) : index === "&raquo;" ? (
@@ -194,28 +173,18 @@ const NumericPagination = ({
 									href={`?page=${Number(totalPages)}&limit=${Number(
 										limit
 									)}${newParams}`}
-									passHref
-									legacyBehavior
+									className={`page-link${index === "..." ? " disabled" : ""}`}
 									scroll={false}
 								>
-									<a
-										className={`page-link${index === "..." ? " disabled" : ""}`}
-									>
-										{index}
-									</a>
+									{index}
 								</Link>
 							) : (
 								<Link
 									href={`?page=${index}&limit=${Number(limit)}${newParams}`}
-									passHref
-									legacyBehavior
+									className={`page-link${index === "..." ? " disabled" : ""}`}
 									scroll={false}
 								>
-									<a
-										className={`page-link${index === "..." ? " disabled" : ""}`}
-									>
-										{index}
-									</a>
+									{index}
 								</Link>
 							)}
 						</li>
@@ -231,11 +200,10 @@ const NumericPagination = ({
 						href={`?page=${Number(pageNo) + 1}&limit=${Number(
 							limit
 						)}${newParams}`}
-						passHref
-						legacyBehavior
+						className="page-link"
 						scroll={false}
 					>
-						<a className="page-link">&rsaquo;&nbsp;</a>
+						&rsaquo;&nbsp;
 					</Link>
 				</li>
 				<li
@@ -247,11 +215,10 @@ const NumericPagination = ({
 						href={`?page=${Number(totalPages)}&limit=${Number(
 							limit
 						)}${newParams}`}
-						passHref
-						legacyBehavior
+						className="page-link"
 						scroll={false}
 					>
-						<a className="page-link">&raquo;&nbsp;Last</a>
+						&raquo;&nbsp;Last
 					</Link>
 				</li>
 			</ul>

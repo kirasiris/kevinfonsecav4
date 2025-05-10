@@ -10,14 +10,9 @@ const CreateCompanyLink = ({}) => {
 						pathname: `/noadmin/companies/create`,
 						query: {},
 					}}
-					passHref
-					legacyBehavior
+					className="text-bg-primary text-decoration-underline"
 				>
-					<a>
-						<b className="text-bg-primary text-decoration-underline">
-							Create company first
-						</b>
-					</a>
+					Create company first
 				</Link>
 			</p>
 		</div>

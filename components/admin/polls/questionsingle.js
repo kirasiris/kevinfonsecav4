@@ -22,10 +22,9 @@ const Single = ({
 						pathname: `/noadmin/polls/question/${object?._id}/update`,
 						query: {},
 					}}
-					passHref
-					legacyBehavior
+					className="me-1"
 				>
-					<a className="me-1">{object?.title}</a>
+					{object?.title}
 				</Link>
 			</div>
 			<div className="float-end">
@@ -40,10 +39,9 @@ const Single = ({
 											isAdmin: true,
 										},
 									}}
-									passHref
-									legacyBehavior
+									className="dropdown-item btn btn-link"
 								>
-									<a className="dropdown-item btn btn-link">View&nbsp;It</a>
+									View&nbsp;It
 								</Link>
 								<button
 									className="dropdown-item btn btn-sm"

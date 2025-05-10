@@ -29,11 +29,17 @@ const UploadPicture = async ({ params, searchParams }) => {
 							</div>
 							<div className="float-end">
 								<div className="btn-group">
-									<Link href="/auth/editavatar" passHref legacyBehavior>
-										<a className="btn btn-secondary btn-sm">Update avatar</a>
+									<Link
+										href="/auth/editavatar"
+										className="btn btn-secondary btn-sm"
+									>
+										Update avatar
 									</Link>
-									<Link href="/auth/editcover" passHref legacyBehavior>
-										<a className="btn btn-secondary btn-sm">Update cover</a>
+									<Link
+										href="/auth/editcover"
+										className="btn btn-secondary btn-sm"
+									>
+										Update cover
 									</Link>
 								</div>
 							</div>

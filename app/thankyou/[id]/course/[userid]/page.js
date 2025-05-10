@@ -60,12 +60,9 @@ const ThankYouRead = async ({ params, searchParams }) => {
 								<hr />
 								<Link
 									href={`${searchParams.returnpage}`}
-									passHref
-									legacyBehavior
+									className="btn btn-light btn-sm w-100"
 								>
-									<a className="btn btn-light btn-sm w-100">
-										Access&nbsp;to&nbsp;It!
-									</a>
+									Access&nbsp;to&nbsp;It!
 								</Link>
 							</div>
 						</div>

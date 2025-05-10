@@ -112,10 +112,9 @@ const VideoRead = async ({ params, searchParams }) => {
 											limit: 10,
 										},
 									}}
-									passHref
-									legacyBehavior
+									className="btn btn-dark btn-sm me-1"
 								>
-									<a className="btn btn-dark btn-sm me-1">Category</a>
+									Category
 								</Link>
 								<hr />
 								<div className="clearfix">
@@ -131,12 +130,9 @@ const VideoRead = async ({ params, searchParams }) => {
 													limit: undefined,
 												},
 											}}
-											passHref
-											legacyBehavior
+											className="btn btn-dark btn-sm me-1"
 										>
-											<a className="btn btn-dark btn-sm me-1">
-												{video.data.language}
-											</a>
+											{video.data.language}
 										</Link>
 										<ReportModal postId={1} postType="video" onModel="Video" />
 									</div>

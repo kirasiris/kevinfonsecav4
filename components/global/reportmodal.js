@@ -27,7 +27,7 @@ const ReportModal = ({
 
 	const sendReport = async (e) => {
 		e.preventDefault();
-		await fetchurl(`/reports/${resourceId}`, "POST", "no-cache", {
+		await fetchurl(`/global/reports/${resourceId}`, "POST", "no-cache", {
 			...reportData,
 			postType: postType,
 			onModel: onModel,

@@ -62,16 +62,11 @@ const Jumbotron = ({
 											sort: `-createdAt`,
 										},
 									}}
-									passHref
-									legacyBehavior
+									className={`nav-link ${isActive(
+										`/profile/${object?.data?._id}/${object?.data?.username}`
+									)}`}
 								>
-									<a
-										className={`nav-link ${isActive(
-											`/profile/${object?.data?._id}/${object?.data?.username}`
-										)}`}
-									>
-										Posts
-									</a>
+									Posts
 								</Link>
 								<Link
 									href={{
@@ -82,16 +77,11 @@ const Jumbotron = ({
 											sort: `-createdAt`,
 										},
 									}}
-									passHref
-									legacyBehavior
+									className={`nav-link ${isActive(
+										`/profile/${object?.data?._id}/${object?.data?.username}/social/friends`
+									)}`}
 								>
-									<a
-										className={`nav-link ${isActive(
-											`/profile/${object?.data?._id}/${object?.data?.username}/social/friends`
-										)}`}
-									>
-										Socials
-									</a>
+									Socials
 								</Link>
 								<Link
 									href={{
@@ -102,16 +92,11 @@ const Jumbotron = ({
 											sort: `-createdAt`,
 										},
 									}}
-									passHref
-									legacyBehavior
+									className={`nav-link ${isActive(
+										`/profile/${object?.data?._id}/${object?.data?.username}/photos`
+									)}`}
 								>
-									<a
-										className={`nav-link ${isActive(
-											`/profile/${object?.data?._id}/${object?.data?.username}/photos`
-										)}`}
-									>
-										Photos
-									</a>
+									Photos
 								</Link>
 								<Link
 									href={{
@@ -122,32 +107,22 @@ const Jumbotron = ({
 											sort: `-createdAt`,
 										},
 									}}
-									passHref
-									legacyBehavior
+									className={`nav-link ${isActive(
+										`/profile/${object?.data?._id}/${object?.data?.username}/videos`
+									)}`}
 								>
-									<a
-										className={`nav-link ${isActive(
-											`/profile/${object?.data?._id}/${object?.data?.username}/videos`
-										)}`}
-									>
-										Videos
-									</a>
+									Videos
 								</Link>
 								<Link
 									href={{
 										pathname: `/profile/${object?.data?._id}/${object?.data?.username}/map`,
 										query: {},
 									}}
-									passHref
-									legacyBehavior
+									className={`nav-link ${isActive(
+										`/profile/${object?.data?._id}/${object?.data?.username}/map`
+									)}`}
 								>
-									<a
-										className={`nav-link ${isActive(
-											`/profile/${object?.data?._id}/${object?.data?.username}/map`
-										)}`}
-									>
-										Visit Registrations
-									</a>
+									Visit Registrations
 								</Link>
 							</nav>
 						</div>

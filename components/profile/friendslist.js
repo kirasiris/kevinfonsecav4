@@ -18,10 +18,9 @@ const List = ({ object = {}, objects = [], searchParams = {} }) => {
 								limit: 10,
 							},
 						}}
-						passHref
-						legacyBehavior
+						className="btn btn-primary btn-sm me-1"
 					>
-						<a className="btn btn-primary btn-sm me-1">Friends</a>
+						Friends
 					</Link>
 					<Link
 						href={{
@@ -31,10 +30,9 @@ const List = ({ object = {}, objects = [], searchParams = {} }) => {
 								limit: 10,
 							},
 						}}
-						passHref
-						legacyBehavior
+						className="btn btn-primary btn-sm me-1"
 					>
-						<a className="btn btn-primary btn-sm me-1">Followers</a>
+						Followers
 					</Link>
 					<Link
 						href={{
@@ -44,10 +42,9 @@ const List = ({ object = {}, objects = [], searchParams = {} }) => {
 								limit: 10,
 							},
 						}}
-						passHref
-						legacyBehavior
+						className="btn btn-primary btn-sm"
 					>
-						<a className="btn btn-primary btn-sm">Following</a>
+						Following
 					</Link>
 				</div>
 			</div>

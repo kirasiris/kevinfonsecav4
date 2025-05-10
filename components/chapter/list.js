@@ -48,12 +48,9 @@ const List = ({
 															pathname: `/noadmin/courses/lesson/${object.data._id}/create`,
 															query: {},
 														}}
-														passHref
-														legacyBehavior
+														className="btn btn-outline-secondary btn-sm"
 													>
-														<a className="btn btn-outline-secondary btn-sm">
-															Add&nbsp;lesson
-														</a>
+														Add&nbsp;lesson
 													</Link>
 												</div>
 											)}
@@ -71,15 +68,11 @@ const List = ({
 														<div className="float-start">
 															<Link
 																href={`/course/${object.data._id}/${object.data.category}/${object.data.sub_category}/${object.data.slug}/video/${lesson._id}`}
-																passHref
-																legacyBehavior
 															>
-																<a>
-																	<span className="badge bg-secondary me-1">
-																		{lesson.orderingNumber}
-																	</span>
-																	{lesson.title}
-																</a>
+																<span className="badge bg-secondary me-1">
+																	{lesson.orderingNumber}
+																</span>
+																{lesson.title}
 															</Link>
 														</div>
 														<div className="float-end">
@@ -144,10 +137,9 @@ const List = ({
 												sort: `-createdAt`,
 											},
 										}}
-										passHref
-										legacyBehavior
+										className="float-end"
 									>
-										<a className="float-end">View&nbsp;all</a>
+										View&nbsp;all
 									</Link>
 								</div>
 								<div className="card-body row g-2 p-0">
@@ -161,24 +153,19 @@ const List = ({
 													limit: 50,
 												},
 											}}
-											passHref
-											legacyBehavior
+											className="col"
 										>
-											<a className="col">
-												<Image
-													src={
-														student.user.files.avatar.location.secure_location
-													}
-													className={`${index}`}
-													width={130}
-													height={130}
-													alt={`${student.user.username}'s profile avatars`}
-													style={{
-														objectFit: "cover",
-														margin: "1px",
-													}}
-												/>
-											</a>
+											<Image
+												src={student.user.files.avatar.location.secure_location}
+												className={`${index}`}
+												width={130}
+												height={130}
+												alt={`${student.user.username}'s profile avatars`}
+												style={{
+													objectFit: "cover",
+													margin: "1px",
+												}}
+											/>
 										</Link>
 									))}
 								</div>

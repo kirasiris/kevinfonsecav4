@@ -124,10 +124,8 @@ const Login = async ({ params, searchParams }) => {
 										pathname: `/auth/register`,
 										query: {},
 									}}
-									passHref
-									legacyBehavior
 								>
-									<a>Register</a>
+									Register
 								</Link>
 								&nbsp;|&nbsp;
 								<Link
@@ -135,10 +133,8 @@ const Login = async ({ params, searchParams }) => {
 										pathname: `/auth/recover`,
 										query: {},
 									}}
-									passHref
-									legacyBehavior
 								>
-									<a>Forgot password?</a>
+									Forgot password?
 								</Link>
 							</div>
 						</div>

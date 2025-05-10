@@ -26,32 +26,30 @@ const Menu = ({
 						aria-controls="responsive-navbar-nav"
 						className="me-1"
 					/>
-					<Link href={canonical} passHref legacyBehavior>
-						<a
-							className={`navbar-brand`}
-							target="_blank"
-							style={{ verticalAlign: "middle" }}
-						>
-							<Image
-								alt={title}
-								src={logo}
-								width="150"
-								height="40"
-								className="d-inline-block align-text-top"
-							/>
-						</a>
+					<Link
+						href={canonical}
+						className={`navbar-brand`}
+						target="_blank"
+						style={{ verticalAlign: "middle" }}
+					>
+						<Image
+							alt={title}
+							src={logo}
+							width="150"
+							height="40"
+							className="d-inline-block align-text-top"
+						/>
 					</Link>
 				</div>
 				<Navbar.Collapse id="responsive-navbar-nav">
 					<Nav as="ul" className="me-auto">
 						<li className="nav-item mx-1">
-							<Link href={canonical} passHref legacyBehavior>
-								<a
-									className={`nav-link ${isActive(canonical)}`}
-									aria-current="page"
-								>
-									Home
-								</a>
+							<Link
+								href={canonical}
+								className={`nav-link ${isActive(canonical)}`}
+								aria-current="page"
+							>
+								Home
 							</Link>
 						</li>
 						<li className="nav-item mx-1">
@@ -64,15 +62,10 @@ const Menu = ({
 										sort: `-createdAt`,
 									},
 								}}
-								passHref
-								legacyBehavior
+								className={`nav-link ${isActive(`${canonical}/quiz`)}`}
+								aria-current="page"
 							>
-								<a
-									className={`nav-link ${isActive(`${canonical}/quiz`)}`}
-									aria-current="page"
-								>
-									Quizzes
-								</a>
+								Quizzes
 							</Link>
 						</li>
 					</Nav>
@@ -86,17 +79,10 @@ const Menu = ({
 												pathname: `${canonical}/noadmin`,
 												query: {},
 											}}
-											passHref
-											legacyBehavior
+											className={`nav-link ${isActive(`${canonical}/noadmin`)}`}
+											aria-current="page"
 										>
-											<a
-												className={`nav-link ${isActive(
-													`${canonical}/noadmin`
-												)}`}
-												aria-current="page"
-											>
-												Admin
-											</a>
+											Admin
 										</Link>
 									</li>
 								)}
@@ -106,17 +92,10 @@ const Menu = ({
 											pathname: `${canonical}/dashboard`,
 											query: {},
 										}}
-										passHref
-										legacyBehavior
+										className={`nav-link ${isActive(`${canonical}/dashboard`)}`}
+										aria-current="page"
 									>
-										<a
-											className={`nav-link ${isActive(
-												`${canonical}/dashboard`
-											)}`}
-											aria-current="page"
-										>
-											Dashboard
-										</a>
+										Dashboard
 									</Link>
 								</li>
 								<li className="nav-item">
@@ -125,17 +104,12 @@ const Menu = ({
 											pathname: `${canonical}/auth/profile`,
 											query: {},
 										}}
-										passHref
-										legacyBehavior
+										className={`nav-link ${isActive(
+											`${canonical}/auth/profile`
+										)}`}
+										aria-current="page"
 									>
-										<a
-											className={`nav-link ${isActive(
-												`${canonical}/auth/profile`
-											)}`}
-											aria-current="page"
-										>
-											Account
-										</a>
+										Account
 									</Link>
 								</li>
 								<li className="nav-item">
@@ -144,17 +118,12 @@ const Menu = ({
 											pathname: `${canonical}/profile/${auth?.data?._id}/${auth?.data?.username}`,
 											query: {},
 										}}
-										passHref
-										legacyBehavior
+										className={`nav-link ${isActive(
+											`${canonical}/profile/${auth?.data?._id}/${auth?.data?.username}`
+										)}`}
+										aria-current="page"
 									>
-										<a
-											className={`nav-link ${isActive(
-												`${canonical}/profile/${auth?.data?._id}/${auth?.data?.username}`
-											)}`}
-											aria-current="page"
-										>
-											{auth.data.username}
-										</a>
+										{auth.data.username}
 									</Link>
 								</li>
 								<li className="nav-item">
@@ -175,32 +144,20 @@ const Menu = ({
 										pathname: `${canonical}/auth/login`,
 										query: {},
 									}}
-									passHref
-									legacyBehavior
+									className={`nav-link ${isActive(`${canonical}/auth/login`)}`}
 								>
-									<a
-										className={`nav-link ${isActive(
-											`${canonical}/auth/login`
-										)}`}
-									>
-										Log In
-									</a>
+									Log In
 								</Link>
 								<Link
 									href={{
 										pathname: `${canonical}/auth/register`,
 										query: {},
 									}}
-									passHref
-									legacyBehavior
+									className={`nav-link ${isActive(
+										`${canonical}/auth/register`
+									)}`}
 								>
-									<a
-										className={`nav-link ${isActive(
-											`${canonical}/auth/register`
-										)}`}
-									>
-										Register
-									</a>
+									Register
 								</Link>
 							</>
 						)}

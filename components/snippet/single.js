@@ -15,11 +15,7 @@ const Single = ({
 		<Suspense fallback={<Loading />}>
 			<article className={`${object?._id} col`}>
 				<div className={`card ${object?.featured && "text-bg-primary"} mb-4`}>
-					<Link
-						href={`/snippet/${object?._id}/${object?.slug}`}
-						passHref
-						legacyBehavior
-					>
+					<Link href={`/snippet/${object?._id}/${object?.slug}`}>
 						<Image
 							src={
 								object?.files?.avatar?.location?.secure_location ||
@@ -47,10 +43,9 @@ const Single = ({
 						)}
 						<Link
 							href={`/snippet/${object?._id}/${object?.slug}`}
-							passHref
-							legacyBehavior
+							className="btn btn-sm btn-secondary"
 						>
-							<a className="btn btn-sm btn-secondary">Read&nbsp;more</a>
+							Read&nbsp;more
 						</Link>
 					</div>
 				</div>

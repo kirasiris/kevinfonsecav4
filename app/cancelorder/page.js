@@ -35,8 +35,8 @@ const CancelOrderRead = async ({ params, searchParams }) => {
 								<p className="lead">
 									Please,&nbsp;let&nbsp;me&nbsp;know&nbsp;what&nbsp;was&nbsp;wrong&nbsp;with&nbsp;it&nbsp;by&nbsp;sending&nbsp;a
 									message&nbsp;via&nbsp;our&nbsp;
-									<Link href={`/contact`} passHref legacyBehavior>
-										<a className="btn btn-light btn-sm">contact page</a>
+									<Link href={`/contact`} className="btn btn-light btn-sm">
+										contact page
 									</Link>
 								</p>
 							</div>

@@ -29,10 +29,9 @@ const QuizResultsRead = async ({ params, searchParams }) => {
 							page: 1,
 						},
 					}}
-					passHref
-					legacyBehavior
+					className="btn btn-secondary btn-sm"
 				>
-					<a className="btn btn-secondary btn-sm">Take&nbsp;test&nbsp;again</a>
+					Take&nbsp;test&nbsp;again
 				</Link>
 			</div>
 		);

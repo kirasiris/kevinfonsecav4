@@ -16,11 +16,7 @@ const AuthorBox = ({ author = {}, imageWidth = "64", imageHeight = "64" }) => {
 	return (
 		<div className="d-flex my-4" id={`media comment-${author?._id}`}>
 			<div className="flex-shrink-0">
-				<Link
-					href={`/profile/${author?._id}/${author?.username}`}
-					passHref
-					legacyBehavior
-				>
+				<Link href={`/profile/${author?._id}/${author?.username}`}>
 					<Image
 						src={
 							author?.files?.avatar?.location?.secure_location ||
@@ -37,11 +33,7 @@ const AuthorBox = ({ author = {}, imageWidth = "64", imageHeight = "64" }) => {
 				</Link>
 			</div>
 			<div className="flex-grow-1 ms-3" style={{ marginTop: "-6px" }}>
-				<Link
-					href={`/profile/${author?._id}/${author?.username}`}
-					passHref
-					legacyBehavior
-				>
+				<Link href={`/profile/${author?._id}/${author?.username}`}>
 					{author?.username}
 				</Link>
 				<ParseHtml text={author?.bio} />

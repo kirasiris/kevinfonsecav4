@@ -1,9 +1,9 @@
 "use client";
+import { useState } from "react";
+import Link from "next/link";
 import Single from "../comment/single";
 import NumericPagination from "@/layout/numericpagination";
 import ErrorPage from "@/layout/errorpage";
-import { useState } from "react";
-import Link from "next/link";
 
 const CommentBox = ({
 	auth = {},
@@ -133,10 +133,8 @@ const CommentBox = ({
 							pathname: allLink,
 							query: {},
 						}}
-						passHref
-						legacyBehavior
 					>
-						<a>{pageText}</a>
+						{pageText}
 					</Link>
 					: {objects?.countAll}
 				</h5>

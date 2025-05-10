@@ -37,10 +37,8 @@ const Sidebar = ({}) => {
 								decrypt: true,
 							},
 						}}
-						passHref
-						legacyBehavior
 					>
-						<a>NSFW</a>
+						NSFW
 					</Link>
 				</div>
 			</div>

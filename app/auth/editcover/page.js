@@ -29,11 +29,17 @@ const UpdateCover = async ({ params, searchParams }) => {
 							</div>
 							<div className="float-end">
 								<div className="btn-group">
-									<Link href="/auth/uploadpicture" passHref legacyBehavior>
-										<a className="btn btn-secondary btn-sm">Take a picture</a>
+									<Link
+										href="/auth/uploadpicture"
+										className="btn btn-secondary btn-sm"
+									>
+										Take a picture
 									</Link>
-									<Link href="/auth/editavatar" passHref legacyBehavior>
-										<a className="btn btn-secondary btn-sm">Update avatar</a>
+									<Link
+										href="/auth/editavatar"
+										className="btn btn-secondary btn-sm"
+									>
+										Update avatar
 									</Link>
 								</div>
 							</div>

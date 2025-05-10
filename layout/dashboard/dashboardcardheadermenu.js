@@ -28,12 +28,9 @@ const DashboardCardHeaderMenu = ({
 							pathname: allLink,
 							query: { page: 1, limit: 10 },
 						}}
-						passHref
-						legacyBehavior
+						className="btn btn-link btn-sm"
 					>
-						<a className="btn btn-link btn-sm">
-							{pageText} - ({currentResults} / {totalResults})
-						</a>
+						{pageText} - ({currentResults} / {totalResults})
 					</Link>
 					<form className="d-none d-md-block d-lg-block d-xl-block d-xxl-block">
 						<div className="input-group">
@@ -68,10 +65,9 @@ const DashboardCardHeaderMenu = ({
 								pathname: addLink,
 								query: {},
 							}}
-							passHref
-							legacyBehavior
+							className="btn btn-primary btn-sm"
 						>
-							<a className="btn btn-primary btn-sm">Add new</a>
+							Add new
 						</Link>
 					)}
 					<TrashAllModal action={handleTrashAllFunction} />

@@ -23,15 +23,10 @@ const List = ({
 								sort: `-createdAt`,
 							},
 						}}
-						passHref
-						legacyBehavior
+						className="btn btn-secondary btn-sm me-1"
+						style={{ marginBottom: "4px" }}
 					>
-						<a
-							className="btn btn-secondary btn-sm me-1"
-							style={{ marginBottom: "4px" }}
-						>
-							All
-						</a>
+						All
 					</Link>
 					{categories.data?.length > 0 &&
 						categories.data
@@ -47,15 +42,10 @@ const List = ({
 											sort: `-createdAt`,
 										},
 									}}
-									passHref
-									legacyBehavior
+									className="btn btn-primary btn-sm me-1"
+									style={{ marginBottom: "4px" }}
 								>
-									<a
-										className="btn btn-primary btn-sm me-1"
-										style={{ marginBottom: "4px" }}
-									>
-										{category.title}
-									</a>
+									{category.title}
 								</Link>
 							))}
 				</div>

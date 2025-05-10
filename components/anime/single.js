@@ -17,8 +17,6 @@ const Single = ({
 				<div className={`card ${object?.featured && "text-bg-primary"} mb-4`}>
 					<Link
 						href={`/blog/${object?._id}/${object?.category?._id}/${object?.category?.slug}/${object?.slug}`}
-						passHref
-						legacyBehavior
 					>
 						<Image
 							src={
@@ -51,10 +49,9 @@ const Single = ({
 						<hr />
 						<Link
 							href={`/blog/${object?._id}/${object?.category?._id}/${object?.category?.slug}/${object?.slug}`}
-							passHref
-							legacyBehavior
+							className="btn btn-sm btn-secondary"
 						>
-							<a className="btn btn-sm btn-secondary">Read&nbsp;more</a>
+							Read&nbsp;more
 						</Link>
 					</div>
 				</div>

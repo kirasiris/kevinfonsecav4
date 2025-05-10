@@ -167,12 +167,9 @@ const LiveCode = ({
 								pathname: `/snippet/full/${object._id}/${object.slug}`,
 								query: {},
 							}}
-							passHref
-							legacyBehavior
+							className="btn btn-link btn-sm"
 						>
-							<a className="btn btn-link btn-sm">
-								<FaExternalLinkAlt />
-							</a>
+							<FaExternalLinkAlt />
 						</Link>
 					</div>
 				</div>

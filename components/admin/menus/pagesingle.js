@@ -22,15 +22,12 @@ const Single = ({
 						pathname: `/noadmin/menus/page/${object?._id}/update`,
 						query: {},
 					}}
-					passHref
-					legacyBehavior
+					className="me-1"
 				>
-					<a className="me-1">
-						<span className="badge bg-secondary me-1">
-							{object?.orderingNumber}
-						</span>
-						{object?.title}
-					</a>
+					<span className="badge bg-secondary me-1">
+						{object?.orderingNumber}
+					</span>
+					{object?.title}
 				</Link>
 				<span className="badge bg-dark me-1">{object?.rel}</span>
 				<span className="badge bg-dark me-1">{object?.target}</span>
@@ -48,10 +45,9 @@ const Single = ({
 											isAdmin: true,
 										},
 									}}
-									passHref
-									legacyBehavior
+									className="dropdown-item btn btn-link"
 								>
-									<a className="dropdown-item btn btn-link">View&nbsp;It</a>
+									View&nbsp;It
 								</Link>
 								<button
 									className="dropdown-item btn btn-sm"

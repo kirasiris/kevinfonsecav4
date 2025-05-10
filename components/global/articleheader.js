@@ -24,12 +24,9 @@ const ArticleHeader = ({ object = {}, url = `#!` }) => {
 							limit: 10,
 						},
 					}}
-					passHref
-					legacyBehavior
+					className="badge bg-secondary text-decoration-none link-light"
 				>
-					<a className="badge bg-secondary text-decoration-none link-light">
-						{object?.data?.category?.title}
-					</a>
+					{object?.data?.category?.title}
 				</Link>
 			)}
 		</div>

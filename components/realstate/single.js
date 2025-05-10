@@ -10,11 +10,7 @@ const Single = ({ object = {}, imageWidth = "415", imageHeight = "207" }) => {
 			<article className={`${object?._id} col-lg-6`}>
 				<div className={`card ${object?.featured && "text-bg-primary"} mb-4`}>
 					<div>
-						<Link
-							href={`/realstate/${object?._id}/${object?.slug}`}
-							passHref
-							legacyBehavior
-						>
+						<Link href={`/realstate/${object?._id}/${object?.slug}`}>
 							<Image
 								src={
 									object?.files?.avatar?.location.secure_location ||
@@ -86,10 +82,9 @@ const Single = ({ object = {}, imageWidth = "415", imageHeight = "207" }) => {
 						<div className="float-end">
 							<Link
 								href={`/realstate/${object?._id}/${object?.slug}`}
-								passHref
-								legacyBehavior
+								className="btn btn-sm btn-secondary"
 							>
-								<a className="btn btn-sm btn-secondary">Read&nbsp;more</a>
+								Read&nbsp;more
 							</Link>
 						</div>
 					</div>

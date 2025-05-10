@@ -22,10 +22,9 @@ const DynamicCards = ({
 							pathname: myLink,
 							query: myQuery,
 						}}
-						passHref
-						legacyBehavior
+						className="btn btn-link btn-sm"
 					>
-						<a className="btn btn-link btn-sm">View all</a>
+						View all
 					</Link>
 				</div>
 			</div>

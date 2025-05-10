@@ -151,12 +151,9 @@ const Jumbotron = ({
 												limit: 32,
 											},
 										}}
-										passHref
-										legacyBehavior
+										className="badge bg-dark text-decoration-none"
 									>
-										<a className="badge bg-dark text-decoration-none">
-											{object.data.category}
-										</a>
+										{object.data.category}
 									</Link>
 									&nbsp;/&nbsp;
 									<Link
@@ -167,12 +164,9 @@ const Jumbotron = ({
 												limit: 32,
 											},
 										}}
-										passHref
-										legacyBehavior
+										className="badge bg-dark text-decoration-none"
 									>
-										<a className="badge bg-dark text-decoration-none">
-											{object.data.sub_category}
-										</a>
+										{object.data.sub_category}
 									</Link>
 								</p>
 								{/* author */}
@@ -269,12 +263,9 @@ const Jumbotron = ({
 											returnpage: `/course/${object.data._id}/${object.data.category}/${object.data.sub_category}/${object.data.slug}/index`,
 										},
 									}}
-									passHref
-									legacyBehavior
+									className="btn btn-dark btn-sm w-100 mb-3"
 								>
-									<a className="btn btn-dark btn-sm w-100 mb-3">
-										Login to Enroll
-									</a>
+									Login to Enroll
 								</Link>
 							)}
 						</div>

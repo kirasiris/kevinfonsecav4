@@ -21,10 +21,9 @@ const Single = ({ object = {} }) => {
 								_id: object?._id,
 							},
 						}}
-						passHref
-						legacyBehavior
+						className="btn btn-link btn-sm"
 					>
-						<a className="btn btn-link btn-sm">{object?.title}</a>
+						{object?.title}
 					</Link>
 				</div>
 				<div className="float-end">

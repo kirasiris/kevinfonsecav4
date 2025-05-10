@@ -77,10 +77,8 @@ const Recover = async ({ params, searchParams }) => {
 										pathname: `/auth/login`,
 										query: {},
 									}}
-									passHref
-									legacyBehavior
 								>
-									<a>Login</a>
+									Login
 								</Link>
 								&nbsp;|&nbsp;
 								<Link
@@ -88,10 +86,8 @@ const Recover = async ({ params, searchParams }) => {
 										pathname: `/auth/register`,
 										query: {},
 									}}
-									passHref
-									legacyBehavior
 								>
-									<a>Register</a>
+									Register
 								</Link>
 							</div>
 						</div>

@@ -9,12 +9,12 @@ import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
 
 async function getFiles(params) {
-	const res = await fetchurl(`/files${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/files${params}`, "GET", "no-cache");
 	return res;
 }
 
 async function getCategories(params) {
-	const res = await fetchurl(`/categories${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/categories${params}`, "GET", "no-cache");
 	return res;
 }
 
@@ -40,7 +40,7 @@ const CreateTheme = async ({ params, searchParams }) => {
 			github_readme: formData.get("github_readme"),
 			files: { avatar: formData.get("file") },
 		};
-		await fetchurl(`/themes`, "POST", "no-cache", {
+		await fetchurl(`/noadmin/themes`, "POST", "no-cache", {
 			...rawFormData,
 			postType: "theme",
 		});

@@ -9,12 +9,12 @@ import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
 
 async function getFiles(params) {
-	const res = await fetchurl(`/files${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/files${params}`, "GET", "no-cache");
 	return res;
 }
 
 async function getLesson(params) {
-	const res = await fetchurl(`/videos${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/videos${params}`, "GET", "no-cache");
 	if (!res.success) notFound();
 	return res;
 }
@@ -48,7 +48,12 @@ const UpdateLesson = async ({ params, searchParams }) => {
 			files: { video_url: formData.get("file") },
 			address: "4442 Jackson Blvd, Columbia, SC 29209",
 		};
-		await fetchurl(`/videos/${awtdParams.id}`, "PUT", "no-cache", rawFormData);
+		await fetchurl(
+			`/noadmin/videos/${awtdParams.id}`,
+			"PUT",
+			"no-cache",
+			rawFormData
+		);
 		redirect(`/noadmin/courses/read/${lesson?.data?.resourceId}`);
 	};
 

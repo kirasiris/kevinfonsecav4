@@ -4,7 +4,7 @@ import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
 
 async function getSetting(params) {
-	const res = await fetchurl(`/settings${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/settings${params}`, "GET", "no-cache");
 	if (!res.success) notFound();
 	return res;
 }
@@ -31,7 +31,7 @@ const UpdateSetting = async ({ params, searchParams }) => {
 			language: formData.get("language"),
 			google_api: formData.get("google_api"),
 		};
-		await fetchurl(`/settings/${awtdParams.id}`, "PUT", "no-cache", {
+		await fetchurl(`/noadmin/settings/${awtdParams.id}`, "PUT", "no-cache", {
 			...rawFormData,
 			calendar: {
 				availableDays: formData.getAll("available_days"),

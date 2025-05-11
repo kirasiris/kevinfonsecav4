@@ -9,7 +9,7 @@ import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
 
 async function getJob(params) {
-	const res = await fetchurl(`/jobs${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/jobs${params}`, "GET", "no-cache");
 	if (!res.success) notFound();
 	return res;
 }
@@ -46,7 +46,7 @@ const UpdateJob = async ({ params, searchParams }) => {
 			status: formData.get("status"),
 		};
 
-		await fetchurl(`/jobs/${awtdParams.id}`, "PUT", "no-cache", {
+		await fetchurl(`/noadmin/jobs/${awtdParams.id}`, "PUT", "no-cache", {
 			...rawFormData,
 		});
 		redirect(`/noadmin/companies/read/${job?.data?.resourceId}`);

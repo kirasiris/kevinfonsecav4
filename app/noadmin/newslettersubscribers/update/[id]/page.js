@@ -12,7 +12,7 @@ import FormButtons from "@/components/global/formbuttons";
 
 async function getNewsletterSubscriber(params) {
 	const res = await fetchurl(
-		`/newslettersubscribers${params}`,
+		`/global/newslettersubscribers${params}`,
 		"GET",
 		"no-cache"
 	);
@@ -33,7 +33,7 @@ const UpdateNewsletterSubscriber = async ({ params, searchParams }) => {
 			email: formData.get("email"),
 		};
 		await fetchurl(
-			`/newslettersubscribers/${awtdParams.id}`,
+			`/noadmin/newslettersubscribers/${awtdParams.id}`,
 			"PUT",
 			"no-cache",
 			rawFormData

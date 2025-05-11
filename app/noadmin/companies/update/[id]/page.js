@@ -9,12 +9,12 @@ import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
 
 async function getFiles(params) {
-	const res = await fetchurl(`/files${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/files${params}`, "GET", "no-cache");
 	return res;
 }
 
 async function getCompany(params) {
-	const res = await fetchurl(`/companies${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/companies${params}`, "GET", "no-cache");
 	if (!res.success) notFound();
 	return res;
 }
@@ -40,7 +40,7 @@ const UpdateCompany = async ({ params, searchParams }) => {
 			files: { avatar: formData.get("file") },
 		};
 		await fetchurl(
-			`/companies/${awtdParams.id}`,
+			`/noadmin/companies/${awtdParams.id}`,
 			"PUT",
 			"no-cache",
 			rawFormData

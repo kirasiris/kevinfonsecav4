@@ -18,7 +18,7 @@ const CreateSnippet = async ({ params, searchParams }) => {
 			commented: formData.get("commented"),
 			status: formData.get("status"),
 		};
-		await fetchurl(`/snippets`, "POST", "no-cache", rawFormData);
+		await fetchurl(`/noadmin/snippets`, "POST", "no-cache", rawFormData);
 		redirect(`/noadmin/snippets`);
 	};
 

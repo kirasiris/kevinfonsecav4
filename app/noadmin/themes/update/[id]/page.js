@@ -9,17 +9,17 @@ import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
 
 async function getFiles(params) {
-	const res = await fetchurl(`/files${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/files${params}`, "GET", "no-cache");
 	return res;
 }
 
 async function getCategories(params) {
-	const res = await fetchurl(`/categories${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/categories${params}`, "GET", "no-cache");
 	return res;
 }
 
 async function getTheme(params) {
-	const res = await fetchurl(`/themes${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/themes${params}`, "GET", "no-cache");
 	if (!res.success) notFound();
 	return res;
 }
@@ -50,7 +50,12 @@ const UpdateTheme = async ({ params, searchParams }) => {
 			github_readme: formData.get("github_readme"),
 			files: { avatar: formData.get("file") },
 		};
-		await fetchurl(`/themes/${awtdParams.id}`, "PUT", "no-cache", rawFormData);
+		await fetchurl(
+			`/noadmin/themes/${awtdParams.id}`,
+			"PUT",
+			"no-cache",
+			rawFormData
+		);
 		redirect(`/noadmin/themes`);
 	};
 

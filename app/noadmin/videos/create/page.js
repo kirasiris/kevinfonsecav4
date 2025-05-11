@@ -15,12 +15,12 @@ import {
 import { redirect } from "next/navigation";
 
 async function getPlaylists(params) {
-	const res = await fetchurl(`/playlists${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/playlists${params}`, "GET", "no-cache");
 	return res;
 }
 
 async function getCategories(params) {
-	const res = await fetchurl(`/categories${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/categories${params}`, "GET", "no-cache");
 	return res;
 }
 
@@ -35,7 +35,7 @@ const CreateVideo = async ({ params, searchParams }) => {
 		"use server";
 		const rawFormData = {};
 
-		await fetchurl(`/videos`, "POST", "no-cache", {
+		await fetchurl(`/noadmin/videos`, "POST", "no-cache", {
 			...rawFormData,
 		});
 		redirect(`/noadmin/videos`);

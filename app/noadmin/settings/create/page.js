@@ -22,7 +22,7 @@ const CreateSetting = async ({ params, searchParams }) => {
 			language: formData.get("language"),
 			google_api: formData.get("google_api"),
 		};
-		await fetchurl(`/settings`, "POST", "no-cache", {
+		await fetchurl(`/noadmin/settings`, "POST", "no-cache", {
 			...rawFormData,
 			calendar: {
 				availableDays: formData.getAll("available_days"),

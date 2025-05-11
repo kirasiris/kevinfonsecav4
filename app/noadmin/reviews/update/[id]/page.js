@@ -9,7 +9,7 @@ import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
 
 async function getReview(params) {
-	const res = await fetchurl(`/comments${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/comments${params}`, "GET", "no-cache");
 	if (!res.success) notFound();
 	return res;
 }
@@ -30,7 +30,7 @@ const UpdateReview = async ({ params, searchParams }) => {
 			status: formData.get("status"),
 		};
 		await fetchurl(
-			`/comments/${awtdParams.id}`,
+			`/noadmin/comments/${awtdParams.id}`,
 			"PUT",
 			"no-cache",
 			rawFormData

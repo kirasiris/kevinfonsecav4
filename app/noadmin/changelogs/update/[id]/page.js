@@ -8,7 +8,7 @@ import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
 
 async function getChangelog(params) {
-	const res = await fetchurl(`/changelogs${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/changelogs${params}`, "GET", "no-cache");
 	if (!res.success) notFound();
 	return res;
 }
@@ -33,7 +33,7 @@ const UpdateChangelog = async ({ params, searchParams }) => {
 			project: formData.get("project"),
 		};
 		await fetchurl(
-			`/changelogs/${awtdParams.id}`,
+			`/noadmin/changelogs/${awtdParams.id}`,
 			"PUT",
 			"no-cache",
 			rawFormData

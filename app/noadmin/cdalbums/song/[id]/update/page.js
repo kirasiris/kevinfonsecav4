@@ -9,13 +9,13 @@ import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
 
 async function getSong(params) {
-	const res = await fetchurl(`/songs${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/songs${params}`, "GET", "no-cache");
 	if (!res.success) notFound();
 	return res;
 }
 
 async function getFiles(params) {
-	const res = await fetchurl(`/files${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/files${params}`, "GET", "no-cache");
 	return res;
 }
 
@@ -46,7 +46,12 @@ const UpdateSong = async ({ params, searchParams }) => {
 			orderingNumber: formData.get("orderingNumber"),
 			files: { avatar: formData.get("file") },
 		};
-		await fetchurl(`/songs/${awtdParams.id}`, "PUT", "no-cache", rawFormData);
+		await fetchurl(
+			`/noadmin/songs/${awtdParams.id}`,
+			"PUT",
+			"no-cache",
+			rawFormData
+		);
 		redirect(`/noadmin/cdalbums/read/${song?.data?.resourceId}`);
 	};
 

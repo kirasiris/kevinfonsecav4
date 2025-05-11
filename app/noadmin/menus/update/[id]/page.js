@@ -5,7 +5,7 @@ import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
 
 async function getMenu(params) {
-	const res = await fetchurl(`/menus${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/menus${params}`, "GET", "no-cache");
 	if (!res.success) notFound();
 	return res;
 }
@@ -23,7 +23,12 @@ const UpdateMenu = async ({ params, searchParams }) => {
 			position: formData.getAll("position"),
 			status: formData.get("status"),
 		};
-		await fetchurl(`/menus/${awtdParams.id}`, "PUT", "no-cache", rawFormData);
+		await fetchurl(
+			`/noadmin/menus/${awtdParams.id}`,
+			"PUT",
+			"no-cache",
+			rawFormData
+		);
 		redirect(`/noadmin/menus`);
 	};
 

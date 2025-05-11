@@ -9,17 +9,17 @@ import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
 
 async function getFiles(params) {
-	const res = await fetchurl(`/files${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/files${params}`, "GET", "no-cache");
 	return res;
 }
 
 async function getCategories(params) {
-	const res = await fetchurl(`/categories${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/categories${params}`, "GET", "no-cache");
 	return res;
 }
 
 async function getMovie(params) {
-	const res = await fetchurl(`/playlists${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/playlists${params}`, "GET", "no-cache");
 	if (!res.success) notFound();
 	return res;
 }
@@ -48,7 +48,7 @@ const UpdateMovie = async ({ params, searchParams }) => {
 			status: formData.get("status"),
 			files: { avatar: formData.get("file") },
 		};
-		await fetchurl(`/playlists/${awtdParams.id}`, "PUT", "no-cache", {
+		await fetchurl(`/noadmin/playlists/${awtdParams.id}`, "PUT", "no-cache", {
 			...rawFormData,
 			onairtype: "movie",
 			playlistType: "video",

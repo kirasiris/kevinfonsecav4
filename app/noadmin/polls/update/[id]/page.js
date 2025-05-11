@@ -9,7 +9,7 @@ import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
 
 async function getPoll(params) {
-	const res = await fetchurl(`/polls${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/polls${params}`, "GET", "no-cache");
 	if (!res.success) notFound();
 	return res;
 }
@@ -30,7 +30,12 @@ const UpdatePoll = async ({ params, searchParams }) => {
 			featured: formData.get("featured"),
 			status: formData.get("status"),
 		};
-		await fetchurl(`/polls/${awtdParams.id}`, "PUT", "no-cache", rawFormData);
+		await fetchurl(
+			`/noadmin/polls/${awtdParams.id}`,
+			"PUT",
+			"no-cache",
+			rawFormData
+		);
 		redirect(`/noadmin/polls`);
 	};
 

@@ -15,7 +15,7 @@ import FormButtons from "@/components/global/formbuttons";
 // }
 
 async function getChapter(params) {
-	const res = await fetchurl(`/videos${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/videos${params}`, "GET", "no-cache");
 	return res;
 }
 
@@ -68,7 +68,12 @@ const UpdateChapter = async ({ params, searchParams }) => {
 				stape: formData.get("stape_download"),
 			},
 		};
-		await fetchurl(`/videos/${awtdParams.id}`, "PUT", "no-cache", rawFormData);
+		await fetchurl(
+			`/noadmin/videos/${awtdParams.id}`,
+			"PUT",
+			"no-cache",
+			rawFormData
+		);
 		redirect(`/noadmin/animes/read/${chapter?.data?.resourceId}`);
 	};
 

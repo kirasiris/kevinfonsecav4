@@ -9,17 +9,17 @@ import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
 
 async function getFiles(params) {
-	const res = await fetchurl(`/files${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/files${params}`, "GET", "no-cache");
 	return res;
 }
 
 async function getCategories(params) {
-	const res = await fetchurl(`/categories${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/categories${params}`, "GET", "no-cache");
 	return res;
 }
 
 async function getBlog(params) {
-	const res = await fetchurl(`/blogs${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/blogs${params}`, "GET", "no-cache");
 	return res;
 }
 
@@ -48,7 +48,12 @@ const UpdateBlog = async ({ params, searchParams }) => {
 			fullWidth: formData.get("fullWidth"),
 			files: { avatar: formData.get("file") },
 		};
-		await fetchurl(`/blogs/${awtdParams.id}`, "PUT", "no-cache", rawFormData);
+		await fetchurl(
+			`/noadmin/blogs/${awtdParams.id}`,
+			"PUT",
+			"no-cache",
+			rawFormData
+		);
 		redirect(`/noadmin/blogs`);
 	};
 

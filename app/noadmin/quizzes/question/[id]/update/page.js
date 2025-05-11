@@ -14,7 +14,7 @@ import FormButtons from "@/components/global/formbuttons";
 // }
 
 async function getQuestion(params) {
-	const res = await fetchurl(`/questions${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/questions${params}`, "GET", "no-cache");
 	if (!res.success) notFound();
 	return res;
 }
@@ -56,7 +56,7 @@ const UpdateQuestion = async ({ params, searchParams }) => {
 		};
 
 		await fetchurl(
-			`/questions/${awtdParams.id}`,
+			`/noadmin/questions/${awtdParams.id}`,
 			"PUT",
 			"no-cache",
 			rawFormData

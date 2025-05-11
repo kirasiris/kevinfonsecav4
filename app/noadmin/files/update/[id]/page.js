@@ -10,7 +10,7 @@ import Image from "next/image";
 import FormButtons from "@/components/global/formbuttons";
 
 async function getFile(params) {
-	const res = await fetchurl(`/files${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/files${params}`, "GET", "no-cache");
 	if (!res.success) notFound();
 	return res;
 }
@@ -32,7 +32,12 @@ const UpdateFile = async ({ params, searchParams }) => {
 			text: formData.get("text"),
 		};
 
-		await fetchurl(`/files/${awtdParams.id}`, "PUT", "no-cache", rawFormData);
+		await fetchurl(
+			`/noadmin/files/${awtdParams.id}`,
+			"PUT",
+			"no-cache",
+			rawFormData
+		);
 		redirect("/noadmin/files");
 	};
 

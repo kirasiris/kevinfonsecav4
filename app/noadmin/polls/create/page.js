@@ -20,7 +20,7 @@ const CreatePoll = async ({ params, searchParams }) => {
 			featured: formData.get("featured"),
 			status: formData.get("status"),
 		};
-		await fetchurl(`/polls`, "POST", "no-cache", rawFormData);
+		await fetchurl(`/noadmin/polls`, "POST", "no-cache", rawFormData);
 		redirect(`/noadmin/polls`);
 	};
 

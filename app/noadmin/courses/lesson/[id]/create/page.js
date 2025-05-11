@@ -9,7 +9,7 @@ import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
 
 async function getFiles(params) {
-	const res = await fetchurl(`/files${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/files${params}`, "GET", "no-cache");
 	return res;
 }
 
@@ -39,7 +39,7 @@ const CreateLesson = async ({ params, searchParams }) => {
 			orderingNumber: formData.get("orderingNumber"),
 			files: { video_url: formData.get("file") },
 		};
-		await fetchurl(`/videos`, "POST", "no-cache", {
+		await fetchurl(`/noadmin/videos`, "POST", "no-cache", {
 			...rawFormData,
 			resourceId: awtdParams.id,
 			onModel: "Course",

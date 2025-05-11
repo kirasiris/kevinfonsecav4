@@ -8,7 +8,7 @@ import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
 
 async function getUsers(params) {
-	const res = await fetchurl(`/users${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/users${params}`, "GET", "no-cache");
 	return res;
 }
 
@@ -41,7 +41,7 @@ const CreateUser = async ({ params, searchParams }) => {
 			website: formData.get("website"),
 			// files: { avatar: formData.get("file") },
 		};
-		await fetchurl(`/users`, "POST", "no-cache", {
+		await fetchurl(`/noadmin/users`, "POST", "no-cache", {
 			...rawFormData,
 			social: {
 				twitter: formData.get("twitter"),

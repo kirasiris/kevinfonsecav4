@@ -9,7 +9,7 @@ import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
 
 async function getFiles(params) {
-	const res = await fetchurl(`/files${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/files${params}`, "GET", "no-cache");
 	return res;
 }
 
@@ -39,7 +39,7 @@ const CreateRealState = async ({ params, searchParams }) => {
 			files: { avatar: formData.get("file") },
 		};
 
-		await fetchurl(`/realstates`, "POST", "no-cache", {
+		await fetchurl(`/noadmin/realstates`, "POST", "no-cache", {
 			...rawFormData,
 			rates: {
 				weeklyPrice: formData.get("weeklyPrice"),

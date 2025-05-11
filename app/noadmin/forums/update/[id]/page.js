@@ -9,7 +9,7 @@ import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
 
 async function getForum(params) {
-	const res = await fetchurl(`/forums${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/forums${params}`, "GET", "no-cache");
 	if (!res.success) notFound();
 	return res;
 }
@@ -39,7 +39,12 @@ const UpdateForum = async ({ params, searchParams }) => {
 			status: formData.get("status"),
 			// files: { avatar: formData.get("file") },
 		};
-		await fetchurl(`/forums/${awtdParams.id}`, "PUT", "no-cache", rawFormData);
+		await fetchurl(
+			`/noadmin/forums/${awtdParams.id}`,
+			"PUT",
+			"no-cache",
+			rawFormData
+		);
 		redirect(`/noadmin/forums`);
 	};
 

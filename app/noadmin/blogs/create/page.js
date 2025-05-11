@@ -9,12 +9,12 @@ import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
 
 async function getFiles(params) {
-	const res = await fetchurl(`/files${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/files${params}`, "GET", "no-cache");
 	return res;
 }
 
 async function getCategories(params) {
-	const res = await fetchurl(`/categories${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/categories${params}`, "GET", "no-cache");
 	return res;
 }
 
@@ -40,7 +40,7 @@ const CreateBlog = async ({ params, searchParams }) => {
 			files: { avatar: formData.get("file") },
 		};
 
-		await fetchurl(`/blogs`, "POST", "no-cache", {
+		await fetchurl(`/noadmin/blogs`, "POST", "no-cache", {
 			...rawFormData,
 			postType: "blog",
 		});

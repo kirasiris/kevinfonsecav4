@@ -10,7 +10,7 @@ import FormButtons from "@/components/global/formbuttons";
 
 async function getUsersSubscribed(params) {
 	const res = await fetchurl(
-		`/newslettersubscribers${params}`,
+		`/global/newslettersubscribers${params}`,
 		"GET",
 		"no-cache"
 	);
@@ -18,7 +18,11 @@ async function getUsersSubscribed(params) {
 }
 
 async function getNewsletterEmail(params) {
-	const res = await fetchurl(`/newsletteremails${params}`, "GET", "no-cache");
+	const res = await fetchurl(
+		`/global/newsletteremails${params}`,
+		"GET",
+		"no-cache"
+	);
 	if (!res.success) notFound();
 	return res;
 }
@@ -45,10 +49,15 @@ const UpdateEmail = async ({ params, searchParams }) => {
 			subject: formData.get("subject"),
 			status: formData.get("status"),
 		};
-		await fetchurl(`/newsletteremails/${awtdParams.id}`, "PUT", "no-cache", {
-			...rawFormData,
-			website: process.env.NEXT_PUBLIC_NO_REPLY_EMAIL, // Needed for DB mass email functionality
-		});
+		await fetchurl(
+			`/noadmin/newsletteremails/${awtdParams.id}`,
+			"PUT",
+			"no-cache",
+			{
+				...rawFormData,
+				website: process.env.NEXT_PUBLIC_NO_REPLY_EMAIL, // Needed for DB mass email functionality
+			}
+		);
 		redirect(`/noadmin/newsletteremails`);
 	};
 

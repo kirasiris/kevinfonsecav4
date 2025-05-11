@@ -25,7 +25,7 @@ const CreateEvent = async ({ params, searchParams }) => {
 			status: formData.get("status"),
 		};
 
-		await fetchurl(`/events`, "POST", "no-cache", {
+		await fetchurl(`/noadmin/events`, "POST", "no-cache", {
 			...rawFormData,
 			attendees: [
 				{

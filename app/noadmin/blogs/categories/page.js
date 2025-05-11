@@ -32,7 +32,7 @@ const AdminBlogCategoriesIndex = async ({ params, searchParams }) => {
 			parentCategory: formData.get("parentCategory"),
 		};
 
-		await fetchurl(`/global/categories`, "POST", "no-cache", {
+		await fetchurl(`/noadmin/categories`, "POST", "no-cache", {
 			...rawFormData,
 			categoryType: "blog",
 		});

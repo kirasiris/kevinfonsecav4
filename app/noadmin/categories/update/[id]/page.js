@@ -7,7 +7,7 @@ import { revalidatePath } from "next/cache";
 import { notFound } from "next/navigation";
 
 async function getCategories(params) {
-	const res = await fetchurl(`/categories${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/categories${params}`, "GET", "no-cache");
 	if (!res.success) notFound();
 	return res;
 }
@@ -29,7 +29,12 @@ const UpdateCategory = async ({ params, searchParams }) => {
 			text: formData.get("text"),
 			parentCategory: formData.get("parentCategory"),
 		};
-		await fetchurl(`/categories/${params.id}`, "PUT", "no-cache", rawFormData);
+		await fetchurl(
+			`/noadmin/categories/${params.id}`,
+			"PUT",
+			"no-cache",
+			rawFormData
+		);
 		revalidatePath(
 			`/noadmin/categories?page=${awtdSearchParams.page || 1}&limit=${
 				awtdSearchParams.limit || 10
@@ -40,7 +45,7 @@ const UpdateCategory = async ({ params, searchParams }) => {
 	const draftIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/categories/${id}/draftit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/categories/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
 			`/noadmin/categories?page=${awtdSearchParams.page || 1}&limit=${
 				awtdSearchParams.limit || 10
@@ -51,7 +56,7 @@ const UpdateCategory = async ({ params, searchParams }) => {
 	const publishIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/categories/${id}/publishit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/categories/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
 			`/noadmin/categories?page=${awtdSearchParams.page || 1}&limit=${
 				awtdSearchParams.limit || 10
@@ -62,7 +67,7 @@ const UpdateCategory = async ({ params, searchParams }) => {
 	const trashIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/categories/${id}/trashit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/categories/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
 			`/noadmin/categories?page=${awtdSearchParams.page || 1}&limit=${
 				awtdSearchParams.limit || 10
@@ -73,7 +78,7 @@ const UpdateCategory = async ({ params, searchParams }) => {
 	const scheduleIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/categories/${id}/scheduleit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/categories/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
 			`/noadmin/categories?page=${awtdSearchParams.page || 1}&limit=${
 				awtdSearchParams.limit || 10
@@ -84,7 +89,11 @@ const UpdateCategory = async ({ params, searchParams }) => {
 	const handleDelete = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/categories/${id}/permanently`, "DELETE", "no-cache");
+		await fetchurl(
+			`/noadmin/categories/${id}/permanently`,
+			"DELETE",
+			"no-cache"
+		);
 		revalidatePath(
 			`/noadmin/categories?page=${awtdSearchParams.page || 1}&limit=${
 				awtdSearchParams.limit || 10
@@ -95,7 +104,7 @@ const UpdateCategory = async ({ params, searchParams }) => {
 	const handleTrashAll = async () => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/categories/deleteall`, "PUT", "no-cache", {});
+		await fetchurl(`/noadmin/categories/deleteall`, "PUT", "no-cache", {});
 		revalidatePath(
 			`/noadmin/categories?page=${awtdSearchParams.page || 1}&limit=${
 				awtdSearchParams.limit || 10
@@ -107,7 +116,7 @@ const UpdateCategory = async ({ params, searchParams }) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(
-			`/categories/deleteall/permanently`,
+			`/noadmin/categories/deleteall/permanently`,
 			"DELETE",
 			"no-cache",
 			{}

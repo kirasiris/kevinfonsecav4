@@ -6,7 +6,7 @@ import LiveCode from "@/components/admin/snippets/livecode";
 import FormButtons from "@/components/global/formbuttons";
 
 async function getSnippet(params) {
-	const res = await fetchurl(`/snippets${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/snippets${params}`, "GET", "no-cache");
 	if (!res.success) notFound();
 	return res;
 }
@@ -29,7 +29,7 @@ const UpdateSnippet = async ({ params, searchParams }) => {
 			status: formData.get("status"),
 		};
 		await fetchurl(
-			`/snippets/${awtdParams.id}`,
+			`/noadmin/snippets/${awtdParams.id}`,
 			"PUT",
 			"no-cache",
 			rawFormData

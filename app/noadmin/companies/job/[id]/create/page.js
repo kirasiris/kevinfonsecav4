@@ -37,7 +37,7 @@ const CreateJob = async ({ params, searchParams }) => {
 			password: formData.get("password"),
 			status: formData.get("status"),
 		};
-		await fetchurl(`/jobs`, "POST", "no-cache", {
+		await fetchurl(`/noadmin/jobs`, "POST", "no-cache", {
 			...rawFormData,
 			resourceId: awtdParams.id,
 		});

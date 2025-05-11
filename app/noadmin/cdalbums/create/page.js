@@ -14,7 +14,7 @@ import FormButtons from "@/components/global/formbuttons";
 // }
 
 async function getCategories(params) {
-	const res = await fetchurl(`/categories${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/categories${params}`, "GET", "no-cache");
 	return res;
 }
 
@@ -38,7 +38,7 @@ const CreateCDAlbum = async ({ params, searchParams }) => {
 			status: formData.get("status"),
 			// files: { avatar: formData.get("file") },
 		};
-		await fetchurl(`/playlists`, "POST", "no-cache", {
+		await fetchurl(`/noadmin/playlists`, "POST", "no-cache", {
 			...rawFormData,
 			onairstatus: "finished",
 			onairtype: "cd-album",

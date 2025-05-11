@@ -9,17 +9,17 @@ import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
 
 async function getFiles(params) {
-	const res = await fetchurl(`/files${params}`, "GET", "force-cache");
+	const res = await fetchurl(`/global/files${params}`, "GET", "force-cache");
 	return res;
 }
 
 async function getCategories(params) {
-	const res = await fetchurl(`/categories${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/categories${params}`, "GET", "no-cache");
 	return res;
 }
 
 async function getQuiz(params) {
-	const res = await fetchurl(`/quizzes${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/quizzes${params}`, "GET", "no-cache");
 	if (!res.success) notFound();
 	return res;
 }
@@ -54,7 +54,12 @@ const UpdateQuiz = async ({ params, searchParams }) => {
 			singlePage: formData.get("singlePage"),
 			files: { avatar: formData.get("file") },
 		};
-		await fetchurl(`/quizzes/${awtdParams.id}`, "PUT", "no-cache", rawFormData);
+		await fetchurl(
+			`/noadmin/quizzes/${awtdParams.id}`,
+			"PUT",
+			"no-cache",
+			rawFormData
+		);
 		redirect(`/noadmin/quizzes`);
 	};
 

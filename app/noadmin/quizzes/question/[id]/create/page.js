@@ -46,7 +46,7 @@ const CreateQuestion = async ({ params, searchParams }) => {
 			answers: options,
 		};
 
-		await fetchurl(`/questions`, "POST", "no-cache", {
+		await fetchurl(`/noadmin/questions`, "POST", "no-cache", {
 			...rawFormData,
 			resourceId: awtdParams.id,
 			onModel: "Quiz",

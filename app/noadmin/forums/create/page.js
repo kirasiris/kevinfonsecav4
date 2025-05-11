@@ -29,7 +29,7 @@ const CreateForum = async ({ params, searchParams }) => {
 			status: formData.get("status"),
 			// files: { avatar: formData.get("file") },
 		};
-		await fetchurl(`/forums`, "POST", "no-cache", {
+		await fetchurl(`/noadmin/forums`, "POST", "no-cache", {
 			...rawFormData,
 		});
 		redirect(`/noadmin/forums`);

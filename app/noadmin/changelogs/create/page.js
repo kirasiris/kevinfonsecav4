@@ -21,7 +21,7 @@ const CreateChangelog = async ({ params, searchParams }) => {
 			version: formData.get("version"),
 			project: formData.get("project"),
 		};
-		await fetchurl(`/changelogs`, "POST", "no-cache", rawFormData);
+		await fetchurl(`/noadmin/changelogs`, "POST", "no-cache", rawFormData);
 		redirect(`/noadmin/changelogs`);
 	};
 

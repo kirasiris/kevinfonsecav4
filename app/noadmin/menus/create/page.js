@@ -13,7 +13,7 @@ const CreateMenu = async ({ params, searchParams }) => {
 			position: formData.getAll("position"),
 			status: formData.get("status"),
 		};
-		await fetchurl(`/menus`, "POST", "no-cache", rawFormData);
+		await fetchurl(`/noadmin/menus`, "POST", "no-cache", rawFormData);
 		redirect(`/noadmin/menus`);
 	};
 

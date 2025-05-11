@@ -10,7 +10,7 @@ import OnboardingLink from "@/components/dashboard/onboardinglink";
 import FormButtons from "@/components/global/formbuttons";
 
 async function getFiles(params) {
-	const res = await fetchurl(`/files${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/files${params}`, "GET", "no-cache");
 	return res;
 }
 
@@ -43,7 +43,7 @@ const CreateCourse = async ({ params, searchParams }) => {
 			files: { avatar: formData.get("file") },
 		};
 
-		await fetchurl(`/courses`, "POST", "no-cache", rawFormData);
+		await fetchurl(`/extras/stripe/courses/`, "POST", "no-cache", rawFormData);
 		redirect(`/noadmin/courses`);
 	};
 

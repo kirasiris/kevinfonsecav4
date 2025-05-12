@@ -1,10 +1,10 @@
+import { revalidatePath } from "next/cache";
+import { notFound } from "next/navigation";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
 import List from "@/components/admin/categories/list";
-import { revalidatePath } from "next/cache";
-import { notFound } from "next/navigation";
 
 async function getCategories(params) {
 	const res = await fetchurl(`/global/categories${params}`, "GET", "no-cache");
@@ -15,7 +15,7 @@ async function getCategories(params) {
 const UpdateCategory = async ({ params, searchParams }) => {
 	const awtdParams = await params;
 	const awtdSearchParams = await searchParams;
-	const category = await getCategories(`/${params.id}`);
+	const category = await getCategories(`/${awtdParams.id}`);
 
 	const categories = await getCategories(
 		`?page=${awtdSearchParams.page || 1}&limit=${
@@ -30,7 +30,7 @@ const UpdateCategory = async ({ params, searchParams }) => {
 			parentCategory: formData.get("parentCategory"),
 		};
 		await fetchurl(
-			`/noadmin/categories/${params.id}`,
+			`/noadmin/categories/${awtdParams.id}`,
 			"PUT",
 			"no-cache",
 			rawFormData
@@ -122,9 +122,9 @@ const UpdateCategory = async ({ params, searchParams }) => {
 			{}
 		);
 		revalidatePath(
-			`/noadmin/categories?page=${searchParams.page || 1}&limit=${
-				searchParams.limit || 10
-			}&sort=${searchParams.sort || "-createdAt"}`
+			`/noadmin/categories?page=${awtdSearchParams.page || 1}&limit=${
+				awtdSearchParams.limit || 10
+			}&sort=${awtdSearchParams.sort || "-createdAt"}`
 		);
 	};
 
@@ -165,12 +165,12 @@ const UpdateCategory = async ({ params, searchParams }) => {
 							onModel="Category"
 							advancedTextEditor={false}
 						/>
-						<label htmlFor="parent" className="form-label">
+						<label htmlFor="parentCategory" className="form-label">
 							Parent Category
 						</label>
 						<select
-							id="parent"
-							name="parent"
+							id="parentCategory"
+							name="parentCategory"
 							defaultValue={category?.data?.parentCategory}
 							className="form-control"
 						>

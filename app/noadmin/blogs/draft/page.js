@@ -1,7 +1,7 @@
+import { revalidatePath } from "next/cache";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
 import List from "@/components/admin/blogs/list";
-import { revalidatePath } from "next/cache";
 
 async function getBlogs(params) {
 	const res = await fetchurl(

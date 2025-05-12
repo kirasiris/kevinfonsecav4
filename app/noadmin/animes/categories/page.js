@@ -1,9 +1,9 @@
+import { revalidatePath } from "next/cache";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
 import List from "@/components/admin/categories/list";
-import { revalidatePath } from "next/cache";
 
 async function getCategories(params) {
 	const res = await fetchurl(
@@ -153,12 +153,12 @@ const AdminAnimeCategoriesIndex = async ({ params, searchParams }) => {
 							onModel="Category"
 							advancedTextEditor={false}
 						/>
-						<label htmlFor="parent" className="form-label">
+						<label htmlFor="parentCategory" className="form-label">
 							Parent Category
 						</label>
 						<select
-							id="parent"
-							name="parent"
+							id="parentCategory"
+							name="parentCategory"
 							defaultValue=""
 							className="form-control"
 						>

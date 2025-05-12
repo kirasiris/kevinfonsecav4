@@ -1,9 +1,9 @@
+import { notFound, redirect } from "next/navigation";
 import {
 	fetchurl,
 	getAuthTokenOnServer,
 	getUserOnServer,
 } from "@/helpers/setTokenOnServer";
-import { notFound, redirect } from "next/navigation";
 import AdminSidebar from "@/components/admin/myfinaladminsidebar";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
@@ -114,9 +114,9 @@ const UpdateAnime = async ({ params, searchParams }) => {
 					commented={anime?.data?.commented.toString()}
 					embedding={false}
 					github_readme={""}
-					category={anime?.data?.category?._id || anime?.data?.category}
+					category={anime?.data?.category[0]._id || undefined}
 					categories={categories?.data}
-					multiple_categories={true}
+					multiple_categories={false}
 					multipleFiles={false}
 					onModel={"Playlist"}
 					files={files}

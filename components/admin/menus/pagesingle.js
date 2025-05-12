@@ -73,6 +73,7 @@ const Single = ({
 								>
 									Schedule&nbsp;It
 								</button>
+								<hr />
 								<DeleteModal
 									id={object._id ? object._id : object._id}
 									action={handleDelete}

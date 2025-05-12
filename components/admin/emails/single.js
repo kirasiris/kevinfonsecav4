@@ -46,6 +46,7 @@ const Single = ({
 							>
 								View&nbsp;It
 							</Link>
+							<hr />
 							<DeleteModal
 								id={object._id ? object._id : object._id}
 								action={handleDelete}

@@ -18,7 +18,7 @@ async function getCategories(params) {
 }
 
 async function getQuotes() {
-	const res = await fetchurl(`/extras/quotes/random`, "GET", "no-cache");
+	const res = await fetchurl(`/global/quotes/random`, "GET", "no-cache");
 	return res;
 }
 

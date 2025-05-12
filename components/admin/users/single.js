@@ -129,7 +129,7 @@ const Single = ({
 									Request OnBoardLink
 								</button>
 							)}
-
+							<hr />
 							<DeleteModal
 								id={object._id ? object._id : object._id}
 								action={handleDelete}

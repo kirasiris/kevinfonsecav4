@@ -1,9 +1,9 @@
+import { redirect, notFound } from "next/navigation";
 import {
 	fetchurl,
 	getAuthTokenOnServer,
 	getUserOnServer,
 } from "@/helpers/setTokenOnServer";
-import { redirect, notFound } from "next/navigation";
 import AdminSidebar from "@/components/admin/myfinaladminsidebar";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
@@ -16,6 +16,7 @@ import FormButtons from "@/components/global/formbuttons";
 
 async function getChapter(params) {
 	const res = await fetchurl(`/global/videos${params}`, "GET", "no-cache");
+	if (!res.success) notFound();
 	return res;
 }
 
@@ -74,7 +75,7 @@ const UpdateChapter = async ({ params, searchParams }) => {
 			"no-cache",
 			rawFormData
 		);
-		redirect(`/noadmin/animes/read/${chapter?.data?.resourceId}`);
+		redirect(`/noadmin/animes/read/${chapter?.data?.resourceId?._id}`);
 	};
 
 	return (

@@ -169,17 +169,17 @@ const AdminSidebar = ({
 						name="category"
 						defaultValue={category}
 						className="form-control"
-						multiple={multiple_categories}
+						multiple={multiple_categories} // or use your `multiple_categories` variable
 					>
 						{categories
-							// .filter((c) => c.parentCategory === undefined)
+							.filter((c) => !c.parentCategory) // top-level categories
 							.map((category) => (
 								<optgroup key={category._id} label={category.title}>
 									{categories
 										.filter(
 											(c) =>
 												c.parentCategory?._id === category._id ||
-												c._id === category._id
+												c._id === category._id // also include top-level category itself as option
 										)
 										.map((childC) => (
 											<option key={childC._id} value={childC._id}>

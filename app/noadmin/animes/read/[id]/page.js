@@ -1,3 +1,6 @@
+import { revalidatePath } from "next/cache";
+import Image from "next/image";
+import { notFound } from "next/navigation";
 import {
 	fetchurl,
 	getAuthTokenOnServer,
@@ -5,10 +8,7 @@ import {
 } from "@/helpers/setTokenOnServer";
 import ParseHtml from "@/layout/parseHtml";
 import ChapterList from "@/components/admin/animes/chapterlist";
-import { revalidatePath } from "next/cache";
-import Image from "next/image";
 import UseDropzone from "@/components/admin/animes/chapterdropzone";
-import { notFound } from "next/navigation";
 
 async function getAnime(params) {
 	const res = await fetchurl(`/global/playlists${params}`, "GET", "no-cache");

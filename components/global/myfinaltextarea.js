@@ -176,7 +176,7 @@ const MyTextArea = ({
 					<p>Remaining: {sizeLimit - length}</p>
 				</Tab.Pane>
 				<Tab.Pane eventKey="jsoncontent">
-					<pre>{JSON.stringify({ html }, 4, null)}</pre>
+					<pre>{JSON.stringify({ html }, null, 4)}</pre>
 				</Tab.Pane>
 			</Tab.Content>
 		</Tab.Container>

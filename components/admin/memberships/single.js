@@ -98,14 +98,17 @@ const Single = ({
 								</button>
 							)}
 							{!object.active && (
-								<DeleteModal
-									id={object._id ? object._id : object._id}
-									action={handleDelete}
-									classStr={`dropdown-item`}
-									objects={objects}
-									setObjects={setObjects}
-									setTotalResults={setTotalResults}
-								/>
+								<>
+									<hr />
+									<DeleteModal
+										id={object._id ? object._id : object._id}
+										action={handleDelete}
+										classStr={`dropdown-item`}
+										objects={objects}
+										setObjects={setObjects}
+										setTotalResults={setTotalResults}
+									/>
+								</>
 							)}
 						</DropdownButton>
 					</span>

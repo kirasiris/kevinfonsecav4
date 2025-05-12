@@ -151,7 +151,6 @@ const Single = ({
 							>
 								Feature&nbsp;It
 							</button>
-
 							<hr />
 							<DeleteModal
 								id={object._id ? object._id : object._id}

@@ -128,6 +128,7 @@ const AdminNewsletterEmailsSearchIndex = async ({ params, searchParams }) => {
 					pageText="Newsletter Emails"
 					addLink="/noadmin/newsletteremails/create"
 					searchOn="/noadmin/newsletteremails"
+					searchedKeyword={keyword}
 					objects={newsletteremails}
 					searchParams={awtdSearchParams}
 					handleDraft={draftIt}

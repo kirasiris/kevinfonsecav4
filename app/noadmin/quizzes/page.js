@@ -87,6 +87,7 @@ const AdminQuizzesIndex = async ({ params, searchParams }) => {
 					pageText="Quizzes"
 					addLink="/noadmin/quizzes/create"
 					searchOn="/noadmin/quizzes"
+					searchedKeyword=""
 					objects={quizzes}
 					searchParams={awtdSearchParams}
 					handleDraft={draftIt}

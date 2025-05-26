@@ -12,6 +12,7 @@ const Single = ({
 	handleTrash = () => {},
 	handleSchedule = () => {},
 	handleFeature = () => {},
+	handleUnfeature = () => {},
 	handleDelete = () => {},
 	objects = [],
 	setObjects = () => {},
@@ -106,6 +107,12 @@ const Single = ({
 								onClick={() => handleFeature(object._id)}
 							>
 								Feature&nbsp;It
+							</button>
+							<button
+								className="dropdown-item btn btn-sm"
+								onClick={() => handleUnfeature(object._id)}
+							>
+								Unfeature&nbsp;It
 							</button>
 							<hr />
 							<DeleteModal

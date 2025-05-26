@@ -13,8 +13,8 @@ const AdminCardHeaderMenu = ({
 	totalResults = 0,
 	addLink = "#",
 	searchOn = "/noadmin",
-	handleTrashAllFunction = () => {},
 	handleDeleteAllFunction = () => {},
+	handleDeleteAllInvalidPermanentlyFunction = () => {},
 	classList = "",
 }) => {
 	const router = useRouter();
@@ -105,8 +105,8 @@ const AdminCardHeaderMenu = ({
 							Add new
 						</Link>
 					)}
-					<TrashAllModal action={handleTrashAllFunction} />
-					<DeleteAllModal action={handleDeleteAllFunction} />
+					<TrashAllModal action={handleDeleteAllFunction} />
+					<DeleteAllModal action={handleDeleteAllInvalidPermanentlyFunction} />
 				</div>
 			</div>
 		</div>

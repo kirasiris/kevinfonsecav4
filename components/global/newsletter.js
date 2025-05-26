@@ -10,7 +10,7 @@ const NewsletterForm = ({
 
 	const fetchNewsletters = async (params = "") => {
 		const res = await fetchurl(
-			`/newslettersubscribers${params}`,
+			`/global/newslettersubscribers${params}`,
 			"GET",
 			"no-cache"
 		);
@@ -34,7 +34,7 @@ const NewsletterForm = ({
 		e.preventDefault();
 		try {
 			setEmailBtnTxt("...");
-			await fetchurl(`/newslettersubscribers`, "POST", "no-cache", {
+			await fetchurl(`/global/newslettersubscribers`, "POST", "no-cache", {
 				...newsletterData,
 				website: process.env.NEXT_PUBLIC_NO_REPLY_EMAIL, // Needed for DB mass email functionality
 			});

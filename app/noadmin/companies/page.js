@@ -1,7 +1,7 @@
+import { revalidatePath } from "next/cache";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
 import List from "@/components/admin/companies/list";
-import { revalidatePath } from "next/cache";
 
 async function getCompanies(params) {
 	const res = await fetchurl(`/global/companies${params}`, "GET", "no-cache");
@@ -107,6 +107,7 @@ const AdminCompaniesIndex = async ({ params, searchParams }) => {
 					pageText="Companies"
 					addLink="/noadmin/companies/create"
 					searchOn="/noadmin/companies"
+					searchedKeyword=""
 					objects={companies}
 					searchParams={awtdSearchParams}
 					handleDraft={draftIt}

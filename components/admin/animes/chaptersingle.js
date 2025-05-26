@@ -3,6 +3,7 @@ import Link from "next/link";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import DeleteModal from "@/components/global/deletemodal";
 import PreviewModal from "@/components/admin/courses/lessonpreviewmodal";
+import { formatDateWithoutTime } from "befree-utilities";
 
 const Single = ({
 	object = {},
@@ -10,6 +11,8 @@ const Single = ({
 	handlePublish = () => {},
 	handleTrash = () => {},
 	handleSchedule = () => {},
+	handleFeature = () => {},
+	handleUnfeature = () => {},
 	handleDelete = () => {},
 	objects = [],
 	setObjects = () => {},
@@ -24,15 +27,20 @@ const Single = ({
 						query: {},
 					}}
 				>
+					{object?.title}
+				</Link>
+				<div className="blog-item__meta">
 					<span className="badge bg-secondary me-1">
 						{object?.orderingNumber}
 					</span>
-					{object?.title}
-				</Link>
-				<span className="badge bg-dark ms-1">{object.status}</span>
-				{object.featured && (
-					<span className="badge bg-dark me-1">featured</span>
-				)}
+					<span className="badge bg-dark me-1">
+						{formatDateWithoutTime(object.createdAt)}
+					</span>
+					<span className="badge bg-dark me-1">{object.status}</span>
+					{object.featured && (
+						<span className="badge bg-dark me-1">featured</span>
+					)}
+				</div>
 			</div>
 			<div className="float-end">
 				<div className="blog-item__panel">
@@ -49,7 +57,7 @@ const Single = ({
 							<DropdownButton title="Options" variant="secondary">
 								<Link
 									href={{
-										pathname: `/animes/${object?._id}/${object?.slug}`,
+										pathname: `NOT_PAGE_YET`,
 										query: {
 											isAdmin: true,
 										},
@@ -81,6 +89,18 @@ const Single = ({
 									onClick={() => handleSchedule(object._id)}
 								>
 									Schedule&nbsp;It
+								</button>
+								<button
+									className="dropdown-item btn btn-sm"
+									onClick={() => handleFeature(object._id)}
+								>
+									Feature&nbsp;It
+								</button>
+								<button
+									className="dropdown-item btn btn-sm"
+									onClick={() => handleUnfeature(object._id)}
+								>
+									Unfeature&nbsp;It
 								</button>
 								<hr />
 								<DeleteModal

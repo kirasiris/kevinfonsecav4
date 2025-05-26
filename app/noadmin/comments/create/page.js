@@ -7,26 +7,34 @@ import {
 import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
 
-const CreateChangelog = async ({ params, searchParams }) => {
+const CreateComment = async ({ params, searchParams }) => {
 	const token = await getAuthTokenOnServer();
 	const auth = await getUserOnServer();
 
-	const addChangelog = async (formData) => {
+	const addComment = async (formData) => {
 		"use server";
 		const rawFormData = {
+			resourceId: formData.get("resourceId"),
+			user: formData.get("user"),
+			name: formData.get("name"),
+			email: formData.get("email"),
 			title: formData.get("title"),
 			text: formData.get("text"),
 			status: formData.get("status"),
-			postType: formData.getAll("postType"),
-			version: formData.get("version"),
-			project: formData.get("project"),
 		};
-		await fetchurl(`/noadmin/changelogs`, "POST", "no-cache", rawFormData);
-		redirect(`/noadmin/changelogs`);
+
+		const res = await fetchurl(
+			`/noadmin/comments`,
+			"POST",
+			"no-cache",
+			rawFormData
+		);
+		console.log("comments response", res);
+		// redirect(`/noadmin/comments`);
 	};
 
 	return (
-		<form className="row" action={addChangelog}>
+		<form className="row" action={addComment}>
 			<div className="col">
 				<label htmlFor="blog-title" className="form-label">
 					Title
@@ -47,60 +55,61 @@ const CreateChangelog = async ({ params, searchParams }) => {
 					token={token}
 					id="text"
 					name="text"
-					onModel="Changelog"
+					defaultValue="No description..."
+					onModel="Comment"
 					advancedTextEditor={true}
 					customPlaceholder="No description"
-					defaultValue="No description..."
 				/>
-				<label htmlFor="version" className="form-label">
-					Version
+				<label htmlFor="user" className="form-label">
+					User ID
 				</label>
 				<input
-					id="version"
-					name="version"
-					defaultValue="1.0.0"
+					id="user"
+					name="user"
+					defaultValue=""
 					type="text"
 					className="form-control mb-3"
-					placeholder=""
+					placeholder="0123456789"
 				/>
 				<div className="row">
 					<div className="col">
-						<label htmlFor="postType" className="form-label">
-							Post type
+						<label htmlFor="name" className="form-label">
+							Name
 						</label>
-						<select
-							id="postType"
-							name="postType"
-							defaultValue={["enhancement"]}
-							className="form-control"
-							multiple
-						>
-							<option value={`bug`}>Bug</option>
-							<option value={`dependencies`}>Dependencies</option>
-							<option value={`duplicate`}>Duplicate</option>
-							<option value={`enhancement`}>Enhancement</option>
-							<option value={`help`}>Help</option>
-							<option value={`invalid`}>Invalid</option>
-							<option value={`question`}>Question</option>
-							<option value={`wontfix`}>Wontfix</option>
-						</select>
+						<input
+							id="name"
+							name="name"
+							defaultValue=""
+							type="text"
+							className="form-control mb-3"
+							placeholder="John Doe"
+						/>
 					</div>
 					<div className="col">
-						<label htmlFor="project" className="form-label">
-							Project
+						<label htmlFor="email" className="form-label">
+							Email
 						</label>
-						<select
-							id="project"
-							name="project"
-							defaultValue="enhancement"
-							className="form-control"
-						>
-							<option value={`all`}>All</option>
-							<option value={`personal`}>Personal</option>
-							<option value={`anonymous-secrets-app`}>
-								Anonymous Secrets App
-							</option>
-						</select>
+						<input
+							id="email"
+							name="email"
+							defaultValue=""
+							type="email"
+							className="form-control mb-3"
+							placeholder="john@doe.com"
+						/>
+					</div>
+					<div className="col">
+						<label htmlFor="website" className="form-label">
+							Website
+						</label>
+						<input
+							id="website"
+							name="website"
+							defaultValue=""
+							type="website"
+							className="form-control mb-3"
+							placeholder="https://demo.com/"
+						/>
 					</div>
 				</div>
 				<label htmlFor="status" className="form-label">
@@ -124,4 +133,4 @@ const CreateChangelog = async ({ params, searchParams }) => {
 	);
 };
 
-export default CreateChangelog;
+export default CreateComment;

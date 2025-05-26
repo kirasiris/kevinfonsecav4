@@ -1,7 +1,7 @@
+import { revalidatePath } from "next/cache";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import AdminMediaLibrary from "@/components/admin/adminmedialibrary";
 import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
-import { revalidatePath } from "next/cache";
 
 const AdminFilesIndex = async ({ params, searchParams }) => {
 	const awtdParams = await params;
@@ -22,17 +22,21 @@ const AdminFilesIndex = async ({ params, searchParams }) => {
 		revalidatePath(`/noadmin/files?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
-	const handleTrashAll = async () => {
+	const handleDeleteAll = async () => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/files/deleteall`, "PUT", "no-cache");
 		revalidatePath(`/noadmin/files?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
-	const handleDeleteAll = async () => {
+	const handleDeleteAllPermanently = async () => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/noadmin/files/deleteall`, "DELETE", "no-cache");
+		await fetchurl(
+			`/noadmin/files/deleteall/failed/permanently`,
+			"DELETE",
+			"no-cache"
+		);
 		revalidatePath(`/noadmin/files?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
@@ -52,8 +56,8 @@ const AdminFilesIndex = async ({ params, searchParams }) => {
 					params={awtdParams}
 					searchParams={awtdSearchParams}
 					handleDelete={handleDelete}
-					handleTrashAllFunction={handleTrashAll}
 					handleDeleteAllFunction={handleDeleteAll}
+					handleDeleteAllInvalidPermanentlyFunction={handleDeleteAllPermanently}
 				/>
 			</div>
 		</>

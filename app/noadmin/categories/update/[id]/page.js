@@ -27,7 +27,7 @@ const UpdateCategory = async ({ params, searchParams }) => {
 		const rawFormData = {
 			title: formData.get("title"),
 			text: formData.get("text"),
-			parentCategory: formData.get("parentCategory"),
+			parentId: formData.get("parentId"),
 		};
 		await fetchurl(
 			`/noadmin/categories/${awtdParams.id}`,
@@ -165,13 +165,13 @@ const UpdateCategory = async ({ params, searchParams }) => {
 							onModel="Category"
 							advancedTextEditor={false}
 						/>
-						<label htmlFor="parentCategory" className="form-label">
+						<label htmlFor="parentId" className="form-label">
 							Parent Category
 						</label>
 						<select
-							id="parentCategory"
-							name="parentCategory"
-							defaultValue={category?.data?.parentCategory}
+							id="parentId"
+							name="parentId"
+							defaultValue={category?.data?.parentId}
 							className="form-control"
 						>
 							<option value="">Select category</option>

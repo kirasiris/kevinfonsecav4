@@ -1,7 +1,7 @@
+import { revalidatePath } from "next/cache";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
 import List from "@/components/admin/logs/list";
-import { revalidatePath } from "next/cache";
 
 async function getLogs(params) {
 	const res = await fetchurl(`/global/logs${params}`, "GET", "no-cache");
@@ -55,6 +55,7 @@ const AdminLogsSearchIndex = async ({ params, searchParams }) => {
 					pageText="Logs"
 					addLink="/noadmin/logs/create"
 					searchOn="/noadmin/logs"
+					searchedKeyword={keyword}
 					objects={logs}
 					searchParams={awtdSearchParams}
 					handleDraft={undefined}

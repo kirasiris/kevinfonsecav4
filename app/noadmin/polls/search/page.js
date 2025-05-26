@@ -104,6 +104,7 @@ const AdminPollsSearchIndex = async ({ params, searchParams }) => {
 					pageText="Polls"
 					addLink="/noadmin/polls/create"
 					searchOn="/noadmin/polls"
+					searchedKeyword={keyword}
 					objects={polls}
 					searchParams={awtdSearchParams}
 					handleDraft={draftIt}

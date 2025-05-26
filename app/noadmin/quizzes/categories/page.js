@@ -29,7 +29,7 @@ const AdminPageCategoriesIndex = async ({ params, searchParams }) => {
 		const rawFormData = {
 			title: formData.get("title"),
 			text: formData.get("text"),
-			parentCategory: formData.get("parentCategory"),
+			parentId: formData.get("parentId"),
 		};
 		await fetchurl(`/noadmin/categories`, "POST", "no-cache", {
 			...rawFormData,
@@ -153,12 +153,12 @@ const AdminPageCategoriesIndex = async ({ params, searchParams }) => {
 							onModel="Category"
 							advancedTextEditor={false}
 						/>
-						<label htmlFor="parentCategory" className="form-label">
+						<label htmlFor="parentId" className="form-label">
 							Parent Category
 						</label>
 						<select
-							id="parentCategory"
-							name="parentCategory"
+							id="parentId"
+							name="parentId"
 							defaultValue=""
 							className="form-control"
 						>

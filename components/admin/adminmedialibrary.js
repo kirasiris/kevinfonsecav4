@@ -18,8 +18,8 @@ const AdminMediaLibrary = async ({
 	params = [],
 	searchParams = {},
 	handleDelete = () => {},
-	handleTrashAllFunction = () => {},
 	handleDeleteAllFunction = () => {},
+	handleDeleteAllInvalidPermanentlyFunction = () => {},
 }) => {
 	const token = await getAuthTokenOnServer();
 	const auth = await getUserOnServer();
@@ -49,8 +49,10 @@ const AdminMediaLibrary = async ({
 			handleTrash={undefined}
 			handleSchedule={undefined}
 			handleDelete={handleDelete}
-			handleTrashAllFunction={handleTrashAllFunction}
 			handleDeleteAllFunction={handleDeleteAllFunction}
+			handleDeleteAllInvalidPermanentlyFunction={
+				handleDeleteAllInvalidPermanentlyFunction
+			}
 		/>
 	);
 };

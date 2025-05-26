@@ -127,6 +127,7 @@ const AdminNewsletterEmailsTrashedIndex = async ({ params, searchParams }) => {
 					pageText="Newsletter Emails"
 					addLink="/noadmin/newsletteremails/create"
 					searchOn="/noadmin/newsletteremails"
+					searchedKeyword=""
 					objects={newsletteremails}
 					searchParams={awtdSearchParams}
 					handleDraft={draftIt}

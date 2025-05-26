@@ -1,7 +1,7 @@
+import { revalidatePath } from "next/cache";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
 import List from "@/components/admin/forums/list";
-import { revalidatePath } from "next/cache";
 
 async function getForums(params) {
 	const res = await fetchurl(
@@ -105,6 +105,7 @@ const AdminForumsDraftIndex = async ({ params, searchParams }) => {
 					pageText="Forums"
 					addLink="/noadmin/forums/create"
 					searchOn="/noadmin/forums"
+					searchedKeyword=""
 					objects={forums}
 					searchParams={awtdSearchParams}
 					handleDraft={draftIt}

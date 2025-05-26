@@ -1,7 +1,7 @@
+import { revalidatePath } from "next/cache";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
 import List from "@/components/admin/movies/list";
-import { revalidatePath } from "next/cache";
 
 async function getPlaylists(params) {
 	const res = await fetchurl(
@@ -111,6 +111,7 @@ const AdminMoviesDraftIndex = async ({ params, searchParams }) => {
 					pageText="Movies"
 					addLink="/noadmin/movies/create"
 					searchOn="/noadmin/movies"
+					searchedKeyword=""
 					objects={movies}
 					searchParams={awtdSearchParams}
 					handleDraft={draftIt}

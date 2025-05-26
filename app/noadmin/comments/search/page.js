@@ -106,6 +106,7 @@ const AdminCommentsSearchIndex = async ({ params, searchParams }) => {
 					pageText="Comments"
 					addLink="/noadmin/comments/create"
 					searchOn="/noadmin/comments"
+					searchedKeyword={keyword}
 					objects={comments}
 					searchParams={awtdSearchParams}
 					handleDraft={draftIt}

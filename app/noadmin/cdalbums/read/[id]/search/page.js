@@ -21,9 +21,10 @@ async function getSongs(params) {
 	return res;
 }
 
-const ReadCDAlbum = async ({ params, searchParams }) => {
+const AdminCDAlbumReadIndex = async ({ params, searchParams }) => {
 	const awtdParams = await params;
 	const awtdSearchParams = await searchParams;
+	const keyword = awtdSearchParams.keyword || "";
 	const token = await getAuthTokenOnServer();
 	const auth = await getUserOnServer();
 
@@ -33,7 +34,7 @@ const ReadCDAlbum = async ({ params, searchParams }) => {
 
 	const cdalbum = await getCDAlbum(`/${awtdParams.id}`);
 	const songs = await getSongs(
-		`?resourceId=${cdalbum?.data?._id}&page=${page}&limit=${limit}&sort=${sort}`
+		`?resourceId=${cdalbum?.data?._id}&page=${page}&limit=${limit}&sort=${sort}&keyword=${keyword}`
 	);
 
 	const draftIt = async (id) => {
@@ -124,6 +125,7 @@ const ReadCDAlbum = async ({ params, searchParams }) => {
 						pageText="Songs"
 						addLink={`/noadmin/cdalbums/song/${cdalbum?.data?._id}/create`}
 						searchOn={`/noadmin/cdalbums/read/${cdalbum?.data?._id}`}
+						searchedKeyword={keyword}
 						objects={songs}
 						searchParams={awtdSearchParams}
 						handleDraft={draftIt}
@@ -155,4 +157,4 @@ const ReadCDAlbum = async ({ params, searchParams }) => {
 	);
 };
 
-export default ReadCDAlbum;
+export default AdminCDAlbumReadIndex;

@@ -26,9 +26,45 @@ const AdminCategoriesSearchIndex = async ({ params, searchParams }) => {
 		const rawFormData = {
 			title: formData.get("title"),
 			text: formData.get("text"),
-			parentCategory: formData.get("parentCategory"),
+			parentId: formData.get("parentId"),
 		};
 		await fetchurl(`/noadmin/categories`, "POST", "no-cache", rawFormData);
+		revalidatePath(
+			`/noadmin/categories/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+		);
+	};
+
+	const draftIt = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/noadmin/categories/${id}/draftit`, "PUT", "no-cache");
+		revalidatePath(
+			`/noadmin/categories/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+		);
+	};
+
+	const publishIt = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/noadmin/categories/${id}/publishit`, "PUT", "no-cache");
+		revalidatePath(
+			`/noadmin/categories/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+		);
+	};
+
+	const trashIt = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/noadmin/categories/${id}/trashit`, "PUT", "no-cache");
+		revalidatePath(
+			`/noadmin/categories/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+		);
+	};
+
+	const scheduleIt = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/noadmin/categories/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
 			`/noadmin/categories/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -104,12 +140,12 @@ const AdminCategoriesSearchIndex = async ({ params, searchParams }) => {
 							onModel="Category"
 							advancedTextEditor={false}
 						/>
-						<label htmlFor="parentCategory" className="form-label">
+						<label htmlFor="parentId" className="form-label">
 							Parent Category
 						</label>
 						<select
-							id="parentCategory"
-							name="parentCategory"
+							id="parentId"
+							name="parentId"
 							defaultValue=""
 							className="form-control"
 						>
@@ -131,12 +167,13 @@ const AdminCategoriesSearchIndex = async ({ params, searchParams }) => {
 							pageText="Categories"
 							addLink="/noadmin/categories"
 							searchOn="/noadmin/categories"
+							searchedKeyword={keyword}
 							objects={categories}
 							searchParams={awtdSearchParams}
-							handleDraft={undefined}
-							handlePublish={undefined}
-							handleTrash={undefined}
-							handleSchedule={undefined}
+							handleDraft={draftIt}
+							handlePublish={publishIt}
+							handleTrash={trashIt}
+							handleSchedule={scheduleIt}
 							handleDelete={handleDelete}
 							handleTrashAllFunction={handleTrashAll}
 							handleDeleteAllFunction={handleDeleteAll}

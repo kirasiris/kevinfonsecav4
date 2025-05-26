@@ -25,8 +25,8 @@ const List = ({
 	handleTrash = () => {},
 	handleSchedule = () => {},
 	handleDelete = () => {},
-	handleTrashAllFunction = () => {},
 	handleDeleteAllFunction = () => {},
+	handleDeleteAllInvalidPermanentlyFunction = () => {},
 	setSelectedObject = () => {},
 	setShowMediaModel = () => {},
 }) => {
@@ -112,21 +112,6 @@ const List = ({
 	}
 
 	if (
-		typeof handleTrashAllFunction !== "function" &&
-		handleTrashAllFunction !== "" &&
-		handleTrashAllFunction !== undefined &&
-		handleTrashAllFunction !== null
-	) {
-		return (
-			<ErrorPage
-				statusCodeMessage={
-					"The handleTrashAllFunction parameter is not a function!. Please try again"
-				}
-			/>
-		);
-	}
-
-	if (
 		typeof handleDeleteAllFunction !== "function" &&
 		handleDeleteAllFunction !== "" &&
 		handleDeleteAllFunction !== undefined &&
@@ -141,6 +126,21 @@ const List = ({
 		);
 	}
 
+	if (
+		typeof handleDeleteAllInvalidPermanentlyFunction !== "function" &&
+		handleDeleteAllInvalidPermanentlyFunction !== "" &&
+		handleDeleteAllInvalidPermanentlyFunction !== undefined &&
+		handleDeleteAllInvalidPermanentlyFunction !== null
+	) {
+		return (
+			<ErrorPage
+				statusCodeMessage={
+					"The handleDeleteAllInvalidPermanentlyFunction parameter is not a function!. Please try again"
+				}
+			/>
+		);
+	}
+
 	return (
 		<>
 			<AdminCardHeaderMenu
@@ -150,8 +150,10 @@ const List = ({
 				totalResults={objects?.countAll}
 				addLink={addLink}
 				searchOn={searchOn}
-				handleTrashAllFunction={handleTrashAllFunction}
 				handleDeleteAllFunction={handleDeleteAllFunction}
+				handleDeleteAllInvalidPermanentlyFunction={
+					handleDeleteAllInvalidPermanentlyFunction
+				}
 				classList="mb-5"
 			/>
 			<UseDropzone

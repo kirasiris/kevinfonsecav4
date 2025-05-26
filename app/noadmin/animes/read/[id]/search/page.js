@@ -21,9 +21,10 @@ async function getChapters(params) {
 	return res;
 }
 
-const ReadAnime = async ({ params, searchParams }) => {
+const AdminAnimeReadSearchIndex = async ({ params, searchParams }) => {
 	const awtdParams = await params;
 	const awtdSearchParams = await searchParams;
+	const keyword = awtdSearchParams.keyword || "";
 	const token = await getAuthTokenOnServer();
 	const auth = await getUserOnServer();
 
@@ -33,7 +34,7 @@ const ReadAnime = async ({ params, searchParams }) => {
 
 	const anime = await getAnime(`/${awtdParams.id}`);
 	const chapters = await getChapters(
-		`?resourceId=${anime?.data?._id}&page=${page}&limit=${limit}&sort=${sort}`
+		`?resourceId=${anime?.data?._id}&page=${page}&limit=${limit}&sort=${sort}&keyword=${keyword}`
 	);
 
 	const draftIt = async (id) => {
@@ -141,7 +142,7 @@ const ReadAnime = async ({ params, searchParams }) => {
 						pageText="Episodes"
 						addLink={`/noadmin/animes/chapter/${anime?.data?._id}/create`}
 						searchOn={`/noadmin/animes/read/${anime?.data?._id}`}
-						searchedKeyword=""
+						searchedKeyword={keyword}
 						objects={chapters}
 						searchParams={awtdSearchParams}
 						handleDraft={draftIt}
@@ -175,4 +176,4 @@ const ReadAnime = async ({ params, searchParams }) => {
 	);
 };
 
-export default ReadAnime;
+export default AdminAnimeReadSearchIndex;

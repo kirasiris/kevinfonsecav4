@@ -60,6 +60,24 @@ const AdminAnimesSearchIndex = async ({ params, searchParams }) => {
 		);
 	};
 
+	const featureIt = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/noadmin/playlists/${id}/featureit`, "PUT", "no-cache");
+		revalidatePath(
+			`/noadmin/animes/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+		);
+	};
+
+	const unfeatureIt = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/noadmin/playlists/${id}/unfeatureit`, "PUT", "no-cache");
+		revalidatePath(
+			`/noadmin/animes/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+		);
+	};
+
 	const handleDelete = async (id) => {
 		"use server";
 		// const rawFormData = {}
@@ -112,12 +130,15 @@ const AdminAnimesSearchIndex = async ({ params, searchParams }) => {
 					pageText="Animes"
 					addLink="/noadmin/animes/create"
 					searchOn="/noadmin/animes"
+					searchedKeyword={keyword}
 					objects={animes}
 					searchParams={awtdSearchParams}
 					handleDraft={draftIt}
 					handlePublish={publishIt}
 					handleTrash={trashIt}
 					handleSchedule={scheduleIt}
+					handleFeature={featureIt}
+					handleUnfeature={unfeatureIt}
 					handleDelete={handleDelete}
 					handleTrashAllFunction={handleTrashAll}
 					handleDeleteAllFunction={handleDeleteAll}

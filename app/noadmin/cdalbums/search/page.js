@@ -60,6 +60,24 @@ const AdminCDAlbumsSearchIndex = async ({ params, searchParams }) => {
 		);
 	};
 
+	const featureIt = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/noadmin/playlists/${id}/featureit`, "PUT", "no-cache");
+		revalidatePath(
+			`/noadmin/cdalbums/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+		);
+	};
+
+	const unfeatureIt = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/noadmin/playlists/${id}/unfeatureit`, "PUT", "no-cache");
+		revalidatePath(
+			`/noadmin/cdalbums/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+		);
+	};
+
 	const handleDelete = async (id) => {
 		"use server";
 		// const rawFormData = {}
@@ -112,12 +130,15 @@ const AdminCDAlbumsSearchIndex = async ({ params, searchParams }) => {
 					pageText="CD Albums"
 					addLink="/noadmin/cdalbums/create"
 					searchOn="/noadmin/cdalbums"
+					searchedKeyword={keyword}
 					objects={cdalbums}
 					searchParams={awtdSearchParams}
 					handleDraft={draftIt}
 					handlePublish={publishIt}
 					handleTrash={trashIt}
 					handleSchedule={scheduleIt}
+					handleFeature={featureIt}
+					handleUnfeature={unfeatureIt}
 					handleDelete={handleDelete}
 					handleTrashAllFunction={handleTrashAll}
 					handleDeleteAllFunction={handleDeleteAll}

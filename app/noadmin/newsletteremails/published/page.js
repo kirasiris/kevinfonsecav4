@@ -130,6 +130,7 @@ const AdminNewsletterEmailsPublishedIndex = async ({
 					pageText="Newsletter Emails"
 					addLink="/noadmin/newsletteremails/create"
 					searchOn="/noadmin/newsletteremails"
+					searchedKeyword=""
 					objects={newsletteremails}
 					searchParams={awtdSearchParams}
 					handleDraft={draftIt}

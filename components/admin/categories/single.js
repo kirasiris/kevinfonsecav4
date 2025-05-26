@@ -34,7 +34,7 @@ const Single = ({
 					</h1>
 					<div className="blog-item__meta">
 						<span className="badge bg-dark me-1">
-							{object.parentCategory ? "Sub Category" : "Category"}
+							{object.parentId ? "Sub Category" : "Category"}
 							&nbsp;for&nbsp;{object.categoryType}
 						</span>
 						<span className="badge bg-dark me-1">

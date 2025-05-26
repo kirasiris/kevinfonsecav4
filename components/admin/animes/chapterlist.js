@@ -11,12 +11,15 @@ const ChapterList = ({
 	pageText = "",
 	addLink = "",
 	searchOn = "",
+	searchedKeyword = "",
 	objects = [],
 	searchParams = {},
 	handleDraft = () => {},
 	handlePublish = () => {},
 	handleTrash = () => {},
 	handleSchedule = () => {},
+	handleFeature = () => {},
+	handleUnfeature = () => {},
 	handleDelete = () => {},
 	handleTrashAllFunction = () => {},
 	handleDeleteAllFunction = () => {},
@@ -82,6 +85,36 @@ const ChapterList = ({
 			<ErrorPage
 				statusCodeMessage={
 					"The handleSchedule parameter is not a function!. Please try again"
+				}
+			/>
+		);
+	}
+
+	if (
+		typeof handleFeature !== "function" &&
+		handleFeature !== "" &&
+		handleFeature !== undefined &&
+		handleFeature !== null
+	) {
+		return (
+			<ErrorPage
+				statusCodeMessage={
+					"The handleFeature parameter is not a function!. Please try again"
+				}
+			/>
+		);
+	}
+
+	if (
+		typeof handleUnfeature !== "function" &&
+		handleUnfeature !== "" &&
+		handleUnfeature !== undefined &&
+		handleUnfeature !== null
+	) {
+		return (
+			<ErrorPage
+				statusCodeMessage={
+					"The handleUnfeature parameter is not a function!. Please try again"
 				}
 			/>
 		);
@@ -159,6 +192,8 @@ const ChapterList = ({
 								handlePublish={handlePublish}
 								handleTrash={handleTrash}
 								handleSchedule={handleSchedule}
+								handleFeature={handleFeature}
+								handleUnfeature={handleUnfeature}
 								handleDelete={handleDelete}
 								objects={newobjects.data}
 								setObjects={setNewObjects}
@@ -181,7 +216,7 @@ const ChapterList = ({
 			) : (
 				<NothingFoundAlert
 					classList="alert-danger rounded-0 m-0 border-0"
-					text="Nothing found"
+					text={`Nothing found with ${searchedKeyword}`}
 				/>
 			)}
 		</>

@@ -64,7 +64,18 @@ const AdminBlogsSearchIndex = async ({ params, searchParams }) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/blogs/${id}/featureit`, "PUT", "no-cache");
-		revalidatePath(`/noadmin/blogs?page=${page}&limit=${limit}&sort=${sort}`);
+		revalidatePath(
+			`/noadmin/blogs/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+		);
+	};
+
+	const unfeatureIt = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/noadmin/blogs/${id}/unfeatureit`, "PUT", "no-cache");
+		revalidatePath(
+			`/noadmin/blogs/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+		);
 	};
 
 	const handleDelete = async (id) => {
@@ -115,6 +126,7 @@ const AdminBlogsSearchIndex = async ({ params, searchParams }) => {
 					pageText="Blogs"
 					addLink="/noadmin/blogs/create"
 					searchOn="/noadmin/blogs"
+					searchedKeyword={keyword}
 					objects={blogs}
 					searchParams={awtdSearchParams}
 					handleDraft={draftIt}
@@ -122,6 +134,7 @@ const AdminBlogsSearchIndex = async ({ params, searchParams }) => {
 					handleTrash={trashIt}
 					handleSchedule={scheduleIt}
 					handleFeature={featureIt}
+					handleUnfeature={unfeatureIt}
 					handleDelete={handleDelete}
 					handleTrashAllFunction={handleTrashAll}
 					handleDeleteAllFunction={handleDeleteAll}

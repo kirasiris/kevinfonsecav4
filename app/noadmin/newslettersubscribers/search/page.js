@@ -27,50 +27,6 @@ const AdminNewsletterSubscribersSearchIndex = async ({
 		`?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 	);
 
-	// const draftIt = async (id) => {
-	// 	"use server";
-	// 	// const rawFormData = {}
-	// 	await fetchurl(`/noadmin/newslettersubscribers/${id}/draftit`, "PUT", "no-cache");
-	// 	revalidatePath(
-	// 		`/noadmin/newslettersubscribers?page=${awtdSearchParams.page || 1}&limit=${
-	// 			awtdSearchParams.limit || 10
-	// 		}&sort=${awtdSearchParams.sort || "-createdAt"}`
-	// 	);
-	// };
-
-	// const publishIt = async (id) => {
-	// 	"use server";
-	// 	// const rawFormData = {}
-	// 	await fetchurl(`/noadmin/newslettersubscribers/${id}/publishit`, "PUT", "no-cache");
-	// 	revalidatePath(
-	// 		`/noadmin/newslettersubscribers?page=${awtdSearchParams.page || 1}&limit=${
-	// 			awtdSearchParams.limit || 10
-	// 		}&sort=${awtdSearchParams.sort || "-createdAt"}`
-	// 	);
-	// };
-
-	// const trashIt = async (id) => {
-	// 	"use server";
-	// 	// const rawFormData = {}
-	// 	await fetchurl(`/noadmin/newslettersubscribers/${id}/trashit`, "PUT", "no-cache");
-	// 	revalidatePath(
-	// 		`/noadmin/newslettersubscribers?page=${awtdSearchParams.page || 1}&limit=${
-	// 			awtdSearchParams.limit || 10
-	// 		}&sort=${awtdSearchParams.sort || "-createdAt"}`
-	// 	);
-	// };
-
-	// const scheduleIt = async (id) => {
-	// 	"use server";
-	// 	// const rawFormData = {}
-	// 	await fetchurl(`/noadmin/newslettersubscribers/${id}/scheduleit`, "PUT", "no-cache");
-	// 	revalidatePath(
-	// 		`/noadmin/newslettersubscribers?page=${awtdSearchParams.page || 1}&limit=${
-	// 			awtdSearchParams.limit || 10
-	// 		}&sort=${awtdSearchParams.sort || "-createdAt"}`
-	// 	);
-	// };
-
 	const handleDelete = async (id) => {
 		"use server";
 		// const rawFormData = {}
@@ -80,26 +36,9 @@ const AdminNewsletterSubscribersSearchIndex = async ({
 			"no-cache"
 		);
 		revalidatePath(
-			`/noadmin/newslettersubscribers/search?keyword=${
-				awtdSearchParams.keyword
-			}&page=${awtdSearchParams.page || 1}&limit=${
-				awtdSearchParams.limit || 10
-			}&sort=${awtdSearchParams.sort || "-createdAt"}`
+			`/noadmin/newslettersubscribers/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
-
-	// const handleTrashAll = async () => {
-	// 	"use server";
-	// 	// const rawFormData = {}
-	// 	await fetchurl(`/noadmin/newslettersubscribers/deleteall`, "PUT", "no-cache");
-	// 	revalidatePath(
-	// 		`/noadmin/newslettersubscribers/search?keyword=${
-	// 			awtdSearchParams.keyword
-	// 		}&page=${awtdSearchParams.page || 1}&limit=${awtdSearchParams.limit || 10}&sort=${
-	// 			awtdSearchParams.sort || "-createdAt"
-	// 		}`
-	// 	);
-	// };
 
 	const handleDeleteAll = async () => {
 		"use server";
@@ -110,11 +49,7 @@ const AdminNewsletterSubscribersSearchIndex = async ({
 			"no-cache"
 		);
 		revalidatePath(
-			`/noadmin/newslettersubscribers/search?keyword=${
-				awtdSearchParams.keyword
-			}&page=${awtdSearchParams.page || 1}&limit=${
-				awtdSearchParams.limit || 10
-			}&sort=${awtdSearchParams.sort || "-createdAt"}`
+			`/noadmin/newslettersubscribers/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -135,6 +70,7 @@ const AdminNewsletterSubscribersSearchIndex = async ({
 					pageText="Newsletter Subscribers"
 					addLink=""
 					searchOn="/noadmin/newslettersubscribers"
+					searchedKeyword={keyword}
 					objects={newslettersubscribers}
 					searchParams={awtdSearchParams}
 					handleDraft={undefined}

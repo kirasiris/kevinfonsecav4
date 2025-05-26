@@ -104,6 +104,7 @@ const AdminEventsSearchIndex = async ({ params, searchParams }) => {
 					pageText="Events"
 					addLink="/noadmin/events/create"
 					searchOn="/noadmin/events"
+					searchedKeyword={keyword}
 					objects={events}
 					searchParams={awtdSearchParams}
 					handleDraft={draftIt}

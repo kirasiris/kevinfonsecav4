@@ -19,55 +19,10 @@ const AdminSettingsIndex = async ({ params, searchParams }) => {
 		`?page=${page}&limit=${limit}&sort=${sort}`
 	);
 
-	const draftIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/settings/${id}/draftit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/settings?page=${page}&limit=${limit}&sort=${sort}`
-		);
-	};
-
-	const publishIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/settings/${id}/publishit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/settings?page=${page}&limit=${limit}&sort=${sort}`
-		);
-	};
-
-	const trashIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/settings/${id}/trashit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/settings?page=${page}&limit=${limit}&sort=${sort}`
-		);
-	};
-
-	const scheduleIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/settings/${id}/scheduleit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/settings?page=${page}&limit=${limit}&sort=${sort}`
-		);
-	};
-
 	const handleDelete = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/settings/${id}/permanently`, "DELETE", "no-cache");
-		revalidatePath(
-			`/noadmin/settings?page=${page}&limit=${limit}&sort=${sort}`
-		);
-	};
-
-	const handleTrashAll = async () => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/settings/deleteall`, "PUT", "no-cache");
 		revalidatePath(
 			`/noadmin/settings?page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -90,10 +45,10 @@ const AdminSettingsIndex = async ({ params, searchParams }) => {
 		<>
 			<AdminStatusesMenu
 				allLink="/noadmin/settings"
-				publishedLink="/noadmin/settings/published"
-				draftLink="/noadmin/settings/draft"
-				scheduledLink="/noadmin/settings/scheduled"
-				trashedLink="/noadmin/settings/trashed"
+				publishedLink=""
+				draftLink=""
+				scheduledLink=""
+				trashedLink=""
 				categoriesLink=""
 				categoryType=""
 			/>

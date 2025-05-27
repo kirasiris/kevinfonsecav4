@@ -24,42 +24,42 @@ const AdminReviewsIndex = async ({ params, searchParams }) => {
 	const draftIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/noadmin/comments/${id}/draftit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/reviews/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(`/noadmin/reviews?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const publishIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/noadmin/comments/${id}/publishit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/reviews/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(`/noadmin/reviews?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const trashIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/noadmin/comments/${id}/trashit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/reviews/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(`/noadmin/reviews?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const scheduleIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/noadmin/comments/${id}/scheduleit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/reviews/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(`/noadmin/reviews?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const handleDelete = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/noadmin/comments/${id}/permanently`, "DELETE", "no-cache");
+		await fetchurl(`/noadmin/reviews/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(`/noadmin/reviews?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const handleTrashAll = async () => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/noadmin/comments/deleteall`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/reviews/deleteall`, "PUT", "no-cache");
 		revalidatePath(`/noadmin/reviews?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
@@ -67,7 +67,7 @@ const AdminReviewsIndex = async ({ params, searchParams }) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(
-			`/noadmin/comments/deleteall/permanently`,
+			`/noadmin/reviews/deleteall/permanently`,
 			"DELETE",
 			"no-cache"
 		);
@@ -89,6 +89,7 @@ const AdminReviewsIndex = async ({ params, searchParams }) => {
 					pageText="Reviews"
 					addLink="/noadmin/reviews/create"
 					searchOn="/noadmin/reviews"
+					searchedKeyword=""
 					objects={reviews}
 					searchParams={awtdSearchParams}
 					handleDraft={draftIt}

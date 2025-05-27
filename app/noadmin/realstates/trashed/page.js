@@ -111,6 +111,7 @@ const AdminRealStatesTrashedIndex = async ({ params, searchParams }) => {
 					pageText="Real States"
 					addLink="/noadmin/realstates/create"
 					searchOn="/noadmin/realstates"
+					searchedKeyword=""
 					objects={realstates}
 					searchParams={awtdSearchParams}
 					handleDraft={draftIt}

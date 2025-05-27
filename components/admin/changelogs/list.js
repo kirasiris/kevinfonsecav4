@@ -11,6 +11,7 @@ const List = ({
 	pageText = "",
 	addLink = "",
 	searchOn = "",
+	searchedKeyword = "",
 	objects = [],
 	searchParams = {},
 	handleDraft = () => {},
@@ -188,7 +189,7 @@ const List = ({
 			) : (
 				<NothingFoundAlert
 					classList="alert-danger rounded-0 m-0 border-0"
-					text="Nothing found"
+					text={`Nothing found with ${searchedKeyword}`}
 				/>
 			)}
 		</>

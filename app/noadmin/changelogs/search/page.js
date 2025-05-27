@@ -105,6 +105,7 @@ const AdminChangelogsSearchIndex = async ({ params, searchParams }) => {
 					pageText="Changelogs"
 					addLink="/noadmin/changelogs"
 					searchOn="/noadmin/changelogs"
+					searchedKeyword={keyword}
 					objects={changelogs}
 					searchParams={awtdSearchParams}
 					handleDraft={draftIt}

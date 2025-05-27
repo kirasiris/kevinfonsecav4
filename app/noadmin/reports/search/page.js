@@ -20,55 +20,10 @@ const AdminReportsSearchIndex = async ({ params, searchParams }) => {
 		`?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 	);
 
-	const draftIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/reports/${id}/draftit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/reports/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
-		);
-	};
-
-	const publishIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/reports/${id}/publishit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/reports/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
-		);
-	};
-
-	const trashIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/reports/${id}/trashit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/reports/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
-		);
-	};
-
-	const scheduleIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/reports/${id}/scheduleit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/reports/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
-		);
-	};
-
 	const handleDelete = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/reports/${id}/permanently`, "DELETE", "no-cache");
-		revalidatePath(
-			`/noadmin/reports/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
-		);
-	};
-
-	const handleTrashAll = async () => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/reports/deleteall`, "PUT", "no-cache");
 		revalidatePath(
 			`/noadmin/reports/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -91,10 +46,10 @@ const AdminReportsSearchIndex = async ({ params, searchParams }) => {
 		<>
 			<AdminStatusesMenu
 				allLink="/noadmin/reports"
-				publishedLink="/noadmin/reports/published"
-				draftLink="/noadmin/reports/draft"
-				scheduledLink="/noadmin/reports/scheduled"
-				trashedLink="/noadmin/reports/trashed"
+				publishedLink=""
+				draftLink=""
+				scheduledLink=""
+				trashedLink=""
 				categoriesLink=""
 				categoryType=""
 			/>
@@ -104,12 +59,13 @@ const AdminReportsSearchIndex = async ({ params, searchParams }) => {
 					pageText="Reports"
 					addLink="/noadmin/reports/create"
 					searchOn="/noadmin/reports"
+					searchedKeyword={keyword}
 					objects={reports}
 					searchParams={awtdSearchParams}
-					handleDraft={draftIt}
-					handlePublish={publishIt}
-					handleTrash={trashIt}
-					handleSchedule={scheduleIt}
+					handleDraft={undefined}
+					handlePublish={undefined}
+					handleTrash={undefined}
+					handleSchedule={undefined}
 					handleDelete={handleDelete}
 					handleTrashAllFunction={handleTrashAll}
 					handleDeleteAllFunction={handleDeleteAll}

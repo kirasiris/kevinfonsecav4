@@ -30,7 +30,7 @@ const UpdateReview = async ({ params, searchParams }) => {
 			status: formData.get("status"),
 		};
 		await fetchurl(
-			`/noadmin/comments/${awtdParams.id}`,
+			`/noadmin/reviews/${awtdParams.id}`,
 			"PUT",
 			"no-cache",
 			rawFormData

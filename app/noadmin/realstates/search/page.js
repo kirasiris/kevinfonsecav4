@@ -108,6 +108,7 @@ const AdminRealStatesSearchIndex = async ({ params, searchParams }) => {
 					pageText="Real States"
 					addLink="/noadmin/realstates/create"
 					searchOn="/noadmin/realstates"
+					searchedKeyword={keyword}
 					objects={realstates}
 					searchParams={awtdSearchParams}
 					handleDraft={draftIt}

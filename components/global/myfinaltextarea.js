@@ -188,7 +188,7 @@ const MyTextArea = ({
 			// type
 			className="form-control mb-3"
 			required={isRequired}
-			// placeholder=""
+			placeholder={customPlaceholder}
 			rows="5"
 		/>
 	);

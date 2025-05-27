@@ -24,7 +24,7 @@ const AdminReviewsPublishedIndex = async ({ params, searchParams }) => {
 	const draftIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/noadmin/comments/${id}/draftit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/reviews/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
 			`/noadmin/reviews/published?page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -33,7 +33,7 @@ const AdminReviewsPublishedIndex = async ({ params, searchParams }) => {
 	const publishIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/noadmin/comments/${id}/publishit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/reviews/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
 			`/noadmin/reviews/published?page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -42,7 +42,7 @@ const AdminReviewsPublishedIndex = async ({ params, searchParams }) => {
 	const trashIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/noadmin/comments/${id}/trashit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/reviews/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
 			`/noadmin/reviews/published?page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -51,7 +51,7 @@ const AdminReviewsPublishedIndex = async ({ params, searchParams }) => {
 	const scheduleIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/noadmin/comments/${id}/scheduleit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/reviews/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
 			`/noadmin/reviews/published?page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -60,7 +60,7 @@ const AdminReviewsPublishedIndex = async ({ params, searchParams }) => {
 	const handleDelete = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/noadmin/comments/${id}/permanently`, "DELETE", "no-cache");
+		await fetchurl(`/noadmin/reviews/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(
 			`/noadmin/reviews/published?page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -69,7 +69,7 @@ const AdminReviewsPublishedIndex = async ({ params, searchParams }) => {
 	const handleTrashAll = async () => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/noadmin/comments/deleteall`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/reviews/deleteall`, "PUT", "no-cache");
 		revalidatePath(
 			`/noadmin/reviews/published?page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -79,7 +79,7 @@ const AdminReviewsPublishedIndex = async ({ params, searchParams }) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(
-			`/noadmin/comments/deleteall/permanently`,
+			`/noadmin/reviews/deleteall/permanently`,
 			"DELETE",
 			"no-cache"
 		);
@@ -103,6 +103,7 @@ const AdminReviewsPublishedIndex = async ({ params, searchParams }) => {
 					pageText="Reviews"
 					addLink="/noadmin/reviews/create"
 					searchOn="/noadmin/reviews"
+					searchedKeyword=""
 					objects={reviews}
 					searchParams={awtdSearchParams}
 					handleDraft={draftIt}

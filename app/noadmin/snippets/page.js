@@ -55,6 +55,24 @@ const AdminSnippetsIndex = async ({ params, searchParams }) => {
 		);
 	};
 
+	const featureIt = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/noadmin/snippets/${id}/featureit`, "PUT", "no-cache");
+		revalidatePath(
+			`/noadmin/snippets?page=${page}&limit=${limit}&sort=${sort}`
+		);
+	};
+
+	const unfeatureIt = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/noadmin/snippets/${id}/unfeatureit`, "PUT", "no-cache");
+		revalidatePath(
+			`/noadmin/snippets?page=${page}&limit=${limit}&sort=${sort}`
+		);
+	};
+
 	const handleDelete = async (id) => {
 		"use server";
 		// const rawFormData = {}
@@ -103,12 +121,15 @@ const AdminSnippetsIndex = async ({ params, searchParams }) => {
 					pageText="Snippets"
 					addLink="/noadmin/snippets/create"
 					searchOn="/noadmin/snippets"
+					searchedKeyword=""
 					objects={snippets}
 					searchParams={awtdSearchParams}
 					handleDraft={draftIt}
 					handlePublish={publishIt}
 					handleTrash={trashIt}
 					handleSchedule={scheduleIt}
+					handleFeature={featureIt}
+					handleUnfeature={unfeatureIt}
 					handleDelete={handleDelete}
 					handleTrashAllFunction={handleTrashAll}
 					handleDeleteAllFunction={handleDeleteAll}

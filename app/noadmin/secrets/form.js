@@ -14,7 +14,7 @@ const Form = async ({ params, searchParams, revalidateUrl = "" }) => {
 			status: formData.get("status"),
 		};
 
-		await fetchurl(`/extras/secrets`, "POST", "no-cache", rawFormData);
+		await fetchurl(`/noadmin/secrets`, "POST", "no-cache", rawFormData);
 
 		revalidatePath(revalidateUrl);
 	};

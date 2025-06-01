@@ -116,6 +116,7 @@ const AdminUsersIndex = async ({ params, searchParams }) => {
 					pageText="Users"
 					addLink="/noadmin/users/create"
 					searchOn="/noadmin/users"
+					searchedKeyword=""
 					objects={users}
 					searchParams={awtdSearchParams}
 					handleAssignStripeCustomerId={assignStripeCustomerId}

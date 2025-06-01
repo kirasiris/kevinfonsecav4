@@ -90,6 +90,19 @@ const AdminChangelogsIndex = async ({ params, searchParams }) => {
 		);
 	};
 
+	const handleDeleteAllEmpty = async () => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(
+			`/noadmin/changelogs/deleteall/empty/permanently`,
+			"DELETE",
+			"no-cache"
+		);
+		revalidatePath(
+			`/noadmin/changelogs?page=${page}&limit=${limit}&sort=${sort}`
+		);
+	};
+
 	return (
 		<>
 			<AdminStatusesMenu
@@ -115,6 +128,7 @@ const AdminChangelogsIndex = async ({ params, searchParams }) => {
 					handleDelete={handleDelete}
 					handleTrashAllFunction={handleTrashAll}
 					handleDeleteAllFunction={handleDeleteAll}
+					handleDeleteAllEmptyFunction={handleDeleteAllEmpty}
 				/>
 			</div>
 		</>

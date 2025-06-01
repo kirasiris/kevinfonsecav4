@@ -5,28 +5,29 @@ import List from "@/components/admin/secrets/list";
 import Form from "../form";
 
 async function getSecrets(params) {
-	const res = await fetchurl(`/global/secrets${params}`, "GET", "no-cache");
+	const res = await fetchurl(
+		`/global/secrets${params}&status=trash`,
+		"GET",
+		"no-cache"
+	);
 	return res;
 }
 
-const AdminSecretsSearchIndex = async ({ params, searchParams }) => {
+const AdminSecretsTrashedIndex = async ({ params, searchParams }) => {
 	const awtdParams = await params;
 	const awtdSearchParams = await searchParams;
-	const keyword = awtdSearchParams.keyword || "";
 	const page = awtdSearchParams.page || 1;
 	const limit = awtdSearchParams.limit || 10;
 	const sort = awtdSearchParams.sort || "-createdAt";
 
-	const secrets = await getSecrets(
-		`?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
-	);
+	const secrets = await getSecrets(`?page=${page}&limit=${limit}&sort=${sort}`);
 
 	const draftIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/secrets/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/secrets/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/secrets/scheduled?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -35,7 +36,7 @@ const AdminSecretsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/secrets/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/secrets/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/secrets/scheduled?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -44,7 +45,7 @@ const AdminSecretsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/secrets/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/secrets/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/secrets/scheduled?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -53,7 +54,7 @@ const AdminSecretsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/secrets/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/secrets/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/secrets/scheduled?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -62,7 +63,7 @@ const AdminSecretsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/secrets/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`/noadmin/secrets/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/secrets/scheduled?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -71,7 +72,7 @@ const AdminSecretsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/secrets/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/secrets/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/secrets/scheduled?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -84,7 +85,7 @@ const AdminSecretsSearchIndex = async ({ params, searchParams }) => {
 			"no-cache"
 		);
 		revalidatePath(
-			`/noadmin/secrets/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/secrets/scheduled?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -101,7 +102,7 @@ const AdminSecretsSearchIndex = async ({ params, searchParams }) => {
 			/>
 			<Form
 				searchParams={awtdSearchParams}
-				revalidateUrl={`/noadmin/secrets/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`}
+				revalidateUrl={`/noadmin/secrets/trashed?page=${page}&limit=${limit}&sort=${sort}`}
 			/>
 			<div className="card rounded-0">
 				<List
@@ -109,7 +110,7 @@ const AdminSecretsSearchIndex = async ({ params, searchParams }) => {
 					pageText="Secrets"
 					addLink="/noadmin/secrets/create"
 					searchOn="/noadmin/secrets"
-					searchedKeyword={keyword}
+					searchedKeyword=""
 					objects={secrets}
 					searchParams={awtdSearchParams}
 					handleDraft={draftIt}
@@ -125,4 +126,4 @@ const AdminSecretsSearchIndex = async ({ params, searchParams }) => {
 	);
 };
 
-export default AdminSecretsSearchIndex;
+export default AdminSecretsTrashedIndex;

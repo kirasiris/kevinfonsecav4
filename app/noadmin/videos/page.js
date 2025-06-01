@@ -91,6 +91,7 @@ const AdminVideosIndex = async ({ params, searchParams }) => {
 					pageText="Videos"
 					addLink="/noadmin/videos/create"
 					searchOn="/noadmin/videos"
+					searchedKeyword=""
 					objects={videos}
 					searchParams={awtdSearchParams}
 					handleDraft={draftIt}

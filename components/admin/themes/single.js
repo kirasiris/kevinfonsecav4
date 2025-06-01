@@ -11,6 +11,8 @@ const Single = ({
 	handlePublish = () => {},
 	handleTrash = () => {},
 	handleSchedule = () => {},
+	handleFeature = () => {},
+	handleUnfeature = () => {},
 	handleDelete = () => {},
 	objects = [],
 	setObjects = () => {},
@@ -97,6 +99,18 @@ const Single = ({
 								onClick={() => handleSchedule(object._id)}
 							>
 								Schedule&nbsp;It
+							</button>
+							<button
+								className="dropdown-item btn btn-sm"
+								onClick={() => handleFeature(object._id)}
+							>
+								Feature&nbsp;It
+							</button>
+							<button
+								className="dropdown-item btn btn-sm"
+								onClick={() => handleUnfeature(object._id)}
+							>
+								Unfeature&nbsp;It
 							</button>
 							<hr />
 							<DeleteModal

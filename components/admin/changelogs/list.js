@@ -21,6 +21,7 @@ const List = ({
 	handleDelete = () => {},
 	handleTrashAllFunction = () => {},
 	handleDeleteAllFunction = () => {},
+	handleDeleteAllEmptyFunction = () => {},
 }) => {
 	const [newobjects, setNewObjects] = useState(objects);
 	const [, setTotalResults] = useState({
@@ -142,6 +143,21 @@ const List = ({
 		);
 	}
 
+	if (
+		typeof handleDeleteAllEmptyFunction !== "function" &&
+		handleDeleteAllEmptyFunction !== "" &&
+		handleDeleteAllEmptyFunction !== undefined &&
+		handleDeleteAllEmptyFunction !== null
+	) {
+		return (
+			<ErrorPage
+				statusCodeMessage={
+					"The handleDeleteAllEmptyFunction parameter is not a function!. Please try again"
+				}
+			/>
+		);
+	}
+
 	return (
 		<>
 			<AdminCardHeaderMenu
@@ -153,6 +169,7 @@ const List = ({
 				searchOn={searchOn}
 				handleTrashAllFunction={handleTrashAllFunction}
 				handleDeleteAllFunction={handleDeleteAllFunction}
+				// handleDeleteAllEmptyFunction={handleDeleteAllEmptyFunction}
 				classList=""
 			/>
 			{objects?.data?.length > 0 ? (

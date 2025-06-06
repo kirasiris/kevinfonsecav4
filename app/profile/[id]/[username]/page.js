@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
+import { revalidatePath } from "next/cache";
 import {
 	fetchurl,
 	getAuthTokenOnServer,
@@ -9,7 +10,6 @@ import Loading from "@/app/profile/loading";
 import List from "@/components/profile/list";
 import Sidebar from "@/components/profile/sidebar";
 import Jumbotron from "@/components/profile/jumbotron";
-import { revalidatePath } from "next/cache";
 import Globalcontent from "@/layout/content";
 import PostNew from "@/components/profile/postnew";
 import Head from "@/app/head";
@@ -70,7 +70,7 @@ const ProfileRead = async ({ params, searchParams }) => {
 	const draftIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/posts/${id}/draftit`, "PUT", "no-cache");
+		await fetchurl(`/protected/posts/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
 			`/profile/${awtdParams.id}/${awtdParams.username}?page=${page}&limit=${limit}&sort=${sort}${subtype}`
 		);
@@ -79,7 +79,7 @@ const ProfileRead = async ({ params, searchParams }) => {
 	const publishIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/posts/${id}/publishit`, "PUT", "no-cache");
+		await fetchurl(`/protected/posts/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
 			`/profile/${awtdParams.id}/${awtdParams.username}?page=${page}&limit=${limit}&sort=${sort}${subtype}`
 		);
@@ -88,7 +88,7 @@ const ProfileRead = async ({ params, searchParams }) => {
 	const trashIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/posts/${id}/trashit`, "PUT", "no-cache");
+		await fetchurl(`/protected/posts/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
 			`/profile/${awtdParams.id}/${awtdParams.username}?page=${page}&limit=${limit}&sort=${sort}${subtype}`
 		);
@@ -97,7 +97,7 @@ const ProfileRead = async ({ params, searchParams }) => {
 	const scheduleIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/posts/${id}/scheduleit`, "PUT", "no-cache");
+		await fetchurl(`/protected/posts/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
 			`/profile/${awtdParams.id}/${awtdParams.username}?page=${page}&limit=${limit}&sort=${sort}${subtype}`
 		);
@@ -106,7 +106,7 @@ const ProfileRead = async ({ params, searchParams }) => {
 	const handleDelete = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/posts/${id}/permanently`, "DELETE", "no-cache");
+		await fetchurl(`/protected/posts/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(
 			`/profile/${awtdParams.id}/${awtdParams.username}?page=${page}&limit=${limit}&sort=${sort}${subtype}`
 		);
@@ -115,7 +115,7 @@ const ProfileRead = async ({ params, searchParams }) => {
 	const handleTrashAll = async () => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/blogs/deleteall`, "PUT", "no-cache");
+		await fetchurl(`/protected/posts/deleteall`, "PUT", "no-cache");
 		revalidatePath(
 			`/profile/${awtdParams.id}/${awtdParams.username}?page=${page}&limit=${limit}&sort=${sort}${subtype}`
 		);
@@ -124,7 +124,11 @@ const ProfileRead = async ({ params, searchParams }) => {
 	const handleDeleteAll = async () => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/blogs/deleteall/permanently`, "DELETE", "no-cache");
+		await fetchurl(
+			`/protected/posts/deleteall/permanently`,
+			"DELETE",
+			"no-cache"
+		);
 		revalidatePath(
 			`/profile/${awtdParams.id}/${awtdParams.username}?page=${page}&limit=${limit}&sort=${sort}${subtype}`
 		);
@@ -133,7 +137,7 @@ const ProfileRead = async ({ params, searchParams }) => {
 	const featureIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/posts/${id}/featureit`, "PUT", "no-cache");
+		await fetchurl(`/protected/posts/${id}/featureit`, "PUT", "no-cache");
 		revalidatePath(
 			`/profile/${awtdParams.id}/${awtdParams.username}?page=${page}&limit=${limit}&sort=${sort}${subtype}`
 		);
@@ -142,7 +146,7 @@ const ProfileRead = async ({ params, searchParams }) => {
 	const unfeatureIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/posts/${id}/unfeatureit`, "PUT", "no-cache");
+		await fetchurl(`/protected/posts/${id}/unfeatureit`, "PUT", "no-cache");
 		revalidatePath(
 			`/profile/${awtdParams.id}/${awtdParams.username}?page=${page}&limit=${limit}&sort=${sort}${subtype}`
 		);
@@ -151,7 +155,7 @@ const ProfileRead = async ({ params, searchParams }) => {
 	const hideIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/posts/${id}/hideit`, "PUT", "no-cache");
+		await fetchurl(`/protected/posts/${id}/hideit`, "PUT", "no-cache");
 		revalidatePath(
 			`/profile/${awtdParams.id}/${awtdParams.username}?page=${page}&limit=${limit}&sort=${sort}${subtype}`
 		);
@@ -160,7 +164,7 @@ const ProfileRead = async ({ params, searchParams }) => {
 	const unhideIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/posts/${id}/unhideit`, "PUT", "no-cache");
+		await fetchurl(`/protected/posts/${id}/unhideit`, "PUT", "no-cache");
 		revalidatePath(
 			`/profile/${awtdParams.id}/${awtdParams.username}?page=${page}&limit=${limit}&sort=${sort}${subtype}`
 		);
@@ -169,7 +173,7 @@ const ProfileRead = async ({ params, searchParams }) => {
 	const commentIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/posts/${id}/commentit`, "PUT", "no-cache");
+		await fetchurl(`/protected/posts/${id}/commentit`, "PUT", "no-cache");
 		revalidatePath(
 			`/profile/${awtdParams.id}/${awtdParams.username}?page=${page}&limit=${limit}&sort=${sort}${subtype}`
 		);
@@ -178,7 +182,7 @@ const ProfileRead = async ({ params, searchParams }) => {
 	const uncommentIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/posts/${id}/uncommentit`, "PUT", "no-cache");
+		await fetchurl(`/protected/posts/${id}/uncommentit`, "PUT", "no-cache");
 		revalidatePath(
 			`/profile/${awtdParams.id}/${awtdParams.username}?page=${page}&limit=${limit}&sort=${sort}${subtype}`
 		);
@@ -238,10 +242,10 @@ const ProfileRead = async ({ params, searchParams }) => {
 							params={awtdParams}
 							objects={posts}
 							searchParams={awtdSearchParams}
-							handleDraft={undefined}
-							handlePublish={undefined}
-							handleTrash={undefined}
-							handleSchedule={undefined}
+							handleDraft={draftIt}
+							handlePublish={publishIt}
+							handleTrash={trashIt}
+							handleSchedule={scheduleIt}
 							handleDelete={handleDelete}
 							handleTrashAllFunction={handleTrashAll}
 							handleDeleteAllFunction={handleDeleteAll}

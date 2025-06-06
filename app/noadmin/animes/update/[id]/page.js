@@ -8,11 +8,6 @@ import AdminSidebar from "@/components/admin/myfinaladminsidebar";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
 
-async function getFiles(params) {
-	const res = await fetchurl(`/global/files${params}`, "GET", "no-cache");
-	return res;
-}
-
 async function getCategories(params) {
 	const res = await fetchurl(`/global/categories${params}`, "GET", "no-cache");
 	return res;
@@ -31,8 +26,6 @@ const UpdateAnime = async ({ params, searchParams }) => {
 	const auth = await getUserOnServer();
 
 	const anime = await getAnime(`/${awtdParams.id}`);
-
-	const files = await getFiles(`?page=1&limit=100&sort=-createdAt`);
 	const categories = await getCategories(`?categoryType=anime`);
 
 	const upgradeAnime = async (formData) => {
@@ -102,11 +95,12 @@ const UpdateAnime = async ({ params, searchParams }) => {
 				</div>
 			</div>
 			<div className="col-lg-3">
+				{console.log(anime?.data)}
 				<AdminSidebar
 					displayCategoryField={true}
 					displayAvatar={true}
-					avatar={anime?.data?.files?.avatar}
-					avatarFormat={"image"}
+					avatar={anime?.data?.files?.avatar?.location?.secure_location}
+					avatarFormat={anime?.data?.avatar?.format_type}
 					status={anime?.data?.status}
 					fullWidth={false}
 					password=""
@@ -117,11 +111,6 @@ const UpdateAnime = async ({ params, searchParams }) => {
 					category={anime?.data?.category[0]._id || undefined}
 					categories={categories?.data}
 					multiple_categories={false}
-					multipleFiles={false}
-					onModel={"Playlist"}
-					files={files}
-					auth={auth}
-					token={token}
 				/>
 				<br />
 				<FormButtons />

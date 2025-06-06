@@ -8,11 +8,6 @@ import AdminSidebar from "@/components/admin/myfinaladminsidebar";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
 
-async function getFiles(params) {
-	const res = await fetchurl(`/global/files${params}`, "GET", "no-cache");
-	return res;
-}
-
 async function getCategories(params) {
 	const res = await fetchurl(`/global/categories${params}`, "GET", "no-cache");
 	return res;
@@ -22,7 +17,6 @@ const CreateAnime = async ({ params, searchParams }) => {
 	const token = await getAuthTokenOnServer();
 	const auth = await getUserOnServer();
 
-	const files = await getFiles(`?page=1&limit=100&sort=-createdAt`);
 	const categories = await getCategories(`?categoryType=anime`);
 
 	const addAnime = async (formData) => {
@@ -95,7 +89,7 @@ const CreateAnime = async ({ params, searchParams }) => {
 				<AdminSidebar
 					displayCategoryField={true}
 					displayAvatar={true}
-					// avatar={files?.selected?._id}
+					avatar=""
 					avatarFormat={"image"}
 					status="draft"
 					fullWidth={false}
@@ -107,11 +101,6 @@ const CreateAnime = async ({ params, searchParams }) => {
 					category={""}
 					categories={categories?.data}
 					multiple_categories={true}
-					multipleFiles={false}
-					onModel={"Playlist"}
-					files={files}
-					auth={auth}
-					token={token}
 				/>
 				<br />
 				<FormButtons />

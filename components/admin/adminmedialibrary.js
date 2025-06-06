@@ -6,7 +6,7 @@ import {
 import List from "../admin/files/list";
 
 async function getFiles(params) {
-	const res = await fetchurl(`/files${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/files${params}`, "GET", "no-cache");
 	return res;
 }
 
@@ -24,11 +24,11 @@ const AdminMediaLibrary = async ({
 	const token = await getAuthTokenOnServer();
 	const auth = await getUserOnServer();
 
-	const files = await getFiles(
-		`?page=${searchParams.page || 1}&limit=${searchParams.limit || 50}&sort=${
-			searchParams.sort || "-createdAt"
-		}`
-	);
+	const page = searchParams.page || 1;
+	const limit = searchParams.limit || 50;
+	const sort = searchParams.sort || "-createdAt";
+
+	const files = await getFiles(`?page=${page}&limit=${limit}&sort=${sort}`);
 
 	return (
 		<List

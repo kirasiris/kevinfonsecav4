@@ -1,23 +1,8 @@
 "use client";
-import { useState } from "react";
 import Image from "next/image";
 import { FaFilePdf, FaFileVideo } from "react-icons/fa";
-import { Modal } from "react-bootstrap";
-import List from "./files/list";
 
-const AdminFeaturedImage = ({
-	avatar = "",
-	avatarFormat = "image",
-	multipleFiles = false,
-	onModel = "Blog",
-	files = [],
-	selectedFile = null,
-	setSelectedFile = () => {},
-	auth = {},
-	token = null,
-}) => {
-	const [showMediaModal, setShowMediaModel] = useState(false);
-	console.log("Admin Featured Image", selectedFile?.title);
+const AdminFeaturedImage = ({ avatar = "", avatarFormat = "image" }) => {
 	/*
 	 *
 	 * ANY OBJECT
@@ -25,15 +10,9 @@ const AdminFeaturedImage = ({
 	 */
 	const anyObj = () => {
 		return (
-			<figure
-				onClick={() => {
-					// setSelectedFile(avatar);
-					setShowMediaModel(true);
-				}}
-			>
+			<figure>
 				<Image
 					src={
-						selectedFile?.location?.secure_location ||
 						avatar?.location?.secure_location ||
 						"https://static.vecteezy.com/system/resources/previews/005/337/799/original/icon-image-not-found-free-vector.jpg"
 					}
@@ -53,15 +32,9 @@ const AdminFeaturedImage = ({
 	 */
 	const imgObj = () => {
 		return (
-			<figure
-				onClick={() => {
-					// setSelectedFile(avatar);
-					setShowMediaModel(true);
-				}}
-			>
+			<figure>
 				<Image
 					src={
-						selectedFile?.location?.secure_location ||
 						avatar?.location?.secure_location ||
 						"https://static.vecteezy.com/system/resources/previews/005/337/799/original/icon-image-not-found-free-vector.jpg"
 					}
@@ -81,12 +54,7 @@ const AdminFeaturedImage = ({
 	 */
 	const pdfObj = () => {
 		return (
-			<figure
-				onClick={() => {
-					// setSelectedFile(avatar);
-					setShowMediaModel(true);
-				}}
-			>
+			<figure>
 				<FaFilePdf style={{ fontSize: "184px" }} />
 			</figure>
 		);
@@ -98,12 +66,7 @@ const AdminFeaturedImage = ({
 	 */
 	const vidObj = () => {
 		return (
-			<figure
-				onClick={() => {
-					// setSelectedFile(avatar);
-					setShowMediaModel(true);
-				}}
-			>
+			<figure>
 				<FaFileVideo style={{ fontSize: "184px" }} />
 			</figure>
 		);
@@ -115,12 +78,7 @@ const AdminFeaturedImage = ({
 	 */
 	const audObj = () => {
 		return (
-			<figure
-				onClick={() => {
-					// setSelectedFile(avatar);
-					setShowMediaModel(true);
-				}}
-			>
+			<figure>
 				{/* <FaFileAudio style={{ fontSize: "184px" }} /> */}
 				<audio
 					controls
@@ -131,7 +89,6 @@ const AdminFeaturedImage = ({
 				>
 					<source
 						src={
-							selectedFile?.location?.secure_location ||
 							avatar?.location?.secure_location ||
 							"https://static.vecteezy.com/system/resources/previews/005/337/799/original/icon-image-not-found-free-vector.jpg"
 						}
@@ -141,74 +98,13 @@ const AdminFeaturedImage = ({
 		);
 	};
 	return (
-		<>
-			<div className="d-grid gap-2">
-				<button
-					type="button"
-					className="btn btn-secondary btn-sm btn-block"
-					onClick={() => setShowMediaModel(true)}
-				>
-					Featured Image
-				</button>
-				{avatarFormat === "any" && anyObj()}
-				{avatarFormat === "image" && imgObj()}
-				{avatarFormat === "application" && pdfObj()}
-				{avatarFormat === "video" && vidObj()}
-				{avatarFormat === "audio" && audObj()}
-			</div>
-			<Modal
-				show={showMediaModal}
-				onHide={() => setShowMediaModel(false)}
-				backdrop={true}
-				animation={true}
-				fullscreen={true}
-			>
-				<Modal.Header closeButton>
-					<Modal.Title>Media Library</Modal.Title>
-				</Modal.Header>
-				<Modal.Body>
-					<List
-						auth={auth}
-						token={token}
-						id={undefined}
-						name={undefined}
-						multipleFiles={multipleFiles}
-						onModel={onModel}
-						allLink="/noadmin/files"
-						pageText="Files"
-						addLink="/noadmin/files/create"
-						searchOn="/noadmin/files"
-						objects={files}
-						searchParams={undefined}
-						handleDraft={undefined}
-						handlePublish={undefined}
-						handleTrash={undefined}
-						handleSchedule={undefined}
-						handleDelete={undefined}
-						handleTrashAllFunction={undefined}
-						handleDeleteAllFunction={undefined}
-						setSelectedObject={setSelectedFile}
-						setShowMediaModel={setShowMediaModel}
-					/>
-				</Modal.Body>
-				<Modal.Footer>
-					<button
-						className="btn btn-secondary btn-sm"
-						type="button"
-						onClick={() => setShowMediaModel(false)}
-					>
-						Close
-					</button>
-					<button
-						className="btn btn-primary btn-sm"
-						type="button"
-						onClick={() => setShowMediaModel(false)}
-					>
-						Submit
-					</button>
-				</Modal.Footer>
-			</Modal>
-		</>
+		<div className="d-grid gap-2">
+			{avatarFormat === "any" && anyObj()}
+			{avatarFormat === "image" && imgObj()}
+			{avatarFormat === "application" && pdfObj()}
+			{avatarFormat === "video" && vidObj()}
+			{avatarFormat === "audio" && audObj()}
+		</div>
 	);
 };
 

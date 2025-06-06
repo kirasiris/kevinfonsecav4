@@ -4,7 +4,6 @@ import {
 	getUserOnServer,
 } from "@/helpers/setTokenOnServer";
 import { notFound, redirect } from "next/navigation";
-import AdminSidebar from "@/components/admin/myfinaladminsidebar";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
 
@@ -25,6 +24,12 @@ const UpdateComment = async ({ params, searchParams }) => {
 	const upgradeComment = async (formData) => {
 		"use server";
 		const rawFormData = {
+			resourceId: formData.get("resourceId"),
+			onModel: formData.get("onModel"),
+			user: formData.get("user") || undefined,
+			name: formData.get("name"),
+			email: formData.get("email"),
+			website: formData.get("website"),
 			title: formData.get("title"),
 			text: formData.get("text"),
 			status: formData.get("status"),
@@ -65,29 +70,118 @@ const UpdateComment = async ({ params, searchParams }) => {
 					customPlaceholder="No description"
 					defaultValue={comment?.data?.text}
 				/>
-			</div>
-			<div className="col-lg-3">
-				<AdminSidebar
-					displayCategoryField={false}
-					displayAvatar={false}
-					avatar={""}
-					avatarFormat={"image"}
-					status={comment?.data?.status}
-					fullWidth={false}
-					password=""
-					featured={undefined}
-					commented={undefined}
-					embedding={undefined}
-					github_readme={""}
-					category={undefined}
-					categories={[]}
-					multiple_categories={false}
-					multipleFiles={false}
-					onModel={"Comment"}
-					files={[]}
-					auth={auth}
-					token={token}
+				<label htmlFor="user" className="form-label">
+					User ID
+				</label>
+				<input
+					id="user"
+					name="user"
+					defaultValue={comment?.data.user?._id || undefined}
+					type="text"
+					className="form-control mb-3"
+					placeholder="0123456789"
 				/>
+				<div className="row">
+					<div className="col">
+						<label htmlFor="resourceId" className="form-label">
+							Resource ID
+						</label>
+						<input
+							id="resourceId"
+							name="resourceId"
+							defaultValue={comment?.data?.resourceId?._id}
+							type="text"
+							className="form-control mb-3"
+							placeholder="0123456789"
+						/>
+					</div>
+					<div className="col">
+						<label htmlFor="onModel" className="form-label">
+							On Model
+						</label>
+						<select
+							id="onModel"
+							name="onModel"
+							defaultValue={comment?.data?.onModel}
+							className="form-control"
+						>
+							<option value={`Post`}>Post</option>
+							<option value={`Video`}>Video</option>
+							<option value={`Job`}>Job</option>
+							<option value={`Comment`}>Comment</option>
+							<option value={`Product`}>Product</option>
+							<option value={`User`}>User</option>
+							<option value={`Course`}>Course</option>
+							<option value={`Lesson`}>Lesson</option>
+							<option value={`Playlist`}>Playlist</option>
+							<option value={`Song`}>Song</option>
+							<option value={`Blog`}>Blog</option>
+							<option value={`Quiz`}>Quiz</option>
+							<option value={`Question`}>Question</option>
+							<option value={`Company`}>Company</option>
+							<option value={`File`}>File</option>
+							<option value={`Secret`}>Secret</option>
+							<option value={`RealState`}>RealState</option>
+							<option value={`Forum`}>Forum</option>
+							<option value={`Poll`}>Poll</option>
+						</select>
+					</div>
+				</div>
+				<div className="row">
+					<div className="col">
+						<label htmlFor="name" className="form-label">
+							Name
+						</label>
+						<input
+							id="name"
+							name="name"
+							defaultValue={comment?.data?.name}
+							type="text"
+							className="form-control mb-3"
+							placeholder="John Doe"
+						/>
+					</div>
+					<div className="col">
+						<label htmlFor="email" className="form-label">
+							Email
+						</label>
+						<input
+							id="email"
+							name="email"
+							defaultValue={comment?.data?.email}
+							type="email"
+							className="form-control mb-3"
+							placeholder="john@doe.com"
+						/>
+					</div>
+					<div className="col">
+						<label htmlFor="website" className="form-label">
+							Website
+						</label>
+						<input
+							id="website"
+							name="website"
+							defaultValue={comment?.data?.website}
+							type="website"
+							className="form-control mb-3"
+							placeholder="https://demo.com/"
+						/>
+					</div>
+				</div>
+				<label htmlFor="status" className="form-label">
+					Status
+				</label>
+				<select
+					id="status"
+					name="status"
+					defaultValue={comment?.data?.status}
+					className="form-control"
+				>
+					<option value={`draft`}>Draft</option>
+					<option value={`published`}>Published</option>
+					<option value={`trash`}>Trash</option>
+					<option value={`scheduled`}>Scheduled</option>
+				</select>
 				<br />
 				<FormButtons />
 			</div>

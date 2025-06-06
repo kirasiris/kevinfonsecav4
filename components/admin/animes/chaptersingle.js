@@ -57,7 +57,7 @@ const Single = ({
 							<DropdownButton title="Options" variant="secondary">
 								<Link
 									href={{
-										pathname: `NOT_PAGE_YET`,
+										pathname: `/noadmin/animes/chapter/${object?._id}/read`,
 										query: {
 											isAdmin: true,
 										},

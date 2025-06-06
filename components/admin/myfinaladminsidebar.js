@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import AdminFeaturedImage from "./adminfeaturedimage";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 
 const AdminSidebar = ({
 	displayCategoryField = true,
@@ -17,34 +18,52 @@ const AdminSidebar = ({
 	category = undefined,
 	categories = [],
 	multiple_categories = false,
-	multipleFiles = false,
-	onModel = "Blog",
-	files = [],
-	auth = {},
-	token = null,
 }) => {
-	const [selectedFile, setSelectedFile] = useState(null);
+	const [fileId, setFileId] = useState(avatar);
+	const [loading, setLoading] = useState("Paste file Id");
+	const [featuredFile, setFeaturedFile] = useState(avatar);
+
+	const fetchFile = async (e) => {
+		e.preventDefault();
+
+		// Grab the pasted value
+		const pastedText = e.clipboardData?.getData("text");
+
+		const retrieveFile = await fetchurl(
+			`/global/files/${pastedText}`,
+			"GET",
+			"no-cache"
+		);
+
+		console.log("File retrieved", retrieveFile);
+
+		// If the file is valid, update state
+		setLoading("Loading...");
+		setFileId(retrieveFile?.data._id);
+		setFeaturedFile(retrieveFile?.data);
+		setLoading("Paste file Id");
+	};
+
 	return (
 		<>
 			{/* HERE GOES THE AVATAR */}
 			{displayAvatar && (
 				<>
 					<AdminFeaturedImage
-						avatar={avatar}
+						avatar={featuredFile}
 						avatarFormat={avatarFormat}
-						multipleFiles={multipleFiles}
-						onModel={onModel}
-						files={files}
-						selectedFile={selectedFile}
-						setSelectedFile={setSelectedFile}
-						auth={auth}
-						token={token}
 					/>
+					<label htmlFor="file" className="form-label">
+						Featured Image - {loading}
+					</label>
 					<input
 						id="file"
 						name="file"
-						defaultValue={selectedFile?._id}
-						type="hidden"
+						defaultValue={fileId}
+						type="text"
+						className="form-control mb-3"
+						placeholder="0123456789"
+						onPaste={fetchFile}
 					/>
 				</>
 			)}

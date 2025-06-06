@@ -1,5 +1,4 @@
 "use client";
-import Image from "next/image";
 import Link from "next/link";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import { formatDateWithoutTime } from "befree-utilities";
@@ -43,26 +42,6 @@ const Single = ({
 							<span className="badge bg-dark me-1">featured</span>
 						)}
 					</div>
-				</div>
-				<div className="blog-type-list__blog-thumbnail-wrapper has-image d-none d-md-block d-lg-block d-xl-block d-xxl-block">
-					<Link
-						href={{
-							pathname: `/noadmin/cdalbums/update/${object._id}`,
-							query: {},
-						}}
-						className="blog-type-list__blog-thumbnail-link"
-					>
-						<Image
-							src={
-								object.files?.avatar?.location.secure_location ||
-								`https://source.unsplash.com/random/83x63`
-							}
-							className="blog-type-list__blog-thumbnail"
-							alt="Blog titles image"
-							width="83"
-							height="63"
-						/>
-					</Link>
 				</div>
 				<div className="blog-actions-ellipsis-menu">
 					<span className="ellipsis-menu">

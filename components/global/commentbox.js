@@ -130,8 +130,14 @@ const CommentBox = ({
 				<h5>
 					<Link
 						href={{
-							pathname: allLink,
-							query: {},
+							pathname: allLink.split("?")[0],
+							query: {
+								resourceId: allLink.split("?")[1].split("&")[0].split("=")[1],
+								page: allLink.split("?")[1].split("&")[1].split("=")[1],
+								limit: allLink.split("?")[1].split("&")[2].split("=")[1],
+								sort: allLink.split("?")[1].split("&")[3].split("=")[1],
+								status: allLink.split("?")[1].split("&")[4].split("=")[1],
+							},
 						}}
 					>
 						{pageText}

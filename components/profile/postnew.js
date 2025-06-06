@@ -44,7 +44,7 @@ const PostNew = ({
 
 	const addPost = async (e) => {
 		e.preventDefault();
-		await fetchurl(`/posts`, "POST", "no-cache", {
+		await fetchurl(`/protected/posts`, "POST", "no-cache", {
 			...postData,
 			commented: true,
 			status: "published",

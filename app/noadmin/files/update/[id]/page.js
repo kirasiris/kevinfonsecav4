@@ -1,12 +1,12 @@
+import { redirect, notFound } from "next/navigation";
+import Image from "next/image";
+// import Plyr from "plyr";
 import {
 	fetchurl,
 	getAuthTokenOnServer,
 	getUserOnServer,
 } from "@/helpers/setTokenOnServer";
-import { redirect, notFound } from "next/navigation";
 import MyTextArea from "@/components/global/myfinaltextarea";
-import Image from "next/image";
-// import Plyr from "plyr";
 import FormButtons from "@/components/global/formbuttons";
 
 async function getFile(params) {
@@ -167,6 +167,19 @@ const UpdateFile = async ({ params, searchParams }) => {
 					advancedTextEditor={false}
 					customPlaceholder="No description"
 					defaultValue={file?.data?.text}
+				/>
+				<label htmlFor="objectId" className="form-label">
+					Object ID
+				</label>
+				<input
+					id="objectId"
+					name="objectId"
+					defaultValue={file?.data?._id}
+					type="text"
+					className="form-control mb-3"
+					placeholder=""
+					readOnly
+					disabled
 				/>
 				<label htmlFor="file-url" className="form-label">
 					URL

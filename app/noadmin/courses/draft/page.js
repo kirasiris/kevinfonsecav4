@@ -115,6 +115,7 @@ const AdminCoursesDraftIndex = async ({ params, searchParams }) => {
 					pageText="Courses"
 					addLink="/noadmin/courses/create"
 					searchOn="/noadmin/courses"
+					searchedKeyword=""
 					objects={courses}
 					searchParams={awtdSearchParams}
 					handleDraft={draftIt}

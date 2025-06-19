@@ -1,7 +1,7 @@
+import { revalidatePath } from "next/cache";
 import { fetchurl, getUserOnServer } from "@/helpers/setTokenOnServer";
 import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
 import List from "@/components/admin/courses/list";
-import { revalidatePath } from "next/cache";
 
 async function getCourses(params) {
 	const res = await fetchurl(
@@ -118,6 +118,7 @@ const AdminCoursesSearchIndex = async ({ params, searchParams }) => {
 					pageText="Courses"
 					addLink="/noadmin/courses/create"
 					searchOn="/noadmin/courses"
+					searchedKeyword={keyword}
 					objects={courses}
 					searchParams={awtdSearchParams}
 					handleDraft={draftIt}

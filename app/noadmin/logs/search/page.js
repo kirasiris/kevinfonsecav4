@@ -53,17 +53,11 @@ const AdminLogsSearchIndex = async ({ params, searchParams }) => {
 				<List
 					allLink="/noadmin/logs"
 					pageText="Logs"
-					addLink="/noadmin/logs/create"
 					searchOn="/noadmin/logs"
 					searchedKeyword={keyword}
 					objects={logs}
 					searchParams={awtdSearchParams}
-					handleDraft={undefined}
-					handlePublish={undefined}
-					handleTrash={undefined}
-					handleSchedule={undefined}
 					handleDelete={handleDelete}
-					handleTrashAllFunction={undefined}
 					handleDeleteAllFunction={handleDeleteAll}
 				/>
 			</div>

@@ -1,10 +1,9 @@
+import { notFound, redirect } from "next/navigation";
 import {
 	fetchurl,
 	getAuthTokenOnServer,
 	getUserOnServer,
 } from "@/helpers/setTokenOnServer";
-import { notFound, redirect } from "next/navigation";
-// import AdminSidebar from "@/components/admin/myfinaladminsidebar";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
 
@@ -35,9 +34,7 @@ const UpdateForum = async ({ params, searchParams }) => {
 			category: formData.get("category"),
 			sub_category: formData.get("sub_category"),
 			commented: formData.get("commented"),
-			password: formData.get("password"),
 			status: formData.get("status"),
-			// files: { avatar: formData.get("file") },
 		};
 		await fetchurl(
 			`/noadmin/forums/${awtdParams.id}`,
@@ -238,24 +235,13 @@ const UpdateForum = async ({ params, searchParams }) => {
 					id="status"
 					name="status"
 					defaultValue={forum?.data?.status}
-					className="form-control"
+					className="form-control mb-3"
 				>
 					<option value={`draft`}>Draft</option>
 					<option value={`published`}>Published</option>
 					<option value={`trash`}>Trash</option>
 					<option value={`scheduled`}>Scheduled</option>
 				</select>
-				<label htmlFor="password" className="form-label">
-					Password
-				</label>
-				<input
-					id="password"
-					name="password"
-					defaultValue=""
-					type="password"
-					className="form-control mb-3"
-					placeholder="******"
-				/>
 				<label htmlFor="featured" className="form-label">
 					Featured
 				</label>
@@ -263,7 +249,7 @@ const UpdateForum = async ({ params, searchParams }) => {
 					id="featured"
 					name="featured"
 					defaultValue={forum?.data?.featured.toString()}
-					className="form-control"
+					className="form-control mb-3"
 				>
 					<option value={true}>Yes</option>
 					<option value={false}>No</option>
@@ -275,7 +261,7 @@ const UpdateForum = async ({ params, searchParams }) => {
 					id="commented"
 					name="commented"
 					defaultValue={forum?.data?.commented.toString()}
-					className="form-control"
+					className="form-control mb-3"
 				>
 					<option value={true}>Yes</option>
 					<option value={false}>No</option>

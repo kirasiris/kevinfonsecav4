@@ -82,11 +82,6 @@ const UpdateReview = async ({ params, searchParams }) => {
 					category={undefined}
 					categories={[]}
 					multiple_categories={false}
-					multipleFiles={false}
-					onModel={"Comment"}
-					files={[]}
-					auth={{}}
-					token={token}
 				/>
 				<br />
 				<FormButtons />

@@ -1,10 +1,9 @@
+import { redirect } from "next/navigation";
 import {
 	fetchurl,
 	getAuthTokenOnServer,
 	getUserOnServer,
 } from "@/helpers/setTokenOnServer";
-import { redirect } from "next/navigation";
-// import AdminSidebar from "@/components/admin/myfinaladminsidebar";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
 
@@ -25,13 +24,9 @@ const CreateForum = async ({ params, searchParams }) => {
 			category: formData.get("category"),
 			sub_category: formData.get("sub_category"),
 			commented: formData.get("commented"),
-			password: formData.get("password"),
 			status: formData.get("status"),
-			// files: { avatar: formData.get("file") },
 		};
-		await fetchurl(`/noadmin/forums`, "POST", "no-cache", {
-			...rawFormData,
-		});
+		await fetchurl(`/noadmin/forums`, "POST", "no-cache", rawFormData);
 		redirect(`/noadmin/forums`);
 	};
 
@@ -225,24 +220,13 @@ const CreateForum = async ({ params, searchParams }) => {
 					id="status"
 					name="status"
 					defaultValue="draft"
-					className="form-control"
+					className="form-control mb-3"
 				>
 					<option value={`draft`}>Draft</option>
 					<option value={`published`}>Published</option>
 					<option value={`trash`}>Trash</option>
 					<option value={`scheduled`}>Scheduled</option>
 				</select>
-				<label htmlFor="password" className="form-label">
-					Password
-				</label>
-				<input
-					id="password"
-					name="password"
-					defaultValue=""
-					type="password"
-					className="form-control mb-3"
-					placeholder="******"
-				/>
 				<label htmlFor="featured" className="form-label">
 					Featured
 				</label>
@@ -250,7 +234,7 @@ const CreateForum = async ({ params, searchParams }) => {
 					id="featured"
 					name="featured"
 					defaultValue={true}
-					className="form-control"
+					className="form-control mb-3"
 				>
 					<option value={true}>Yes</option>
 					<option value={false}>No</option>
@@ -262,7 +246,7 @@ const CreateForum = async ({ params, searchParams }) => {
 					id="commented"
 					name="commented"
 					defaultValue={false}
-					className="form-control"
+					className="form-control mb-3"
 				>
 					<option value={true}>Yes</option>
 					<option value={false}>No</option>

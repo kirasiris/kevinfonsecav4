@@ -1,28 +1,32 @@
+import { redirect } from "next/navigation";
 import {
 	fetchurl,
 	getAuthTokenOnServer,
 	getUserOnServer,
 } from "@/helpers/setTokenOnServer";
-import { redirect } from "next/navigation";
-// import AdminSidebar from "@/components/admin/myfinaladminsidebar";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
 
 async function getUsersSubscribed(params) {
-	const res = await fetchurl(`/global/users${params}`, "GET", "no-cache");
+	const res = await fetchurl(
+		`/global/newslettersubscribers${params}`,
+		"GET",
+		"no-cache"
+	);
 	return res;
 }
 
 const CreateEmail = async ({ params, searchParams }) => {
 	const awtdParams = await params;
 	const awtdSearchParams = await searchParams;
+	const page = awtdSearchParams.page || 1;
+	const limit = awtdSearchParams.limit || 10;
+	const sort = awtdSearchParams.sort || "-createdAt";
 	const token = await getAuthTokenOnServer();
 	const auth = await getUserOnServer();
 
 	const users = await getUsersSubscribed(
-		`?page=${awtdSearchParams.page || 1}&limit=${
-			awtdSearchParams.limit || 10
-		}&sort=${awtdSearchParams.sort || "-createdAt"}`
+		`?page=${page}&limit=${limit}&sort=${sort}`
 	);
 
 	const addEmail = async (formData) => {

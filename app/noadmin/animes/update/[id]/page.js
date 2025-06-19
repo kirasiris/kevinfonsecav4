@@ -41,11 +41,13 @@ const UpdateAnime = async ({ params, searchParams }) => {
 			status: formData.get("status"),
 			files: { avatar: formData.get("file") },
 		};
+
 		await fetchurl(`/noadmin/playlists/${awtdParams.id}`, "PUT", "no-cache", {
 			...rawFormData,
 			onairtype: "anime",
 			playlistType: "video",
 		});
+
 		redirect(`/noadmin/animes`);
 	};
 
@@ -95,12 +97,11 @@ const UpdateAnime = async ({ params, searchParams }) => {
 				</div>
 			</div>
 			<div className="col-lg-3">
-				{console.log(anime?.data)}
 				<AdminSidebar
 					displayCategoryField={true}
 					displayAvatar={true}
-					avatar={anime?.data?.files?.avatar?.location?.secure_location}
-					avatarFormat={anime?.data?.avatar?.format_type}
+					avatar={anime?.data?.files}
+					avatarFormat={anime?.data?.files?.avatar?.format_type}
 					status={anime?.data?.status}
 					fullWidth={false}
 					password=""

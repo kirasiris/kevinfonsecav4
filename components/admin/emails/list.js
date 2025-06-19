@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import AdminCardHeaderMenu from "@/components/admin/admincardheadermenu";
+import AdminCardHeaderMenu from "@/components/admin/emails/emailcardheadermenu";
 import Single from "./single";
 import NumericPagination from "@/layout/numericpagination";
 import NothingFoundAlert from "@/layout/nothingfoundalert";
@@ -9,7 +9,6 @@ import ErrorPage from "@/layout/errorpage";
 const List = ({
 	allLink = "",
 	pageText = "",
-	addLink = "",
 	searchOn = "",
 	searchedKeyword = "",
 	objects = [],
@@ -60,9 +59,7 @@ const List = ({
 				pageText={pageText}
 				currentResults={objects?.count}
 				totalResults={objects?.countAll}
-				addLink={addLink}
 				searchOn={searchOn}
-				handleTrashAllFunction={undefined}
 				handleDeleteAllFunction={handleDeleteAllFunction}
 				classList=""
 			/>

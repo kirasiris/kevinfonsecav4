@@ -1,17 +1,12 @@
+import { notFound, redirect } from "next/navigation";
 import {
 	fetchurl,
 	getAuthTokenOnServer,
 	getUserOnServer,
 } from "@/helpers/setTokenOnServer";
-import { notFound, redirect } from "next/navigation";
 import AdminSidebar from "@/components/admin/myfinaladminsidebar";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
-
-async function getFiles(params) {
-	const res = await fetchurl(`/global/files${params}`, "GET", "no-cache");
-	return res;
-}
 
 async function getCategories(params) {
 	const res = await fetchurl(`/global/categories${params}`, "GET", "no-cache");
@@ -32,7 +27,6 @@ const UpdateMovie = async ({ params, searchParams }) => {
 
 	const movie = await getMovie(`/${awtdParams.id}`);
 
-	const files = await getFiles(`?page=1&limit=100&sort=-createdAt`);
 	const categories = await getCategories(`?categoryType=movie`);
 
 	const upgradeMovie = async (formData) => {
@@ -105,8 +99,8 @@ const UpdateMovie = async ({ params, searchParams }) => {
 				<AdminSidebar
 					displayCategoryField={true}
 					displayAvatar={true}
-					avatar={movie?.data?.files?.avatar}
-					avatarFormat={"image"}
+					avatar={movie?.data?.files}
+					avatarFormat={movie?.data?.files?.avatar?.format_type}
 					status={movie?.data?.status}
 					fullWidth={false}
 					password=""
@@ -117,11 +111,6 @@ const UpdateMovie = async ({ params, searchParams }) => {
 					category={movie?.data?.category?._id || movie?.data?.category}
 					categories={categories?.data}
 					multiple_categories={false}
-					multipleFiles={false}
-					onModel={"Playlist"}
-					files={files}
-					auth={auth}
-					token={token}
 				/>
 				<br />
 				<FormButtons />

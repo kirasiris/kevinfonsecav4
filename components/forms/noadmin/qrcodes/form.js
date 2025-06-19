@@ -4,8 +4,7 @@ import { useRouter } from "next/navigation";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import QRC from "@/components/global/qrcode";
 
-const Form = ({ auth = {} }) => {
-	console.log("Authenticated user", auth);
+const Form = ({ auth = {}, object = {} }) => {
 	const router = useRouter();
 
 	const [qrcodeData, setQrCodeData] = useState({

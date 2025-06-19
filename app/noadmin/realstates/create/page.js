@@ -8,23 +8,15 @@ import AdminSidebar from "@/components/admin/myfinaladminsidebar";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
 
-async function getFiles(params) {
-	const res = await fetchurl(`/global/files${params}`, "GET", "no-cache");
-	return res;
-}
-
 const CreateRealState = async ({ params, searchParams }) => {
 	const token = await getAuthTokenOnServer();
 	const auth = await getUserOnServer();
-
-	const files = await getFiles(`?page=1&limit=100&sort=-createdAt`);
 
 	const addRealState = async (formData) => {
 		"use server";
 		const rawFormData = {
 			title: formData.get("title"),
 			text: formData.get("text"),
-			featured: formData.get("featured"),
 			commented: formData.get("commented"),
 			address: formData.get("address"),
 			bedrooms: formData.get("bedrooms"),
@@ -34,7 +26,6 @@ const CreateRealState = async ({ params, searchParams }) => {
 			businessType: formData.getAll("businessType"),
 			type: formData.get("type"),
 			amenities: formData.getAll("amenities"),
-			password: formData.get("password"),
 			status: formData.get("status"),
 			files: { avatar: formData.get("file") },
 		};
@@ -429,23 +420,18 @@ const CreateRealState = async ({ params, searchParams }) => {
 				<AdminSidebar
 					displayCategoryField={false}
 					displayAvatar={true}
-					// avatar={files?.selected?._id}
+					avatar={undefined}
 					avatarFormat={"image"}
 					status="draft"
 					fullWidth={false}
 					password=""
-					featured={true}
+					featured={false}
 					commented={true}
 					embedding={false}
 					github_readme={""}
 					category={undefined}
 					categories={[]}
 					multiple_categories={false}
-					multipleFiles={false}
-					onModel={"RealState"}
-					files={files}
-					auth={auth}
-					token={token}
 				/>
 				<br />
 				<FormButtons />

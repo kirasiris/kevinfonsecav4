@@ -6,10 +6,6 @@ import DeleteModal from "@/components/global/deletemodal";
 
 const Single = ({
 	object = {},
-	handleDraft = () => {},
-	handlePublish = () => {},
-	handleTrash = () => {},
-	handleSchedule = () => {},
 	handleDelete = () => {},
 	objects = [],
 	setObjects = () => {},
@@ -42,15 +38,6 @@ const Single = ({
 									href={`/logs/${object._id}`}
 								>
 									<span className="blog-relative-time-status__time">
-										{/* <svg
-											xmlns="http://www.w3.org/2000/svg"
-											viewBox="0 0 24 24"
-											className="gridicon gridicons-time"
-											height="12"
-											width="12"
-										>
-											<use xlink:href="/calypso/images/../images/gridicons-47c7fb356fcb2d963681.svg#gridicons-time"></use>
-										</svg> */}
 										<time
 											className="blog-relative-time-status__time-text"
 											dateTime={object.createdAt}
@@ -83,30 +70,6 @@ const Single = ({
 							>
 								View&nbsp;It
 							</Link>
-							<button
-								className="dropdown-item btn btn-sm"
-								onClick={() => handleDraft(object._id)}
-							>
-								Draft&nbsp;It
-							</button>
-							<button
-								className="dropdown-item btn btn-sm"
-								onClick={() => handlePublish(object._id)}
-							>
-								Publish&nbsp;It
-							</button>
-							<button
-								className="dropdown-item btn btn-sm"
-								onClick={() => handleTrash(object._id)}
-							>
-								Trash&nbsp;It
-							</button>
-							<button
-								className="dropdown-item btn btn-sm"
-								onClick={() => handleSchedule(object._id)}
-							>
-								Schedule&nbsp;It
-							</button>
 							<hr />
 							<DeleteModal
 								id={object._id ? object._id : object._id}

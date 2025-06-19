@@ -89,7 +89,7 @@ const CreateAnime = async ({ params, searchParams }) => {
 				<AdminSidebar
 					displayCategoryField={true}
 					displayAvatar={true}
-					avatar=""
+					avatar={undefined}
 					avatarFormat={"image"}
 					status="draft"
 					fullWidth={false}
@@ -100,7 +100,7 @@ const CreateAnime = async ({ params, searchParams }) => {
 					github_readme={""}
 					category={""}
 					categories={categories?.data}
-					multiple_categories={true}
+					multiple_categories={false}
 				/>
 				<br />
 				<FormButtons />

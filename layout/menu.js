@@ -73,18 +73,36 @@ const Menu = ({
 						{auth?.data?.isOnline ? (
 							<>
 								{auth?.data?.role.includes("founder") && (
-									<li className="nav-item">
-										<Link
-											href={{
-												pathname: `${canonical}/noadmin`,
-												query: {},
-											}}
-											className={`nav-link ${isActive(`${canonical}/noadmin`)}`}
-											aria-current="page"
-										>
-											Admin
-										</Link>
-									</li>
+									<>
+										<li className="nav-item">
+											<Link
+												href={{
+													pathname: `${canonical}/noadmin`,
+													query: {},
+												}}
+												className={`nav-link ${isActive(
+													`${canonical}/noadmin`
+												)}`}
+												aria-current="page"
+											>
+												Admin
+											</Link>
+										</li>
+										<li className="nav-item">
+											<Link
+												href={{
+													pathname: `${canonical}/nfabusiness`,
+													query: {},
+												}}
+												className={`nav-link ${isActive(
+													`${canonical}/nfabusiness`
+												)}`}
+												aria-current="page"
+											>
+												NFA Business
+											</Link>
+										</li>
+									</>
 								)}
 								<li className="nav-item">
 									<Link

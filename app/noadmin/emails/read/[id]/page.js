@@ -1,6 +1,6 @@
+import { notFound } from "next/navigation";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import ParseHtml from "@/layout/parseHtml";
-import { notFound } from "next/navigation";
 // import ArticleHeader from "@/components/global/articleheader";
 // import Image from "next/image";
 

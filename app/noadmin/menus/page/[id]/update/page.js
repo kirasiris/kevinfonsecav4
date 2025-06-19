@@ -5,7 +5,7 @@ import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
 
 async function getPage(params) {
-	const res = await fetchurl(`/pages${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/pages${params}`, "GET", "no-cache");
 	if (!res.success) notFound();
 	return res;
 }
@@ -30,8 +30,13 @@ const UpdatePage = async ({ params, searchParams }) => {
 			password: formData.get("password"),
 			status: formData.get("status"),
 		};
-		await fetchurl(`/pages/${awtdParams.id}`, "PUT", "no-cache", rawFormData);
-		redirect(`/noadmin/menus/read/${page?.data?.resourceId}`);
+		await fetchurl(
+			`/noadmin/pages/${awtdParams.id}`,
+			"PUT",
+			"no-cache",
+			rawFormData
+		);
+		redirect(`/noadmin/menus/read/${page?.data?.resourceId?._id}`);
 	};
 
 	return (
@@ -153,7 +158,7 @@ const UpdatePage = async ({ params, searchParams }) => {
 				<AdminSidebar
 					displayCategoryField={false}
 					displayAvatar={false}
-					avatar={""}
+					avatar={undefined}
 					avatarFormat={""}
 					status={page.data.status}
 					fullWidth={false}
@@ -165,11 +170,6 @@ const UpdatePage = async ({ params, searchParams }) => {
 					category={undefined}
 					categories={[]}
 					multiple_categories={false}
-					multipleFiles={false}
-					onModel={"Page"}
-					files={[]}
-					auth={undefined}
-					token={undefined}
 				/>
 				<br />
 				<FormButtons />

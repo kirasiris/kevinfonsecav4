@@ -52,30 +52,6 @@ const Single = ({
 							>
 								View&nbsp;It
 							</Link>
-							<button
-								className="dropdown-item btn btn-sm"
-								onClick={() => handleDraft(object._id)}
-							>
-								Draft&nbsp;It
-							</button>
-							<button
-								className="dropdown-item btn btn-sm"
-								onClick={() => handlePublish(object._id)}
-							>
-								Publish&nbsp;It
-							</button>
-							<button
-								className="dropdown-item btn btn-sm"
-								onClick={() => handleTrash(object._id)}
-							>
-								Trash&nbsp;It
-							</button>
-							<button
-								className="dropdown-item btn btn-sm"
-								onClick={() => handleSchedule(object._id)}
-							>
-								Schedule&nbsp;It
-							</button>
 							<hr />
 							<DeleteModal
 								id={object._id ? object._id : object._id}

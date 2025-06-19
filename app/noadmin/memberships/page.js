@@ -1,7 +1,7 @@
+import { revalidatePath } from "next/cache";
 import { fetchurl, getUserOnServer } from "@/helpers/setTokenOnServer";
 import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
 import List from "@/components/admin/memberships/list";
-import { revalidatePath } from "next/cache";
 
 async function getMembershipsPublished(params) {
 	const res = await fetchurl(

@@ -1,16 +1,19 @@
+import { revalidatePath } from "next/cache";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import FormButtons from "@/components/global/formbuttons";
-import { revalidatePath } from "next/cache";
 
 const Form = async ({ params, searchParams, revalidateUrl = "" }) => {
 	const createSecret = async (formData) => {
 		"use server";
 		const rawFormData = {
+			title: formData.get("title"),
+			text: formData.get("text"),
+			password: formData.get("password"),
 			age: formData.get("age"),
 			sex: formData.get("sex"),
-			password: formData.get("password"),
-			text: formData.get("text"),
+			state: formData.get("state"),
 			nsfw: formData.get("nsfw"),
+			deletable: formData.get("deletable"),
 			status: formData.get("status"),
 		};
 

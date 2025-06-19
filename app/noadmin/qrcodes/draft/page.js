@@ -1,7 +1,7 @@
 import { revalidatePath } from "next/cache";
 import { fetchurl, getUserOnServer } from "@/helpers/setTokenOnServer";
 import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
-import Form from "../form";
+import Form from "@/components/forms/noadmin/qrcodes/form";
 import List from "@/components/admin/qrcodes/list";
 
 async function getQRCodes(params) {
@@ -115,8 +115,9 @@ const AdminQRCodesGeneratorDraftIndex = async ({ params, searchParams }) => {
 						<List
 							allLink="/noadmin/qrcodes"
 							pageText="QR Codes"
-							addLink="/noadmin/qrcodes"
+							addLink=""
 							searchOn="/noadmin/qrcodes"
+							searchedKeyword=""
 							objects={qrcodes}
 							searchParams={awtdSearchParams}
 							handleDraft={draftIt}

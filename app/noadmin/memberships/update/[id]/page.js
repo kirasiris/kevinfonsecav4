@@ -288,7 +288,7 @@ const UpdateMembership = async ({ params, searchParams }) => {
 				<AdminSidebar
 					displayCategoryField={false}
 					displayAvatar={false}
-					avatar={""}
+					avatar={undefined}
 					avatarFormat={""}
 					status={membership?.data?.status}
 					fullWidth={false}
@@ -300,11 +300,6 @@ const UpdateMembership = async ({ params, searchParams }) => {
 					category={undefined}
 					categories={[]}
 					multiple_categories={false}
-					multipleFiles={false}
-					onModel={"Membership"}
-					files={[]}
-					auth={auth}
-					token={token}
 				/>
 				<br />
 				<FormButtons />

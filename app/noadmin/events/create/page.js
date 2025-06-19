@@ -129,8 +129,8 @@ const CreateEvent = async ({ params, searchParams }) => {
 				<AdminSidebar
 					displayCategoryField={false}
 					displayAvatar={false}
-					// avatar={files?.selected?._id}
-					avatarFormat={"image"}
+					avatar={undefined}
+					avatarFormat={""}
 					status="draft"
 					fullWidth={false}
 					password=""
@@ -141,11 +141,6 @@ const CreateEvent = async ({ params, searchParams }) => {
 					category={undefined}
 					categories={[]}
 					multiple_categories={false}
-					multipleFiles={false}
-					onModel={"Event"}
-					files={[]}
-					auth={auth}
-					token={token}
 				/>
 				<br />
 				<FormButtons />

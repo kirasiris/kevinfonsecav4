@@ -8,11 +8,6 @@ import AdminSidebar from "@/components/admin/myfinaladminsidebar";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
 
-async function getFiles(params) {
-	const res = await fetchurl(`/global/files${params}`, "GET", "no-cache");
-	return res;
-}
-
 async function getRealState(params) {
 	const res = await fetchurl(`/global/realstates${params}`, "GET", "no-cache");
 	if (!res.success) notFound();
@@ -27,14 +22,11 @@ const UpdateRealState = async ({ params, searchParams }) => {
 
 	const realstate = await getRealState(`/${awtdParams.id}`);
 
-	const files = await getFiles(`?page=1&limit=100&sort=-createdAt`);
-
 	const upgradeRealState = async (formData) => {
 		"use server";
 		const rawFormData = {
 			title: formData.get("title"),
 			text: formData.get("text"),
-			featured: formData.get("featured"),
 			commented: formData.get("commented"),
 			address: formData.get("address"),
 			bedrooms: formData.get("bedrooms"),
@@ -44,7 +36,6 @@ const UpdateRealState = async ({ params, searchParams }) => {
 			businessType: formData.getAll("businessType"),
 			type: formData.get("type"),
 			amenities: formData.getAll("amenities"),
-			password: formData.get("password"),
 			status: formData.get("status"),
 			files: { avatar: formData.get("file") },
 		};
@@ -210,7 +201,7 @@ const UpdateRealState = async ({ params, searchParams }) => {
 						<select
 							id="businessType"
 							name="businessType"
-							defaultValue={realstate?.data?.businessType}
+							defaultValue={[realstate?.data?.businessType]}
 							className="form-control"
 							multiple
 						>
@@ -476,23 +467,18 @@ const UpdateRealState = async ({ params, searchParams }) => {
 				<AdminSidebar
 					displayCategoryField={false}
 					displayAvatar={true}
-					avatar={realstate?.data?.files?.avatar}
-					avatarFormat={"image"}
+					avatar={realstate?.data?.files}
+					avatarFormat={realstate?.data?.files?.avatar?.format_type}
 					status={realstate?.data?.status}
 					fullWidth={false}
 					password=""
-					featured={realstate?.data?.featured.toString()}
+					featured={false}
 					commented={realstate?.data?.commented.toString()}
 					embedding={false}
 					github_readme={""}
 					category={undefined}
 					categories={[]}
 					multiple_categories={false}
-					multipleFiles={false}
-					onModel={"RealState"}
-					files={files}
-					auth={auth}
-					token={token}
 				/>
 				<br />
 				<FormButtons />

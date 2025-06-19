@@ -100,6 +100,7 @@ const ReadQuiz = async ({ params, searchParams }) => {
 						pageText="Questions"
 						addLink={`/noadmin/quizzes/question/${quiz?.data?._id}/create`}
 						searchOn={`/noadmin/quizzes/read/${quiz?.data?._id}`}
+						searchedKeyword=""
 						objects={questions}
 						searchParams={awtdSearchParams}
 						handleDraft={draftIt}

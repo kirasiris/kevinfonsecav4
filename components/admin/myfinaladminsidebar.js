@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import AdminFeaturedImage from "./adminfeaturedimage";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 
@@ -19,29 +19,43 @@ const AdminSidebar = ({
 	categories = [],
 	multiple_categories = false,
 }) => {
-	const [fileId, setFileId] = useState(avatar);
+	const [fileId, setFileId] = useState(avatar?.avatar?._id);
 	const [loading, setLoading] = useState("Paste file Id");
-	const [featuredFile, setFeaturedFile] = useState(avatar);
+	const [featuredFile, setFeaturedFile] = useState(
+		avatar?.avatar?.location?.secure_location
+	);
 
+	// Load file attached to object from DB
+	useEffect(() => {
+		const loadFile = async () => {
+			const res = await fetchurl(`/global/files/${fileId}`, "GET", "no-cache");
+			setLoading("Loading...");
+			setFileId(res?.data?._id);
+			setFeaturedFile(res?.data);
+			setLoading("Paste file Id");
+		};
+		loadFile();
+	}, []);
+
+	// Fetch file from pasted Id
 	const fetchFile = async (e) => {
 		e.preventDefault();
 
 		// Grab the pasted value
 		const pastedText = e.clipboardData?.getData("text");
 
-		const retrieveFile = await fetchurl(
+		const res = await fetchurl(
 			`/global/files/${pastedText}`,
 			"GET",
 			"no-cache"
 		);
-
-		console.log("File retrieved", retrieveFile);
-
 		// If the file is valid, update state
-		setLoading("Loading...");
-		setFileId(retrieveFile?.data._id);
-		setFeaturedFile(retrieveFile?.data);
-		setLoading("Paste file Id");
+		if (res.success) {
+			setLoading("Loading...");
+			setFileId(res?.data?._id);
+			setFeaturedFile(res?.data);
+			setLoading("Paste file Id");
+		}
 	};
 
 	return (
@@ -74,7 +88,7 @@ const AdminSidebar = ({
 				id="status"
 				name="status"
 				defaultValue={status}
-				className="form-control"
+				className="form-control mb-3"
 			>
 				<option value={`draft`}>Draft</option>
 				<option value={`published`}>Published</option>
@@ -90,7 +104,7 @@ const AdminSidebar = ({
 						id="fullWidth"
 						name="fullWidth"
 						defaultValue={fullWidth}
-						className="form-control"
+						className="form-control mb-3"
 					>
 						<option value={true}>Yes</option>
 						<option value={false}>No</option>
@@ -138,7 +152,7 @@ const AdminSidebar = ({
 						id="featured"
 						name="featured"
 						defaultValue={featured}
-						className="form-control"
+						className="form-control mb-3"
 					>
 						<option value={true}>Yes</option>
 						<option value={false}>No</option>
@@ -154,7 +168,7 @@ const AdminSidebar = ({
 						id="commented"
 						name="commented"
 						defaultValue={commented}
-						className="form-control"
+						className="form-control mb-3"
 					>
 						<option value={true}>Yes</option>
 						<option value={false}>No</option>
@@ -170,7 +184,7 @@ const AdminSidebar = ({
 						id="embedding"
 						name="embedding"
 						defaultValue={embedding}
-						className="form-control"
+						className="form-control mb-3"
 					>
 						<option value={true}>Yes</option>
 						<option value={false}>No</option>

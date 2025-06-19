@@ -59,7 +59,7 @@ const AdminEmailsSearchIndex = async ({ params, searchParams }) => {
 					pageText="Emails"
 					addLink=""
 					searchOn="/noadmin/emails"
-					searchedKeyword=""
+					searchedKeyword={keyword}
 					objects={emails}
 					searchParams={awtdSearchParams}
 					handleDelete={handleDelete}

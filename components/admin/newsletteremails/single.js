@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import DropdownButton from "react-bootstrap/DropdownButton";
+import { formatDateWithoutTime } from "befree-utilities";
 import DeleteModal from "@/components/global/deletemodal";
 
 const Single = ({
@@ -31,7 +32,10 @@ const Single = ({
 						</Link>
 					</h1>
 					<div className="blog-item__meta">
-						{/* <span className="blog-item__meta-time-status">{object.text}</span> */}
+						<span className="badge bg-dark me-1">
+							{formatDateWithoutTime(object.createdAt)}
+						</span>
+						<span className="badge bg-dark me-1">{object.status}</span>
 					</div>
 				</div>
 				{/* HERE GOES THE IMAGE */}

@@ -79,7 +79,7 @@ const CreateCDAlbum = async ({ params, searchParams }) => {
 				<AdminSidebar
 					displayCategoryField={true}
 					displayAvatar={false}
-					// avatar={files?.selected?._id}
+					avatar={undefined}
 					avatarFormat={"image"}
 					status="draft"
 					fullWidth={false}
@@ -91,11 +91,6 @@ const CreateCDAlbum = async ({ params, searchParams }) => {
 					category={undefined}
 					categories={categories?.data}
 					multiple_categories={false}
-					multipleFiles={false}
-					onModel={"Playlist"}
-					files={[]}
-					auth={auth}
-					token={token}
 				/>
 				<br />
 				<FormButtons />

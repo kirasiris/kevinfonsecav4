@@ -1,27 +1,20 @@
+import { redirect } from "next/navigation";
 import {
 	fetchurl,
 	getAuthTokenOnServer,
 	getUserOnServer,
 } from "@/helpers/setTokenOnServer";
-import { redirect } from "next/navigation";
 import AdminSidebar from "@/components/admin/myfinaladminsidebar";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import OnboardingLink from "@/components/dashboard/onboardinglink";
 import FormButtons from "@/components/global/formbuttons";
 
-async function getFiles(params) {
-	const res = await fetchurl(`/global/files${params}`, "GET", "no-cache");
-	return res;
-}
-
 const CreateCourse = async ({ params, searchParams }) => {
 	const token = await getAuthTokenOnServer();
 	const auth = await getUserOnServer();
 
-	const files = await getFiles(`?page=1&limit=100&sort=-createdAt`);
-
 	// Redirect if not charges enabled
-	!auth?.data?.stripe?.stripeChargesEnabled && <OnboardingLink auth={auth} />;
+	!auth?.userStripeChargesEnabled && <OnboardingLink auth={auth} />;
 
 	const addCourse = async (formData) => {
 		"use server";
@@ -309,7 +302,7 @@ const CreateCourse = async ({ params, searchParams }) => {
 				<AdminSidebar
 					displayCategoryField={false}
 					displayAvatar={true}
-					// avatar={files?.selected?._id}
+					avatar={undefined}
 					avatarFormat={"image"}
 					status="draft"
 					fullWidth={false}
@@ -321,11 +314,6 @@ const CreateCourse = async ({ params, searchParams }) => {
 					category={undefined}
 					categories={[]}
 					multiple_categories={false}
-					multipleFiles={false}
-					onModel={"Course"}
-					files={files}
-					auth={auth}
-					token={token}
 				/>
 				<br />
 				<FormButtons />

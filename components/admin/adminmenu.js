@@ -40,7 +40,7 @@ const AdminMenu = () => {
 					<Link href={"/noadmin/courses"}>Courses</Link>
 				</li>
 				<li className={`list-group-item ${isActive(`/noadmin/emails`)}`}>
-					<Link href={"/noadmin/emails"}>Emails</Link>
+					<Link href={"/noadmin/emails"}>Contact Form Emails</Link>
 				</li>
 				<li className={`list-group-item ${isActive(`/noadmin/events`)}`}>
 					<Link href={"/noadmin/events"}>Events</Link>

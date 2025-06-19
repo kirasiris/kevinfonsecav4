@@ -1,17 +1,12 @@
+import { notFound, redirect } from "next/navigation";
 import {
 	fetchurl,
 	getAuthTokenOnServer,
 	getUserOnServer,
 } from "@/helpers/setTokenOnServer";
-import { notFound, redirect } from "next/navigation";
 import AdminSidebar from "@/components/admin/myfinaladminsidebar";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
-
-// async function getFiles(params) {
-// 	const res = await fetchurl(`/files${params}`, "GET", "no-cache");
-// 	return res;
-// }
 
 async function getQuestion(params) {
 	const res = await fetchurl(`/global/questions${params}`, "GET", "no-cache");
@@ -26,8 +21,6 @@ const UpdateQuestion = async ({ params, searchParams }) => {
 	const auth = await getUserOnServer();
 
 	const question = await getQuestion(`/${awtdParams.id}`);
-
-	// const files = await getFiles(`?page=1&limit=100&sort=-createdAt`);
 
 	const upgradeQuestion = async (formData) => {
 		"use server";
@@ -158,7 +151,7 @@ const UpdateQuestion = async ({ params, searchParams }) => {
 					displayCategoryField={false}
 					displayAvatar={false}
 					avatar={undefined}
-					avatarFormat={"any"}
+					avatarFormat={"image"}
 					status={question?.data?.status}
 					fullWidth={false}
 					password=""
@@ -169,11 +162,6 @@ const UpdateQuestion = async ({ params, searchParams }) => {
 					category={undefined}
 					categories={[]}
 					multiple_categories={false}
-					multipleFiles={false}
-					onModel={"Question"}
-					files={[]}
-					auth={auth}
-					token={token}
 				/>
 				<br />
 				<FormButtons />

@@ -1,17 +1,12 @@
+import { notFound, redirect } from "next/navigation";
 import {
 	fetchurl,
 	getAuthTokenOnServer,
 	getUserOnServer,
 } from "@/helpers/setTokenOnServer";
-import { notFound, redirect } from "next/navigation";
 import AdminSidebar from "@/components/admin/myfinaladminsidebar";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
-
-async function getFiles(params) {
-	const res = await fetchurl(`/global/files${params}`, "GET", "force-cache");
-	return res;
-}
 
 async function getCategories(params) {
 	const res = await fetchurl(`/global/categories${params}`, "GET", "no-cache");
@@ -32,7 +27,6 @@ const UpdateQuiz = async ({ params, searchParams }) => {
 
 	const quiz = await getQuiz(`/${awtdParams.id}`);
 
-	const files = await getFiles(`?page=1&limit=100&sort=-createdAt`);
 	const categories = await getCategories(`?categoryType=quiz`);
 
 	const upgradeQuiz = async (formData) => {
@@ -44,11 +38,9 @@ const UpdateQuiz = async ({ params, searchParams }) => {
 			duration: formData.get("duration"),
 			minimumScore: formData.get("minimumScore"),
 			maximumScore: formData.get("maximumScore"),
-			featured: formData.get("featured"),
 			embedding: formData.get("embedding"),
 			category: formData.get("category"),
 			commented: formData.get("commented"),
-			password: formData.get("password"),
 			status: formData.get("status"),
 			attempts: formData.get("attempts"),
 			singlePage: formData.get("singlePage"),
@@ -174,23 +166,18 @@ const UpdateQuiz = async ({ params, searchParams }) => {
 				<AdminSidebar
 					displayCategoryField={true}
 					displayAvatar={true}
-					avatar={quiz?.data?.files?.avatar}
-					avatarFormat={"image"}
+					avatar={quiz?.data?.files}
+					avatarFormat={quiz?.data?.files?.avatar?.format_type}
 					status={quiz?.data?.status}
 					fullWidth={false}
 					password=""
-					featured={quiz?.data?.featured.toString()}
+					featured={false}
 					commented={quiz?.data?.commented.toString()}
 					embedding={quiz?.data?.embedding.toString()}
 					github_readme={""}
 					category={quiz?.data?.category?._id || quiz?.data?.category}
 					categories={categories.data}
 					multiple_categories={false}
-					multipleFiles={false}
-					onModel={"Quiz"}
-					files={files}
-					auth={auth}
-					token={token}
 				/>
 				<br />
 				<FormButtons />

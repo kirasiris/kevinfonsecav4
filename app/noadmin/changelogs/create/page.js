@@ -97,9 +97,11 @@ const CreateChangelog = async ({ params, searchParams }) => {
 						>
 							<option value={`all`}>All</option>
 							<option value={`personal`}>Personal</option>
+							<option value={`armedcodellc`}>Armed Code, LLC</option>
 							<option value={`anonymous-secrets-app`}>
 								Anonymous Secrets App
 							</option>
+							<option value={`play-it-now-app`}>Play It Now App</option>
 						</select>
 					</div>
 				</div>

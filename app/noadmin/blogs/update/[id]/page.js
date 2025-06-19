@@ -8,11 +8,6 @@ import AdminSidebar from "@/components/admin/myfinaladminsidebar";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
 
-async function getFiles(params) {
-	const res = await fetchurl(`/global/files${params}`, "GET", "no-cache");
-	return res;
-}
-
 async function getCategories(params) {
 	const res = await fetchurl(`/global/categories${params}`, "GET", "no-cache");
 	return res;
@@ -31,7 +26,6 @@ const UpdateBlog = async ({ params, searchParams }) => {
 
 	const blog = await getBlog(`/${awtdParams.id}`);
 
-	const files = await getFiles(`?page=1&limit=100&sort=-createdAt`);
 	const categories = await getCategories(`?categoryType=blog`);
 
 	const upgradeBlog = async (formData) => {
@@ -89,8 +83,8 @@ const UpdateBlog = async ({ params, searchParams }) => {
 				<AdminSidebar
 					displayCategoryField={true}
 					displayAvatar={true}
-					avatar={blog?.data?.files?.avatar}
-					avatarFormat={"image"}
+					avatar={blog?.data?.files}
+					avatarFormat={blog?.data?.files?.avatar?.format_type}
 					status={blog?.data?.status}
 					fullWidth={blog?.data?.fullWidth.toString()}
 					password=""
@@ -101,11 +95,6 @@ const UpdateBlog = async ({ params, searchParams }) => {
 					category={blog?.data?.category?._id || blog?.data?.category}
 					categories={categories.data}
 					multiple_categories={false}
-					multipleFiles={false}
-					onModel={"Blog"}
-					files={files}
-					auth={auth}
-					token={token}
 				/>
 				<br />
 				<FormButtons />

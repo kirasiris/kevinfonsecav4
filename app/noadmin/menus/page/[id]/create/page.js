@@ -19,10 +19,10 @@ const CreatePage = async ({ params, searchParams }) => {
 			target: formData.get("target"),
 			orderingNumber: formData.get("orderingNumber"),
 			commented: formData.get("commented"),
-			password: formData.get("password"),
 			status: formData.get("status"),
 		};
-		await fetchurl(`/pages`, "POST", "no-cache", {
+
+		await fetchurl(`/noadmin/pages`, "POST", "no-cache", {
 			...rawFormData,
 			resourceId: awtdParams.id,
 		});
@@ -148,7 +148,7 @@ const CreatePage = async ({ params, searchParams }) => {
 				<AdminSidebar
 					displayCategoryField={false}
 					displayAvatar={false}
-					avatar={""}
+					avatar={undefined}
 					avatarFormat={""}
 					status={"draft"}
 					fullWidth={false}
@@ -160,11 +160,6 @@ const CreatePage = async ({ params, searchParams }) => {
 					category={undefined}
 					categories={[]}
 					multiple_categories={false}
-					multipleFiles={false}
-					onModel={"Page"}
-					files={[]}
-					auth={undefined}
-					token={undefined}
 				/>
 				<br />
 				<FormButtons />

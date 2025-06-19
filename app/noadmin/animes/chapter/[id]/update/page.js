@@ -8,12 +8,6 @@ import AdminSidebar from "@/components/admin/myfinaladminsidebar";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
 
-// async function getFiles(params) {
-// 	const res = await fetchurl(`/files${params}`, "GET", "no-cache");
-// 	if (!res.success) notFound();
-// 	return res;
-// }
-
 async function getChapter(params) {
 	const res = await fetchurl(`/global/videos${params}`, "GET", "no-cache");
 	if (!res.success) notFound();
@@ -28,10 +22,6 @@ const UpdateChapter = async ({ params, searchParams }) => {
 
 	const chapter = await getChapter(`/${awtdParams.id}`);
 
-	// const getFilesData = getFiles(`?page=1&limit=100&sort=-createdAt`);
-
-	// const [files] = await Promise.all([getFilesData]);
-
 	const upgradeChapter = async (formData) => {
 		"use server";
 		const rawFormData = {
@@ -40,12 +30,9 @@ const UpdateChapter = async ({ params, searchParams }) => {
 			featured: formData.get("featured"),
 			commented: formData.get("commented"),
 			embedding: formData.get("embedding"),
-			category: formData.get("category"),
-			password: formData.get("password"),
 			status: formData.get("status"),
-			cast: [],
 			language: formData.get("language"),
-			captionCert: formData.get("captioncert"),
+			captionCert: formData.get("captionCert"),
 			recordingDate: formData.get("recordingDate"),
 			address: formData.get("address"),
 			license: formData.get("license"),
@@ -53,7 +40,6 @@ const UpdateChapter = async ({ params, searchParams }) => {
 			duration: formData.get("duration"),
 			averageRating: formData.get("averageRating"),
 			orderingNumber: formData.get("orderingNumber"),
-			// files: { video_url: formData.get("file") },
 			players: {
 				mega: formData.get("mega"),
 				streamwish: formData.get("streamwish"),
@@ -390,7 +376,7 @@ const UpdateChapter = async ({ params, searchParams }) => {
 				<AdminSidebar
 					displayCategoryField={false}
 					displayAvatar={false}
-					// avatar={files?.selected?._id}
+					avatar={undefined}
 					avatarFormat={"image"}
 					status={chapter?.data?.status}
 					fullWidth={false}
@@ -401,12 +387,7 @@ const UpdateChapter = async ({ params, searchParams }) => {
 					github_readme={""}
 					category={undefined}
 					categories={[]}
-					multipleFiles={false}
-					onModel={"Video"}
-					files={[]}
-					// files={files}
-					auth={auth}
-					token={token}
+					multiple_categories={false}
 				/>
 				<br />
 				<FormButtons />

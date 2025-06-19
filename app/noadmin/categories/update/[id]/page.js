@@ -15,12 +15,13 @@ async function getCategories(params) {
 const UpdateCategory = async ({ params, searchParams }) => {
 	const awtdParams = await params;
 	const awtdSearchParams = await searchParams;
+	const page = awtdSearchParams.page || 1;
+	const limit = awtdSearchParams.limit || 10;
+	const sort = awtdSearchParams.sort || "-createdAt";
 	const category = await getCategories(`/${awtdParams.id}`);
 
 	const categories = await getCategories(
-		`?page=${awtdSearchParams.page || 1}&limit=${
-			awtdSearchParams.limit || 10
-		}&sort=${awtdSearchParams.sort || "-createdAt"}`
+		`?page=${page}&limit=${limit}&sort=${sort}`
 	);
 	const upgradeCategory = async (formData) => {
 		"use server";

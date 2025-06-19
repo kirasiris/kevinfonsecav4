@@ -1,10 +1,9 @@
+import { notFound, redirect } from "next/navigation";
 import {
 	fetchurl,
 	getAuthTokenOnServer,
 	getUserOnServer,
 } from "@/helpers/setTokenOnServer";
-import { notFound, redirect } from "next/navigation";
-// import AdminSidebar from "@/components/admin/myfinaladminsidebar";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
 
@@ -30,15 +29,16 @@ async function getNewsletterEmail(params) {
 const UpdateEmail = async ({ params, searchParams }) => {
 	const awtdParams = await params;
 	const awtdSearchParams = await searchParams;
+	const page = awtdSearchParams.page || 1;
+	const limit = awtdSearchParams.limit || 10;
+	const sort = awtdSearchParams.sort || "-createdAt";
 	const token = await getAuthTokenOnServer();
 	const auth = await getUserOnServer();
 
 	const newsletteremail = await getNewsletterEmail(`/${awtdParams.id}`);
 
 	const users = await getUsersSubscribed(
-		`?page=${awtdSearchParams.page || 1}&limit=${
-			awtdSearchParams.limit || 10
-		}&sort=${awtdSearchParams.sort || "-createdAt"}`
+		`?page=${page}&limit=${limit}&sort=${sort}`
 	);
 
 	const upgradeEmail = async (formData) => {

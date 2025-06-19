@@ -8,11 +8,6 @@ import AdminSidebar from "@/components/admin/myfinaladminsidebar";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
 
-async function getFiles(params) {
-	const res = await fetchurl(`/global/files${params}`, "GET", "no-cache");
-	return res;
-}
-
 async function getCategories(params) {
 	const res = await fetchurl(`/global/categories${params}`, "GET", "no-cache");
 	return res;
@@ -22,7 +17,6 @@ const CreateBlog = async ({ params, searchParams }) => {
 	const token = await getAuthTokenOnServer();
 	const auth = await getUserOnServer();
 
-	const files = await getFiles(`?page=1&limit=100&sort=-createdAt`);
 	const categories = await getCategories(`?categoryType=blog`);
 
 	const addBlog = async (formData) => {
@@ -79,7 +73,7 @@ const CreateBlog = async ({ params, searchParams }) => {
 				<AdminSidebar
 					displayCategoryField={true}
 					displayAvatar={true}
-					// avatar={files?.selected?._id}
+					avatar={undefined}
 					avatarFormat={"image"}
 					status="draft"
 					fullWidth={true}
@@ -91,11 +85,6 @@ const CreateBlog = async ({ params, searchParams }) => {
 					category={undefined}
 					categories={categories?.data}
 					multiple_categories={false}
-					multipleFiles={false}
-					onModel={"Blog"}
-					files={files}
-					auth={auth}
-					token={token}
 				/>
 				<br />
 				<FormButtons />

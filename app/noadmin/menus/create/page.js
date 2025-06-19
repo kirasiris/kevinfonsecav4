@@ -62,7 +62,7 @@ const CreateMenu = async ({ params, searchParams }) => {
 				<AdminSidebar
 					displayCategoryField={false}
 					displayAvatar={false}
-					avatar={""}
+					avatar={undefined}
 					avatarFormat={""}
 					status="draft"
 					fullWidth={false}
@@ -74,11 +74,6 @@ const CreateMenu = async ({ params, searchParams }) => {
 					category={undefined}
 					categories={[]}
 					multiple_categories={false}
-					multipleFiles={false}
-					onModel={"Menu"}
-					files={[]}
-					auth={undefined}
-					token={undefined}
 				/>
 				<br />
 				<FormButtons />

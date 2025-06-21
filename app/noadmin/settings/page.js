@@ -60,12 +60,12 @@ const AdminSettingsIndex = async ({ params, searchParams }) => {
 					searchOn="/noadmin/settings"
 					objects={settings}
 					searchParams={awtdSearchParams}
-					handleDraft={draftIt}
-					handlePublish={publishIt}
-					handleTrash={trashIt}
-					handleSchedule={scheduleIt}
+					handleDraft={undefined}
+					handlePublish={undefined}
+					handleTrash={undefined}
+					handleSchedule={undefined}
 					handleDelete={handleDelete}
-					handleTrashAllFunction={handleTrashAll}
+					handleTrashAllFunction={undefined}
 					handleDeleteAllFunction={handleDeleteAll}
 				/>
 			</div>

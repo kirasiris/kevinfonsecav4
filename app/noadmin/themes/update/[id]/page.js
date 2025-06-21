@@ -1,17 +1,12 @@
+import { notFound, redirect } from "next/navigation";
 import {
 	fetchurl,
 	getAuthTokenOnServer,
 	getUserOnServer,
 } from "@/helpers/setTokenOnServer";
-import { notFound, redirect } from "next/navigation";
 import AdminSidebar from "@/components/admin/myfinaladminsidebar";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
-
-async function getFiles(params) {
-	const res = await fetchurl(`/global/files${params}`, "GET", "no-cache");
-	return res;
-}
 
 async function getCategories(params) {
 	const res = await fetchurl(`/global/categories${params}`, "GET", "no-cache");
@@ -32,7 +27,6 @@ const UpdateTheme = async ({ params, searchParams }) => {
 
 	const theme = await getTheme(`/${awtdParams.id}`);
 
-	const files = await getFiles(`?page=1&limit=100&sort=-createdAt`);
 	const categories = await getCategories(`?categoryType=theme`);
 
 	const upgradeTheme = async (formData) => {
@@ -91,8 +85,8 @@ const UpdateTheme = async ({ params, searchParams }) => {
 				<AdminSidebar
 					displayCategoryField={true}
 					displayAvatar={true}
-					avatar={theme?.data?.files?.avatar}
-					avatarFormat={"image"}
+					avatar={theme?.data?.files}
+					avatarFormat={theme?.data?.files?.avatar?.format_type}
 					status={theme?.data?.status}
 					fullWidth={theme?.data?.fullWidth.toString()}
 					password=""
@@ -103,11 +97,6 @@ const UpdateTheme = async ({ params, searchParams }) => {
 					category={theme?.data?.category?._id || theme?.data?.category}
 					categories={categories.data}
 					multiple_categories={false}
-					multipleFiles={false}
-					onModel={"Blog"}
-					files={files}
-					auth={auth}
-					token={token}
 				/>
 				<br />
 				<FormButtons />

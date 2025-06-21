@@ -2,7 +2,7 @@ import { revalidatePath } from "next/cache";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
 import List from "@/components/admin/shorturls/list";
-import Form from "./form";
+import Form from "@/components/forms/noadmin/shorturls/form";
 
 async function getShortUrls(params) {
 	const res = await fetchurl(
@@ -127,7 +127,7 @@ const AdminShortUrlsIndex = async ({ params, searchParams }) => {
 				categoryType=""
 			/>
 			<Form
-				params={params}
+				params={awtdParams}
 				searchParams={awtdSearchParams}
 				revalidateUrl={`/noadmin/shorturls?page=${page}&limit=${limit}&sort=${sort}`}
 			/>
@@ -137,6 +137,7 @@ const AdminShortUrlsIndex = async ({ params, searchParams }) => {
 					pageText="Short Urls"
 					addLink="/noadmin/shorturls/create"
 					searchOn="/noadmin/shorturls"
+					searchedKeyword=""
 					objects={shorturls}
 					searchParams={awtdSearchParams}
 					handleDraft={draftIt}

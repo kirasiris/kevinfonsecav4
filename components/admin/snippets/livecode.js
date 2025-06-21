@@ -144,7 +144,6 @@ const LiveCode = ({
 					</div>
 				</div>
 			)}
-
 			<iframe
 				ref={iframeRef}
 				title={objectData.title}
@@ -162,15 +161,14 @@ const LiveCode = ({
 					}`}
 				>
 					<div className="btn-group">
-						<Link
-							href={{
-								pathname: `/snippet/full/${object._id}/${object.slug}`,
-								query: {},
-							}}
+						<a
+							href={`/snippet/full/${object._id}/${object.slug}`}
 							className="btn btn-link btn-sm"
+							target="_blank"
+							rel="noreferrer noopener"
 						>
 							<FaExternalLinkAlt />
-						</Link>
+						</a>
 					</div>
 				</div>
 			)}

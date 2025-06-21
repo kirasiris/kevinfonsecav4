@@ -1,6 +1,6 @@
+import { revalidatePath } from "next/cache";
 import { fetchurl, getUserOnServer } from "@/helpers/setTokenOnServer";
 import FormButtons from "@/components/global/formbuttons";
-import { revalidatePath } from "next/cache";
 import MyTextArea from "@/components/global/myfinaltextarea";
 
 const Form = async ({ params, searchParams, revalidateUrl = `` }) => {
@@ -14,12 +14,14 @@ const Form = async ({ params, searchParams, revalidateUrl = `` }) => {
 			text: formData.get("text"),
 		};
 
-		await fetchurl(
-			`/extras/shorturls${auth ? `?user=${auth?.userId}` : ``}`,
+		const res = await fetchurl(
+			`/extras/tools/urls/regression${auth ? `?user=${auth?.userId}` : ``}`,
 			"POST",
 			"no-cache",
 			rawFormData
 		);
+
+		console.log("response from shortening url", res);
 
 		revalidatePath(revalidateUrl);
 	};

@@ -1,17 +1,12 @@
+import { redirect } from "next/navigation";
 import {
 	fetchurl,
 	getAuthTokenOnServer,
 	getUserOnServer,
 } from "@/helpers/setTokenOnServer";
-import { redirect } from "next/navigation";
 import AdminSidebar from "@/components/admin/myfinaladminsidebar";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
-
-async function getFiles(params) {
-	const res = await fetchurl(`/global/files${params}`, "GET", "no-cache");
-	return res;
-}
 
 async function getCategories(params) {
 	const res = await fetchurl(`/global/categories${params}`, "GET", "no-cache");
@@ -22,7 +17,6 @@ const CreateTheme = async ({ params, searchParams }) => {
 	const token = await getAuthTokenOnServer();
 	const auth = await getUserOnServer();
 
-	const files = await getFiles(`?page=1&limit=100&sort=-createdAt`);
 	const categories = await getCategories(`?categoryType=theme`);
 
 	const addTheme = async (formData) => {
@@ -69,17 +63,17 @@ const CreateTheme = async ({ params, searchParams }) => {
 					token={token}
 					id="text"
 					name="text"
+					defaultValue="No description..."
 					onModel="Blog"
 					advancedTextEditor={true}
 					customPlaceholder="No description"
-					defaultValue="No description..."
 				/>
 			</div>
 			<div className="col-lg-3">
 				<AdminSidebar
 					displayCategoryField={true}
 					displayAvatar={true}
-					// avatar={files?.selected?._id}
+					avatar={undefined}
 					avatarFormat={"image"}
 					status="draft"
 					fullWidth={true}
@@ -91,11 +85,6 @@ const CreateTheme = async ({ params, searchParams }) => {
 					category={undefined}
 					categories={categories.data}
 					multiple_categories={false}
-					multipleFiles={false}
-					onModel={"Blog"}
-					files={files}
-					auth={auth}
-					token={token}
 				/>
 				<br />
 				<FormButtons />

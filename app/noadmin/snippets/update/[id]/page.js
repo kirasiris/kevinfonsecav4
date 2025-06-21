@@ -1,5 +1,5 @@
-import { fetchurl } from "@/helpers/setTokenOnServer";
 import { notFound, redirect } from "next/navigation";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 import AdminSidebar from "@/components/admin/myfinaladminsidebar";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import LiveCode from "@/components/admin/snippets/livecode";
@@ -70,7 +70,7 @@ const UpdateSnippet = async ({ params, searchParams }) => {
 					<AdminSidebar
 						displayCategoryField={false}
 						displayAvatar={false}
-						// avatar={files?.selected?._id}
+						avatar={undefined}
 						avatarFormat={"image"}
 						status={snippet?.data?.status}
 						fullWidth={false}
@@ -82,12 +82,6 @@ const UpdateSnippet = async ({ params, searchParams }) => {
 						category={undefined}
 						categories={[]}
 						multiple_categories={false}
-						multipleFiles={false}
-						onModel={"Snippet"}
-						// files={files}
-						files={[]}
-						auth={undefined}
-						token={undefined}
 					/>
 					<br />
 					<FormButtons />
@@ -99,7 +93,7 @@ const UpdateSnippet = async ({ params, searchParams }) => {
 						MyHtml={snippet?.data?.code?.html}
 						MyCss={snippet?.data?.code?.css}
 						MyJs={snippet?.data?.code?.javascript}
-						hasId={true}
+						hasId={false}
 					/>
 				</div>
 			</div>

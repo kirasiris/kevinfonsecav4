@@ -564,7 +564,9 @@ CODEPREVIEWER and CODEMIRROR STYLING
 	border: 1px solid #00cc00;
 	width: 100%;
 	margin-top: 20px;
+	margin-bottom: -8px;
 	min-height: 600px;
+	height: 100%;
 }
 
 .code-previewer-footer {

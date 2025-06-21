@@ -11,6 +11,7 @@ const List = ({
 	pageText = "",
 	addLink = "",
 	searchOn = "",
+	searchedKeyword = "",
 	objects = [],
 	searchParams = {},
 	handleDraft = () => {},
@@ -152,11 +153,11 @@ const List = ({
 							<Single
 								key={setting._id}
 								object={setting}
-								handleDraft={handleDraft}
-								handlePublish={handlePublish}
-								handleTrash={handleTrash}
-								handleSchedule={handleSchedule}
-								handleDelete={handleDelete}
+								handleDraft={undefined}
+								handlePublish={undefined}
+								handleTrash={undefined}
+								handleSchedule={undefined}
+								handleDelete={undefined}
 								objects={newobjects.data}
 								setObjects={setNewObjects}
 								setTotalResults={setTotalResults}
@@ -178,7 +179,7 @@ const List = ({
 			) : (
 				<NothingFoundAlert
 					classList="alert-danger rounded-0 m-0 border-0"
-					text="Nothing found"
+					text={`Nothing found with ${searchedKeyword}`}
 				/>
 			)}
 		</>

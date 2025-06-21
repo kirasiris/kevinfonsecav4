@@ -2,7 +2,6 @@ import { revalidatePath } from "next/cache";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
 import List from "@/components/admin/secrets/list";
-import Form from "@/components/forms/noadmin/secrets/form";
 
 async function getSecrets(params) {
 	const res = await fetchurl(`/global/secrets${params}`, "GET", "no-cache");
@@ -82,15 +81,11 @@ const AdminSecretsIndex = async ({ params, searchParams }) => {
 				categoriesLink=""
 				categoryType=""
 			/>
-			<Form
-				searchParams={awtdSearchParams}
-				revalidateUrl={`/noadmin/secrets?page=${page}&limit=${limit}&sort=${sort}`}
-			/>
 			<div className="card rounded-0">
 				<List
 					allLink="/noadmin/secrets"
 					pageText="Secrets"
-					addLink=""
+					addLink="/noadmin/secrets/create"
 					searchOn="/noadmin/secrets"
 					searchedKeyword=""
 					objects={secrets}

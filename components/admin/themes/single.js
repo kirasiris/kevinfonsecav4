@@ -39,6 +39,9 @@ const Single = ({
 							{formatDateWithoutTime(object.createdAt)}
 						</span>
 						<span className="badge bg-dark me-1">{object.status}</span>
+						{object.featured && (
+							<span className="badge bg-dark me-1">featured</span>
+						)}
 					</div>
 				</div>
 				<div className="blog-type-list__blog-thumbnail-wrapper has-image d-none d-md-block d-lg-block d-xl-block d-xxl-block">

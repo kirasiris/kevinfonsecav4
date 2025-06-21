@@ -58,42 +58,42 @@
     "url": "https://github.com/kirasiris/kevinfonsecav4/issues"
   },
   "homepage": "https://github.com/kirasiris/kevinfonsecav4#readme",
-  "devDependencies": {
-    "eslint": "^9.18.0",
-    "eslint-config-next": "^15.1.5"
-  },
   "overrides": {
     "@tinymce/tinymce-react": {
       "react": "$react",
       "react-dom": "$react-dom"
     }
   },
+  "devDependencies": {
+    "eslint": "^9.29.0",
+    "eslint-config-next": "^15.3.4"
+  },
   "dependencies": {
     "@codemirror/lang-css": "^6.3.1",
     "@codemirror/lang-html": "^6.4.9",
-    "@codemirror/lang-javascript": "^6.2.3",
+    "@codemirror/lang-javascript": "^6.2.4",
     "@fullcalendar/daygrid": "^6.1.17",
     "@fullcalendar/interaction": "^6.1.17",
     "@fullcalendar/list": "^6.1.17",
     "@fullcalendar/react": "^6.1.17",
     "@fullcalendar/timegrid": "^6.1.17",
-    "@stripe/stripe-js": "^7.3.0",
-    "@tinymce/tinymce-react": "^6.1.0",
-    "@uiw/codemirror-extensions-langs": "^4.23.12",
-    "@uiw/codemirror-theme-vscode": "^4.23.12",
-    "@uiw/react-codemirror": "^4.23.12",
-    "axios": "^1.9.0",
+    "@stripe/stripe-js": "^7.3.1",
+    "@tinymce/tinymce-react": "^6.2.1",
+    "@uiw/codemirror-extensions-langs": "^4.23.13",
+    "@uiw/codemirror-theme-vscode": "^4.23.13",
+    "@uiw/react-codemirror": "^4.23.13",
+    "axios": "^1.10.0",
     "base-64": "^1.0.0",
     "befree-utilities": "^1.0.4",
-    "bootstrap": "^5.3.6",
+    "bootstrap": "^5.3.7",
     "depcheck": "^1.4.7",
     "he": "^1.2.0",
     "lodash": "^4.17.21",
-    "next": "^15.3.2",
+    "next": "^15.3.4",
     "plyr": "^3.7.8",
     "qrcode.react": "^4.2.0",
     "react": "^19.1.0",
-    "react-bootstrap": "^2.10.9",
+    "react-bootstrap": "^2.10.10",
     "react-dom": "^19.1.0",
     "react-dropzone": "^14.3.8",
     "react-icons": "^5.5.0",

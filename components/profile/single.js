@@ -46,6 +46,9 @@ const Single = ({ object = {}, imageWidth = "500", imageHeight = "320" }) => {
 								alt={`${object?.username || "Username"}'s profile's picture`}
 								width={imageWidth}
 								height={imageHeight}
+								style={{
+									objectFit: "cover",
+								}}
 							/>
 						</UrlToProfileContainer>
 						<UrlToProfileContainer>

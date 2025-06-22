@@ -35,6 +35,7 @@ const Single = ({
 						<span className="badge bg-dark me-1">
 							{formatDateWithoutTime(object.createdAt)}
 						</span>
+						<span className="badge bg-dark me-1">{object.onModel}</span>
 					</div>
 				</div>
 				<div className="blog-actions-ellipsis-menu">

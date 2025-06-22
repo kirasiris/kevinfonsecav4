@@ -47,6 +47,18 @@ const Single = ({
 					>
 						Read&nbsp;more
 					</Link>
+					<Link
+						href={{
+							pathname: `/noadmin/reports/create`,
+							query: {
+								resourceId: object._id,
+								onModel: `File`,
+							},
+						}}
+						className="btn btn-dark btn-sm"
+					>
+						Add&nbsp;Report
+					</Link>
 					<DeleteModal
 						id={object._id ? object._id : object._id}
 						sId={object?.location?.public_id}
@@ -85,6 +97,18 @@ const Single = ({
 					>
 						Read&nbsp;more
 					</Link>
+					<Link
+						href={{
+							pathname: `/noadmin/reports/create`,
+							query: {
+								resourceId: object._id,
+								onModel: `File`,
+							},
+						}}
+						className="btn btn-dark btn-sm"
+					>
+						Add&nbsp;Report
+					</Link>
 					<DeleteModal
 						id={object._id ? object._id : object._id}
 						action={handleDelete}
@@ -122,6 +146,18 @@ const Single = ({
 					>
 						Read&nbsp;more
 					</Link>
+					<Link
+						href={{
+							pathname: `/noadmin/reports/create`,
+							query: {
+								resourceId: object._id,
+								onModel: `File`,
+							},
+						}}
+						className="btn btn-dark btn-sm"
+					>
+						Add&nbsp;Report
+					</Link>
 					<DeleteModal
 						id={object._id ? object._id : object._id}
 						action={handleDelete}
@@ -158,6 +194,18 @@ const Single = ({
 						className="btn btn-secondary btn-sm"
 					>
 						Read&nbsp;more
+					</Link>
+					<Link
+						href={{
+							pathname: `/noadmin/reports/create`,
+							query: {
+								resourceId: object._id,
+								onModel: `File`,
+							},
+						}}
+						className="btn btn-dark btn-sm"
+					>
+						Add&nbsp;Report
 					</Link>
 					<DeleteModal
 						id={object._id ? object._id : object._id}

@@ -1,9 +1,8 @@
 "use client";
-
-import { fetchurl } from "@/helpers/setTokenOnServer";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 
 const ContactForm = () => {
 	const router = useRouter();
@@ -21,9 +20,9 @@ const ContactForm = () => {
 	const createContact = async (e) => {
 		e.preventDefault();
 		setBtnText(`Processing`);
-		const res = await fetchurl(`/emails`, "POST", "no-cache", {
+		const res = await fetchurl(`/global/emails`, "POST", "no-cache", {
 			...rawFormData,
-			website: process.env.NEXT_PUBLIC_NO_REPLY_EMAIL, // Needed for DB mass email functionality
+			postType: "contact",
 		});
 		if (res.status === "error") {
 			toast.error(res.message, "bottom");

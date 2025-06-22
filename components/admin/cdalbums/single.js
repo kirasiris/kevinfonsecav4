@@ -94,6 +94,19 @@ const Single = ({
 								Unfeature&nbsp;It
 							</button>
 							<hr />
+							<Link
+								href={{
+									pathname: `/noadmin/reports/create`,
+									query: {
+										resourceId: object._id,
+										onModel: `Playlist`,
+									},
+								}}
+								className="dropdown-item btn btn-link"
+							>
+								Add&nbsp;Report
+							</Link>
+							<hr />
 							<DeleteModal
 								id={object._id ? object._id : object._id}
 								action={handleDelete}

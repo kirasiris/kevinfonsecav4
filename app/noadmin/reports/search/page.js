@@ -57,7 +57,7 @@ const AdminReportsSearchIndex = async ({ params, searchParams }) => {
 				<List
 					allLink="/noadmin/reports"
 					pageText="Reports"
-					addLink="/noadmin/reports/create"
+					addLink=""
 					searchOn="/noadmin/reports"
 					searchedKeyword={keyword}
 					objects={reports}
@@ -67,7 +67,7 @@ const AdminReportsSearchIndex = async ({ params, searchParams }) => {
 					handleTrash={undefined}
 					handleSchedule={undefined}
 					handleDelete={handleDelete}
-					handleTrashAllFunction={handleTrashAll}
+					handleTrashAllFunction={undefined}
 					handleDeleteAllFunction={handleDeleteAll}
 				/>
 			</div>

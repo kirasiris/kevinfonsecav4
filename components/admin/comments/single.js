@@ -1,9 +1,8 @@
 "use client";
 import Link from "next/link";
 import DropdownButton from "react-bootstrap/DropdownButton";
-import DeleteModal from "@/components/global/deletemodal";
-import ParseHtml from "@/layout/parseHtml";
 import { formatDateWithoutTime } from "befree-utilities";
+import DeleteModal from "@/components/global/deletemodal";
 
 const Single = ({
 	object = {},
@@ -77,6 +76,19 @@ const Single = ({
 							>
 								Schedule&nbsp;It
 							</button>
+							<hr />
+							<Link
+								href={{
+									pathname: `/noadmin/reports/create`,
+									query: {
+										resourceId: object._id,
+										onModel: `Comment`,
+									},
+								}}
+								className="dropdown-item btn btn-link"
+							>
+								Add&nbsp;Report
+							</Link>
 							<hr />
 							<DeleteModal
 								id={object._id ? object._id : object._id}

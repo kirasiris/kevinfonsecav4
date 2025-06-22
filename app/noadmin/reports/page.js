@@ -50,7 +50,7 @@ const AdminReportsIndex = async ({ params, searchParams }) => {
 				<List
 					allLink="/noadmin/reports"
 					pageText="Reports"
-					addLink="/noadmin/reports/create"
+					addLink=""
 					searchOn="/noadmin/reports"
 					searchedKeyword=""
 					objects={reports}

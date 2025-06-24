@@ -1,6 +1,9 @@
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import { redirect } from "next/navigation";
 import FormButtons from "@/components/global/formbuttons";
+import Globalcontent from "@/layout/content";
+// import ConfirmEmailForm from "@/forms/auth/confirmemailform";
+import Link from "next/link";
 
 const UpdateConfirmEmail = async ({ params, searchParams }) => {
 	const awtdParams = await params;
@@ -10,7 +13,6 @@ const UpdateConfirmEmail = async ({ params, searchParams }) => {
 		"use server";
 		const confirmtoken = awtdParams.confirmtoken;
 		if (!confirmtoken) {
-			// alert("There was an error, please try again");
 			console.log("There was an error, plase try again");
 			redirect(`/auth/login`);
 		}
@@ -27,25 +29,68 @@ const UpdateConfirmEmail = async ({ params, searchParams }) => {
 	};
 
 	return (
-		<div className="container">
-			<div className="row">
-				<div className="col-lg-12">
-					<form action={confirmAccount}>
-						<label htmlFor="email" className="form-label">
-							Email
-						</label>
-						<input
-							id="email"
-							name="email"
-							type="email"
-							className="form-control mb-3"
-							placeholder="john@doe.com"
-						/>
-						<FormButtons />
-					</form>
+		<>
+			<style>
+				<style>
+					{`
+					footer: {
+						margin-top: 0px !important;
+					}
+				`}
+				</style>
+			</style>
+			<div
+				className="container align-content-center"
+				style={{
+					height: "100vh",
+				}}
+			>
+				<div className="row">
+					<Globalcontent containerClasses="col-lg-12">
+						<div className="card">
+							<div className="card-header">Confirm Account</div>
+							<div className="card-body">
+								{/* <ConfirmEmailForm /> */}
+								<div className="col-lg-12">
+									<form action={confirmAccount}>
+										<label htmlFor="email" className="form-label">
+											Email
+										</label>
+										<input
+											id="email"
+											name="email"
+											type="email"
+											className="form-control"
+											placeholder="john@doe.com"
+										/>
+										<FormButtons />
+									</form>
+								</div>
+							</div>
+							<div className="card-footer">
+								<Link
+									href={{
+										pathname: `/auth/login`,
+										query: {},
+									}}
+								>
+									Login
+								</Link>
+								&nbsp;|&nbsp;
+								<Link
+									href={{
+										pathname: `/auth/register`,
+										query: {},
+									}}
+								>
+									Register
+								</Link>
+							</div>
+						</div>
+					</Globalcontent>
 				</div>
 			</div>
-		</div>
+		</>
 	);
 };
 

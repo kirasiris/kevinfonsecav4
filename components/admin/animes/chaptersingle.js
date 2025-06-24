@@ -105,6 +105,18 @@ const Single = ({
 								<hr />
 								<Link
 									href={{
+										pathname: `/noadmin/comments/create`,
+										query: {
+											resourceId: object._id,
+											onModel: `Video`,
+										},
+									}}
+									className="dropdown-item btn btn-link"
+								>
+									Add&nbsp;Comment
+								</Link>
+								<Link
+									href={{
 										pathname: `/noadmin/reports/create`,
 										query: {
 											resourceId: object._id,

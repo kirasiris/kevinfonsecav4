@@ -8,14 +8,15 @@ import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
 
 const CreateComment = async ({ params, searchParams }) => {
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+
 	const token = await getAuthTokenOnServer();
 	const auth = await getUserOnServer();
 
 	const addComment = async (formData) => {
 		"use server";
 		const rawFormData = {
-			resourceId: formData.get("resourceId"),
-			onModel: formData.get("onModel"),
 			user: formData.get("user") || undefined,
 			name: formData.get("name"),
 			email: formData.get("email"),
@@ -25,7 +26,12 @@ const CreateComment = async ({ params, searchParams }) => {
 			status: formData.get("status"),
 		};
 
-		await fetchurl(`/noadmin/comments`, "POST", "no-cache", rawFormData);
+		await fetchurl(`/noadmin/comments`, "POST", "no-cache", {
+			...rawFormData,
+			resourceId: awtdSearchParams.resourceId,
+			parentId: awtdSearchParams.parentId || undefined,
+			onModel: awtdSearchParams.onModel,
+		});
 		redirect(`/noadmin/comments`);
 	};
 
@@ -67,52 +73,6 @@ const CreateComment = async ({ params, searchParams }) => {
 					className="form-control mb-3"
 					placeholder="0123456789"
 				/>
-				<div className="row">
-					<div className="col">
-						<label htmlFor="resourceId" className="form-label">
-							Resource ID
-						</label>
-						<input
-							id="resourceId"
-							name="resourceId"
-							defaultValue=""
-							type="text"
-							className="form-control mb-3"
-							placeholder="0123456789"
-						/>
-					</div>
-					<div className="col">
-						<label htmlFor="onModel" className="form-label">
-							On Model
-						</label>
-						<select
-							id="onModel"
-							name="onModel"
-							defaultValue="Blog"
-							className="form-control"
-						>
-							<option value={`Post`}>Post</option>
-							<option value={`Video`}>Video</option>
-							<option value={`Job`}>Job</option>
-							<option value={`Comment`}>Comment</option>
-							<option value={`Product`}>Product</option>
-							<option value={`User`}>User</option>
-							<option value={`Course`}>Course</option>
-							<option value={`Lesson`}>Lesson</option>
-							<option value={`Playlist`}>Playlist</option>
-							<option value={`Song`}>Song</option>
-							<option value={`Blog`}>Blog</option>
-							<option value={`Quiz`}>Quiz</option>
-							<option value={`Question`}>Question</option>
-							<option value={`Company`}>Company</option>
-							<option value={`File`}>File</option>
-							<option value={`Secret`}>Secret</option>
-							<option value={`RealState`}>RealState</option>
-							<option value={`Forum`}>Forum</option>
-							<option value={`Poll`}>Poll</option>
-						</select>
-					</div>
-				</div>
 				<div className="row">
 					<div className="col">
 						<label htmlFor="name" className="form-label">

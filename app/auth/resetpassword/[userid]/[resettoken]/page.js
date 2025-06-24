@@ -2,6 +2,7 @@ import { fetchurl } from "@/helpers/setTokenOnServer";
 import { redirect } from "next/navigation";
 import FormButtons from "@/components/global/formbuttons";
 import Globalcontent from "@/layout/content";
+import ResetPasswordForm from "@/forms/auth/resetpasswordform";
 
 async function getAuthenticatedUser() {
 	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
@@ -75,7 +76,11 @@ const ResetPassword = async ({ params, searchParams }) => {
 			>
 				<div className="row">
 					<Globalcontent containerClasses="col-lg-12">
-						<form action={resetPasswordAccount}>
+						<div className="card">
+							<div className="card-header">Reset password</div>
+							<div className="card-body">
+								<ResetPasswordForm />
+								{/* <form action={resetPasswordAccount}>
 							<label htmlFor="password" className="form-label">
 								Password
 							</label>
@@ -98,7 +103,9 @@ const ResetPassword = async ({ params, searchParams }) => {
 							/>
 							<br />
 							<FormButtons />
-						</form>
+						</form> */}
+							</div>
+						</div>
 					</Globalcontent>
 				</div>
 			</div>

@@ -1,29 +1,20 @@
-import { redirect } from "next/navigation";
 import { fetchurl } from "@/helpers/setTokenOnServer";
+import { redirect } from "next/navigation";
 import Sidebar from "@/layout/auth/sidebar";
 import Globalcontent from "@/layout/content";
-import UpdateAboutForm from "@/forms/auth/updateaboutform";
+import UpdatePasswordForm from "@/forms/auth/updatepasswordform";
 
 async function getAuthenticatedUser() {
 	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
 	return res;
 }
 
-async function getProfiles(params) {
-	const res = await fetchurl(`/users${params}`, "GET", "no-cache");
-	return res;
-}
-
-const UpdateAbout = async ({ params, searchParams }) => {
+const UpdatePasswords = async ({ params, searchParams }) => {
 	const auth = await getAuthenticatedUser();
 
 	// Redirect if user is not logged in
 	(auth?.error?.statusCode === 401 || !auth?.data?.isOnline) &&
 		redirect(`/auth/login`);
-
-	const getProfilesData = getProfiles(`?isEmailConfirmed=true`);
-
-	const [profiles] = await Promise.all([getProfilesData]);
 
 	return (
 		<div className="container my-4">
@@ -31,9 +22,9 @@ const UpdateAbout = async ({ params, searchParams }) => {
 				<Sidebar />
 				<Globalcontent>
 					<div className="card">
-						<div className="card-header">Edit&nbsp;About</div>
+						<div className="card-header">Edit&nbsp;Password</div>
 						<div className="card-body">
-							<UpdateAboutForm auth={auth} profiles={profiles} />
+							<UpdatePasswordForm auth={auth} />
 						</div>
 					</div>
 				</Globalcontent>
@@ -42,4 +33,4 @@ const UpdateAbout = async ({ params, searchParams }) => {
 	);
 };
 
-export default UpdateAbout;
+export default UpdatePasswords;

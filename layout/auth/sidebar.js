@@ -24,26 +24,14 @@ const Sidebar = () => {
 					<Link href={`/auth/editabout`}>About</Link>
 				</li>
 				<li
-					className={`list-group-item ${isActive(`/auth/editnotifications`)}`}
-				>
-					<Link href={`/auth/editnotifications`}>Notifications</Link>
-				</li>
-				<li
-					className={`list-group-item ${isActive(
-						`/auth/editnotificationsemail`
-					)}`}
-				>
-					<Link href={`/auth/editnotificationsemail`}>Emails</Link>
-				</li>
-				<li
 					className={`list-group-item ${isActive(
 						`/auth/edittwofactorauthentication`
 					)}`}
 				>
 					<Link href={`/auth/edittwofactorauthentication`}>2FA</Link>
 				</li>
-				<li className={`list-group-item ${isActive(`/auth/editpasswords`)}`}>
-					<Link href={`/auth/editpasswords`}>Passwords</Link>
+				<li className={`list-group-item ${isActive(`/auth/editpassword`)}`}>
+					<Link href={`/auth/editpassword`}>Password</Link>
 				</li>
 				<li className={`list-group-item ${isActive(`/auth/stripe`)}`}>
 					<Link href={`/auth/stripe`}>Stripe Settings</Link>

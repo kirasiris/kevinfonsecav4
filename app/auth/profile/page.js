@@ -6,6 +6,7 @@ import { fetchurl } from "@/helpers/setTokenOnServer";
 import Globalcontent from "@/layout/content";
 import Loading from "@/app/blog/loading";
 import ParseHtml from "@/layout/parseHtml";
+import Single from "@/components/profile/single";
 
 async function getAuthenticatedUser() {
 	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
@@ -105,6 +106,9 @@ const AuthIndex = async ({ params, searchParams }) => {
 												<Link href={`/auth/editavatar`}>
 													AVATAR&nbsp;&&nbsp;COVER
 												</Link>
+											</li>
+											<li>
+												<Single object={auth.data} isSingle={false} />
 											</li>
 										</ul>
 									</div>

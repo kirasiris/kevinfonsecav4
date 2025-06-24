@@ -9,25 +9,28 @@ const RegisterForm = () => {
 	const awtdParams = useParams();
 	const awtdSearchParams = useSearchParams();
 
-	const [rawFormData, setRawFormData] = useState({
-		username: ``,
-		name: ``,
-		email: ``,
-		password: ``,
-		password2: ``,
-	});
-
-	const { username, name, email, password, password2 } = rawFormData;
-
 	const [btnText, setBtnText] = useState("Submit");
 
 	const registerAccount = async (e) => {
 		e.preventDefault();
+		setBtnText(`Processing`);
+
+		const form = e.target;
+		const formData = new FormData(form);
+
+		const rawFormData = {
+			username: formData.get("username"),
+			name: formData.get("name"),
+			email: formData.get("email"),
+			password: formData.get("password"),
+			password2: formData.get("password2"),
+		};
+
 		if (rawFormData.password !== rawFormData.password2) {
 			toast.error(`Passwords do not match`);
 			return;
 		}
-		setBtnText(`Processing`);
+
 		const res = await fetchurl(`/auth/register`, "POST", "no-cache", {
 			...rawFormData,
 			website: "beFree",
@@ -47,18 +50,11 @@ const RegisterForm = () => {
 		toast.success(
 			`An email has been sent to ${rawFormData.email}. Please verify account`
 		);
-		resetForm();
-		// router.push(`/auth/login`);
+		router.push(`/auth/login`);
 	};
 
 	const resetForm = () => {
-		setRawFormData({
-			username: ``,
-			name: ``,
-			email: ``,
-			password: ``,
-			password2: ``,
-		});
+		e.target.closest("form").reset();
 	};
 
 	return (
@@ -69,17 +65,11 @@ const RegisterForm = () => {
 			<input
 				id="username"
 				name="username"
-				value={username}
-				onChange={(e) => {
-					setRawFormData({
-						...rawFormData,
-						username: e.target.value,
-					});
-				}}
 				type="text"
 				className="form-control mb-3"
 				required
 				placeholder="john.doe"
+				defaultValue=""
 			/>
 			<label htmlFor="name" className="form-label">
 				Name
@@ -87,16 +77,10 @@ const RegisterForm = () => {
 			<input
 				id="name"
 				name="name"
-				value={name}
-				onChange={(e) => {
-					setRawFormData({
-						...rawFormData,
-						name: e.target.value,
-					});
-				}}
 				type="text"
 				className="form-control mb-3"
-				placeholder="john@doe.com"
+				placeholder="John Doe"
+				defaultValue=""
 			/>
 			<label htmlFor="email" className="form-label">
 				Email
@@ -104,17 +88,11 @@ const RegisterForm = () => {
 			<input
 				id="email"
 				name="email"
-				value={email}
-				onChange={(e) => {
-					setRawFormData({
-						...rawFormData,
-						email: e.target.value,
-					});
-				}}
 				type="email"
 				className="form-control mb-3"
 				required
 				placeholder="john@doe.com"
+				defaultValue=""
 			/>
 			<label htmlFor="password" className="form-label">
 				Password
@@ -122,16 +100,10 @@ const RegisterForm = () => {
 			<input
 				id="password"
 				name="password"
-				value={password}
-				onChange={(e) => {
-					setRawFormData({
-						...rawFormData,
-						password: e.target.value,
-					});
-				}}
 				type="password"
 				className="form-control mb-3"
 				placeholder="******"
+				defaultValue=""
 			/>
 			<label htmlFor="password2" className="form-label">
 				Confirm Password
@@ -139,16 +111,10 @@ const RegisterForm = () => {
 			<input
 				id="password2"
 				name="password2"
-				value={password2}
-				onChange={(e) => {
-					setRawFormData({
-						...rawFormData,
-						password2: e.target.value,
-					});
-				}}
 				type="password"
 				className="form-control mb-3"
 				placeholder="******"
+				defaultValue=""
 			/>
 			<button type="submit" className="btn btn-secondary btn-sm float-start">
 				{btnText}

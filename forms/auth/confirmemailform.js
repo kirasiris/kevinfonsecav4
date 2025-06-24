@@ -9,12 +9,7 @@ const ConfirmEmailForm = () => {
 	const awtdParams = useParams();
 	const awtdSearchParams = useSearchParams();
 
-	// const [rawFormData, setRawFormData] = useState({
-	// 	email: ``,
-	// });
-
 	const [btnText, setBtnText] = useState("Submit");
-	// const { email } = rawFormData;
 
 	const confirmAccount = async (e) => {
 		e.preventDefault();
@@ -68,13 +63,6 @@ const ConfirmEmailForm = () => {
 			<input
 				id="email"
 				name="email"
-				// value={email}
-				// onChange={(e) => {
-				// 	setRawFormData({
-				// 		...rawFormData,
-				// 		email: e.target.value,
-				// 	});
-				// }}
 				type="email"
 				className="form-control mb-3"
 				required

@@ -11,12 +11,6 @@ const VerifyTwoFactorAuthenticationForm = ({ auth = {} }) => {
 
 	const [displayText, setDisplayText] = useState(false);
 
-	// const [rawFormData, setRawFormData] = useState({
-	// 	token: ``,
-	// });
-
-	// const { token } = rawFormData;
-
 	const [btnText, setBtnText] = useState("Submit");
 
 	const verifyTFA = async (e) => {
@@ -61,9 +55,6 @@ const VerifyTwoFactorAuthenticationForm = ({ auth = {} }) => {
 
 	const resetForm = () => {
 		e.target.closest("form").reset();
-		// setRawFormData({
-		// 	token: ``,
-		// });
 	};
 
 	return (
@@ -76,13 +67,6 @@ const VerifyTwoFactorAuthenticationForm = ({ auth = {} }) => {
 					<input
 						id="token"
 						name="token"
-						// value={token}
-						// onChange={(e) => {
-						// 	setRawFormData({
-						// 		...rawFormData,
-						// 		token: e.target.value,
-						// 	});
-						// }}
 						type="text"
 						className="form-control mb-3"
 						required

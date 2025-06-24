@@ -13,13 +13,6 @@ const LoginForm = () => {
 	const awtdParams = useParams();
 	const awtdSearchParams = useSearchParams();
 
-	// const [rawFormData, setRawFormData] = useState({
-	// 	email: ``,
-	// 	password: ``,
-	// });
-
-	// const { email, password } = rawFormData;
-
 	const [btnText, setBtnText] = useState("Submit");
 
 	const loginAccount = async (e) => {
@@ -87,10 +80,6 @@ const LoginForm = () => {
 	};
 
 	const resetForm = () => {
-		// setRawFormData({
-		// 	email: ``,
-		// 	password: ``,
-		// });
 		e.target.closest("form").reset();
 	};
 
@@ -102,13 +91,6 @@ const LoginForm = () => {
 			<input
 				id="email"
 				name="email"
-				// value={email}
-				// onChange={(e) => {
-				// 	setRawFormData({
-				// 		...rawFormData,
-				// 		email: e.target.value,
-				// 	});
-				// }}
 				type="email"
 				className="form-control mb-3"
 				required
@@ -121,13 +103,6 @@ const LoginForm = () => {
 			<input
 				id="password"
 				name="password"
-				// value={password}
-				// onChange={(e) => {
-				// 	setRawFormData({
-				// 		...rawFormData,
-				// 		password: e.target.value,
-				// 	});
-				// }}
 				type="password"
 				className="form-control mb-3"
 				placeholder="******"

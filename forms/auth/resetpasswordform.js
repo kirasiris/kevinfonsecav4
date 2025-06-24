@@ -9,13 +9,6 @@ const ResetPasswordForm = () => {
 	const awtdParams = useParams();
 	const awtdSearchParams = useSearchParams();
 
-	// const [rawFormData, setRawFormData] = useState({
-	// 	password: ``,
-	// 	password2: ``,
-	// });
-
-	// const { password, password2 } = rawFormData;
-
 	const [btnText, setBtnText] = useState("Submit");
 
 	const resetPasswordAccount = async (e) => {
@@ -68,10 +61,6 @@ const ResetPasswordForm = () => {
 
 	const resetForm = () => {
 		e.target.closest("form").reset();
-		// setRawFormData({
-		// 	password: ``,
-		// 	password2: ``,
-		// });
 	};
 
 	return (
@@ -82,13 +71,6 @@ const ResetPasswordForm = () => {
 			<input
 				id="password"
 				name="password"
-				// value={password}
-				// onChange={(e) => {
-				// 	setRawFormData({
-				// 		...rawFormData,
-				// 		password: e.target.value,
-				// 	});
-				// }}
 				type="password"
 				className="form-control mb-3"
 				required
@@ -101,13 +83,6 @@ const ResetPasswordForm = () => {
 			<input
 				id="password2"
 				name="password2"
-				// value={password2}
-				// onChange={(e) => {
-				// 	setRawFormData({
-				// 		...rawFormData,
-				// 		password2: e.target.value,
-				// 	});
-				// }}
 				type="password"
 				className="form-control mb-3"
 				required

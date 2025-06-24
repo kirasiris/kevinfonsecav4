@@ -9,12 +9,7 @@ const RecoverForm = () => {
 	const awtdParams = useParams();
 	const awtdSearchParams = useSearchParams();
 
-	// const [rawFormData, setRawFormData] = useState({
-	// 	email: ``,
-	// });
-
 	const [btnText, setBtnText] = useState("Submit");
-	// const { email } = rawFormData;
 
 	const recoverAccount = async (e) => {
 		e.preventDefault();
@@ -52,9 +47,6 @@ const RecoverForm = () => {
 
 	const resetForm = () => {
 		e.target.closest("form").reset();
-		// setRawFormData({
-		// 	email: ``,
-		// });
 	};
 
 	return (
@@ -65,13 +57,6 @@ const RecoverForm = () => {
 			<input
 				id="email"
 				name="email"
-				// value={email}
-				// onChange={(e) => {
-				// 	setRawFormData({
-				// 		...rawFormData,
-				// 		email: e.target.value,
-				// 	});
-				// }}
 				type="email"
 				className="form-control mb-3"
 				required

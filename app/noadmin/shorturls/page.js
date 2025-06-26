@@ -2,7 +2,7 @@ import { revalidatePath } from "next/cache";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
 import List from "@/components/admin/shorturls/list";
-import Form from "@/components/forms/noadmin/shorturls/form";
+import Form from "@/forms/noadmin/shorturls/form";
 
 async function getShortUrls(params) {
 	const res = await fetchurl(

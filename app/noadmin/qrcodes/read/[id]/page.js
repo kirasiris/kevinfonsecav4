@@ -1,5 +1,5 @@
 import { fetchurl, getUserOnServer } from "@/helpers/setTokenOnServer";
-import Form from "@/components/forms/noadmin/qrcodes/form";
+import Form from "@/forms/noadmin/qrcodes/form";
 import QRC from "@/components/global/qrcode";
 
 async function getQRCodes(params) {

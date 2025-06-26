@@ -1,44 +1,58 @@
 import { revalidatePath } from "next/cache";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
-import List from "@/components/admin/emails/list";
+import List from "@/components/nfabusiness/serviceemails/list";
 
-async function getEmails(params) {
-	const res = await fetchurl(`/global/emails${params}`, "GET", "no-cache");
+async function getServiceEmails(params) {
+	const res = await fetchurl(
+		`/global/serviceemails${params}`,
+		"GET",
+		"no-cache"
+	);
 	return res;
 }
 
-const AdminEmailsIndex = async ({ params, searchParams }) => {
+const AdminServiceEmailsIndex = async ({ params, searchParams }) => {
 	const awtdParams = await params;
 	const awtdSearchParams = await searchParams;
 	const page = awtdSearchParams.page || 1;
 	const limit = awtdSearchParams.limit || 10;
 	const sort = awtdSearchParams.sort || "-createdAt";
 
-	const emails = await getEmails(`?page=${page}&limit=${limit}&sort=${sort}`);
+	const serviceemails = await getServiceEmails(
+		`?page=${page}&limit=${limit}&sort=${sort}`
+	);
 
 	const handleDelete = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/noadmin/emails/${id}/permanently`, "DELETE", "no-cache");
-		revalidatePath(`/noadmin/emails?page=${page}&limit=${limit}&sort=${sort}`);
+		await fetchurl(
+			`/noadmin/serviceemails/${id}/permanently`,
+			"DELETE",
+			"no-cache"
+		);
+		revalidatePath(
+			`/nfabusiness/serviceemails?page=${page}&limit=${limit}&sort=${sort}`
+		);
 	};
 
 	const handleDeleteAll = async () => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(
-			`/noadmin/emails/deleteall/permanently`,
+			`/noadmin/serviceemails/deleteall/permanently`,
 			"DELETE",
 			"no-cache"
 		);
-		revalidatePath(`/noadmin/emails?page=${page}&limit=${limit}&sort=${sort}`);
+		revalidatePath(
+			`/nfabusiness/serviceemails?page=${page}&limit=${limit}&sort=${sort}`
+		);
 	};
 
 	return (
 		<>
 			<AdminStatusesMenu
-				allLink="/noadmin/emails"
+				allLink="/nfabusiness/serviceemails"
 				publishedLink=""
 				draftLink=""
 				scheduledLink=""
@@ -48,11 +62,11 @@ const AdminEmailsIndex = async ({ params, searchParams }) => {
 			/>
 			<div className="card rounded-0">
 				<List
-					allLink="/noadmin/emails"
-					pageText="Emails"
-					searchOn="/noadmin/emails"
+					allLink="/nfabusiness/serviceemails"
+					pageText="Service Emails"
+					searchOn="/nfabusiness/serviceemails"
 					searchedKeyword=""
-					objects={emails}
+					objects={serviceemails}
 					searchParams={awtdSearchParams}
 					handleDelete={handleDelete}
 					handleDeleteAllFunction={handleDeleteAll}
@@ -62,4 +76,4 @@ const AdminEmailsIndex = async ({ params, searchParams }) => {
 	);
 };
 
-export default AdminEmailsIndex;
+export default AdminServiceEmailsIndex;

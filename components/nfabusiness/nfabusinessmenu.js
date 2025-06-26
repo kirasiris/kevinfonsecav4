@@ -15,6 +15,13 @@ const AdminNFAMenu = () => {
 				<li className={`list-group-item ${isActive(`/nfabusiness`)}`}>
 					<Link href={"/nfabusiness"}>Dashboard</Link>
 				</li>
+				<li
+					className={`list-group-item ${isActive(
+						`/nfabusiness/serviceemails`
+					)}`}
+				>
+					<Link href={"/serviceemails"}>Service Requests</Link>
+				</li>
 			</ul>
 		</div>
 	);

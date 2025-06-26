@@ -36,11 +36,11 @@ const AdminMenu = () => {
 				<li className={`list-group-item ${isActive(`/noadmin/companies`)}`}>
 					<Link href={"/noadmin/companies"}>Companies</Link>
 				</li>
+				<li className={`list-group-item ${isActive(`/noadmin/contactemails`)}`}>
+					<Link href={"/noadmin/contactemails"}>Contact Emails</Link>
+				</li>
 				<li className={`list-group-item ${isActive(`/noadmin/courses`)}`}>
 					<Link href={"/noadmin/courses"}>Courses</Link>
-				</li>
-				<li className={`list-group-item ${isActive(`/noadmin/emails`)}`}>
-					<Link href={"/noadmin/emails"}>Contact Form Emails</Link>
 				</li>
 				<li className={`list-group-item ${isActive(`/noadmin/events`)}`}>
 					<Link href={"/noadmin/events"}>Events</Link>

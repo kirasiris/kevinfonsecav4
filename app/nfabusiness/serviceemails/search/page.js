@@ -1,14 +1,18 @@
 import { revalidatePath } from "next/cache";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
-import List from "@/components/admin/emails/list";
+import List from "@/components/nfabusiness/serviceemails/list";
 
-async function getEmails(params) {
-	const res = await fetchurl(`/global/emails${params}`, "GET", "no-cache");
+async function getServiceEmails(params) {
+	const res = await fetchurl(
+		`/global/serviceemails${params}`,
+		"GET",
+		"no-cache"
+	);
 	return res;
 }
 
-const AdminEmailsSearchIndex = async ({ params, searchParams }) => {
+const AdminServiceEmailsSearchIndex = async ({ params, searchParams }) => {
 	const awtdParams = await params;
 	const awtdSearchParams = await searchParams;
 	const keyword = awtdSearchParams.keyword || "";
@@ -16,16 +20,20 @@ const AdminEmailsSearchIndex = async ({ params, searchParams }) => {
 	const limit = awtdSearchParams.limit || 10;
 	const sort = awtdSearchParams.sort || "-createdAt";
 
-	const emails = await getEmails(
+	const serviceemails = await getServiceEmails(
 		`?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 	);
 
 	const handleDelete = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/noadmin/emails/${id}/permanently`, "DELETE", "no-cache");
+		await fetchurl(
+			`/noadmin/serviceemails/${id}/permanently`,
+			"DELETE",
+			"no-cache"
+		);
 		revalidatePath(
-			`/noadmin/emails/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/serviceemails/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -33,19 +41,19 @@ const AdminEmailsSearchIndex = async ({ params, searchParams }) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(
-			`/noadmin/emails/deleteall/permanently`,
+			`/noadmin/serviceemails/deleteall/permanently`,
 			"DELETE",
 			"no-cache"
 		);
 		revalidatePath(
-			`/noadmin/emails/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/serviceemails/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
 	return (
 		<>
 			<AdminStatusesMenu
-				allLink="/noadmin/emails"
+				allLink="/nfabusiness/serviceemails"
 				publishedLink=""
 				draftLink=""
 				scheduledLink=""
@@ -55,12 +63,12 @@ const AdminEmailsSearchIndex = async ({ params, searchParams }) => {
 			/>
 			<div className="card rounded-0">
 				<List
-					allLink="/noadmin/emails"
-					pageText="Emails"
+					allLink="/nfabusiness/serviceemails"
+					pageText="Service Emails"
 					addLink=""
-					searchOn="/noadmin/emails"
+					searchOn="/nfabusiness/serviceemails"
 					searchedKeyword={keyword}
-					objects={emails}
+					objects={serviceemails}
 					searchParams={awtdSearchParams}
 					handleDelete={handleDelete}
 					handleDeleteAllFunction={handleDeleteAll}
@@ -70,4 +78,4 @@ const AdminEmailsSearchIndex = async ({ params, searchParams }) => {
 	);
 };
 
-export default AdminEmailsSearchIndex;
+export default AdminServiceEmailsSearchIndex;

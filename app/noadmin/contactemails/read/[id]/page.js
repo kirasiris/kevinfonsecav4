@@ -2,17 +2,20 @@ import { notFound } from "next/navigation";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import ParseHtml from "@/layout/parseHtml";
 
-async function getEmails(params) {
-	const res = await fetchurl(`/global/emails${params}`, "GET", "no-cache");
-	console.log("email", res);
+async function getContactEmails(params) {
+	const res = await fetchurl(
+		`/global/contactemails${params}`,
+		"GET",
+		"no-cache"
+	);
 	if (!res.success) notFound();
 	return res;
 }
 
-const ReadEmail = async ({ params, searchParams }) => {
+const ReadContactEmail = async ({ params, searchParams }) => {
 	const awtdParams = await params;
 	const awtdSearchParams = await searchParams;
-	const email = await getEmails(`/${awtdParams.id}`);
+	const email = await getContactEmails(`/${awtdParams.id}`);
 
 	return (
 		<div className="row">
@@ -27,4 +30,4 @@ const ReadEmail = async ({ params, searchParams }) => {
 	);
 };
 
-export default ReadEmail;
+export default ReadContactEmail;

@@ -1,5 +1,5 @@
 import "@/src/css/admin.css";
-import AdminMenu from "@/components/nfabusiness/menu";
+import AdminNFAMenu from "@/components/nfabusiness/nfabusinessmenu";
 import { redirect } from "next/navigation";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 
@@ -23,7 +23,7 @@ export default async function AdminLayout({ children }) {
 	return (
 		<div className="container-fluid my-4">
 			<div className="row">
-				<AdminMenu />
+				<AdminNFAMenu />
 				<div className="col-lg-11">{children}</div>
 			</div>
 		</div>

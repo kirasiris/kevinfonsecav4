@@ -1,32 +1,32 @@
-import { fetchurl } from "@/helpers/setTokenOnServer";
-import { redirect } from "next/navigation";
-import FormButtons from "@/components/global/formbuttons";
-import Globalcontent from "@/layout/content";
+// import { fetchurl } from "@/helpers/setTokenOnServer";
+// import { redirect } from "next/navigation";
+// import FormButtons from "@/components/global/formbuttons";
 // import ConfirmEmailForm from "@/forms/auth/confirmemailform";
+import Globalcontent from "@/layout/content";
 import Link from "next/link";
 
 const UpdateConfirmEmail = async ({ params, searchParams }) => {
 	const awtdParams = await params;
 	const awtdSearchParams = await searchParams;
 
-	const confirmAccount = async (formData) => {
-		"use server";
-		const confirmtoken = awtdParams.confirmtoken;
-		if (!confirmtoken) {
-			console.log("There was an error, plase try again");
-			redirect(`/auth/login`);
-		}
-		const rawFormData = {
-			email: formData.get("email"),
-		};
-		await fetchurl(
-			`/auth/confirmemail/${confirmtoken}`,
-			"PUT",
-			"no-cache",
-			rawFormData
-		);
-		redirect(`/auth/login`);
-	};
+	// const confirmAccount = async (formData) => {
+	// 	"use server";
+	// 	const confirmtoken = awtdParams.confirmtoken;
+	// 	if (!confirmtoken) {
+	// 		console.log("There was an error, plase try again");
+	// 		redirect(`/auth/login`);
+	// 	}
+	// 	const rawFormData = {
+	// 		email: formData.get("email"),
+	// 	};
+	// 	await fetchurl(
+	// 		`/auth/confirmemail/${confirmtoken}`,
+	// 		"PUT",
+	// 		"no-cache",
+	// 		rawFormData
+	// 	);
+	// 	redirect(`/auth/login`);
+	// };
 
 	return (
 		<>
@@ -50,22 +50,20 @@ const UpdateConfirmEmail = async ({ params, searchParams }) => {
 						<div className="card">
 							<div className="card-header">Confirm Account</div>
 							<div className="card-body">
-								{/* <ConfirmEmailForm /> */}
-								<div className="col-lg-12">
-									<form action={confirmAccount}>
-										<label htmlFor="email" className="form-label">
-											Email
-										</label>
-										<input
-											id="email"
-											name="email"
-											type="email"
-											className="form-control"
-											placeholder="john@doe.com"
-										/>
-										<FormButtons />
-									</form>
-								</div>
+								<ConfirmEmailForm />
+								{/* <form action={confirmAccount}>
+									<label htmlFor="email" className="form-label">
+										Email
+									</label>
+									<input
+										id="email"
+										name="email"
+										type="email"
+										className="form-control"
+										placeholder="john@doe.com"
+									/>
+									<FormButtons />
+								</form> */}
 							</div>
 							<div className="card-footer">
 								<Link

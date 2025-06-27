@@ -30,7 +30,7 @@ const ConfirmEmailForm = () => {
 		}
 
 		const res = await fetchurl(
-			`/auth/confirmemail`,
+			`/auth/confirmemail/${confirmtoken}`,
 			"PUT",
 			"no-cache",
 			rawFormData

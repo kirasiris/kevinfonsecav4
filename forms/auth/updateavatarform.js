@@ -6,7 +6,7 @@ import Image from "next/image";
 import UseProgress from "@/components/global/useprogress";
 import axios from "axios";
 
-const Form = ({ auth = {} }) => {
+const UpdateAvatarForm = ({ auth = {} }) => {
 	const [avatarData, setAvatarData] = useState({
 		file: null,
 		filename: `Choose file`,
@@ -27,7 +27,7 @@ const Form = ({ auth = {} }) => {
 			setBtnTxt("Submit...");
 			const token = await getAuthTokenOnServer();
 			const res = await axios.put(
-				`${process.env.NEXT_PUBLIC_API_URL}/uploads/uploadobject`,
+				`https://befree.herokuapp.com/api/v1/uploads/uploadobject`,
 				{
 					userId: auth?.data?._id,
 					username: auth?.data?.username,
@@ -38,7 +38,7 @@ const Form = ({ auth = {} }) => {
 				},
 				{
 					headers: {
-						"Content-Type": "multipart/form-data",
+						"Content-Type": "multipart/UpdateAvatar-data",
 						Authorization: `Bearer ${token.value}`,
 					},
 					onUploadProgress: (ProgressEvent) => {
@@ -151,4 +151,4 @@ const Form = ({ auth = {} }) => {
 	);
 };
 
-export default Form;
+export default UpdateAvatarForm;

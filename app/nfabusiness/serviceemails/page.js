@@ -1,6 +1,6 @@
 import { revalidatePath } from "next/cache";
 import { fetchurl } from "@/helpers/setTokenOnServer";
-import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
+import NFAStatusesMenu from "@/components/nfabusiness/nfastatusesmenu";
 import List from "@/components/nfabusiness/serviceemails/list";
 
 async function getServiceEmails(params) {
@@ -12,7 +12,7 @@ async function getServiceEmails(params) {
 	return res;
 }
 
-const AdminServiceEmailsIndex = async ({ params, searchParams }) => {
+const NFAServiceEmailsIndex = async ({ params, searchParams }) => {
 	const awtdParams = await params;
 	const awtdSearchParams = await searchParams;
 	const page = awtdSearchParams.page || 1;
@@ -51,7 +51,7 @@ const AdminServiceEmailsIndex = async ({ params, searchParams }) => {
 
 	return (
 		<>
-			<AdminStatusesMenu
+			<NFAStatusesMenu
 				allLink="/nfabusiness/serviceemails"
 				publishedLink=""
 				draftLink=""
@@ -76,4 +76,4 @@ const AdminServiceEmailsIndex = async ({ params, searchParams }) => {
 	);
 };
 
-export default AdminServiceEmailsIndex;
+export default NFAServiceEmailsIndex;

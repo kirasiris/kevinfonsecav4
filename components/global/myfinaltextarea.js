@@ -35,7 +35,7 @@ const MyTextArea = ({
 		data.append("onModel", onModel);
 		data.append("file", file);
 		const res = await axios.put(
-			`${process.env.NEXT_PUBLIC_API_URL}/uploads/uploadobject`,
+			`https://befree.herokuapp.com/api/v1/uploads/uploadobject`,
 			data,
 			{
 				headers: {

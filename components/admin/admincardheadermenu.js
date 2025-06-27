@@ -105,8 +105,12 @@ const AdminCardHeaderMenu = ({
 							Add new
 						</Link>
 					)}
-					<TrashAllModal action={handleTrashAllFunction} />
-					<DeleteAllModal action={handleDeleteAllFunction} />
+					{handleTrashAllFunction !== "" && (
+						<TrashAllModal action={handleTrashAllFunction} />
+					)}
+					{handleDeleteAllFunction !== "" && (
+						<DeleteAllModal action={handleDeleteAllFunction} />
+					)}
 				</div>
 			</div>
 		</div>

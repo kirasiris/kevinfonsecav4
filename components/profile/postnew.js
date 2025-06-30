@@ -74,6 +74,9 @@ const PostNew = ({
 								alt={`${object?.data?.username}'s avatar`}
 								width={48}
 								height={48}
+								style={{
+									objectFit: "cover",
+								}}
 							/>
 						</Link>
 					</div>

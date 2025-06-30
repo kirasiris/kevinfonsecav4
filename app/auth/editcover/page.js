@@ -1,9 +1,9 @@
-import { fetchurl } from "@/helpers/setTokenOnServer";
 import { redirect } from "next/navigation";
+import Link from "next/link";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 import Sidebar from "@/layout/auth/sidebar";
 import Globalcontent from "@/layout/content";
-import Link from "next/link";
-import Form from "./form";
+import UpdateCoverForm from "@/forms/auth/updatecoverform";
 
 async function getAuthenticatedUser() {
 	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
@@ -44,7 +44,7 @@ const UpdateCover = async ({ params, searchParams }) => {
 								</div>
 							</div>
 						</div>
-						<Form auth={auth} />
+						<UpdateCoverForm auth={auth} />
 					</div>
 				</Globalcontent>
 			</div>

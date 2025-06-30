@@ -460,6 +460,12 @@ const Post = ({
 						) : (
 							<Default object={object} />
 						)}
+						{object.tags.length > 0 &&
+							object.tags.map((tag, index) => (
+								<span key={index} className="badge bg-secondary me-1">
+									#{tag.charAt(0).toUpperCase() + tag.slice(1)}
+								</span>
+							))}
 					</div>
 					<div className="card-footer d-flex justify-content-between align-items-center">
 						<div className="float-start"></div>

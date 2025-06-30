@@ -1,19 +1,19 @@
 "use client";
-import { fetchurl, getAuthTokenOnServer } from "@/helpers/setTokenOnServer";
 import { useState, useRef, useCallback } from "react";
 import { toast } from "react-toastify";
 import Image from "next/image";
-import UseProgress from "@/components/global/useprogress";
 import axios from "axios";
 import { Modal } from "react-bootstrap";
 import Webcam from "react-webcam";
 import { base64toBlob } from "befree-utilities";
+import UseProgress from "@/components/global/useprogress";
+import { fetchurl, getAuthTokenOnServer } from "@/helpers/setTokenOnServer";
 
 const videoConstraints = {
 	facingMode: "user",
 };
 
-const Form = ({ auth = {} }) => {
+const UploadPictureForm = ({ auth = {} }) => {
 	const fileurl =
 		auth?.data?.files?.avatar?.location?.secure_location ||
 		`https://static.vecteezy.com/system/resources/previews/005/337/799/original/icon-image-not-found-free-vector.jpg`;
@@ -33,7 +33,7 @@ const Form = ({ auth = {} }) => {
 				setBtnTxt("Submit...");
 				const token = await getAuthTokenOnServer();
 				const res = await axios.put(
-					`${process.env.NEXT_PUBLIC_API_URL}/uploads/uploadobject`,
+					`${process.env.NEXT_PUBLIC_FILE_UPLOADER_URL}/uploads/uploadobject`,
 					{
 						userId: auth?.data?._id,
 						username: auth?.data?.username,
@@ -67,6 +67,7 @@ const Form = ({ auth = {} }) => {
 				setCameraModal(false);
 			} catch (err) {
 				console.log(err);
+				setBtnTxt(btnText);
 				setError(true);
 				// const error = err.response.data.message;
 				const error = err?.response?.data?.error?.errors;
@@ -172,4 +173,4 @@ const Form = ({ auth = {} }) => {
 	);
 };
 
-export default Form;
+export default UploadPictureForm;

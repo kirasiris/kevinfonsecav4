@@ -112,7 +112,7 @@ const AuthIndex = async ({ params, searchParams }) => {
 											</li>
 										</ul>
 									</div>
-									<div className="col-6 mb-4">
+									<div className="col-12 mb-4">
 										<ul className="list-group list-group-flush">
 											<li className="list-group-item text-bg-secondary">
 												<Link href={`/auth/editabout`}>ABOUT</Link>
@@ -159,92 +159,6 @@ const AuthIndex = async ({ params, searchParams }) => {
 													))}
 												</li>
 											)}
-										</ul>
-									</div>
-									<div className="col-6 mb-4">
-										<ul className="list-group list-group-flush">
-											<li className="list-group-item text-bg-secondary">
-												<Link href={`/auth/editnotifications`}>
-													NOTIFICATIONS&nbsp;ON&nbsp;WEBSITE
-												</Link>
-											</li>
-											<li className="list-group-item">
-												Blog&nbsp;Responses&nbsp;(
-												{auth.data.settings.notifications.comments.fromBlogNotification.toString()}
-												)
-											</li>
-											<li className="list-group-item">
-												Post&nbsp;Responses&nbsp;(
-												{auth.data.settings.notifications.comments.fromPostNotification.toString()}
-												)
-											</li>
-											<li className="list-group-item">
-												Video&nbsp;Responses&nbsp;(
-												{auth.data.settings.notifications.comments.fromVideoNotification.toString()}
-												)
-											</li>
-											<li className="list-group-item">
-												File&nbsp;Responses&nbsp;(
-												{auth.data.settings.notifications.comments.fromMediaNotification.toString()}
-												)
-											</li>
-											<li className="list-group-item">
-												Channel&nbsp;Responses&nbsp;(
-												{
-													auth.data.settings.notifications.comments
-														.fromProducerNotification
-												}
-												)
-											</li>
-											<li className="list-group-item">
-												Job&nbsp;Responses&nbsp;(
-												{auth.data.settings.notifications.comments.fromJobNotification.toString()}
-												)
-											</li>
-											<li className="list-group-item">
-												Comment&nbsp;Responses&nbsp;(
-												{auth.data.settings.notifications.comments.fromCommentNotification.toString()}
-												)
-											</li>
-										</ul>
-									</div>
-									<div className="col-6 mb-4">
-										<ul className="list-group list-group-flush">
-											<li className="list-group-item text-bg-secondary">
-												<Link href={`/auth/editnotificationsemail`}>
-													NOTIFICATIONS&nbsp;BY&nbsp;EMAIL
-												</Link>
-											</li>
-										</ul>
-									</div>
-									<div className="col-6 mb-4">
-										<ul className="list-group list-group-flush">
-											<li className="list-group-item text-bg-secondary">
-												<Link href={`/auth/edittwofactorauthentication`}>
-													2FA
-												</Link>
-											</li>
-											<li className="list-group-item">
-												{auth.data.twoFactorTokenEnabled
-													? `ENABLED`
-													: "DISABLED"}
-											</li>
-										</ul>
-									</div>
-									<div className="col-6 mb-4">
-										<ul className="list-group list-group-flush">
-											<li className="list-group-item text-bg-secondary">
-												<Link href={`/auth/editpassword`}>PASSWORD</Link>
-											</li>
-										</ul>
-									</div>
-									<div className="col-6 mb-4">
-										<ul className="list-group list-group-flush">
-											<li className="list-group-item text-bg-danger">
-												<Link href={`/auth/deleteaccount`}>
-													DELETE&nbsp;ACCOUNT&nbsp;(ITS&nbsp;A&nbsp;LINK)
-												</Link>
-											</li>
 										</ul>
 									</div>
 								</div>

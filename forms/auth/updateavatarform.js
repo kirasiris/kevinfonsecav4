@@ -1,10 +1,10 @@
 "use client";
-import { fetchurl, getAuthTokenOnServer } from "@/helpers/setTokenOnServer";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import Image from "next/image";
-import UseProgress from "@/components/global/useprogress";
 import axios from "axios";
+import { fetchurl, getAuthTokenOnServer } from "@/helpers/setTokenOnServer";
+import UseProgress from "@/components/global/useprogress";
 
 const UpdateAvatarForm = ({ auth = {} }) => {
 	const [avatarData, setAvatarData] = useState({
@@ -27,7 +27,7 @@ const UpdateAvatarForm = ({ auth = {} }) => {
 			setBtnTxt("Submit...");
 			const token = await getAuthTokenOnServer();
 			const res = await axios.put(
-				`https://befree.herokuapp.com/api/v1/uploads/uploadobject`,
+				`${process.env.NEXT_PUBLIC_FILE_UPLOADER_URL}/uploads/uploadobject`,
 				{
 					userId: auth?.data?._id,
 					username: auth?.data?.username,
@@ -38,7 +38,7 @@ const UpdateAvatarForm = ({ auth = {} }) => {
 				},
 				{
 					headers: {
-						"Content-Type": "multipart/UpdateAvatar-data",
+						"Content-Type": "multipart/form-data",
 						Authorization: `Bearer ${token.value}`,
 					},
 					onUploadProgress: (ProgressEvent) => {
@@ -60,6 +60,7 @@ const UpdateAvatarForm = ({ auth = {} }) => {
 			setBtnTxt(btnText);
 		} catch (err) {
 			console.log(err);
+			setBtnTxt(btnText);
 			setError(true);
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;

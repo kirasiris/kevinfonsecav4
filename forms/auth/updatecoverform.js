@@ -1,12 +1,12 @@
 "use client";
-import { fetchurl, getAuthTokenOnServer } from "@/helpers/setTokenOnServer";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import Image from "next/image";
-import UseProgress from "@/components/global/useprogress";
 import axios from "axios";
+import { fetchurl, getAuthTokenOnServer } from "@/helpers/setTokenOnServer";
+import UseProgress from "@/components/global/useprogress";
 
-const Form = ({ auth = {} }) => {
+const UpdateCoverForm = ({ auth = {} }) => {
 	const [coverData, setCoverData] = useState({
 		file: null,
 		filename: `Choose file`,
@@ -27,7 +27,7 @@ const Form = ({ auth = {} }) => {
 			setBtnTxt("Submit...");
 			const token = await getAuthTokenOnServer();
 			const res = await axios.put(
-				`${process.env.NEXT_PUBLIC_API_URL}/uploads/uploadobject`,
+				`${process.env.NEXT_PUBLIC_FILE_UPLOADER_URL}/uploads/uploadobject`,
 				{
 					userId: auth?.data?._id,
 					username: auth?.data?.username,
@@ -59,6 +59,7 @@ const Form = ({ auth = {} }) => {
 			setBtnTxt(btnText);
 		} catch (err) {
 			console.log(err);
+			setBtnTxt(btnText);
 			setError(true);
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;
@@ -150,4 +151,4 @@ const Form = ({ auth = {} }) => {
 	);
 };
 
-export default Form;
+export default UpdateCoverForm;

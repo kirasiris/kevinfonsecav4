@@ -1,9 +1,9 @@
-import { fetchurl } from "@/helpers/setTokenOnServer";
 import { redirect } from "next/navigation";
+import Link from "next/link";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 import Sidebar from "@/layout/auth/sidebar";
 import Globalcontent from "@/layout/content";
-import Link from "next/link";
-import Form from "./form";
+import UploadPictureForm from "@/forms/auth/uploadpictureform";
 
 async function getAuthenticatedUser() {
 	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
@@ -44,7 +44,7 @@ const UploadPicture = async ({ params, searchParams }) => {
 								</div>
 							</div>
 						</div>
-						<Form auth={auth} />
+						<UploadPictureForm auth={auth} />
 					</div>
 				</Globalcontent>
 			</div>

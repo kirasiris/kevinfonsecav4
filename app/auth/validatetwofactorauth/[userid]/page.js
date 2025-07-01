@@ -2,9 +2,6 @@ import Globalcontent from "@/layout/content";
 import ValidateTwoFactorAuthenticationForm from "@/forms/auth/validatetwofactorauthentication";
 
 const ValidateTwoFactorAuthentication = async ({ params, searchParams }) => {
-	const awtdParams = await params;
-	const awtdSearchParams = await searchParams;
-
 	return (
 		<>
 			<style>

@@ -10,9 +10,6 @@ async function getAuthenticatedUser() {
 }
 
 const Recover = async ({ params, searchParams }) => {
-	// const awtdParams = await params;
-	const awtdSearchParams = await searchParams;
-
 	const auth = await getAuthenticatedUser();
 
 	// Redirect if user is logged in

@@ -26,19 +26,6 @@ const UpdateConfirmEmail = async ({ params, searchParams }) => {
 							<div className="card-header">Confirm Account</div>
 							<div className="card-body">
 								<ConfirmEmailForm />
-								{/* <form action={confirmAccount}>
-									<label htmlFor="email" className="form-label">
-										Email
-									</label>
-									<input
-										id="email"
-										name="email"
-										type="email"
-										className="form-control"
-										placeholder="john@doe.com"
-									/>
-									<FormButtons />
-								</form> */}
 							</div>
 							<div className="card-footer">
 								<Link

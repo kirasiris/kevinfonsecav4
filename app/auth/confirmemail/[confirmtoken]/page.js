@@ -1,33 +1,8 @@
-// import { fetchurl } from "@/helpers/setTokenOnServer";
-// import { redirect } from "next/navigation";
-// import FormButtons from "@/components/global/formbuttons";
-// import ConfirmEmailForm from "@/forms/auth/confirmemailform";
+import ConfirmEmailForm from "@/forms/auth/confirmemailform";
 import Globalcontent from "@/layout/content";
 import Link from "next/link";
 
 const UpdateConfirmEmail = async ({ params, searchParams }) => {
-	const awtdParams = await params;
-	const awtdSearchParams = await searchParams;
-
-	// const confirmAccount = async (formData) => {
-	// 	"use server";
-	// 	const confirmtoken = awtdParams.confirmtoken;
-	// 	if (!confirmtoken) {
-	// 		console.log("There was an error, plase try again");
-	// 		redirect(`/auth/login`);
-	// 	}
-	// 	const rawFormData = {
-	// 		email: formData.get("email"),
-	// 	};
-	// 	await fetchurl(
-	// 		`/auth/confirmemail/${confirmtoken}`,
-	// 		"PUT",
-	// 		"no-cache",
-	// 		rawFormData
-	// 	);
-	// 	redirect(`/auth/login`);
-	// };
-
 	return (
 		<>
 			<style>

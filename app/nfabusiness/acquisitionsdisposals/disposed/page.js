@@ -56,6 +56,12 @@ const NFAAcquisitionDisposalsDisposedIndex = async ({
 		<>
 			<NFAStatusesMenu
 				allLink="/nfabusiness/acquisitionsdisposals"
+				publishedLink=""
+				draftLink=""
+				scheduledLink=""
+				trashedLink=""
+				categoriesLink=""
+				categoryType=""
 				acquiredLink="/nfabusiness/acquisitionsdisposals/acquired"
 				disposedLink="/nfabusiness/acquisitionsdisposals/disposed"
 			/>

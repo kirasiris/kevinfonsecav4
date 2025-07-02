@@ -23,11 +23,11 @@ const NFAAcquisitionDisposalsIndex = async ({ params, searchParams }) => {
 		`?page=${page}&limit=${limit}&sort=${sort}`
 	);
 
-	const draftIt = async (id) => {
+	const acquireIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(
-			`/noadmin/acquisitionsdisposals/${id}/draftit`,
+			`/noadmin/acquisitionsdisposals/${id}/acquireit`,
 			"PUT",
 			"no-cache"
 		);
@@ -36,11 +36,11 @@ const NFAAcquisitionDisposalsIndex = async ({ params, searchParams }) => {
 		);
 	};
 
-	const publishIt = async (id) => {
+	const disposeIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(
-			`/noadmin/acquisitionsdisposals/${id}/publishit`,
+			`/noadmin/acquisitionsdisposals/${id}/disposeit`,
 			"PUT",
 			"no-cache"
 		);
@@ -53,8 +53,8 @@ const NFAAcquisitionDisposalsIndex = async ({ params, searchParams }) => {
 		<>
 			<NFAStatusesMenu
 				allLink="/nfabusiness/acquisitionsdisposals"
-				publishedLink="/nfabusiness/acquisitionsdisposals/published"
-				draftLink="/nfabusiness/acquisitionsdisposals/draft"
+				publishedLink="/nfabusiness/acquisitionsdisposals/acquired"
+				draftLink="/nfabusiness/acquisitionsdisposals/disposed"
 				scheduledLink=""
 				trashedLink=""
 				categoriesLink=""
@@ -69,8 +69,8 @@ const NFAAcquisitionDisposalsIndex = async ({ params, searchParams }) => {
 					searchedKeyword=""
 					objects={acquisitionsdisposals}
 					searchParams={awtdSearchParams}
-					handleDraft={draftIt}
-					handlePublish={publishIt}
+					handleDraft={acquireIt}
+					handlePublish={disposeIt}
 					handleTrash={undefined}
 					handleSchedule={undefined}
 					handleFeature={undefined}

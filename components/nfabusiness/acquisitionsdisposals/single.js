@@ -2,7 +2,6 @@
 import Link from "next/link";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import { formatDateWithoutTime } from "befree-utilities";
-import DeleteModal from "@/components/global/deletemodal";
 
 const Single = ({
 	object = {},
@@ -60,23 +59,14 @@ const Single = ({
 								className="dropdown-item btn btn-sm"
 								onClick={() => handleDraft(object._id)}
 							>
-								Draft&nbsp;It
+								Acquire&nbsp;It
 							</button>
 							<button
 								className="dropdown-item btn btn-sm"
 								onClick={() => handlePublish(object._id)}
 							>
-								Publish&nbsp;It
+								Dispose&nbsp;It
 							</button>
-							<hr />
-							<DeleteModal
-								id={object._id ? object._id : object._id}
-								action={handleDelete}
-								classStr={`dropdown-item`}
-								objects={objects}
-								setObjects={setObjects}
-								setTotalResults={setTotalResults}
-							/>
 						</DropdownButton>
 					</span>
 				</div>

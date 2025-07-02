@@ -5,14 +5,14 @@ import List from "@/components/nfabusiness/acquisitionsdisposals/list";
 
 async function getAcquisitionsDisposals(params) {
 	const res = await fetchurl(
-		`/global/acquisitionsdisposals${params}&status=published`,
+		`/global/acquisitionsdisposals${params}&status=disposed`,
 		"GET",
 		"no-cache"
 	);
 	return res;
 }
 
-const NFAAcquisitionDisposalsPublishedIndex = async ({
+const NFAAcquisitionDisposalsDisposedIndex = async ({
 	params,
 	searchParams,
 }) => {
@@ -30,7 +30,7 @@ const NFAAcquisitionDisposalsPublishedIndex = async ({
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(
-			`/noadmin/acquisitionsdisposals/${id}/draftit`,
+			`/noadmin/acquisitionsdisposals/${id}/acquireit`,
 			"PUT",
 			"no-cache"
 		);
@@ -43,7 +43,7 @@ const NFAAcquisitionDisposalsPublishedIndex = async ({
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(
-			`/noadmin/acquisitionsdisposals/${id}/publishit`,
+			`/noadmin/acquisitionsdisposals/${id}/disposeit`,
 			"PUT",
 			"no-cache"
 		);
@@ -56,8 +56,8 @@ const NFAAcquisitionDisposalsPublishedIndex = async ({
 		<>
 			<NFAStatusesMenu
 				allLink="/nfabusiness/acquisitionsdisposals"
-				publishedLink="/nfabusiness/acquisitionsdisposals/published"
-				draftLink="/nfabusiness/acquisitionsdisposals/draft"
+				publishedLink="/nfabusiness/acquisitionsdisposals/acquired"
+				draftLink="/nfabusiness/acquisitionsdisposals/disposed"
 				scheduledLink=""
 				trashedLink=""
 				categoriesLink=""
@@ -87,4 +87,4 @@ const NFAAcquisitionDisposalsPublishedIndex = async ({
 	);
 };
 
-export default NFAAcquisitionDisposalsPublishedIndex;
+export default NFAAcquisitionDisposalsDisposedIndex;

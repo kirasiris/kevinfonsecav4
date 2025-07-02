@@ -28,7 +28,7 @@ const NFAAcquisitionDisposalsSearchIndex = async ({ params, searchParams }) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(
-			`/noadmin/acquisitionsdisposals/${id}/draftit`,
+			`/noadmin/acquisitionsdisposals/${id}/acquireit`,
 			"PUT",
 			"no-cache"
 		);
@@ -41,7 +41,7 @@ const NFAAcquisitionDisposalsSearchIndex = async ({ params, searchParams }) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(
-			`/noadmin/acquisitionsdisposals/${id}/publishit`,
+			`/noadmin/acquisitionsdisposals/${id}/disposeit`,
 			"PUT",
 			"no-cache"
 		);
@@ -54,8 +54,8 @@ const NFAAcquisitionDisposalsSearchIndex = async ({ params, searchParams }) => {
 		<>
 			<NFAStatusesMenu
 				allLink="/nfabusiness/acquisitionsdisposals"
-				publishedLink="/nfabusiness/acquisitionsdisposals/published"
-				draftLink="/nfabusiness/acquisitionsdisposals/draft"
+				publishedLink="/nfabusiness/acquisitionsdisposals/acquired"
+				draftLink="/nfabusiness/acquisitionsdisposals/disposed"
 				scheduledLink=""
 				trashedLink=""
 				categoriesLink=""

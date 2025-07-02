@@ -4,13 +4,8 @@ import { usePathname } from "next/navigation";
 
 const NFAStatusesMenu = ({
 	allLink = "",
-	publishedLink = "",
-	draftLink = "",
-	scheduledLink = "",
-	trashedLink = "",
-	filledLink = "",
-	categoriesLink = "",
-	categoryType = "",
+	acquiredLink = "",
+	disposedLink = "",
 }) => {
 	const pathname = usePathname();
 
@@ -31,81 +26,30 @@ const NFAStatusesMenu = ({
 					All
 				</Link>
 			)}
-			{publishedLink !== "" &&
-				publishedLink !== undefined &&
-				publishedLink !== null && (
+			{acquiredLink !== "" &&
+				acquiredLink !== undefined &&
+				acquiredLink !== null && (
 					<Link
 						href={{
-							pathname: publishedLink,
+							pathname: acquiredLink,
 							query: { page: 1, limit: 10, sort: `-createdAt` },
 						}}
-						className={`btn ${isActive(publishedLink)} btn-sm`}
+						className={`btn ${isActive(acquiredLink)} btn-sm`}
 					>
 						Published
 					</Link>
 				)}
-			{draftLink !== "" && draftLink !== undefined && draftLink !== null && (
-				<Link
-					href={{
-						pathname: draftLink,
-						query: { page: 1, limit: 10, sort: `-createdAt` },
-					}}
-					className={`btn ${isActive(draftLink)} btn-sm`}
-				>
-					Draft
-				</Link>
-			)}
-			{scheduledLink !== "" &&
-				scheduledLink !== undefined &&
-				scheduledLink !== null && (
+			{disposedLink !== "" &&
+				disposedLink !== undefined &&
+				disposedLink !== null && (
 					<Link
 						href={{
-							pathname: scheduledLink,
+							pathname: disposedLink,
 							query: { page: 1, limit: 10, sort: `-createdAt` },
 						}}
-						className={`btn ${isActive(scheduledLink)} btn-sm`}
+						className={`btn ${isActive(disposedLink)} btn-sm`}
 					>
-						Scheduled
-					</Link>
-				)}
-			{trashedLink !== "" &&
-				trashedLink !== undefined &&
-				trashedLink !== null && (
-					<Link
-						href={{
-							pathname: trashedLink,
-							query: { page: 1, limit: 10, sort: `-createdAt` },
-						}}
-						className={`btn ${isActive(trashedLink)} btn-sm`}
-					>
-						Trashed
-					</Link>
-				)}
-			{filledLink !== "" && filledLink !== undefined && filledLink !== null && (
-				<Link
-					href={{
-						pathname: filledLink,
-						query: { page: 1, limit: 10, sort: `-createdAt` },
-					}}
-					className={`btn ${isActive(filledLink)} btn-sm`}
-				>
-					Filled Out
-				</Link>
-			)}
-			{categoriesLink !== "" &&
-				categoriesLink !== undefined &&
-				categoriesLink !== null &&
-				categoryType !== "" &&
-				categoryType !== undefined &&
-				categoryType !== null && (
-					<Link
-						href={{
-							pathname: categoriesLink,
-							query: { page: 1, limit: 10, categoryType: categoryType },
-						}}
-						className="btn btn-link btn-sm border-1 border-secondary"
-					>
-						Categories
+						Draft
 					</Link>
 				)}
 		</div>

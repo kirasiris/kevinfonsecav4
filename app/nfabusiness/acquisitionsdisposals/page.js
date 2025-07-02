@@ -53,12 +53,8 @@ const NFAAcquisitionDisposalsIndex = async ({ params, searchParams }) => {
 		<>
 			<NFAStatusesMenu
 				allLink="/nfabusiness/acquisitionsdisposals"
-				publishedLink="/nfabusiness/acquisitionsdisposals/acquired"
-				draftLink="/nfabusiness/acquisitionsdisposals/disposed"
-				scheduledLink=""
-				trashedLink=""
-				categoriesLink=""
-				categoryType=""
+				acquiredLink="/nfabusiness/acquisitionsdisposals/acquired"
+				disposedLink="/nfabusiness/acquisitionsdisposals/disposed"
 			/>
 			<div className="card rounded-0">
 				<List

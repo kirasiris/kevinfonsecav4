@@ -26,7 +26,7 @@ const NFAAcquisitionDisposalsDisposedIndex = async ({
 		`?page=${page}&limit=${limit}&sort=${sort}`
 	);
 
-	const draftIt = async (id) => {
+	const acquireIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(
@@ -39,7 +39,7 @@ const NFAAcquisitionDisposalsDisposedIndex = async ({
 		);
 	};
 
-	const publishIt = async (id) => {
+	const disposeIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(
@@ -56,12 +56,8 @@ const NFAAcquisitionDisposalsDisposedIndex = async ({
 		<>
 			<NFAStatusesMenu
 				allLink="/nfabusiness/acquisitionsdisposals"
-				publishedLink="/nfabusiness/acquisitionsdisposals/acquired"
-				draftLink="/nfabusiness/acquisitionsdisposals/disposed"
-				scheduledLink=""
-				trashedLink=""
-				categoriesLink=""
-				categoryType=""
+				acquiredLink="/nfabusiness/acquisitionsdisposals/acquired"
+				disposedLink="/nfabusiness/acquisitionsdisposals/disposed"
 			/>
 			<div className="card rounded-0">
 				<List
@@ -72,8 +68,8 @@ const NFAAcquisitionDisposalsDisposedIndex = async ({
 					searchedKeyword=""
 					objects={acquisitionsdisposals}
 					searchParams={awtdSearchParams}
-					handleDraft={draftIt}
-					handlePublish={publishIt}
+					handleDraft={acquireIt}
+					handlePublish={disposeIt}
 					handleTrash={undefined}
 					handleSchedule={undefined}
 					handleFeature={undefined}

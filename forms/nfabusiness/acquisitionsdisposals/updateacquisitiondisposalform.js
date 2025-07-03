@@ -49,9 +49,7 @@ const UpdateAcquisitionDisposalForm = ({
 			setBtnText("Submit");
 			return;
 		}
-		setBtnText("Submit");
 		toast.success("Weapon acquistion and disposal updated", "bottom");
-		resetForm();
 		router.push(`/nfabusiness/acquisitionsdisposals`);
 	};
 

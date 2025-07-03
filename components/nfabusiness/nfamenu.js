@@ -36,10 +36,10 @@ const NFAMenu = () => {
 				</li>
 				<li
 					className={`list-group-item ${isActive(
-						`/nfabusiness/weaponaaccessories`
+						`/nfabusiness/weaponaccessories`
 					)}`}
 				>
-					<Link href={"/nfabusiness/weaponaaccessories"}>
+					<Link href={"/nfabusiness/weaponaccessories"}>
 						Weapons Accessories
 					</Link>
 				</li>

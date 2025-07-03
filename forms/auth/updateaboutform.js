@@ -10,7 +10,10 @@ const UpdateAboutForm = ({ auth = {}, profiles = [] }) => {
 	const awtdParams = useParams();
 	const awtdSearchParams = useSearchParams();
 
-	const [displayProfiles, setDisplayProfiles] = useState(false);
+	const [showPartner, setShowPartner] = useState(
+		auth?.data?.relationshipStatus === "taken"
+	);
+
 	const [btnText, setBtnText] = useState("Submit");
 
 	const upgradeAbout = async (e) => {
@@ -59,6 +62,8 @@ const UpdateAboutForm = ({ auth = {}, profiles = [] }) => {
 	const resetForm = (e) => {
 		e.target.closest("form").reset();
 	};
+
+	console.log("auth", auth.data);
 
 	return (
 		<form onSubmit={upgradeAbout}>
@@ -120,44 +125,37 @@ const UpdateAboutForm = ({ auth = {}, profiles = [] }) => {
 						name="relationshipStatus"
 						className="form-control mb-3"
 						defaultValue={auth?.data?.relationshipStatus}
-						onClick={() => {
-							setDisplayProfiles(!displayProfiles);
-						}}
+						onChange={(e) => setShowPartner(e.target.value === "taken")}
 					>
-						<option value={`single`}>Single</option>
-						<option value={`taken`}>Taken</option>
-						<option value={`complicated`}>Complicated</option>
-						<option value={`widowed`}>Widowed</option>
-						<option value={`divorced`}>Divorced</option>
+						<option value="single">Single</option>
+						<option value="taken">Taken</option>
+						<option value="complicated">Complicated</option>
+						<option value="widowed">Widowed</option>
+						<option value="divorced">Divorced</option>
 					</select>
 				</div>
-				{auth.data.relationshipStatus !== "" &&
-					auth.data.relationshipStatus !== "single" &&
-					auth.data.relationshipStatus !== "widowed" &&
-					auth.data.relationshipStatus !== "divorced" &&
-					auth.data.relationshipStatus !== undefined &&
-					auth.data.relationshipStatus !== null &&
-					profiles.length >= 1 && (
-						<div className="col">
-							<label htmlFor="inRelationshipWith" className="form-label">
-								In&nbsp;Relationship&nbsp;With?
-							</label>
-							<select
-								id="inRelationshipWith"
-								name="inRelationshipWith"
-								className="form-control"
-								defaultValue={auth?.data?.inRelationshipWith}
-							>
-								{profiles
-									.filter((excludedUser) => excludedUser._id !== auth.data._id)
-									.map((user) => (
-										<option key={user._id} value={user._id}>
-											{user.username}
-										</option>
-									))}
-							</select>
-						</div>
-					)}
+
+				{showPartner && profiles.data.length >= 1 && (
+					<div className="col">
+						<label htmlFor="inRelationshipWith" className="form-label">
+							In&nbsp;Relationship&nbsp;With?
+						</label>
+						<select
+							id="inRelationshipWith"
+							name="inRelationshipWith"
+							className="form-control"
+							defaultValue={auth?.data?.inRelationshipWith?._id}
+						>
+							{profiles.data
+								.filter((excludedUser) => excludedUser._id !== auth.data._id)
+								.map((user) => (
+									<option key={user._id} value={user._id}>
+										{user.username}
+									</option>
+								))}
+						</select>
+					</div>
+				)}
 			</div>
 			<label htmlFor="company" className="form-label">
 				Company

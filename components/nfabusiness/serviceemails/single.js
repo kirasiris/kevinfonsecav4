@@ -16,20 +16,12 @@ const Single = ({
 				<div className="blog-item__detail">
 					<div className="blog-item__info"></div>
 					<h1 className="blog-item__title">
-						<Link
-							href={{
-								pathname: `/nfabusiness/serviceemails/update/${object._id}`,
-								query: {},
-							}}
-							className="blog-item__title-link"
-						>
-							{object.email}&nbsp;-&nbsp;{object.subject}
-						</Link>
+						{object.email}&nbsp;-&nbsp;{object.subject}
 					</h1>
 					<div className="blog-item__meta">
-						<span className="blog-item__meta-time-status">
-							{object.name}&nbsp;-&nbsp;{object.ipAddress}
-						</span>
+						<span className="badge bg-dark me-1">{object.name}</span>
+						<span className="badge bg-dark me-1">{object.ipAddress}</span>
+						<span className="badge bg-dark">{object.status}</span>
 					</div>
 				</div>
 				<div className="blog-actions-ellipsis-menu">

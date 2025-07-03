@@ -10,7 +10,7 @@ async function getAuthenticatedUser() {
 }
 
 async function getProfiles(params) {
-	const res = await fetchurl(`/users${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/users${params}`, "GET", "no-cache");
 	return res;
 }
 

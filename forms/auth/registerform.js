@@ -53,7 +53,7 @@ const RegisterForm = () => {
 		router.push(`/auth/login`);
 	};
 
-	const resetForm = () => {
+	const resetForm = (e) => {
 		e.target.closest("form").reset();
 	};
 

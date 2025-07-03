@@ -45,13 +45,11 @@ const ConfirmEmailForm = () => {
 			setBtnText("Submit");
 			return;
 		}
-		setBtnText("Submit");
 		toast.success("Account confirmed", "bottom");
-		resetForm();
 		router.push(`/auth/login`);
 	};
 
-	const resetForm = () => {
+	const resetForm = (e) => {
 		e.target.closest("form").reset();
 	};
 

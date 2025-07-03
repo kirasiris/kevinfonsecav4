@@ -73,9 +73,7 @@ const UpdateWeaponForm = ({ object = {}, token = "", auth = {} }) => {
 			setBtnText("Submit");
 			return;
 		}
-		setBtnText("Submit");
 		toast.success("Weapon updated", "bottom");
-		resetForm();
 		router.push(`/nfabusiness/weapons`);
 	};
 

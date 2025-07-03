@@ -2,21 +2,34 @@ import DynamicCards from "@/components/global/dynamiccards";
 import Header from "@/layout/header";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 
-async function getBlogs(params) {
-	const res = await fetchurl(`/global/blogs${params}`, "GET", "default");
+async function getAcquisitionsDisposals(params) {
+	const res = await fetchurl(
+		`/global/acquisitionsdisposals${params}`,
+		"GET",
+		"default"
+	);
 	return res;
 }
 
-async function getThemes(params) {
-	const res = await fetchurl(`/global/themes${params}`, "GET", "default");
+async function getServiceEmails(params) {
+	const res = await fetchurl(
+		`/global/serviceemails${params}&status=pending`,
+		"GET",
+		"default"
+	);
 	return res;
 }
 
 const AdminNFAHome = async ({ params, searchParams }) => {
-	const blogsData = getBlogs(`?postType=blog`);
-	const themesData = getThemes(`?postType=theme`);
+	const acquiredData = getAcquisitionsDisposals(`?status=acquired`);
+	const disposedData = getAcquisitionsDisposals(`?status=disposed`);
+	const serviceemailsData = getServiceEmails(`?limit=100`);
 
-	const [blogs, themes] = await Promise.all([blogsData, themesData]);
+	const [acquired, disposed, serviceemails] = await Promise.all([
+		acquiredData,
+		disposedData,
+		serviceemailsData,
+	]);
 
 	return (
 		<>
@@ -26,22 +39,33 @@ const AdminNFAHome = async ({ params, searchParams }) => {
 			/>
 			<div className="row">
 				<DynamicCards
-					title="Blogs"
-					text={blogs?.data?.length || `0`}
+					title="Service Requests"
+					text={serviceemails?.data?.length || `0`}
 					// bgcolor="dark"
 					// txtcolor="red"
-					myLink="/noadmin/blogs"
+					myLink="/nfabusiness/serviceemails"
 					myQuery={{
 						page: 1,
 						limit: 10,
 					}}
 				/>
 				<DynamicCards
-					title="Themes"
-					text={themes?.data?.length || `0`}
+					title="Weapons Acquired"
+					text={acquired?.data?.length || `0`}
 					// bgcolor="dark"
 					// txtcolor="red"
-					myLink="/noadmin/themes"
+					myLink="/nfabusiness/acquisitionsdisposals/acquired"
+					myQuery={{
+						page: 1,
+						limit: 10,
+					}}
+				/>
+				<DynamicCards
+					title="Weapons Disposed"
+					text={disposed?.data?.length || `0`}
+					// bgcolor="dark"
+					// txtcolor="red"
+					myLink="/nfabusiness/acquisitionsdisposals/disposed"
 					myQuery={{
 						page: 1,
 						limit: 10,

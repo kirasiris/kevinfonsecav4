@@ -45,9 +45,7 @@ const CreateAcquisitionDisposalForm = ({ token = "", auth = {} }) => {
 			setBtnText("Submit");
 			return;
 		}
-		setBtnText("Submit");
 		toast.success("Weapon acquistion and disposal created", "bottom");
-		resetForm();
 		router.push(`/nfabusiness/acquisitionsdisposals`);
 	};
 

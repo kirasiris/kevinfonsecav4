@@ -64,7 +64,7 @@ const ValidateTwoFactorAuthenticationForm = () => {
 		router.push(`/auth/profile`);
 	};
 
-	const resetForm = () => {
+	const resetForm = (e) => {
 		e.target.closest("form").reset();
 	};
 

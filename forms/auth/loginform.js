@@ -64,6 +64,8 @@ const LoginForm = () => {
 
 		let returnpage = awtdSearchParams.returnpage;
 
+		console.log("Si llego aqui x1", returnpage);
+
 		// Ensure returnpage is only modified if it points to armedcodellc.com
 		if (returnpage) {
 			try {
@@ -75,6 +77,8 @@ const LoginForm = () => {
 				toast.error(`Invalid return URL: ${err}`, "bottom");
 			}
 		}
+
+		console.log("Si llego aqui x2", returnpage);
 
 		router.push(returnpage || `/auth/profile`);
 	};

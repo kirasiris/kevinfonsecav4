@@ -3,7 +3,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import ParseHtml from "@/layout/parseHtml";
-import QuestionList from "@/components/admin/quizzes/questionlist";
+import QuestionList from "@/components/noadmin/quizzes/questionlist";
 
 async function getQuiz(params) {
 	const res = await fetchurl(`/global/quizzes${params}`, "GET", "no-cache");

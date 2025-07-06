@@ -2,7 +2,7 @@ import { revalidatePath } from "next/cache";
 import { notFound } from "next/navigation";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import ParseHtml from "@/layout/parseHtml";
-import QuestionList from "@/components/admin/polls/questionlist";
+import QuestionList from "@/components/noadmin/polls/questionlist";
 
 async function getPoll(params) {
 	const res = await fetchurl(`/global/polls${params}`, "GET", "no-cache");

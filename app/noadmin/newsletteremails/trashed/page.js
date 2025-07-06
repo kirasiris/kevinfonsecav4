@@ -1,7 +1,7 @@
 import { revalidatePath } from "next/cache";
 import { fetchurl } from "@/helpers/setTokenOnServer";
-import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
-import List from "@/components/admin/newsletteremails/list";
+import AdminStatusesMenu from "@/components/noadmin/adminstatusesmenu";
+import List from "@/components/noadmin/newsletteremails/list";
 
 async function getNewsletterEmails(params) {
 	const res = await fetchurl(

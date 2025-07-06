@@ -1,5 +1,5 @@
 import "@/src/css/admin.css";
-import AdminMenu from "@/components/admin/adminmenu";
+import AdminMenu from "@/components/noadmin/adminmenu";
 import { redirect } from "next/navigation";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 

@@ -1,7 +1,7 @@
 import { revalidatePath } from "next/cache";
 import { fetchurl } from "@/helpers/setTokenOnServer";
-import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
-import List from "@/components/admin/menus/list";
+import AdminStatusesMenu from "@/components/noadmin/adminstatusesmenu";
+import List from "@/components/noadmin/menus/list";
 
 async function getMenus(params) {
 	const res = await fetchurl(`/global/menus${params}`, "GET", "no-cache");

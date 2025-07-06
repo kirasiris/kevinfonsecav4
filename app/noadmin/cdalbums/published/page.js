@@ -1,7 +1,7 @@
 import { revalidatePath } from "next/cache";
 import { fetchurl } from "@/helpers/setTokenOnServer";
-import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
-import List from "@/components/admin/cdalbums/list";
+import AdminStatusesMenu from "@/components/noadmin/adminstatusesmenu";
+import List from "@/components/noadmin/cdalbums/list";
 
 async function getPlaylists(params) {
 	const res = await fetchurl(

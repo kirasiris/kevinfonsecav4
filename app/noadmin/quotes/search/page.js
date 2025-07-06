@@ -1,9 +1,9 @@
 import { revalidatePath } from "next/cache";
 import { fetchurl } from "@/helpers/setTokenOnServer";
-import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
+import AdminStatusesMenu from "@/components/noadmin/adminstatusesmenu";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
-import List from "@/components/admin/quotes/list";
+import List from "@/components/noadmin/quotes/list";
 
 async function getQuotes(params) {
 	const res = await fetchurl(`/global/quotes${params}`, "GET", "no-cache");

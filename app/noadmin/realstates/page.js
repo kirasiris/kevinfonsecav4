@@ -1,7 +1,7 @@
 import { revalidatePath } from "next/cache";
 import { fetchurl } from "@/helpers/setTokenOnServer";
-import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
-import List from "@/components/admin/realstates/list";
+import AdminStatusesMenu from "@/components/noadmin/adminstatusesmenu";
+import List from "@/components/noadmin/realstates/list";
 
 async function getRealStates(params) {
 	const res = await fetchurl(`/global/realstates${params}`, "GET", "no-cache");

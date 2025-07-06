@@ -7,8 +7,8 @@ import {
 	getUserOnServer,
 } from "@/helpers/setTokenOnServer";
 import ParseHtml from "@/layout/parseHtml";
-import SongList from "@/components/admin/cdalbums/songlist";
-import UseDropzone from "@/components/admin/cdalbums/songdropzone";
+import SongList from "@/components/noadmin/cdalbums/songlist";
+import UseDropzone from "@/components/noadmin/cdalbums/songdropzone";
 
 async function getCDAlbum(params) {
 	const res = await fetchurl(`/global/playlists${params}`, "GET", "no-cache");

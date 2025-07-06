@@ -7,8 +7,8 @@ import {
 	getUserOnServer,
 } from "@/helpers/setTokenOnServer";
 import ParseHtml from "@/layout/parseHtml";
-import ChapterList from "@/components/admin/animes/chapterlist";
-import UseDropzone from "@/components/admin/animes/chapterdropzone";
+import ChapterList from "@/components/noadmin/animes/chapterlist";
+import UseDropzone from "@/components/noadmin/animes/chapterdropzone";
 
 async function getAnime(params) {
 	const res = await fetchurl(`/global/playlists${params}`, "GET", "no-cache");

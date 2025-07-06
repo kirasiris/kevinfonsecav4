@@ -37,7 +37,7 @@ const UseDropzone = ({
 				onDrop={async (acceptedFiles) => {
 					for (let i = 0; i < acceptedFiles.length; i++) {
 						await axios.put(
-							`${process.env.NEXT_PUBLIC_API_URL}/uploads/uploadobject`,
+							`${process.env.NEXT_PUBLIC_FILE_UPLOADER_URL}/uploads/uploadobject`,
 							{
 								userId: auth?.userId,
 								username: auth?.username,

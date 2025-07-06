@@ -1,7 +1,7 @@
 import { revalidatePath } from "next/cache";
 import { fetchurl, getUserOnServer } from "@/helpers/setTokenOnServer";
-import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
-import List from "@/components/admin/courses/list";
+import AdminStatusesMenu from "@/components/noadmin/adminstatusesmenu";
+import List from "@/components/noadmin/courses/list";
 
 async function getCourses(params) {
 	const res = await fetchurl(

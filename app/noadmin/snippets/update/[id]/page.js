@@ -1,8 +1,8 @@
 import { notFound, redirect } from "next/navigation";
 import { fetchurl } from "@/helpers/setTokenOnServer";
-import AdminSidebar from "@/components/admin/myfinaladminsidebar";
+import AdminSidebar from "@/components/noadmin/myfinaladminsidebar";
 import MyTextArea from "@/components/global/myfinaltextarea";
-import LiveCode from "@/components/admin/snippets/livecode";
+import LiveCode from "@/components/noadmin/snippets/livecode";
 import FormButtons from "@/components/global/formbuttons";
 
 async function getSnippet(params) {

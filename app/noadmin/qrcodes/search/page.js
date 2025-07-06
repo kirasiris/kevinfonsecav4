@@ -1,8 +1,8 @@
 import { revalidatePath } from "next/cache";
 import { fetchurl, getUserOnServer } from "@/helpers/setTokenOnServer";
-import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
+import AdminStatusesMenu from "@/components/noadmin/adminstatusesmenu";
 import Form from "@/forms/noadmin/qrcodes/form";
-import List from "@/components/admin/qrcodes/list";
+import List from "@/components/noadmin/qrcodes/list";
 
 async function getQRCodes(params) {
 	const res = await fetchurl(

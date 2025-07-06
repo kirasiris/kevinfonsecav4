@@ -1,6 +1,6 @@
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import ParseHtml from "@/layout/parseHtml";
-import VideoList from "@/components/admin/movies/videolist";
+import VideoList from "@/components/noadmin/movies/videolist";
 import { revalidatePath } from "next/cache";
 import Image from "next/image";
 import { notFound } from "next/navigation";

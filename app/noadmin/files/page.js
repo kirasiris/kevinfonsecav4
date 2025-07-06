@@ -1,7 +1,7 @@
 import { revalidatePath } from "next/cache";
 import { fetchurl } from "@/helpers/setTokenOnServer";
-import AdminMediaLibrary from "@/components/admin/adminmedialibrary";
-import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
+import AdminMediaLibrary from "@/components/noadmin/adminmedialibrary";
+import AdminStatusesMenu from "@/components/noadmin/adminstatusesmenu";
 
 const AdminFilesIndex = async ({ params, searchParams }) => {
 	const awtdParams = await params;

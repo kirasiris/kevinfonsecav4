@@ -1,6 +1,6 @@
 import { fetchurl } from "@/helpers/setTokenOnServer";
-import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
-import List from "@/components/admin/comments/list";
+import AdminStatusesMenu from "@/components/noadmin/adminstatusesmenu";
+import List from "@/components/noadmin/comments/list";
 import { revalidatePath } from "next/cache";
 
 async function getComments(params) {

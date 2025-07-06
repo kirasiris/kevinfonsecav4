@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { fetchurl } from "@/helpers/setTokenOnServer";
-import LiveCode from "@/components/admin/snippets/livecode";
+import LiveCode from "@/components/noadmin/snippets/livecode";
 
 async function getSnippet(params) {
 	const res = await fetchurl(`/global/snippets${params}`, "GET", "no-cache");

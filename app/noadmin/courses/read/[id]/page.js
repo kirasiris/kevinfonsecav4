@@ -1,6 +1,6 @@
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import ParseHtml from "@/layout/parseHtml";
-import LessonList from "@/components/admin/courses/lessonlist";
+import LessonList from "@/components/noadmin/courses/lessonlist";
 import { revalidatePath } from "next/cache";
 import Image from "next/image";
 import { notFound } from "next/navigation";

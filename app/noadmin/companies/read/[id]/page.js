@@ -3,7 +3,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import ParseHtml from "@/layout/parseHtml";
-import JobList from "@/components/admin/companies/joblist";
+import JobList from "@/components/noadmin/companies/joblist";
 import Map from "@/components/global/map";
 
 async function getCompany(params) {

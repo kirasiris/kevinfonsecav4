@@ -1,6 +1,6 @@
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import ParseHtml from "@/layout/parseHtml";
-import PageList from "@/components/admin/menus/pagelist";
+import PageList from "@/components/noadmin/menus/pagelist";
 import { revalidatePath } from "next/cache";
 import { notFound } from "next/navigation";
 

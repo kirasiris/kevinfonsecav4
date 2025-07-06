@@ -1,5 +1,5 @@
 import { fetchurl, getUserOnServer } from "@/helpers/setTokenOnServer";
-import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
+import AdminStatusesMenu from "@/components/noadmin/adminstatusesmenu";
 import List from "@/components/dashboard/memberships/list";
 import { revalidatePath } from "next/cache";
 

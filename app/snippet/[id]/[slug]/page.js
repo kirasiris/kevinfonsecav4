@@ -12,7 +12,7 @@ import ReportModal from "@/components/global/reportmodal";
 import { fetchurl, getUserOnServer } from "@/helpers/setTokenOnServer";
 import Globalcontent from "@/layout/content";
 import ArticleHeader from "@/components/global/articleheader";
-import LiveCode from "@/components/admin/snippets/livecode";
+import LiveCode from "@/components/noadmin/snippets/livecode";
 
 async function getSnippet(params) {
 	const res = await fetchurl(`/global/snippets${params}`, "GET", "no-cache");

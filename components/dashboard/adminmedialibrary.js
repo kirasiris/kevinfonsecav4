@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import { FaFileVideo } from "react-icons/fa";
 import AuthContext from "@/helpers/globalContext";
 import AdminMediaLibraryMenu from "@/components/admin/adminmediamenu";
-import Single from "@/components/admin/files/single";
+import Single from "@/components/noadmin/files/single";
 import UseDropzone from "@/components/global/dropzone";
 import DeleteAllModal from "@/components/global/deleteallmodal";
 import ClientLoadMorePagination from "@/layout/clientloadmorepagination";

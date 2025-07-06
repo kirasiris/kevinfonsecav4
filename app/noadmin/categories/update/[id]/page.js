@@ -1,10 +1,10 @@
 import { revalidatePath } from "next/cache";
 import { notFound } from "next/navigation";
 import { fetchurl } from "@/helpers/setTokenOnServer";
-import AdminStatusesMenu from "@/components/admin/adminstatusesmenu";
+import AdminStatusesMenu from "@/components/noadmin/adminstatusesmenu";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
-import List from "@/components/admin/categories/list";
+import List from "@/components/noadmin/categories/list";
 
 async function getCategories(params) {
 	const res = await fetchurl(`/global/categories${params}`, "GET", "no-cache");

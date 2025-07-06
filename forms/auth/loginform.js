@@ -80,7 +80,7 @@ const LoginForm = () => {
 
 		console.log("Si llego aqui x2", returnpage);
 
-		router.push(returnpage || `/auth/profile`);
+		// router.push(returnpage || `/auth/profile`);
 	};
 
 	const resetForm = (e) => {

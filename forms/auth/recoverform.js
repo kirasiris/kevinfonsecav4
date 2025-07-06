@@ -41,7 +41,7 @@ const RecoverForm = () => {
 			`An email has been sent to ${rawFormData.email} associated with this account`,
 			"bottom"
 		);
-		let returnpage = awtdSearchParams.returnpage;
+		let returnpage = awtdSearchParams.get("returnpage");
 		router.push(returnpage || `/auth/profile`);
 	};
 

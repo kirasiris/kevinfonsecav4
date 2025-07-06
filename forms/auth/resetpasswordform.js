@@ -55,7 +55,7 @@ const ResetPasswordForm = () => {
 			return;
 		}
 		toast.success("Password has been updated", "bottom");
-		let returnpage = awtdSearchParams.returnpage;
+		let returnpage = awtdSearchParams.get("returnpage");
 		router.push(returnpage || `/auth/login`);
 	};
 

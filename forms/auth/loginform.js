@@ -62,9 +62,7 @@ const LoginForm = () => {
 
 		await setUserOnServer(await loadUser?.data);
 
-		let returnpage = awtdSearchParams.returnpage;
-
-		console.log("Si llego aqui x1", returnpage);
+		let returnpage = awtdSearchParams.get("returnpage");
 
 		// Ensure returnpage is only modified if it points to armedcodellc.com
 		if (returnpage) {
@@ -78,9 +76,7 @@ const LoginForm = () => {
 			}
 		}
 
-		console.log("Si llego aqui x2", returnpage);
-
-		// router.push(returnpage || `/auth/profile`);
+		router.push(returnpage || `/auth/profile`);
 	};
 
 	const resetForm = (e) => {

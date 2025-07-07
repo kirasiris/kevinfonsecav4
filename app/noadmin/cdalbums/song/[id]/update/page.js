@@ -1,9 +1,9 @@
+import { notFound, redirect } from "next/navigation";
 import {
 	fetchurl,
 	getAuthTokenOnServer,
 	getUserOnServer,
 } from "@/helpers/setTokenOnServer";
-import { notFound, redirect } from "next/navigation";
 import AdminSidebar from "@/components/noadmin/myfinaladminsidebar";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
@@ -14,11 +14,6 @@ async function getSong(params) {
 	return res;
 }
 
-async function getFiles(params) {
-	const res = await fetchurl(`/global/files${params}`, "GET", "no-cache");
-	return res;
-}
-
 const UpdateSong = async ({ params, searchParams }) => {
 	const awtdParams = await params;
 	const awtdSearchParams = await searchParams;
@@ -26,8 +21,6 @@ const UpdateSong = async ({ params, searchParams }) => {
 	const auth = await getUserOnServer();
 
 	const song = await getSong(`/${awtdParams.id}`);
-
-	const files = await getFiles(`?page=1&limit=100&sort=-createdAt`);
 
 	const upgradeSong = async (formData) => {
 		"use server";
@@ -143,8 +136,8 @@ const UpdateSong = async ({ params, searchParams }) => {
 				<AdminSidebar
 					displayCategoryField={false}
 					displayAvatar={true}
-					avatar={song?.data?.files?.avatar}
-					avatarFormat={"audio"}
+					avatar={song?.data?.files}
+					avatarFormat={song?.data?.files?.avatar?.format_type}
 					status={song?.data?.status}
 					fullWidth={false}
 					password={song?.data?.password}
@@ -155,11 +148,6 @@ const UpdateSong = async ({ params, searchParams }) => {
 					category={undefined}
 					categories={[]}
 					multiple_categories={false}
-					multipleFiles={false}
-					onModel={"Song"}
-					files={files}
-					auth={auth}
-					token={token}
 				/>
 				<br />
 				<FormButtons />

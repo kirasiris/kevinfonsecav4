@@ -103,7 +103,7 @@ const AdminCommentsPublishedIndex = async ({ params, searchParams }) => {
 				<List
 					allLink="/noadmin/comments"
 					pageText="Comments"
-					addLink="/noadmin/comments/create"
+					addLink=""
 					searchOn="/noadmin/comments"
 					searchedKeyword=""
 					objects={comments}

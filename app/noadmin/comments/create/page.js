@@ -68,7 +68,7 @@ const CreateComment = async ({ params, searchParams }) => {
 				<input
 					id="user"
 					name="user"
-					defaultValue={undefined}
+					defaultValue={auth?.userId || undefined}
 					type="text"
 					className="form-control mb-3"
 					placeholder="0123456789"

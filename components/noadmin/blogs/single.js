@@ -58,7 +58,7 @@ const Single = ({
 								`https://source.unsplash.com/random/83x63`
 							}
 							className="blog-type-list__blog-thumbnail"
-							alt="Blog titles image"
+							alt={`${object.title}'s featured image `}
 							width="83"
 							height="63"
 						/>

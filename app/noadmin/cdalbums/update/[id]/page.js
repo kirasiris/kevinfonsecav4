@@ -41,7 +41,7 @@ const UpdateCDAlbum = async ({ params, searchParams }) => {
 			password: formData.get("password"),
 			onairtype: formData.get("onairtype"),
 			status: formData.get("status"),
-			// files: { avatar: formData.get("file") },
+			files: { avatar: formData.get("file") },
 		};
 		await fetchurl(`/noadmin/playlists/${awtdParams.id}`, "PUT", "no-cache", {
 			...rawFormData,
@@ -83,9 +83,9 @@ const UpdateCDAlbum = async ({ params, searchParams }) => {
 			<div className="col-lg-3">
 				<AdminSidebar
 					displayCategoryField={true}
-					displayAvatar={false}
-					avatar={undefined}
-					avatarFormat={"image"}
+					displayAvatar={true}
+					avatar={cdalbum?.data?.files}
+					avatarFormat={cdalbum?.data?.files?.avatar?.format_type}
 					status={cdalbum?.data?.status}
 					fullWidth={false}
 					password=""

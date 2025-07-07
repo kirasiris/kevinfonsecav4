@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { notFound } from "next/navigation";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import ParseHtml from "@/layout/parseHtml";
@@ -23,19 +22,6 @@ const ReadCategory = async ({ params, searchParams }) => {
 						object={category}
 						url={`/category/category/${category?.data?.category?._id}/${category?.data?.category?.slug}`}
 					/>
-					<figure className="mb-4">
-						<Image
-							className="img-fluid"
-							src={
-								category?.data?.files?.avatar?.location?.secure_location ||
-								`https://source.unsplash.com/random/1200x900`
-							}
-							alt={`${category?.data?.files?.avatar?.location?.filename}'s featured image`}
-							width={1200}
-							height={900}
-							priority
-						/>
-					</figure>
 					<section className="mb-5">
 						<ParseHtml text={category?.data?.text} />
 					</section>

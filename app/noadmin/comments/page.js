@@ -1,7 +1,7 @@
+import { revalidatePath } from "next/cache";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import AdminStatusesMenu from "@/components/noadmin/adminstatusesmenu";
 import List from "@/components/noadmin/comments/list";
-import { revalidatePath } from "next/cache";
 
 async function getComments(params) {
 	const res = await fetchurl(

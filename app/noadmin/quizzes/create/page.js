@@ -35,9 +35,7 @@ const CreateQuiz = async ({ params, searchParams }) => {
 			singlePage: formData.get("singlePage"),
 			files: { avatar: formData.get("file") },
 		};
-		await fetchurl(`/noadmin/quizzes`, "POST", "no-cache", {
-			...rawFormData,
-		});
+		await fetchurl(`/noadmin/quizzes`, "POST", "no-cache", rawFormData);
 		redirect(`/noadmin/quizzes`);
 	};
 

@@ -276,7 +276,7 @@ const CreateMembership = async ({ params, searchParams }) => {
 				<AdminSidebar
 					displayCategoryField={false}
 					displayAvatar={false}
-					// avatar={files?.selected?._id}
+					avatar={undefined}
 					avatarFormat={""}
 					status="draft"
 					fullWidth={false}

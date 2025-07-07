@@ -1,8 +1,8 @@
+import { revalidatePath } from "next/cache";
+import { notFound } from "next/navigation";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import ParseHtml from "@/layout/parseHtml";
 import PageList from "@/components/noadmin/menus/pagelist";
-import { revalidatePath } from "next/cache";
-import { notFound } from "next/navigation";
 
 async function getMenu(params) {
 	const res = await fetchurl(`/global/menus${params}`, "GET", "no-cache");

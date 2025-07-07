@@ -23,9 +23,7 @@ const CreateCompany = async ({ params, searchParams }) => {
 			files: { avatar: formData.get("file") },
 		};
 
-		await fetchurl(`/noadmin/companies`, "POST", "no-cache", {
-			...rawFormData,
-		});
+		await fetchurl(`/noadmin/companies`, "POST", "no-cache", rawFormData);
 		redirect(`/noadmin/companies`);
 	};
 

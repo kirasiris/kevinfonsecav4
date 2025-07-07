@@ -1,9 +1,9 @@
+import { revalidatePath } from "next/cache";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import AdminStatusesMenu from "@/components/noadmin/adminstatusesmenu";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
 import List from "@/components/noadmin/categories/list";
-import { revalidatePath } from "next/cache";
 
 async function getCategories(params) {
 	const res = await fetchurl(
@@ -152,7 +152,7 @@ const AdminCategoriesTrashedIndex = async ({ params, searchParams }) => {
 							defaultValue=""
 							className="form-control"
 						>
-							<option value="">Select category</option>
+							<option value={undefined}>Select category</option>
 							{categories?.data?.map((item) => (
 								<option key={item._id} value={item._id}>
 									{item.title}

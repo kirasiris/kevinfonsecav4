@@ -1,17 +1,12 @@
+import { notFound, redirect } from "next/navigation";
 import {
 	fetchurl,
 	getAuthTokenOnServer,
 	getUserOnServer,
 } from "@/helpers/setTokenOnServer";
-import { notFound, redirect } from "next/navigation";
 import AdminSidebar from "@/components/noadmin/myfinaladminsidebar";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
-
-async function getFiles(params) {
-	const res = await fetchurl(`/global/files${params}`, "GET", "no-cache");
-	return res;
-}
 
 async function getLesson(params) {
 	const res = await fetchurl(`/global/videos${params}`, "GET", "no-cache");
@@ -26,10 +21,6 @@ const UpdateLesson = async ({ params, searchParams }) => {
 	const auth = await getUserOnServer();
 
 	const lesson = await getLesson(`/${awtdParams.id}`);
-
-	const getFilesData = getFiles(`?page=1&limit=100&sort=-createdAt`);
-
-	const [files] = await Promise.all([getFilesData]);
 
 	const upgradeLesson = async (formData) => {
 		"use server";
@@ -131,8 +122,8 @@ const UpdateLesson = async ({ params, searchParams }) => {
 				<AdminSidebar
 					displayCategoryField={false}
 					displayAvatar={true}
-					avatar={lesson?.data?.files?.video_url}
-					avatarFormat={"video"}
+					avatar={lesson?.data?.files}
+					avatarFormat={lesson?.data?.files?.avatar?.format_type}
 					status={lesson?.data?.status}
 					fullWidth={false}
 					password={lesson?.data?.password}
@@ -143,11 +134,6 @@ const UpdateLesson = async ({ params, searchParams }) => {
 					category={undefined}
 					categories={[]}
 					multiple_categories={false}
-					multipleFiles={false}
-					onModel={"Lesson"}
-					files={files}
-					auth={auth}
-					token={token}
 				/>
 				<br />
 				<FormButtons />

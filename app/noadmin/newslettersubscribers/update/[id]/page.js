@@ -1,13 +1,5 @@
-import {
-	fetchurl,
-	// getAuthTokenOnServer,
-	// getUserEmailOnServer,
-	// getUserIdOnServer,
-	// getUserUsernameOnServer,
-} from "@/helpers/setTokenOnServer";
 import { notFound, redirect } from "next/navigation";
-// import AdminSidebar from "@/components/admin/myfinaladminsidebar";
-// import MyTextArea from "@/components/global/myfinaltextarea";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 import FormButtons from "@/components/global/formbuttons";
 
 async function getNewsletterSubscriber(params) {

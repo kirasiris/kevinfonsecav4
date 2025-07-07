@@ -37,17 +37,14 @@ const CreateEmail = async ({ params, searchParams }) => {
 			subject: formData.get("subject"),
 			status: formData.get("status"),
 		};
-		await fetchurl(`/noadmin/newsletteremails`, "POST", "no-cache", {
-			...rawFormData,
-			website: process.env.NEXT_PUBLIC_NO_REPLY_EMAIL, // Needed for DB mass email functionality
-		});
+		await fetchurl(
+			`/noadmin/newsletteremails`,
+			"POST",
+			"no-cache",
+			rawFormData
+		);
 		redirect(`/noadmin/newsletteremails`);
 	};
-
-	console.dir({
-		profiles: users,
-		authenticated: auth,
-	});
 
 	return (
 		<form className="row" action={addEmail}>

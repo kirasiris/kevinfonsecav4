@@ -1,9 +1,9 @@
-import { fetchurl } from "@/helpers/setTokenOnServer";
-import ParseHtml from "@/layout/parseHtml";
-import VideoList from "@/components/noadmin/movies/videolist";
 import { revalidatePath } from "next/cache";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import { fetchurl } from "@/helpers/setTokenOnServer";
+import ParseHtml from "@/layout/parseHtml";
+import VideoList from "@/components/noadmin/movies/videolist";
 
 async function getMovie(params) {
 	const res = await fetchurl(`/global/playlists${params}`, "GET", "no-cache");

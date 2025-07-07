@@ -53,10 +53,7 @@ const UpdateEmail = async ({ params, searchParams }) => {
 			`/noadmin/newsletteremails/${awtdParams.id}`,
 			"PUT",
 			"no-cache",
-			{
-				...rawFormData,
-				website: process.env.NEXT_PUBLIC_NO_REPLY_EMAIL, // Needed for DB mass email functionality
-			}
+			rawFormData
 		);
 		redirect(`/noadmin/newsletteremails`);
 	};

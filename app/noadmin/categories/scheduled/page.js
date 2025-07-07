@@ -152,7 +152,7 @@ const AdminCategoriesScheduledIndex = async ({ params, searchParams }) => {
 							defaultValue=""
 							className="form-control"
 						>
-							<option value="">Select category</option>
+							<option value={undefined}>Select category</option>
 							{categories?.data?.map((item) => (
 								<option key={item._id} value={item._id}>
 									{item.title}

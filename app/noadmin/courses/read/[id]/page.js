@@ -1,9 +1,9 @@
-import { fetchurl } from "@/helpers/setTokenOnServer";
-import ParseHtml from "@/layout/parseHtml";
-import LessonList from "@/components/noadmin/courses/lessonlist";
 import { revalidatePath } from "next/cache";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import { fetchurl } from "@/helpers/setTokenOnServer";
+import ParseHtml from "@/layout/parseHtml";
+import LessonList from "@/components/noadmin/courses/lessonlist";
 
 async function getCourse(params) {
 	const res = await fetchurl(`/global/courses${params}`, "GET", "no-cache");

@@ -6,13 +6,13 @@
 // import AdminSidebar from "@/components/admin/myfinaladminsidebar";
 // import MyTextArea from "@/components/global/myfinaltextarea";
 
+import { redirect } from "next/navigation";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import {
 	fetchurl,
 	getAuthTokenOnServer,
 	getUserOnServer,
 } from "@/helpers/setTokenOnServer";
-import { redirect } from "next/navigation";
 
 async function getPlaylists(params) {
 	const res = await fetchurl(`/global/playlists${params}`, "GET", "no-cache");

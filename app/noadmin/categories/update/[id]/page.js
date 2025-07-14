@@ -29,6 +29,7 @@ const UpdateCategory = async ({ params, searchParams }) => {
 			title: formData.get("title"),
 			text: formData.get("text"),
 			parentId: formData.get("parentId"),
+			deletable: formData.get("deletable"),
 		};
 		await fetchurl(
 			`/noadmin/categories/${awtdParams.id}`,
@@ -157,7 +158,7 @@ const UpdateCategory = async ({ params, searchParams }) => {
 							id="parentId"
 							name="parentId"
 							defaultValue={category?.data?.parentId}
-							className="form-control"
+							className="form-control mb-3"
 						>
 							<option value={undefined}>Select category</option>
 							{categories?.data?.map((item) => (
@@ -165,6 +166,18 @@ const UpdateCategory = async ({ params, searchParams }) => {
 									{item.title}
 								</option>
 							))}
+						</select>
+						<label htmlFor="deletable" className="form-label">
+							Deletable
+						</label>
+						<select
+							id="deletable"
+							name="deletable"
+							defaultValue=""
+							className="form-control"
+						>
+							<option value={true}>Yes</option>
+							<option value={false}>No</option>
 						</select>
 						<br />
 						<FormButtons />

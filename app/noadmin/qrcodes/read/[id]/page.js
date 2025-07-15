@@ -24,9 +24,9 @@ const ReadQrCode = async ({ params, searchParams }) => {
 					qrmargin={qrcode?.data?.qrmargin}
 					qrcodesize={qrcode?.data?.qrcodesize}
 					securitylevel={qrcode?.data?.securitylevel}
-					imgsrc={qrcode?.data?.imageurl}
-					imgwidth={qrcode?.data?.imagewidth}
-					imgheight={qrcode?.data?.imageheight}
+					imgsrc={qrcode?.data?.logo?.url}
+					imgwidth={qrcode?.data?.logo?.width}
+					imgheight={qrcode?.data?.logo?.height}
 				/>
 			</div>
 		</div>

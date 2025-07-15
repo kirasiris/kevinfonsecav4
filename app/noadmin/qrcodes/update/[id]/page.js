@@ -1,22 +1,19 @@
 import { revalidatePath } from "next/cache";
 import { fetchurl, getUserOnServer } from "@/helpers/setTokenOnServer";
 import AdminStatusesMenu from "@/components/noadmin/adminstatusesmenu";
-import CreateQrCodeForm from "@/forms/noadmin/qrcodes/createqrcodeform";
+import UpdateQRCodeForm from "@/forms/noadmin/qrcodes/updateqrcodeform";
 import List from "@/components/noadmin/qrcodes/list";
 
 async function getQRCodes(params) {
 	const res = await fetchurl(
-		`/extras/tools/qrcodes${params}&status=published`,
+		`/extras/tools/qrcodes${params}`,
 		"GET",
 		"no-cache"
 	);
 	return res;
 }
 
-const AdminQRCodesGeneratorPublishedIndex = async ({
-	params,
-	searchParams,
-}) => {
+const UpdateQRCode = async ({ params, searchParams }) => {
 	const awtdParams = await params;
 	const awtdSearchParams = await searchParams;
 	const page = awtdSearchParams.page || 1;
@@ -25,42 +22,35 @@ const AdminQRCodesGeneratorPublishedIndex = async ({
 
 	const auth = await getUserOnServer();
 
+	const qrcode = await getQRCodes(`/${awtdParams.id}`);
 	const qrcodes = await getQRCodes(`?page=${page}&limit=${limit}&sort=${sort}`);
 
 	const draftIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/extras/tools/qrcodes/${id}/draftit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/qrcodes/published?page=${page}&limit=${limit}&sort=${sort}`
-		);
+		revalidatePath(`?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const publishIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/extras/tools/qrcodes/${id}/publishit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/qrcodes/published?page=${page}&limit=${limit}&sort=${sort}`
-		);
+		revalidatePath(`?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const trashIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/extras/tools/qrcodes/${id}/trashit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/qrcodes/published?page=${page}&limit=${limit}&sort=${sort}`
-		);
+		revalidatePath(`?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const scheduleIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/extras/tools/qrcodes/${id}/scheduleit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/qrcodes/published?page=${page}&limit=${limit}&sort=${sort}`
-		);
+		revalidatePath(`?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const handleDelete = async (id) => {
@@ -71,18 +61,14 @@ const AdminQRCodesGeneratorPublishedIndex = async ({
 			"DELETE",
 			"no-cache"
 		);
-		revalidatePath(
-			`/noadmin/qrcodes/published?page=${page}&limit=${limit}&sort=${sort}`
-		);
+		revalidatePath(`?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const handleTrashAll = async () => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/extras/tools/qrcodes/deleteall`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/qrcodes/published?page=${page}&limit=${limit}&sort=${sort}`
-		);
+		revalidatePath(`?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const handleDeleteAll = async () => {
@@ -93,9 +79,7 @@ const AdminQRCodesGeneratorPublishedIndex = async ({
 			"DELETE",
 			"no-cache"
 		);
-		revalidatePath(
-			`/noadmin/qrcodes/published?page=${page}&limit=${limit}&sort=${sort}`
-		);
+		revalidatePath(`?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	return (
@@ -111,7 +95,7 @@ const AdminQRCodesGeneratorPublishedIndex = async ({
 			/>
 			<div className="row">
 				<div className="col">
-					<CreateQrCodeForm auth={auth} />
+					<UpdateQRCodeForm object={qrcode} />
 				</div>
 				<div className="col-lg-10">
 					<div className="card rounded-0">
@@ -138,4 +122,4 @@ const AdminQRCodesGeneratorPublishedIndex = async ({
 	);
 };
 
-export default AdminQRCodesGeneratorPublishedIndex;
+export default UpdateQRCode;

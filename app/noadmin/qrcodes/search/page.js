@@ -1,7 +1,7 @@
 import { revalidatePath } from "next/cache";
 import { fetchurl, getUserOnServer } from "@/helpers/setTokenOnServer";
 import AdminStatusesMenu from "@/components/noadmin/adminstatusesmenu";
-import Form from "@/forms/noadmin/qrcodes/form";
+import CreateQrCodeForm from "@/forms/noadmin/qrcodes/createqrcodeform";
 import List from "@/components/noadmin/qrcodes/list";
 
 async function getQRCodes(params) {
@@ -111,7 +111,7 @@ const AdminQRCodesGeneratorSearchIndex = async ({ params, searchParams }) => {
 			/>
 			<div className="row">
 				<div className="col">
-					<Form auth={auth} />
+					<CreateQrCodeForm auth={auth} />
 				</div>
 				<div className="col-lg-10">
 					<div className="card rounded-0">

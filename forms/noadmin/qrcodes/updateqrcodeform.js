@@ -1,22 +1,23 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import QRC from "@/components/global/qrcode";
 
-const Form = ({ auth = {}, object = {} }) => {
+const UpdateQRCodeForm = ({ object = {} }) => {
 	const router = useRouter();
 
 	const [qrcodeData, setQrCodeData] = useState({
-		title: ``,
-		url: ``,
-		qrmargin: 4,
-		qrcodesize: 200,
-		securitylevel: `L`,
-		imageurl: ``,
-		imagewidth: 30,
-		imageheight: 30,
-		status: "draft",
+		title: object?.data?.title,
+		url: object?.data?.url,
+		qrmargin: object?.data?.qrmargin,
+		qrcodesize: object?.data?.qrcodesize,
+		securitylevel: object?.data?.securitylevel,
+		imageurl: object?.data?.logo.url,
+		imagewidth: object?.data?.logo.width,
+		imageheight: object?.data?.logo.height,
+		status: object?.data?.status,
 	});
 
 	const {
@@ -36,17 +37,29 @@ const Form = ({ auth = {}, object = {} }) => {
 	const createQrCode = async (e) => {
 		e.preventDefault();
 		setBtnText("...");
-		await fetchurl(`/extras/tools/qrcodes`, "POST", "no-cache", {
-			...qrcodeData,
-			user: auth?.userId,
-			logo: {
-				url: imageurl,
-				width: imagewidth,
-				height: imageheight,
-			},
-			website: process.env.NEXT_PUBLIC_WEBSITE_NAME,
-			status: "published",
-		});
+		const res = await fetchurl(
+			`/extras/tools/qrcodes/${object?.data?._id}`,
+			"PUT",
+			"no-cache",
+			{
+				...qrcodeData,
+				logo: {
+					url: imageurl,
+					width: imagewidth,
+					height: imageheight,
+				},
+			}
+		);
+		if (res.status === "error") {
+			toast.error(res.message, "bottom");
+			setBtnText("Submit");
+			return;
+		}
+		if (res.status === "fail") {
+			toast.error(res.message, "bottom");
+			setBtnText("Submit");
+			return;
+		}
 		setBtnText(btnText);
 		resetForm();
 		router.push(`/noadmin/qrcodes?page=1&limit=10&sort=-createdAt`);
@@ -54,15 +67,15 @@ const Form = ({ auth = {}, object = {} }) => {
 
 	const resetForm = () => {
 		setQrCodeData({
-			title: ``,
-			url: ``,
-			qrmargin: 4,
-			qrcodesize: 200,
-			securitylevel: `L`,
-			imageurl: ``,
-			imagewidth: 30,
-			imageheight: 30,
-			status: "draft",
+			title: object?.data?.title,
+			url: object?.data?.url,
+			qrmargin: object?.data?.qrmargin,
+			qrcodesize: object?.data?.qrcodesize,
+			securitylevel: object?.data?.securitylevel,
+			imageurl: object?.data?.imageurl,
+			imagewidth: object?.data?.imagewidth,
+			imageheight: object?.data?.imageheight,
+			status: object?.data?.status,
 		});
 	};
 
@@ -238,4 +251,4 @@ const Form = ({ auth = {}, object = {} }) => {
 	);
 };
 
-export default Form;
+export default UpdateQRCodeForm;

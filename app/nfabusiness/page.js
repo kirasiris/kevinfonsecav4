@@ -4,6 +4,15 @@ import { fetchurl } from "@/helpers/setTokenOnServer";
 
 async function getAcquisitionsDisposals(params) {
 	const res = await fetchurl(
+		`/global/acquisitionsdisposals${params}&postType=review`,
+		"GET",
+		"default"
+	);
+	return res;
+}
+
+async function getReviews(params) {
+	const res = await fetchurl(
 		`/global/acquisitionsdisposals${params}`,
 		"GET",
 		"default"
@@ -22,11 +31,13 @@ async function getServiceEmails(params) {
 
 const AdminNFAHome = async ({ params, searchParams }) => {
 	const acquiredData = getAcquisitionsDisposals(`?status=acquired`);
+	const reviewsData = getReviews(`?limit=100`);
 	const disposedData = getAcquisitionsDisposals(`?status=disposed`);
 	const serviceemailsData = getServiceEmails(`?limit=100`);
 
-	const [acquired, disposed, serviceemails] = await Promise.all([
+	const [acquired, reviews, disposed, serviceemails] = await Promise.all([
 		acquiredData,
+		reviewsData,
 		disposedData,
 		serviceemailsData,
 	]);
@@ -44,6 +55,17 @@ const AdminNFAHome = async ({ params, searchParams }) => {
 					// bgcolor="dark"
 					// txtcolor="red"
 					myLink="/nfabusiness/serviceemails"
+					myQuery={{
+						page: 1,
+						limit: 10,
+					}}
+				/>
+				<DynamicCards
+					title="Service Reviews"
+					text={serviceemails?.data?.length || `0`}
+					// bgcolor="dark"
+					// txtcolor="red"
+					myLink="/nfabusiness/reviews"
 					myQuery={{
 						page: 1,
 						limit: 10,

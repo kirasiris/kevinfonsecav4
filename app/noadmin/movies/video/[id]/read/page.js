@@ -4,17 +4,17 @@ import { fetchurl } from "@/helpers/setTokenOnServer";
 import ParseHtml from "@/layout/parseHtml";
 import Loading from "@/app/video/loading";
 
-async function getChapter(params) {
+async function getMovieVideo(params) {
 	const res = await fetchurl(`/global/videos${params}`, "GET", "no-cache");
 	if (!res.success) notFound();
 	return res;
 }
 
-const ReadChapter = async ({ params, searchParams }) => {
+const ReadMovieVideo = async ({ params, searchParams }) => {
 	const awtdParams = await params;
 	const awtdSearchParams = await searchParams;
 
-	const chapter = await getChapter(`/${awtdParams.id}`);
+	const chapter = await getMovieVideo(`/${awtdParams.id}`);
 
 	return (
 		<Suspense fallback={<Loading />}>
@@ -93,4 +93,4 @@ const ReadChapter = async ({ params, searchParams }) => {
 	);
 };
 
-export default ReadChapter;
+export default ReadMovieVideo;

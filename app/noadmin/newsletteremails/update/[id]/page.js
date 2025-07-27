@@ -1,11 +1,10 @@
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import {
 	fetchurl,
 	getAuthTokenOnServer,
 	getUserOnServer,
 } from "@/helpers/setTokenOnServer";
-import MyTextArea from "@/components/global/myfinaltextarea";
-import FormButtons from "@/components/global/formbuttons";
+import UpdateNewsletterEmailForm from "@/forms/noadmin/newsletteremails/updatenewsletteremailform";
 
 async function getUsersSubscribed(params) {
 	const res = await fetchurl(
@@ -41,89 +40,13 @@ const UpdateEmail = async ({ params, searchParams }) => {
 		`?page=${page}&limit=${limit}&sort=${sort}`
 	);
 
-	const upgradeEmail = async (formData) => {
-		"use server";
-		const rawFormData = {
-			recipients: formData.getAll("recipients"),
-			text: formData.get("text"),
-			subject: formData.get("subject"),
-			status: formData.get("status"),
-		};
-		await fetchurl(
-			`/noadmin/newsletteremails/${awtdParams.id}`,
-			"PUT",
-			"no-cache",
-			rawFormData
-		);
-		redirect(`/noadmin/newsletteremails`);
-	};
-
 	return (
-		<form className="row" action={upgradeEmail}>
-			<div className="col">
-				<label htmlFor="recipients" className="form-label">
-					To
-				</label>
-				<select
-					id="recipients"
-					name="recipients"
-					defaultValue={newsletteremail?.data?.users}
-					className="form-control"
-					multiple
-				>
-					{users?.data
-						.filter((user) => user.email !== auth?.email)
-						.map((user) => (
-							<option key={user._id} value={user.name + "|" + user.email}>
-								{user?.email}
-							</option>
-						))}
-				</select>
-				<label htmlFor="subject" className="form-label">
-					Subject
-				</label>
-				<input
-					id="subject"
-					name="subject"
-					defaultValue={newsletteremail?.data?.subject}
-					type="text"
-					className="form-control mb-3"
-					placeholder=""
-				/>
-				<label htmlFor="text" className="form-label">
-					Text
-				</label>
-				<MyTextArea
-					auth={auth}
-					token={token}
-					id="text"
-					name="text"
-					onModel="NewsletterEmail"
-					advancedTextEditor={true}
-					customPlaceholder="No description"
-					defaultValue={newsletteremail?.data?.text}
-					insertClasses={false}
-				/>
-			</div>
-			<div className="col-lg-3">
-				<label htmlFor="status" className="form-label">
-					Status
-				</label>
-				<select
-					id="status"
-					name="status"
-					defaultValue={newsletteremail?.data?.status}
-					className="form-control"
-				>
-					<option value={`draft`}>Draft</option>
-					<option value={`published`}>Published</option>
-					<option value={`trash`}>Trash</option>
-					<option value={`scheduled`}>Scheduled</option>
-				</select>
-				<br />
-				<FormButtons />
-			</div>
-		</form>
+		<UpdateNewsletterEmailForm
+			token={token}
+			auth={auth}
+			object={newsletteremail}
+			objects={users}
+		/>
 	);
 };
 

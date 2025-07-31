@@ -15,6 +15,9 @@ const AdminMediaLibrary = async ({
 	name = "single",
 	multipleFiles = true,
 	onModel = "Blog",
+	page = 1,
+	limit = 10,
+	sort = "-createdAt",
 	params = [],
 	searchParams = {},
 	handleDelete = () => {},
@@ -24,9 +27,7 @@ const AdminMediaLibrary = async ({
 	const token = await getAuthTokenOnServer();
 	const auth = await getUserOnServer();
 
-	const files = await getFiles(
-		`?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`
-	);
+	const files = await getFiles(`?page=${page}&limit=${limit}&sort=${sort}`);
 
 	return (
 		<List
@@ -42,10 +43,6 @@ const AdminMediaLibrary = async ({
 			searchOn="/noadmin/files"
 			objects={files}
 			searchParams={searchParams}
-			handleDraft={undefined}
-			handlePublish={undefined}
-			handleTrash={undefined}
-			handleSchedule={undefined}
 			handleDelete={handleDelete}
 			handleDeleteAllFunction={handleDeleteAllFunction}
 			handleDeleteAllInvalidPermanentlyFunction={

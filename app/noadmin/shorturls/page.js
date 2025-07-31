@@ -1,8 +1,8 @@
 import { revalidatePath } from "next/cache";
-import { fetchurl } from "@/helpers/setTokenOnServer";
+import { fetchurl, getUserOnServer } from "@/helpers/setTokenOnServer";
 import AdminStatusesMenu from "@/components/noadmin/adminstatusesmenu";
 import List from "@/components/noadmin/shorturls/list";
-import Form from "@/forms/noadmin/shorturls/form";
+import CreateShortUrlForm from "@/forms/noadmin/shorturls/createshorturlform";
 
 async function getShortUrls(params) {
 	const res = await fetchurl(
@@ -19,6 +19,8 @@ const AdminShortUrlsIndex = async ({ params, searchParams }) => {
 	const page = awtdSearchParams.page || 1;
 	const limit = awtdSearchParams.limit || 10;
 	const sort = awtdSearchParams.sort || "-createdAt";
+
+	const auth = await getUserOnServer();
 
 	const shorturls = await getShortUrls(
 		`?page=${page}&limit=${limit}&sort=${sort}`
@@ -126,10 +128,9 @@ const AdminShortUrlsIndex = async ({ params, searchParams }) => {
 				categoriesLink=""
 				categoryType=""
 			/>
-			<Form
-				params={awtdParams}
-				searchParams={awtdSearchParams}
-				revalidateUrl={`/noadmin/shorturls?page=${page}&limit=${limit}&sort=${sort}`}
+			<CreateShortUrlForm
+				auth={auth}
+				currentpage={`/noadmin/shorturls?page=${page}&limit=${limit}&sort=${sort}`}
 			/>
 			<div className="card rounded-0">
 				<List

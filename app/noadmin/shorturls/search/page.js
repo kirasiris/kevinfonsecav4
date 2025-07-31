@@ -1,8 +1,8 @@
 import { revalidatePath } from "next/cache";
-import { fetchurl } from "@/helpers/setTokenOnServer";
+import { fetchurl, getUserOnServer } from "@/helpers/setTokenOnServer";
 import AdminStatusesMenu from "@/components/noadmin/adminstatusesmenu";
 import List from "@/components/noadmin/shorturls/list";
-import Form from "@/forms/noadmin/shorturls/form";
+import CreateShortUrlForm from "@/forms/noadmin/shorturls/createshorturlform";
 
 async function getShortUrls(params) {
 	const res = await fetchurl(`/extras/shorturls${params}`, "GET", "no-cache");
@@ -16,6 +16,8 @@ const AdminShortUrlsSearchIndex = async ({ params, searchParams }) => {
 	const page = awtdSearchParams.page || 1;
 	const limit = awtdSearchParams.limit || 10;
 	const sort = awtdSearchParams.sort || "-createdAt";
+
+	const auth = await getUserOnServer();
 
 	const shorturls = await getShortUrls(
 		`?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
@@ -123,9 +125,9 @@ const AdminShortUrlsSearchIndex = async ({ params, searchParams }) => {
 				categoriesLink=""
 				categoryType=""
 			/>
-			<Form
-				searchParams={awtdSearchParams}
-				revalidateUrl={`/noadmin/shorturls/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`}
+			<CreateShortUrlForm
+				auth={auth}
+				currentpage={`/noadmin/shorturls/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`}
 			/>
 			<div className="card rounded-0">
 				<List

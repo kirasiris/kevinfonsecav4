@@ -2,9 +2,8 @@ import { revalidatePath } from "next/cache";
 import { notFound } from "next/navigation";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import AdminStatusesMenu from "@/components/noadmin/adminstatusesmenu";
-import MyTextArea from "@/components/global/myfinaltextarea";
-import FormButtons from "@/components/global/formbuttons";
 import List from "@/components/noadmin/quotes/list";
+import UpdateQuoteForm from "@/forms/noadmin/quotes/updatequoteform";
 
 async function getQuotes(params) {
 	const res = await fetchurl(`/extras/quotes${params}`, "GET", "no-cache");
@@ -21,27 +20,6 @@ const UpdateQuote = async ({ params, searchParams }) => {
 
 	const quote = await getQuotes(`/${awtdParams.id}`);
 	const quotes = await getQuotes(`?page=${page}&limit=${limit}&sort=${sort}`);
-
-	const upgradeQuote = async (formData) => {
-		"use server";
-		const rawFormData = {
-			text: formData.get("text"),
-			authorName: formData.get("authorName"),
-			authorUrl: formData.get("authorUrl"),
-			sourceWebsite: formData.get("sourceWebsite"),
-			sourceUrl: formData.get("sourceUrl"),
-			status: formData.get("status"),
-			embedding: formData.get("embedding"),
-		};
-
-		await fetchurl(
-			`/extras/quotes/${awtdParams.id}`,
-			"PUT",
-			"no-cache",
-			rawFormData
-		);
-		revalidatePath(`/noadmin/quotes?page=${page}&limit=${limit}&sort=${sort}`);
-	};
 
 	const draftIt = async (id) => {
 		"use server";
@@ -107,93 +85,10 @@ const UpdateQuote = async ({ params, searchParams }) => {
 			/>
 			<div className="row">
 				<div className="col">
-					<form action={upgradeQuote}>
-						<label htmlFor="text" className="form-label">
-							Text
-						</label>
-						<MyTextArea
-							auth={undefined}
-							token={undefined}
-							id="text"
-							name="text"
-							customPlaceholder="Type something..."
-							defaultValue={quote?.data?.text}
-							onModel="Quote"
-							advancedTextEditor={false}
-						/>
-						<label htmlFor="authorName" className="form-label">
-							Author Name
-						</label>
-						<input
-							id="authorName"
-							name="authorName"
-							defaultValue={quote?.data?.authorName}
-							type="text"
-							className="form-control mb-3"
-							placeholder="Someone"
-						/>
-						<label htmlFor="authorUrl" className="form-label">
-							Author Url
-						</label>
-						<input
-							id="authorUrl"
-							name="authorUrl"
-							defaultValue={quote?.data?.authorUrl}
-							type="text"
-							className="form-control mb-3"
-							placeholder="#"
-						/>
-						<label htmlFor="sourceWebsite" className="form-label">
-							Source Website
-						</label>
-						<input
-							id="sourceWebsite"
-							name="sourceWebsite"
-							defaultValue={quote?.data?.sourceWebsite}
-							type="text"
-							className="form-control mb-3"
-							placeholder="Somewhere"
-						/>
-						<label htmlFor="sourceUrl" className="form-label">
-							Source Url
-						</label>
-						<input
-							id="sourceUrl"
-							name="sourceUrl"
-							defaultValue={quote?.data?.sourceUrl}
-							type="text"
-							className="form-control mb-3"
-							placeholder="#"
-						/>
-						<label htmlFor="embedding" className="form-label">
-							Embedding
-						</label>
-						<select
-							id="embedding"
-							name="embedding"
-							defaultValue={quote?.data?.embedding.toString()}
-							className="form-control"
-						>
-							<option value={true}>Yes</option>
-							<option value={false}>No</option>
-						</select>
-						<label htmlFor="status" className="form-label">
-							Status
-						</label>
-						<select
-							id="status"
-							name="status"
-							defaultValue={quote?.data?.status}
-							className="form-control"
-						>
-							<option value={`draft`}>Draft</option>
-							<option value={`published`}>Published</option>
-							<option value={`trash`}>Trash</option>
-							<option value={`scheduled`}>Scheduled</option>
-						</select>
-						<br />
-						<FormButtons />
-					</form>
+					<UpdateQuoteForm
+						currentpage={`/noadmin/quotes?page=${page}&limit=${limit}&sort=${sort}`}
+						object={quote}
+					/>
 				</div>
 				<div className="col-lg-10">
 					<div className="card rounded-0">

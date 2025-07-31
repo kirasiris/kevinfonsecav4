@@ -7,7 +7,7 @@ const AdminFilesIndex = async ({ params, searchParams }) => {
 	const awtdParams = await params;
 	const awtdSearchParams = await searchParams;
 	const page = awtdSearchParams.page || 1;
-	const limit = awtdSearchParams.limit || 25;
+	const limit = awtdSearchParams.limit || 28;
 	const sort = awtdSearchParams.sort || "-createdAt";
 
 	const handleDelete = async (id, publicId) => {
@@ -53,6 +53,9 @@ const AdminFilesIndex = async ({ params, searchParams }) => {
 			/>
 			<div className="card rounded-0">
 				<AdminMediaLibrary
+					page={page}
+					limit={limit}
+					sort={sort}
 					params={awtdParams}
 					searchParams={awtdSearchParams}
 					handleDelete={handleDelete}

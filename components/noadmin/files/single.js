@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { FaFilePdf, FaFileVideo, FaFileAudio } from "react-icons/fa";
 import DeleteModal from "@/components/global/deletemodal";
+import { DropdownButton } from "react-bootstrap";
 
 const Single = ({
 	object = {},
@@ -10,8 +11,6 @@ const Single = ({
 	objects = [],
 	setObjects = () => {},
 	setTotalResults = () => {},
-	setSelectedObject = () => {},
-	setShowMediaModel = () => {},
 }) => {
 	/*
 	 *
@@ -21,13 +20,7 @@ const Single = ({
 	const imgObj = ({ object }) => {
 		return (
 			<div className="col-auto mb-3 text-center">
-				<figure
-					title={object.title}
-					onClick={() => {
-						setSelectedObject(object);
-						setShowMediaModel(false);
-					}}
-				>
+				<figure title={object.title}>
 					<Image
 						src={
 							object?.location?.secure_location ||
@@ -47,30 +40,41 @@ const Single = ({
 					>
 						Read&nbsp;more
 					</Link>
-					<Link
-						href={{
-							pathname: `/noadmin/comments/create`,
-							query: {
-								resourceId: object._id,
-								onModel: `File`,
-							},
+					<DropdownButton
+						title="..."
+						variant="secondary"
+						size="sm"
+						style={{
+							position: "absolute",
+							right: "10px",
+							bottom: "211px",
 						}}
-						className="btn btn-dark btn-sm"
 					>
-						Add&nbsp;Comment
-					</Link>
-					<Link
-						href={{
-							pathname: `/noadmin/reports/create`,
-							query: {
-								resourceId: object._id,
-								onModel: `File`,
-							},
-						}}
-						className="btn btn-dark btn-sm"
-					>
-						Add&nbsp;Report
-					</Link>
+						<Link
+							href={{
+								pathname: `/noadmin/comments/create`,
+								query: {
+									resourceId: object._id,
+									onModel: `File`,
+								},
+							}}
+							className="dropdown-item"
+						>
+							Add&nbsp;Comment
+						</Link>
+						<Link
+							href={{
+								pathname: `/noadmin/reports/create`,
+								query: {
+									resourceId: object._id,
+									onModel: `File`,
+								},
+							}}
+							className="dropdown-item"
+						>
+							Add&nbsp;Report
+						</Link>
+					</DropdownButton>
 					<DeleteModal
 						id={object._id ? object._id : object._id}
 						sId={object?.location?.public_id}
@@ -91,13 +95,7 @@ const Single = ({
 	const pdfObj = ({ object }) => {
 		return (
 			<div className="col-auto mb-3 text-center">
-				<figure
-					title={object.title}
-					onClick={() => {
-						setSelectedObject(object);
-						setShowMediaModel(false);
-					}}
-				>
+				<figure title={object.title}>
 					<FaFilePdf style={{ fontSize: "184px" }} />
 				</figure>
 				<div className="btn-group">
@@ -109,30 +107,41 @@ const Single = ({
 					>
 						Read&nbsp;more
 					</Link>
-					<Link
-						href={{
-							pathname: `/noadmin/comments/create`,
-							query: {
-								resourceId: object._id,
-								onModel: `File`,
-							},
+					<DropdownButton
+						title="..."
+						variant="secondary"
+						size="sm"
+						style={{
+							position: "absolute",
+							right: "10px",
+							bottom: "211px",
 						}}
-						className="btn btn-dark btn-sm"
 					>
-						Add&nbsp;Comment
-					</Link>
-					<Link
-						href={{
-							pathname: `/noadmin/reports/create`,
-							query: {
-								resourceId: object._id,
-								onModel: `File`,
-							},
-						}}
-						className="btn btn-dark btn-sm"
-					>
-						Add&nbsp;Report
-					</Link>
+						<Link
+							href={{
+								pathname: `/noadmin/comments/create`,
+								query: {
+									resourceId: object._id,
+									onModel: `File`,
+								},
+							}}
+							className="dropdown-item"
+						>
+							Add&nbsp;Comment
+						</Link>
+						<Link
+							href={{
+								pathname: `/noadmin/reports/create`,
+								query: {
+									resourceId: object._id,
+									onModel: `File`,
+								},
+							}}
+							className="dropdown-item"
+						>
+							Add&nbsp;Report
+						</Link>
+					</DropdownButton>
 					<DeleteModal
 						id={object._id ? object._id : object._id}
 						action={handleDelete}
@@ -152,13 +161,7 @@ const Single = ({
 	const vidObj = ({ object }) => {
 		return (
 			<div className="col-auto mb-3 text-center">
-				<figure
-					title={object.title}
-					onClick={() => {
-						setSelectedObject(object);
-						setShowMediaModel(false);
-					}}
-				>
+				<figure title={object.title}>
 					<FaFileVideo style={{ fontSize: "184px" }} />
 				</figure>
 				<div className="btn-group">
@@ -170,30 +173,41 @@ const Single = ({
 					>
 						Read&nbsp;more
 					</Link>
-					<Link
-						href={{
-							pathname: `/noadmin/comments/create`,
-							query: {
-								resourceId: object._id,
-								onModel: `File`,
-							},
+					<DropdownButton
+						title="..."
+						variant="secondary"
+						size="sm"
+						style={{
+							position: "absolute",
+							right: "10px",
+							bottom: "211px",
 						}}
-						className="btn btn-dark btn-sm"
 					>
-						Add&nbsp;Comment
-					</Link>
-					<Link
-						href={{
-							pathname: `/noadmin/reports/create`,
-							query: {
-								resourceId: object._id,
-								onModel: `File`,
-							},
-						}}
-						className="btn btn-dark btn-sm"
-					>
-						Add&nbsp;Report
-					</Link>
+						<Link
+							href={{
+								pathname: `/noadmin/comments/create`,
+								query: {
+									resourceId: object._id,
+									onModel: `File`,
+								},
+							}}
+							className="dropdown-item"
+						>
+							Add&nbsp;Comment
+						</Link>
+						<Link
+							href={{
+								pathname: `/noadmin/reports/create`,
+								query: {
+									resourceId: object._id,
+									onModel: `File`,
+								},
+							}}
+							className="dropdown-item"
+						>
+							Add&nbsp;Report
+						</Link>
+					</DropdownButton>
 					<DeleteModal
 						id={object._id ? object._id : object._id}
 						action={handleDelete}
@@ -213,13 +227,7 @@ const Single = ({
 	const audObj = ({ object }) => {
 		return (
 			<div className="col-auto mb-3 text-center">
-				<figure
-					title={object.title}
-					onClick={() => {
-						setSelectedObject(object);
-						setShowMediaModel(false);
-					}}
-				>
+				<figure title={object.title}>
 					<FaFileAudio style={{ fontSize: "184px" }} />
 				</figure>
 				<div className="btn-group">
@@ -231,30 +239,41 @@ const Single = ({
 					>
 						Read&nbsp;more
 					</Link>
-					<Link
-						href={{
-							pathname: `/noadmin/comments/create`,
-							query: {
-								resourceId: object._id,
-								onModel: `File`,
-							},
+					<DropdownButton
+						title="..."
+						variant="secondary"
+						size="sm"
+						style={{
+							position: "absolute",
+							right: "10px",
+							bottom: "211px",
 						}}
-						className="btn btn-dark btn-sm"
 					>
-						Add&nbsp;Comment
-					</Link>
-					<Link
-						href={{
-							pathname: `/noadmin/reports/create`,
-							query: {
-								resourceId: object._id,
-								onModel: `File`,
-							},
-						}}
-						className="btn btn-dark btn-sm"
-					>
-						Add&nbsp;Report
-					</Link>
+						<Link
+							href={{
+								pathname: `/noadmin/comments/create`,
+								query: {
+									resourceId: object._id,
+									onModel: `File`,
+								},
+							}}
+							className="dropdown-item"
+						>
+							Add&nbsp;Comment
+						</Link>
+						<Link
+							href={{
+								pathname: `/noadmin/reports/create`,
+								query: {
+									resourceId: object._id,
+									onModel: `File`,
+								},
+							}}
+							className="dropdown-item"
+						>
+							Add&nbsp;Report
+						</Link>
+					</DropdownButton>
 					<DeleteModal
 						id={object._id ? object._id : object._id}
 						action={handleDelete}

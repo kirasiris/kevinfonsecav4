@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import MyTextArea from "@/components/global/myfinaltextarea";
 
-const UpdateWeaponForm = ({ object = {}, token = "", auth = {} }) => {
+const UpdateWeaponForm = ({ token = "", auth = {}, object = {} }) => {
 	const router = useRouter();
 
 	const [rawFiles, setRawFiles] = useState({

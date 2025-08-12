@@ -18,7 +18,7 @@ const UpdateWeapon = async ({ params, searchParams }) => {
 
 	const weapon = await getWeapon(`/${awtdParams.id}`);
 
-	return <UpdateWeaponForm object={weapon} token={token} auth={auth} />;
+	return <UpdateWeaponForm token={token} auth={auth} object={weapon} />;
 };
 
 export default UpdateWeapon;

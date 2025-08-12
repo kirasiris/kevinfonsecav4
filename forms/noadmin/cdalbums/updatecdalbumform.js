@@ -100,16 +100,16 @@ const UpdateCDAlbumForm = ({
 				<AdminSidebar
 					displayCategoryField={true}
 					displayAvatar={true}
-					avatar={cdalbum?.data?.files}
-					avatarFormat={cdalbum?.data?.files?.avatar?.format_type}
-					status={cdalbum?.data?.status}
+					avatar={object?.data?.files}
+					avatarFormat={object?.data?.files?.avatar?.format_type}
+					status={object?.data?.status}
 					fullWidth={false}
 					password=""
-					featured={cdalbum?.data?.featured.toString()}
-					commented={cdalbum?.data?.commented.toString()}
+					featured={object?.data?.featured.toString()}
+					commented={object?.data?.commented.toString()}
 					embedding={false}
 					github_readme={""}
-					category={cdalbum?.data?.category?._id || cdalbum?.data?.category}
+					category={object?.data?.category?._id || object?.data?.category}
 					categories={categories?.data}
 					multiple_categories={false}
 				/>

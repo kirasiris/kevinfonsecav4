@@ -53,6 +53,7 @@ const CreateChapterForm = ({
 				onefichier: formData.get("onefichier"),
 				stape: formData.get("stape_download"),
 			},
+			files: { avatar: formData.get("file") || undefined },
 		};
 
 		const res = await fetchurl(`/noadmin/videos`, "POST", "no-cache", {
@@ -390,7 +391,7 @@ const CreateChapterForm = ({
 			<div className="col-lg-3">
 				<AdminSidebar
 					displayCategoryField={false}
-					displayAvatar={false}
+					displayAvatar={true}
 					avatar={undefined}
 					avatarFormat={"image"}
 					status="draft"

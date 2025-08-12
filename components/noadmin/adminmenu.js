@@ -98,9 +98,6 @@ const AdminMenu = () => {
 				<li className={`list-group-item ${isActive(`/noadmin/reports`)}`}>
 					<Link href={"/noadmin/reports"}>Reports</Link>
 				</li>
-				<li className={`list-group-item ${isActive(`/noadmin/reviews`)}`}>
-					<Link href={"/noadmin/reviews"}>Reviews</Link>
-				</li>
 				<li className={`list-group-item ${isActive(`/noadmin/secrets`)}`}>
 					<Link href={"/noadmin/secrets"}>Secrets</Link>
 				</li>
@@ -118,9 +115,6 @@ const AdminMenu = () => {
 				</li>
 				<li className={`list-group-item ${isActive(`/noadmin/users`)}`}>
 					<Link href={"/noadmin/users"}>Users</Link>
-				</li>
-				<li className={`list-group-item ${isActive(`/noadmin/videos`)}`}>
-					<Link href={"/noadmin/videos"}>Videos</Link>
 				</li>
 				<li className={`list-group-item ${isActive(`/noadmin/youtube`)}`}>
 					<Link href={"/noadmin/youtube"}>Youtube</Link>

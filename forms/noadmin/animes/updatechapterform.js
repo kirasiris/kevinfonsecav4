@@ -53,6 +53,7 @@ const UpdateChapterForm = ({
 				onefichier: formData.get("onefichier"),
 				stape: formData.get("stape_download"),
 			},
+			files: { avatar: formData.get("file") || undefined },
 		};
 
 		const res = await fetchurl(
@@ -391,9 +392,9 @@ const UpdateChapterForm = ({
 			<div className="col-lg-3">
 				<AdminSidebar
 					displayCategoryField={false}
-					displayAvatar={false}
-					avatar={undefined}
-					avatarFormat={"image"}
+					displayAvatar={true}
+					avatar={object?.data?.files}
+					avatarFormat={object?.data?.files?.avatar?.format_type}
 					status={object?.data?.status}
 					fullWidth={false}
 					password=""

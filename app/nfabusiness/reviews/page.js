@@ -25,42 +25,54 @@ const AdminReviewsIndex = async ({ params, searchParams }) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/reviews/${id}/draftit`, "PUT", "no-cache");
-		revalidatePath(`/noadmin/reviews?page=${page}&limit=${limit}&sort=${sort}`);
+		revalidatePath(
+			`/nfabusiness/reviews?page=${page}&limit=${limit}&sort=${sort}`
+		);
 	};
 
 	const publishIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/reviews/${id}/publishit`, "PUT", "no-cache");
-		revalidatePath(`/noadmin/reviews?page=${page}&limit=${limit}&sort=${sort}`);
+		revalidatePath(
+			`/nfabusiness/reviews?page=${page}&limit=${limit}&sort=${sort}`
+		);
 	};
 
 	const trashIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/reviews/${id}/trashit`, "PUT", "no-cache");
-		revalidatePath(`/noadmin/reviews?page=${page}&limit=${limit}&sort=${sort}`);
+		revalidatePath(
+			`/nfabusiness/reviews?page=${page}&limit=${limit}&sort=${sort}`
+		);
 	};
 
 	const scheduleIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/reviews/${id}/scheduleit`, "PUT", "no-cache");
-		revalidatePath(`/noadmin/reviews?page=${page}&limit=${limit}&sort=${sort}`);
+		revalidatePath(
+			`/nfabusiness/reviews?page=${page}&limit=${limit}&sort=${sort}`
+		);
 	};
 
 	const handleDelete = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/reviews/${id}/permanently`, "DELETE", "no-cache");
-		revalidatePath(`/noadmin/reviews?page=${page}&limit=${limit}&sort=${sort}`);
+		revalidatePath(
+			`/nfabusiness/reviews?page=${page}&limit=${limit}&sort=${sort}`
+		);
 	};
 
 	const handleTrashAll = async () => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/reviews/deleteall`, "PUT", "no-cache");
-		revalidatePath(`/noadmin/reviews?page=${page}&limit=${limit}&sort=${sort}`);
+		revalidatePath(
+			`/nfabusiness/reviews?page=${page}&limit=${limit}&sort=${sort}`
+		);
 	};
 
 	const handleDeleteAll = async () => {
@@ -71,7 +83,9 @@ const AdminReviewsIndex = async ({ params, searchParams }) => {
 			"DELETE",
 			"no-cache"
 		);
-		revalidatePath(`/noadmin/reviews?page=${page}&limit=${limit}&sort=${sort}`);
+		revalidatePath(
+			`/nfabusiness/reviews?page=${page}&limit=${limit}&sort=${sort}`
+		);
 	};
 
 	return (

@@ -12,11 +12,7 @@ const UseDropzone = ({
 	id = "",
 	name = "",
 	multipleFiles = true,
-	onModel = "Blog",
-	objectIpRoute = ``,
 	object = {},
-	objectData = {},
-	revalidateUrl = "",
 }) => {
 	const router = useRouter();
 	const [uploadPercentage, setUploadPercentage] = useState(0);
@@ -38,12 +34,12 @@ const UseDropzone = ({
 				onDrop={async (acceptedFiles) => {
 					for (let i = 0; i < acceptedFiles.length; i++) {
 						const res = await axios.put(
-							`${process.env.NEXT_PUBLIC_API_URL}/uploads/uploadobject`,
+							`${process.env.NEXT_PUBLIC_FILE_UPLOADER_URL}/uploads/uploadobject`,
 							{
 								userId: auth?.userId,
 								username: auth?.username,
 								userEmail: auth?.email,
-								onModel: onModel,
+								onModel: "Playlist",
 								resourceId: object?._id,
 								file: acceptedFiles[i],
 							},
@@ -63,29 +59,30 @@ const UseDropzone = ({
 								},
 							}
 						);
-						if (
-							objectIpRoute !== "" &&
-							objectIpRoute !== undefined &&
-							objectIpRoute !== null
-						) {
-							await axios.post(
-								objectIpRoute,
-								{
-									...objectData,
-									title: res?.data?.data?.title,
-									text: "No description",
-									files: { video_url: res?.data?.data?._id },
+
+						await axios.post(
+							`${process.env.NEXT_PUBLIC_API_URL}/noadmin/videos`,
+							{
+								resourceId: object?._id,
+								duration: "0:0",
+								status: "draft",
+								averageRating: 10,
+								onModel: "Playlist",
+								title: res?.data?.data?.title,
+								text: "No description",
+								files: { video_url: res?.data?.data?._id },
+								embedding: false,
+								commented: false,
+							},
+							{
+								headers: {
+									Authorization: `Bearer ${token?.value}`,
 								},
-								{
-									headers: {
-										Authorization: `Bearer ${token?.value}`,
-									},
-								}
-							);
-						}
+							}
+						);
 					}
 					setUploadPercentage(0);
-					router.push(revalidateUrl);
+					router.push(`/noadmin/animes/read/${object?._id}`);
 				}}
 			>
 				{({ getRootProps, getInputProps }) => (

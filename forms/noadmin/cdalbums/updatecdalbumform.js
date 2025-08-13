@@ -110,7 +110,7 @@ const UpdateCDAlbumForm = ({
 					embedding={false}
 					github_readme={""}
 					category={object?.data?.category?._id || object?.data?.category}
-					categories={categories?.data}
+					categories={objects?.data}
 					multiple_categories={false}
 				/>
 				<br />

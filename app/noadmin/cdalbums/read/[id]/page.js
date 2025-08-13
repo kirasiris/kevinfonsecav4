@@ -105,18 +105,8 @@ const ReadCDAlbum = async ({ params, searchParams }) => {
 					token={token}
 					id={"file"}
 					name={"file"}
-					multipleFiles={false}
-					onModel="Playlist"
-					objectIpRoute={`${process.env.apiUrl}/songs`}
+					multipleFiles={true}
 					object={cdalbum?.data}
-					objectData={{
-						resourceId: cdalbum?.data?._id,
-						duration: "0:0",
-						status: "published",
-						averageRating: 5,
-						onModel: "Playlist",
-					}}
-					revalidateUrl={`/noadmin/cdalbums/read/${awtdParams.id}`}
 				/>
 				<div className="card rounded-0">
 					<SongList

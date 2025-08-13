@@ -56,7 +56,7 @@ const UpdateFileForm = ({ token = {}, auth = {}, object = {} }) => {
 	 * IMAGE OBJECT
 	 *
 	 */
-	const imgObj = ({ file }) => {
+	const imgObj = (file = {}) => {
 		return (
 			<figure title={file?.data?.title}>
 				<Image
@@ -78,7 +78,7 @@ const UpdateFileForm = ({ token = {}, auth = {}, object = {} }) => {
 	 *
 	 */
 
-	const pdfObj = ({ file }) => {
+	const pdfObj = (file = {}) => {
 		return (
 			<object
 				data={file?.data?.location?.secure_location}
@@ -107,7 +107,7 @@ const UpdateFileForm = ({ token = {}, auth = {}, object = {} }) => {
 	// 	};
 	// }, [fileId]);
 
-	const vidObj = ({ file }) => {
+	const vidObj = (file = {}) => {
 		return (
 			<video
 				// ref={videoRef}
@@ -122,12 +122,31 @@ const UpdateFileForm = ({ token = {}, auth = {}, object = {} }) => {
 		);
 	};
 
+	const audObj = (file = {}) => {
+		return (
+			<audio
+				title={file?.data?.title}
+				controls
+				style={{
+					width: "100%",
+					backgroundColor: "#000000",
+				}}
+			>
+				<source
+					src={file?.data?.location?.secure_location}
+					type={`${file?.data?.format_type}/${file?.data?.format}`}
+				/>
+			</audio>
+		);
+	};
+
 	return (
 		<form className="row" onSubmit={upgradeFile}>
 			<div className="col">
-				{object?.data?.format_type === "image" && imgObj({ object })}
-				{object?.data?.format_type === "application" && pdfObj({ object })}
-				{object?.data?.format_type === "video" && vidObj({ object })}
+				{object?.data?.format_type === "image" && imgObj(object)}
+				{object?.data?.format_type === "application" && pdfObj(object)}
+				{object?.data?.format_type === "video" && vidObj(object)}
+				{object?.data?.format_type === "audio" && audObj(object)}
 			</div>
 			<div className="col">
 				<label htmlFor="file-title" className="form-label">

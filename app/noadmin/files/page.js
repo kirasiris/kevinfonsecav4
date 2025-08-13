@@ -7,7 +7,7 @@ const AdminFilesIndex = async ({ params, searchParams }) => {
 	const awtdParams = await params;
 	const awtdSearchParams = await searchParams;
 	const page = awtdSearchParams.page || 1;
-	const limit = awtdSearchParams.limit || 28;
+	const limit = (awtdSearchParams.limit = 28);
 	const sort = awtdSearchParams.sort || "-createdAt";
 
 	const handleDelete = async (id, publicId) => {

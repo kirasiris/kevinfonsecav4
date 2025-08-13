@@ -456,6 +456,7 @@ const YouTubePage = ({
 														</button>
 													</div>
 													<audio
+														title={video?.title}
 														controls
 														style={{
 															width: "100%",

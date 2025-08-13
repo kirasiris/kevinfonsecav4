@@ -25,7 +25,7 @@ const NFAMenu = () => {
 					</Link>
 				</li>
 				<li className={`list-group-item ${isActive(`/nfabusiness/reviews`)}`}>
-					<Link href={"/nfabusiness/reviews"}>Reviews</Link>
+					<Link href={"/nfabusiness/reviews"}>Service Reviews</Link>
 				</li>
 				<li
 					className={`list-group-item ${isActive(

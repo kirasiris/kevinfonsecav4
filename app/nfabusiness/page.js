@@ -29,17 +29,42 @@ async function getServiceEmails(params) {
 	return res;
 }
 
+async function getWeapons(params) {
+	const res = await fetchurl(`/noadmin/weapons${params}`, "GET", "default");
+	return res;
+}
+
+// async function getWeaponAccessories(params) {
+// 	const res = await fetchurl(
+// 		`/noadmin/weaponaccessories${params}`,
+// 		"GET",
+// 		"default"
+// 	);
+// 	return res;
+// }
+
 const AdminNFAHome = async ({ params, searchParams }) => {
 	const acquiredData = getAcquisitionsDisposals(`?status=acquired`);
-	const reviewsData = getReviews(`?limit=100`);
 	const disposedData = getAcquisitionsDisposals(`?status=disposed`);
+	const reviewsData = getReviews(`?limit=100`);
 	const serviceemailsData = getServiceEmails(`?limit=100`);
+	const weaponsData = getWeapons(`?limit=100`);
+	// const weaponaccessoriesData = getWeaponAccessories(`?limit=100`);
 
-	const [acquired, reviews, disposed, serviceemails] = await Promise.all([
+	const [
+		acquired,
+		disposed,
+		servicereviews,
+		serviceemails,
+		weapons,
+		// weaponaccessories,
+	] = await Promise.all([
 		acquiredData,
-		reviewsData,
 		disposedData,
+		reviewsData,
 		serviceemailsData,
+		weaponsData,
+		// weaponaccessoriesData,
 	]);
 
 	return (
@@ -49,28 +74,6 @@ const AdminNFAHome = async ({ params, searchParams }) => {
 				description="This is the place where you have the full control of your website. Feel free to play with it as you like!"
 			/>
 			<div className="row">
-				<DynamicCards
-					title="Service Requests"
-					text={serviceemails?.data?.length || `0`}
-					// bgcolor="dark"
-					// txtcolor="red"
-					myLink="/nfabusiness/serviceemails"
-					myQuery={{
-						page: 1,
-						limit: 10,
-					}}
-				/>
-				<DynamicCards
-					title="Service Reviews"
-					text={serviceemails?.data?.length || `0`}
-					// bgcolor="dark"
-					// txtcolor="red"
-					myLink="/nfabusiness/reviews"
-					myQuery={{
-						page: 1,
-						limit: 10,
-					}}
-				/>
 				<DynamicCards
 					title="Weapons Acquired"
 					text={acquired?.data?.length || `0`}
@@ -93,6 +96,50 @@ const AdminNFAHome = async ({ params, searchParams }) => {
 						limit: 10,
 					}}
 				/>
+				<DynamicCards
+					title="Service Reviews"
+					text={servicereviews?.data?.length || `0`}
+					// bgcolor="dark"
+					// txtcolor="red"
+					myLink="/nfabusiness/reviews"
+					myQuery={{
+						page: 1,
+						limit: 10,
+					}}
+				/>
+				<DynamicCards
+					title="Service Requests"
+					text={serviceemails?.data?.length || `0`}
+					// bgcolor="dark"
+					// txtcolor="red"
+					myLink="/nfabusiness/serviceemails"
+					myQuery={{
+						page: 1,
+						limit: 10,
+					}}
+				/>
+				<DynamicCards
+					title="Weapons"
+					text={weapons?.data?.length || `0`}
+					// bgcolor="dark"
+					// txtcolor="red"
+					myLink="/nfabusiness/weapons"
+					myQuery={{
+						page: 1,
+						limit: 10,
+					}}
+				/>
+				{/* <DynamicCards
+					title="Weapon Accessories"
+					text={weaponaccessories?.data?.length || `0`}
+					// bgcolor="dark"
+					// txtcolor="red"
+					myLink="/nfabusiness/weaponaccessories"
+					myQuery={{
+						page: 1,
+						limit: 10,
+					}}
+				/> */}
 			</div>
 			<div className="row">
 				<div className="col">

@@ -2,6 +2,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { checkEmptyObject } from "befree-utilities";
+import { toast } from "react-toastify";
 import Globalcontent from "@/layout/content";
 import Globalsidebar from "@/layout/sidebar";
 import { fetchurl } from "@/helpers/setTokenOnServer";
@@ -65,6 +66,16 @@ const QRCodeGeneratorPage = ({ searchParams = {}, pushTo = true }) => {
 			website: process.env.NEXT_PUBLIC_WEBSITE_NAME,
 			status: "published",
 		});
+		if (res.status === "error") {
+			toast.error(res.message, "bottom");
+			setBtnText("Submit");
+			return;
+		}
+		if (res.status === "fail") {
+			toast.error(res.message, "bottom");
+			setBtnText("Submit");
+			return;
+		}
 		setQrCode(res?.data);
 		setBtnText(btnText);
 		resetForm();

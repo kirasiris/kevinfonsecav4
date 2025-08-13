@@ -91,18 +91,18 @@ const AdminReviewsIndex = async ({ params, searchParams }) => {
 	return (
 		<>
 			<AdminStatusesMenu
-				allLink="/noadmin/reviews"
-				publishedLink="/noadmin/reviews/published"
-				draftLink="/noadmin/reviews/draft"
-				scheduledLink="/noadmin/reviews/scheduled"
-				trashedLink="/noadmin/reviews/trashed"
+				allLink="/nfabusiness/reviews"
+				publishedLink="/nfabusiness/reviews/published"
+				draftLink="/nfabusiness/reviews/draft"
+				scheduledLink="/nfabusiness/reviews/scheduled"
+				trashedLink="/nfabusiness/reviews/trashed"
 			/>
 			<div className="card rounded-0">
 				<List
-					allLink="/noadmin/reviews"
+					allLink="/nfabusiness/reviews"
 					pageText="Reviews"
-					addLink="/noadmin/reviews/create"
-					searchOn="/noadmin/reviews"
+					addLink="/nfabusiness/reviews/create"
+					searchOn="/nfabusiness/reviews"
 					searchedKeyword=""
 					objects={reviews}
 					searchParams={awtdSearchParams}

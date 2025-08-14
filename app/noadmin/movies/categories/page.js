@@ -1,9 +1,8 @@
 import { revalidatePath } from "next/cache";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import AdminStatusesMenu from "@/components/noadmin/adminstatusesmenu";
-import MyTextArea from "@/components/global/myfinaltextarea";
-import FormButtons from "@/components/global/formbuttons";
 import List from "@/components/noadmin/categories/list";
+import CreateMovieCategoryForm from "@/forms/noadmin/movies/createmoviecategoryform";
 
 async function getCategories(params) {
 	const res = await fetchurl(
@@ -24,22 +23,6 @@ const AdminMovieCategoriesIndex = async ({ params, searchParams }) => {
 	const categories = await getCategories(
 		`?page=${page}&limit=${limit}&sort=${sort}`
 	);
-	const createCategory = async (formData) => {
-		"use server";
-		const rawFormData = {
-			title: formData.get("title"),
-			text: formData.get("text"),
-			parentId: formData.get("parentId"),
-			deletable: formData.get("deletable"),
-		};
-		await fetchurl(`/noadmin/categories`, "POST", "no-cache", {
-			...rawFormData,
-			categoryType: "movie",
-		});
-		revalidatePath(
-			`/noadmin/movies/categories?page=${page}&limit=${limit}&sort=${sort}`
-		);
-	};
 
 	const draftIt = async (id) => {
 		"use server";
@@ -130,61 +113,12 @@ const AdminMovieCategoriesIndex = async ({ params, searchParams }) => {
 			/>
 			<div className="row">
 				<div className="col">
-					<form action={createCategory}>
-						<label htmlFor="category-title" className="form-label">
-							Title
-						</label>
-						<input
-							id="category-title"
-							name="title"
-							defaultValue=""
-							type="text"
-							className="form-control mb-3"
-							placeholder="Untitled"
-						/>
-						<label htmlFor="text" className="form-label">
-							Text
-						</label>
-						<MyTextArea
-							auth={undefined}
-							id="text"
-							name="text"
-							customPlaceholder="Type something..."
-							defaultValue=""
-							onModel="Category"
-							advancedTextEditor={false}
-						/>
-						<label htmlFor="parentId" className="form-label">
-							Parent Category
-						</label>
-						<select
-							id="parentId"
-							name="parentId"
-							defaultValue=""
-							className="form-control mb-3"
-						>
-							<option value={undefined}>Select category</option>
-							{categories?.data?.map((item) => (
-								<option key={item._id} value={item._id}>
-									{item.title}
-								</option>
-							))}
-						</select>
-						<label htmlFor="deletable" className="form-label">
-							Deletable
-						</label>
-						<select
-							id="deletable"
-							name="deletable"
-							defaultValue=""
-							className="form-control"
-						>
-							<option value={true}>Yes</option>
-							<option value={false}>No</option>
-						</select>
-						<br />
-						<FormButtons />
-					</form>
+					<CreateMovieCategoryForm
+						page={page}
+						limit={limit}
+						sort={sort}
+						objects={categories}
+					/>
 				</div>
 				<div className="col-lg-10">
 					<div className="card rounded-0">

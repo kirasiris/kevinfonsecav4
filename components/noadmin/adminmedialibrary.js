@@ -27,7 +27,8 @@ const AdminMediaLibrary = async ({
 	const token = await getAuthTokenOnServer();
 	const auth = await getUserOnServer();
 
-	const files = await getFiles(`?page=${page}&limit=${limit}&sort=${sort}`);
+	const files = await getFiles(`?page=${page}&limit=1&sort=${sort}`);
+	console.log("files", files);
 
 	return (
 		<List

@@ -461,9 +461,9 @@ const CreateSettingForm = ({ token = {}, auth = {} }) => {
 						/>
 					</div>
 				</div>
+				<br />
+				<FormButtons />
 			</div>
-			<br />
-			<FormButtons />
 		</form>
 	);
 };

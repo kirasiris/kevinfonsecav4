@@ -461,9 +461,9 @@ const UpdateSettingForm = ({ token = {}, auth = {}, object = {} }) => {
 						/>
 					</div>
 				</div>
+				<br />
+				<FormButtons />
 			</div>
-			<br />
-			<FormButtons />
 		</form>
 	);
 };

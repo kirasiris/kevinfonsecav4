@@ -27,7 +27,7 @@ const UpdateMovieForm = ({
 			title: formData.get("title"),
 			text: formData.get("text"),
 			featured: formData.get("featured"),
-			category: formData.get("category"),
+			category: formData.getAll("category"), // Needs to be getAll due to Model receiving array
 			commented: formData.get("commented"),
 			password: formData.get("password"),
 			onairstatus: formData.get("onairstatus"),

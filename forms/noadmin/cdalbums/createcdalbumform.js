@@ -21,7 +21,7 @@ const CreateCDAlbumForm = ({ token = {}, auth = {}, objects = [] }) => {
 			title: formData.get("title"),
 			text: formData.get("text"),
 			featured: formData.get("featured"),
-			// category: formData.get("category"),
+			category: formData.get("category"),
 			commented: formData.get("commented"),
 			password: formData.get("password"),
 			onairtype: formData.get("onairtype"),

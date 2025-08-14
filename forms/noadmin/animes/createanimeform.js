@@ -22,7 +22,7 @@ const CreateAnimeForm = ({ token = {}, auth = {}, objects = [] }) => {
 			title: formData.get("title"),
 			text: formData.get("text"),
 			featured: formData.get("featured"),
-			category: formData.getAll("category"),
+			category: formData.get("category"),
 			commented: formData.get("commented"),
 			password: formData.get("password"),
 			onairstatus: formData.get("onairstatus"),
@@ -114,7 +114,7 @@ const CreateAnimeForm = ({ token = {}, auth = {}, objects = [] }) => {
 					commented={true}
 					embedding={false}
 					github_readme={""}
-					category={""}
+					category={undefined}
 					categories={objects?.data}
 					multiple_categories={false}
 				/>

@@ -22,7 +22,7 @@ const CreateMovieForm = ({ token = {}, auth = {}, objects = [] }) => {
 			title: formData.get("title"),
 			text: formData.get("text"),
 			featured: formData.get("featured"),
-			category: formData.getAll("category"),
+			category: formData.get("category"),
 			commented: formData.get("commented"),
 			password: formData.get("password"),
 			onairstatus: formData.get("onairstatus"),

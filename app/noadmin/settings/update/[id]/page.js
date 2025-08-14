@@ -1,5 +1,9 @@
 import { notFound } from "next/navigation";
-import { fetchurl } from "@/helpers/setTokenOnServer";
+import {
+	fetchurl,
+	getAuthTokenOnServer,
+	getUserOnServer,
+} from "@/helpers/setTokenOnServer";
 import UpdateSettingForm from "@/forms/noadmin/settings/updatesettingform";
 
 async function getSetting(params) {
@@ -11,6 +15,9 @@ async function getSetting(params) {
 const UpdateSetting = async ({ params, searchParams }) => {
 	const awtdParams = await params;
 	const awtdSearchParams = await searchParams;
+	const token = await getAuthTokenOnServer();
+	const auth = await getUserOnServer();
+
 	const setting = await getSetting(`/${awtdParams.id}`);
 
 	return <UpdateSettingForm token={token} auth={auth} object={setting} />;

@@ -24,7 +24,6 @@ const UpdateMovie = async ({ params, searchParams }) => {
 	const auth = await getUserOnServer();
 
 	const movie = await getMovie(`/${awtdParams.id}`);
-
 	const categories = await getCategories(`?categoryType=movie`);
 
 	return (

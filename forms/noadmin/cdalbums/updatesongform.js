@@ -36,7 +36,10 @@ const UpdateSongForm = ({
 			duration: formData.get("duration"),
 			averageRating: formData.get("averageRating"),
 			orderingNumber: formData.get("orderingNumber"),
-			files: { avatar: formData.get("file") || undefined },
+			files: {
+				avatar: formData.get("file") || undefined,
+				audio_url: formData.get("audio_url") || undefined,
+			},
 		};
 
 		const res = await fetchurl(
@@ -105,6 +108,21 @@ const UpdateSongForm = ({
 				/>
 				<div className="row">
 					<div className="col">
+						<label htmlFor="audio_url" className="form-label">
+							Audio ID
+						</label>
+						<input
+							id="audio_url"
+							name="audio_url"
+							defaultValue={object?.data?.files?.audio_url?._id}
+							type="text"
+							className="form-control mb-3"
+							placeholder="Here goes the audioId from files page"
+						/>
+					</div>
+				</div>
+				<div className="row">
+					<div className="col">
 						<label htmlFor="duration" className="form-label">
 							Duration
 						</label>
@@ -157,7 +175,7 @@ const UpdateSongForm = ({
 					avatarFormat={object?.data?.files?.avatar?.format_type}
 					status={object?.data?.status}
 					fullWidth={false}
-					password={object?.data?.password}
+					password=""
 					featured={object?.data?.featured.toString()}
 					commented={object?.data?.commented.toString()}
 					embedding={object?.data?.commented.toString()}

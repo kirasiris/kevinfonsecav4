@@ -53,6 +53,10 @@ const UpdateVideoForm = ({
 				onefichier: formData.get("onefichier"),
 				stape: formData.get("stape_download"),
 			},
+			files: {
+				avatar: formData.get("file") || undefined,
+				video_url: formData.get("video_url") || undefined,
+			},
 		};
 
 		const res = await fetchurl(
@@ -272,6 +276,17 @@ const UpdateVideoForm = ({
 				<div className="row">
 					<div className="col">
 						<h4>Players</h4>
+						<label htmlFor="video_url" className="form-label">
+							Video ID
+						</label>
+						<input
+							id="video_url"
+							name="video_url"
+							defaultValue={object?.data?.files?.video_url?._id}
+							type="text"
+							className="form-control mb-3"
+							placeholder="Here goes the videoId from files page"
+						/>
 						<label htmlFor="mega" className="form-label">
 							Mega
 						</label>

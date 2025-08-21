@@ -30,7 +30,10 @@ const UpdateLessonForm = ({ token = {}, auth = {}, object = {} }) => {
 			free_preview: formData.get("free_preview"),
 			duration: formData.get("duration"),
 			orderingNumber: formData.get("orderingNumber"),
-			files: { avatar: formData.get("file") || undefined },
+			files: {
+				avatar: formData.get("file") || undefined,
+				video_url: formData.get("video_url") || undefined,
+			},
 			// address: "4442 Jackson Blvd, Columbia, SC 29209",
 		};
 
@@ -86,6 +89,21 @@ const UpdateLessonForm = ({ token = {}, auth = {}, object = {} }) => {
 					advancedTextEditor={true}
 					customPlaceholder="No description"
 				/>
+				<div className="row">
+					<div className="col">
+						<label htmlFor="video_url" className="form-label">
+							Video ID
+						</label>
+						<input
+							id="video_url"
+							name="video_url"
+							defaultValue={object?.data?.files?.video_url?._id}
+							type="text"
+							className="form-control mb-3"
+							placeholder="Here goes the videoId from files page"
+						/>
+					</div>
+				</div>
 				<div className="row">
 					<div className="col">
 						<label htmlFor="free_preview" className="form-label">

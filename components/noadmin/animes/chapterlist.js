@@ -184,10 +184,10 @@ const ChapterList = ({
 						className="list-group list-group-flush"
 						style={{ maxHeight: "1000px" }}
 					>
-						{objects?.data?.map((menu) => (
+						{objects?.data?.map((chapter) => (
 							<Single
-								key={menu._id}
-								object={menu}
+								key={chapter._id}
+								object={chapter}
 								handleDraft={handleDraft}
 								handlePublish={handlePublish}
 								handleTrash={handleTrash}

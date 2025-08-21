@@ -36,7 +36,10 @@ const CreateSongForm = ({
 			duration: formData.get("duration"),
 			averageRating: formData.get("averageRating"),
 			orderingNumber: formData.get("orderingNumber"),
-			files: { avatar: formData.get("file") || undefined },
+			files: {
+				avatar: formData.get("file") || undefined,
+				audio_url: formData.get("audio_url") || undefined,
+			},
 		};
 
 		const res = await fetchurl(`/noadmin/songs`, "POST", "no-cache", {
@@ -102,6 +105,21 @@ const CreateSongForm = ({
 					advancedTextEditor={true}
 					customPlaceholder="No description"
 				/>
+				<div className="row">
+					<div className="col">
+						<label htmlFor="audio_url" className="form-label">
+							Audio ID
+						</label>
+						<input
+							id="audio_url"
+							name="audio_url"
+							defaultValue=""
+							type="text"
+							className="form-control mb-3"
+							placeholder="Here goes the audioId from files page"
+						/>
+					</div>
+				</div>
 				<div className="row">
 					<div className="col">
 						<label htmlFor="duration" className="form-label">

@@ -106,7 +106,7 @@ const Single = ({
 			</div>
 			<Waveform
 				id={object?._id}
-				src={object?.files?.avatar?.location?.secure_location}
+				src={object?.files?.audio_url?.location?.secure_location}
 				mediaTitle={object?.title}
 				mediaAuthor={object?.resourceId?.title}
 				mediaAlbum={object?.resourceId?.title}

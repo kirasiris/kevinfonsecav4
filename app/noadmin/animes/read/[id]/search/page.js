@@ -124,17 +124,7 @@ const AdminAnimeReadSearchIndex = async ({ params, searchParams }) => {
 					id={"file"}
 					name={"file"}
 					multipleFiles={false}
-					onModel="Playlist"
-					objectIpRoute={`${process.env.apiUrl}/videos`}
 					object={anime?.data}
-					objectData={{
-						resourceId: anime?.data?._id,
-						duration: "0:0",
-						status: "draft",
-						averageRating: 10,
-						onModel: "Playlist",
-					}}
-					revalidateUrl={`/noadmin/animes/read/${awtdParams.id}`}
 				/>
 				<div className="card rounded-0">
 					<ChapterList

@@ -70,7 +70,7 @@ const UseDropzone = ({
 								title: res?.data?.data?.title,
 								sub_title: res?.data?.data?.title,
 								text: "No description",
-								files: { avatar: res?.data?.data?._id },
+								files: { audio_url: res?.data?.data?._id },
 								embedding: false,
 								commented: false,
 							},

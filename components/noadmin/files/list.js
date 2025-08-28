@@ -126,6 +126,7 @@ const List = ({
 						}
 						searchParams={searchParams}
 						siblings={1}
+						isAdmin={false}
 					/>
 				</>
 			) : (

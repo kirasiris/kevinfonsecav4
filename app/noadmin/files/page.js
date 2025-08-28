@@ -1,7 +1,16 @@
 import { revalidatePath } from "next/cache";
-import { fetchurl } from "@/helpers/setTokenOnServer";
-import AdminMediaLibrary from "@/components/noadmin/adminmedialibrary";
+import {
+	fetchurl,
+	getAuthTokenOnServer,
+	getUserOnServer,
+} from "@/helpers/setTokenOnServer";
 import AdminStatusesMenu from "@/components/noadmin/adminstatusesmenu";
+import List from "@/components/noadmin/files/list";
+
+async function getFiles(params) {
+	const res = await fetchurl(`/global/files${params}`, "GET", "no-cache");
+	return res;
+}
 
 const AdminFilesIndex = async ({ params, searchParams }) => {
 	const awtdParams = await params;
@@ -9,6 +18,11 @@ const AdminFilesIndex = async ({ params, searchParams }) => {
 	const page = awtdSearchParams.page || 1;
 	const limit = (awtdSearchParams.limit = 28);
 	const sort = awtdSearchParams.sort || "-createdAt";
+
+	const token = await getAuthTokenOnServer();
+	const auth = await getUserOnServer();
+
+	const files = await getFiles(`?page=${page}&limit=${limit}&sort=${sort}`);
 
 	const handleDelete = async (id, publicId) => {
 		"use server";
@@ -52,11 +66,18 @@ const AdminFilesIndex = async ({ params, searchParams }) => {
 				categoryType=""
 			/>
 			<div className="card rounded-0">
-				<AdminMediaLibrary
-					page={page}
-					limit={limit}
-					sort={sort}
-					params={awtdParams}
+				<List
+					auth={auth}
+					token={token}
+					id="single"
+					name="single"
+					multipleFiles={true}
+					onModel="Blog"
+					allLink="/noadmin/files"
+					pageText="Files"
+					addLink="/noadmin/files/create"
+					searchOn="/noadmin/files"
+					objects={files}
 					searchParams={awtdSearchParams}
 					handleDelete={handleDelete}
 					handleDeleteAllFunction={handleDeleteAll}

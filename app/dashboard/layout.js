@@ -1,6 +1,6 @@
+import { redirect } from "next/navigation";
 import "@/src/css/admin.css";
 import AdminMenu from "@/layout/dashboard/sidebar";
-import { redirect } from "next/navigation";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 
 async function getAuthenticatedUser() {

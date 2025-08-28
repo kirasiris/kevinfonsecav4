@@ -1,6 +1,6 @@
+import { redirect } from "next/navigation";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import { stripeCurrencyFormatter } from "befree-utilities";
-import { redirect } from "next/navigation";
 
 async function getBalance() {
 	const res = await fetchurl(

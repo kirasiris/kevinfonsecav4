@@ -1,6 +1,5 @@
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
-import Link from "next/link";
 import { revalidatePath } from "next/cache";
 import Header from "@/layout/header";
 import Sidebar from "@/layout/forum/sidebar";

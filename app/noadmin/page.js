@@ -105,6 +105,7 @@ async function getThemes(params) {
 const AdminHome = async ({ params, searchParams }) => {
 	const blogsData = getBlogs(`?postType=blog`);
 	const themesData = getThemes(`?postType=theme`);
+
 	// const postsData = getPosts(`?page=1`);
 	// const playlistsData = getPlaylists(`?page=1`);
 	// const coursesData = getCourses(`?page=1`);

@@ -7,6 +7,7 @@ import Globalcontent from "@/layout/content";
 import Loading from "@/app/blog/loading";
 import ParseHtml from "@/layout/parseHtml";
 import Single from "@/components/profile/single";
+import ActivityChart from "@/components/auth/activitychart";
 
 async function getAuthenticatedUser() {
 	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
@@ -26,7 +27,7 @@ const AuthIndex = async ({ params, searchParams }) => {
 				<div className="row">
 					<Sidebar />
 					<Globalcontent>
-						<div className="card">
+						<div className="card mb-4">
 							<div className="card-header">
 								Welcome&nbsp;back,&nbsp;{auth.data.username}
 							</div>
@@ -112,7 +113,7 @@ const AuthIndex = async ({ params, searchParams }) => {
 											</li>
 										</ul>
 									</div>
-									<div className="col-12 mb-4">
+									<div className="col-12">
 										<ul className="list-group list-group-flush">
 											<li className="list-group-item text-bg-secondary">
 												<Link href={`/auth/editabout`}>ABOUT</Link>

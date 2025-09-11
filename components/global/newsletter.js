@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { fetchurl } from "@/helpers/setTokenOnServer";
+import { toast } from "react-toastify";
 
 const NewsletterForm = ({
 	sectionClassList = `py-5`,
@@ -21,36 +22,49 @@ const NewsletterForm = ({
 		fetchNewsletters(``);
 	}, []);
 
-	const [newsletterData, setNewsletterData] = useState({
-		name: ``,
-		email: ``,
-	});
-
-	const { name, email } = newsletterData;
-
 	const [emailBtnTxt, setEmailBtnTxt] = useState("Subscribe Now");
 
 	const subscribeToNewsletter = async (e) => {
 		e.preventDefault();
-		try {
-			setEmailBtnTxt("...");
-			await fetchurl(`/global/newslettersubscribers`, "POST", "no-cache", {
-				...newsletterData,
+		setEmailBtnTxt("...");
+
+		const form = e.target;
+		const formData = new FormData(form);
+
+		const rawFormData = {
+			name: formData.get("name"),
+			email: formData.get("email"),
+		};
+
+		const res = await fetchurl(
+			`/global/newslettersubscribers`,
+			"POST",
+			"no-cache",
+			{
+				...rawFormData,
 				website: process.env.NEXT_PUBLIC_NO_REPLY_EMAIL, // Needed for DB mass email functionality
-			});
-			await fetchNewsletters(``);
-			setEmailBtnTxt(emailBtnTxt);
-			resetForm();
-		} catch (err) {
-			console.log(err);
+			}
+		);
+
+		if (res.status === "error") {
+			toast.error(res.message, "bottom");
+			setEmailBtnTxt("Submit");
+			return;
 		}
+
+		if (res.status === "fail") {
+			toast.error(res.message, "bottom");
+			setEmailBtnTxt("Submit");
+			return;
+		}
+
+		await fetchNewsletters(``);
+		setEmailBtnTxt(emailBtnTxt);
+		resetForm();
 	};
 
 	const resetForm = () => {
-		setNewsletterData({
-			name: "",
-			email: "",
-		});
+		e.target.closest("form").reset();
 	};
 
 	return (
@@ -70,37 +84,23 @@ const NewsletterForm = ({
 						<input
 							id="name"
 							name="name"
-							value={name}
-							onChange={(e) => {
-								setNewsletterData({
-									...newsletterData,
-									name: e.target.value,
-								});
-							}}
 							type="text"
 							className="form-control rounded-0"
 							placeholder="Enter your name"
+							required
+							defaultValue=""
 						/>
 						<input
 							id="email"
 							name="email"
-							value={email}
-							onChange={(e) => {
-								setNewsletterData({
-									...newsletterData,
-									email: e.target.value,
-								});
-							}}
 							type="email"
 							className="form-control rounded-0"
 							placeholder="Enter your email"
+							required
+							defaultValue=""
 						/>
 						<span className="input-group-btn">
-							<button
-								className="btn btn-secondary rounded-0"
-								type="submit"
-								disabled={name.length > 0 && email.length > 0 ? !true : !false}
-							>
+							<button className="btn btn-secondary rounded-0" type="submit">
 								{emailBtnTxt}
 							</button>
 						</span>

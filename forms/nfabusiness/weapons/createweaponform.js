@@ -40,7 +40,7 @@ const CreateWeaponForm = ({ token = "", auth = {} }) => {
 		});
 	};
 
-	const createWeapon = async (e) => {
+	const addWeapon = async (e) => {
 		e.preventDefault();
 		setBtnText(`Processing...`);
 		const form = e.target;
@@ -82,7 +82,7 @@ const CreateWeaponForm = ({ token = "", auth = {} }) => {
 	};
 
 	return (
-		<form className="row" onSubmit={createWeapon}>
+		<form className="row" onSubmit={addWeapon}>
 			<div className="col">
 				<div className="row">
 					<div className="col">

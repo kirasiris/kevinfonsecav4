@@ -24,6 +24,22 @@ const NFAMenu = () => {
 						Acquisition and Disposals
 					</Link>
 				</li>
+				<li className={`list-group-item ${isActive(`/nfabusiness/courses`)}`}>
+					<Link href={"/nfabusiness/courses"}>Courses</Link>
+				</li>
+				<li
+					className={`list-group-item ${isActive(`/nfabusiness/memberships`)}`}
+				>
+					<Link href={"/nfabusiness/memberships"}>Memberships</Link>
+				</li>
+				<li className={`list-group-item ${isActive(`/nfabusiness/products`)}`}>
+					<Link href={"/nfabusiness/products"}>Products</Link>
+				</li>
+				<li
+					className={`list-group-item ${isActive(`/nfabusiness/realstates`)}`}
+				>
+					<Link href={"/nfabusiness/realstates"}>Real State</Link>
+				</li>
 				<li className={`list-group-item ${isActive(`/nfabusiness/reviews`)}`}>
 					<Link href={"/nfabusiness/reviews"}>Service Reviews</Link>
 				</li>

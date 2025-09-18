@@ -39,9 +39,6 @@ const AdminMenu = () => {
 				<li className={`list-group-item ${isActive(`/noadmin/contactemails`)}`}>
 					<Link href={"/noadmin/contactemails"}>Contact Emails</Link>
 				</li>
-				<li className={`list-group-item ${isActive(`/noadmin/courses`)}`}>
-					<Link href={"/noadmin/courses"}>Courses</Link>
-				</li>
 				<li className={`list-group-item ${isActive(`/noadmin/events`)}`}>
 					<Link href={"/noadmin/events"}>Events</Link>
 				</li>
@@ -53,9 +50,6 @@ const AdminMenu = () => {
 				</li>
 				<li className={`list-group-item ${isActive(`/noadmin/logs`)}`}>
 					<Link href={"/noadmin/logs"}>Logs</Link>
-				</li>
-				<li className={`list-group-item ${isActive(`/noadmin/memberships`)}`}>
-					<Link href={"/noadmin/memberships"}>Memberships</Link>
 				</li>
 				<li className={`list-group-item ${isActive(`/noadmin/menus`)}`}>
 					<Link href={"/noadmin/menus"}>Menus</Link>
@@ -91,9 +85,6 @@ const AdminMenu = () => {
 				</li>
 				<li className={`list-group-item ${isActive(`/noadmin/quotes`)}`}>
 					<Link href={"/noadmin/quotes"}>Quotes</Link>
-				</li>
-				<li className={`list-group-item ${isActive(`/noadmin/realstates`)}`}>
-					<Link href={"/noadmin/realstates"}>Real State</Link>
 				</li>
 				<li className={`list-group-item ${isActive(`/noadmin/reports`)}`}>
 					<Link href={"/noadmin/reports"}>Reports</Link>

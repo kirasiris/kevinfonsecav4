@@ -5,12 +5,12 @@ import { useRouter } from "next/navigation";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import MyTextArea from "@/components/global/myfinaltextarea";
 
-const CreateAcquisitionDisposalForm = ({ token = "", auth = {} }) => {
+const UpdateProductForm = ({ object = {}, token = "", auth = {} }) => {
 	const router = useRouter();
 
 	const [btnText, setBtnText] = useState("Submit");
 
-	const addAcquisitionDisposal = async (e) => {
+	const upgradeProduct = async (e) => {
 		e.preventDefault();
 		setBtnText(`Processing...`);
 		const form = e.target;
@@ -54,7 +54,7 @@ const CreateAcquisitionDisposalForm = ({ token = "", auth = {} }) => {
 	};
 
 	return (
-		<form className="row" onSubmit={addAcquisitionDisposal}>
+		<form className="row" onSubmit={upgradeProduct}>
 			<div className="col-lg-6">
 				<h6 className="display-6">Description</h6>
 				<label htmlFor="manufacturer" className="form-label">
@@ -216,4 +216,4 @@ const CreateAcquisitionDisposalForm = ({ token = "", auth = {} }) => {
 	);
 };
 
-export default CreateAcquisitionDisposalForm;
+export default UpdateProductForm;

@@ -57,11 +57,11 @@ const RecoverForm = () => {
 			<input
 				id="email"
 				name="email"
+				defaultValue=""
 				type="email"
 				className="form-control mb-3"
 				required
 				placeholder="john@doe.com"
-				defaultValue=""
 			/>
 			<button type="submit" className="btn btn-secondary btn-sm float-start">
 				{btnText}

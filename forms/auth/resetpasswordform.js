@@ -71,11 +71,11 @@ const ResetPasswordForm = () => {
 			<input
 				id="password"
 				name="password"
+				defaultValue=""
 				type="password"
 				className="form-control mb-3"
 				required
 				placeholder="******"
-				defaultValue=""
 			/>
 			<label htmlFor="password2" className="form-label">
 				Confirm Password
@@ -83,11 +83,11 @@ const ResetPasswordForm = () => {
 			<input
 				id="password2"
 				name="password2"
+				defaultValue=""
 				type="password"
 				className="form-control mb-3"
 				required
 				placeholder="******"
-				defaultValue=""
 			/>
 			<button type="submit" className="btn btn-secondary btn-sm float-start">
 				{btnText}

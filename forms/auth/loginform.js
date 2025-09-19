@@ -91,11 +91,11 @@ const LoginForm = () => {
 			<input
 				id="email"
 				name="email"
+				defaultValue=""
 				type="email"
 				className="form-control mb-3"
 				required
 				placeholder="john@doe.com"
-				defaultValue=""
 			/>
 			<label htmlFor="password" className="form-label">
 				Password
@@ -103,10 +103,10 @@ const LoginForm = () => {
 			<input
 				id="password"
 				name="password"
+				defaultValue=""
 				type="password"
 				className="form-control mb-3"
 				placeholder="******"
-				defaultValue=""
 			/>
 			<button type="submit" className="btn btn-secondary btn-sm float-start">
 				{btnText}

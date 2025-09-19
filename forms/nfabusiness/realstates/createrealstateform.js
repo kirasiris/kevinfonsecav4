@@ -54,7 +54,7 @@ const CreateRealStateForm = ({ token = {}, auth = {} }) => {
 			return;
 		}
 		toast.success(`Real State created`, "bottom");
-		router.push(`/noadmin/realstates`);
+		router.push(`/nfabusiness/realstates`);
 	};
 
 	const resetForm = (e) => {
@@ -99,8 +99,8 @@ const CreateRealStateForm = ({ token = {}, auth = {} }) => {
 							defaultValue={0}
 							type="number"
 							className="form-control mb-3"
-							placeholder="18"
 							min={0}
+							placeholder="18"
 						/>
 					</div>
 					<div className="col">
@@ -113,8 +113,8 @@ const CreateRealStateForm = ({ token = {}, auth = {} }) => {
 							defaultValue={0}
 							type="number"
 							className="form-control mb-3"
-							placeholder="18"
 							min={0}
+							placeholder="18"
 						/>
 					</div>
 					<div className="col">
@@ -127,8 +127,8 @@ const CreateRealStateForm = ({ token = {}, auth = {} }) => {
 							defaultValue={0}
 							type="number"
 							className="form-control mb-3"
-							placeholder="18"
 							min={0}
+							placeholder="18"
 						/>
 					</div>
 				</div>
@@ -154,7 +154,7 @@ const CreateRealStateForm = ({ token = {}, auth = {} }) => {
 							id="isSold"
 							name="isSold"
 							defaultValue={false}
-							className="form-control"
+							className="form-control mb-3"
 						>
 							<option value={true}>Yes</option>
 							<option value={false}>No</option>
@@ -172,8 +172,8 @@ const CreateRealStateForm = ({ token = {}, auth = {} }) => {
 							defaultValue={1}
 							type="number"
 							className="form-control mb-3"
-							placeholder="18"
 							min={1}
+							placeholder="18"
 						/>
 					</div>
 					<div className="col">
@@ -186,8 +186,8 @@ const CreateRealStateForm = ({ token = {}, auth = {} }) => {
 							defaultValue={1}
 							type="number"
 							className="form-control mb-3"
-							placeholder="18"
 							min={1}
+							placeholder="18"
 						/>
 					</div>
 					<div className="col">
@@ -200,8 +200,8 @@ const CreateRealStateForm = ({ token = {}, auth = {} }) => {
 							defaultValue={1}
 							type="number"
 							className="form-control mb-3"
-							placeholder="18"
 							min={1}
+							placeholder="18"
 						/>
 					</div>
 				</div>
@@ -214,7 +214,7 @@ const CreateRealStateForm = ({ token = {}, auth = {} }) => {
 							id="businessType"
 							name="businessType"
 							defaultValue="sale"
-							className="form-control"
+							className="form-control mb-3"
 							multiple
 						>
 							<option value={`sale`}>Sale</option>
@@ -229,7 +229,7 @@ const CreateRealStateForm = ({ token = {}, auth = {} }) => {
 							id="type"
 							name="type"
 							defaultValue="house"
-							className="form-control"
+							className="form-control mb-3"
 						>
 							<option value={`apartment`}>Apartment</option>
 							<option value={`studio`}>Studio</option>
@@ -251,8 +251,8 @@ const CreateRealStateForm = ({ token = {}, auth = {} }) => {
 								id="wifi"
 								name="amenities"
 								defaultValue="wifi"
-								className="form-check-input"
 								type="checkbox"
+								className="form-check-input"
 							/>
 							<label htmlFor="wifi" className="form-check-label">
 								Wi-Fi
@@ -263,8 +263,8 @@ const CreateRealStateForm = ({ token = {}, auth = {} }) => {
 								id="free-parking"
 								name="amenities"
 								defaultValue="free-parking"
-								className="form-check-input"
 								type="checkbox"
+								className="form-check-input"
 							/>
 							<label htmlFor="free-parking" className="form-check-label">
 								Free Parking
@@ -275,8 +275,8 @@ const CreateRealStateForm = ({ token = {}, auth = {} }) => {
 								id="elevator-access"
 								name="amenities"
 								defaultValue="elevator-access"
-								className="form-check-input"
 								type="checkbox"
+								className="form-check-input"
 							/>
 							<label htmlFor="elevator-access" className="form-check-label">
 								Elevator Access
@@ -287,8 +287,8 @@ const CreateRealStateForm = ({ token = {}, auth = {} }) => {
 								id="air-conditioning"
 								name="amenities"
 								defaultValue="air-conditioning"
-								className="form-check-input"
 								type="checkbox"
+								className="form-check-input"
 							/>
 							<label htmlFor="air-conditioning" className="form-check-label">
 								Air Conditioning
@@ -299,8 +299,8 @@ const CreateRealStateForm = ({ token = {}, auth = {} }) => {
 								id="coffee-maker"
 								name="amenities"
 								defaultValue="coffee-maker"
-								className="form-check-input"
 								type="checkbox"
+								className="form-check-input"
 							/>
 							<label htmlFor="coffee-maker" className="form-check-label">
 								Coffee Maker
@@ -313,8 +313,8 @@ const CreateRealStateForm = ({ token = {}, auth = {} }) => {
 								id="full-kitchen"
 								name="amenities"
 								defaultValue="full-kitchen"
-								className="form-check-input"
 								type="checkbox"
+								className="form-check-input"
 							/>
 							<label htmlFor="full-kitchen" className="form-check-label">
 								Full Kitchen
@@ -325,8 +325,8 @@ const CreateRealStateForm = ({ token = {}, auth = {} }) => {
 								id="swimming-pool"
 								name="amenities"
 								defaultValue="swimming-pool"
-								className="form-check-input"
 								type="checkbox"
+								className="form-check-input"
 							/>
 							<label htmlFor="swimming-pool" className="form-check-label">
 								Swimming Pool
@@ -337,8 +337,8 @@ const CreateRealStateForm = ({ token = {}, auth = {} }) => {
 								id="dish-washer"
 								name="amenities"
 								defaultValue="dish-washer"
-								className="form-check-input"
 								type="checkbox"
+								className="form-check-input"
 							/>
 							<label htmlFor="dish-washer" className="form-check-label">
 								Dish Washer
@@ -349,8 +349,8 @@ const CreateRealStateForm = ({ token = {}, auth = {} }) => {
 								id="balcony-patio"
 								name="amenities"
 								defaultValue="balcony-patio"
-								className="form-check-input"
 								type="checkbox"
+								className="form-check-input"
 							/>
 							<label htmlFor="balcony-patio" className="form-check-label">
 								Balcony / Patio
@@ -361,8 +361,8 @@ const CreateRealStateForm = ({ token = {}, auth = {} }) => {
 								id="laundry-room"
 								name="amenities"
 								defaultValue="laundry-room"
-								className="form-check-input"
 								type="checkbox"
+								className="form-check-input"
 							/>
 							<label htmlFor="laundry-room" className="form-check-label">
 								Laundry Room
@@ -375,8 +375,8 @@ const CreateRealStateForm = ({ token = {}, auth = {} }) => {
 								id="24-7-security"
 								name="amenities"
 								defaultValue="24-7-security"
-								className="form-check-input"
 								type="checkbox"
+								className="form-check-input"
 							/>
 							<label htmlFor="24-7-security" className="form-check-label">
 								24/7 Security
@@ -387,8 +387,8 @@ const CreateRealStateForm = ({ token = {}, auth = {} }) => {
 								id="gym-fitness-center"
 								name="amenities"
 								defaultValue="gym-fitness-center"
-								className="form-check-input"
 								type="checkbox"
+								className="form-check-input"
 							/>
 							<label htmlFor="gym-fitness-center" className="form-check-label">
 								Gym / Fitness Center
@@ -399,8 +399,8 @@ const CreateRealStateForm = ({ token = {}, auth = {} }) => {
 								id="smart-tv"
 								name="amenities"
 								defaultValue="smart-tv"
-								className="form-check-input"
 								type="checkbox"
+								className="form-check-input"
 							/>
 							<label htmlFor="smart-tv" className="form-check-label">
 								Smart TV
@@ -411,8 +411,8 @@ const CreateRealStateForm = ({ token = {}, auth = {} }) => {
 								id="wheelchair-accessible"
 								name="amenities"
 								defaultValue="wheelchair-accessible"
-								className="form-check-input"
 								type="checkbox"
+								className="form-check-input"
 							/>
 							<label
 								htmlFor="wheelchair-accessible"
@@ -426,8 +426,8 @@ const CreateRealStateForm = ({ token = {}, auth = {} }) => {
 								id="hot-tub"
 								name="amenities"
 								defaultValue="hot-tub"
-								className="form-check-input"
 								type="checkbox"
+								className="form-check-input"
 							/>
 							<label htmlFor="hot-tub" className="form-check-label">
 								Hot Tub

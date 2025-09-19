@@ -63,11 +63,11 @@ const CreateAcquisitionDisposalForm = ({ token = "", auth = {} }) => {
 				<input
 					id="manufacturer"
 					name="manufacturer"
+					defaultValue=""
 					type="text"
 					className="form-control mb-3"
 					required
 					placeholder="Ruger"
-					defaultValue=""
 				/>
 				<label htmlFor="title" className="form-label">
 					Model
@@ -75,11 +75,11 @@ const CreateAcquisitionDisposalForm = ({ token = "", auth = {} }) => {
 				<input
 					id="title"
 					name="title"
+					defaultValue=""
 					type="text"
 					className="form-control mb-3"
 					required
 					placeholder="M4A1"
-					defaultValue=""
 				/>
 				<label htmlFor="type" className="form-label">
 					Type
@@ -87,9 +87,9 @@ const CreateAcquisitionDisposalForm = ({ token = "", auth = {} }) => {
 				<select
 					id="type"
 					name="type"
+					defaultValue=""
 					className="form-control mb-3"
 					required
-					defaultValue=""
 				>
 					<option value="none">Choose an option</option>
 					<option value="rifle">Rifle</option>
@@ -108,11 +108,11 @@ const CreateAcquisitionDisposalForm = ({ token = "", auth = {} }) => {
 				<input
 					id="caliber"
 					name="caliber"
+					defaultValue=""
 					type="text"
 					className="form-control mb-3"
 					required
 					placeholder="5.56x45mm NATO"
-					defaultValue=""
 				/>
 				<label htmlFor="serialNumber" className="form-label">
 					Serial Number
@@ -120,10 +120,10 @@ const CreateAcquisitionDisposalForm = ({ token = "", auth = {} }) => {
 				<input
 					id="serialNumber"
 					name="serialNumber"
+					defaultValue=""
 					type="text"
 					className="form-control mb-3"
 					placeholder="COL123456"
-					defaultValue=""
 				/>
 			</div>
 			<div className="col-lg-6">
@@ -134,11 +134,11 @@ const CreateAcquisitionDisposalForm = ({ token = "", auth = {} }) => {
 				<input
 					id="fromWhomReceived"
 					name="fromWhomReceived"
+					defaultValue=""
 					type="text"
-					className="form-control"
+					className="form-control mb-3"
 					required
 					placeholder="Shootsmart"
-					defaultValue=""
 				/>
 				<small className="mb-3">
 					Name and Address or Name and License Number "FFL"
@@ -150,11 +150,11 @@ const CreateAcquisitionDisposalForm = ({ token = "", auth = {} }) => {
 				<input
 					id="name"
 					name="name"
+					defaultValue=""
 					type="text"
 					className="form-control mb-3"
 					required
 					placeholder="John Doe"
-					defaultValue=""
 				/>
 				<label htmlFor="address" className="form-label">
 					Address
@@ -162,11 +162,11 @@ const CreateAcquisitionDisposalForm = ({ token = "", auth = {} }) => {
 				<input
 					id="address"
 					name="address"
+					defaultValue=""
 					type="text"
-					className="form-control"
+					className="form-control mb-3"
 					required
 					placeholder=""
-					defaultValue=""
 				/>
 				<small className="mb-3">
 					Or Form 4473 Serial Number if Forms 4473 Filed Numerically
@@ -192,9 +192,9 @@ const CreateAcquisitionDisposalForm = ({ token = "", auth = {} }) => {
 				<select
 					id="status"
 					name="status"
+					defaultValue=""
 					className="form-control mb-3"
 					required
-					defaultValue=""
 				>
 					<option value={`draft`}>Draft</option>
 					<option value={`published`}>Published</option>

@@ -98,7 +98,7 @@ const UpdateJobForm = ({ token = {}, auth = {}, object = {} }) => {
 							id="positionFilled"
 							name="positionFilled"
 							defaultValue={object?.data?.positionFilled.toString()}
-							className="form-control"
+							className="form-control mb-3"
 						>
 							<option value={true}>Yes</option>
 							<option value={false}>No</option>
@@ -123,7 +123,7 @@ const UpdateJobForm = ({ token = {}, auth = {}, object = {} }) => {
 							id="experience_level"
 							name="experience_level"
 							defaultValue={object?.data?.experience_level}
-							className="form-control"
+							className="form-control mb-3"
 							multiple
 						>
 							<option value={"graduate"}>Graduate</option>
@@ -138,7 +138,7 @@ const UpdateJobForm = ({ token = {}, auth = {}, object = {} }) => {
 							id="job_type"
 							name="job_type"
 							defaultValue={object?.data?.job_type}
-							className="form-control"
+							className="form-control mb-3"
 							multiple
 						>
 							<option value={"full-time"}>Full Time</option>
@@ -156,7 +156,7 @@ const UpdateJobForm = ({ token = {}, auth = {}, object = {} }) => {
 							id="provides_training"
 							name="provides_training"
 							defaultValue={object?.data?.provides_training.toString()}
-							className="form-control"
+							className="form-control mb-3"
 						>
 							<option value={true}>Yes</option>
 							<option value={false}>No</option>
@@ -168,7 +168,7 @@ const UpdateJobForm = ({ token = {}, auth = {}, object = {} }) => {
 							id="security_clearance"
 							name="security_clearance"
 							defaultValue={object?.data?.security_clearance.toString()}
-							className="form-control"
+							className="form-control mb-3"
 						>
 							<option value={true}>Yes</option>
 							<option value={false}>No</option>
@@ -195,7 +195,7 @@ const UpdateJobForm = ({ token = {}, auth = {}, object = {} }) => {
 							id="remote"
 							name="remote"
 							defaultValue={object?.data?.remote}
-							className="form-control"
+							className="form-control mb-3"
 							multiple
 						>
 							<option value={`hybrid`}>Hybrid</option>
@@ -210,7 +210,7 @@ const UpdateJobForm = ({ token = {}, auth = {}, object = {} }) => {
 							id="shift_and_schedule"
 							name="shift_and_schedule"
 							defaultValue={object?.data?.shift_and_schedule}
-							className="form-control"
+							className="form-control mb-3"
 							multiple
 						>
 							<option value={`hybrid`}>Hybrid</option>
@@ -236,7 +236,7 @@ const UpdateJobForm = ({ token = {}, auth = {}, object = {} }) => {
 							id="encouraged_to_apply"
 							name="encouraged_to_apply"
 							defaultValue={object?.data?.encouraged_to_apply}
-							className="form-control"
+							className="form-control mb-3"
 						>
 							<option value={`fair-chance`}>Fair Chance</option>
 							<option value={`no-highschool-diploma`}>
@@ -257,9 +257,9 @@ const UpdateJobForm = ({ token = {}, auth = {}, object = {} }) => {
 					avatarFormat={"image"}
 					status={object?.data?.status}
 					fullWidth={false}
-					password={object?.data?.password}
-					featured={object?.data?.featured}
-					commented={object?.data?.commented}
+					password=""
+					featured={object?.data?.featured.toString()}
+					commented={object?.data?.commented.toString()}
 					embedding={false}
 					github_readme={""}
 					category={undefined}

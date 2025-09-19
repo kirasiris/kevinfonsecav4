@@ -67,11 +67,11 @@ const UpdateAcquisitionDisposalForm = ({
 				<input
 					id="manufacturer"
 					name="manufacturer"
+					defaultValue={object?.data?.manufacturer}
 					type="text"
 					className="form-control mb-3"
 					required
 					placeholder="Ruger"
-					defaultValue={object?.data?.manufacturer}
 				/>
 				<label htmlFor="title" className="form-label">
 					Model
@@ -79,11 +79,11 @@ const UpdateAcquisitionDisposalForm = ({
 				<input
 					id="title"
 					name="title"
+					defaultValue={object?.data?.title}
 					type="text"
 					className="form-control mb-3"
 					required
 					placeholder="M4A1"
-					defaultValue={object?.data?.title}
 				/>
 				<label htmlFor="type" className="form-label">
 					Type
@@ -91,9 +91,9 @@ const UpdateAcquisitionDisposalForm = ({
 				<select
 					id="type"
 					name="type"
+					defaultValue={object?.data?.type}
 					className="form-control mb-3"
 					required
-					defaultValue={object?.data?.type}
 				>
 					<option value="none">Choose an option</option>
 					<option value="rifle">Rifle</option>
@@ -112,11 +112,11 @@ const UpdateAcquisitionDisposalForm = ({
 				<input
 					id="caliber"
 					name="caliber"
+					defaultValue={object?.data?.caliber}
 					type="text"
 					className="form-control mb-3"
 					required
 					placeholder="5.56x45mm NATO"
-					defaultValue={object?.data?.caliber}
 				/>
 				<label htmlFor="serialNumber" className="form-label">
 					Serial Number
@@ -124,10 +124,10 @@ const UpdateAcquisitionDisposalForm = ({
 				<input
 					id="serialNumber"
 					name="serialNumber"
+					defaultValue={object?.data?.serialNumber}
 					type="text"
 					className="form-control mb-3"
 					placeholder="COL123456"
-					defaultValue={object?.data?.serialNumber}
 				/>
 			</div>
 			<div className="col-lg-6">
@@ -138,11 +138,11 @@ const UpdateAcquisitionDisposalForm = ({
 				<input
 					id="fromWhomReceived"
 					name="fromWhomReceived"
+					defaultValue={object?.data?.fromWhomReceived}
 					type="text"
 					className="form-control"
 					required
 					placeholder="Shootsmart"
-					defaultValue={object?.data?.fromWhomReceived}
 				/>
 				<small className="mb-3">
 					Name and Address or Name and License Number "FFL"
@@ -154,11 +154,11 @@ const UpdateAcquisitionDisposalForm = ({
 				<input
 					id="name"
 					name="name"
+					defaultValue={object?.data?.name}
 					type="text"
 					className="form-control mb-3"
 					required
 					placeholder="John Doe"
-					defaultValue={object?.data?.name}
 				/>
 				<label htmlFor="address" className="form-label">
 					Address
@@ -166,11 +166,11 @@ const UpdateAcquisitionDisposalForm = ({
 				<input
 					id="address"
 					name="address"
+					defaultValue={object?.data?.address}
 					type="text"
 					className="form-control"
 					required
 					placeholder=""
-					defaultValue={object?.data?.address}
 				/>
 				<small className="mb-3">
 					Or Form 4473 Serial Number if Forms 4473 Filed Numerically
@@ -196,9 +196,9 @@ const UpdateAcquisitionDisposalForm = ({
 				<select
 					id="status"
 					name="status"
+					defaultValue={object?.data?.status}
 					className="form-control mb-3"
 					required
-					defaultValue={object?.data?.status}
 				>
 					<option value={`draft`}>Draft</option>
 					<option value={`published`}>Published</option>

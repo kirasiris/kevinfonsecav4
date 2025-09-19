@@ -8,7 +8,7 @@ async function getRealStates(params) {
 	return res;
 }
 
-const AdminRealStatesSearchIndex = async ({ params, searchParams }) => {
+const NFARealStatesSearchIndex = async ({ params, searchParams }) => {
 	const awtdParams = await params;
 	const awtdSearchParams = await searchParams;
 	const keyword = awtdSearchParams.keyword || "";
@@ -25,7 +25,7 @@ const AdminRealStatesSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/realstates/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/realstates/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/realstates/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -34,7 +34,7 @@ const AdminRealStatesSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/realstates/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/realstates/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/realstates/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -43,7 +43,7 @@ const AdminRealStatesSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/realstates/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/realstates/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/realstates/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -52,7 +52,7 @@ const AdminRealStatesSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/realstates/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/realstates/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/realstates/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -65,7 +65,7 @@ const AdminRealStatesSearchIndex = async ({ params, searchParams }) => {
 			"no-cache"
 		);
 		revalidatePath(
-			`/noadmin/realstates/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/realstates/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -74,7 +74,7 @@ const AdminRealStatesSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/realstates/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/realstates/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/realstates/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -87,27 +87,27 @@ const AdminRealStatesSearchIndex = async ({ params, searchParams }) => {
 			"no-cache"
 		);
 		revalidatePath(
-			`/noadmin/realstates/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/realstates/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
 	return (
 		<>
 			<AdminStatusesMenu
-				allLink="/noadmin/realstates"
-				publishedLink="/noadmin/realstates/published"
-				draftLink="/noadmin/realstates/draft"
-				scheduledLink="/noadmin/realstates/scheduled"
-				trashedLink="/noadmin/realstates/trashed"
+				allLink="/nfabusiness/realstates"
+				publishedLink="/nfabusiness/realstates/published"
+				draftLink="/nfabusiness/realstates/draft"
+				scheduledLink="/nfabusiness/realstates/scheduled"
+				trashedLink="/nfabusiness/realstates/trashed"
 				categoriesLink=""
 				categoryType=""
 			/>
 			<div className="card rounded-0">
 				<List
-					allLink="/noadmin/realstates"
+					allLink="/nfabusiness/realstates"
 					pageText="Real States"
-					addLink="/noadmin/realstates/create"
-					searchOn="/noadmin/realstates"
+					addLink="/nfabusiness/realstates/create"
+					searchOn="/nfabusiness/realstates"
 					searchedKeyword={keyword}
 					objects={realstates}
 					searchParams={awtdSearchParams}
@@ -124,4 +124,4 @@ const AdminRealStatesSearchIndex = async ({ params, searchParams }) => {
 	);
 };
 
-export default AdminRealStatesSearchIndex;
+export default NFARealStatesSearchIndex;

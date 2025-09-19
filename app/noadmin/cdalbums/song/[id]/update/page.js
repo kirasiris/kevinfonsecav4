@@ -20,14 +20,7 @@ const UpdateSong = async ({ params, searchParams }) => {
 
 	const song = await getSong(`/${awtdParams.id}`);
 
-	return (
-		<UpdateSongForm
-			token={token}
-			auth={auth}
-			object={song}
-			params={awtdParams}
-		/>
-	);
+	return <UpdateSongForm token={token} auth={auth} object={song} />;
 };
 
 export default UpdateSong;

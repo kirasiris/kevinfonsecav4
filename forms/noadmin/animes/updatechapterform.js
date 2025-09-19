@@ -7,12 +7,7 @@ import AdminSidebar from "@/components/noadmin/myfinaladminsidebar";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
 
-const UpdateChapterForm = ({
-	token = {},
-	auth = {},
-	object = {},
-	params = {},
-}) => {
+const UpdateChapterForm = ({ token = {}, auth = {}, object = {} }) => {
 	const router = useRouter();
 
 	const [btnText, setBtnText] = useState(`Submit`);
@@ -60,7 +55,7 @@ const UpdateChapterForm = ({
 		};
 
 		const res = await fetchurl(
-			`/noadmin/videos/${params.id}`,
+			`/noadmin/videos/${object?.data._id}`,
 			"PUT",
 			"no-cache",
 			rawFormData

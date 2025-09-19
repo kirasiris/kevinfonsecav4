@@ -2,7 +2,7 @@
 import Link from "next/link";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import DeleteModal from "@/components/global/deletemodal";
-import PreviewModal from "@/components/noadmin/courses/lessonpreviewmodal";
+import PreviewModal from "@/components/nfabusiness/courses/lessonpreviewmodal";
 
 const Single = ({
 	object = {},

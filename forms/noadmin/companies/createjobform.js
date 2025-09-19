@@ -96,7 +96,7 @@ const CreateJobForm = ({ token = {}, auth = {}, params = {} }) => {
 							id="positionFilled"
 							name="positionFilled"
 							defaultValue={false}
-							className="form-control"
+							className="form-control mb-3"
 						>
 							<option value={true}>Yes</option>
 							<option value={false}>No</option>
@@ -121,7 +121,7 @@ const CreateJobForm = ({ token = {}, auth = {}, params = {} }) => {
 							id="experience_level"
 							name="experience_level"
 							defaultValue="entry"
-							className="form-control"
+							className="form-control mb-3"
 							multiple
 						>
 							<option value={"graduate"}>Graduate</option>
@@ -136,7 +136,7 @@ const CreateJobForm = ({ token = {}, auth = {}, params = {} }) => {
 							id="job_type"
 							name="job_type"
 							defaultValue="full-time"
-							className="form-control"
+							className="form-control mb-3"
 							multiple
 						>
 							<option value={"full-time"}>Full Time</option>
@@ -154,7 +154,7 @@ const CreateJobForm = ({ token = {}, auth = {}, params = {} }) => {
 							id="provides_training"
 							name="provides_training"
 							defaultValue={true}
-							className="form-control"
+							className="form-control mb-3"
 						>
 							<option value={true}>Yes</option>
 							<option value={false}>No</option>
@@ -166,7 +166,7 @@ const CreateJobForm = ({ token = {}, auth = {}, params = {} }) => {
 							id="security_clearance"
 							name="security_clearance"
 							defaultValue={false}
-							className="form-control"
+							className="form-control mb-3"
 						>
 							<option value={true}>Yes</option>
 							<option value={false}>No</option>
@@ -193,7 +193,7 @@ const CreateJobForm = ({ token = {}, auth = {}, params = {} }) => {
 							id="remote"
 							name="remote"
 							defaultValue="remote"
-							className="form-control"
+							className="form-control mb-3"
 							multiple
 						>
 							<option value={`hybrid`}>Hybrid</option>
@@ -208,7 +208,7 @@ const CreateJobForm = ({ token = {}, auth = {}, params = {} }) => {
 							id="shift_and_schedule"
 							name="shift_and_schedule"
 							defaultValue="monday-to-friday"
-							className="form-control"
+							className="form-control mb-3"
 							multiple
 						>
 							<option value={`hybrid`}>Hybrid</option>
@@ -234,7 +234,7 @@ const CreateJobForm = ({ token = {}, auth = {}, params = {} }) => {
 							id="encouraged_to_apply"
 							name="encouraged_to_apply"
 							defaultValue="fair-chance"
-							className="form-control"
+							className="form-control mb-3"
 						>
 							<option value={`fair-chance`}>Fair Chance</option>
 							<option value={`no-highschool-diploma`}>

@@ -63,8 +63,6 @@ const UpdateAboutForm = ({ auth = {}, profiles = [] }) => {
 		e.target.closest("form").reset();
 	};
 
-	console.log("auth", auth.data);
-
 	return (
 		<form onSubmit={upgradeAbout}>
 			<label htmlFor="name" className="form-label">
@@ -73,11 +71,11 @@ const UpdateAboutForm = ({ auth = {}, profiles = [] }) => {
 			<input
 				id="name"
 				name="name"
+				defaultValue={auth?.data?.name}
 				type="text"
 				className="form-control mb-3"
 				required
 				placeholder="John Doe"
-				defaultValue={auth?.data?.name}
 			/>
 			<label htmlFor="sex" className="form-label">
 				Sex
@@ -85,10 +83,10 @@ const UpdateAboutForm = ({ auth = {}, profiles = [] }) => {
 			<input
 				id="sex"
 				name="sex"
+				defaultValue={auth?.data?.sex}
 				type="text"
 				className="form-control mb-3"
 				placeholder="male"
-				defaultValue={auth?.data?.sex}
 			/>
 			<label htmlFor="gender" className="form-label">
 				Gender
@@ -96,8 +94,8 @@ const UpdateAboutForm = ({ auth = {}, profiles = [] }) => {
 			<select
 				id="gender"
 				name="gender"
-				className="form-control mb-3"
 				defaultValue={auth?.data?.gender}
+				className="form-control mb-3"
 			>
 				<option value={`non-binary`}>Non&nbsp;binary</option>
 				<option value={`intersex`}>Intersex</option>
@@ -123,8 +121,8 @@ const UpdateAboutForm = ({ auth = {}, profiles = [] }) => {
 					<select
 						id="relationshipStatus"
 						name="relationshipStatus"
-						className="form-control mb-3"
 						defaultValue={auth?.data?.relationshipStatus}
+						className="form-control mb-3"
 						onChange={(e) => setShowPartner(e.target.value === "taken")}
 					>
 						<option value="single">Single</option>
@@ -143,8 +141,8 @@ const UpdateAboutForm = ({ auth = {}, profiles = [] }) => {
 						<select
 							id="inRelationshipWith"
 							name="inRelationshipWith"
-							className="form-control"
 							defaultValue={auth?.data?.inRelationshipWith?._id}
+							className="form-control mb-3"
 						>
 							{profiles.data
 								.filter((excludedUser) => excludedUser._id !== auth.data._id)
@@ -163,10 +161,10 @@ const UpdateAboutForm = ({ auth = {}, profiles = [] }) => {
 			<input
 				id="company"
 				name="company"
+				defaultValue={auth?.data?.company}
 				type="text"
 				className="form-control mb-3"
 				placeholder="John Doe's Business"
-				defaultValue={auth?.data?.company}
 			/>
 			<label htmlFor="phoneNumber" className="form-label">
 				Phone Number
@@ -174,10 +172,10 @@ const UpdateAboutForm = ({ auth = {}, profiles = [] }) => {
 			<input
 				id="phoneNumber"
 				name="phoneNumber"
+				defaultValue={auth?.data?.phoneNumber}
 				type="text"
 				className="form-control mb-3"
 				placeholder="012-345-6789"
-				defaultValue={auth?.data?.phoneNumber}
 			/>
 			<label htmlFor="age" className="form-label">
 				Age
@@ -185,12 +183,12 @@ const UpdateAboutForm = ({ auth = {}, profiles = [] }) => {
 			<input
 				id="age"
 				name="age"
+				defaultValue={auth?.data?.age}
 				type="number"
 				className="form-control mb-3"
 				min={18}
 				max={99}
 				placeholder="18"
-				defaultValue={auth?.data?.age}
 			/>
 			<label htmlFor="bio" className="form-label">
 				Bio
@@ -211,11 +209,11 @@ const UpdateAboutForm = ({ auth = {}, profiles = [] }) => {
 			<input
 				id="tags"
 				name="tags"
+				defaultValue={auth?.data?.tags}
 				type="text"
 				className="form-control mb-3"
 				required
 				placeholder="html, css, javascript, php, etc"
-				defaultValue={auth?.data?.tags}
 			/>
 			<button type="submit" className="btn btn-secondary btn-sm float-start">
 				{btnText}

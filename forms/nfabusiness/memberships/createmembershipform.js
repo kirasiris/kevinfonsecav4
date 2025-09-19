@@ -101,7 +101,7 @@ const CreateMembershipForm = ({ token = {}, auth = {} }) => {
 							id="isFree"
 							name="isFree"
 							defaultValue={true}
-							className="form-control"
+							className="form-control mb-3"
 						>
 							<option value={true}>Yes</option>
 							<option value={false}>No</option>
@@ -128,9 +128,9 @@ const CreateMembershipForm = ({ token = {}, auth = {} }) => {
 							id="interval_count"
 							name="interval_count"
 							defaultValue="1"
-							min="1"
 							type="number"
 							className="form-control mb-3"
+							min="1"
 							placeholder="1"
 						/>
 					</div>

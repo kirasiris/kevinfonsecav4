@@ -7,12 +7,7 @@ import AdminSidebar from "@/components/noadmin/myfinaladminsidebar";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
 
-const CreateChapterForm = ({
-	token = {},
-	auth = {},
-	params = {},
-	searchParams = {},
-}) => {
+const CreateChapterForm = ({ token = {}, auth = {}, params = {} }) => {
 	const router = useRouter();
 
 	const [btnText, setBtnText] = useState(`Submit`);

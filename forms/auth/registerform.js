@@ -65,11 +65,11 @@ const RegisterForm = () => {
 			<input
 				id="username"
 				name="username"
+				defaultValue=""
 				type="text"
 				className="form-control mb-3"
 				required
 				placeholder="john.doe"
-				defaultValue=""
 			/>
 			<label htmlFor="name" className="form-label">
 				Name
@@ -77,10 +77,10 @@ const RegisterForm = () => {
 			<input
 				id="name"
 				name="name"
+				defaultValue=""
 				type="text"
 				className="form-control mb-3"
 				placeholder="John Doe"
-				defaultValue=""
 			/>
 			<label htmlFor="email" className="form-label">
 				Email
@@ -88,11 +88,11 @@ const RegisterForm = () => {
 			<input
 				id="email"
 				name="email"
+				defaultValue=""
 				type="email"
 				className="form-control mb-3"
 				required
 				placeholder="john@doe.com"
-				defaultValue=""
 			/>
 			<label htmlFor="password" className="form-label">
 				Password
@@ -100,10 +100,10 @@ const RegisterForm = () => {
 			<input
 				id="password"
 				name="password"
+				defaultValue=""
 				type="password"
 				className="form-control mb-3"
 				placeholder="******"
-				defaultValue=""
 			/>
 			<label htmlFor="password2" className="form-label">
 				Confirm Password
@@ -111,10 +111,10 @@ const RegisterForm = () => {
 			<input
 				id="password2"
 				name="password2"
+				defaultValue=""
 				type="password"
 				className="form-control mb-3"
 				placeholder="******"
-				defaultValue=""
 			/>
 			<button type="submit" className="btn btn-secondary btn-sm float-start">
 				{btnText}

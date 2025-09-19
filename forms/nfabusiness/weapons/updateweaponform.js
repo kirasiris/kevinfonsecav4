@@ -92,11 +92,11 @@ const UpdateWeaponForm = ({ token = "", auth = {}, object = {} }) => {
 						<input
 							id="manufacturer"
 							name="manufacturer"
+							defaultValue={object?.data?.manufacturer}
 							type="text"
 							className="form-control mb-3"
 							required
 							placeholder="Ruger"
-							defaultValue={object?.data?.manufacturer}
 						/>
 					</div>
 					<div className="col">
@@ -106,11 +106,11 @@ const UpdateWeaponForm = ({ token = "", auth = {}, object = {} }) => {
 						<input
 							id="title"
 							name="title"
+							defaultValue={object?.data?.title}
 							type="text"
 							className="form-control mb-3"
 							required
 							placeholder="M4A1"
-							defaultValue={object?.data?.title}
 						/>
 					</div>
 					<div className="col">
@@ -120,9 +120,9 @@ const UpdateWeaponForm = ({ token = "", auth = {}, object = {} }) => {
 						<select
 							id="type"
 							name="type"
+							defaultValue={object?.data?.type}
 							className="form-control mb-3"
 							required
-							defaultValue={object?.data?.type}
 						>
 							<option value="none">Choose an option</option>
 							<option value="rifle">Rifle</option>
@@ -145,11 +145,11 @@ const UpdateWeaponForm = ({ token = "", auth = {}, object = {} }) => {
 						<input
 							id="caliber"
 							name="caliber"
+							defaultValue={object?.data?.caliber}
 							type="text"
 							className="form-control mb-3"
 							required
 							placeholder="5.56x45mm NATO"
-							defaultValue={object?.data?.caliber}
 						/>
 					</div>
 					<div className="col">
@@ -159,10 +159,10 @@ const UpdateWeaponForm = ({ token = "", auth = {}, object = {} }) => {
 						<input
 							id="serialNumber"
 							name="serialNumber"
+							defaultValue={object?.data?.serialNumber}
 							type="text"
 							className="form-control mb-3"
 							placeholder="COL123456"
-							defaultValue={object?.data?.serialNumber}
 						/>
 					</div>
 					<div className="col">
@@ -172,9 +172,9 @@ const UpdateWeaponForm = ({ token = "", auth = {}, object = {} }) => {
 						<select
 							id="nfaClassification"
 							name="nfaClassification"
+							defaultValue={object?.data?.nfaClassification}
 							className="form-control mb-3"
 							required
-							defaultValue={object?.data?.nfaClassification}
 						>
 							<option value="none">Choose an option</option>
 							<option value="short-barrel-rifle">Short Barrel Rifle</option>
@@ -195,9 +195,9 @@ const UpdateWeaponForm = ({ token = "", auth = {}, object = {} }) => {
 							id={`file-${index}`}
 							name="files[]"
 							value={file}
-							onChange={(e) => handleChange(index, e.target.value)}
 							type="text"
 							className="form-control me-2"
+							onChange={(e) => handleChange(index, e.target.value)}
 							placeholder="Enter file URL"
 						/>
 						<button

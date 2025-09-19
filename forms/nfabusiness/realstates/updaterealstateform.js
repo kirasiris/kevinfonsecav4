@@ -59,7 +59,7 @@ const UpdateRealStateForm = ({ token = {}, auth = {}, object = {} }) => {
 			return;
 		}
 		toast.success(`Real State updated`, "bottom");
-		router.push(`/noadmin/realstates`);
+		router.push(`/nfabusiness/realstates`);
 	};
 
 	const resetForm = (e) => {
@@ -104,8 +104,8 @@ const UpdateRealStateForm = ({ token = {}, auth = {}, object = {} }) => {
 							defaultValue={object?.data?.rates?.weeklyPrice}
 							type="number"
 							className="form-control mb-3"
-							placeholder="18"
 							min={0}
+							placeholder="18"
 						/>
 					</div>
 					<div className="col">
@@ -118,8 +118,8 @@ const UpdateRealStateForm = ({ token = {}, auth = {}, object = {} }) => {
 							defaultValue={object?.data?.rates?.monthlyPrice}
 							type="number"
 							className="form-control mb-3"
-							placeholder="18"
 							min={0}
+							placeholder="18"
 						/>
 					</div>
 					<div className="col">
@@ -132,8 +132,8 @@ const UpdateRealStateForm = ({ token = {}, auth = {}, object = {} }) => {
 							defaultValue={object?.data?.rates?.nightlyPrice}
 							type="number"
 							className="form-control mb-3"
-							placeholder="18"
 							min={0}
+							placeholder="18"
 						/>
 					</div>
 				</div>
@@ -159,7 +159,7 @@ const UpdateRealStateForm = ({ token = {}, auth = {}, object = {} }) => {
 							id="isSold"
 							name="isSold"
 							defaultValue={object?.data?.isSold.toString()}
-							className="form-control"
+							className="form-control mb-3"
 						>
 							<option value={true}>Yes</option>
 							<option value={false}>No</option>
@@ -177,8 +177,8 @@ const UpdateRealStateForm = ({ token = {}, auth = {}, object = {} }) => {
 							defaultValue={object?.data?.bedrooms}
 							type="number"
 							className="form-control mb-3"
-							placeholder="18"
 							min={1}
+							placeholder="18"
 						/>
 					</div>
 					<div className="col">
@@ -191,8 +191,8 @@ const UpdateRealStateForm = ({ token = {}, auth = {}, object = {} }) => {
 							defaultValue={object?.data?.bathrooms}
 							type="number"
 							className="form-control mb-3"
-							placeholder="18"
 							min={1}
+							placeholder="18"
 						/>
 					</div>
 					<div className="col">
@@ -205,8 +205,8 @@ const UpdateRealStateForm = ({ token = {}, auth = {}, object = {} }) => {
 							defaultValue={object?.data?.squarefeet}
 							type="number"
 							className="form-control mb-3"
-							placeholder="18"
 							min={1}
+							placeholder="18"
 						/>
 					</div>
 				</div>
@@ -234,7 +234,7 @@ const UpdateRealStateForm = ({ token = {}, auth = {}, object = {} }) => {
 							id="type"
 							name="type"
 							defaultValue={object?.data?.type}
-							className="form-control"
+							className="form-control mb-3"
 						>
 							<option value={`apartment`}>Apartment</option>
 							<option value={`studio`}>Studio</option>
@@ -256,8 +256,8 @@ const UpdateRealStateForm = ({ token = {}, auth = {}, object = {} }) => {
 								id="wifi"
 								name="amenities"
 								defaultValue="wifi"
-								className="form-check-input"
 								type="checkbox"
+								className="form-check-input"
 								defaultChecked={object?.data?.amenities.includes("wifi")}
 							/>
 							<label htmlFor="wifi" className="form-check-label">
@@ -269,8 +269,8 @@ const UpdateRealStateForm = ({ token = {}, auth = {}, object = {} }) => {
 								id="free-parking"
 								name="amenities"
 								defaultValue="free-parking"
-								className="form-check-input"
 								type="checkbox"
+								className="form-check-input"
 								defaultChecked={object?.data?.amenities.includes(
 									"free-parking"
 								)}
@@ -284,8 +284,8 @@ const UpdateRealStateForm = ({ token = {}, auth = {}, object = {} }) => {
 								id="elevator-access"
 								name="amenities"
 								defaultValue="elevator-access"
-								className="form-check-input"
 								type="checkbox"
+								className="form-check-input"
 								defaultChecked={object?.data?.amenities.includes(
 									"elevator-access"
 								)}
@@ -299,8 +299,8 @@ const UpdateRealStateForm = ({ token = {}, auth = {}, object = {} }) => {
 								id="air-conditioning"
 								name="amenities"
 								defaultValue="air-conditioning"
-								className="form-check-input"
 								type="checkbox"
+								className="form-check-input"
 								defaultChecked={object?.data?.amenities.includes(
 									"air-conditioning"
 								)}
@@ -314,8 +314,8 @@ const UpdateRealStateForm = ({ token = {}, auth = {}, object = {} }) => {
 								id="coffee-maker"
 								name="amenities"
 								defaultValue="coffee-maker"
-								className="form-check-input"
 								type="checkbox"
+								className="form-check-input"
 								defaultChecked={object?.data?.amenities.includes(
 									"coffee-maker"
 								)}
@@ -331,8 +331,8 @@ const UpdateRealStateForm = ({ token = {}, auth = {}, object = {} }) => {
 								id="full-kitchen"
 								name="amenities"
 								defaultValue="full-kitchen"
-								className="form-check-input"
 								type="checkbox"
+								className="form-check-input"
 								defaultChecked={object?.data?.amenities.includes(
 									"full-kitchen"
 								)}
@@ -346,8 +346,8 @@ const UpdateRealStateForm = ({ token = {}, auth = {}, object = {} }) => {
 								id="swimming-pool"
 								name="amenities"
 								defaultValue="swimming-pool"
-								className="form-check-input"
 								type="checkbox"
+								className="form-check-input"
 								defaultChecked={object?.data?.amenities.includes(
 									"swimming-pool"
 								)}
@@ -361,8 +361,8 @@ const UpdateRealStateForm = ({ token = {}, auth = {}, object = {} }) => {
 								id="dish-washer"
 								name="amenities"
 								defaultValue="dish-washer"
-								className="form-check-input"
 								type="checkbox"
+								className="form-check-input"
 								defaultChecked={object?.data?.amenities.includes("dish-washer")}
 							/>
 							<label htmlFor="dish-washer" className="form-check-label">
@@ -374,8 +374,8 @@ const UpdateRealStateForm = ({ token = {}, auth = {}, object = {} }) => {
 								id="balcony-patio"
 								name="amenities"
 								defaultValue="balcony-patio"
-								className="form-check-input"
 								type="checkbox"
+								className="form-check-input"
 								defaultChecked={object?.data?.amenities.includes(
 									"balcony-patio"
 								)}
@@ -389,8 +389,8 @@ const UpdateRealStateForm = ({ token = {}, auth = {}, object = {} }) => {
 								id="laundry-room"
 								name="amenities"
 								defaultValue="laundry-room"
-								className="form-check-input"
 								type="checkbox"
+								className="form-check-input"
 								defaultChecked={object?.data?.amenities.includes(
 									"laundry-room"
 								)}
@@ -406,8 +406,8 @@ const UpdateRealStateForm = ({ token = {}, auth = {}, object = {} }) => {
 								id="24-7-security"
 								name="amenities"
 								defaultValue="24-7-security"
-								className="form-check-input"
 								type="checkbox"
+								className="form-check-input"
 								defaultChecked={object?.data?.amenities.includes(
 									"24-7-security"
 								)}
@@ -421,8 +421,8 @@ const UpdateRealStateForm = ({ token = {}, auth = {}, object = {} }) => {
 								id="gym-fitness-center"
 								name="amenities"
 								defaultValue="gym-fitness-center"
-								className="form-check-input"
 								type="checkbox"
+								className="form-check-input"
 								defaultChecked={object?.data?.amenities.includes(
 									"gym-fitness-center"
 								)}
@@ -436,8 +436,8 @@ const UpdateRealStateForm = ({ token = {}, auth = {}, object = {} }) => {
 								id="smart-tv"
 								name="amenities"
 								defaultValue="smart-tv"
-								className="form-check-input"
 								type="checkbox"
+								className="form-check-input"
 								defaultChecked={object?.data?.amenities.includes("smart-tv")}
 							/>
 							<label htmlFor="smart-tv" className="form-check-label">
@@ -449,8 +449,8 @@ const UpdateRealStateForm = ({ token = {}, auth = {}, object = {} }) => {
 								id="wheelchair-accessible"
 								name="amenities"
 								defaultValue="wheelchair-accessible"
-								className="form-check-input"
 								type="checkbox"
+								className="form-check-input"
 								defaultChecked={object?.data?.amenities.includes(
 									"wheelchair-accessible"
 								)}
@@ -467,8 +467,8 @@ const UpdateRealStateForm = ({ token = {}, auth = {}, object = {} }) => {
 								id="hot-tub"
 								name="amenities"
 								defaultValue="hot-tub"
-								className="form-check-input"
 								type="checkbox"
+								className="form-check-input"
 								defaultChecked={object?.data?.amenities.includes("hot-tub")}
 							/>
 							<label htmlFor="hot-tub" className="form-check-label">

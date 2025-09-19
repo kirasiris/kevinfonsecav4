@@ -108,7 +108,7 @@ const UpdateCourseForm = ({ token = {}, auth = {}, object = {} }) => {
 							id="category"
 							name="category"
 							defaultValue={object?.data?.category}
-							className="form-control"
+							className="form-control mb-3"
 						>
 							<option value={"development"}>Development</option>
 							<option value={"business"}>Business</option>
@@ -134,7 +134,7 @@ const UpdateCourseForm = ({ token = {}, auth = {}, object = {} }) => {
 							id="sub_category"
 							name="sub_category"
 							defaultValue={object?.data?.sub_category}
-							className="form-control"
+							className="form-control mb-3"
 						>
 							<optgroup label="Development">
 								<option value={"web-development"}>Web Development</option>
@@ -262,7 +262,7 @@ const UpdateCourseForm = ({ token = {}, auth = {}, object = {} }) => {
 							id="isFree"
 							name="isFree"
 							defaultValue={object?.data?.isFree.toString()}
-							className="form-control"
+							className="form-control mb-3"
 						>
 							<option value={true}>Yes</option>
 							<option value={false}>No</option>
@@ -287,7 +287,7 @@ const UpdateCourseForm = ({ token = {}, auth = {}, object = {} }) => {
 							id="language"
 							name="language"
 							defaultValue={object?.data?.language}
-							className="form-control"
+							className="form-control mb-3"
 						>
 							<option value={"english"}>English</option>
 							<option value={"mandarin"}>Mandarin</option>
@@ -309,7 +309,7 @@ const UpdateCourseForm = ({ token = {}, auth = {}, object = {} }) => {
 							id="difficulty"
 							name="difficulty"
 							defaultValue={object?.data?.difficulty}
-							className="form-control"
+							className="form-control mb-3"
 						>
 							<option value={"all-level"}>All level</option>
 							<option value={"beginner"}>Beginner</option>

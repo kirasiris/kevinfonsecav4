@@ -12,7 +12,7 @@ async function getRealStates(params) {
 	return res;
 }
 
-const AdminRealStatesPublishedIndex = async ({ params, searchParams }) => {
+const NFARealStatesPublishedIndex = async ({ params, searchParams }) => {
 	const awtdParams = await params;
 	const awtdSearchParams = await searchParams;
 	const page = awtdSearchParams.page || 1;
@@ -28,7 +28,7 @@ const AdminRealStatesPublishedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/realstates/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/realstates/published?page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/realstates/published?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -37,7 +37,7 @@ const AdminRealStatesPublishedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/realstates/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/realstates/published?page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/realstates/published?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -46,7 +46,7 @@ const AdminRealStatesPublishedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/realstates/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/realstates/published?page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/realstates/published?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -55,7 +55,7 @@ const AdminRealStatesPublishedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/realstates/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/realstates/published?page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/realstates/published?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -68,7 +68,7 @@ const AdminRealStatesPublishedIndex = async ({ params, searchParams }) => {
 			"no-cache"
 		);
 		revalidatePath(
-			`/noadmin/realstates/published?page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/realstates/published?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -77,7 +77,7 @@ const AdminRealStatesPublishedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/realstates/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/realstates/published?page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/realstates/published?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -90,27 +90,27 @@ const AdminRealStatesPublishedIndex = async ({ params, searchParams }) => {
 			"no-cache"
 		);
 		revalidatePath(
-			`/noadmin/realstates/published?page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/realstates/published?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
 	return (
 		<>
 			<AdminStatusesMenu
-				allLink="/noadmin/realstates"
-				publishedLink="/noadmin/realstates/published"
-				draftLink="/noadmin/realstates/draft"
-				scheduledLink="/noadmin/realstates/scheduled"
-				trashedLink="/noadmin/realstates/trashed"
+				allLink="/nfabusiness/realstates"
+				publishedLink="/nfabusiness/realstates/published"
+				draftLink="/nfabusiness/realstates/draft"
+				scheduledLink="/nfabusiness/realstates/scheduled"
+				trashedLink="/nfabusiness/realstates/trashed"
 				categoriesLink=""
 				categoryType=""
 			/>
 			<div className="card rounded-0">
 				<List
-					allLink="/noadmin/realstates"
+					allLink="/nfabusiness/realstates"
 					pageText="Real States"
-					addLink="/noadmin/realstates/create"
-					searchOn="/noadmin/realstates"
+					addLink="/nfabusiness/realstates/create"
+					searchOn="/nfabusiness/realstates"
 					searchedKeyword=""
 					objects={realstates}
 					searchParams={awtdSearchParams}
@@ -127,4 +127,4 @@ const AdminRealStatesPublishedIndex = async ({ params, searchParams }) => {
 	);
 };
 
-export default AdminRealStatesPublishedIndex;
+export default NFARealStatesPublishedIndex;

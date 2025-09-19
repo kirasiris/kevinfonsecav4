@@ -92,11 +92,11 @@ const CreateWeaponForm = ({ token = "", auth = {} }) => {
 						<input
 							id="manufacturer"
 							name="manufacturer"
+							defaultValue=""
 							type="text"
 							className="form-control mb-3"
 							required
 							placeholder="Ruger"
-							defaultValue=""
 						/>
 					</div>
 					<div className="col">
@@ -106,11 +106,11 @@ const CreateWeaponForm = ({ token = "", auth = {} }) => {
 						<input
 							id="title"
 							name="title"
+							defaultValue=""
 							type="text"
 							className="form-control mb-3"
 							required
 							placeholder="M4A1"
-							defaultValue=""
 						/>
 					</div>
 					<div className="col">
@@ -120,9 +120,9 @@ const CreateWeaponForm = ({ token = "", auth = {} }) => {
 						<select
 							id="type"
 							name="type"
+							defaultValue=""
 							className="form-control mb-3"
 							required
-							defaultValue=""
 						>
 							<option value="none">Choose an option</option>
 							<option value="rifle">Rifle</option>
@@ -145,11 +145,11 @@ const CreateWeaponForm = ({ token = "", auth = {} }) => {
 						<input
 							id="caliber"
 							name="caliber"
+							defaultValue=""
 							type="text"
 							className="form-control mb-3"
 							required
 							placeholder="5.56x45mm NATO"
-							defaultValue=""
 						/>
 					</div>
 					<div className="col">
@@ -159,10 +159,10 @@ const CreateWeaponForm = ({ token = "", auth = {} }) => {
 						<input
 							id="serialNumber"
 							name="serialNumber"
+							defaultValue=""
 							type="text"
 							className="form-control mb-3"
 							placeholder="COL123456"
-							defaultValue=""
 						/>
 					</div>
 					<div className="col">
@@ -172,9 +172,9 @@ const CreateWeaponForm = ({ token = "", auth = {} }) => {
 						<select
 							id="nfaClassification"
 							name="nfaClassification"
+							defaultValue=""
 							className="form-control mb-3"
 							required
-							defaultValue=""
 						>
 							<option value="none">Choose an option</option>
 							<option value="short-barrel-rifle">Short Barrel Rifle</option>
@@ -195,9 +195,9 @@ const CreateWeaponForm = ({ token = "", auth = {} }) => {
 							id={`file-${index}`}
 							name="files[]"
 							value={file}
-							onChange={(e) => handleChange(index, e.target.value)}
 							type="text"
 							className="form-control me-2"
+							onChange={(e) => handleChange(index, e.target.value)}
 							placeholder="Enter file URL"
 						/>
 						<button

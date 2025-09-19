@@ -10,6 +10,8 @@ import FormButtons from "@/components/global/formbuttons";
 const CreateProductForm = ({ token = {}, auth = {} }) => {
 	const router = useRouter();
 
+	const [showWeaponInputs, setShowWeaponInputs] = useState(false);
+
 	const [btnText, setBtnText] = useState("Submit");
 
 	const addProduct = async (e) => {
@@ -25,7 +27,6 @@ const CreateProductForm = ({ token = {}, auth = {} }) => {
 			isFree: formData.get("isFree"),
 			active: formData.get("active"),
 			statement_descriptor: formData.get("statement_descriptor"),
-			url: formData.get("url"),
 			comparePrice: formData.get("comparePrice"),
 			cost: formData.get("cost"),
 			sku: formData.get("sku"),
@@ -59,7 +60,7 @@ const CreateProductForm = ({ token = {}, auth = {} }) => {
 		};
 
 		const res = await fetchurl(
-			`/noadmin/store/products`,
+			`/noadmin/stripe/products`,
 			"POST",
 			"no-cache",
 			rawFormData
@@ -76,7 +77,7 @@ const CreateProductForm = ({ token = {}, auth = {} }) => {
 			return;
 		}
 		toast.success("Product created", "bottom");
-		// router.push(`/nfabusiness/products`);
+		router.push(`/nfabusiness/products`);
 	};
 
 	const resetForm = (e) => {
@@ -92,11 +93,11 @@ const CreateProductForm = ({ token = {}, auth = {} }) => {
 				<input
 					id="title"
 					name="title"
+					defaultValue=""
 					type="text"
 					className="form-control mb-3"
 					required
 					placeholder="M4A1"
-					defaultValue=""
 				/>
 				<label htmlFor="text" className="form-label">
 					Text
@@ -111,336 +112,490 @@ const CreateProductForm = ({ token = {}, auth = {} }) => {
 					advancedTextEditor={false}
 					customPlaceholder="No description"
 				/>
-				<label htmlFor="price" className="form-label">
-					Price
-				</label>
-				<input
-					id="price"
-					name="price"
-					defaultValue="0"
-					type="text"
-					className="form-control mb-3"
-					placeholder=""
-				/>
-				<label htmlFor="isFree" className="form-label">
-					Is it free?
-				</label>
-				<select
-					id="isFree"
-					name="isFree"
-					defaultValue={true}
-					className="form-control mb-3"
-				>
-					<option value={true}>Yes</option>
-					<option value={false}>No</option>
-				</select>
-				<label htmlFor="active" className="form-label">
-					Activate
-				</label>
-				<select
-					id="active"
-					name="active"
-					defaultValue={true}
-					className="form-control mb-3"
-				>
-					<option value={true}>Yes</option>
-					<option value={false}>No</option>
-				</select>
-				<label htmlFor="statement_descriptor" className="form-label">
-					Statement Descriptor
-				</label>
-				<input
-					id="statement_descriptor"
-					name="statement_descriptor"
-					type="text"
-					className="form-control mb-3"
-					required
-					placeholder="THIS WILL APPEAR ON THE BANK STATEMENT"
-					defaultValue=""
-				/>
-				<label htmlFor="url" className="form-label">
-					Url
-				</label>
-				<input
-					id="url"
-					name="url"
-					defaultValue="0"
-					type="text"
-					className="form-control mb-3"
-					placeholder=""
-				/>
-				<label htmlFor="comparePrice" className="form-label">
-					Compare Price
-				</label>
-				<input
-					id="comparePrice"
-					name="comparePrice"
-					defaultValue="0"
-					type="text"
-					className="form-control"
-					placeholder=""
-				/>
-				<p className="text-small mb-3">
-					Should always be bigger than price to apply discount
-				</p>
-				<label htmlFor="cost" className="form-label">
-					Cost
-				</label>
-				<input
-					id="cost"
-					name="cost"
-					defaultValue="0"
-					type="text"
-					className="form-control mb-3"
-					placeholder=""
-				/>
-				<label htmlFor="sku" className="form-label">
-					SKU
-				</label>
-				<input
-					id="sku"
-					name="sku"
-					defaultValue="0"
-					type="text"
-					className="form-control mb-3"
-					placeholder=""
-				/>
-				<label htmlFor="barcode" className="form-label">
-					Bar Code
-				</label>
-				<input
-					id="barcode"
-					name="barcode"
-					defaultValue="0"
-					type="text"
-					className="form-control mb-3"
-					placeholder=""
-				/>
-				<label htmlFor="category" className="form-label">
-					Category
-				</label>
-				<select
-					id="category"
-					name="category"
-					className="form-control mb-3"
-					required
-					defaultValue=""
-				>
-					<option value="none">Choose an option</option>
-					<option value="rifles">Rifles</option>
-					<option value="handguns">Handguns</option>
-					<option value="nfa-items">NFA Items</option>
-					<option value="shotguns">Shotguns</option>
-					<option value="accessories">Accessories</option>
-					<option value="clothing">Clothing</option>
-				</select>
-				<label htmlFor="sub_category" className="form-label">
-					Sub category
-				</label>
-				<input
-					id="sub_category"
-					name="sub_category"
-					type="text"
-					className="form-control mb-3"
-					required
-					placeholder="5.56x45mm NATO"
-					defaultValue=""
-				/>
-				<label htmlFor="brand" className="form-label">
-					Brand
-				</label>
-				<input
-					id="brand"
-					name="brand"
-					type="text"
-					className="form-control mb-3"
-					placeholder="COL123456"
-					defaultValue=""
-				/>
-				<label htmlFor="model" className="form-label">
-					Model
-				</label>
-				<input
-					id="model"
-					name="model"
-					type="text"
-					className="form-control mb-3"
-					placeholder="COL123456"
-					defaultValue=""
-				/>
+				<div className="row">
+					<div className="col">
+						<label htmlFor="price" className="form-label">
+							Price
+						</label>
+						<input
+							id="price"
+							name="price"
+							defaultValue="0"
+							type="text"
+							className="form-control mb-3"
+							required
+							placeholder=""
+						/>
+					</div>
+					<div className="col">
+						<label htmlFor="comparePrice" className="form-label">
+							Compare Price
+						</label>
+						<input
+							id="comparePrice"
+							name="comparePrice"
+							defaultValue="0"
+							type="text"
+							className="form-control"
+							placeholder=""
+						/>
+						<p className="text-small mb-3">
+							Should always be bigger than price to apply discount
+						</p>
+					</div>
+					<div className="col">
+						<label htmlFor="cost" className="form-label">
+							Cost
+						</label>
+						<input
+							id="cost"
+							name="cost"
+							defaultValue="0"
+							type="text"
+							className="form-control mb-3"
+							placeholder=""
+						/>
+					</div>
+				</div>
+				<div className="row">
+					<div className="col">
+						<label htmlFor="isFree" className="form-label">
+							Is it free?
+						</label>
+						<select
+							id="isFree"
+							name="isFree"
+							defaultValue={true}
+							className="form-control mb-3"
+						>
+							<option value={true}>Yes</option>
+							<option value={false}>No</option>
+						</select>
+					</div>
+					<div className="col">
+						<label htmlFor="active" className="form-label">
+							Activate
+						</label>
+						<select
+							id="active"
+							name="active"
+							defaultValue={true}
+							className="form-control mb-3"
+						>
+							<option value={true}>Yes</option>
+							<option value={false}>No</option>
+						</select>
+					</div>
+				</div>
+				<div className="row">
+					<div className="col">
+						<label htmlFor="statement_descriptor" className="form-label">
+							Statement Descriptor (22 characters. max)
+						</label>
+						<select
+							id="statement_descriptor"
+							name="statement_descriptor"
+							defaultValue="MONTHLY MEMBRSHP"
+							className="form-control mb-3"
+							placeholder="This is what will appear in the user's bank statement account"
+						>
+							<option value={"DAILY MEMBRSHP"}>
+								DAILY ARMED CODE, LLC MEMBERSHIP
+							</option>
+							<option value={"BIWEEKLY MEMBRSHP"}>
+								BI-WEEKLY ARMED CODE, LLC MEMBERSHIP
+							</option>
+							<option value={"MONTHLY MEMBRSHP"}>
+								MONTHLY ARMED CODE, LLC MEMBERSHIP
+							</option>
+							<option value={"YEARLY MEMBRSHP"}>
+								YEARLY ARMED CODE, LLC MEMBERSHIP
+							</option>
+						</select>
+					</div>
+					<div className="col">
+						<label htmlFor="sku" className="form-label">
+							SKU
+						</label>
+						<input
+							id="sku"
+							name="sku"
+							defaultValue="0"
+							type="text"
+							className="form-control mb-3"
+							required
+							placeholder=""
+						/>
+					</div>
+					<div className="col">
+						<label htmlFor="barcode" className="form-label">
+							Bar Code
+						</label>
+						<input
+							id="barcode"
+							name="barcode"
+							defaultValue="0"
+							type="text"
+							className="form-control mb-3"
+							required
+							placeholder=""
+						/>
+					</div>
+				</div>
+				<div className="row">
+					<div className="col">
+						<label htmlFor="category" className="form-label">
+							Category
+						</label>
+						<select
+							id="category"
+							name="category"
+							defaultValue="none"
+							className="form-control mb-3"
+							onChange={(e) =>
+								setShowWeaponInputs(e.target.value === "weapons")
+							}
+							required
+						>
+							<option value="none">Choose an option</option>
+							<option value="weapons">Weapons</option>
+							<option value="accessories">Accessories</option>
+							<option value="clothing">Clothing</option>
+						</select>
+					</div>
+					<div className="col">
+						<label htmlFor="sub_category" className="form-label">
+							Sub category
+						</label>
+						<input
+							id="sub_category"
+							name="sub_category"
+							defaultValue="none"
+							type="text"
+							className="form-control mb-3"
+							required={showWeaponInputs ? true : false}
+							disabled={showWeaponInputs ? true : false}
+							placeholder="5.56x45mm NATO"
+						/>
+					</div>
+				</div>
+				{showWeaponInputs && (
+					<>
+						<div className="row">
+							<div className="col">
+								<label htmlFor="nfaItem" className="form-label">
+									NFA Item
+								</label>
+								<select
+									id="nfaItem"
+									name="nfaItem"
+									defaultValue={true}
+									className="form-control mb-3"
+								>
+									<option value={true}>Yes</option>
+									<option value={false}>No</option>
+								</select>
+							</div>
+							<div className="col">
+								<label htmlFor="requiresBackgroundCheck" className="form-label">
+									Requires Background Check?
+								</label>
+								<select
+									id="requiresBackgroundCheck"
+									name="requiresBackgroundCheck"
+									defaultValue={true}
+									className="form-control mb-3"
+								>
+									<option value={true}>Yes</option>
+									<option value={false}>No</option>
+								</select>
+							</div>
+							<div className="col">
+								<label htmlFor="ageRestriction" className="form-label">
+									Age Restriction
+								</label>
+								<input
+									id="ageRestriction"
+									name="ageRestriction"
+									defaultValue="18"
+									type="text"
+									className="form-control mb-3"
+									placeholder=""
+								/>
+							</div>
+						</div>
+						<div className="row">
+							<div className="col">
+								<label htmlFor="brand" className="form-label">
+									Brand / Manufacturer
+								</label>
+								<input
+									id="brand"
+									name="brand"
+									defaultValue="Brand"
+									type="text"
+									className="form-control mb-3"
+									placeholder="Ruger"
+								/>
+							</div>
+							<div className="col">
+								<label htmlFor="model" className="form-label">
+									Model
+								</label>
+								<input
+									id="model"
+									name="model"
+									defaultValue="AR15"
+									type="text"
+									className="form-control mb-3"
+									placeholder="AR15"
+								/>
+							</div>
+							<div className="col">
+								<label htmlFor="type" className="form-label">
+									Type
+								</label>
+								<select
+									id="type"
+									name="type"
+									className="form-control mb-3"
+									required
+									defaultValue="none"
+								>
+									<option value="none">Choose an option</option>
+									<option value="rifle">Rifle</option>
+									<option value="shotgun">Shotgun</option>
+									<option value="pistol">Pistol</option>
+									<option value="supressor">Supressor</option>
+									<option value="short-barrel-rifle">Short Barrel Rifle</option>
+									<option value="short-barrel-shotgun">
+										Short Barrel Shotgun
+									</option>
+									<option value="any-other-weapon">Any Other Weapon</option>
+									<option value="destructive-device">Destructive Device</option>
+									<option value="machine-gun">Machine Gun</option>
+								</select>
+							</div>
+							<div className="col">
+								<label htmlFor="caliber" className="form-label">
+									Caliber
+								</label>
+								<input
+									id="caliber"
+									name="caliber"
+									defaultValue="5.56x45mm NATO"
+									type="text"
+									className="form-control mb-3"
+									placeholder="5.56x45mm NATO"
+								/>
+							</div>
+							<div className="col">
+								<label htmlFor="serialNumber" className="form-label">
+									Serial Number
+								</label>
+								<input
+									id="serialNumber"
+									name="serialNumber"
+									defaultValue="COL123456"
+									type="text"
+									className="form-control mb-3"
+									placeholder="COL123456"
+								/>
+							</div>
+							<div className="col">
+								<label htmlFor="nfaClassification" className="form-label">
+									NFA Classification
+								</label>
+								<select
+									id="nfaClassification"
+									name="nfaClassification"
+									defaultValue="none"
+									className="form-control mb-3"
+									required
+								>
+									<option value="none">Choose an option</option>
+									<option value="short-barrel-rifle">Short Barrel Rifle</option>
+									<option value="short-barrel-shotgun">
+										Short Barrel Shotgun
+									</option>
+									<option value="supressor">Supressor</option>
+									<option value="any-other-weapon">Any Other Weapon</option>
+									<option value="destructive-device">Destructive Device</option>
+									<option value="machine-gun">Machine Gun</option>
+								</select>
+							</div>
+						</div>
+					</>
+				)}
 				{/* Files */}
 				{/* Variants */}
 				{/* Specifications */}
-				<label htmlFor="features" className="form-label">
-					Features
-				</label>
-				<input
-					id="features"
-					name="features"
-					type="text"
-					className="form-control mb-3"
-					placeholder="COL123456"
-					defaultValue=""
-				/>
-				<label htmlFor="stockQuantity" className="form-label">
-					Stock Quantity
-				</label>
-				<input
-					id="stockQuantity"
-					name="stockQuantity"
-					defaultValue="0"
-					type="text"
-					className="form-control mb-3"
-					placeholder=""
-				/>
-				<label htmlFor="lowStockThreshold" className="form-label">
-					Low Stock Threshold
-				</label>
-				<input
-					id="lowStockThreshold"
-					name="lowStockThreshold"
-					defaultValue="5"
-					min="5"
-					type="text"
-					className="form-control mb-3"
-					placeholder=""
-				/>
-				<label htmlFor="trackInventory" className="form-label">
-					Track Inventory
-				</label>
-				<select
-					id="trackInventory"
-					name="trackInventory"
-					defaultValue={true}
-					className="form-control mb-3"
-				>
-					<option value={true}>Yes</option>
-					<option value={false}>No</option>
-				</select>
-				<label htmlFor="inStock" className="form-label">
-					In Stock
-				</label>
-				<select
-					id="inStock"
-					name="inStock"
-					defaultValue={true}
-					className="form-control mb-3"
-				>
-					<option value={true}>Yes</option>
-					<option value={false}>No</option>
-				</select>
-				<label htmlFor="nfaItem" className="form-label">
-					NFA Item
-				</label>
-				<select
-					id="nfaItem"
-					name="nfaItem"
-					defaultValue={true}
-					className="form-control mb-3"
-				>
-					<option value={true}>Yes</option>
-					<option value={false}>No</option>
-				</select>
-				<label htmlFor="requiresBackgroundCheck" className="form-label">
-					Requires Background Check?
-				</label>
-				<select
-					id="requiresBackgroundCheck"
-					name="requiresBackgroundCheck"
-					defaultValue={true}
-					className="form-control mb-3"
-				>
-					<option value={true}>Yes</option>
-					<option value={false}>No</option>
-				</select>
-				<label htmlFor="ageRestriction" className="form-label">
-					Age Restriction
-				</label>
-				<input
-					id="ageRestriction"
-					name="ageRestriction"
-					defaultValue="18"
-					type="text"
-					className="form-control mb-3"
-					placeholder=""
-				/>
-				<label htmlFor="weight" className="form-label">
-					Weight
-				</label>
-				<input
-					id="weight"
-					name="weight"
-					defaultValue="0"
-					type="text"
-					className="form-control mb-3"
-					placeholder=""
-				/>
-				<label htmlFor="length" className="form-label">
-					Length
-				</label>
-				<input
-					id="length"
-					name="length"
-					defaultValue="0"
-					type="text"
-					className="form-control mb-3"
-					placeholder=""
-				/>
-				<label htmlFor="width" className="form-label">
-					Width
-				</label>
-				<input
-					id="width"
-					name="width"
-					defaultValue="0"
-					type="text"
-					className="form-control mb-3"
-					placeholder=""
-				/>
-				<label htmlFor="height" className="form-label">
-					Height
-				</label>
-				<input
-					id="height"
-					name="height"
-					defaultValue="0"
-					type="text"
-					className="form-control mb-3"
-					placeholder=""
-				/>
-				<label htmlFor="shippable" className="form-label">
-					Shippable
-				</label>
-				<select
-					id="shippable"
-					name="shippable"
-					defaultValue={false}
-					className="form-control"
-				>
-					<option value={true}>Yes</option>
-					<option value={false}>No</option>
-				</select>
-				<label htmlFor="shippingClass" className="form-label">
-					Shipping Class
-				</label>
-				<select
-					id="shippingClass"
-					name="shippingClass"
-					className="form-control"
-					required
-					defaultValue=""
-				>
-					<option value={`standard`}>Standard</option>
-					<option value={`oversized`}>Oversized</option>
-					<option value={`hazmat`}>Hazmat</option>
-					<option value={`restricted`}>Restricted</option>
-				</select>
+				<div className="row">
+					<div className="col">
+						<label htmlFor="features" className="form-label">
+							Features
+						</label>
+						<input
+							id="features"
+							name="features"
+							defaultValue=""
+							type="text"
+							className="form-control mb-3"
+							placeholder="COL123456"
+						/>
+					</div>
+					<div className="col">
+						<label htmlFor="stockQuantity" className="form-label">
+							Stock Quantity
+						</label>
+						<input
+							id="stockQuantity"
+							name="stockQuantity"
+							defaultValue="0"
+							type="text"
+							className="form-control mb-3"
+							placeholder=""
+						/>
+					</div>
+					<div className="col">
+						<label htmlFor="lowStockThreshold" className="form-label">
+							Low Stock Threshold
+						</label>
+						<input
+							id="lowStockThreshold"
+							name="lowStockThreshold"
+							defaultValue="5"
+							min="5"
+							type="text"
+							className="form-control mb-3"
+							placeholder=""
+						/>
+					</div>
+				</div>
+				<div className="row">
+					<div className="col">
+						<label htmlFor="trackInventory" className="form-label">
+							Track Inventory
+						</label>
+						<select
+							id="trackInventory"
+							name="trackInventory"
+							defaultValue={true}
+							className="form-control mb-3"
+						>
+							<option value={true}>Yes</option>
+							<option value={false}>No</option>
+						</select>
+					</div>
+					<div className="col">
+						<label htmlFor="inStock" className="form-label">
+							In Stock
+						</label>
+						<select
+							id="inStock"
+							name="inStock"
+							defaultValue={true}
+							className="form-control mb-3"
+						>
+							<option value={true}>Yes</option>
+							<option value={false}>No</option>
+						</select>
+					</div>
+				</div>
+				<div className="row">
+					<div className="col">
+						<label htmlFor="weight" className="form-label">
+							Weight
+						</label>
+						<input
+							id="weight"
+							name="weight"
+							defaultValue="0"
+							type="text"
+							className="form-control mb-3"
+							placeholder=""
+						/>
+					</div>
+					<div className="col">
+						<label htmlFor="length" className="form-label">
+							Length
+						</label>
+						<input
+							id="length"
+							name="length"
+							defaultValue="0"
+							type="text"
+							className="form-control mb-3"
+							placeholder=""
+						/>
+					</div>
+					<div className="col">
+						<label htmlFor="width" className="form-label">
+							Width
+						</label>
+						<input
+							id="width"
+							name="width"
+							defaultValue="0"
+							type="text"
+							className="form-control mb-3"
+							placeholder=""
+						/>
+					</div>
+					<div className="col">
+						<label htmlFor="height" className="form-label">
+							Height
+						</label>
+						<input
+							id="height"
+							name="height"
+							defaultValue="0"
+							type="text"
+							className="form-control mb-3"
+							placeholder=""
+						/>
+					</div>
+				</div>
+				<div className="row">
+					<div className="col">
+						<label htmlFor="shippable" className="form-label">
+							Shippable
+						</label>
+						<select
+							id="shippable"
+							name="shippable"
+							defaultValue={false}
+							className="form-control mb-3"
+						>
+							<option value={true}>Yes</option>
+							<option value={false}>No</option>
+						</select>
+					</div>
+					<div className="col">
+						<label htmlFor="shippingClass" className="form-label">
+							Shipping Class
+						</label>
+						<select
+							id="shippingClass"
+							name="shippingClass"
+							defaultValue="standard"
+							className="form-control mb-3"
+							required
+						>
+							<option value={`standard`}>Standard</option>
+							<option value={`oversized`}>Oversized</option>
+							<option value={`hazmat`}>Hazmat</option>
+							<option value={`restricted`}>Restricted</option>
+						</select>
+					</div>
+				</div>
 			</div>
 			<div className="col-lg-3">
 				<AdminSidebar
 					displayCategoryField={false}
 					displayAvatar={true}
 					avatar={undefined}
+					avatarFormat="image"
 					status="draft"
 					fullWidth={false}
 					password=""

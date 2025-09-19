@@ -113,7 +113,7 @@ const UpdateLessonForm = ({ token = {}, auth = {}, object = {} }) => {
 							id="free_preview"
 							name="free_preview"
 							defaultValue={object?.data?.free_preview.toString()}
-							className="form-control"
+							className="form-control mb-3"
 						>
 							<option value={true}>Yes</option>
 							<option value={false}>No</option>

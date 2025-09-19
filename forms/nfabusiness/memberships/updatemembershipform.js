@@ -101,7 +101,7 @@ const UpdateMembershipForm = ({ token = {}, auth = {}, object = {} }) => {
 							id="isFree"
 							name="isFree"
 							defaultValue={object?.data?.isFree.toString()}
-							className="form-control"
+							className="form-control mb-3"
 						>
 							<option value={true}>Yes</option>
 							<option value={false}>No</option>
@@ -128,9 +128,9 @@ const UpdateMembershipForm = ({ token = {}, auth = {}, object = {} }) => {
 							id="interval_count"
 							name="interval_count"
 							defaultValue={object?.data?.interval_count}
-							min="1"
 							type="number"
 							className="form-control mb-3"
+							min="1"
 							placeholder="1"
 						/>
 					</div>

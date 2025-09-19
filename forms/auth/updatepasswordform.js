@@ -92,8 +92,8 @@ const UpdatePasswordForm = ({ auth = {} }) => {
 							name="token"
 							type="text"
 							className="form-control mb-3"
-							placeholder="012 345"
 							required
+							placeholder="012 345"
 						/>
 					</div>
 				</div>

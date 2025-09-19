@@ -67,11 +67,11 @@ const UpdateBasicsForm = ({ auth = {} }) => {
 			<input
 				id="username"
 				name="username"
+				defaultValue={auth?.data?.username}
 				type="text"
 				className="form-control mb-3"
 				required
 				placeholder="john.doe"
-				defaultValue={auth?.data?.username}
 			/>
 			<label htmlFor="email" className="form-label">
 				Email
@@ -79,11 +79,11 @@ const UpdateBasicsForm = ({ auth = {} }) => {
 			<input
 				id="email"
 				name="email"
+				defaultValue={auth?.data?.email}
 				type="email"
 				className="form-control mb-3"
 				disabled
 				placeholder="john.doe@demo.com"
-				defaultValue={auth?.data?.email}
 			/>
 			<label htmlFor="secondaryEmail" className="form-label">
 				Secondary&nbsp;Email
@@ -91,10 +91,10 @@ const UpdateBasicsForm = ({ auth = {} }) => {
 			<input
 				id="secondaryEmail"
 				name="secondaryEmail"
+				defaultValue={auth?.data?.secondaryEmail}
 				type="email"
 				className="form-control mb-3"
 				placeholder="john.doe2@demo.com"
-				defaultValue={auth?.data?.secondaryEmail}
 			/>
 			<label htmlFor="workstatus" className="form-label">
 				Work&nbsp;Status
@@ -102,8 +102,8 @@ const UpdateBasicsForm = ({ auth = {} }) => {
 			<select
 				id="workstatus"
 				name="workstatus"
-				className="form-control mb-3"
 				defaultValue={auth?.data?.workstatus}
+				className="form-control mb-3"
 			>
 				<option value="nini">Nini</option>
 				<option value="student">Student</option>
@@ -116,10 +116,10 @@ const UpdateBasicsForm = ({ auth = {} }) => {
 			<input
 				id="website"
 				name="website"
+				defaultValue={auth?.data?.website}
 				type="text"
 				className="form-control mb-3"
 				placeholder="https://demo.com"
-				defaultValue={auth?.data?.website}
 			/>
 			<h6 className="display-6 text-center text-decoration-underline">
 				Socials
@@ -132,10 +132,10 @@ const UpdateBasicsForm = ({ auth = {} }) => {
 					<input
 						id="facebook"
 						name="facebook"
+						defaultValue={auth?.data?.social?.facebook}
 						type="text"
 						className="form-control mb-3"
 						placeholder="https://facebook.com"
-						defaultValue={auth?.data?.social?.facebook}
 					/>
 				</div>
 				<div className="col">
@@ -145,10 +145,10 @@ const UpdateBasicsForm = ({ auth = {} }) => {
 					<input
 						id="twitter"
 						name="twitter"
+						defaultValue={auth?.data?.social?.twitter}
 						type="text"
 						className="form-control mb-3"
 						placeholder="https://x.com/john.doe"
-						defaultValue={auth?.data?.social?.twitter}
 					/>
 				</div>
 				<div className="col">
@@ -158,10 +158,10 @@ const UpdateBasicsForm = ({ auth = {} }) => {
 					<input
 						id="youtube"
 						name="youtube"
+						defaultValue={auth?.data?.social?.youtube}
 						type="text"
 						className="form-control mb-3"
 						placeholder="https://youtube.com/channel/john.doe"
-						defaultValue={auth?.data?.social?.youtube}
 					/>
 				</div>
 			</div>
@@ -173,10 +173,10 @@ const UpdateBasicsForm = ({ auth = {} }) => {
 					<input
 						id="instagram"
 						name="instagram"
+						defaultValue={auth?.data?.social?.instagram}
 						type="text"
 						className="form-control mb-3"
 						placeholder="https://instagram.com/john.doe"
-						defaultValue={auth?.data?.social?.instagram}
 					/>
 				</div>
 				<div className="col">
@@ -186,10 +186,10 @@ const UpdateBasicsForm = ({ auth = {} }) => {
 					<input
 						id="linkedin"
 						name="linkedin"
+						defaultValue={auth?.data?.social?.linkedin}
 						type="text"
 						className="form-control mb-3"
 						placeholder="https://www.linkedin.com/in/john-doe-12345678a/"
-						defaultValue={auth?.data?.social?.linkedin}
 					/>
 				</div>
 			</div>
@@ -201,10 +201,10 @@ const UpdateBasicsForm = ({ auth = {} }) => {
 					<input
 						id="steamId"
 						name="steamId"
+						defaultValue={auth?.data?.social?.steamId}
 						type="text"
 						className="form-control mb-3"
 						placeholder="https://www.steam.com"
-						defaultValue={auth?.data?.social?.steamId}
 					/>
 				</div>
 				<div className="col">
@@ -214,10 +214,10 @@ const UpdateBasicsForm = ({ auth = {} }) => {
 					<input
 						id="xboxId"
 						name="xboxId"
+						defaultValue={auth?.data?.social?.xboxId}
 						type="text"
 						className="form-control mb-3"
 						placeholder="https://account.xbox.com/en-us/Profile?csrf=ID"
-						defaultValue={auth?.data?.social?.xboxId}
 					/>
 				</div>
 			</div>

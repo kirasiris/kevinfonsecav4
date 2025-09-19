@@ -10,14 +10,7 @@ const CreateChapter = async ({ params, searchParams }) => {
 	const token = await getAuthTokenOnServer();
 	const auth = await getUserOnServer();
 
-	return (
-		<CreateChapterForm
-			token={token}
-			auth={auth}
-			params={awtdParams}
-			searchParams={awtdSearchParams}
-		/>
-	);
+	return <CreateChapterForm token={token} auth={auth} params={awtdParams} />;
 };
 
 export default CreateChapter;

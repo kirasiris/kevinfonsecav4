@@ -67,11 +67,11 @@ const VerifyTwoFactorAuthenticationForm = ({ auth = {} }) => {
 					<input
 						id="token"
 						name="token"
+						defaultValue=""
 						type="text"
 						className="form-control mb-3"
 						required
 						placeholder="012 345"
-						defaultValue=""
 					/>
 				</div>
 			</div>

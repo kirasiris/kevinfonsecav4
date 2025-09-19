@@ -108,7 +108,7 @@ const CreateCourseForm = ({ token = {}, auth = {} }) => {
 							id="category"
 							name="category"
 							defaultValue="development"
-							className="form-control"
+							className="form-control mb-3"
 						>
 							<option value={"development"}>Development</option>
 							<option value={"business"}>Business</option>
@@ -134,7 +134,7 @@ const CreateCourseForm = ({ token = {}, auth = {} }) => {
 							id="sub_category"
 							name="sub_category"
 							defaultValue="development"
-							className="form-control"
+							className="form-control mb-3"
 						>
 							<optgroup label="Development">
 								<option value={"web-development"}>Web Development</option>
@@ -262,7 +262,7 @@ const CreateCourseForm = ({ token = {}, auth = {} }) => {
 							id="isFree"
 							name="isFree"
 							defaultValue={true}
-							className="form-control"
+							className="form-control mb-3"
 						>
 							<option value={true}>Yes</option>
 							<option value={false}>No</option>
@@ -287,7 +287,7 @@ const CreateCourseForm = ({ token = {}, auth = {} }) => {
 							id="language"
 							name="language"
 							defaultValue="english"
-							className="form-control"
+							className="form-control mb-3"
 						>
 							<option value={"english"}>English</option>
 							<option value={"mandarin"}>Mandarin</option>
@@ -309,7 +309,7 @@ const CreateCourseForm = ({ token = {}, auth = {} }) => {
 							id="difficulty"
 							name="difficulty"
 							defaultValue="beginner"
-							className="form-control"
+							className="form-control mb-3"
 						>
 							<option value={"all-level"}>All level</option>
 							<option value={"beginner"}>Beginner</option>

@@ -112,7 +112,7 @@ const CreateLessonForm = ({ token = {}, auth = {}, params = {} }) => {
 							id="free_preview"
 							name="free_preview"
 							defaultValue={true}
-							className="form-control"
+							className="form-control mb-3"
 						>
 							<option value={true}>Yes</option>
 							<option value={false}>No</option>

@@ -25,27 +25,31 @@ const NFACoursesDraftIndex = async ({ params, searchParams }) => {
 	const draftIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/extras/stripe/courses/${id}/draftit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/stripe/courses/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/courses/draft?page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/courses/draft?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
 	const publishIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/extras/stripe/courses/${id}/publishit`, "PUT", "no-cache");
+		await fetchurl(
+			`/noadmin/stripe/courses/${id}/publishit`,
+			"PUT",
+			"no-cache"
+		);
 		revalidatePath(
-			`/noadmin/courses/draft?page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/courses/draft?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
 	const trashIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/extras/stripe/courses/${id}/trashit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/stripe/courses/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/courses/draft?page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/courses/draft?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -53,12 +57,12 @@ const NFACoursesDraftIndex = async ({ params, searchParams }) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(
-			`/extras/stripe/courses/${id}/scheduleit`,
+			`/noadmin/stripe/courses/${id}/scheduleit`,
 			"PUT",
 			"no-cache"
 		);
 		revalidatePath(
-			`/noadmin/courses/draft?page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/courses/draft?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -66,21 +70,21 @@ const NFACoursesDraftIndex = async ({ params, searchParams }) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(
-			`/extras/stripe/courses/${id}/permanently`,
+			`/noadmin/stripe/courses/${id}/permanently`,
 			"DELETE",
 			"no-cache"
 		);
 		revalidatePath(
-			`/noadmin/courses/draft?page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/courses/draft?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
 	const handleTrashAll = async () => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/extras/stripe/courses/deleteall`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/stripe/courses/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/courses/draft?page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/courses/draft?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -88,33 +92,33 @@ const NFACoursesDraftIndex = async ({ params, searchParams }) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(
-			`/extras/stripe/courses/deleteall/permanently`,
+			`/noadmin/stripe/courses/deleteall/permanently`,
 			"DELETE",
 			"no-cache"
 		);
 		revalidatePath(
-			`/noadmin/courses/draft?page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/courses/draft?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
 	return (
 		<>
 			<AdminStatusesMenu
-				allLink="/noadmin/courses"
-				publishedLink="/noadmin/courses/published"
-				draftLink="/noadmin/courses/draft"
-				scheduledLink="/noadmin/courses/scheduled"
-				trashedLink="/noadmin/courses/trashed"
+				allLink="/nfabusiness/courses"
+				publishedLink="/nfabusiness/courses/published"
+				draftLink="/nfabusiness/courses/draft"
+				scheduledLink="/nfabusiness/courses/scheduled"
+				trashedLink="/nfabusiness/courses/trashed"
 				categoriesLink=""
 				categoryType=""
 			/>
 			<div className="card rounded-0">
 				<List
 					stripeChargesEnabled={auth?.userStripeChargesEnabled}
-					allLink="/noadmin/courses"
+					allLink="/nfabusiness/courses"
 					pageText="Courses"
-					addLink="/noadmin/courses/create"
-					searchOn="/noadmin/courses"
+					addLink="/nfabusiness/courses/create"
+					searchOn="/nfabusiness/courses"
 					searchedKeyword=""
 					objects={courses}
 					searchParams={awtdSearchParams}

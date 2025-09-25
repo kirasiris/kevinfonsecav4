@@ -35,7 +35,7 @@ const UpdateRealStateForm = ({ token = {}, auth = {}, object = {} }) => {
 		};
 
 		const res = await fetchurl(
-			`/noadmin/realstates/${object?.data?._id}`,
+			`/noadmin/stripe/realstates/${object?.data?._id}`,
 			"PUT",
 			"no-cache",
 			{

@@ -54,7 +54,7 @@ const CreateLessonForm = ({ token = {}, auth = {}, params = {} }) => {
 			return;
 		}
 		toast.success(`Lesson created`, "bottom");
-		router.push(`/noadmin/courses/read/${params.id}`);
+		router.push(`/nfabusiness/courses/read/${params.id}`);
 	};
 
 	const resetForm = (e) => {

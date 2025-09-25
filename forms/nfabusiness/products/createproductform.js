@@ -171,6 +171,9 @@ const CreateProductForm = ({ token = {}, auth = {} }) => {
 							<option value={true}>Yes</option>
 							<option value={false}>No</option>
 						</select>
+						<p className="text-small mb-3">
+							If free, price will be set to zero
+						</p>
 					</div>
 					<div className="col">
 						<label htmlFor="active" className="form-label">

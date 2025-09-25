@@ -53,14 +53,14 @@ const Single = ({
 							Stock:&nbsp;{object.stockQuantity}
 						</span>
 						<span className="badge bg-dark me-1">
-							In&nbsp;Stock&nbsp;{object.inStock.toString()}
+							In&nbsp;Stock&nbsp;{object?.inStock?.toString()}
 						</span>
 						<span className="badge bg-dark me-1">
-							NFA&nbsp;Item:&nbsp;{object.nfaItem.toString()}
+							NFA&nbsp;Item:&nbsp;{object?.nfaItem?.toString()}
 						</span>
 						<span className="badge bg-dark me-1">
 							Background&nbsp;Check?:&nbsp;
-							{object.requiresBackgroundCheck.toString()}
+							{object?.requiresBackgroundCheck?.toString()}
 						</span>
 						<span className="badge bg-dark me-1">
 							Age&nbsp;Restriction:&nbsp;
@@ -118,6 +118,43 @@ const Single = ({
 							>
 								Publish&nbsp;It
 							</button>
+							<button
+								className="dropdown-item btn btn-sm"
+								onClick={() => handleTrash(object._id)}
+							>
+								Trash&nbsp;It
+							</button>
+							<button
+								className="dropdown-item btn btn-sm"
+								onClick={() => handleSchedule(object._id)}
+							>
+								Schedule&nbsp;It
+							</button>
+							<hr />
+							<Link
+								href={{
+									pathname: `/noadmin/comments/create`,
+									query: {
+										resourceId: object._id,
+										onModel: `Product`,
+									},
+								}}
+								className="dropdown-item btn btn-link"
+							>
+								Add&nbsp;Comment
+							</Link>
+							<Link
+								href={{
+									pathname: `/noadmin/reports/create`,
+									query: {
+										resourceId: object._id,
+										onModel: `Product`,
+									},
+								}}
+								className="dropdown-item btn btn-link"
+							>
+								Add&nbsp;Report
+							</Link>
 							<hr />
 							<DeleteModal
 								id={object._id ? object._id : object._id}

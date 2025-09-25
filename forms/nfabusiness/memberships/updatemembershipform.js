@@ -39,7 +39,7 @@ const UpdateMembershipForm = ({ token = {}, auth = {}, object = {} }) => {
 		};
 
 		const res = await fetchurl(
-			`/extras/stripe/memberships/${object?.data?._id}`,
+			`/noadmin/stripe/memberships/${object?.data?._id}`,
 			"PUT",
 			"no-cache",
 			rawFormData
@@ -56,7 +56,7 @@ const UpdateMembershipForm = ({ token = {}, auth = {}, object = {} }) => {
 			return;
 		}
 		toast.success(`Membership updated`, "bottom");
-		router.push(`/noadmin/memberships`);
+		router.push(`/nfabusiness/memberships`);
 	};
 
 	const resetForm = (e) => {

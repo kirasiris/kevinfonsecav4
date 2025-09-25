@@ -13,7 +13,7 @@ async function getAcquisitionsDisposals(params) {
 
 async function getReviews(params) {
 	const res = await fetchurl(
-		`/global/acquisitionsdisposals${params}`,
+		`/global/comments${params}&postType=review`,
 		"GET",
 		"default"
 	);

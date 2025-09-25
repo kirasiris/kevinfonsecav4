@@ -8,15 +8,16 @@ async function getProducts(params) {
 	return res;
 }
 
-const NFAProductsIndex = async ({ params, searchParams }) => {
+const NFAProductsSearchIndex = async ({ params, searchParams }) => {
 	const awtdParams = await params;
 	const awtdSearchParams = await searchParams;
+	const keyword = awtdSearchParams.keyword || "";
 	const page = awtdSearchParams.page || 1;
 	const limit = awtdSearchParams.limit || 10;
 	const sort = awtdSearchParams.sort || "-createdAt";
 
 	const products = await getProducts(
-		`?page=${page}&limit=${limit}&sort=${sort}`
+		`?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 	);
 
 	const draftIt = async (id) => {
@@ -24,7 +25,7 @@ const NFAProductsIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/stripe/products/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
-			`/nfabusiness/products?page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/products/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -37,7 +38,7 @@ const NFAProductsIndex = async ({ params, searchParams }) => {
 			"no-cache"
 		);
 		revalidatePath(
-			`/nfabusiness/products?page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/products/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -46,7 +47,7 @@ const NFAProductsIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/stripe/products/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
-			`/nfabusiness/products?page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/products/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -59,7 +60,7 @@ const NFAProductsIndex = async ({ params, searchParams }) => {
 			"no-cache"
 		);
 		revalidatePath(
-			`/nfabusiness/products?page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/products/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -72,7 +73,7 @@ const NFAProductsIndex = async ({ params, searchParams }) => {
 			"no-cache"
 		);
 		revalidatePath(
-			`/nfabusiness/products?page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/products/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -81,7 +82,7 @@ const NFAProductsIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/stripe/products/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`/nfabusiness/products?page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/products/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -94,7 +95,7 @@ const NFAProductsIndex = async ({ params, searchParams }) => {
 			"no-cache"
 		);
 		revalidatePath(
-			`/nfabusiness/products?page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/products/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -115,7 +116,7 @@ const NFAProductsIndex = async ({ params, searchParams }) => {
 					pageText="Products"
 					addLink="/nfabusiness/products/create"
 					searchOn="/nfabusiness/products"
-					searchedKeyword=""
+					searchedKeyword={keyword}
 					objects={products}
 					searchParams={awtdSearchParams}
 					handleDraft={draftIt}
@@ -133,4 +134,4 @@ const NFAProductsIndex = async ({ params, searchParams }) => {
 	);
 };
 
-export default NFAProductsIndex;
+export default NFAProductsSearchIndex;

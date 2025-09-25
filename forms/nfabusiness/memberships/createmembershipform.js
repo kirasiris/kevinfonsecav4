@@ -39,7 +39,7 @@ const CreateMembershipForm = ({ token = {}, auth = {} }) => {
 		};
 
 		const res = await fetchurl(
-			`/extras/stripe/memberships`,
+			`/noadmin/stripe/memberships`,
 			"POST",
 			"no-cache",
 			rawFormData
@@ -56,7 +56,7 @@ const CreateMembershipForm = ({ token = {}, auth = {} }) => {
 			return;
 		}
 		toast.success(`Membership created`, "bottom");
-		router.push(`/noadmin/memberships`);
+		router.push(`/nfabusiness/memberships`);
 	};
 
 	const resetForm = (e) => {

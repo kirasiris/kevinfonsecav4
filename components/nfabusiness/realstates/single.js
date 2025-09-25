@@ -24,7 +24,7 @@ const Single = ({
 					<h1 className="blog-item__title">
 						<Link
 							href={{
-								pathname: `/noadmin/realstates/update/${object._id}`,
+								pathname: `/nfabusiness/realstates/update/${object._id}`,
 								query: {},
 							}}
 							className="blog-item__title-link"
@@ -42,7 +42,7 @@ const Single = ({
 				<div className="blog-type-list__blog-thumbnail-wrapper has-image d-none d-md-block d-lg-block d-xl-block d-xxl-block">
 					<Link
 						href={{
-							pathname: `/noadmin/realstates/update/${object._id}`,
+							pathname: `/nfabusiness/realstates/update/${object._id}`,
 							query: {},
 						}}
 						className="blog-type-list__blog-thumbnail-link"
@@ -64,7 +64,7 @@ const Single = ({
 						<DropdownButton title="Options" variant="secondary">
 							<Link
 								href={{
-									pathname: `/noadmin/realstates/read/${object._id}`,
+									pathname: `/nfabusiness/realstates/read/${object._id}`,
 									query: {
 										isAdmin: true,
 									},

@@ -55,7 +55,7 @@ const UpdateLessonForm = ({ token = {}, auth = {}, object = {} }) => {
 			return;
 		}
 		toast.success(`Lesson updated`, "bottom");
-		router.push(`/noadmin/courses/read/${object?.data?.resourceId?._id}`);
+		router.push(`/nfabusiness/courses/read/${object?.data?.resourceId?._id}`);
 	};
 
 	const resetForm = (e) => {

@@ -37,7 +37,7 @@ const CreateCourseForm = ({ token = {}, auth = {} }) => {
 		};
 
 		const res = await fetchurl(
-			`/extras/stripe/courses/`,
+			`/noadmin/stripe/courses/`,
 			"POST",
 			"no-cache",
 			rawFormData
@@ -54,7 +54,7 @@ const CreateCourseForm = ({ token = {}, auth = {} }) => {
 			return;
 		}
 		toast.success(`Course created`, "bottom");
-		router.push(`/noadmin/courses`);
+		router.push(`/nfabusiness/courses`);
 	};
 
 	const resetForm = (e) => {

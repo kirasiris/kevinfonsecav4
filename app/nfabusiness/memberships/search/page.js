@@ -4,15 +4,11 @@ import AdminStatusesMenu from "@/components/noadmin/adminstatusesmenu";
 import List from "@/components/nfabusiness/memberships/list";
 
 async function getMembershipsPublished(params) {
-	const res = await fetchurl(
-		`/extras/stripe/memberships${params}`,
-		"GET",
-		"no-cache"
-	);
+	const res = await fetchurl(`/global/memberships${params}`, "GET", "no-cache");
 	return res;
 }
 
-const AdminMembershipsSearchIndex = async ({ params, searchParams }) => {
+const NFAMembershipsSearchIndex = async ({ params, searchParams }) => {
 	const awtdParams = await params;
 	const awtdSearchParams = await searchParams;
 	const keyword = awtdSearchParams.keyword || "";
@@ -29,12 +25,12 @@ const AdminMembershipsSearchIndex = async ({ params, searchParams }) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(
-			`/extras/stripe/memberships/${id}/activateit`,
+			`/noadmin/stripe/memberships/${id}/activateit`,
 			"PUT",
 			"no-cache"
 		);
 		revalidatePath(
-			`/noadmin/memberships/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/memberships/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -42,12 +38,12 @@ const AdminMembershipsSearchIndex = async ({ params, searchParams }) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(
-			`/extras/stripe/memberships/${id}/disactivateit`,
+			`/noadmin/stripe/memberships/${id}/disactivateit`,
 			"PUT",
 			"no-cache"
 		);
 		revalidatePath(
-			`/noadmin/memberships/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/memberships/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -55,21 +51,21 @@ const AdminMembershipsSearchIndex = async ({ params, searchParams }) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(
-			`/extras/stripe/memberships/${id}/permanently`,
+			`/noadmin/stripe/memberships/${id}/permanently`,
 			"DELETE",
 			"no-cache"
 		);
 		revalidatePath(
-			`/noadmin/memberships/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/memberships/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
 	const handleTrashAll = async () => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/extras/stripe/memberships/deleteall`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/stripe/memberships/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/memberships/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/memberships/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -77,31 +73,31 @@ const AdminMembershipsSearchIndex = async ({ params, searchParams }) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(
-			`/extras/stripe/memberships/deleteall/permanently`,
+			`/noadmin/stripe/memberships/deleteall/permanently`,
 			"DELETE",
 			"no-cache"
 		);
 		revalidatePath(
-			`/noadmin/memberships/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/memberships/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
 	return (
 		<>
 			<AdminStatusesMenu
-				allLink="/noadmin/memberships"
-				publishedLink="/noadmin/memberships/published"
-				draftLink="/noadmin/memberships/draft"
-				scheduledLink="/noadmin/memberships/scheduled"
-				trashedLink="/noadmin/memberships/trashed"
+				allLink="/nfabusiness/memberships"
+				publishedLink="/nfabusiness/memberships/published"
+				draftLink="/nfabusiness/memberships/draft"
+				scheduledLink="/nfabusiness/memberships/scheduled"
+				trashedLink="/nfabusiness/memberships/trashed"
 			/>
 			<div className="card rounded-0">
 				<List
 					stripeChargesEnabled={auth?.userStripeChargesEnabled}
-					allLink="/noadmin/memberships"
+					allLink="/nfabusiness/memberships"
 					pageText="Memberships"
-					addLink="/noadmin/memberships/create"
-					searchOn="/noadmin/memberships"
+					addLink="/nfabusiness/memberships/create"
+					searchOn="/nfabusiness/memberships"
 					objects={memberships}
 					searchParams={awtdSearchParams}
 					handleDraft={undefined}
@@ -119,4 +115,4 @@ const AdminMembershipsSearchIndex = async ({ params, searchParams }) => {
 	);
 };
 
-export default AdminMembershipsSearchIndex;
+export default NFAMembershipsSearchIndex;

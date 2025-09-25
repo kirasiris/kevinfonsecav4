@@ -25,7 +25,7 @@ const Single = ({
 					<h1 className="blog-item__title">
 						<Link
 							href={{
-								pathname: `/noadmin/memberships/update/${object._id}`,
+								pathname: `/nfabusiness/memberships/update/${object._id}`,
 								query: {},
 							}}
 							className="blog-item__title-link"

@@ -32,35 +32,35 @@ const ReadCourse = async ({ params, searchParams }) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/videos/${id}/draftit`, "PUT", "no-cache");
-		revalidatePath(`/noadmin/courses/read/${awtdParams.id}`);
+		revalidatePath(`/nfabusiness/courses/read/${awtdParams.id}`);
 	};
 
 	const publishIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/videos/${id}/publishit`, "PUT", "no-cache");
-		revalidatePath(`/noadmin/courses/read/${awtdParams.id}`);
+		revalidatePath(`/nfabusiness/courses/read/${awtdParams.id}`);
 	};
 
 	const trashIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/videos/${id}/trashit`, "PUT", "no-cache");
-		revalidatePath(`/noadmin/courses/read/${awtdParams.id}`);
+		revalidatePath(`/nfabusiness/courses/read/${awtdParams.id}`);
 	};
 
 	const scheduleIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/videos/${id}/scheduleit`, "PUT", "no-cache");
-		revalidatePath(`/noadmin/courses/read/${awtdParams.id}`);
+		revalidatePath(`/nfabusiness/courses/read/${awtdParams.id}`);
 	};
 
 	const handleDelete = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/videos/${id}/permanently`, "DELETE", "no-cache");
-		revalidatePath(`/noadmin/courses/read/${awtdParams.id}`);
+		revalidatePath(`/nfabusiness/courses/read/${awtdParams.id}`);
 	};
 
 	const handleTrashAll = async (id) => {
@@ -69,7 +69,7 @@ const ReadCourse = async ({ params, searchParams }) => {
 		await fetchurl(`/noadmin/videos/deleteall`, "PUT", "no-cache", {
 			onModel: "Course",
 		});
-		revalidatePath(`/noadmin/courses/read/${awtdParams.id}`);
+		revalidatePath(`/nfabusiness/courses/read/${awtdParams.id}`);
 	};
 
 	const handleDeleteAll = async (id) => {
@@ -83,7 +83,7 @@ const ReadCourse = async ({ params, searchParams }) => {
 				onModel: "Course",
 			}
 		);
-		revalidatePath(`/noadmin/courses/read/${awtdParams.id}`);
+		revalidatePath(`/nfabusiness/courses/read/${awtdParams.id}`);
 	};
 
 	return (
@@ -97,10 +97,10 @@ const ReadCourse = async ({ params, searchParams }) => {
 				</div>
 				<div className="card rounded-0">
 					<LessonList
-						allLink={`/noadmin/courses/read/${course?.data?._id}`}
+						allLink={`/nfabusiness/courses/read/${course?.data?._id}`}
 						pageText="Lessons"
 						addLink={`/noadmin/courses/lesson/${course?.data?._id}/create`}
-						searchOn={`/noadmin/courses/read/${course?.data?._id}`}
+						searchOn={`/nfabusiness/courses/read/${course?.data?._id}`}
 						objects={lessons}
 						searchParams={awtdSearchParams}
 						handleDraft={draftIt}

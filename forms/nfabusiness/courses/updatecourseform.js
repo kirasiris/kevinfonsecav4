@@ -37,7 +37,7 @@ const UpdateCourseForm = ({ token = {}, auth = {}, object = {} }) => {
 		};
 
 		const res = await fetchurl(
-			`/extras/stripe/courses/${object?.data?._id}`,
+			`/noadmin/stripe/courses/${object?.data?._id}`,
 			"PUT",
 			"no-cache",
 			rawFormData
@@ -54,7 +54,7 @@ const UpdateCourseForm = ({ token = {}, auth = {}, object = {} }) => {
 			return;
 		}
 		toast.success(`Course updated`, "bottom");
-		router.push(`/noadmin/courses`);
+		router.push(`/nfabusiness/courses`);
 	};
 
 	const resetForm = (e) => {

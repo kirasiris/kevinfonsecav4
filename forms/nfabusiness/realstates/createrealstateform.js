@@ -34,14 +34,19 @@ const CreateRealStateForm = ({ token = {}, auth = {} }) => {
 			files: { avatar: formData.get("file") || undefined },
 		};
 
-		const res = await fetchurl(`/noadmin/realstates`, "POST", "no-cache", {
-			...rawFormData,
-			rates: {
-				weeklyPrice: formData.get("weeklyPrice"),
-				monthlyPrice: formData.get("monthlyPrice"),
-				nightlyPrice: formData.get("nightlyPrice"),
-			},
-		});
+		const res = await fetchurl(
+			`/noadmin/stripe/realstates`,
+			"POST",
+			"no-cache",
+			{
+				...rawFormData,
+				rates: {
+					weeklyPrice: formData.get("weeklyPrice"),
+					monthlyPrice: formData.get("monthlyPrice"),
+					nightlyPrice: formData.get("nightlyPrice"),
+				},
+			}
+		);
 
 		if (res.status === "error") {
 			toast.error(res.message, "bottom");

@@ -12,7 +12,7 @@ async function getReviews(params) {
 	return res;
 }
 
-const AdminReviewsSearchIndex = async ({ params, searchParams }) => {
+const NFAReviewsSearchIndex = async ({ params, searchParams }) => {
 	const awtdParams = await params;
 	const awtdSearchParams = await searchParams;
 	const keyword = awtdSearchParams.keyword || "";
@@ -122,4 +122,4 @@ const AdminReviewsSearchIndex = async ({ params, searchParams }) => {
 	);
 };
 
-export default AdminReviewsSearchIndex;
+export default NFAReviewsSearchIndex;

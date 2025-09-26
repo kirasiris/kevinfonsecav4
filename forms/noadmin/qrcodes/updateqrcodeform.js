@@ -4,12 +4,12 @@ import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import QRC from "@/components/global/qrcode";
+import FormButtons from "@/components/global/formbuttons";
 
 const UpdateQRCodeForm = ({ object = {} }) => {
 	const router = useRouter();
 
 	const [qrcodeData, setQrCodeData] = useState({
-		title: object?.data?.title,
 		url: object?.data?.url,
 		qrmargin: object?.data?.qrmargin,
 		qrcodesize: object?.data?.qrcodesize,
@@ -17,11 +17,9 @@ const UpdateQRCodeForm = ({ object = {} }) => {
 		imageurl: object?.data?.logo.url,
 		imagewidth: object?.data?.logo.width,
 		imageheight: object?.data?.logo.height,
-		status: object?.data?.status,
 	});
 
 	const {
-		title,
 		url,
 		qrmargin,
 		qrcodesize,
@@ -29,24 +27,34 @@ const UpdateQRCodeForm = ({ object = {} }) => {
 		imageurl,
 		imagewidth,
 		imageheight,
-		status,
 	} = qrcodeData;
 
 	const [btnText, setBtnText] = useState(`Submit`);
 
-	const createQrCode = async (e) => {
+	const upgradeQrCode = async (e) => {
 		e.preventDefault();
-		setBtnText("...");
+		setBtnText("Processing...");
+		const form = e.target;
+		const formData = new FormData(form);
+
+		const rawFormData = {
+			title: formData.get("title"),
+			url: formData.get("url"),
+			qrmargin: formData.get("qrmargin"),
+			qrcodesize: formData.get("qrcodesize"),
+			securitylevel: formData.get("securitylevel"),
+		};
+
 		const res = await fetchurl(
 			`/extras/tools/qrcodes/${object?.data?._id}`,
 			"PUT",
 			"no-cache",
 			{
-				...qrcodeData,
+				...rawFormData,
 				logo: {
-					url: imageurl,
-					width: imagewidth,
-					height: imageheight,
+					url: formData.get("imageurl"),
+					width: formData.get("imagewidth"),
+					height: formData.get("imageheight"),
 				},
 			}
 		);
@@ -60,23 +68,9 @@ const UpdateQRCodeForm = ({ object = {} }) => {
 			setBtnText("Submit");
 			return;
 		}
+		toast.success("QR Code upgraded", "bottom");
 		setBtnText(btnText);
-		resetForm();
 		router.push(`/noadmin/qrcodes?page=1&limit=10&sort=-createdAt`);
-	};
-
-	const resetForm = () => {
-		setQrCodeData({
-			title: object?.data?.title,
-			url: object?.data?.url,
-			qrmargin: object?.data?.qrmargin,
-			qrcodesize: object?.data?.qrcodesize,
-			securitylevel: object?.data?.securitylevel,
-			imageurl: object?.data?.imageurl,
-			imagewidth: object?.data?.imagewidth,
-			imageheight: object?.data?.imageheight,
-			status: object?.data?.status,
-		});
 	};
 
 	return (
@@ -92,20 +86,14 @@ const UpdateQRCodeForm = ({ object = {} }) => {
 					imgheight={imageheight}
 				/>
 			</div>
-			<form onSubmit={createQrCode}>
+			<form onSubmit={upgradeQrCode}>
 				<label htmlFor="title" className="form-label">
 					Title
 				</label>
 				<input
 					id="title"
 					name="title"
-					value={title}
-					onChange={(e) => {
-						setQrCodeData({
-							...qrcodeData,
-							title: e.target.value,
-						});
-					}}
+					defaultValue={object?.data?.title}
 					type="text"
 					className="form-control mb-3"
 					placeholder="Demo"
@@ -116,7 +104,7 @@ const UpdateQRCodeForm = ({ object = {} }) => {
 				<input
 					id="url"
 					name="url"
-					value={url}
+					defaultValue={object?.data?.url}
 					onChange={(e) => {
 						setQrCodeData({
 							...qrcodeData,
@@ -133,7 +121,7 @@ const UpdateQRCodeForm = ({ object = {} }) => {
 				<input
 					id="qrmargin"
 					name="qrmargin"
-					value={qrmargin}
+					defaultValue={object?.data?.qrmargin}
 					onChange={(e) => {
 						setQrCodeData({
 							...qrcodeData,
@@ -150,7 +138,7 @@ const UpdateQRCodeForm = ({ object = {} }) => {
 				<input
 					id="qrcodesize"
 					name="qrcodesize"
-					value={qrcodesize}
+					defaultValue={object?.data?.qrcodesize}
 					onChange={(e) => {
 						setQrCodeData({
 							...qrcodeData,
@@ -167,7 +155,7 @@ const UpdateQRCodeForm = ({ object = {} }) => {
 				<select
 					id="securitylevel"
 					name="securitylevel"
-					value={securitylevel}
+					defaultValue={object?.data?.securitylevel}
 					onChange={(e) => {
 						setQrCodeData({
 							...qrcodeData,
@@ -187,7 +175,7 @@ const UpdateQRCodeForm = ({ object = {} }) => {
 				<input
 					id="imageurl"
 					name="imageurl"
-					value={imageurl}
+					defaultValue={object?.data?.logo.url}
 					onChange={(e) => {
 						setQrCodeData({
 							...qrcodeData,
@@ -204,7 +192,7 @@ const UpdateQRCodeForm = ({ object = {} }) => {
 				<input
 					id="imagewidth"
 					name="imagewidth"
-					value={imagewidth}
+					defaultValue={object?.data?.logo.width}
 					onChange={(e) => {
 						setQrCodeData({
 							...qrcodeData,
@@ -221,7 +209,7 @@ const UpdateQRCodeForm = ({ object = {} }) => {
 				<input
 					id="imageheight"
 					name="imageheight"
-					value={imageheight}
+					defaultValue={object?.data?.logo.height}
 					onChange={(e) => {
 						setQrCodeData({
 							...qrcodeData,
@@ -232,20 +220,7 @@ const UpdateQRCodeForm = ({ object = {} }) => {
 					className="form-control mb-3"
 					placeholder="30"
 				/>
-				<button
-					className="btn btn-secondary btn-sm float-start"
-					type="submit"
-					disabled={url?.length > 0 ? !true : !false}
-				>
-					{btnText}
-				</button>
-				<button
-					className="btn btn-secondary btn-sm float-end"
-					type="reset"
-					onClick={resetForm}
-				>
-					Reset
-				</button>
+				<FormButtons />
 			</form>
 		</>
 	);

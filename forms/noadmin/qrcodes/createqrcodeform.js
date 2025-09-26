@@ -4,24 +4,22 @@ import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import QRC from "@/components/global/qrcode";
+import FormButtons from "@/components/global/formbuttons";
 
 const CreateQrCodeForm = ({ auth = {} }) => {
 	const router = useRouter();
 
 	const [qrcodeData, setQrCodeData] = useState({
-		title: ``,
-		url: ``,
+		url: "",
 		qrmargin: 4,
 		qrcodesize: 200,
-		securitylevel: `L`,
-		imageurl: ``,
+		securitylevel: "L",
+		imageurl: "",
 		imagewidth: 30,
 		imageheight: 30,
-		status: "draft",
 	});
 
 	const {
-		title,
 		url,
 		qrmargin,
 		qrcodesize,
@@ -29,21 +27,31 @@ const CreateQrCodeForm = ({ auth = {} }) => {
 		imageurl,
 		imagewidth,
 		imageheight,
-		status,
 	} = qrcodeData;
 
 	const [btnText, setBtnText] = useState(`Submit`);
 
-	const createQrCode = async (e) => {
+	const addQrCode = async (e) => {
 		e.preventDefault();
-		setBtnText("...");
+		setBtnText("Processing...");
+		const form = e.target;
+		const formData = new FormData(form);
+
+		const rawFormData = {
+			title: formData.get("title"),
+			url: formData.get("url"),
+			qrmargin: formData.get("qrmargin"),
+			qrcodesize: formData.get("qrcodesize"),
+			securitylevel: formData.get("securitylevel"),
+		};
+
 		const res = await fetchurl(`/extras/tools/qrcodes`, "POST", "no-cache", {
-			...qrcodeData,
+			...rawFormData,
 			user: auth?.userId,
 			logo: {
-				url: imageurl,
-				width: imagewidth,
-				height: imageheight,
+				url: formData.get("imageurl"),
+				width: formData.get("imagewidth"),
+				height: formData.get("imageheight"),
 			},
 			website: process.env.NEXT_PUBLIC_WEBSITE_NAME,
 			status: "published",
@@ -58,23 +66,9 @@ const CreateQrCodeForm = ({ auth = {} }) => {
 			setBtnText("Submit");
 			return;
 		}
+		toast.success("QR Code created", "bottom");
 		setBtnText(btnText);
-		resetForm();
 		router.push(`/noadmin/qrcodes?page=1&limit=10&sort=-createdAt`);
-	};
-
-	const resetForm = () => {
-		setQrCodeData({
-			title: ``,
-			url: ``,
-			qrmargin: 4,
-			qrcodesize: 200,
-			securitylevel: `L`,
-			imageurl: ``,
-			imagewidth: 30,
-			imageheight: 30,
-			status: "draft",
-		});
 	};
 
 	return (
@@ -90,20 +84,14 @@ const CreateQrCodeForm = ({ auth = {} }) => {
 					imgheight={imageheight}
 				/>
 			</div>
-			<form onSubmit={createQrCode}>
+			<form onSubmit={addQrCode}>
 				<label htmlFor="title" className="form-label">
 					Title
 				</label>
 				<input
 					id="title"
 					name="title"
-					value={title}
-					onChange={(e) => {
-						setQrCodeData({
-							...qrcodeData,
-							title: e.target.value,
-						});
-					}}
+					defaultValue=""
 					type="text"
 					className="form-control mb-3"
 					placeholder="Demo"
@@ -114,7 +102,7 @@ const CreateQrCodeForm = ({ auth = {} }) => {
 				<input
 					id="url"
 					name="url"
-					value={url}
+					defaultValue=""
 					onChange={(e) => {
 						setQrCodeData({
 							...qrcodeData,
@@ -131,7 +119,7 @@ const CreateQrCodeForm = ({ auth = {} }) => {
 				<input
 					id="qrmargin"
 					name="qrmargin"
-					value={qrmargin}
+					defaultValue="4"
 					onChange={(e) => {
 						setQrCodeData({
 							...qrcodeData,
@@ -148,7 +136,7 @@ const CreateQrCodeForm = ({ auth = {} }) => {
 				<input
 					id="qrcodesize"
 					name="qrcodesize"
-					value={qrcodesize}
+					defaultValue="200"
 					onChange={(e) => {
 						setQrCodeData({
 							...qrcodeData,
@@ -165,7 +153,7 @@ const CreateQrCodeForm = ({ auth = {} }) => {
 				<select
 					id="securitylevel"
 					name="securitylevel"
-					value={securitylevel}
+					defaultValue="L"
 					onChange={(e) => {
 						setQrCodeData({
 							...qrcodeData,
@@ -185,7 +173,7 @@ const CreateQrCodeForm = ({ auth = {} }) => {
 				<input
 					id="imageurl"
 					name="imageurl"
-					value={imageurl}
+					defaultValue=""
 					onChange={(e) => {
 						setQrCodeData({
 							...qrcodeData,
@@ -202,7 +190,7 @@ const CreateQrCodeForm = ({ auth = {} }) => {
 				<input
 					id="imagewidth"
 					name="imagewidth"
-					value={imagewidth}
+					defaultValue="30"
 					onChange={(e) => {
 						setQrCodeData({
 							...qrcodeData,
@@ -219,7 +207,7 @@ const CreateQrCodeForm = ({ auth = {} }) => {
 				<input
 					id="imageheight"
 					name="imageheight"
-					value={imageheight}
+					defaultValue="30"
 					onChange={(e) => {
 						setQrCodeData({
 							...qrcodeData,
@@ -230,20 +218,7 @@ const CreateQrCodeForm = ({ auth = {} }) => {
 					className="form-control mb-3"
 					placeholder="30"
 				/>
-				<button
-					className="btn btn-secondary btn-sm float-start"
-					type="submit"
-					disabled={url?.length > 0 ? !true : !false}
-				>
-					{btnText}
-				</button>
-				<button
-					className="btn btn-secondary btn-sm float-end"
-					type="reset"
-					onClick={resetForm}
-				>
-					Reset
-				</button>
+				<FormButtons />
 			</form>
 		</>
 	);

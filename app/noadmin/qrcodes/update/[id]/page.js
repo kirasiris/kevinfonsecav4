@@ -1,8 +1,19 @@
+import { notFound } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { fetchurl, getUserOnServer } from "@/helpers/setTokenOnServer";
 import AdminStatusesMenu from "@/components/noadmin/adminstatusesmenu";
 import UpdateQRCodeForm from "@/forms/noadmin/qrcodes/updateqrcodeform";
 import List from "@/components/noadmin/qrcodes/list";
+
+async function getQRCode(params) {
+	const res = await fetchurl(
+		`/extras/tools/qrcodes${params}`,
+		"GET",
+		"no-cache"
+	);
+	if (!res.success) notFound();
+	return res;
+}
 
 async function getQRCodes(params) {
 	const res = await fetchurl(
@@ -22,7 +33,7 @@ const UpdateQRCode = async ({ params, searchParams }) => {
 
 	const auth = await getUserOnServer();
 
-	const qrcode = await getQRCodes(`/${awtdParams.id}`);
+	const qrcode = await getQRCode(`/${awtdParams.id}`);
 	const qrcodes = await getQRCodes(`?page=${page}&limit=${limit}&sort=${sort}`);
 
 	const draftIt = async (id) => {

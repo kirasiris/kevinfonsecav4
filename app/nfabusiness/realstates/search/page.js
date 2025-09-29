@@ -23,7 +23,11 @@ const NFARealStatesSearchIndex = async ({ params, searchParams }) => {
 	const draftIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/noadmin/realstates/${id}/draftit`, "PUT", "no-cache");
+		await fetchurl(
+			`/noadmin/stripe/realstates/${id}/draftit`,
+			"PUT",
+			"no-cache"
+		);
 		revalidatePath(
 			`/nfabusiness/realstates/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -32,7 +36,11 @@ const NFARealStatesSearchIndex = async ({ params, searchParams }) => {
 	const publishIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/noadmin/realstates/${id}/publishit`, "PUT", "no-cache");
+		await fetchurl(
+			`/noadmin/stripe/realstates/${id}/publishit`,
+			"PUT",
+			"no-cache"
+		);
 		revalidatePath(
 			`/nfabusiness/realstates/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -41,7 +49,11 @@ const NFARealStatesSearchIndex = async ({ params, searchParams }) => {
 	const trashIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/noadmin/realstates/${id}/trashit`, "PUT", "no-cache");
+		await fetchurl(
+			`/noadmin/stripe/realstates/${id}/trashit`,
+			"PUT",
+			"no-cache"
+		);
 		revalidatePath(
 			`/nfabusiness/realstates/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -50,7 +62,11 @@ const NFARealStatesSearchIndex = async ({ params, searchParams }) => {
 	const scheduleIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/noadmin/realstates/${id}/scheduleit`, "PUT", "no-cache");
+		await fetchurl(
+			`/noadmin/stripe/realstates/${id}/scheduleit`,
+			"PUT",
+			"no-cache"
+		);
 		revalidatePath(
 			`/nfabusiness/realstates/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -60,7 +76,7 @@ const NFARealStatesSearchIndex = async ({ params, searchParams }) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(
-			`/noadmin/realstates/${id}/permanently`,
+			`/noadmin/stripe/realstates/${id}/permanently`,
 			"DELETE",
 			"no-cache"
 		);
@@ -72,7 +88,7 @@ const NFARealStatesSearchIndex = async ({ params, searchParams }) => {
 	const handleTrashAll = async () => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/noadmin/realstates/deleteall`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/stripe/realstates/deleteall`, "PUT", "no-cache");
 		revalidatePath(
 			`/nfabusiness/realstates/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
 		);
@@ -82,7 +98,7 @@ const NFARealStatesSearchIndex = async ({ params, searchParams }) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(
-			`/noadmin/realstates/deleteall/permanently`,
+			`/noadmin/stripe/realstates/deleteall/permanently`,
 			"DELETE",
 			"no-cache"
 		);

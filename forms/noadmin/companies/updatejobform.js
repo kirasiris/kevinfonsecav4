@@ -200,6 +200,7 @@ const UpdateJobForm = ({ token = {}, auth = {}, object = {} }) => {
 						>
 							<option value={`hybrid`}>Hybrid</option>
 							<option value={`remote`}>Remote</option>
+							<option value={`in-office`}>In Office</option>
 						</select>
 					</div>
 					<div className="col">

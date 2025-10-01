@@ -198,6 +198,7 @@ const CreateJobForm = ({ token = {}, auth = {}, params = {} }) => {
 						>
 							<option value={`hybrid`}>Hybrid</option>
 							<option value={`remote`}>Remote</option>
+							<option value={`in-office`}>In Office</option>
 						</select>
 					</div>
 					<div className="col">

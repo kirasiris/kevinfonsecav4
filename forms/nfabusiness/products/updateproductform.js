@@ -264,7 +264,7 @@ const UpdateProductForm = ({ object = {}, token = "", auth = {} }) => {
 							}
 							required
 						>
-							<option value="none">Choose an option</option>
+							<option value="all">Choose an option</option>
 							<option value="weapons">Weapons</option>
 							<option value="accessories">Accessories</option>
 							<option value="clothing">Clothing</option>
@@ -369,7 +369,7 @@ const UpdateProductForm = ({ object = {}, token = "", auth = {} }) => {
 									className="form-control mb-3"
 									required
 								>
-									<option value="none">Choose an option</option>
+									<option value="all">Choose an option</option>
 									<option value="rifle">Rifle</option>
 									<option value="shotgun">Shotgun</option>
 									<option value="pistol">Pistol</option>

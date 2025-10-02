@@ -4,7 +4,7 @@ import {
 	getUserOnServer,
 } from "@/helpers/setTokenOnServer";
 import ParseHtml from "@/layout/parseHtml";
-import UseDropzone from "@/components/global/dropzone";
+// import UseDropzone from "@/components/global/dropzone";
 
 async function getAcquisitionsDisposals(params) {
 	const res = await fetchurl(
@@ -120,7 +120,7 @@ const ReadAcquisitionDisposal = async ({ params, searchParams }) => {
 						disabled
 					/>
 					<small className="mb-3">
-						Name and Address or Name and License Number "FFL"
+						Name and Address or Name and License Number &quot;FFL&quot;
 					</small>
 					<h6 className="display-6">Disposal</h6>
 					<label htmlFor="name" className="form-label">

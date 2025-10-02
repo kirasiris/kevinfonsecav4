@@ -5,14 +5,17 @@ import List from "@/components/nfabusiness/acquisitionsdisposals/list";
 
 async function getAcquisitionsDisposals(params) {
 	const res = await fetchurl(
-		`/global/acquisitionsdisposals${params}`,
+		`/global/acquisitionsdisposals${params}&status=fbidenied`,
 		"GET",
 		"no-cache"
 	);
 	return res;
 }
 
-const NFAAcquisitionDisposalsIndex = async ({ params, searchParams }) => {
+const NFAAcquisitionDisposalsFBIDeniedIndex = async ({
+	params,
+	searchParams,
+}) => {
 	const awtdParams = await params;
 	const awtdSearchParams = await searchParams;
 	const page = awtdSearchParams.page || 1;
@@ -32,7 +35,7 @@ const NFAAcquisitionDisposalsIndex = async ({ params, searchParams }) => {
 			"no-cache"
 		);
 		revalidatePath(
-			`/nfabusiness/acquisitionsdisposals?page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/acquisitionsdisposals/fbidenied?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -45,7 +48,7 @@ const NFAAcquisitionDisposalsIndex = async ({ params, searchParams }) => {
 			"no-cache"
 		);
 		revalidatePath(
-			`/nfabusiness/acquisitionsdisposals?page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/acquisitionsdisposals/fbidenied?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -88,4 +91,4 @@ const NFAAcquisitionDisposalsIndex = async ({ params, searchParams }) => {
 	);
 };
 
-export default NFAAcquisitionDisposalsIndex;
+export default NFAAcquisitionDisposalsFBIDeniedIndex;

@@ -132,6 +132,16 @@ const Single = ({
 							<hr />
 							<Link
 								href={{
+									pathname: `/noadmin/users/update/${object?._id}/nfaprofilepicture`,
+									query: {},
+								}}
+								className="dropdown-item btn btn-link"
+							>
+								Update&nbsp;NFA&nbsp;Profile&nbsp;Picture
+							</Link>
+							<hr />
+							<Link
+								href={{
 									pathname: `/noadmin/comments/create`,
 									query: {
 										resourceId: object._id,

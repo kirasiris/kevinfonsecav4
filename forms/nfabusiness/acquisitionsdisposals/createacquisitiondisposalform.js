@@ -24,7 +24,12 @@ const CreateAcquisitionDisposalForm = ({ token = "", auth = {} }) => {
 			serialNumber: formData.get("serialNumber"),
 			fromWhomReceived: formData.get("fromWhomReceived"),
 			name: formData.get("name"),
+			email: formData.get("email"),
 			address: formData.get("address"),
+			delivery: {
+				trackingCompany: formData.get("trackingCompany"),
+				trackingNumber: formData.get("trackingNumber"),
+			},
 			text: formData.get("text"),
 			status: formData.get("status"),
 		};
@@ -136,7 +141,7 @@ const CreateAcquisitionDisposalForm = ({ token = "", auth = {} }) => {
 					name="fromWhomReceived"
 					defaultValue=""
 					type="text"
-					className="form-control mb-3"
+					className="form-control"
 					required
 					placeholder="Shootsmart"
 				/>
@@ -156,6 +161,17 @@ const CreateAcquisitionDisposalForm = ({ token = "", auth = {} }) => {
 					required
 					placeholder="John Doe"
 				/>
+				<label htmlFor="email" className="form-label">
+					Email
+				</label>
+				<input
+					id="email"
+					name="email"
+					defaultValue=""
+					type="email"
+					className="form-control mb-3"
+					placeholder="john@doe.com"
+				/>
 				<label htmlFor="address" className="form-label">
 					Address
 				</label>
@@ -164,12 +180,62 @@ const CreateAcquisitionDisposalForm = ({ token = "", auth = {} }) => {
 					name="address"
 					defaultValue=""
 					type="text"
-					className="form-control mb-3"
+					className="form-control"
 					required
 					placeholder=""
 				/>
 				<small className="mb-3">
 					Or Form 4473 Serial Number if Forms 4473 Filed Numerically
+				</small>
+			</div>
+			<h6 className="display-6">Delivery Information</h6>
+			<div className="col-lg-6">
+				<label htmlFor="trackingCompany" className="form-label">
+					Tracking Company
+				</label>
+				<select
+					id="trackingCompany"
+					name="trackingCompany"
+					defaultValue="none"
+					className="form-control mb-3"
+				>
+					<option value="none">None</option>
+					<option value="ups">UPS</option>
+					<option value="fedex">FedEx</option>
+				</select>
+			</div>
+			<div className="col-lg-6">
+				<label htmlFor="trackingNumber" className="form-label">
+					Tracking Number
+				</label>
+				<input
+					id="trackingNumber"
+					name="trackingNumber"
+					defaultValue=""
+					type="text"
+					className="form-control"
+					required
+					placeholder="1234567890"
+				/>
+				<small className="mb-3">
+					Use&nbsp;
+					<a
+						href="https://www.ups.com/track?trackNums=&loc=en_US&requester=ST"
+						className="btn btn-link btn-sm"
+						target="_blank"
+						rel="noreferrer noopener"
+					>
+						UPS
+					</a>
+					&nbsp;or&nbsp;
+					<a
+						href="https://www.fedex.com/en-us/tracking.html"
+						className="btn btn-link btn-sm"
+						target="_blank"
+						rel="noreferrer noopener"
+					>
+						FedEx
+					</a>
 				</small>
 			</div>
 			<div className="col">
@@ -192,12 +258,12 @@ const CreateAcquisitionDisposalForm = ({ token = "", auth = {} }) => {
 				<select
 					id="status"
 					name="status"
-					defaultValue=""
+					defaultValue="pending"
 					className="form-control mb-3"
 					required
 				>
-					<option value={`draft`}>Draft</option>
-					<option value={`published`}>Published</option>
+					<option value={`pending`}>Pending</option>
+					<option value={`fbidenied`}>FBI Denied</option>
 					<option value={`acquired`}>Acquired</option>
 					<option value={`disposed`}>Disposed</option>
 				</select>

@@ -11,6 +11,8 @@ const NFAStatusesMenu = ({
 	filledLink = "",
 	categoriesLink = "",
 	categoryType = "",
+	pendingLink = "",
+	fbiDeniedLink = "",
 	acquiredLink = "",
 	disposedLink = "",
 }) => {
@@ -108,6 +110,32 @@ const NFAStatusesMenu = ({
 						className="btn btn-link btn-sm border-1 border-secondary"
 					>
 						Categories
+					</Link>
+				)}
+			{pendingLink !== "" &&
+				pendingLink !== undefined &&
+				pendingLink !== null && (
+					<Link
+						href={{
+							pathname: pendingLink,
+							query: { page: 1, limit: 10, sort: `-createdAt` },
+						}}
+						className={`btn ${isActive(pendingLink)} btn-sm`}
+					>
+						Pending
+					</Link>
+				)}
+			{fbiDeniedLink !== "" &&
+				fbiDeniedLink !== undefined &&
+				fbiDeniedLink !== null && (
+					<Link
+						href={{
+							pathname: fbiDeniedLink,
+							query: { page: 1, limit: 10, sort: `-createdAt` },
+						}}
+						className={`btn ${isActive(fbiDeniedLink)} btn-sm`}
+					>
+						Denied
 					</Link>
 				)}
 			{acquiredLink !== "" &&

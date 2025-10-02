@@ -35,7 +35,7 @@ const NFAAcquisitionDisposalsDisposedIndex = async ({
 			"no-cache"
 		);
 		revalidatePath(
-			`/nfabusiness/acquisitionsdisposals/published?page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/acquisitionsdisposals/disposed?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -48,7 +48,7 @@ const NFAAcquisitionDisposalsDisposedIndex = async ({
 			"no-cache"
 		);
 		revalidatePath(
-			`/nfabusiness/acquisitionsdisposals/published?page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/acquisitionsdisposals/disposed?page=${page}&limit=${limit}&sort=${sort}`
 		);
 	};
 
@@ -62,6 +62,8 @@ const NFAAcquisitionDisposalsDisposedIndex = async ({
 				trashedLink=""
 				categoriesLink=""
 				categoryType=""
+				pendingLink="/nfabusiness/acquisitionsdisposals/pending"
+				fbiDeniedLink="/nfabusiness/acquisitionsdisposals/fbidenied"
 				acquiredLink="/nfabusiness/acquisitionsdisposals/acquired"
 				disposedLink="/nfabusiness/acquisitionsdisposals/disposed"
 			/>

@@ -45,6 +45,7 @@ const CreateUserForm = ({ auth = {}, objects = [] }) => {
 				linkedin: formData.get("linkedin"),
 				steamId: formData.get("steamId"),
 				xboxId: formData.get("xboxId"),
+				indeed: formData.get("indeed"),
 			},
 			registeredFrom: process.env.NEXT_PUBLIC_NO_REPLY_EMAIL,
 		};
@@ -75,7 +76,7 @@ const CreateUserForm = ({ auth = {}, objects = [] }) => {
 	};
 
 	return (
-		<form className="row" onSubmit={addUser}>
+		<form onSubmit={addUser}>
 			<div className="col">
 				<div className="col">
 					<label htmlFor="username" className="form-label">
@@ -366,20 +367,7 @@ const CreateUserForm = ({ auth = {}, objects = [] }) => {
 						defaultValue=""
 						type="text"
 						className="form-control mb-3"
-						placeholder="https://demo.com/"
-					/>
-				</div>
-				<div className="col">
-					<label htmlFor="twitter" className="form-label">
-						Twitter
-					</label>
-					<input
-						id="twitter"
-						name="twitter"
-						defaultValue=""
-						type="text"
-						className="form-control mb-3"
-						placeholder="https://demo.com/"
+						placeholder="https://demo.com"
 					/>
 				</div>
 				<div className="col">
@@ -392,7 +380,20 @@ const CreateUserForm = ({ auth = {}, objects = [] }) => {
 						defaultValue=""
 						type="text"
 						className="form-control mb-3"
-						placeholder="https://demo.com/"
+						placeholder="https://facebook.com"
+					/>
+				</div>
+				<div className="col">
+					<label htmlFor="twitter" className="form-label">
+						Twitter
+					</label>
+					<input
+						id="twitter"
+						name="twitter"
+						defaultValue=""
+						type="text"
+						className="form-control mb-3"
+						placeholder="https://x.com/john.doe"
 					/>
 				</div>
 				<div className="col">
@@ -405,7 +406,7 @@ const CreateUserForm = ({ auth = {}, objects = [] }) => {
 						defaultValue=""
 						type="text"
 						className="form-control mb-3"
-						placeholder="https://demo.com/"
+						placeholder="https://youtube.com/channel/john.doe"
 					/>
 				</div>
 			</div>
@@ -420,7 +421,7 @@ const CreateUserForm = ({ auth = {}, objects = [] }) => {
 						defaultValue=""
 						type="text"
 						className="form-control mb-3"
-						placeholder="https://demo.com/"
+						placeholder="https://instagram.com/john.doe"
 					/>
 				</div>
 				<div className="col">
@@ -433,7 +434,7 @@ const CreateUserForm = ({ auth = {}, objects = [] }) => {
 						defaultValue=""
 						type="text"
 						className="form-control mb-3"
-						placeholder="https://demo.com/"
+						placeholder="https://www.linkedin.com/in/john-doe-12345678a/"
 					/>
 				</div>
 				<div className="col">
@@ -446,7 +447,7 @@ const CreateUserForm = ({ auth = {}, objects = [] }) => {
 						defaultValue=""
 						type="text"
 						className="form-control mb-3"
-						placeholder="https://demo.com/"
+						placeholder="https://www.steam.com"
 					/>
 				</div>
 				<div className="col">
@@ -459,7 +460,20 @@ const CreateUserForm = ({ auth = {}, objects = [] }) => {
 						defaultValue=""
 						type="text"
 						className="form-control mb-3"
-						placeholder="https://demo.com/"
+						placeholder="https://account.xbox.com/en-us/Profile?csrf=ID"
+					/>
+				</div>
+				<div className="col-lg-12">
+					<label htmlFor="indeed" className="form-label">
+						Indeed Resume Link
+					</label>
+					<input
+						id="indeed"
+						name="indeed"
+						defaultValue=""
+						type="text"
+						className="form-control mb-3"
+						placeholder="https://profile.indeed.com/p/USERNAME-RESUMEID"
 					/>
 				</div>
 			</div>

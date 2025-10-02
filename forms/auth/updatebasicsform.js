@@ -30,6 +30,7 @@ const UpdateBasicsForm = ({ auth = {} }) => {
 			linkedin: formData.get("linkedin"),
 			steamId: formData.get("steamId"),
 			xboxId: formData.get("xboxId"),
+			indeed: formData.get("indeed"),
 		};
 
 		const res = await fetchurl(
@@ -218,6 +219,19 @@ const UpdateBasicsForm = ({ auth = {} }) => {
 						type="text"
 						className="form-control mb-3"
 						placeholder="https://account.xbox.com/en-us/Profile?csrf=ID"
+					/>
+				</div>
+				<div className="col-lg-12">
+					<label htmlFor="indeed" className="form-label">
+						Indeed Resume Link
+					</label>
+					<input
+						id="indeed"
+						name="indeed"
+						defaultValue={auth?.data?.social?.indeed}
+						type="text"
+						className="form-control mb-3"
+						placeholder="https://profile.indeed.com/p/USERNAME-RESUMEID"
 					/>
 				</div>
 			</div>

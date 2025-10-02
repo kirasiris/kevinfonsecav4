@@ -8,7 +8,6 @@ import UpdateUserForm from "@/forms/noadmin/users/updateuserform";
 
 async function getUsers(params) {
 	const res = await fetchurl(`/global/users${params}`, "GET", "no-cache");
-	console.log("response", res);
 	if (!res.success) notFound();
 	return res;
 }

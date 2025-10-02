@@ -60,6 +60,8 @@ const NFAAcquisitionDisposalsSearchIndex = async ({ params, searchParams }) => {
 				trashedLink=""
 				categoriesLink=""
 				categoryType=""
+				pendingLink="/nfabusiness/acquisitionsdisposals/pending"
+				fbiDeniedLink="/nfabusiness/acquisitionsdisposals/fbidenied"
 				acquiredLink="/nfabusiness/acquisitionsdisposals/acquired"
 				disposedLink="/nfabusiness/acquisitionsdisposals/disposed"
 			/>

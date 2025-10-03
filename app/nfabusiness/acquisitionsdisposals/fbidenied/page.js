@@ -5,7 +5,7 @@ import List from "@/components/nfabusiness/acquisitionsdisposals/list";
 
 async function getAcquisitionsDisposals(params) {
 	const res = await fetchurl(
-		`/global/acquisitionsdisposals${params}&status=fbidenied`,
+		`/global/weaponacquisitionsdisposals${params}&status=fbidenied`,
 		"GET",
 		"no-cache"
 	);
@@ -30,7 +30,7 @@ const NFAAcquisitionDisposalsFBIDeniedIndex = async ({
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(
-			`/noadmin/acquisitionsdisposals/${id}/acquireit`,
+			`/noadmin/weaponacquisitionsdisposals/${id}/acquireit`,
 			"PUT",
 			"no-cache"
 		);
@@ -43,7 +43,7 @@ const NFAAcquisitionDisposalsFBIDeniedIndex = async ({
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(
-			`/noadmin/acquisitionsdisposals/${id}/disposeit`,
+			`/noadmin/weaponacquisitionsdisposals/${id}/disposeit`,
 			"PUT",
 			"no-cache"
 		);

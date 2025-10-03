@@ -1,17 +1,20 @@
+import { notFound } from "next/navigation";
 import {
 	fetchurl,
 	getAuthTokenOnServer,
 	getUserOnServer,
 } from "@/helpers/setTokenOnServer";
 import ParseHtml from "@/layout/parseHtml";
-// import UseDropzone from "@/components/global/dropzone";
+import FileList from "@/components/nfabusiness/acquisitionsdisposals/filelist";
+import UseDropzone from "@/components/nfabusiness/acquisitionsdisposals/filedropzone";
 
 async function getAcquisitionsDisposals(params) {
 	const res = await fetchurl(
-		`/global/acquisitionsdisposals${params}`,
+		`/global/weaponacquisitionsdisposals${params}`,
 		"GET",
 		"no-cache"
 	);
+	if (!res.success) notFound();
 	return res;
 }
 
@@ -222,15 +225,22 @@ const ReadAcquisitionDisposal = async ({ params, searchParams }) => {
 						Notes
 					</label>
 					<ParseHtml text={acquisitionsdisposal?.data?.text} />
-					{/* <UseDropzone
+					<UseDropzone
 						auth={auth}
 						token={token}
 						id="file"
 						name="file"
 						multipleFiles={true}
-						onModel="WeaponAcquisitionDisposal"
-						revalidateUrl={`/nfabusiness/acquisitionsdisposals/read/${acquisitionsdisposal?.data?._id}`}
-					/> */}
+						object={acquisitionsdisposal?.data}
+					/>
+					<div className="card rounded-0">
+						<FileList
+							allLink={`/nfabusiness/acquisitionsdisposals/read/${acquisitionsdisposal?.data?._id}`}
+							pageText="Files"
+							objects={acquisitionsdisposal?.data?.files?.extras}
+							searchParams={awtdSearchParams}
+						/>
+					</div>
 				</div>
 			</div>
 		</article>

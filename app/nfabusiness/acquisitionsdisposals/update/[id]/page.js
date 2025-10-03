@@ -7,7 +7,7 @@ import UpdateAcquisitionDisposalForm from "@/forms/nfabusiness/acquisitionsdispo
 
 async function getAcquisitionsDisposals(params) {
 	const res = await fetchurl(
-		`/global/acquisitionsdisposals${params}`,
+		`/global/weaponacquisitionsdisposals${params}`,
 		"GET",
 		"no-cache"
 	);

@@ -4,7 +4,7 @@ import { fetchurl } from "@/helpers/setTokenOnServer";
 
 async function getAcquisitionsDisposals(params) {
 	const res = await fetchurl(
-		`/global/acquisitionsdisposals${params}&postType=review`,
+		`/global/weaponacquisitionsdisposals${params}`,
 		"GET",
 		"default"
 	);
@@ -44,6 +44,8 @@ async function getWeapons(params) {
 // }
 
 const AdminNFAHome = async ({ params, searchParams }) => {
+	const pendingData = getAcquisitionsDisposals(`?status=pending`);
+	const fbideniedData = getAcquisitionsDisposals(`?status=fbidenied`);
 	const acquiredData = getAcquisitionsDisposals(`?status=acquired`);
 	const disposedData = getAcquisitionsDisposals(`?status=disposed`);
 	const reviewsData = getReviews(`?limit=100`);
@@ -52,6 +54,8 @@ const AdminNFAHome = async ({ params, searchParams }) => {
 	// const weaponaccessoriesData = getWeaponAccessories(`?limit=100`);
 
 	const [
+		pending,
+		fbidenied,
 		acquired,
 		disposed,
 		servicereviews,
@@ -59,6 +63,8 @@ const AdminNFAHome = async ({ params, searchParams }) => {
 		weapons,
 		// weaponaccessories,
 	] = await Promise.all([
+		pendingData,
+		fbideniedData,
 		acquiredData,
 		disposedData,
 		reviewsData,
@@ -74,6 +80,28 @@ const AdminNFAHome = async ({ params, searchParams }) => {
 				description="This is the place where you have the full control of your website. Feel free to play with it as you like!"
 			/>
 			<div className="row">
+				<DynamicCards
+					title="Weapons Pending"
+					text={pending?.data?.length || `0`}
+					// bgcolor="dark"
+					// txtcolor="red"
+					myLink="/nfabusiness/acquisitionsdisposals/pending"
+					myQuery={{
+						page: 1,
+						limit: 10,
+					}}
+				/>
+				<DynamicCards
+					title="Weapons Denied"
+					text={fbidenied?.data?.length || `0`}
+					// bgcolor="dark"
+					// txtcolor="red"
+					myLink="/nfabusiness/acquisitionsdisposals/fbidenied"
+					myQuery={{
+						page: 1,
+						limit: 10,
+					}}
+				/>
 				<DynamicCards
 					title="Weapons Acquired"
 					text={acquired?.data?.length || `0`}

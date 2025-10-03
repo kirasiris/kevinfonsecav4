@@ -39,7 +39,7 @@ const UpdateAcquisitionDisposalForm = ({
 		};
 
 		const res = await fetchurl(
-			`/noadmin/acquisitionsdisposals/${object?.data?._id}`,
+			`/noadmin/weaponacquisitionsdisposals/${object?.data?._id}`,
 			"PUT",
 			"no-cache",
 			rawFormData

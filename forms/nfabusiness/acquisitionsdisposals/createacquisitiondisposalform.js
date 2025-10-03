@@ -35,7 +35,7 @@ const CreateAcquisitionDisposalForm = ({ token = "", auth = {} }) => {
 		};
 
 		const res = await fetchurl(
-			`/noadmin/acquisitionsdisposals`,
+			`/noadmin/weaponacquisitionsdisposals`,
 			"POST",
 			"no-cache",
 			rawFormData

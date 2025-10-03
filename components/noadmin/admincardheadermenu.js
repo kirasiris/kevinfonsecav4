@@ -45,25 +45,27 @@ const AdminCardHeaderMenu = ({
 					>
 						{pageText} - ({currentResults} / {totalResults})
 					</Link>
-					<form
-						onSubmit={searchData}
-						className="d-none d-md-block d-lg-block d-xl-block d-xxl-block"
-					>
-						<input
-							id="keyword"
-							name="keyword"
-							value={keyword}
-							onChange={(e) => {
-								setSearchParams({
-									...searchParams,
-									keyword: e.target.value,
-								});
-							}}
-							type="text"
-							className="form-control"
-							placeholder="Search title of object (EXACT MATCH)"
-						/>
-					</form>
+					{searchOn !== "" && searchOn !== undefined && searchOn !== null && (
+						<form
+							onSubmit={searchData}
+							className="d-none d-md-block d-lg-block d-xl-block d-xxl-block"
+						>
+							<input
+								id="keyword"
+								name="keyword"
+								value={keyword}
+								onChange={(e) => {
+									setSearchParams({
+										...searchParams,
+										keyword: e.target.value,
+									});
+								}}
+								type="text"
+								className="form-control"
+								placeholder="Search title of object (EXACT MATCH)"
+							/>
+						</form>
+					)}
 				</div>
 			</div>
 			<div className="float-end my-1">

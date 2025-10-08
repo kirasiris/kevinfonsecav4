@@ -60,7 +60,7 @@ const UseDropzone = ({
 							}
 						);
 						await axios.put(
-							`${process.env.NEXT_PUBLIC_API_URL}/noadmin/weaponacquisitionsdisposals/${object?._id}/updatefiles`,
+							`${process.env.NEXT_PUBLIC_API_URL}/noadmin/weaponacquisitionsdisposals/${object?._id}/files`,
 							{
 								file: res?.data?.data?._id,
 							},

@@ -45,6 +45,8 @@ const CreateRealStateForm = ({ token = {}, auth = {} }) => {
 					monthlyPrice: formData.get("monthlyPrice"),
 					nightlyPrice: formData.get("nightlyPrice"),
 				},
+				resourceId: auth?.companyId,
+				onModel: "Company",
 			}
 		);
 

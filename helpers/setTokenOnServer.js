@@ -16,6 +16,7 @@ export const getUserOnServer = async () => {
 		username: myCookies.get("username")?.value,
 		email: myCookies.get("email")?.value,
 		avatar: myCookies.get("avatar")?.value,
+		companyId: myCookies.get("companyId")?.value,
 	};
 	return cookiesReturned;
 };
@@ -79,6 +80,12 @@ export const setUserOnServer = async (object) => {
 				Date.now() + process.env.NEXT_PUBLIC_JWT_COOKIE_EXPIRE * daysInTime
 			),
 		});
+		myCookies.set("companyId", object?.companyId, {
+			secure: process.env.NEXT_PUBLIC_API_ENV === "production" ? true : false,
+			maxAge: new Date(
+				Date.now() + process.env.NEXT_PUBLIC_JWT_COOKIE_EXPIRE * daysInTime
+			),
+		});
 	} else {
 		console.log("setUserOnServer function was not a success", object);
 		await deleteAuthTokenOnServer();
@@ -94,6 +101,7 @@ export const deleteAuthTokenOnServer = async () => {
 	myCookies.delete("username");
 	myCookies.delete("email");
 	myCookies.delete("avatar");
+	myCookies.delete("companyId");
 	console.log("2.- Deleting cookie from back-end");
 	redirect(`/auth/login`);
 };

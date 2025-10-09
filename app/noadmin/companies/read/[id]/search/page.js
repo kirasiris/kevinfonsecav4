@@ -1,6 +1,7 @@
 import { revalidatePath } from "next/cache";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import Link from "next/link";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import ParseHtml from "@/layout/parseHtml";
 import JobList from "@/components/noadmin/companies/joblist";
@@ -84,7 +85,24 @@ const AdminCompanyReadSearchIndex = async ({ params, searchParams }) => {
 			<div className="col-lg-10">
 				<div className="card rounded-0 mb-3">
 					<div className="card-header">
-						{company?.data?.title || "Untitled"}
+						<div className="float-start">
+							<div className="d-flex align-items-center">
+								{company?.data?.title || "Untitled"}
+							</div>
+						</div>
+						<div className="float-end my-1">
+							<div className="btn-group">
+								<Link
+									href={{
+										pathname: `/noadmin/companies/certificate/${company?.data?._id}/create`,
+										query: {},
+									}}
+									className="btn btn-primary btn-sm"
+								>
+									Add License
+								</Link>
+							</div>
+						</div>
 					</div>
 					<div className="card-body">
 						<ParseHtml text={company?.data?.text} />
@@ -107,6 +125,24 @@ const AdminCompanyReadSearchIndex = async ({ params, searchParams }) => {
 						handleTrashAllFunction={handleTrashAll}
 						handleDeleteAllFunction={handleDeleteAll}
 					/>
+				</div>
+				<div className="card rounded-0 mb-3">
+					<div className="card-header">Certificates</div>
+					<ul className="list-group list-group-flush">
+						{company?.data?.certificates?.map((cert) => (
+							<li key={cert._id} className="list-group-item">
+								<div className="float-start">
+									<Link
+										href={{
+											pathname: `/noadmin/companies/certificate/${company?.data?._id}/update/${cert._id}`,
+										}}
+									>
+										{cert.name}
+									</Link>
+								</div>
+							</li>
+						))}
+					</ul>
 				</div>
 				<Map object={company?.data} />
 			</div>

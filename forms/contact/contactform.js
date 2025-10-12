@@ -21,7 +21,14 @@ const ContactForm = () => {
 			email: formData.get("email"),
 			subject: formData.get("subject"),
 			text: formData.get("text"),
+			captcha: formData.get("captcha"),
 		};
+
+		if (rawFormData.captcha !== "5") {
+			toast.error("There was an error, try again");
+			setBtnText("Submit");
+			return;
+		}
 
 		const res = await fetchurl(
 			`/global/contactemails`,
@@ -107,6 +114,18 @@ const ContactForm = () => {
 				required
 				placeholder={`Here goes the message`}
 				rows={`3`}
+				defaultValue=""
+			/>
+			<label htmlFor="captcha" className="form-label">
+				Captcha: 3+2?
+			</label>
+			<input
+				id="captcha"
+				name="captcha"
+				type="number"
+				className="form-control mb-3"
+				required
+				placeholder="0"
 				defaultValue=""
 			/>
 			<button type="submit" className="btn btn-secondary btn-sm float-start">

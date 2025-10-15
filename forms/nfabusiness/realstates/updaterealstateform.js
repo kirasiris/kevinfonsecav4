@@ -31,6 +31,7 @@ const UpdateRealStateForm = ({ token = {}, auth = {}, object = {} }) => {
 			type: formData.get("type"),
 			amenities: formData.getAll("amenities"),
 			status: formData.get("status"),
+			builtOnYear: formData.get("builtOnYear"),
 			files: { avatar: formData.get("file") || undefined },
 		};
 
@@ -225,6 +226,19 @@ const UpdateRealStateForm = ({ token = {}, auth = {}, object = {} }) => {
 							<option value={`sale`}>Sale</option>
 							<option value={`rent`}>Rent</option>
 						</select>
+					</div>
+					<div className="col">
+						<label htmlFor="builtOnYear" className="form-label">
+							Built On?
+						</label>
+						<input
+							id="builtOnYear"
+							name="builtOnYear"
+							defaultValue={object?.data?.builtOnYear}
+							type="text"
+							className="form-control mb-3"
+							placeholder=""
+						/>
 					</div>
 					<div className="col">
 						<label htmlFor="type" className="form-label">

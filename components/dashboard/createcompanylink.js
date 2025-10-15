@@ -7,7 +7,7 @@ const CreateCompanyLink = ({}) => {
 			<p className="m-0">
 				<Link
 					href={{
-						pathname: `/noadmin/companies/create`,
+						pathname: `/dashboard/companies/create`,
 						query: {},
 					}}
 					className="text-bg-primary text-decoration-underline"

@@ -14,8 +14,6 @@ const UpdateProductForm = ({ object = {}, token = "", auth = {} }) => {
 		object?.data?.category === "weapons"
 	);
 
-	console.log("Product", object);
-
 	const [btnText, setBtnText] = useState("Submit");
 
 	const upgradeProduct = async (e) => {
@@ -199,26 +197,14 @@ const UpdateProductForm = ({ object = {}, token = "", auth = {} }) => {
 						<label htmlFor="statement_descriptor" className="form-label">
 							Statement Descriptor (22 characters. max)
 						</label>
-						<select
+						<input
 							id="statement_descriptor"
 							name="statement_descriptor"
 							defaultValue={object?.data?.statement_descriptor}
+							type="text"
 							className="form-control mb-3"
 							placeholder="This is what will appear in the user's bank statement account"
-						>
-							<option value={"DAILY MEMBRSHP"}>
-								DAILY ARMED CODE, LLC MEMBERSHIP
-							</option>
-							<option value={"BIWEEKLY MEMBRSHP"}>
-								BI-WEEKLY ARMED CODE, LLC MEMBERSHIP
-							</option>
-							<option value={"MONTHLY MEMBRSHP"}>
-								MONTHLY ARMED CODE, LLC MEMBERSHIP
-							</option>
-							<option value={"YEARLY MEMBRSHP"}>
-								YEARLY ARMED CODE, LLC MEMBERSHIP
-							</option>
-						</select>
+						/>
 					</div>
 					<div className="col">
 						<label htmlFor="sku" className="form-label">

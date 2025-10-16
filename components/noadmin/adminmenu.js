@@ -33,9 +33,6 @@ const AdminMenu = () => {
 				<li className={`list-group-item ${isActive(`/noadmin/comments`)}`}>
 					<Link href={"/noadmin/comments"}>Comments</Link>
 				</li>
-				<li className={`list-group-item ${isActive(`/noadmin/companies`)}`}>
-					<Link href={"/noadmin/companies"}>Companies</Link>
-				</li>
 				<li className={`list-group-item ${isActive(`/noadmin/contactemails`)}`}>
 					<Link href={"/noadmin/contactemails"}>Contact Emails</Link>
 				</li>

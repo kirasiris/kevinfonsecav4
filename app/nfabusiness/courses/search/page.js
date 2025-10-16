@@ -1,6 +1,6 @@
 import { revalidatePath } from "next/cache";
 import { fetchurl, getUserOnServer } from "@/helpers/setTokenOnServer";
-import AdminStatusesMenu from "@/components/noadmin/adminstatusesmenu";
+import NFAStatusesMenu from "@/components/nfabusiness/nfastatusesmenu";
 import List from "@/components/nfabusiness/courses/list";
 
 async function getCourses(params) {
@@ -102,7 +102,7 @@ const NFACoursesSearchIndex = async ({ params, searchParams }) => {
 
 	return (
 		<>
-			<AdminStatusesMenu
+			<NFAStatusesMenu
 				allLink="/nfabusiness/courses"
 				publishedLink="/nfabusiness/courses/published"
 				draftLink="/nfabusiness/courses/draft"
@@ -110,6 +110,10 @@ const NFACoursesSearchIndex = async ({ params, searchParams }) => {
 				trashedLink="/nfabusiness/courses/trashed"
 				categoriesLink=""
 				categoryType=""
+				pendingLink=""
+				fbiDeniedLink=""
+				acquiredLink=""
+				disposedLink=""
 			/>
 			<div className="card rounded-0">
 				<List

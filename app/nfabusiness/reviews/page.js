@@ -1,6 +1,6 @@
 import { revalidatePath } from "next/cache";
 import { fetchurl } from "@/helpers/setTokenOnServer";
-import AdminStatusesMenu from "@/components/noadmin/adminstatusesmenu";
+import NFAStatusesMenu from "@/components/nfabusiness/nfastatusesmenu";
 import List from "@/components/noadmin/reviews/list";
 
 async function getReviews(params) {
@@ -90,12 +90,18 @@ const NFAReviewsIndex = async ({ params, searchParams }) => {
 
 	return (
 		<>
-			<AdminStatusesMenu
+			<NFAStatusesMenu
 				allLink="/nfabusiness/reviews"
 				publishedLink="/nfabusiness/reviews/published"
 				draftLink="/nfabusiness/reviews/draft"
 				scheduledLink="/nfabusiness/reviews/scheduled"
 				trashedLink="/nfabusiness/reviews/trashed"
+				categoriesLink=""
+				categoryType=""
+				pendingLink=""
+				fbiDeniedLink=""
+				acquiredLink=""
+				disposedLink=""
 			/>
 			<div className="card rounded-0">
 				<List

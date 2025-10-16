@@ -20,7 +20,7 @@ const Single = ({
 			<div className="float-start">
 				<Link
 					href={{
-						pathname: `/noadmin/courses/lesson/${object?._id}/update`,
+						pathname: `/nfabusiness/courses/lesson/${object?._id}/update`,
 						query: {},
 					}}
 					className="me-1"

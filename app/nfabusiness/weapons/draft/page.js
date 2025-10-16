@@ -71,6 +71,10 @@ const NFAWeaponsDraftIndex = async ({ params, searchParams }) => {
 				trashedLink=""
 				categoriesLink=""
 				categoryType=""
+				pendingLink=""
+				fbiDeniedLink=""
+				acquiredLink=""
+				disposedLink=""
 			/>
 			<div className="card rounded-0">
 				<List

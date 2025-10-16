@@ -109,6 +109,10 @@ const NFAProductsSearchIndex = async ({ params, searchParams }) => {
 				trashedLink="/nfabusiness/products/trashed"
 				categoriesLink=""
 				categoryType=""
+				pendingLink=""
+				fbiDeniedLink=""
+				acquiredLink=""
+				disposedLink=""
 			/>
 			<div className="card rounded-0">
 				<List

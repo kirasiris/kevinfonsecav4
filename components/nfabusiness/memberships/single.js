@@ -47,7 +47,7 @@ const Single = ({
 						<DropdownButton title="Options" variant="secondary">
 							<Link
 								href={{
-									pathname: `/membership/read/${object._id}`,
+									pathname: `/nfabusiness/membership/read/${object._id}`,
 									query: {
 										isAdmin: true,
 									},

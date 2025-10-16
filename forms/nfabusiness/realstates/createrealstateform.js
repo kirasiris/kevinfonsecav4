@@ -21,13 +21,16 @@ const CreateRealStateForm = ({ token = {}, auth = {} }) => {
 		const rawFormData = {
 			title: formData.get("title"),
 			text: formData.get("text"),
+			price: formData.get("price"),
+			active: formData.get("active"),
+			statement_descriptor: formData.get("statement_descriptor"),
 			commented: formData.get("commented"),
 			address: formData.get("address"),
 			bedrooms: formData.get("bedrooms"),
 			bathrooms: formData.get("bathrooms"),
 			squarefeet: formData.get("squarefeet"),
 			isSold: formData.get("isSold"),
-			businessType: formData.getAll("businessType"),
+			businessType: formData.get("businessType"),
 			type: formData.get("type"),
 			amenities: formData.getAll("amenities"),
 			status: formData.get("status"),
@@ -142,6 +145,49 @@ const CreateRealStateForm = ({ token = {}, auth = {} }) => {
 				</div>
 				<div className="row">
 					<div className="col">
+						<label htmlFor="price" className="form-label">
+							Price
+						</label>
+						<input
+							id="price"
+							name="price"
+							defaultValue="0"
+							type="text"
+							className="form-control mb-3"
+							required
+							placeholder=""
+						/>
+					</div>
+					<div className="col">
+						<label htmlFor="active" className="form-label">
+							Activate
+						</label>
+						<select
+							id="active"
+							name="active"
+							defaultValue={true}
+							className="form-control mb-3"
+						>
+							<option value={true}>Yes</option>
+							<option value={false}>No</option>
+						</select>
+					</div>
+					<div className="col">
+						<label htmlFor="statement_descriptor" className="form-label">
+							Statement Descriptor (22 characters. max)
+						</label>
+						<input
+							id="statement_descriptor"
+							name="statement_descriptor"
+							defaultValue="ARMED CODE, LLC BANK STATEMENT"
+							type="text"
+							className="form-control mb-3"
+							placeholder="This is what will appear in the user's bank statement account"
+						/>
+					</div>
+				</div>
+				<div className="row">
+					<div className="col">
 						<label htmlFor="address" className="form-label">
 							Address
 						</label>
@@ -216,14 +262,13 @@ const CreateRealStateForm = ({ token = {}, auth = {} }) => {
 				<div className="row">
 					<div className="col">
 						<label htmlFor="businessType" className="form-label">
-							Business Type
+							Property Type
 						</label>
 						<select
 							id="businessType"
 							name="businessType"
 							defaultValue="sale"
 							className="form-control mb-3"
-							multiple
 						>
 							<option value={`sale`}>Sale</option>
 							<option value={`rent`}>Rent</option>

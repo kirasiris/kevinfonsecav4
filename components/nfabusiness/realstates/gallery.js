@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState, useCallback } from "react";
-import Modal from "react-bootstrap/Modal";
 import Image from "next/image";
 
 const Gallery = ({ objects = [] }) => {

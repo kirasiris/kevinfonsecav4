@@ -21,13 +21,16 @@ const UpdateRealStateForm = ({ token = {}, auth = {}, object = {} }) => {
 		const rawFormData = {
 			title: formData.get("title"),
 			text: formData.get("text"),
+			price: formData.get("price"),
+			active: formData.get("active"),
+			statement_descriptor: formData.get("statement_descriptor"),
 			commented: formData.get("commented"),
 			address: formData.get("address"),
 			bedrooms: formData.get("bedrooms"),
 			bathrooms: formData.get("bathrooms"),
 			squarefeet: formData.get("squarefeet"),
 			isSold: formData.get("isSold"),
-			businessType: formData.getAll("businessType"),
+			businessType: formData.get("businessType"),
 			type: formData.get("type"),
 			amenities: formData.getAll("amenities"),
 			status: formData.get("status"),
@@ -102,7 +105,7 @@ const UpdateRealStateForm = ({ token = {}, auth = {}, object = {} }) => {
 						<input
 							id="weeklyPrice"
 							name="weeklyPrice"
-							defaultValue={object?.data?.rates?.weeklyPrice}
+							defaultValue={object?.data?.rates?.weeklyPrice.inHumanFormat}
 							type="number"
 							className="form-control mb-3"
 							min={0}
@@ -116,7 +119,7 @@ const UpdateRealStateForm = ({ token = {}, auth = {}, object = {} }) => {
 						<input
 							id="monthlyPrice"
 							name="monthlyPrice"
-							defaultValue={object?.data?.rates?.monthlyPrice}
+							defaultValue={object?.data?.rates?.monthlyPrice.inHumanFormat}
 							type="number"
 							className="form-control mb-3"
 							min={0}
@@ -130,11 +133,54 @@ const UpdateRealStateForm = ({ token = {}, auth = {}, object = {} }) => {
 						<input
 							id="nightlyPrice"
 							name="nightlyPrice"
-							defaultValue={object?.data?.rates?.nightlyPrice}
+							defaultValue={object?.data?.rates?.nightlyPrice.inHumanFormat}
 							type="number"
 							className="form-control mb-3"
 							min={0}
 							placeholder="18"
+						/>
+					</div>
+				</div>
+				<div className="row">
+					<div className="col">
+						<label htmlFor="price" className="form-label">
+							Price
+						</label>
+						<input
+							id="price"
+							name="price"
+							defaultValue={object?.data?.price.inHumanFormat}
+							type="text"
+							className="form-control mb-3"
+							required
+							placeholder=""
+						/>
+					</div>
+					<div className="col">
+						<label htmlFor="active" className="form-label">
+							Activate
+						</label>
+						<select
+							id="active"
+							name="active"
+							defaultValue={object?.data?.active.toString()}
+							className="form-control mb-3"
+						>
+							<option value={true}>Yes</option>
+							<option value={false}>No</option>
+						</select>
+					</div>
+					<div className="col">
+						<label htmlFor="statement_descriptor" className="form-label">
+							Statement Descriptor (22 characters. max)
+						</label>
+						<input
+							id="statement_descriptor"
+							name="statement_descriptor"
+							defaultValue={object?.data?.statement_descriptor}
+							type="text"
+							className="form-control mb-3"
+							placeholder="This is what will appear in the user's bank statement account"
 						/>
 					</div>
 				</div>
@@ -214,14 +260,13 @@ const UpdateRealStateForm = ({ token = {}, auth = {}, object = {} }) => {
 				<div className="row">
 					<div className="col">
 						<label htmlFor="businessType" className="form-label">
-							Business Type
+							Property Type
 						</label>
 						<select
 							id="businessType"
 							name="businessType"
-							defaultValue={[object?.data?.businessType]}
+							defaultValue={object?.data?.businessType}
 							className="form-control"
-							multiple
 						>
 							<option value={`sale`}>Sale</option>
 							<option value={`rent`}>Rent</option>

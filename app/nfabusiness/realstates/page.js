@@ -1,6 +1,6 @@
 import { revalidatePath } from "next/cache";
 import { fetchurl } from "@/helpers/setTokenOnServer";
-import AdminStatusesMenu from "@/components/noadmin/adminstatusesmenu";
+import NFAStatusesMenu from "@/components/nfabusiness/nfastatusesmenu";
 import List from "@/components/nfabusiness/realstates/list";
 
 async function getRealStates(params) {
@@ -108,7 +108,7 @@ const NFARealStatesIndex = async ({ params, searchParams }) => {
 
 	return (
 		<>
-			<AdminStatusesMenu
+			<NFAStatusesMenu
 				allLink="/nfabusiness/realstates"
 				publishedLink="/nfabusiness/realstates/published"
 				draftLink="/nfabusiness/realstates/draft"
@@ -116,6 +116,10 @@ const NFARealStatesIndex = async ({ params, searchParams }) => {
 				trashedLink="/nfabusiness/realstates/trashed"
 				categoriesLink=""
 				categoryType=""
+				pendingLink=""
+				fbiDeniedLink=""
+				acquiredLink=""
+				disposedLink=""
 			/>
 			<div className="card rounded-0">
 				<List

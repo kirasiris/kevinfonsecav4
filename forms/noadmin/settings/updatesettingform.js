@@ -327,7 +327,7 @@ const UpdateSettingForm = ({ token = {}, auth = {}, object = {} }) => {
 						<select
 							id="available_days"
 							name="available_days"
-							defaultValue={object?.data?.calendar?.availableDays}
+							defaultValue={[object?.data?.calendar?.availableDays]}
 							className="form-control"
 							multiple
 						>

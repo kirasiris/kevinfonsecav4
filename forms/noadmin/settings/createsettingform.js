@@ -327,7 +327,7 @@ const CreateSettingForm = ({ token = {}, auth = {} }) => {
 						<select
 							id="available_days"
 							name="available_days"
-							defaultValue=""
+							defaultValue={[""]}
 							className="form-control"
 							multiple
 						>

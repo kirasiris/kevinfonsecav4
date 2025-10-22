@@ -21,6 +21,9 @@ const UpdateCompanyForm = ({ token = {}, auth = {}, object = {} }) => {
 		const rawFormData = {
 			title: formData.get("title"),
 			text: formData.get("text"),
+			website: formData.get("website"),
+			email: formData.get("email"),
+			phoneNumber: formData.get("phoneNumber"),
 			address: formData.get("address"),
 			password: formData.get("password"),
 			status: formData.get("status"),
@@ -79,6 +82,47 @@ const UpdateCompanyForm = ({ token = {}, auth = {}, object = {} }) => {
 					advancedTextEditor={true}
 					customPlaceholder="No description"
 				/>
+				<div className="row">
+					<div className="col">
+						<label htmlFor="website" className="form-label">
+							Website
+						</label>
+						<input
+							id="website"
+							name="website"
+							defaultValue={object?.data?.website}
+							type="text"
+							className="form-control mb-3"
+							placeholder="https://demo.com"
+						/>
+					</div>
+					<div className="col">
+						<label htmlFor="email" className="form-label">
+							Email
+						</label>
+						<input
+							id="email"
+							name="email"
+							defaultValue={object?.data?.email}
+							type="email"
+							className="form-control mb-3"
+							placeholder="john@doe.com"
+						/>
+					</div>
+					<div className="col">
+						<label htmlFor="phoneNumber" className="form-label">
+							Phone Number
+						</label>
+						<input
+							id="phoneNumber"
+							name="phoneNumber"
+							defaultValue={object?.data?.phoneNumber}
+							type="tel"
+							className="form-control mb-3"
+							placeholder="012-345-6789"
+						/>
+					</div>
+				</div>
 				<label htmlFor="address" className="form-label">
 					Address
 				</label>

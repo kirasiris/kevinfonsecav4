@@ -86,7 +86,7 @@ const AdminCompanyReadSearchIndex = async ({ params, searchParams }) => {
 				<div className="card rounded-0 mb-3">
 					<div className="card-header">
 						<div className="float-start">
-							<div className="d-flex align-items-center">
+							<div className="d-flex align-items-center my-2">
 								{company?.data?.title || "Untitled"}
 							</div>
 						</div>

@@ -2,7 +2,7 @@ import {
 	getAuthTokenOnServer,
 	getUserOnServer,
 } from "@/helpers/setTokenOnServer";
-import OnboardingLink from "@/components/dashboard/onboardinglink";
+import OnboardingLink from "@/components/nfabusiness/onboardinglink";
 import CreateCourseForm from "@/forms/nfabusiness/courses/createcourseform";
 
 const CreateCourse = async ({ params, searchParams }) => {

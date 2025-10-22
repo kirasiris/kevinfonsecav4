@@ -5,7 +5,7 @@ import Single from "./single";
 import NumericPagination from "@/layout/numericpagination";
 import NothingFoundAlert from "@/layout/nothingfoundalert";
 import ErrorPage from "@/layout/errorpage";
-import OnboardingLink from "@/components/dashboard/onboardinglink";
+import OnboardingLink from "@/components/nfabusiness/onboardinglink";
 
 const List = ({
 	stripeChargesEnabled = false,

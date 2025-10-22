@@ -5,7 +5,7 @@ import Single from "./single";
 import NumericPagination from "@/layout/numericpagination";
 import NothingFoundAlert from "@/layout/nothingfoundalert";
 import ErrorPage from "@/layout/errorpage";
-import OnboardingLink from "@/components/dashboard/onboardinglink";
+import OnboardingLink from "@/components/nfabusiness/onboardinglink";
 
 const List = ({
 	stripeChargesEnabled = false,
@@ -13,6 +13,7 @@ const List = ({
 	pageText = "",
 	addLink = "",
 	searchOn = "",
+	searchedKeyword = "",
 	objects = [],
 	searchParams = {},
 	handleDraft = () => {},
@@ -227,7 +228,7 @@ const List = ({
 			) : (
 				<NothingFoundAlert
 					classList="alert-danger rounded-0 m-0 border-0"
-					text="Nothing found"
+					text={`Nothing found with ${searchedKeyword}`}
 				/>
 			)}
 		</>

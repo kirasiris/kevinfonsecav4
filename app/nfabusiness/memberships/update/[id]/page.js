@@ -4,7 +4,7 @@ import {
 	getAuthTokenOnServer,
 	getUserOnServer,
 } from "@/helpers/setTokenOnServer";
-import OnboardingLink from "@/components/dashboard/onboardinglink";
+import OnboardingLink from "@/components/nfabusiness/onboardinglink";
 import UpdateMembershipForm from "@/forms/nfabusiness/memberships/updatemembershipform";
 
 async function getMembership(params) {

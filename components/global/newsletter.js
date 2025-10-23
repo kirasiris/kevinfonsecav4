@@ -87,40 +87,36 @@ const NewsletterForm = ({
 					&nbsp;subscribers!
 				</p>
 				<form onSubmit={subscribeToNewsletter}>
-					<div className="input-group">
-						<input
-							id="name"
-							name="name"
-							defaultValue=""
-							type="text"
-							className="form-control rounded-0"
-							required
-							placeholder="Enter your name"
-						/>
-						<input
-							id="email"
-							name="email"
-							defaultValue=""
-							type="email"
-							className="form-control rounded-0"
-							required
-							placeholder="Enter your email"
-						/>
-						<input
-							id="captcha"
-							name="captcha"
-							defaultValue=""
-							type="number"
-							className="form-control rounded-0"
-							required
-							placeholder="3+2 = ?"
-						/>
-						<span className="input-group-btn">
-							<button className="btn btn-secondary rounded-0" type="submit">
-								{emailBtnTxt}
-							</button>
-						</span>
-					</div>
+					<input
+						id="name"
+						name="name"
+						defaultValue=""
+						type="text"
+						className="form-control mb-3"
+						required
+						placeholder="Enter your name"
+					/>
+					<input
+						id="email"
+						name="email"
+						defaultValue=""
+						type="email"
+						className="form-control mb-3"
+						required
+						placeholder="Enter your email"
+					/>
+					<input
+						id="captcha"
+						name="captcha"
+						defaultValue=""
+						type="number"
+						className="form-control mb-3"
+						required
+						placeholder="3+2 = ?"
+					/>
+					<button className="btn btn-secondary btn-sm w-100" type="submit">
+						{emailBtnTxt}
+					</button>
 				</form>
 				<p className="mt-3">
 					Get&nbsp;to&nbsp;know&nbsp;more&nbsp;about&nbsp;my&nbsp;every&nbsp;day&nbsp;routines,&nbsp;what&nbsp;I&apos;m&nbsp;planning

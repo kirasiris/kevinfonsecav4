@@ -145,7 +145,7 @@ const ThemeRead = async ({ params, searchParams }) => {
 				posType="theme"
 			/>
 			<Header title={theme.data.title} />
-			<div className="container">
+			<div className="container-fluid">
 				{theme.data.status === "published" ||
 				awtdSearchParams.isAdmin === "true" ? (
 					<div className="row">

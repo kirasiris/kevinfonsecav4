@@ -7,7 +7,7 @@ const Sidebar = ({ object = {} }) => {
 		<Globalsidebar sidebarClasses={`col-lg-4`}>
 			<figure className="mb-4">
 				<Image
-					className="img-fluid"
+					className="img-thumbnail"
 					src={
 						object?.data?.files?.avatar?.location?.secure_location ||
 						`https://source.unsplash.com/random/1200x900`

@@ -10,9 +10,7 @@ import FormButtons from "@/components/global/formbuttons";
 const UpdateProductForm = ({ object = {}, token = "", auth = {} }) => {
 	const router = useRouter();
 
-	const [showWeaponInputs, setShowWeaponInputs] = useState(
-		object?.data?.category === "weapons"
-	);
+	const [showCategories, setShowCategories] = useState(object?.data?.category);
 
 	const [btnText, setBtnText] = useState("Submit");
 
@@ -249,9 +247,7 @@ const UpdateProductForm = ({ object = {}, token = "", auth = {} }) => {
 							name="category"
 							defaultValue={object?.data?.category}
 							className="form-control mb-3"
-							onChange={(e) =>
-								setShowWeaponInputs(e.target.value === "weapons")
-							}
+							onChange={(e) => setShowCategories(e.target.value)}
 							required
 						>
 							<option value="all">Choose an option</option>
@@ -260,23 +256,56 @@ const UpdateProductForm = ({ object = {}, token = "", auth = {} }) => {
 							<option value="clothing">Clothing</option>
 						</select>
 					</div>
-					<div className="col">
-						<label htmlFor="sub_category" className="form-label">
-							Sub category
-						</label>
-						<input
-							id="sub_category"
-							name="sub_category"
-							defaultValue={object?.data?.sub_category}
-							type="text"
-							className="form-control mb-3"
-							required={showWeaponInputs ? true : false}
-							disabled={showWeaponInputs ? true : false}
-							placeholder="5.56x45mm NATO"
-						/>
-					</div>
+					{showCategories === "accessories" && (
+						<div className="col">
+							<label htmlFor="sub_category" className="form-label">
+								Sub categories for accessories
+							</label>
+							<select
+								id="sub_category"
+								name="sub_category"
+								defaultValue={[object?.data?.sub_category]}
+								className="form-control mb-3"
+								multiple
+							>
+								<option value="all">All</option>
+								<option value="magazines">Magazines</option>
+								<option value="buttstocks">Butt Stocks</option>
+								<option value="grips">Grips</option>
+								<option value="handguards">Handguards</option>
+								<option value="slings">Slings</option>
+								<option value="optics">Optics</option>
+								<option value="mounts">Mounts</option>
+								<option value="tools">Tools</option>
+							</select>
+						</div>
+					)}
+					{showCategories === "clothing" && (
+						<div className="col">
+							<label htmlFor="sub_category" className="form-label">
+								Sub categories for clothing
+							</label>
+							<select
+								id="sub_category"
+								name="sub_category"
+								defaultValue={[object?.data?.sub_category]}
+								className="form-control mb-3"
+								multiple
+							>
+								<option value="all">All</option>
+								<option value="male">Male</option>
+								<option value="female">Female</option>
+								<option value="unisex">Unisex</option>
+								<option value="shirts">Shirts</option>
+								<option value="shorts">Shorts</option>
+								<option value="pants">Pants</option>
+								<option value="footwear">Footwear</option>
+								<option value="outerwear">Outerwear</option>
+							</select>
+						</div>
+					)}
 				</div>
-				{showWeaponInputs && (
+				{showCategories === "weapons" && (
 					<>
 						<div className="row">
 							<div className="col">
@@ -286,7 +315,7 @@ const UpdateProductForm = ({ object = {}, token = "", auth = {} }) => {
 								<select
 									id="nfaItem"
 									name="nfaItem"
-									defaultValue={object?.data?.nfaItem.toString()}
+									defaultValue={object?.data?.nfaItem?.toString()}
 									className="form-control mb-3"
 								>
 									<option value={true}>Yes</option>
@@ -300,7 +329,7 @@ const UpdateProductForm = ({ object = {}, token = "", auth = {} }) => {
 								<select
 									id="requiresBackgroundCheck"
 									name="requiresBackgroundCheck"
-									defaultValue={object?.data?.requiresBackgroundCheck.toString()}
+									defaultValue={object?.data?.requiresBackgroundCheck?.toString()}
 									className="form-control mb-3"
 								>
 									<option value={true}>Yes</option>

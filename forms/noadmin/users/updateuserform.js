@@ -192,7 +192,7 @@ const UpdateUserForm = ({ auth = {}, object = {}, objects = [] }) => {
 					<select
 						id="role"
 						name="role"
-						defaultValue={object?.data?.role}
+						defaultValue={[object?.data?.role]}
 						className="form-control"
 						multiple
 					>

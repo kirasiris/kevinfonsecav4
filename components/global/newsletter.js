@@ -34,7 +34,14 @@ const NewsletterForm = ({
 		const rawFormData = {
 			name: formData.get("name"),
 			email: formData.get("email"),
+			captcha: formData.get("captcha"),
 		};
+
+		if (rawFormData.captcha !== "5") {
+			toast.error("There was an error, try again");
+			setBtnText("Submit");
+			return;
+		}
 
 		const res = await fetchurl(
 			`/global/newslettersubscribers`,
@@ -84,20 +91,29 @@ const NewsletterForm = ({
 						<input
 							id="name"
 							name="name"
+							defaultValue=""
 							type="text"
 							className="form-control rounded-0"
-							placeholder="Enter your name"
 							required
-							defaultValue=""
+							placeholder="Enter your name"
 						/>
 						<input
 							id="email"
 							name="email"
+							defaultValue=""
 							type="email"
 							className="form-control rounded-0"
-							placeholder="Enter your email"
 							required
+							placeholder="Enter your email"
+						/>
+						<input
+							id="captcha"
+							name="captcha"
 							defaultValue=""
+							type="number"
+							className="form-control rounded-0"
+							required
+							placeholder="3+2 = ?"
 						/>
 						<span className="input-group-btn">
 							<button className="btn btn-secondary rounded-0" type="submit">

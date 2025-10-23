@@ -66,11 +66,11 @@ const ContactForm = () => {
 					<input
 						id="name"
 						name="name"
+						defaultValue=""
 						type="text"
 						className="form-control mb-3"
 						required
 						placeholder="John Doe"
-						defaultValue=""
 					/>
 				</div>
 				<div className="col">
@@ -80,11 +80,11 @@ const ContactForm = () => {
 					<input
 						id="email"
 						name="email"
+						defaultValue=""
 						type="email"
 						className="form-control mb-3"
 						required
 						placeholder="john@doe.com"
-						defaultValue=""
 					/>
 				</div>
 			</div>
@@ -94,9 +94,9 @@ const ContactForm = () => {
 			<select
 				id="subject"
 				name="subject"
+				defaultValue=""
 				className="form-control mb-3"
 				required
-				defaultValue=""
 			>
 				<option value="none">Choose an option</option>
 				<option value="suggestion">Suggestion</option>
@@ -110,11 +110,11 @@ const ContactForm = () => {
 			<textarea
 				id="text"
 				name="text"
+				defaultValue=""
 				className="form-control mb-3"
 				required
 				placeholder={`Here goes the message`}
 				rows={`3`}
-				defaultValue=""
 			/>
 			<label htmlFor="captcha" className="form-label">
 				Captcha: 3+2?
@@ -122,11 +122,11 @@ const ContactForm = () => {
 			<input
 				id="captcha"
 				name="captcha"
+				defaultValue=""
 				type="number"
 				className="form-control mb-3"
 				required
 				placeholder="0"
-				defaultValue=""
 			/>
 			<button type="submit" className="btn btn-secondary btn-sm float-start">
 				{btnText}

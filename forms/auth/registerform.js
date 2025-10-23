@@ -24,7 +24,14 @@ const RegisterForm = () => {
 			email: formData.get("email"),
 			password: formData.get("password"),
 			password2: formData.get("password2"),
+			captcha: formData.get("captcha"),
 		};
+
+		if (rawFormData.captcha !== "5") {
+			toast.error("There was an error, try again");
+			setBtnText("Submit");
+			return;
+		}
 
 		if (rawFormData.password !== rawFormData.password2) {
 			toast.error(`Passwords do not match`);
@@ -115,6 +122,18 @@ const RegisterForm = () => {
 				type="password"
 				className="form-control mb-3"
 				placeholder="******"
+			/>
+			<label htmlFor="captcha" className="form-label">
+				Captcha: 3+2?
+			</label>
+			<input
+				id="captcha"
+				name="captcha"
+				defaultValue=""
+				type="number"
+				className="form-control mb-3"
+				required
+				placeholder="0"
 			/>
 			<button type="submit" className="btn btn-secondary btn-sm float-start">
 				{btnText}

@@ -83,7 +83,9 @@ const LoginForm = () => {
 			}
 		}
 
-		router.push(returnpage || `/auth/profile`);
+		// router.push(returnpage || `/auth/profile`);
+		// use the method below to make it possible to transfer cookies cross-domain
+		window.location.href = returnpage || `/auth/profile`;
 	};
 
 	const resetForm = (e) => {

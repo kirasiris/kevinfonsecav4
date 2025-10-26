@@ -72,13 +72,15 @@ const LoginForm = () => {
 		let returnpage = awtdSearchParams.get("returnpage");
 
 		// Ensure returnpage is only modified if it points to armedcodellc.com
-		try {
-			const returnUrl = new URL(returnpage);
-			if (returnUrl.hostname === "armedcodellc.com") {
-				returnpage += `?xAuthToken=${res?.token}`;
+		if (returnpage) {
+			try {
+				const returnUrl = new URL(returnpage);
+				if (returnUrl.hostname === "armedcodellc.com") {
+					returnpage += `?xAuthToken=${res?.token}`;
+				}
+			} catch (err) {
+				toast.error(`Invalid return URL: ${err}`, "bottom");
 			}
-		} catch (err) {
-			toast.error(`Invalid return URL: ${err}`, "bottom");
 		}
 
 		// router.push(returnpage || `/auth/profile`);

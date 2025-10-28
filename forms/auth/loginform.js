@@ -104,7 +104,7 @@ const LoginForm = () => {
 			<input
 				id="email"
 				name="email"
-				defaultValue="kebin1421@hotmail.com"
+				defaultValue=""
 				type="email"
 				className="form-control mb-3"
 				required
@@ -116,7 +116,7 @@ const LoginForm = () => {
 			<input
 				id="password"
 				name="password"
-				defaultValue="Chicomono19985!"
+				defaultValue=""
 				type="password"
 				className="form-control mb-3"
 				placeholder="******"
@@ -127,7 +127,7 @@ const LoginForm = () => {
 			<input
 				id="captcha"
 				name="captcha"
-				defaultValue="5"
+				defaultValue=""
 				type="number"
 				className="form-control mb-3"
 				required

@@ -75,17 +75,21 @@ const LoginForm = () => {
 		if (returnpage) {
 			try {
 				const returnUrl = new URL(returnpage);
+				console.log("return hostname", returnUrl.hostname);
 				if (returnUrl.hostname === "armedcodellc.com") {
 					returnpage += `?xAuthToken=${res?.token}`;
 				}
+				console.log("return href", returnUrl.href);
 			} catch (err) {
 				toast.error(`Invalid return URL: ${err}`, "bottom");
 			}
 		}
 
+		window.location.href = returnpage ? returnpage : `/auth/profile`;
+
 		// router.push(returnpage || `/auth/profile`);
 		// use the method below to make it possible to transfer cookies cross-domain
-		window.location.href = returnpage || `/auth/profile`;
+		// window.location.href = returnpage || `/auth/profile`;
 	};
 
 	const resetForm = (e) => {
@@ -100,7 +104,7 @@ const LoginForm = () => {
 			<input
 				id="email"
 				name="email"
-				defaultValue=""
+				defaultValue="kebin1421@hotmail.com"
 				type="email"
 				className="form-control mb-3"
 				required
@@ -112,7 +116,7 @@ const LoginForm = () => {
 			<input
 				id="password"
 				name="password"
-				defaultValue=""
+				defaultValue="Chicomono19985!"
 				type="password"
 				className="form-control mb-3"
 				placeholder="******"
@@ -123,7 +127,7 @@ const LoginForm = () => {
 			<input
 				id="captcha"
 				name="captcha"
-				defaultValue=""
+				defaultValue="5"
 				type="number"
 				className="form-control mb-3"
 				required

@@ -74,18 +74,30 @@ const LoginForm = () => {
 		// Ensure returnpage is only modified if it points to armedcodellc.com
 		if (returnpage) {
 			try {
-				const returnUrl = new URL(returnpage);
-				console.log("return hostname", returnUrl.hostname);
-				if (returnUrl.hostname === "armedcodellc.com") {
-					returnpage += `?xAuthToken=${res?.token}`;
+				const base = "https://armedcodellc.com"; // base fallback for relative paths
+				const returnUrl = new URL(returnpage, base);
+
+				// Only allow armedcodellc.com domains or x.armedcodellc.com sub domains;
+				if (
+					returnUrl.hostname === "armedcodellc.com" ||
+					returnUrl.hostname.endsWith(".armedcodellc.com")
+				) {
+					// Safely set the token param
+					returnUrl.searchParams.set("xAuthToken", res?.token);
+
+					// Reassign fully serialized safe url
+					returnpage = returnUrl.toString();
+				} else {
+					toast.error("Unsafe redirerect attempt to: ", returnUrl.hostname);
+					returnpage = null;
 				}
-				console.log("return href", returnUrl.href);
 			} catch (err) {
 				toast.error(`Invalid return URL: ${err}`, "bottom");
+				returnpage = null;
 			}
 		}
 
-		window.location.href = returnpage ? returnpage : `/auth/profile`;
+		window.location.href = returnpage || `/auth/profile`;
 
 		// router.push(returnpage || `/auth/profile`);
 		// use the method below to make it possible to transfer cookies cross-domain

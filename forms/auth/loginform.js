@@ -77,18 +77,26 @@ const LoginForm = () => {
 				const base = "https://armedcodellc.com"; // base fallback for relative paths
 				const returnUrl = new URL(returnpage, base);
 
+				// Only allow trusted domains
+				const hostname = returnUrl.hostname.toLowerCase();
+				const isTrustedDomain =
+					hostname === "armedcodellc.com" ||
+					hostname.endsWith(".armedcodellc.com");
+
 				// Only allow armedcodellc.com domains or x.armedcodellc.com sub domains;
-				if (
-					returnUrl.hostname === "armedcodellc.com" ||
-					returnUrl.hostname.endsWith(".armedcodellc.com")
-				) {
+				if (isTrustedDomain) {
 					// Safely set the token param
-					returnUrl.searchParams.set("xAuthToken", res?.token);
+					if (res?.token) {
+						returnUrl.searchParams.set(
+							"xAuthToken",
+							encodeURIComponent(res.token)
+						);
+					}
 
 					// Reassign fully serialized safe url
 					returnpage = returnUrl.toString();
 				} else {
-					toast.error("Unsafe redirerect attempt to: ", returnUrl.hostname);
+					toast.error("Unsafe redirerect attempt to: ", hostname);
 					returnpage = null;
 				}
 			} catch (err) {

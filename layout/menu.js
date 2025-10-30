@@ -134,6 +134,7 @@ const Menu = ({
 								</li>
 								<li className="nav-item">
 									<button
+										type="button"
 										className="btn btn-link"
 										onClick={async () => {
 											await deleteAuthTokenOnServer();

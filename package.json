@@ -64,32 +64,28 @@
       "react-dom": "$react-dom"
     }
   },
-  "devDependencies": {
-    "eslint": "^9.36.0",
-    "eslint-config-next": "^15.5.4"
-  },
   "dependencies": {
     "@codemirror/lang-css": "^6.3.1",
-    "@codemirror/lang-html": "^6.4.10",
+    "@codemirror/lang-html": "^6.4.11",
     "@codemirror/lang-javascript": "^6.2.4",
     "@fullcalendar/daygrid": "^6.1.19",
     "@fullcalendar/interaction": "^6.1.19",
     "@fullcalendar/list": "^6.1.19",
     "@fullcalendar/react": "^6.1.19",
     "@fullcalendar/timegrid": "^6.1.19",
-    "@stripe/stripe-js": "^8.0.0",
+    "@stripe/stripe-js": "^8.2.0",
     "@tinymce/tinymce-react": "^6.3.0",
     "@uiw/codemirror-extensions-langs": "^4.25.2",
     "@uiw/codemirror-theme-vscode": "^4.25.2",
     "@uiw/react-codemirror": "^4.25.2",
-    "axios": "^1.12.2",
+    "axios": "^1.13.1",
     "base-64": "^1.0.0",
     "befree-utilities": "^1.0.4",
     "bootstrap": "^5.3.8",
     "depcheck": "^1.4.7",
     "he": "^1.2.0",
     "lodash": "^4.17.21",
-    "next": "^15.5.4",
+    "next": "^16.0.1",
     "plyr": "^3.8.3",
     "qrcode.react": "^4.2.0",
     "react": "^19.2.0",
@@ -104,6 +100,11 @@
     "rrule": "^2.8.1",
     "rss": "^1.2.2",
     "showdown": "^2.1.0",
-    "wavesurfer.js": "^7.11.0"
+    "wavesurfer.js": "^7.11.1"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.3.1",
+    "eslint": "^9.38.0",
+    "eslint-config-next": "^16.0.1"
   }
 }

@@ -65,6 +65,7 @@ const CreateProductForm = ({ token = {}, auth = {} }) => {
 
 		const res = await fetchurl(`/noadmin/stripe/products`, "POST", "no-cache", {
 			...rawFormData,
+			postType: "product",
 			resourceId: auth?.companyId,
 			onModel: "Company",
 		});

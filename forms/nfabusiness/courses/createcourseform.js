@@ -36,17 +36,12 @@ const CreateCourseForm = ({ token = {}, auth = {} }) => {
 			files: { avatar: formData.get("file") || undefined },
 		};
 
-		const res = await fetchurl(
-			`/noadmin/stripe/products/`,
-			"POST",
-			"no-cache",
-			{
-				...rawFormData,
-				postType: "course",
-				resourceId: auth?.companyId,
-				onModel: "Company",
-			}
-		);
+		const res = await fetchurl(`/noadmin/stripe/courses/`, "POST", "no-cache", {
+			...rawFormData,
+			postType: "course",
+			resourceId: auth?.companyId,
+			onModel: "Company",
+		});
 
 		if (res.status === "error") {
 			toast.error(res.message, "bottom");

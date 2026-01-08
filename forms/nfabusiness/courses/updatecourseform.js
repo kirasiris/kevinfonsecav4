@@ -37,7 +37,7 @@ const UpdateCourseForm = ({ token = {}, auth = {}, object = {} }) => {
 		};
 
 		const res = await fetchurl(
-			`/noadmin/stripe/products/${object?.data?._id}`,
+			`/noadmin/stripe/courses/${object?.data?._id}`,
 			"PUT",
 			"no-cache",
 			rawFormData

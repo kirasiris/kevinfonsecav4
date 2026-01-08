@@ -40,7 +40,7 @@ const CreateLessonForm = ({ token = {}, auth = {}, params = {} }) => {
 		const res = await fetchurl(`/noadmin/videos`, "POST", "no-cache", {
 			...rawFormData,
 			resourceId: params.id,
-			onModel: "Course",
+			onModel: "Product",
 		});
 
 		if (res.status === "error") {

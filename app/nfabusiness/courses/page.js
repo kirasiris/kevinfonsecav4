@@ -4,7 +4,11 @@ import NFAStatusesMenu from "@/components/nfabusiness/nfastatusesmenu";
 import List from "@/components/nfabusiness/courses/list";
 
 async function getCourses(params) {
-	const res = await fetchurl(`/global/courses${params}`, "GET", "no-cache");
+	const res = await fetchurl(
+		`/global/courses${params}&postType=course`,
+		"GET",
+		"no-cache"
+	);
 	return res;
 }
 

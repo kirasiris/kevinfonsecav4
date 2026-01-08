@@ -30,7 +30,7 @@ const UpdateRealStateForm = ({ token = {}, auth = {}, object = {} }) => {
 			bathrooms: formData.get("bathrooms"),
 			squarefeet: formData.get("squarefeet"),
 			isSold: formData.get("isSold"),
-			businessType: formData.get("businessType"),
+			itemType: formData.get("itemType"),
 			type: formData.get("type"),
 			amenities: formData.getAll("amenities"),
 			status: formData.get("status"),
@@ -259,13 +259,13 @@ const UpdateRealStateForm = ({ token = {}, auth = {}, object = {} }) => {
 				</div>
 				<div className="row">
 					<div className="col">
-						<label htmlFor="businessType" className="form-label">
+						<label htmlFor="itemType" className="form-label">
 							Property Type
 						</label>
 						<select
-							id="businessType"
-							name="businessType"
-							defaultValue={object?.data?.businessType}
+							id="itemType"
+							name="itemType"
+							defaultValue={object?.data?.itemType}
 							className="form-control"
 						>
 							<option value={`sale`}>Sale</option>

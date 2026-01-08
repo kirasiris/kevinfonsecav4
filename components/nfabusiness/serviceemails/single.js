@@ -16,7 +16,15 @@ const Single = ({
 				<div className="blog-item__detail">
 					<div className="blog-item__info"></div>
 					<h1 className="blog-item__title">
-						{object.email}&nbsp;-&nbsp;{object.subject}
+						<Link
+							href={{
+								pathname: `/nfabusiness/serviceemails/read/${object._id}`,
+								query: {},
+							}}
+							className="blog-item__title-link"
+						>
+							{object.email}&nbsp;-&nbsp;{object.subject}
+						</Link>
 					</h1>
 					<div className="blog-item__meta">
 						<span className="badge bg-dark me-1">{object.name}</span>

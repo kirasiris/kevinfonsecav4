@@ -5,7 +5,7 @@ import List from "@/components/nfabusiness/courses/list";
 
 async function getCourses(params) {
 	const res = await fetchurl(
-		`/global/courses${params}&status=draft`,
+		`/global/courses${params}&postType=course&status=draft`,
 		"GET",
 		"no-cache"
 	);

@@ -4,7 +4,11 @@ import NFAStatusesMenu from "@/components/nfabusiness/nfastatusesmenu";
 import List from "@/components/nfabusiness/realstates/list";
 
 async function getRealStates(params) {
-	const res = await fetchurl(`/global/realstates${params}`, "GET", "no-cache");
+	const res = await fetchurl(
+		`/global/realstates${params}&postType=realstate`,
+		"GET",
+		"no-cache"
+	);
 	return res;
 }
 

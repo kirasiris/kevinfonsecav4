@@ -5,7 +5,7 @@ import List from "@/components/nfabusiness/realstates/list";
 
 async function getRealStates(params) {
 	const res = await fetchurl(
-		`/global/realstates${params}&status=draft`,
+		`/global/realstates${params}&postType=realstate&status=draft`,
 		"GET",
 		"no-cache"
 	);

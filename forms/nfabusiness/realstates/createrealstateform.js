@@ -30,7 +30,7 @@ const CreateRealStateForm = ({ token = {}, auth = {} }) => {
 			bathrooms: formData.get("bathrooms"),
 			squarefeet: formData.get("squarefeet"),
 			isSold: formData.get("isSold"),
-			businessType: formData.get("businessType"),
+			itemType: formData.get("itemType"),
 			type: formData.get("type"),
 			amenities: formData.getAll("amenities"),
 			status: formData.get("status"),
@@ -257,12 +257,12 @@ const CreateRealStateForm = ({ token = {}, auth = {} }) => {
 				</div>
 				<div className="row">
 					<div className="col">
-						<label htmlFor="businessType" className="form-label">
+						<label htmlFor="itemType" className="form-label">
 							Property Type
 						</label>
 						<select
-							id="businessType"
-							name="businessType"
+							id="itemType"
+							name="itemType"
 							defaultValue="sale"
 							className="form-control mb-3"
 						>

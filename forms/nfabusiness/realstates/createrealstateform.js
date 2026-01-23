@@ -29,9 +29,9 @@ const CreateRealStateForm = ({ token = {}, auth = {} }) => {
 			bedrooms: formData.get("bedrooms"),
 			bathrooms: formData.get("bathrooms"),
 			squarefeet: formData.get("squarefeet"),
-			isSold: formData.get("isSold"),
+			inStock: formData.get("inStock"),
 			itemType: formData.get("itemType"),
-			type: formData.get("type"),
+			buldingType: formData.get("buldingType"),
 			amenities: formData.getAll("amenities"),
 			status: formData.get("status"),
 			builtOnYear: formData.get("builtOnYear"),
@@ -52,7 +52,7 @@ const CreateRealStateForm = ({ token = {}, auth = {} }) => {
 				postType: "realstate",
 				resourceId: auth?.companyId,
 				onModel: "Company",
-			}
+			},
 		);
 
 		if (res.status === "error") {
@@ -202,12 +202,12 @@ const CreateRealStateForm = ({ token = {}, auth = {} }) => {
 						/>
 					</div>
 					<div className="col">
-						<label htmlFor="isSold" className="form-label">
+						<label htmlFor="inStock" className="form-label">
 							Is it sold?
 						</label>
 						<select
-							id="isSold"
-							name="isSold"
+							id="inStock"
+							name="inStock"
 							defaultValue={false}
 							className="form-control mb-3"
 						>
@@ -289,12 +289,12 @@ const CreateRealStateForm = ({ token = {}, auth = {} }) => {
 						/>
 					</div>
 					<div className="col">
-						<label htmlFor="type" className="form-label">
-							Type
+						<label htmlFor="buldingType" className="form-label">
+							Building Type
 						</label>
 						<select
-							id="type"
-							name="type"
+							id="buldingType"
+							name="buldingType"
 							defaultValue="house"
 							className="form-control mb-3"
 						>

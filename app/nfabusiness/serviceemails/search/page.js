@@ -7,7 +7,7 @@ async function getServiceEmails(params) {
 	const res = await fetchurl(
 		`/global/serviceemails${params}`,
 		"GET",
-		"no-cache"
+		"no-cache",
 	);
 	return res;
 }
@@ -21,7 +21,7 @@ const NFAServiceEmailsSearchIndex = async ({ params, searchParams }) => {
 	const sort = awtdSearchParams.sort || "-createdAt";
 
 	const serviceemails = await getServiceEmails(
-		`?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+		`?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
 	);
 
 	const handleDelete = async (id) => {
@@ -30,10 +30,19 @@ const NFAServiceEmailsSearchIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/serviceemails/${id}/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/nfabusiness/serviceemails/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/serviceemails/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+		);
+	};
+
+	const handleTrashAll = async () => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/noadmin/serviceemails/deleteall`, "PUT", "no-cache");
+		revalidatePath(
+			`/nfabusiness/serviceemails?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -43,10 +52,10 @@ const NFAServiceEmailsSearchIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/serviceemails/deleteall/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/nfabusiness/serviceemails/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/serviceemails/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -75,6 +84,7 @@ const NFAServiceEmailsSearchIndex = async ({ params, searchParams }) => {
 					objects={serviceemails}
 					searchParams={awtdSearchParams}
 					handleDelete={handleDelete}
+					handleTrashAllFunction={handleTrashAll}
 					handleDeleteAllFunction={handleDeleteAll}
 				/>
 			</div>

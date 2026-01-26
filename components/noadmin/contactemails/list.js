@@ -14,6 +14,7 @@ const List = ({
 	objects = [],
 	searchParams = {},
 	handleDelete = () => {},
+	handleTrashAllFunction = () => {},
 	handleDeleteAllFunction = () => {},
 }) => {
 	const [newobjects, setNewObjects] = useState(objects);
@@ -32,6 +33,21 @@ const List = ({
 			<ErrorPage
 				statusCodeMessage={
 					"The handleDelete parameter is not a function!. Please try again"
+				}
+			/>
+		);
+	}
+
+	if (
+		typeof handleTrashAllFunction !== "function" &&
+		handleTrashAllFunction !== "" &&
+		handleTrashAllFunction !== undefined &&
+		handleTrashAllFunction !== null
+	) {
+		return (
+			<ErrorPage
+				statusCodeMessage={
+					"The handleTrashAllFunction parameter is not a function!. Please try again"
 				}
 			/>
 		);
@@ -60,6 +76,7 @@ const List = ({
 				currentResults={objects?.count}
 				totalResults={objects?.countAll}
 				searchOn={searchOn}
+				handleTrashAllFunction={handleTrashAllFunction}
 				handleDeleteAllFunction={handleDeleteAllFunction}
 				classList=""
 			/>

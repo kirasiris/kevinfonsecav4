@@ -7,7 +7,7 @@ async function getContactEmails(params) {
 	const res = await fetchurl(
 		`/global/contactemails${params}`,
 		"GET",
-		"no-cache"
+		"no-cache",
 	);
 	return res;
 }
@@ -20,7 +20,7 @@ const AdminContactEmailsIndex = async ({ params, searchParams }) => {
 	const sort = awtdSearchParams.sort || "-createdAt";
 
 	const contactemails = await getContactEmails(
-		`?page=${page}&limit=${limit}&sort=${sort}`
+		`?page=${page}&limit=${limit}&sort=${sort}`,
 	);
 
 	const handleDelete = async (id) => {
@@ -29,10 +29,19 @@ const AdminContactEmailsIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/contactemails/${id}/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/contactemails?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/contactemails?page=${page}&limit=${limit}&sort=${sort}`,
+		);
+	};
+
+	const handleTrashAll = async () => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/noadmin/contactemails/deleteall`, "PUT", "no-cache");
+		revalidatePath(
+			`/noadmin/contactemails?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -42,10 +51,10 @@ const AdminContactEmailsIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/contactemails/deleteall/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/contactemails?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/contactemails?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -69,6 +78,7 @@ const AdminContactEmailsIndex = async ({ params, searchParams }) => {
 					objects={contactemails}
 					searchParams={awtdSearchParams}
 					handleDelete={handleDelete}
+					handleTrashAllFunction={handleTrashAll}
 					handleDeleteAllFunction={handleDeleteAll}
 				/>
 			</div>

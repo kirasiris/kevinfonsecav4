@@ -1,5 +1,6 @@
 "use client";
 import Accordion from "react-bootstrap/Accordion";
+import Link from "next/link";
 import DeleteModal from "@/components/global/deletemodal";
 import ParseHtml from "@/layout/parseHtml";
 
@@ -22,14 +23,25 @@ const Single = ({
 					{object.title}
 				</Accordion.Header>
 				<Accordion.Body>
-					<DeleteModal
-						id={object._id ? object._id : object._id}
-						action={handleDelete}
-						// classStr={`dropdown-item`}
-						objects={objects}
-						setObjects={setObjects}
-						setTotalResults={setTotalResults}
-					/>
+					<div className="d-flex justify-content-between">
+						<Link
+							href={{
+								pathname: `/noadmin/changelogs/update/${object._id}`,
+								query: {},
+							}}
+							className="btn btn-light btn-sm"
+						>
+							Read&nbsp;more
+						</Link>
+						<DeleteModal
+							id={object._id ? object._id : object._id}
+							action={handleDelete}
+							// classStr={}
+							objects={objects}
+							setObjects={setObjects}
+							setTotalResults={setTotalResults}
+						/>
+					</div>
 					<hr />
 					<ParseHtml text={object?.text} />
 				</Accordion.Body>

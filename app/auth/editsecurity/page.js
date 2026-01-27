@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import Sidebar from "@/layout/auth/sidebar";
 import Globalcontent from "@/layout/content";
 import UpdatePasswordForm from "@/forms/auth/updatepasswordform";
+import UpdatePasskeyForm from "@/forms/auth/updatepasskeyform";
 
 async function getAuthenticatedUser() {
 	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
@@ -21,10 +22,16 @@ const UpdatePasswords = async ({ params, searchParams }) => {
 			<div className="row">
 				<Sidebar />
 				<Globalcontent>
-					<div className="card">
+					<div className="card mb-3">
 						<div className="card-header">Edit&nbsp;Password</div>
 						<div className="card-body">
 							<UpdatePasswordForm auth={auth} />
+						</div>
+					</div>
+					<div className="card">
+						<div className="card-header">Enable&nbsp;Passkeys</div>
+						<div className="card-body">
+							<UpdatePasskeyForm auth={auth} />
 						</div>
 					</div>
 				</Globalcontent>

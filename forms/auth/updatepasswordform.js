@@ -32,7 +32,7 @@ const UpdatePasswordForm = ({ auth = {} }) => {
 			{ ...rawFormData, website: "beFree" },
 			undefined,
 			false,
-			false
+			false,
 		);
 		if (res.status === "error") {
 			toast.error(res.message, "bottom");

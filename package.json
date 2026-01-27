@@ -73,6 +73,7 @@
     "@fullcalendar/list": "^6.1.20",
     "@fullcalendar/react": "^6.1.20",
     "@fullcalendar/timegrid": "^6.1.20",
+    "@simplewebauthn/browser": "^13.2.2",
     "@stripe/stripe-js": "^8.6.1",
     "@tinymce/tinymce-react": "^6.3.0",
     "@uiw/codemirror-extensions-langs": "^4.25.4",

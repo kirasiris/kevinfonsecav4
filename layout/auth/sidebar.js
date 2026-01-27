@@ -25,13 +25,13 @@ const Sidebar = () => {
 				</li>
 				<li
 					className={`list-group-item ${isActive(
-						`/auth/edittwofactorauthentication`
+						`/auth/edittwofactorauthentication`,
 					)}`}
 				>
 					<Link href={`/auth/edittwofactorauthentication`}>2FA</Link>
 				</li>
-				<li className={`list-group-item ${isActive(`/auth/editpassword`)}`}>
-					<Link href={`/auth/editpassword`}>Password</Link>
+				<li className={`list-group-item ${isActive(`/auth/editsecurity`)}`}>
+					<Link href={`/auth/editsecurity`}>Security</Link>
 				</li>
 				<li className={`list-group-item ${isActive(`/auth/stripe`)}`}>
 					<Link href={`/auth/stripe`}>Stripe Settings</Link>
@@ -41,7 +41,7 @@ const Sidebar = () => {
 				</li>
 				<li
 					className={`list-group-item list-group-item-danger ${isActive(
-						`/auth/deleteaccount`
+						`/auth/deleteaccount`,
 					)}`}
 				>
 					<Link href={`/auth/deleteaccount`}>Delete&nbsp;Account</Link>

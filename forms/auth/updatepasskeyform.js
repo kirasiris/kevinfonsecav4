@@ -12,7 +12,7 @@ const UpdatePasskeyForm = ({ auth = {} }) => {
 
 	const [btnText, setBtnText] = useState("Submit");
 
-	const upgradePasskey = async (e) => {
+	const activate = async (e) => {
 		e.preventDefault();
 		setBtnText(`Processing`);
 
@@ -74,14 +74,45 @@ const UpdatePasskeyForm = ({ auth = {} }) => {
 		// router.push(`/auth/profile`);
 	};
 
+	const disactivate = async (e) => {
+		e.preventDefault();
+		setBtnText(`Processing`);
+
+		const res = await fetchurl(
+			`/auth/2fa/passkey/disable`,
+			"PUT",
+			"no-cache",
+			{},
+			undefined,
+			false,
+			false,
+		);
+		if (res.status === "error") {
+			toast.error(res.message, "bottom");
+			setBtnText("Submit");
+			return;
+		}
+		if (res.status === "fail") {
+			toast.error(res.message, "bottom");
+			setBtnText("Submit");
+			return;
+		}
+
+		toast.success("Account has been updated", "bottom");
+		router.push(`/auth/profile`);
+	};
+
 	const resetForm = (e) => {
 		e.target.closest("form").reset();
 	};
 
 	return (
-		<form onSubmit={upgradePasskey}>
-			<button type="submit" className="btn btn-secondary btn-sm float-start">
-				{btnText}
+		<form onSubmit={!auth?.data?.biometricsEnabled ? activate : disactivate}>
+			<button
+				type="submit"
+				className={`btn btn-${!auth?.data?.biometricsEnabled ? `secondary` : `success`} btn-sm float-start`}
+			>
+				{auth?.data?.biometricsEnabled ? "Enabled" : "Disabled"}
 			</button>
 			<button
 				type="reset"

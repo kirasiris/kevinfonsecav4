@@ -42,7 +42,7 @@ const UpdatePasskeyForm = ({ auth = {} }) => {
 		// Pull biometricOptions from user
 		const attestResponse = await startRegistration(res?.biometricOptions);
 
-		console.log(attestResponse);
+		console.log("Si llego aqui x1", attestResponse);
 
 		// Verify
 		const passkeyVerification = await fetchurl(
@@ -56,6 +56,8 @@ const UpdatePasskeyForm = ({ auth = {} }) => {
 			false,
 			false,
 		);
+
+		console.log("Si llego aqui x2", passkeyVerification);
 
 		if (passkeyVerification.status === "error") {
 			toast.error(passkeyVerification.message, "bottom");

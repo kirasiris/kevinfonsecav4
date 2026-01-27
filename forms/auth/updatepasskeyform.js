@@ -42,6 +42,8 @@ const UpdatePasskeyForm = ({ auth = {} }) => {
 		// Pull biometricOptions from user
 		const attestResponse = await startRegistration(res?.biometricOptions);
 
+		console.log(attestResponse);
+
 		// Verify
 		const passkeyVerification = await fetchurl(
 			`/auth/2fa/passkey/validate/${auth?.data?._id}`,

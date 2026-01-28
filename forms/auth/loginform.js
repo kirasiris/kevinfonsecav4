@@ -98,51 +98,51 @@ const LoginForm = () => {
 
 		console.log("si llego aqui x2", res);
 
-		// // Else continue,
-		// // furthermore, setAuthTokenOnServer needs to be prior to setUserOnServer
-		// await setAuthTokenOnServer(res?.token);
+		// Else continue,
+		// furthermore, setAuthTokenOnServer needs to be prior to setUserOnServer
+		await setAuthTokenOnServer(res?.token);
 
-		// const loadUser = await fetchurl(`/auth/me`, "GET", "default");
+		const loadUser = await fetchurl(`/auth/me`, "GET", "default");
 
-		// await setUserOnServer(await loadUser?.data);
+		await setUserOnServer(await loadUser?.data);
 
-		// let returnpage = awtdSearchParams.get("returnpage");
+		let returnpage = awtdSearchParams.get("returnpage");
 
-		// // Ensure returnpage is only modified if it points to armedcodellc.com
-		// if (returnpage) {
-		// 	try {
-		// 		const base = "https://armedcodellc.com"; // base fallback for relative paths
-		// 		const returnUrl = new URL(returnpage, base);
+		// Ensure returnpage is only modified if it points to armedcodellc.com
+		if (returnpage) {
+			try {
+				const base = "https://armedcodellc.com"; // base fallback for relative paths
+				const returnUrl = new URL(returnpage, base);
 
-		// 		// Only allow trusted domains
-		// 		const hostname = returnUrl.hostname.toLowerCase();
-		// 		const isTrustedDomain =
-		// 			hostname === "armedcodellc.com" ||
-		// 			hostname.endsWith(".armedcodellc.com");
+				// Only allow trusted domains
+				const hostname = returnUrl.hostname.toLowerCase();
+				const isTrustedDomain =
+					hostname === "armedcodellc.com" ||
+					hostname.endsWith(".armedcodellc.com");
 
-		// 		// Only allow armedcodellc.com domains or x.armedcodellc.com sub domains;
-		// 		if (isTrustedDomain) {
-		// 			// Safely set the token param
-		// 			if (res?.token) {
-		// 				returnUrl.searchParams.set(
-		// 					"xAuthToken",
-		// 					encodeURIComponent(res.token),
-		// 				);
-		// 			}
+				// Only allow armedcodellc.com domains or x.armedcodellc.com sub domains;
+				if (isTrustedDomain) {
+					// Safely set the token param
+					if (res?.token) {
+						returnUrl.searchParams.set(
+							"xAuthToken",
+							encodeURIComponent(res.token),
+						);
+					}
 
-		// 			// Reassign fully serialized safe url
-		// 			returnpage = returnUrl.toString();
-		// 		} else {
-		// 			toast.error("Unsafe redirerect attempt to: ", hostname);
-		// 			returnpage = null;
-		// 		}
-		// 	} catch (err) {
-		// 		toast.error(`Invalid return URL: ${err}`, "bottom");
-		// 		returnpage = null;
-		// 	}
-		// }
+					// Reassign fully serialized safe url
+					returnpage = returnUrl.toString();
+				} else {
+					toast.error("Unsafe redirerect attempt to: ", hostname);
+					returnpage = null;
+				}
+			} catch (err) {
+				toast.error(`Invalid return URL: ${err}`, "bottom");
+				returnpage = null;
+			}
+		}
 
-		// window.location.href = returnpage || `/auth/profile`;
+		window.location.href = returnpage || `/auth/profile`;
 
 		// router.push(returnpage || `/auth/profile`);
 		// use the method below to make it possible to transfer cookies cross-domain

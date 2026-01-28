@@ -37,10 +37,10 @@ const ValidateTwoFactorAuthenticationForm = () => {
 			`/auth/2fa/validate/${userid}`,
 			"POST",
 			"no-cache",
-			rawFormData,
+			{ ...rawFormData, website: "beFree" },
 			undefined,
 			false,
-			false
+			false,
 		);
 		if (res.status === "error") {
 			toast.error(res.message, "bottom");

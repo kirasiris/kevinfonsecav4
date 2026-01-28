@@ -44,7 +44,7 @@ const LoginForm = () => {
 			},
 			undefined,
 			false,
-			false
+			false,
 		);
 		if (res.status === "error") {
 			toast.error(res.message, "bottom");
@@ -59,6 +59,7 @@ const LoginForm = () => {
 		if (res?.data) {
 			toast.info("Please enter your 2FA token", "bottom");
 			router.push(`/auth/validatetwofactorauth/${res?.data?._id}`);
+			return;
 		}
 
 		// Else continue,
@@ -89,7 +90,7 @@ const LoginForm = () => {
 					if (res?.token) {
 						returnUrl.searchParams.set(
 							"xAuthToken",
-							encodeURIComponent(res.token)
+							encodeURIComponent(res.token),
 						);
 					}
 

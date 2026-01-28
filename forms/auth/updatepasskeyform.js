@@ -10,7 +10,7 @@ const UpdatePasskeyForm = ({ auth = {} }) => {
 	const awtdParams = useParams();
 	const awtdSearchParams = useSearchParams();
 
-	const [btnText, setBtnText] = useState("Submit");
+	const [, setBtnText] = useState("Submit");
 
 	const activate = async (e) => {
 		e.preventDefault();
@@ -42,8 +42,6 @@ const UpdatePasskeyForm = ({ auth = {} }) => {
 		// Pull biometricOptions from user
 		const attestResponse = await startRegistration(res?.biometricOptions);
 
-		console.log("Si llego aqui x1", attestResponse);
-
 		// Verify
 		const passkeyVerification = await fetchurl(
 			`/auth/2fa/passkey/validate/${auth?.data?._id}`,
@@ -51,13 +49,12 @@ const UpdatePasskeyForm = ({ auth = {} }) => {
 			"no-cache",
 			{
 				passkey: attestResponse,
+				website: "beFree",
 			},
 			undefined,
 			false,
 			false,
 		);
-
-		console.log("Si llego aqui x2", passkeyVerification);
 
 		if (passkeyVerification.status === "error") {
 			toast.error(passkeyVerification.message, "bottom");
@@ -75,7 +72,7 @@ const UpdatePasskeyForm = ({ auth = {} }) => {
 		}
 
 		toast.success("Account has been updated", "bottom");
-		// router.push(`/auth/profile`);
+		router.push(`/auth/profile`);
 	};
 
 	const disactivate = async (e) => {
@@ -86,7 +83,9 @@ const UpdatePasskeyForm = ({ auth = {} }) => {
 			`/auth/2fa/passkey/disable`,
 			"PUT",
 			"no-cache",
-			{},
+			{
+				website: "beFree",
+			},
 			undefined,
 			false,
 			false,
@@ -106,10 +105,6 @@ const UpdatePasskeyForm = ({ auth = {} }) => {
 		router.push(`/auth/profile`);
 	};
 
-	const resetForm = (e) => {
-		e.target.closest("form").reset();
-	};
-
 	return (
 		<form onSubmit={!auth?.data?.biometricsEnabled ? activate : disactivate}>
 			<button
@@ -117,13 +112,6 @@ const UpdatePasskeyForm = ({ auth = {} }) => {
 				className={`btn btn-${!auth?.data?.biometricsEnabled ? `secondary` : `success`} btn-sm float-start`}
 			>
 				{auth?.data?.biometricsEnabled ? "Enabled" : "Disabled"}
-			</button>
-			<button
-				type="reset"
-				onClick={resetForm}
-				className="btn btn-secondary btn-sm float-end"
-			>
-				Reset
 			</button>
 		</form>
 	);

@@ -50,7 +50,7 @@ const UpdatePasskeyForm = ({ auth = {} }) => {
 			"PUT",
 			"no-cache",
 			{
-				attestResponse: attestResponse,
+				passkey: attestResponse,
 			},
 			undefined,
 			false,

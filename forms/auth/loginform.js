@@ -86,11 +86,10 @@ const LoginForm = () => {
 			console.log("si llego aqui x2", authResponse);
 
 			res = await fetchurl(
-				`/auth/2fa/passkey/verify/${userId}`,
+				`/auth/2fa/passkey/verify/${res?.data?._id}`,
 				"PUT",
 				"no-cache",
 				{
-					...rawFormData,
 					authResponse: authResponse,
 				},
 				undefined,

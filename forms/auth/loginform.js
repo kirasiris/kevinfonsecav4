@@ -92,11 +92,7 @@ const LoginForm = () => {
 				false,
 				false,
 			);
-
-			console.log("si llego aqui x1", res);
 		}
-
-		console.log("si llego aqui x2", res);
 
 		// Else continue,
 		// furthermore, setAuthTokenOnServer needs to be prior to setUserOnServer

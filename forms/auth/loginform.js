@@ -77,13 +77,9 @@ const LoginForm = () => {
 				false,
 			);
 
-			console.log("si llego aqui x1", authOptions);
-
 			const authResponse = await startAuthentication(
 				authOptions.biometricOptions,
 			);
-
-			console.log("si llego aqui x2", authResponse);
 
 			res = await fetchurl(
 				`/auth/2fa/passkey/verify/${res?.data?._id}`,
@@ -97,10 +93,10 @@ const LoginForm = () => {
 				false,
 			);
 
-			console.log("si llego aqui x3", res);
+			console.log("si llego aqui x1", res);
 		}
 
-		console.log("si llego aqui x4", res);
+		console.log("si llego aqui x2", res);
 
 		// // Else continue,
 		// // furthermore, setAuthTokenOnServer needs to be prior to setUserOnServer

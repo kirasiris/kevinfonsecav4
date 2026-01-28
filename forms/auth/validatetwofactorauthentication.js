@@ -37,7 +37,7 @@ const ValidateTwoFactorAuthenticationForm = () => {
 			`/auth/2fa/validate/${userid}`,
 			"POST",
 			"no-cache",
-			{ ...rawFormData, website: "beFree" },
+			rawFormData,
 			undefined,
 			false,
 			false,

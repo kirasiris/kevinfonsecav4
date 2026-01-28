@@ -100,39 +100,40 @@ const UpdateTwoFactorAuthentication = async ({ params, searchParams }) => {
 									</ul>
 								</li>
 							</ol>
-							{auth?.data?.twoFactorTokenEnabled && (
-								<>
-									<hr />
-									<div className="align-content-center border border-5 d-flex justify-content-center">
-										<QRC value={auth?.data?.twoFactorToken?.otpauth_url} />
-									</div>
-									<hr />
-									{auth?.data?.twoFactorRecoveryToken && (
-										<>
-											<p>
-												Please&nbsp;keep&nbsp;this&nbsp;code&nbsp;in&nbsp;a&nbsp;safe&nbsp;but&nbsp;accessible&nbsp;area.
-												This&nbsp;is&nbsp;your&nbsp;<b>BACKUP</b>&nbsp;code:
-												<br />
-												<code>{auth?.data?.twoFactorRecoveryToken}</code>
-											</p>
-										</>
-									)}
-									<p>
-										Copy&nbsp;this&nbsp;to&nbsp;
-										<i>Enter&nbsp;a&nbsp;setup&nbsp;key</i>
-										&nbsp;to&nbsp;your&nbsp;authenticator app:
-										<br />
-										<code>{auth?.data?.twoFactorToken.base32}</code>
-									</p>
-									<p>
-										This&nbsp;is&nbsp;the&nbsp;string&nbsp;used&nbsp;for&nbsp;the&nbsp;
-										<i>QR&nbsp;Code</i>.
-										<b>You&nbsp;can&nbsp;ignore&nbsp;it!.&nbsp;</b>
-										<br />
-										<code>{auth?.data?.twoFactorToken?.otpauth_url}</code>
-									</p>
-								</>
-							)}
+							{auth?.data?.twoFactorToken.otpauth_url !== "" &&
+								auth?.data?.twoFactorToken.otpauth_url !== null && (
+									<>
+										<hr />
+										<div className="align-content-center border border-5 d-flex justify-content-center">
+											<QRC value={auth?.data?.twoFactorToken?.otpauth_url} />
+										</div>
+										<hr />
+										{auth?.data?.twoFactorRecoveryToken && (
+											<>
+												<p>
+													Please&nbsp;keep&nbsp;this&nbsp;code&nbsp;in&nbsp;a&nbsp;safe&nbsp;but&nbsp;accessible&nbsp;area.
+													This&nbsp;is&nbsp;your&nbsp;<b>BACKUP</b>&nbsp;code:
+													<br />
+													<code>{auth?.data?.twoFactorRecoveryToken}</code>
+												</p>
+											</>
+										)}
+										<p>
+											Copy&nbsp;this&nbsp;to&nbsp;
+											<i>Enter&nbsp;a&nbsp;setup&nbsp;key</i>
+											&nbsp;to&nbsp;your&nbsp;authenticator app:
+											<br />
+											<code>{auth?.data?.twoFactorToken.base32}</code>
+										</p>
+										<p>
+											This&nbsp;is&nbsp;the&nbsp;string&nbsp;used&nbsp;for&nbsp;the&nbsp;
+											<i>QR&nbsp;Code</i>.
+											<b>You&nbsp;can&nbsp;ignore&nbsp;it!.&nbsp;</b>
+											<br />
+											<code>{auth?.data?.twoFactorToken?.otpauth_url}</code>
+										</p>
+									</>
+								)}
 							<form
 								action={
 									!auth?.data?.twoFactorTokenEnabled ? activate : disactivate

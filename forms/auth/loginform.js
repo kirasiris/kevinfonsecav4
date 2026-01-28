@@ -7,6 +7,7 @@ import {
 	setAuthTokenOnServer,
 	setUserOnServer,
 } from "@/helpers/setTokenOnServer";
+import { startAuthentication } from "@simplewebauthn/browser";
 
 const LoginForm = () => {
 	const router = useRouter();
@@ -56,10 +57,37 @@ const LoginForm = () => {
 			setBtnText("Submit");
 			return;
 		}
-		if (res?.data) {
+		if (res?.data?.tokenEnabled) {
 			toast.info("Please enter your 2FA token", "bottom");
 			router.push(`/auth/validatetwofactorauth/${res?.data?._id}`);
 			return;
+		}
+
+		if (res?.data?.biometricsEnabled) {
+			const authOptions = await fetchurl(
+				`/auth/2fa/passkey/challenge/${res?.data?._id}`,
+				"PUT",
+				"no-cache",
+				{},
+				undefined,
+				false,
+				false,
+			);
+
+			const authResponse = await startAuthentication(authOptions);
+
+			const verifyLogin = await fetchurl(
+				`/auth/2fa/passkey/verify/${userId}`,
+				"PUT",
+				"no-cache",
+				{
+					...rawFormData,
+					authResponse: authResponse,
+				},
+				undefined,
+				false,
+				false,
+			);
 		}
 
 		// Else continue,

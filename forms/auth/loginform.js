@@ -2,12 +2,12 @@
 import { useState } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { toast } from "react-toastify";
+import { startAuthentication } from "@simplewebauthn/browser";
 import {
 	fetchurl,
 	setAuthTokenOnServer,
 	setUserOnServer,
 } from "@/helpers/setTokenOnServer";
-import { startAuthentication } from "@simplewebauthn/browser";
 
 const LoginForm = () => {
 	const router = useRouter();
@@ -35,7 +35,7 @@ const LoginForm = () => {
 			return;
 		}
 
-		const res = await fetchurl(
+		let res = await fetchurl(
 			`/auth/login`,
 			"POST",
 			"no-cache",
@@ -57,12 +57,15 @@ const LoginForm = () => {
 			setBtnText("Submit");
 			return;
 		}
-		if (res?.data?.tokenEnabled) {
+
+		// If 2fa enabled
+		if (res?.data?.twoFactorTokenEnabled) {
 			toast.info("Please enter your 2FA token", "bottom");
 			router.push(`/auth/validatetwofactorauth/${res?.data?._id}`);
 			return;
 		}
 
+		// If passkey enabled
 		if (res?.data?.biometricsEnabled) {
 			const authOptions = await fetchurl(
 				`/auth/2fa/passkey/challenge/${res?.data?._id}`,
@@ -74,9 +77,15 @@ const LoginForm = () => {
 				false,
 			);
 
-			const authResponse = await startAuthentication(authOptions);
+			console.log("si llego aqui x1", authOptions);
 
-			const verifyLogin = await fetchurl(
+			const authResponse = await startAuthentication(
+				authOptions.biometricOptions,
+			);
+
+			console.log("si llego aqui x2", authResponse);
+
+			res = await fetchurl(
 				`/auth/2fa/passkey/verify/${userId}`,
 				"PUT",
 				"no-cache",
@@ -88,53 +97,57 @@ const LoginForm = () => {
 				false,
 				false,
 			);
+
+			console.log("si llego aqui x3", res);
 		}
 
-		// Else continue,
-		// furthermore, setAuthTokenOnServer needs to be prior to setUserOnServer
-		await setAuthTokenOnServer(res?.token);
+		console.log("si llego aqui x4", res);
 
-		const loadUser = await fetchurl(`/auth/me`, "GET", "default");
+		// // Else continue,
+		// // furthermore, setAuthTokenOnServer needs to be prior to setUserOnServer
+		// await setAuthTokenOnServer(res?.token);
 
-		await setUserOnServer(await loadUser?.data);
+		// const loadUser = await fetchurl(`/auth/me`, "GET", "default");
 
-		let returnpage = awtdSearchParams.get("returnpage");
+		// await setUserOnServer(await loadUser?.data);
 
-		// Ensure returnpage is only modified if it points to armedcodellc.com
-		if (returnpage) {
-			try {
-				const base = "https://armedcodellc.com"; // base fallback for relative paths
-				const returnUrl = new URL(returnpage, base);
+		// let returnpage = awtdSearchParams.get("returnpage");
 
-				// Only allow trusted domains
-				const hostname = returnUrl.hostname.toLowerCase();
-				const isTrustedDomain =
-					hostname === "armedcodellc.com" ||
-					hostname.endsWith(".armedcodellc.com");
+		// // Ensure returnpage is only modified if it points to armedcodellc.com
+		// if (returnpage) {
+		// 	try {
+		// 		const base = "https://armedcodellc.com"; // base fallback for relative paths
+		// 		const returnUrl = new URL(returnpage, base);
 
-				// Only allow armedcodellc.com domains or x.armedcodellc.com sub domains;
-				if (isTrustedDomain) {
-					// Safely set the token param
-					if (res?.token) {
-						returnUrl.searchParams.set(
-							"xAuthToken",
-							encodeURIComponent(res.token),
-						);
-					}
+		// 		// Only allow trusted domains
+		// 		const hostname = returnUrl.hostname.toLowerCase();
+		// 		const isTrustedDomain =
+		// 			hostname === "armedcodellc.com" ||
+		// 			hostname.endsWith(".armedcodellc.com");
 
-					// Reassign fully serialized safe url
-					returnpage = returnUrl.toString();
-				} else {
-					toast.error("Unsafe redirerect attempt to: ", hostname);
-					returnpage = null;
-				}
-			} catch (err) {
-				toast.error(`Invalid return URL: ${err}`, "bottom");
-				returnpage = null;
-			}
-		}
+		// 		// Only allow armedcodellc.com domains or x.armedcodellc.com sub domains;
+		// 		if (isTrustedDomain) {
+		// 			// Safely set the token param
+		// 			if (res?.token) {
+		// 				returnUrl.searchParams.set(
+		// 					"xAuthToken",
+		// 					encodeURIComponent(res.token),
+		// 				);
+		// 			}
 
-		window.location.href = returnpage || `/auth/profile`;
+		// 			// Reassign fully serialized safe url
+		// 			returnpage = returnUrl.toString();
+		// 		} else {
+		// 			toast.error("Unsafe redirerect attempt to: ", hostname);
+		// 			returnpage = null;
+		// 		}
+		// 	} catch (err) {
+		// 		toast.error(`Invalid return URL: ${err}`, "bottom");
+		// 		returnpage = null;
+		// 	}
+		// }
+
+		// window.location.href = returnpage || `/auth/profile`;
 
 		// router.push(returnpage || `/auth/profile`);
 		// use the method below to make it possible to transfer cookies cross-domain

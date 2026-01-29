@@ -12,6 +12,7 @@ const Single = ({
 	handleTrash = () => {},
 	handleSchedule = () => {},
 	handleDelete = () => {},
+	handleUsageCount = () => {},
 	objects = [],
 	setObjects = () => {},
 	setTotalResults = () => {},
@@ -83,6 +84,12 @@ const Single = ({
 								onClick={() => handleSchedule(object._id)}
 							>
 								Schedule&nbsp;It
+							</button>
+							<button
+								className="dropdown-item btn btn-sm"
+								onClick={() => handleUsageCount(object._id)}
+							>
+								Usage&nbsp;Count&nbsp;It
 							</button>
 							<hr />
 							<DeleteModal

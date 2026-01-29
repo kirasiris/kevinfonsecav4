@@ -21,6 +21,7 @@ const List = ({
 	handleDelete = () => {},
 	handleTrashAllFunction = () => {},
 	handleDeleteAllFunction = () => {},
+	handleUsageCount = () => {},
 }) => {
 	const [newobjects, setNewObjects] = useState(objects);
 	const [, setTotalResults] = useState({
@@ -133,6 +134,21 @@ const List = ({
 		);
 	}
 
+	if (
+		typeof handleUsageCount !== "function" &&
+		handleUsageCount !== "" &&
+		handleUsageCount !== undefined &&
+		handleUsageCount !== null
+	) {
+		return (
+			<ErrorPage
+				statusCodeMessage={
+					"The handleUsageCount parameter is not a function!. Please try again"
+				}
+			/>
+		);
+	}
+
 	return (
 		<>
 			<AdminCardHeaderMenu
@@ -159,6 +175,7 @@ const List = ({
 								handleTrash={handleTrash}
 								handleSchedule={handleSchedule}
 								handleDelete={handleDelete}
+								handleUsageCount={handleUsageCount}
 								objects={newobjects.data}
 								setObjects={setNewObjects}
 								setTotalResults={setTotalResults}

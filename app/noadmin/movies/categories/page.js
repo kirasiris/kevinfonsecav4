@@ -109,6 +109,15 @@ const AdminMovieCategoriesIndex = async ({ params, searchParams }) => {
 		);
 	};
 
+	const usageCountItAll = async () => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/noadmin/categories/allusagecount`, "PUT", "no-cache");
+		revalidatePath(
+			`/noadmin/movies/categories?page=${page}&limit=${limit}&sort=${sort}`,
+		);
+	};
+
 	return (
 		<>
 			<AdminStatusesMenu
@@ -146,6 +155,8 @@ const AdminMovieCategoriesIndex = async ({ params, searchParams }) => {
 							handleTrashAllFunction={handleTrashAll}
 							handleDeleteAllFunction={handleDeleteAll}
 							handleUsageCount={usageCountIt}
+							handleAllUsageCountEnabled={true}
+							handleAllUsageCount={usageCountItAll}
 						/>
 					</div>
 				</div>

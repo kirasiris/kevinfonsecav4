@@ -16,6 +16,8 @@ const AdminCardHeaderMenu = ({
 	handleTrashAllFunction = () => {},
 	handleDeleteAllFunction = () => {},
 	classList = "",
+	handleAllUsageCountEnabled = false,
+	handleAllUsageCount = () => {},
 }) => {
 	const router = useRouter();
 
@@ -28,7 +30,7 @@ const AdminCardHeaderMenu = ({
 	const searchData = async (e) => {
 		e.preventDefault();
 		router.push(
-			`${searchOn}/search?keyword=${keyword}&page=1&limit=10&sort=-createdAt`
+			`${searchOn}/search?keyword=${keyword}&page=1&limit=10&sort=-createdAt`,
 		);
 	};
 
@@ -106,6 +108,14 @@ const AdminCardHeaderMenu = ({
 						>
 							Add new
 						</Link>
+					)}
+					{handleAllUsageCountEnabled && (
+						<button
+							className="btn btn-secondary btn-sm"
+							onClick={() => handleAllUsageCount()}
+						>
+							Count&nbsp;docs
+						</button>
 					)}
 					{handleTrashAllFunction !== "" && (
 						<TrashAllModal action={handleTrashAllFunction} />

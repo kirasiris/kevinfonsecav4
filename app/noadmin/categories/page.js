@@ -17,35 +17,43 @@ const AdminCategoriesIndex = async ({ params, searchParams }) => {
 	const sort = awtdSearchParams.sort || "-createdAt";
 
 	const categories = await getCategories(
-		`?page=${page}&limit=${limit}&sort=${sort}`
+		`?page=${page}&limit=${limit}&sort=${sort}`,
 	);
 
 	const draftIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/categories/${id}/draftit`, "PUT", "no-cache");
-		revalidatePath(`?page=${page}&limit=${limit}&sort=${sort}`);
+		revalidatePath(
+			`/noadmin/categories?page=${page}&limit=${limit}&sort=${sort}`,
+		);
 	};
 
 	const publishIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/categories/${id}/publishit`, "PUT", "no-cache");
-		revalidatePath(`?page=${page}&limit=${limit}&sort=${sort}`);
+		revalidatePath(
+			`/noadmin/categories?page=${page}&limit=${limit}&sort=${sort}`,
+		);
 	};
 
 	const trashIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/categories/${id}/trashit`, "PUT", "no-cache");
-		revalidatePath(`?page=${page}&limit=${limit}&sort=${sort}`);
+		revalidatePath(
+			`/noadmin/categories?page=${page}&limit=${limit}&sort=${sort}`,
+		);
 	};
 
 	const scheduleIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/categories/${id}/scheduleit`, "PUT", "no-cache");
-		revalidatePath(`?page=${page}&limit=${limit}&sort=${sort}`);
+		revalidatePath(
+			`/noadmin/categories?page=${page}&limit=${limit}&sort=${sort}`,
+		);
 	};
 
 	const handleDelete = async (id) => {
@@ -54,16 +62,20 @@ const AdminCategoriesIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/categories/${id}/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
-		revalidatePath(`?page=${page}&limit=${limit}&sort=${sort}`);
+		revalidatePath(
+			`/noadmin/categories?page=${page}&limit=${limit}&sort=${sort}`,
+		);
 	};
 
 	const handleTrashAll = async () => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/categories/deleteall`, "PUT", "no-cache");
-		revalidatePath(`?page=${page}&limit=${limit}&sort=${sort}`);
+		revalidatePath(
+			`/noadmin/categories?page=${page}&limit=${limit}&sort=${sort}`,
+		);
 	};
 
 	const handleDeleteAll = async () => {
@@ -72,9 +84,29 @@ const AdminCategoriesIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/categories/deleteall/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
-		revalidatePath(`?page=${page}&limit=${limit}&sort=${sort}`);
+		revalidatePath(
+			`/noadmin/categories?page=${page}&limit=${limit}&sort=${sort}`,
+		);
+	};
+
+	const usageCountIt = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/noadmin/categories/${id}/usagecount`, "PUT", "no-cache");
+		revalidatePath(
+			`/noadmin/categories?page=${page}&limit=${limit}&sort=${sort}`,
+		);
+	};
+
+	const usageCountItAll = async () => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/noadmin/categories/allusagecount`, "PUT", "no-cache");
+		revalidatePath(
+			`/noadmin/categories?page=${page}&limit=${limit}&sort=${sort}`,
+		);
 	};
 
 	return (
@@ -109,6 +141,9 @@ const AdminCategoriesIndex = async ({ params, searchParams }) => {
 							handleDelete={handleDelete}
 							handleTrashAllFunction={handleTrashAll}
 							handleDeleteAllFunction={handleDeleteAll}
+							handleUsageCount={usageCountIt}
+							handleAllUsageCountEnabled={true}
+							handleAllUsageCount={usageCountItAll}
 						/>
 					</div>
 				</div>

@@ -44,6 +44,9 @@ const Single = ({
 						<span className="badge bg-dark me-1">
 							{object.deletable ? "deletable" : "not deletable"}
 						</span>
+						<span className="badge bg-danger me-1">
+							Times&nbsp;used:{object?.timesUsed}
+						</span>
 						<span className="badge bg-dark me-1">{object.status}</span>
 					</div>
 				</div>

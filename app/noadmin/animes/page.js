@@ -7,7 +7,7 @@ async function getPlaylists(params) {
 	const res = await fetchurl(
 		`/global/playlists${params}&onairtype=anime`,
 		"GET",
-		"no-cache"
+		"no-cache",
 	);
 	return res;
 }
@@ -20,7 +20,7 @@ const AdminAnimesIndex = async ({ params, searchParams }) => {
 	const sort = awtdSearchParams.sort || "-createdAt";
 
 	const animes = await getPlaylists(
-		`?page=${page}&limit=${limit}&sort=${sort}`
+		`?page=${page}&limit=${limit}&sort=${sort}`,
 	);
 
 	const draftIt = async (id) => {
@@ -71,7 +71,7 @@ const AdminAnimesIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/playlists/${id}/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(`/noadmin/animes?page=${page}&limit=${limit}&sort=${sort}`);
 	};
@@ -89,7 +89,7 @@ const AdminAnimesIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/playlists/deleteall/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(`/noadmin/animes?page=${page}&limit=${limit}&sort=${sort}`);
 	};

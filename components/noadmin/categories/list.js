@@ -22,6 +22,8 @@ const List = ({
 	handleTrashAllFunction = () => {},
 	handleDeleteAllFunction = () => {},
 	handleUsageCount = () => {},
+	handleAllUsageCountEnabled = false,
+	handleAllUsageCount = () => {},
 }) => {
 	const [newobjects, setNewObjects] = useState(objects);
 	const [, setTotalResults] = useState({
@@ -149,6 +151,21 @@ const List = ({
 		);
 	}
 
+	if (
+		typeof handleAllUsageCount !== "function" &&
+		handleAllUsageCount !== "" &&
+		handleAllUsageCount !== undefined &&
+		handleAllUsageCount !== null
+	) {
+		return (
+			<ErrorPage
+				statusCodeMessage={
+					"The handleAllUsageCount parameter is not a function!. Please try again"
+				}
+			/>
+		);
+	}
+
 	return (
 		<>
 			<AdminCardHeaderMenu
@@ -161,6 +178,8 @@ const List = ({
 				handleTrashAllFunction={handleTrashAllFunction}
 				handleDeleteAllFunction={handleDeleteAllFunction}
 				classList=""
+				handleAllUsageCountEnabled={handleAllUsageCountEnabled}
+				handleAllUsageCount={handleAllUsageCount}
 			/>
 			{objects?.data?.length > 0 ? (
 				<>

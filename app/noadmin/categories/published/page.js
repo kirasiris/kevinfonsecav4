@@ -8,7 +8,7 @@ async function getCategories(params) {
 	const res = await fetchurl(
 		`/global/categories${params}&status=published`,
 		"GET",
-		"no-cache"
+		"no-cache",
 	);
 	return res;
 }
@@ -21,7 +21,7 @@ const AdminCategoriesPublishedIndex = async ({ params, searchParams }) => {
 	const sort = awtdSearchParams.sort || "-createdAt";
 
 	const categories = await getCategories(
-		`?page=${page}&limit=${limit}&sort=${sort}`
+		`?page=${page}&limit=${limit}&sort=${sort}`,
 	);
 
 	const draftIt = async (id) => {
@@ -29,7 +29,7 @@ const AdminCategoriesPublishedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/categories/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/categories/published?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/categories/published?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -38,7 +38,7 @@ const AdminCategoriesPublishedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/categories/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/categories/published?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/categories/published?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -47,7 +47,7 @@ const AdminCategoriesPublishedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/categories/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/categories/published?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/categories/published?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -56,7 +56,7 @@ const AdminCategoriesPublishedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/categories/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/categories/published?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/categories/published?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -66,10 +66,10 @@ const AdminCategoriesPublishedIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/categories/${id}/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/categories/published?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/categories/published?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -78,7 +78,7 @@ const AdminCategoriesPublishedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/categories/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/categories/published?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/categories/published?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -88,10 +88,28 @@ const AdminCategoriesPublishedIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/categories/deleteall/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/categories/published?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/categories/published?page=${page}&limit=${limit}&sort=${sort}`,
+		);
+	};
+
+	const usageCountIt = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/noadmin/categories/${id}/usagecount`, "PUT", "no-cache");
+		revalidatePath(
+			`/noadmin/categories/published?page=${page}&limit=${limit}&sort=${sort}`,
+		);
+	};
+
+	const usageCountItAll = async () => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/noadmin/categories/allusagecount`, "PUT", "no-cache");
+		revalidatePath(
+			`/noadmin/categories/published?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -128,6 +146,9 @@ const AdminCategoriesPublishedIndex = async ({ params, searchParams }) => {
 							handleDelete={handleDelete}
 							handleTrashAllFunction={handleTrashAll}
 							handleDeleteAllFunction={handleDeleteAll}
+							handleUsageCount={usageCountIt}
+							handleAllUsageCountEnabled={true}
+							handleAllUsageCount={usageCountItAll}
 						/>
 					</div>
 				</div>

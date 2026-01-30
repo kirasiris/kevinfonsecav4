@@ -18,7 +18,7 @@ const AdminCategoriesSearchIndex = async ({ params, searchParams }) => {
 	const sort = awtdSearchParams.sort || "-createdAt";
 
 	const categories = await getCategories(
-		`?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+		`?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
 	);
 
 	const draftIt = async (id) => {
@@ -26,7 +26,7 @@ const AdminCategoriesSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/categories/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/categories/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/categories/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -35,7 +35,7 @@ const AdminCategoriesSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/categories/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/categories/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/categories/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -44,7 +44,7 @@ const AdminCategoriesSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/categories/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/categories/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/categories/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -53,7 +53,7 @@ const AdminCategoriesSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/categories/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/categories/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/categories/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -63,10 +63,10 @@ const AdminCategoriesSearchIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/categories/${id}/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/categories/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/categories/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -75,7 +75,7 @@ const AdminCategoriesSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/categories/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/categories/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/categories/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -85,10 +85,28 @@ const AdminCategoriesSearchIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/categories/deleteall/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/categories/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/categories/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+		);
+	};
+
+	const usageCountIt = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/noadmin/categories/${id}/usagecount`, "PUT", "no-cache");
+		revalidatePath(
+			`/noadmin/categories/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+		);
+	};
+
+	const usageCountItAll = async () => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/noadmin/categories/allusagecount`, "PUT", "no-cache");
+		revalidatePath(
+			`/noadmin/categories/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -125,6 +143,9 @@ const AdminCategoriesSearchIndex = async ({ params, searchParams }) => {
 							handleDelete={handleDelete}
 							handleTrashAllFunction={handleTrashAll}
 							handleDeleteAllFunction={handleDeleteAll}
+							handleUsageCount={usageCountIt}
+							handleAllUsageCountEnabled={true}
+							handleAllUsageCount={usageCountItAll}
 						/>
 					</div>
 				</div>

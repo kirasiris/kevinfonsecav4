@@ -42,7 +42,7 @@ const UpdateAcquisitionDisposalForm = ({
 			`/noadmin/weaponacquisitionsdisposals/${object?.data?._id}`,
 			"PUT",
 			"no-cache",
-			rawFormData
+			rawFormData,
 		);
 		if (res.status === "error") {
 			toast.error(res.message, "bottom");
@@ -204,6 +204,7 @@ const UpdateAcquisitionDisposalForm = ({
 					className="form-control mb-3"
 				>
 					<option value="none">None</option>
+					<option value="usps">USPS</option>
 					<option value="ups">UPS</option>
 					<option value="fedex">FedEx</option>
 				</select>

@@ -9,6 +9,65 @@ import {
 	setUserOnServer,
 } from "@/helpers/setTokenOnServer";
 
+function normalizeAuthenticationOptions(options) {
+	const normalized = { ...options };
+
+	// Normalize challenge
+	if (typeof normalized.challenge !== "string") {
+		throw new Error("Challenge must be a base64url string");
+	}
+
+	// Normalize allowCredentials
+	if (Array.isArray(normalized.allowCredentials)) {
+		normalized.allowCredentials = normalized.allowCredentials.map((cred) => {
+			let id = cred.id;
+
+			// Case: Buffer serialized from backend
+			if (typeof id === "object" && id?.data) {
+				id = Uint8Array.from(id.data);
+			}
+
+			// Case: ArrayBuffer
+			if (id instanceof ArrayBuffer) {
+				id = new Uint8Array(id);
+			}
+
+			// Case: string (best case)
+			if (typeof id !== "string" && !(id instanceof Uint8Array)) {
+				console.error("Invalid credential ID:", cred.id);
+				throw new Error("Invalid allowCredentials id format");
+			}
+
+			return {
+				...cred,
+				id,
+				transports: cred.transports || ["internal"],
+			};
+		});
+	}
+
+	return normalized;
+}
+
+function handleWebAuthnError(err) {
+	console.error("WebAuthn error:", err);
+
+	if (err.name === "NotAllowedError") {
+		alert(
+			"Authentication was cancelled or not permitted.\n\n" +
+				"Make sure FaceID, fingerprint, or PIN is set up on this device.",
+		);
+	} else if (err.name === "InvalidStateError") {
+		alert("This credential is already registered.");
+	} else if (err.name === "SecurityError") {
+		alert("Security error: domain mismatch or insecure context.");
+	} else if (err.name === "AbortError") {
+		alert("Authentication aborted.");
+	} else {
+		alert("Unexpected authentication error: " + err.message);
+	}
+}
+
 const LoginForm = () => {
 	const router = useRouter();
 	const awtdParams = useParams();
@@ -67,7 +126,7 @@ const LoginForm = () => {
 
 		// If passkey enabled
 		if (res?.data?.biometricsEnabled) {
-			const authOptions = await fetchurl(
+			const challengeRes = await fetchurl(
 				`/auth/2fa/passkey/challenge/${res?.data?._id}`,
 				"PUT",
 				"no-cache",
@@ -77,13 +136,20 @@ const LoginForm = () => {
 				false,
 			);
 
-			console.log("si llego aca x1", authOptions);
+			let options = challengeRes.biometricOptions;
 
-			const authResponse = await startAuthentication(
-				authOptions.biometricOptions,
-			);
+			console.log("raw options from backend", options);
 
-			console.log("si llego aca x2", authResponse);
+			options = normalizeAuthenticationOptions(options);
+
+			let authResponse;
+
+			try {
+				authResponse = await startAuthentication(options);
+			} catch (err) {
+				handleWebAuthnError(err);
+				return;
+			}
 
 			res = await fetchurl(
 				`/auth/2fa/passkey/verify/${res?.data?._id}`,
@@ -96,7 +162,6 @@ const LoginForm = () => {
 				false,
 				false,
 			);
-			return;
 		}
 
 		// Else continue,

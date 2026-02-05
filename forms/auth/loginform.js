@@ -77,9 +77,13 @@ const LoginForm = () => {
 				false,
 			);
 
+			console.log("si llego aca x1", authOptions);
+
 			const authResponse = await startAuthentication(
 				authOptions.biometricOptions,
 			);
+
+			console.log("si llego aca x2", authResponse);
 
 			res = await fetchurl(
 				`/auth/2fa/passkey/verify/${res?.data?._id}`,

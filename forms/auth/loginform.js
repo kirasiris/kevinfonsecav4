@@ -145,7 +145,7 @@ const LoginForm = () => {
 			let authResponse;
 
 			try {
-				authResponse = await startAuthentication({ options });
+				authResponse = await startAuthentication({ optionsJSON: options });
 			} catch (err) {
 				handleWebAuthnError(err);
 				return;

@@ -96,6 +96,7 @@ const LoginForm = () => {
 				false,
 				false,
 			);
+			return;
 		}
 
 		// Else continue,

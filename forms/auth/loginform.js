@@ -138,8 +138,6 @@ const LoginForm = () => {
 
 			let options = challengeRes.biometricOptions;
 
-			console.log("raw options from backend", options);
-
 			options = normalizeAuthenticationOptions(options);
 
 			let authResponse;

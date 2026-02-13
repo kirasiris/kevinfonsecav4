@@ -1,12 +1,14 @@
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import Header from "@/layout/header";
 import List from "@/components/qrcode/resultlist";
+import Head from "@/app/head";
+import { getGlobalData } from "@/helpers/globalData";
 
 async function getQRCodeGeneratorResult(params) {
 	const res = await fetchurl(
 		`/extras/tools/qrcodes${params}`,
 		"GET",
-		"no-cache"
+		"no-cache",
 	);
 	return res;
 }
@@ -19,14 +21,35 @@ const QRCodeGeneratorResultIndex = async ({ params, searchParams }) => {
 	const sort = awtdSearchParams.sort || "-createdAt";
 	const decrypt = awtdSearchParams.decrypt === "true" ? "&decrypt=true" : "";
 
+	const { settings } = await getGlobalData();
+
 	const getResultsData = getQRCodeGeneratorResult(
-		`?page=${page}&limit=${limit}&sort=${sort}&email=${awtdSearchParams.email}${decrypt}`
+		`?page=${page}&limit=${limit}&sort=${sort}&email=${awtdSearchParams.email}${decrypt}`,
 	);
 
 	const [results] = await Promise.all([getResultsData]);
 
 	return (
 		<>
+			<Head
+				title={`${settings?.data?.title} - QR Code Results of ${awtdSearchParams.email}`}
+				description={"Check your previous qrcodes!"}
+				favicon={settings?.data?.favicon}
+				postImage=""
+				imageWidth=""
+				imageHeight=""
+				videoWidth=""
+				videoHeight=""
+				card="summary"
+				robots=""
+				category=""
+				url={`/blog`}
+				author=""
+				createdAt=""
+				updatedAt=""
+				locales=""
+				posType="page"
+			/>
 			<Header
 				title={`QrCode results of ${awtdSearchParams.email}`}
 				description="Check your previous qrcodes!"

@@ -1,11 +1,8 @@
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import Header from "@/layout/header";
 import List from "@/components/theme/list";
-
-async function getFeaturedTheme(params) {
-	const res = await fetchurl(`/global/themes${params}`, "GET", "no-cache");
-	return res;
-}
+import Head from "@/app/head";
+import { getGlobalData } from "@/helpers/globalData";
 
 async function getThemes(params) {
 	const res = await fetchurl(`/global/themes${params}`, "GET", "no-cache");
@@ -25,12 +22,14 @@ const ThemeIndex = async ({ params, searchParams }) => {
 	const sort = awtdSearchParams.sort || "-createdAt";
 	const decrypt = awtdSearchParams.decrypt === "true" ? "&decrypt=true" : "";
 
-	const getFeaturedThemesData = getFeaturedTheme(
-		`?featured=true&postType=theme&status=published${decrypt}`
+	const { settings } = await getGlobalData();
+
+	const getFeaturedThemesData = getThemes(
+		`?featured=true&postType=theme&status=published${decrypt}`,
 	);
 
 	const getThemesData = getThemes(
-		`?page=${page}&limit=${limit}&sort=${sort}&postType=theme&status=published${decrypt}`
+		`?page=${page}&limit=${limit}&sort=${sort}&postType=theme&status=published${decrypt}`,
 	);
 
 	const getCategoriesData = getCategories(`?categoryType=theme`);
@@ -43,6 +42,25 @@ const ThemeIndex = async ({ params, searchParams }) => {
 
 	return (
 		<>
+			<Head
+				title={`${settings?.data?.title} - Portfolio`}
+				description={"Check my projects out and tell me what you think!"}
+				favicon={settings?.data?.favicon}
+				postImage=""
+				imageWidth=""
+				imageHeight=""
+				videoWidth=""
+				videoHeight=""
+				card="summary"
+				robots=""
+				category=""
+				url={`/theme`}
+				author=""
+				createdAt=""
+				updatedAt=""
+				locales=""
+				posType="page"
+			/>
 			<Header
 				title="Welcome to my Portfolio"
 				description="Check my projects out and tell me what you think!"

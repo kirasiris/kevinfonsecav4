@@ -1,11 +1,8 @@
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import Header from "@/layout/header";
 import List from "@/components/blog/list";
-
-async function getFeaturedBlog(params) {
-	const res = await fetchurl(`/global/blogs${params}`, "GET", "no-cache");
-	return res;
-}
+import Head from "@/app/head";
+import { getGlobalData } from "@/helpers/globalData";
 
 async function getBlogs(params) {
 	const res = await fetchurl(`/global/blogs${params}`, "GET", "no-cache");
@@ -31,12 +28,14 @@ const BlogCategoryIndex = async ({ params, searchParams }) => {
 	const postType = awtdSearchParams.postType || "blog";
 	const decrypt = awtdSearchParams.decrypt === "true" ? "&decrypt=true" : "";
 
-	const getFeaturedBlogsData = getFeaturedBlog(
-		`?featured=true&postType=${postType}&status=published${decrypt}`
+	const { settings } = await getGlobalData();
+
+	const getFeaturedBlogsData = getBlogs(
+		`?featured=true&postType=${postType}&status=published${decrypt}`,
 	);
 
 	const getBlogsData = getBlogs(
-		`?page=${page}&limit=${limit}&sort=${sort}&postType=${postType}&status=published&category=${awtdParams.categoryid}${decrypt}`
+		`?page=${page}&limit=${limit}&sort=${sort}&postType=${postType}&status=published&category=${awtdParams.categoryid}${decrypt}`,
 	);
 
 	const getCategoriesData = getCategories(`?categoryType=blog`);
@@ -50,15 +49,34 @@ const BlogCategoryIndex = async ({ params, searchParams }) => {
 		getQuotesData,
 	]);
 
-	const capitalizeWord = awtdParams.categoryslug;
+	const capitalizeWord = awtdParams.categoryslug
+		.split("-")
+		.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+		.join(" ");
 
 	return (
 		<>
+			<Head
+				title={`${settings?.data?.title} - ${capitalizeWord}`}
+				description={`${capitalizeWord} search results`}
+				favicon={settings?.data?.favicon}
+				postImage=""
+				imageWidth=""
+				imageHeight=""
+				videoWidth=""
+				videoHeight=""
+				card="summary"
+				robots=""
+				category=""
+				url={`/blog/category/${awtdParams.categoryid}/${awtdParams.categoryslug}?page=${page}&limit=${limit}&sort=${sort}`}
+				author=""
+				createdAt=""
+				updatedAt=""
+				locales=""
+				posType="page"
+			/>
 			<Header
-				title={`Welcome to my ${capitalizeWord
-					.split("-")
-					.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-					.join(" ")} Blogs`}
+				title={`Welcome to my ${capitalizeWord} Blogs`}
 				description="Learn everything about my programming and life journey"
 			/>
 			<List

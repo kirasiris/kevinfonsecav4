@@ -1,11 +1,8 @@
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import Header from "@/layout/header";
 import List from "@/components/theme/list";
-
-async function getFeaturedTheme(params) {
-	const res = await fetchurl(`/global/themes${params}`, "GET", "no-cache");
-	return res;
-}
+import Head from "@/app/head";
+import { getGlobalData } from "@/helpers/globalData";
 
 async function getThemes(params) {
 	const res = await fetchurl(`/global/themes${params}`, "GET", "no-cache");
@@ -27,12 +24,14 @@ const ThemeSearchIndex = async ({ params, searchParams }) => {
 	const postType = awtdSearchParams.postType || "theme";
 	const decrypt = awtdSearchParams.decrypt === "true" ? "&decrypt=true" : "";
 
-	const getFeaturedThemesData = getFeaturedTheme(
-		`?featured=true&postType=${postType}&status=published${decrypt}`
+	const { settings } = await getGlobalData();
+
+	const getFeaturedThemesData = getThemes(
+		`?featured=true&postType=${postType}&status=published${decrypt}`,
 	);
 
 	const getThemesData = getThemes(
-		`?page=${page}&limit=${limit}&sort=${sort}&postType=${postType}&status=published&keyword=${awtdSearchParams.keyword}${decrypt}`
+		`?page=${page}&limit=${limit}&sort=${sort}&postType=${postType}&status=published&keyword=${awtdSearchParams.keyword}${decrypt}`,
 	);
 
 	const getCategoriesData = getCategories(`?categoryType=theme`);
@@ -45,6 +44,25 @@ const ThemeSearchIndex = async ({ params, searchParams }) => {
 
 	return (
 		<>
+			<Head
+				title={`${settings?.data?.title} - Search results of ${awtdSearchParams.keyword}`}
+				description={"Search results..."}
+				favicon={settings?.data?.favicon}
+				postImage=""
+				imageWidth=""
+				imageHeight=""
+				videoWidth=""
+				videoHeight=""
+				card="summary"
+				robots=""
+				category=""
+				url={`/theme/search?keyword=${awtdSearchParams.keyword}&page=${page}&limit=${limit}&sort=${sort}`}
+				author=""
+				createdAt=""
+				updatedAt=""
+				locales=""
+				posType="page"
+			/>
 			<Header
 				title={`${awtdSearchParams.keyword}`}
 				description="Search results..."

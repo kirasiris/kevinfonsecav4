@@ -26,12 +26,14 @@ const ThemeCategoryIndex = async ({ params, searchParams }) => {
 	const postType = awtdSearchParams.postType || "theme";
 	const decrypt = awtdSearchParams.decrypt === "true" ? "&decrypt=true" : "";
 
-	const getFeaturedThemesData = getFeaturedTheme(
-		`?featured=true&postType=${postType}&status=published${decrypt}`
+	const { settings } = await getGlobalData();
+
+	const getFeaturedThemesData = getThemes(
+		`?featured=true&postType=${postType}&status=published${decrypt}`,
 	);
 
 	const getThemesData = getThemes(
-		`?page=${page}&limit=${limit}&sort=${sort}&postType=${postType}&status=published&category=${awtdParams.categoryid}${decrypt}`
+		`?page=${page}&limit=${limit}&sort=${sort}&postType=${postType}&status=published&category=${awtdParams.categoryid}${decrypt}`,
 	);
 
 	const getCategoriesData = getCategories(`?categoryType=theme`);
@@ -42,15 +44,34 @@ const ThemeCategoryIndex = async ({ params, searchParams }) => {
 		getCategoriesData,
 	]);
 
-	const capitalizeWord = awtdParams.categoryslug;
+	const capitalizeWord = awtdParams.categoryslug
+		.split("-")
+		.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+		.join(" ");
 
 	return (
 		<>
+			<Head
+				title={`${settings?.data?.title} - ${capitalizeWord}`}
+				description={`${capitalizeWord} search results`}
+				favicon={settings?.data?.favicon}
+				postImage=""
+				imageWidth=""
+				imageHeight=""
+				videoWidth=""
+				videoHeight=""
+				card="summary"
+				robots=""
+				category=""
+				url={`/theme/category/${awtdParams.categoryid}/${awtdParams.categoryslug}?page=${page}&limit=${limit}&sort=${sort}`}
+				author=""
+				createdAt=""
+				updatedAt=""
+				locales=""
+				posType="page"
+			/>
 			<Header
-				title={`Welcome to my ${capitalizeWord
-					.split("-")
-					.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-					.join(" ")} Portfolios`}
+				title={`Welcome to my ${capitalizeWord} Portfolios`}
 				description="Check my projects out and tell me what you think!"
 			/>
 			<List

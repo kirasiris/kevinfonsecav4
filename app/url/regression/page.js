@@ -6,12 +6,13 @@ import Globalcontent from "@/layout/content";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
 import Head from "@/app/head";
+import { getGlobalData } from "@/helpers/globalData";
 
 async function getUrls(params) {
 	const res = await fetchurl(
 		`/extras/tools/urls/regression${params}`,
 		"GET",
-		"no-cache"
+		"no-cache",
 	);
 	return res;
 }
@@ -22,6 +23,8 @@ const UrlRegressionIndex = async ({ params, searchParams }) => {
 	const page = awtdSearchParams.page || 1;
 	const limit = awtdSearchParams.limit || 10;
 	const sort = awtdSearchParams.sort || "-createdAt";
+
+	const { settings } = await getGlobalData();
 
 	const shorturls = await getUrls(`?page=${page}&limit=${limit}&sort=${sort}`);
 
@@ -37,7 +40,7 @@ const UrlRegressionIndex = async ({ params, searchParams }) => {
 			`/extras/tools/urls/regression`,
 			"POST",
 			"no-cache",
-			rawFormData
+			rawFormData,
 		);
 
 		revalidatePath(`/url/regression?page=${page}&limit=${limit}&sort=${sort}`);
@@ -46,8 +49,23 @@ const UrlRegressionIndex = async ({ params, searchParams }) => {
 	return (
 		<>
 			<Head
-				title="URL Regression"
-				description="Tired of long URLs?. Try to shorten them!"
+				title={`${settings?.data?.title} - URL Regression`}
+				description={`Tired of long URLs?. Try to shorten them!`}
+				favicon={settings?.data?.favicon}
+				postImage=""
+				imageWidth=""
+				imageHeight=""
+				videoWidth=""
+				videoHeight=""
+				card="summary"
+				robots=""
+				category=""
+				url={`/url/regression`}
+				author=""
+				createdAt=""
+				updatedAt=""
+				locales=""
+				posType="page"
 			/>
 			<Header
 				title="URL Regression"

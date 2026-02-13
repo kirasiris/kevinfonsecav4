@@ -17,11 +17,7 @@ import Head from "@/app/head";
 import Map from "@/components/global/map";
 import CommentBox from "@/components/global/commentbox";
 import CommentForm from "@/components/global/commentform";
-
-async function getAuthenticatedUser() {
-	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
-	return res;
-}
+import { getGlobalData } from "@/helpers/globalData";
 
 async function getJob(params) {
 	const res = await fetchurl(`/global/jobs${params}`, "GET", "no-cache");
@@ -42,12 +38,12 @@ const JobRead = async ({ params, searchParams }) => {
 	const sort = awtdSearchParams.sort || "-createdAt";
 	const decrypt = awtdSearchParams.decrypt === "true" ? "&decrypt=true" : "";
 
-	const auth = await getUserOnServer();
+	const { auth, settings } = await getGlobalData();
 
 	const getJobsData = getJob(`/${awtdParams.id}`);
 
 	const getCommentsData = getComments(
-		`?resourceId=${awtdParams.id}&page=${page}&limit=${limit}&sort=${sort}&status=published&decrypt=true`
+		`?resourceId=${awtdParams.id}&page=${page}&limit=${limit}&sort=${sort}&status=published&decrypt=true`,
 	);
 
 	const [job, comments] = await Promise.all([getJobsData, getCommentsData]);
@@ -65,7 +61,7 @@ const JobRead = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/comments/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`/job/${job?.data?._id}/${job?.data?.category?._id}/${job?.data?.category?.slug}/${job?.data?.slug}`
+			`/job/${job?.data?._id}/${job?.data?.category?._id}/${job?.data?.category?.slug}/${job?.data?.slug}`,
 		);
 	};
 
@@ -76,10 +72,10 @@ const JobRead = async ({ params, searchParams }) => {
 	return (
 		<Suspense fallback={<Loading />}>
 			<Head
-				title={job.data.title}
+				title={`${settings?.data?.title} - ${job.data.title}`}
 				description={job.data.excerpt || job.data.text}
-				// favicon=""
-				postImage=""
+				favicon={settings?.data?.favicon}
+				postImage={job.data.files.avatar.location.secure_location}
 				imageWidth=""
 				imageHeight=""
 				videoWidth=""

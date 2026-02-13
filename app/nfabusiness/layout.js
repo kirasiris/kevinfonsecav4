@@ -1,15 +1,13 @@
+import { Suspense } from "react";
+import { redirect } from "next/navigation";
 import "@/src/css/admin.css";
 import NFAMenu from "@/components/nfabusiness/nfamenu";
-import { redirect } from "next/navigation";
-import { fetchurl } from "@/helpers/setTokenOnServer";
-
-async function getAuthenticatedUser() {
-	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
-	return res;
-}
+import Loading from "@/app/blog/loading";
+import Head from "@/app/head";
+import { getGlobalData } from "@/helpers/globalData";
 
 export default async function AdminLayout({ children }) {
-	const auth = await getAuthenticatedUser();
+	const { auth, settings } = await getGlobalData();
 
 	// Redirect if user is not logged in
 	(auth?.error?.statusCode === 401 || !auth?.data?.isOnline) &&
@@ -21,11 +19,32 @@ export default async function AdminLayout({ children }) {
 		redirect(`/dashboard`);
 
 	return (
-		<div className="container-fluid my-4">
-			<div className="row">
-				<NFAMenu />
-				<div className="col-lg-11">{children}</div>
+		<Suspense fallback={<Loading />}>
+			<Head
+				title={`${settings?.data?.title} - NFA Business`}
+				description={"Manage business"}
+				favicon={settings?.data?.favicon}
+				postImage=""
+				imageWidth=""
+				imageHeight=""
+				videoWidth=""
+				videoHeight=""
+				card="summary"
+				robots=""
+				category=""
+				url={`/nfabusiness`}
+				author=""
+				createdAt=""
+				updatedAt=""
+				locales=""
+				posType="page"
+			/>
+			<div className="container-fluid my-4">
+				<div className="row">
+					<NFAMenu />
+					<div className="col-lg-11">{children}</div>
+				</div>
 			</div>
-		</div>
+		</Suspense>
 	);
 }

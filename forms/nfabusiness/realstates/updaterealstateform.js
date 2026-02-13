@@ -42,14 +42,7 @@ const UpdateRealStateForm = ({ token = {}, auth = {}, object = {} }) => {
 			`/noadmin/stripe/realstates/${object?.data?._id}`,
 			"PUT",
 			"no-cache",
-			{
-				...rawFormData,
-				rates: {
-					weeklyPrice: formData.get("weeklyPrice"),
-					monthlyPrice: formData.get("monthlyPrice"),
-					nightlyPrice: formData.get("nightlyPrice"),
-				},
-			},
+			rawFormData,
 		);
 
 		if (res.status === "error") {
@@ -97,50 +90,6 @@ const UpdateRealStateForm = ({ token = {}, auth = {}, object = {} }) => {
 					advancedTextEditor={true}
 					customPlaceholder="No description"
 				/>
-				<div className="row">
-					<div className="col">
-						<label htmlFor="weeklyPrice" className="form-label">
-							Weekly Price
-						</label>
-						<input
-							id="weeklyPrice"
-							name="weeklyPrice"
-							defaultValue={object?.data?.rates?.weeklyPrice.inHumanFormat}
-							type="number"
-							className="form-control mb-3"
-							min={0}
-							placeholder="18"
-						/>
-					</div>
-					<div className="col">
-						<label htmlFor="monthlyPrice" className="form-label">
-							Monthly Price
-						</label>
-						<input
-							id="monthlyPrice"
-							name="monthlyPrice"
-							defaultValue={object?.data?.rates?.monthlyPrice.inHumanFormat}
-							type="number"
-							className="form-control mb-3"
-							min={0}
-							placeholder="18"
-						/>
-					</div>
-					<div className="col">
-						<label htmlFor="nightlyPrice" className="form-label">
-							Nightly Price
-						</label>
-						<input
-							id="nightlyPrice"
-							name="nightlyPrice"
-							defaultValue={object?.data?.rates?.nightlyPrice.inHumanFormat}
-							type="number"
-							className="form-control mb-3"
-							min={0}
-							placeholder="18"
-						/>
-					</div>
-				</div>
 				<div className="row">
 					<div className="col">
 						<label htmlFor="price" className="form-label">

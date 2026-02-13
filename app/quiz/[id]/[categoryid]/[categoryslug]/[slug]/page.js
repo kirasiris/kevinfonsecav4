@@ -14,6 +14,7 @@ import ArticleHeader from "@/components/global/articleheader";
 import NewsletterForm from "@/components/global/newsletter";
 import ParseHtml from "@/layout/parseHtml";
 import Head from "@/app/head";
+import { getGlobalData } from "@/helpers/globalData";
 
 async function getQuiz(params) {
 	const res = await fetchurl(`/global/quizzes${params}`, "GET", "no-cache");
@@ -26,11 +27,6 @@ async function getQuestions(params) {
 	return res;
 }
 
-async function getComments(params) {
-	const res = await fetchurl(`/global/comments${params}`, "GET", "no-cache");
-	return res;
-}
-
 const QuizRead = async ({ params, searchParams }) => {
 	const awtdParams = await params;
 	const awtdSearchParams = await searchParams;
@@ -39,10 +35,12 @@ const QuizRead = async ({ params, searchParams }) => {
 	const sort = awtdSearchParams.sort || "-createdAt";
 	const decrypt = awtdSearchParams.decrypt === "true" ? "&decrypt=true" : "";
 
+	const { settings } = await getGlobalData();
+
 	const getQuizzesData = getQuiz(`/${awtdParams.id}`);
 
 	const getQuestionsData = getQuestions(
-		`?resourceId=${awtdParams.id}&page=${page}&limit=${limit}&sort=${sort}&status=published`
+		`?resourceId=${awtdParams.id}&page=${page}&limit=${limit}&sort=${sort}&status=published`,
 	);
 
 	const [quiz, questions] = await Promise.all([
@@ -52,46 +50,50 @@ const QuizRead = async ({ params, searchParams }) => {
 
 	const singlePageLink = () => {
 		return (
-			<div className="d-grid gap-2 col-12 mt-3 mb-3">
-				<Link
-					href={{
-						pathname: `/quiz/${quiz?.data?._id}/${quiz?.data?.category?._id}/${quiz?.data?.category?.slug}/${quiz?.data?.slug}/question/single`,
-						query: {
-							page: 1,
-						},
-					}}
-					className="btn btn-secondary btn-sm"
-				>
-					Start test
-				</Link>
-			</div>
+			questions?.data?.length >= 0 && (
+				<div className="d-grid gap-2 col-12 mt-3 mb-3">
+					<Link
+						href={{
+							pathname: `/quiz/${quiz?.data?._id}/${quiz?.data?.category?._id}/${quiz?.data?.category?.slug}/${quiz?.data?.slug}/question/single`,
+							query: {
+								page: 1,
+							},
+						}}
+						className="btn btn-secondary btn-sm"
+					>
+						Start test
+					</Link>
+				</div>
+			)
 		);
 	};
 
 	const multiplePageLink = () => {
 		return (
-			<div className="d-grid gap-2 col-12 mt-3 mb-3">
-				<Link
-					href={{
-						pathname: `/quiz/${quiz?.data?._id}/${quiz?.data?.category?._id}/${quiz?.data?.category?.slug}/${quiz?.data?.slug}/question/multiple`,
-						query: {
-							page: 1,
-						},
-					}}
-					className="btn btn-secondary btn-sm"
-				>
-					Start test
-				</Link>
-			</div>
+			questions?.data?.length >= 0 && (
+				<div className="d-grid gap-2 col-12 mt-3 mb-3">
+					<Link
+						href={{
+							pathname: `/quiz/${quiz?.data?._id}/${quiz?.data?.category?._id}/${quiz?.data?.category?.slug}/${quiz?.data?.slug}/question/multiple`,
+							query: {
+								page: 1,
+							},
+						}}
+						className="btn btn-secondary btn-sm"
+					>
+						Start test
+					</Link>
+				</div>
+			)
 		);
 	};
 
 	return (
 		<Suspense fallback={<Loading />}>
 			<Head
-				title={quiz.data.title}
+				title={`${settings?.data?.title} - ${quiz.data.title}`}
 				description={quiz.data.excerpt || quiz.data.text}
-				// favicon=""
+				favicon={settings?.data?.favicon}
 				postImage={quiz.data.files.avatar.location.secure_location}
 				imageWidth=""
 				imageHeight=""
@@ -136,7 +138,7 @@ const QuizRead = async ({ params, searchParams }) => {
 									{!quiz?.data?.singlePage && multiplePageLink()}
 									<h2>Instructions</h2>
 									<ParseHtml text={quiz?.data?.text} />
-									<ul className="list-group mt-2">
+									<ul className="list-group mt-2 mb-3">
 										<li className="list-group-item">
 											<p className="m-0">
 												Number&nbsp;of&nbsp;questions:&nbsp;

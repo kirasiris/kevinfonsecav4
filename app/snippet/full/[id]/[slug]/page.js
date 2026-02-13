@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import Loading from "@/app/blog/loading";
 import { fetchurl, getUserOnServer } from "@/helpers/setTokenOnServer";
 import LiveCode from "@/components/noadmin/snippets/livecode";
+import Head from "@/app/head";
+import { getGlobalData } from "@/helpers/globalData";
 
 async function getSnippet(params) {
 	const res = await fetchurl(`/global/snippets${params}`, "GET", "no-cache");
@@ -13,6 +15,8 @@ async function getSnippet(params) {
 const SnippetRead = async ({ params, searchParams }) => {
 	const awtdParams = await params;
 	const awtdSearchParams = await searchParams;
+
+	const { settings } = await getGlobalData();
 
 	const auth = await getUserOnServer();
 
@@ -40,6 +44,25 @@ const SnippetRead = async ({ params, searchParams }) => {
 				`}
 			</style>
 			<Suspense fallback={<Loading />}>
+				<Head
+					title={`${settings?.data?.title} - ${snippet.data.title}`}
+					description={snippet.data.excerpt || snippet.data.text}
+					favicon={settings?.data?.favicon}
+					postImage=""
+					imageWidth=""
+					imageHeight=""
+					videoWidth=""
+					videoHeight=""
+					card="summary"
+					robots=""
+					category=""
+					url={`/snippet/full/${snippet.data._id}/${snippet.data.slug}`}
+					author={snippet.data.user.name}
+					createdAt={snippet.data.createdAt}
+					updatedAt={snippet.data.updatedAt}
+					locales=""
+					posType="snippet"
+				/>
 				{snippet.data.status === "published" ||
 				awtdSearchParams.isAdmin === "true" ? (
 					<LiveCode

@@ -4,17 +4,14 @@ import Loading from "@/app/blog/loading";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import List from "@/components/chapter/list";
 import Jumbotron from "@/components/course/jumbotron";
-
-async function getAuthenticatedUser() {
-	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
-	return res;
-}
+import Head from "@/app/head";
+import { getGlobalData } from "@/helpers/globalData";
 
 async function getCourse(params) {
 	const res = await fetchurl(
 		`/extras/stripe/courses${params}`,
 		"GET",
-		"no-cache"
+		"no-cache",
 	);
 	if (!res.success) notFound();
 	return res;
@@ -34,7 +31,7 @@ const CourseRead = async ({ params, searchParams }) => {
 	const awtdParams = await params;
 	const awtdSearchParams = await searchParams;
 
-	const auth = await getAuthenticatedUser();
+	const { auth, settings } = await getGlobalData();
 
 	const page = awtdSearchParams.page || 1;
 	const limit = awtdSearchParams.limit || 10;
@@ -43,17 +40,17 @@ const CourseRead = async ({ params, searchParams }) => {
 
 	const getCoursesData = getCourse(`/${awtdParams.id}`);
 	const getCourseLessonsData = getCourseLessons(
-		`?resourceId=${awtdParams.id}&sort=orderingNumber&onModel=Course`
+		`?resourceId=${awtdParams.id}&sort=orderingNumber&onModel=Course`,
 	);
 
 	const getCourseStudentsData = getCourseStudents(
-		`?resourceId=${awtdParams.id}&page=${page}&limit=${limit}&sort=${sort}&onModel=Course${decrypt}`
+		`?resourceId=${awtdParams.id}&page=${page}&limit=${limit}&sort=${sort}&onModel=Course${decrypt}`,
 	);
 
 	const verifyUserEnrollment = getCourseStudents(
 		`?user=${
 			auth?.data ? auth.data?._id : process.env.NEXT_PUBLIC_ADMIN_ACCOUNT_ID
-		}&resourceId=${awtdParams.id}&onModel=Course`
+		}&resourceId=${awtdParams.id}&onModel=Course`,
 	);
 
 	const [course, lessons, enrolledstudents, verifyAuthEnrollment] =
@@ -66,6 +63,25 @@ const CourseRead = async ({ params, searchParams }) => {
 
 	return (
 		<Suspense fallback={<Loading />}>
+			<Head
+				title={`${settings?.data?.title} - ${course.data.title}`}
+				description={course.data.excerpt || course.data.text}
+				favicon={settings?.data?.favicon}
+				postImage={course.data.files.avatar.location.secure_location}
+				imageWidth=""
+				imageHeight=""
+				videoWidth=""
+				videoHeight=""
+				card="summary"
+				robots=""
+				category={course.data.category.title}
+				url={`course/${course.data._id}/${course.data.category._id}/${course.data.category.slug}/${course.data.slug}`}
+				author={course.data.user.name}
+				createdAt={course.data.createdAt}
+				updatedAt={course.data.updatedAt}
+				locales=""
+				posType="blog"
+			/>
 			<Jumbotron
 				auth={auth}
 				object={course}

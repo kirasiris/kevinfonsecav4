@@ -1,7 +1,5 @@
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
-import Link from "next/link";
-import Image from "next/image";
 import { revalidatePath } from "next/cache";
 import showdown from "showdown";
 import base64 from "base-64";
@@ -19,6 +17,7 @@ import NewsletterForm from "@/components/global/newsletter";
 import Head from "@/app/head";
 import CommentBox from "@/components/global/commentbox";
 import CommentForm from "@/components/global/commentform";
+import { getGlobalData } from "@/helpers/globalData";
 
 async function getTheme(params) {
 	const res = await fetchurl(`/global/themes${params}`, "GET", "no-cache");
@@ -41,7 +40,7 @@ async function getReadMe(repoName) {
 				Authorization: process.env.NEXT_PUBLIC_GITHUB_TOKEN,
 			},
 			cache: "no-store",
-		}
+		},
 	)
 		.then(async (res) => {
 			if (!res.ok) {
@@ -73,18 +72,19 @@ async function getReadMe(repoName) {
 const ThemeRead = async ({ params, searchParams }) => {
 	const awtdParams = await params;
 	const awtdSearchParams = await searchParams;
-
 	const page = awtdSearchParams.page || 1;
 	const limit = awtdSearchParams.limit || 15;
 	const sort = awtdSearchParams.sort || "-createdAt";
 	const decrypt = awtdSearchParams.decrypt === "true" ? "&decrypt=true" : "";
+
+	const { settings } = await getGlobalData();
 
 	const auth = await getUserOnServer();
 
 	const getThemesData = getTheme(`/${awtdParams.id}`);
 
 	const getCommentsData = getComments(
-		`?resourceId=${awtdParams.id}&page=${page}&limit=${limit}&sort=${sort}&status=published&decrypt=true`
+		`?resourceId=${awtdParams.id}&page=${page}&limit=${limit}&sort=${sort}&status=published&decrypt=true`,
 	);
 
 	const [theme, comments] = await Promise.all([getThemesData, getCommentsData]);
@@ -99,7 +99,7 @@ const ThemeRead = async ({ params, searchParams }) => {
 	};
 
 	const readme = readMEDecoder(
-		readMeResponse.content || "Tm8gcmVhZE1FIGZpbGU="
+		readMeResponse.content || "Tm8gcmVhZE1FIGZpbGU=",
 	);
 
 	// Draft It
@@ -115,7 +115,7 @@ const ThemeRead = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/comments/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`/theme/${theme?.data?._id}/${theme?.data?.category?._id}/${theme?.data?.category?.slug}/${theme?.data?.slug}`
+			`/theme/${theme?.data?._id}/${theme?.data?.category?._id}/${theme?.data?.category?.slug}/${theme?.data?.slug}`,
 		);
 	};
 
@@ -126,9 +126,9 @@ const ThemeRead = async ({ params, searchParams }) => {
 	return (
 		<Suspense fallback={<Loading />}>
 			<Head
-				title={theme.data.title}
+				title={`${settings?.data?.title} - ${theme.data.title}`}
 				description={theme.data.excerpt || theme.data.text}
-				// favicon=""
+				favicon={settings?.data?.favicon}
 				postImage={theme.data.files.avatar.location.secure_location}
 				imageWidth=""
 				imageHeight=""

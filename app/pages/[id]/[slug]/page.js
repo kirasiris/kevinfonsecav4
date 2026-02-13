@@ -11,6 +11,7 @@ import Globalcontent from "@/layout/content";
 import ArticleHeader from "@/components/global/articleheader";
 import NewsletterForm from "@/components/global/newsletter";
 import Head from "@/app/head";
+import { getGlobalData } from "@/helpers/globalData";
 
 async function getPage(params) {
 	const res = await fetchurl(`/global/pages${params}`, "GET", "no-cache");
@@ -21,7 +22,8 @@ async function getPage(params) {
 const PageRead = async ({ params, searchParams }) => {
 	const awtdParams = await params;
 	const awtdSearchParams = await searchParams;
-	// Here goes auth
+
+	const { settings } = await getGlobalData();
 
 	const getPagesData = getPage(`/${awtdParams.id}`);
 
@@ -42,9 +44,9 @@ const PageRead = async ({ params, searchParams }) => {
 	return (
 		<Suspense fallback={<Loading />}>
 			<Head
-				title={page.data.title}
+				title={`${settings?.data?.title} - ${page.data.title}`}
 				description={page.data.excerpt || page.data.text}
-				// favicon=""
+				favicon={settings?.data?.favicon}
 				// postImage={page.data.files.avatar.location.secure_location}
 				imageWidth=""
 				imageHeight=""

@@ -3,11 +3,8 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import Loading from "@/app/blog/loading";
 import { fetchurl } from "@/helpers/setTokenOnServer";
-
-async function getAuthenticatedUser() {
-	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
-	return res;
-}
+import Head from "@/app/head";
+import { getGlobalData } from "@/helpers/globalData";
 
 async function getUserAndSubscribeToCourse(id = "") {
 	const res = await fetchurl(
@@ -20,7 +17,7 @@ async function getUserAndSubscribeToCourse(id = "") {
 			onModel: "Membership",
 			isPaid: true,
 			website: "beFree",
-		}
+		},
 	);
 	return res;
 }
@@ -29,18 +26,37 @@ const ThankYouRead = async ({ params, searchParams }) => {
 	const awtdParams = await params;
 	const awtdSearchParams = await searchParams;
 
-	const auth = await getAuthenticatedUser();
+	const { auth, settings } = await getGlobalData();
 
 	// Redirect if user is not loggedIn
 	(auth?.error?.statusCode === 401 || !auth?.data?.isOnline) &&
 		redirect(
-			`/auth/login?returnpage=/thankyou/${awtdParams.id}/membership/${awtdParams.userid}?returnpage=${searchParams.returnpage}`
+			`/auth/login?returnpage=/thankyou/${awtdParams.id}/membership/${awtdParams.userid}?returnpage=${searchParams.returnpage}`,
 		);
 
 	await getUserAndSubscribeToCourse(awtdParams.id);
 
 	return (
 		<Suspense fallback={<Loading />}>
+			<Head
+				title={`${settings?.data?.title} - Thank You`}
+				description={"Thank you for your purchase"}
+				favicon={settings?.data?.favicon}
+				postImage=""
+				imageWidth=""
+				imageHeight=""
+				videoWidth=""
+				videoHeight=""
+				card="summary"
+				robots=""
+				category=""
+				url={`/thankyou/${awtdParams.id}/membership/${awtdParams.userid}`}
+				author=""
+				createdAt=""
+				updatedAt=""
+				locales=""
+				posType="page"
+			/>
 			<div
 				className="bg-secondary py-5"
 				style={{

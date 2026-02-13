@@ -4,12 +4,14 @@ import Loading from "@/app/blog/loading";
 import { fetchurl, getUserOnServer } from "@/helpers/setTokenOnServer";
 import List from "@/components/chapter/list";
 import Jumbotron from "@/components/course/jumbotron";
+import Head from "@/app/head";
+import { getGlobalData } from "@/helpers/globalData";
 
 async function getCourse(params) {
 	const res = await fetchurl(
 		`/extras/stripe/courses${params}`,
 		"GET",
-		"no-cache"
+		"no-cache",
 	);
 	if (!res.success) notFound();
 	return res;
@@ -29,6 +31,8 @@ const CourseLessonsIndex = async ({ params, searchParams }) => {
 	const awtdParams = await params;
 	const awtdSearchParams = await searchParams;
 
+	const { settings } = await getGlobalData();
+
 	const page = awtdSearchParams.page || 1;
 	const limit = awtdSearchParams.limit || 1000;
 	const sort = awtdSearchParams.sort || "-createdAt";
@@ -39,17 +43,17 @@ const CourseLessonsIndex = async ({ params, searchParams }) => {
 	const getCoursesData = getCourse(`/${awtdParams.id}`);
 
 	const getCourseLessonsData = getCourseLessons(
-		`?resourceId=${awtdParams.id}&sort=orderingNumber&onModel=Course`
+		`?resourceId=${awtdParams.id}&sort=orderingNumber&onModel=Course`,
 	);
 
 	const getCourseStudentsData = getCourseStudents(
-		`?resourceId=${awtdParams.id}&page=${page}&limit=${limit}&sort=${sort}&onModel=Course${decrypt}`
+		`?resourceId=${awtdParams.id}&page=${page}&limit=${limit}&sort=${sort}&onModel=Course${decrypt}`,
 	);
 
 	const verifyUserEnrollment = getCourseStudents(
 		`?user=${
 			auth ? auth.userId : process.env.NEXT_PUBLIC_ADMIN_ACCOUNT_ID
-		}&resourceId=${awtdParams.id}&onModel=Course`
+		}&resourceId=${awtdParams.id}&onModel=Course`,
 	);
 
 	const [course, lessons, enrolledstudents, verifyAuthEnrollment] =
@@ -62,6 +66,25 @@ const CourseLessonsIndex = async ({ params, searchParams }) => {
 
 	return (
 		<Suspense fallback={<Loading />}>
+			<Head
+				title={`${settings?.data?.title} - ${course.data.title}`}
+				description={course.data.excerpt || course.data.text}
+				favicon={settings?.data?.favicon}
+				postImage={course.data.files.avatar.location.secure_location}
+				imageWidth=""
+				imageHeight=""
+				videoWidth=""
+				videoHeight=""
+				card="summary"
+				robots=""
+				category={course.data.category.title}
+				url={`/course/${course?.data?._id}/${course?.data?.category}/${course?.data?.sub_category}/${course?.data?.slug}/index`}
+				author={course.data.user.name}
+				createdAt={course.data.createdAt}
+				updatedAt={course.data.updatedAt}
+				locales=""
+				posType="blog"
+			/>
 			<Jumbotron
 				auth={auth}
 				object={course}

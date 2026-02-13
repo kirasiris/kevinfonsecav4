@@ -1,12 +1,14 @@
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
+import Link from "next/link";
 import { fetchurl, getUserOnServer } from "@/helpers/setTokenOnServer";
 import Loading from "@/app/profile/loading";
 import Jumbotron from "@/components/profile/jumbotron";
 import Map from "@/components/profile/map";
 import Sidebar from "@/components/profile/sidebar";
 import Globalcontent from "@/layout/content";
-import Link from "next/link";
+import Head from "@/app/head";
+import { getGlobalData } from "@/helpers/globalData";
 
 async function getProfile(params) {
 	const res = await fetchurl(`/global/users${params}`, "GET", "no-cache");
@@ -22,22 +24,45 @@ async function getPosts(params) {
 const ProfileMapIndex = async ({ params, searchParams }) => {
 	const awtdParams = await params;
 	const awtdSearchParams = await searchParams;
-
-	const auth = await getUserOnServer();
-
-	const profile = await getProfile(`/${awtdParams.id}`);
-
 	const limit = awtdSearchParams.limit || 50;
 	const page = awtdSearchParams.page || 1;
 	const sort = "-createdAt";
 	const decrypt = awtdSearchParams.decrypt === "true" ? "&decrypt=true" : "";
 
+	const { settings } = await getGlobalData();
+
+	const auth = await getUserOnServer();
+
+	const profile = await getProfile(`/${awtdParams.id}`);
+
 	const posts = await getPosts(
-		`?user=${awtdParams.id}&page=${page}&limit=${limit}&sort=${sort}&status=published&postType=post&subType=maps`
+		`?user=${awtdParams.id}&page=${page}&limit=${limit}&sort=${sort}&status=published&postType=post&subType=maps`,
 	);
 
 	return (
 		<Suspense fallback={<Loading />}>
+			<Head
+				title={`${settings?.data?.title} - ${profile.data.username}`}
+				description={profile.data.bio}
+				favicon={settings?.data?.favicon}
+				postImage={
+					profile.data.files.avatar.location.secure_location ||
+					`https://source.unsplash.com/random/416x416`
+				}
+				imageWidth="416"
+				imageHeight="416"
+				videoWidth=""
+				videoHeight=""
+				card="summary"
+				robots=""
+				category=""
+				url={`/profile/${profile.data._id}/${profile.data.username}`}
+				author={profile.data.name}
+				createdAt={profile.data.createdAt}
+				updatedAt={profile.data.updatedAt}
+				locales=""
+				posType="user"
+			/>
 			<Jumbotron
 				object={profile}
 				headerStyle={{

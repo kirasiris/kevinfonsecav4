@@ -31,7 +31,7 @@ async function updateViews(params) {
 	const res = await fetchurl(
 		`/global/forums${params}/addview`,
 		"PUT",
-		"no-cache"
+		"no-cache",
 	);
 	return res;
 }
@@ -49,7 +49,7 @@ const ForumRead = async ({ params, searchParams }) => {
 	const getForumsData = getForum(`/${awtdParams.id}`);
 
 	const getCommentsData = getComments(
-		`?resourceId=${awtdParams.id}&page=${page}&limit=${limit}&sort=${sort}&status=published&decrypt=true`
+		`?resourceId=${awtdParams.id}&page=${page}&limit=${limit}&sort=${sort}&status=published&decrypt=true`,
 	);
 
 	await updateViews(`/${awtdParams.id}`);
@@ -69,7 +69,7 @@ const ForumRead = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/comments/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`/forum/${forum?.data?._id}/${forum?.data?.category?._id}/${forum?.data?.category?.slug}/${forum?.data?.slug}`
+			`/forum/${forum?.data?._id}/${forum?.data?.category?._id}/${forum?.data?.category?.slug}/${forum?.data?.slug}`,
 		);
 	};
 

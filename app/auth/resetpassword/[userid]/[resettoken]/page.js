@@ -1,18 +1,14 @@
-import { fetchurl } from "@/helpers/setTokenOnServer";
 import { redirect } from "next/navigation";
 import Globalcontent from "@/layout/content";
 import ResetPasswordForm from "@/forms/auth/resetpasswordform";
-
-async function getAuthenticatedUser() {
-	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
-	return res;
-}
+import Head from "@/app/head";
+import { getGlobalData } from "@/helpers/globalData";
 
 const ResetPassword = async ({ params, searchParams }) => {
 	const awtdParams = await params;
 	const awtdSearchParams = await searchParams;
 
-	const auth = await getAuthenticatedUser();
+	const { auth, settings } = await getGlobalData();
 
 	// Redirect if user is not logged in
 	auth?.data?.isOnline && redirect(`/`);
@@ -26,6 +22,25 @@ const ResetPassword = async ({ params, searchParams }) => {
 					}
 				`}
 			</style>
+			<Head
+				title={`${settings?.data?.title} - Reset Password`}
+				description={"Reset your account password"}
+				favicon={settings?.data?.favicon}
+				postImage=""
+				imageWidth=""
+				imageHeight=""
+				videoWidth=""
+				videoHeight=""
+				card="summary"
+				robots=""
+				category=""
+				url={`/auth/resetpassword/${awtdParams.userid}/${awtdParams.resettoken}`}
+				author=""
+				createdAt=""
+				updatedAt=""
+				locales=""
+				posType="page"
+			/>
 			<div
 				className="container align-content-center container"
 				style={{

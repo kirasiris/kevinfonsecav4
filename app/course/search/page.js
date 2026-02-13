@@ -1,21 +1,14 @@
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import Header from "@/layout/header";
 import List from "@/components/course/list";
-
-async function getFeaturedCourse(params) {
-	const res = await fetchurl(
-		`/extras/stripe/courses${params}`,
-		"GET",
-		"no-cache"
-	);
-	return res;
-}
+import Head from "@/app/head";
+import { getGlobalData } from "@/helpers/globalData";
 
 async function getCourses(params) {
 	const res = await fetchurl(
 		`/extras/stripe/courses${params}`,
 		"GET",
-		"no-cache"
+		"no-cache",
 	);
 	return res;
 }
@@ -28,12 +21,14 @@ const CourseSearchIndex = async ({ params, searchParams }) => {
 	const sort = awtdSearchParams.sort || "-createdAt";
 	const decrypt = awtdSearchParams.decrypt === "true" ? "&decrypt=true" : "";
 
-	const getFeaturedCoursesData = getFeaturedCourse(
-		`?featured=true&status=published${decrypt}`
+	const { settings } = await getGlobalData();
+
+	const getFeaturedCoursesData = getCourses(
+		`?featured=true&status=published${decrypt}`,
 	);
 
 	const getCoursesData = getCourses(
-		`?page=${page}&limit=${limit}&sort=${sort}&status=published&keyword=${awtdSearchParams.keyword}${decrypt}`
+		`?page=${page}&limit=${limit}&sort=${sort}&status=published&keyword=${awtdSearchParams.keyword}${decrypt}`,
 	);
 
 	const [featured, courses] = await Promise.all([
@@ -43,6 +38,25 @@ const CourseSearchIndex = async ({ params, searchParams }) => {
 
 	return (
 		<>
+			<Head
+				title={`${settings?.data?.title} - Search results of ${awtdSearchParams.keyword}`}
+				description={"Search results..."}
+				favicon={settings?.data?.favicon}
+				postImage=""
+				imageWidth=""
+				imageHeight=""
+				videoWidth=""
+				videoHeight=""
+				card="summary"
+				robots=""
+				category=""
+				url={`/course/search?keyword=${awtdSearchParams.keyword}&page=${page}&limit=${limit}&sort=${sort}`}
+				author=""
+				createdAt=""
+				updatedAt=""
+				locales=""
+				posType="page"
+			/>
 			<Header
 				title={`${awtdSearchParams.keyword}`}
 				description="Search results"

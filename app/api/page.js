@@ -2,11 +2,7 @@ import Header from "@/layout/header";
 import ErrorPage from "@/layout/errorpage";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import Head from "@/app/head";
-
-async function getSetting(params) {
-	const res = await fetchurl(`/global/settings/${params}`, "GET", "no-cache");
-	return res;
-}
+import { getGlobalData } from "@/helpers/globalData";
 
 const APIIndex = async ({ params, searchParams }) => {
 	const awtdSearchParams = await searchParams;
@@ -15,13 +11,13 @@ const APIIndex = async ({ params, searchParams }) => {
 	const sort = awtdSearchParams.sort || "-createdAt";
 	const decrypt = awtdSearchParams.decrypt === "true" ? "&decrypt=true" : "";
 
-	const settings = await getSetting(process.env.NEXT_PUBLIC_SETTINGS_ID);
+	const { settings } = await getGlobalData();
 
 	return settings.data.maintenance === false ? (
 		<>
 			<Head
-				title={settings.data.title}
-				description={settings.data.text}
+				title={`${settings?.data?.title} - API`}
+				description={`Learn how to programatically communicate with my DB!`}
 				favicon={settings.data.favicon}
 				postImage={settings.data.showcase_image}
 				imageWidth="800"
@@ -31,7 +27,7 @@ const APIIndex = async ({ params, searchParams }) => {
 				card="summary"
 				robots=""
 				category=""
-				url="/"
+				url="/api"
 				author={settings.data.author}
 				createdAt={settings.data.createdAt}
 				updatedAt={settings.data.updatedAt}

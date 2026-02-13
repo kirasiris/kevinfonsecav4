@@ -9,6 +9,7 @@ const VerifyTwoFactorAuthenticationForm = ({ auth = {} }) => {
 	const awtdParams = useParams();
 	const awtdSearchParams = useSearchParams();
 
+	const [displayToken, setDisplayToken] = useState("");
 	const [displayText, setDisplayText] = useState(false);
 
 	const [btnText, setBtnText] = useState("Submit");
@@ -36,7 +37,7 @@ const VerifyTwoFactorAuthenticationForm = ({ auth = {} }) => {
 			{ ...rawFormData, website: "beFree" },
 			undefined,
 			false,
-			false
+			false,
 		);
 		if (res.status === "error") {
 			toast.error(res.message, "bottom");
@@ -49,6 +50,7 @@ const VerifyTwoFactorAuthenticationForm = ({ auth = {} }) => {
 			return;
 		}
 		setDisplayText(true);
+		setDisplayToken(res?.data);
 		setBtnText("Submit");
 		resetForm();
 	};
@@ -81,7 +83,7 @@ const VerifyTwoFactorAuthenticationForm = ({ auth = {} }) => {
 						Please keep this code in a safe but accessible area. This is your{" "}
 						<b>BACKUP</b> code:
 						<br />
-						<code>{auth?.data?.twoFactorRecoveryToken}</code>
+						<code>{displayToken}</code>
 						<hr />
 						<b>You can now close this window</b>
 					</p>

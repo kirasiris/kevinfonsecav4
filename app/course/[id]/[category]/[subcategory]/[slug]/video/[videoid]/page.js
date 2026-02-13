@@ -9,17 +9,14 @@ import ReportModal from "@/components/global/reportmodal";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import Menu from "@/components/course/menu";
 import VideoList from "@/components/course/videolist";
-
-async function getAuthenticatedUser() {
-	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
-	return res;
-}
+import Head from "@/app/head";
+import { getGlobalData } from "@/helpers/globalData";
 
 async function getCourse(params) {
 	const res = await fetchurl(
 		`/extras/stripe/courses${params}`,
 		"GET",
-		"no-cache"
+		"no-cache",
 	);
 	if (!res.success) notFound();
 	return res;
@@ -50,24 +47,24 @@ const VideoRead = async ({ params, searchParams }) => {
 	const awtdParams = await params;
 	const awtdSearchParams = await searchParams;
 
-	const auth = await getAuthenticatedUser();
+	const { auth, settings } = await getGlobalData();
 
 	// Redirect if user is not loggedIn
 	(auth?.error?.statusCode === 401 || !auth?.data?.isOnline) &&
 		redirect(
-			`/auth/login?returnpage=/course/${awtdParams.id}/${awtdParams.category}/${awtdParams.subcategory}/${awtdParams.slug}/video/${awtdParams.videoid}`
+			`/auth/login?returnpage=/course/${awtdParams.id}/${awtdParams.category}/${awtdParams.subcategory}/${awtdParams.slug}/video/${awtdParams.videoid}`,
 		);
 
 	const getCoursesData = getCourse(`/${awtdParams.id}`);
 	const getCourseLessonsData = getCourseLessons(
-		`?resourceId=${awtdParams.id}&sort=orderingNumber&onModel=Course`
+		`?resourceId=${awtdParams.id}&sort=orderingNumber&onModel=Course`,
 	);
 
 	// Verify if user is enrolled (it means if course is not free, user should have paid and/or enrolled already)
 	const verifyUserEnrollment = getCourseStudents(
 		`?user=${
 			auth?.data ? auth.data?._id : process.env.NEXT_PUBLIC_ADMIN_ACCOUNT_ID
-		}&resourceId=${awtdParams.id}&onModel=Course`
+		}&resourceId=${awtdParams.id}&onModel=Course`,
 	);
 
 	const getVideosData = getVideo(`/${awtdParams.videoid}`);
@@ -85,11 +82,30 @@ const VideoRead = async ({ params, searchParams }) => {
 	(course?.data?.isFree ||
 		(!course?.data?.isFree && !verifyAuthEnrollment?.success)) &&
 		redirect(
-			`/course/${course?.data._id}/${course?.data?.category}/${course?.data?.sub_category}/${course?.data?.slug}/index`
+			`/course/${course?.data._id}/${course?.data?.category}/${course?.data?.sub_category}/${course?.data?.slug}/index`,
 		);
 
 	return (
 		<Suspense fallback={<Loading />}>
+			<Head
+				title={`${settings?.data?.title} - ${course.data.title}`}
+				description={course.data.excerpt || course.data.text}
+				favicon={settings?.data?.favicon}
+				postImage={course.data.files.avatar.location.secure_location}
+				imageWidth=""
+				imageHeight=""
+				videoWidth=""
+				videoHeight=""
+				card="summary"
+				robots=""
+				category={course.data.category.title}
+				url={`/course/${course?.data?._id}/${course?.data?.category}/${course?.data?.sub_category}/${course?.data?.slug}/video/${video?.data?._id}`}
+				author={course.data.user.name}
+				createdAt={course.data.createdAt}
+				updatedAt={course.data.updatedAt}
+				locales=""
+				posType="blog"
+			/>
 			<div className="bg-secondary border-0 rounded-0 p-0">
 				<div className="container-fluid">
 					<div className="row">

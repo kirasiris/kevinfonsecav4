@@ -16,6 +16,7 @@ import NewsletterForm from "@/components/global/newsletter";
 import Head from "@/app/head";
 import CommentBox from "@/components/global/commentbox";
 import CommentForm from "@/components/global/commentform";
+import { getGlobalData } from "@/helpers/globalData";
 
 async function getBlog(params) {
 	const res = await fetchurl(`/global/blogs${params}`, "GET", "no-cache");
@@ -42,12 +43,14 @@ const BlogRead = async ({ params, searchParams }) => {
 	const awtdParams = await params;
 	const awtdSearchParams = await searchParams;
 
+	const { settings } = await getGlobalData();
+
 	const auth = await getUserOnServer();
 
 	const getBlogsData = getBlog(`/${awtdParams.id}`);
 
 	const getCommentsData = getComments(
-		`?resourceId=${awtdParams.id}&status=published&decrypt=true`
+		`?resourceId=${awtdParams.id}&status=published&decrypt=true`,
 	);
 
 	const getCategoriesData = getCategories(`?categoryType=blog`);
@@ -74,7 +77,7 @@ const BlogRead = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/comments/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`/blog/${blog?.data?._id}/${blog?.data?.category?._id}/${blog?.data?.category?.slug}/${blog?.data?.slug}`
+			`/blog/${blog?.data?._id}/${blog?.data?.category?._id}/${blog?.data?.category?.slug}/${blog?.data?.slug}`,
 		);
 	};
 
@@ -85,9 +88,9 @@ const BlogRead = async ({ params, searchParams }) => {
 	return (
 		<Suspense fallback={<Loading />}>
 			<Head
-				title={blog.data.title}
+				title={`${settings?.data?.title} - ${blog.data.title}`}
 				description={blog.data.excerpt || blog.data.text}
-				// favicon=""
+				favicon={settings?.data?.favicon}
 				postImage={blog.data.files.avatar.location.secure_location}
 				imageWidth=""
 				imageHeight=""

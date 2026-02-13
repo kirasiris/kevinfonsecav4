@@ -1,22 +1,22 @@
+import { Suspense } from "react";
 import { redirect } from "next/navigation";
-import { fetchurl } from "@/helpers/setTokenOnServer";
 import Globalcontent from "@/layout/content";
+import Loading from "@/app/blog/loading";
 import VerifyTwoFactorAuthenticationForm from "@/forms/auth/verifytwofactorauthform";
-
-async function getAuthenticatedUser() {
-	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
-	return res;
-}
+import Head from "@/app/head";
+import { getGlobalData } from "@/helpers/globalData";
 
 const VerifyTwoFactorAuthentication = async ({ params, searchParams }) => {
-	const auth = await getAuthenticatedUser();
+	const awtdParams = await params;
+
+	const { auth, settings } = await getGlobalData();
 
 	// Redirect if user is not logged in
 	(auth?.error?.statusCode === 401 || !auth?.data?.isOnline) &&
 		redirect(`/auth/login`);
 
 	return (
-		<>
+		<Suspense fallback={<Loading />}>
 			<style>
 				{`
 					footer: {
@@ -24,6 +24,25 @@ const VerifyTwoFactorAuthentication = async ({ params, searchParams }) => {
 					}
 				`}
 			</style>
+			<Head
+				title={`${settings?.data?.title} - Verify 2FA`}
+				description={"Verify your 2FA"}
+				favicon={settings?.data?.favicon}
+				postImage=""
+				imageWidth=""
+				imageHeight=""
+				videoWidth=""
+				videoHeight=""
+				card="summary"
+				robots=""
+				category=""
+				url={`/auth/verifytwofactorauth/${awtdParams.userid}`}
+				author=""
+				createdAt=""
+				updatedAt=""
+				locales=""
+				posType="page"
+			/>
 			<div
 				className="container align-content-center container"
 				style={{
@@ -43,7 +62,7 @@ const VerifyTwoFactorAuthentication = async ({ params, searchParams }) => {
 					</Globalcontent>
 				</div>
 			</div>
-		</>
+		</Suspense>
 	);
 };
 

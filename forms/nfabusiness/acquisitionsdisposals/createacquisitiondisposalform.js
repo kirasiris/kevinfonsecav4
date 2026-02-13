@@ -26,6 +26,7 @@ const CreateAcquisitionDisposalForm = ({ token = "", auth = {} }) => {
 			name: formData.get("name"),
 			email: formData.get("email"),
 			address: formData.get("address"),
+			fee: formData.get("fee"),
 			delivery: {
 				trackingCompany: formData.get("trackingCompany"),
 				trackingNumber: formData.get("trackingNumber"),
@@ -172,21 +173,35 @@ const CreateAcquisitionDisposalForm = ({ token = "", auth = {} }) => {
 					className="form-control mb-3"
 					placeholder="john@doe.com"
 				/>
-				<label htmlFor="address" className="form-label">
-					Address
+				<div className="mb-3">
+					<label htmlFor="address" className="form-label">
+						Address
+					</label>
+					<input
+						id="address"
+						name="address"
+						defaultValue=""
+						type="text"
+						className="form-control"
+						required
+						placeholder=""
+					/>
+					<small>
+						Or Form 4473 Serial Number if Forms 4473 Filed Numerically
+					</small>
+				</div>
+				<label htmlFor="fee" className="form-label">
+					Fee
 				</label>
 				<input
-					id="address"
-					name="address"
+					id="fee"
+					name="fee"
 					defaultValue=""
 					type="text"
 					className="form-control"
 					required
-					placeholder=""
+					placeholder="$10"
 				/>
-				<small className="mb-3">
-					Or Form 4473 Serial Number if Forms 4473 Filed Numerically
-				</small>
 			</div>
 			<h6 className="display-6">Delivery Information</h6>
 			<div className="col-lg-6">
@@ -250,7 +265,7 @@ const CreateAcquisitionDisposalForm = ({ token = "", auth = {} }) => {
 					name="text"
 					defaultValue="No description..."
 					onModel="Weapon"
-					advancedTextEditor={false}
+					advancedTextEditor={true}
 					customPlaceholder="No description"
 				/>
 				<label htmlFor="status" className="form-label">

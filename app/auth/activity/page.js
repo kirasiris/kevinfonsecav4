@@ -1,14 +1,12 @@
+import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import Sidebar from "@/layout/auth/sidebar";
 import Globalcontent from "@/layout/content";
-import EditBasicsForm from "@/forms/auth/updatebasicsform";
+import Loading from "@/app/blog/loading";
 import ActivityChart from "@/components/auth/activitychart";
-
-async function getAuthenticatedUser() {
-	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
-	return res;
-}
+import Head from "@/app/head";
+import { getGlobalData } from "@/helpers/globalData";
 
 async function getActivities(params) {
 	const res = await fetchurl(`/global/activities${params}`, "GET", "no-cache");
@@ -16,7 +14,7 @@ async function getActivities(params) {
 }
 
 const Activity = async ({ params, searchParams }) => {
-	const auth = await getAuthenticatedUser();
+	const { auth, settings } = await getGlobalData();
 
 	// Redirect if user is not logged in
 	(auth?.error?.statusCode === 401 || !auth?.data?.isOnline) &&
@@ -27,14 +25,35 @@ const Activity = async ({ params, searchParams }) => {
 	const [activities] = await Promise.all([getActivitiesData]);
 
 	return (
-		<div className="container my-4">
-			<div className="row">
-				<Sidebar />
-				<Globalcontent>
-					<ActivityChart data={activities?.data} />
-				</Globalcontent>
+		<Suspense fallback={<Loading />}>
+			<Head
+				title={`${settings?.data?.title} - Account Activity`}
+				description={"Your account activity"}
+				favicon={settings?.data?.favicon}
+				postImage=""
+				imageWidth=""
+				imageHeight=""
+				videoWidth=""
+				videoHeight=""
+				card="summary"
+				robots=""
+				category=""
+				url={`/auth/activity`}
+				author=""
+				createdAt=""
+				updatedAt=""
+				locales=""
+				posType="page"
+			/>
+			<div className="container my-4">
+				<div className="row">
+					<Sidebar />
+					<Globalcontent>
+						<ActivityChart data={activities?.data} />
+					</Globalcontent>
+				</div>
 			</div>
-		</div>
+		</Suspense>
 	);
 };
 

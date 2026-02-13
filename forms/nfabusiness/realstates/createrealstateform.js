@@ -44,11 +44,6 @@ const CreateRealStateForm = ({ token = {}, auth = {} }) => {
 			"no-cache",
 			{
 				...rawFormData,
-				rates: {
-					weeklyPrice: formData.get("weeklyPrice"),
-					monthlyPrice: formData.get("monthlyPrice"),
-					nightlyPrice: formData.get("nightlyPrice"),
-				},
 				postType: "realstate",
 				resourceId: auth?.companyId,
 				onModel: "Company",
@@ -100,50 +95,6 @@ const CreateRealStateForm = ({ token = {}, auth = {} }) => {
 					advancedTextEditor={true}
 					customPlaceholder="No description"
 				/>
-				<div className="row">
-					<div className="col">
-						<label htmlFor="weeklyPrice" className="form-label">
-							Weekly Price
-						</label>
-						<input
-							id="weeklyPrice"
-							name="weeklyPrice"
-							defaultValue={0}
-							type="number"
-							className="form-control mb-3"
-							min={0}
-							placeholder="18"
-						/>
-					</div>
-					<div className="col">
-						<label htmlFor="monthlyPrice" className="form-label">
-							Monthly Price
-						</label>
-						<input
-							id="monthlyPrice"
-							name="monthlyPrice"
-							defaultValue={0}
-							type="number"
-							className="form-control mb-3"
-							min={0}
-							placeholder="18"
-						/>
-					</div>
-					<div className="col">
-						<label htmlFor="nightlyPrice" className="form-label">
-							Nightly Price
-						</label>
-						<input
-							id="nightlyPrice"
-							name="nightlyPrice"
-							defaultValue={0}
-							type="number"
-							className="form-control mb-3"
-							min={0}
-							placeholder="18"
-						/>
-					</div>
-				</div>
 				<div className="row">
 					<div className="col">
 						<label htmlFor="price" className="form-label">

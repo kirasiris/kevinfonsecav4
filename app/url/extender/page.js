@@ -5,9 +5,14 @@ import List from "@/components/url/extender/list";
 import Globalcontent from "@/layout/content";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
+import { getGlobalData } from "@/helpers/globalData";
 
 async function getUrls(params) {
-	const res = await fetchurl(`/extras/shorturls${params}`, "GET", "no-cache");
+	const res = await fetchurl(
+		`/extras/tools/urls/extender${params}`,
+		"GET",
+		"no-cache",
+	);
 	return res;
 }
 
@@ -17,6 +22,8 @@ const UrlExtenderIndex = async ({ params, searchParams }) => {
 	const page = awtdSearchParams.page || 1;
 	const limit = awtdSearchParams.limit || 10;
 	const sort = awtdSearchParams.sort || "-createdAt";
+
+	const { settings } = await getGlobalData();
 
 	const shorturls = await getUrls(`?page=${page}&limit=${limit}&sort=${sort}`);
 
@@ -28,7 +35,12 @@ const UrlExtenderIndex = async ({ params, searchParams }) => {
 			text: formData.get("text"),
 		};
 
-		await fetchurl(`/extras/shorturls`, "POST", "no-cache", rawFormData);
+		await fetchurl(
+			`/extras/tools/urls/extender`,
+			"POST",
+			"no-cache",
+			rawFormData,
+		);
 
 		revalidatePath(`/url/extender?page=${page}&limit=${limit}&sort=${sort}`);
 	};
@@ -36,8 +48,23 @@ const UrlExtenderIndex = async ({ params, searchParams }) => {
 	return (
 		<>
 			<Header
-				title="URL Extender"
-				description="Tired of short URLs?. Try to extend them!"
+				title={`${settings?.data?.title} - URL Extender`}
+				description={`Tired of short URLs?. Try to extend them!`}
+				favicon={settings?.data?.favicon}
+				postImage=""
+				imageWidth=""
+				imageHeight=""
+				videoWidth=""
+				videoHeight=""
+				card="summary"
+				robots=""
+				category=""
+				url={`/url/extender`}
+				author=""
+				createdAt=""
+				updatedAt=""
+				locales=""
+				posType="page"
 			/>
 			<div className="container">
 				<div className="row">

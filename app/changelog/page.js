@@ -2,6 +2,7 @@ import Header from "@/layout/header";
 import Head from "@/app/head";
 import List from "@/components/changelog/list";
 import { fetchurl } from "@/helpers/setTokenOnServer";
+import { getGlobalData } from "@/helpers/globalData";
 
 async function getChangelogs(params) {
 	const res = await fetchurl(`/global/changelogs${params}`, "GET", "no-cache");
@@ -15,8 +16,10 @@ const ChangelogIndex = async ({ params, searchParams }) => {
 	const sort = awtdSearchParams.sort || "-createdAt";
 	const decrypt = awtdSearchParams.decrypt === "true" ? "&decrypt=true" : "";
 
+	const { settings } = await getGlobalData();
+
 	const getChangelogsData = getChangelogs(
-		`?page=${page}&limit=${limit}&sort=${sort}&status=published${decrypt}`
+		`?page=${page}&limit=${limit}&sort=${sort}&status=published${decrypt}`,
 	);
 
 	const [changelogs] = await Promise.all([getChangelogsData]);
@@ -24,8 +27,25 @@ const ChangelogIndex = async ({ params, searchParams }) => {
 	return (
 		<>
 			<Head
-				title="Changelog"
-				description="Here you can see every change that is taking place with the development of this app!"
+				title={`${settings?.data?.title} - Changelog`}
+				description={
+					"Here you can see every change that is taking place with the development of this app!"
+				}
+				favicon={settings?.data?.favicon}
+				postImage=""
+				imageWidth=""
+				imageHeight=""
+				videoWidth=""
+				videoHeight=""
+				card="summary"
+				robots=""
+				category=""
+				url={`changelog`}
+				author=""
+				createdAt=""
+				updatedAt=""
+				locales=""
+				posType="page"
 			/>
 			<Header
 				title="Changelog"

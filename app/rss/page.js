@@ -1,10 +1,35 @@
 import Link from "next/link";
 import { MdRssFeed } from "react-icons/md";
 import Header from "@/layout/header";
+import Head from "@/app/head";
+import { getGlobalData } from "@/helpers/globalData";
 
 const RSSIndex = async ({ params, searchParams }) => {
+	const { settings } = await getGlobalData();
+
 	return (
 		<>
+			<Head
+				title={`${settings?.data?.title} - RSS`}
+				description={
+					"You can easily exports my articles without having to use an API!"
+				}
+				favicon={settings?.data?.favicon}
+				postImage=""
+				imageWidth=""
+				imageHeight=""
+				videoWidth=""
+				videoHeight=""
+				card="summary"
+				robots=""
+				category=""
+				url={`/rss`}
+				author=""
+				createdAt=""
+				updatedAt=""
+				locales=""
+				posType="page"
+			/>
 			<Header
 				title="Welcome to my RSS Feeds"
 				description="You can easily exports my articles without having to use an API!"

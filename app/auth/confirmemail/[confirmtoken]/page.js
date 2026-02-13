@@ -1,19 +1,42 @@
+import Link from "next/link";
 import ConfirmEmailForm from "@/forms/auth/confirmemailform";
 import Globalcontent from "@/layout/content";
-import Link from "next/link";
+import Head from "@/app/head";
+import { getGlobalData } from "@/helpers/globalData";
 
 const UpdateConfirmEmail = async ({ params, searchParams }) => {
+	const awtdParams = await params;
+
+	const { settings } = await getGlobalData();
+
 	return (
 		<>
 			<style>
-				<style>
-					{`
+				{`
 					footer: {
 						margin-top: 0px !important;
 					}
 				`}
-				</style>
 			</style>
+			<Head
+				title={`${settings?.data?.title} - Confirm Email`}
+				description={"Confirm email to activate account"}
+				favicon={settings?.data?.favicon}
+				postImage=""
+				imageWidth=""
+				imageHeight=""
+				videoWidth=""
+				videoHeight=""
+				card="summary"
+				robots=""
+				category=""
+				url={`/auth/confirmemail/${awtdParams.confirmtoken}`}
+				author=""
+				createdAt=""
+				updatedAt=""
+				locales=""
+				posType="page"
+			/>
 			<div
 				className="container align-content-center"
 				style={{

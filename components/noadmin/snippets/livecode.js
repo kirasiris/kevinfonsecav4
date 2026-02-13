@@ -35,7 +35,7 @@ const LiveCode = ({
 	const csslinksarray = objectData.csslinks
 		.map(
 			(link, index) =>
-				`<link key=${index} rel="stylesheet" href="${link}" media="all" crossOrigin="anonymous" />`
+				`<link key=${index} rel="stylesheet" href="${link}" media="all" crossOrigin="anonymous" />`,
 		)
 		.join("");
 

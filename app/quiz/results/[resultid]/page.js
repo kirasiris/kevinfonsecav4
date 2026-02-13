@@ -5,6 +5,8 @@ import Header from "@/layout/header";
 import Loading from "@/app/quiz/loading";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import Globalcontent from "@/layout/content";
+import Head from "@/app/head";
+import { getGlobalData } from "@/helpers/globalData";
 
 async function getQuizResult(params) {
 	const res = await fetchurl(`/global/quizresults${params}`, "GET", "no-cache");
@@ -16,6 +18,8 @@ const QuizResultsRead = async ({ params, searchParams }) => {
 	const awtdParams = await params;
 	const awtdSearchParams = await searchParams;
 	const getQuizResultsData = getQuizResult(`/${awtdParams.resultid}`);
+
+	const { settings } = await getGlobalData();
 
 	const [quizresult] = await Promise.all([getQuizResultsData]);
 
@@ -90,6 +94,25 @@ const QuizResultsRead = async ({ params, searchParams }) => {
 
 	return (
 		<Suspense fallback={<Loading />}>
+			<Head
+				title={`${settings?.data?.title} - ${quizresult.data.title}`}
+				description={quizresult.data.excerpt || quizresult.data.text}
+				favicon={settings?.data?.favicon}
+				postImage={quizresult.data.files.avatar.location.secure_location}
+				imageWidth=""
+				imageHeight=""
+				videoWidth=""
+				videoHeight=""
+				card="summary"
+				robots=""
+				category=""
+				url={`/quiz/results/${quizresult.data._id}`}
+				author={quizresult.data.user.name}
+				createdAt={quizresult.data.createdAt}
+				updatedAt={quizresult.data.updatedAt}
+				locales=""
+				posType="blog"
+			/>
 			<Header title={quizresult.data.resourceId.title} />
 			<div className="container">
 				{quizresult.data.resourceId.status === "published" ||
@@ -175,7 +198,7 @@ const QuizResultsRead = async ({ params, searchParams }) => {
 
 																{/* Iterate over the single object in questionanswers */}
 																{Object.entries(
-																	questions.questionanswers[0]
+																	questions.questionanswers[0],
 																).map(([key, value]) => (
 																	<ul key={key}>
 																		<li
@@ -183,8 +206,8 @@ const QuizResultsRead = async ({ params, searchParams }) => {
 																				questions.correctanswer === key
 																					? "correct"
 																					: questions.answerbyuser === key
-																					? "selected"
-																					: ""
+																						? "selected"
+																						: ""
 																			}`}
 																		>
 																			{/* Render answer key and text */}

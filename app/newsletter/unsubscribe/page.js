@@ -3,6 +3,8 @@ import Link from "next/link";
 import Loading from "@/app/blog/loading";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import NewsletterForm from "@/components/global/newsletter";
+import Head from "@/app/head";
+import { getGlobalData } from "@/helpers/globalData";
 
 async function RemoveEmailFromNewsletters(email = "") {
 	const res = await fetchurl(
@@ -11,7 +13,7 @@ async function RemoveEmailFromNewsletters(email = "") {
 		"no-cache",
 		{
 			website: "beFree",
-		}
+		},
 	);
 	return res;
 }
@@ -19,9 +21,32 @@ async function RemoveEmailFromNewsletters(email = "") {
 const UnsubscribeFromNewsletter = async ({ params, searchParams }) => {
 	const awtdParams = await params;
 	const awtdSearchParams = await searchParams;
+
+	const { settings } = await getGlobalData();
+
 	await RemoveEmailFromNewsletters(awtdSearchParams.email);
+
 	return (
 		<Suspense fallback={<Loading />}>
+			<Head
+				title={`${settings?.data?.title} - Unsubscribe`}
+				description={"Unsubscribe from newsletter"}
+				favicon={settings?.data?.favicon}
+				postImage=""
+				imageWidth=""
+				imageHeight=""
+				videoWidth=""
+				videoHeight=""
+				card="summary"
+				robots=""
+				category=""
+				url={`/blog`}
+				author=""
+				createdAt=""
+				updatedAt=""
+				locales=""
+				posType="page"
+			/>
 			<div
 				className="bg-secondary py-5"
 				style={{

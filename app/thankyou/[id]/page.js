@@ -1,19 +1,15 @@
 import { Suspense } from "react";
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import Loading from "@/app/blog/loading";
 import { fetchurl } from "@/helpers/setTokenOnServer";
-
-async function getAuthenticatedUser() {
-	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
-	return res;
-}
+import Head from "@/app/head";
+import { getGlobalData } from "@/helpers/globalData";
 
 async function getVerification(params) {
 	const res = await fetchurl(
 		`/extras/stripe/accounts/verification${params}`,
 		"PUT",
-		"no-cache"
+		"no-cache",
 	);
 	return res;
 }
@@ -21,7 +17,8 @@ async function getVerification(params) {
 const ThankYouRead = async ({ params, searchParams }) => {
 	const awtdParams = await params;
 	const awtdSearchParams = await searchParams;
-	const auth = await getAuthenticatedUser();
+
+	const { auth, settings } = await getGlobalData();
 
 	// Redirect if user is not loggedIn
 	(auth?.error?.statusCode === 401 || !auth?.data?.isOnline) &&
@@ -31,6 +28,25 @@ const ThankYouRead = async ({ params, searchParams }) => {
 
 	return (
 		<Suspense fallback={<Loading />}>
+			<Head
+				title={`${settings?.data?.title} - Thank You`}
+				description={"Thank you for settin up your on boarding process"}
+				favicon={settings?.data?.favicon}
+				postImage=""
+				imageWidth=""
+				imageHeight=""
+				videoWidth=""
+				videoHeight=""
+				card="summary"
+				robots=""
+				category=""
+				url={`/thankyou/${awtdParams.id}`}
+				author=""
+				createdAt=""
+				updatedAt=""
+				locales=""
+				posType="page"
+			/>
 			<div
 				className="bg-secondary py-5"
 				style={{

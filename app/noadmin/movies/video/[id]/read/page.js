@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { formatDateWithoutTime } from "befree-utilities";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import ParseHtml from "@/layout/parseHtml";
-import Loading from "@/app/video/loading";
+import Loading from "@/app/blog/loading";
 
 async function getMovieVideo(params) {
 	const res = await fetchurl(`/global/videos${params}`, "GET", "no-cache");

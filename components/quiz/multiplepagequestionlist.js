@@ -53,7 +53,7 @@ const List = ({
 	const addScore = async (e) => {
 		e.preventDefault();
 		try {
-			const res = await fetchurl(`/quizresults`, "POST", "no-cache", {
+			const res = await fetchurl(`/global/quizresults`, "POST", "no-cache", {
 				...selectedOptionsData,
 				resourceId: params.id,
 				onModel: "Quiz",

@@ -2,40 +2,16 @@ import "@/src/css/bootstrap.css";
 // import "@/src/js/bootstrap.js";
 import "@/src/css/global.css";
 import "@/src/css/app.css";
-import Head from "@/app/head";
 import Menu from "@/layout/menu";
 import Footer from "@/layout/footer";
-import { fetchurl } from "@/helpers/setTokenOnServer";
-
-async function getAuthenticatedUser() {
-	const res = await fetchurl(`/auth/me`, "GET", "default");
-	return res;
-}
-
-async function getSetting(params) {
-	const res = await fetchurl(`/global/settings/${params}`, "GET", "default");
-	return res;
-}
-
-async function getMenus(params) {
-	const res = await fetchurl(`/global/pages${params}`, "GET", "default");
-	return res;
-}
+import { getGlobalData } from "@/helpers/globalData";
 
 export default async function RootLayout({ children }) {
-	const auth = await getAuthenticatedUser();
-	const settings = await getSetting(process.env.NEXT_PUBLIC_SETTINGS_ID);
-	const menus = await getMenus(`?page=1&status=published`);
+	const { auth, settings, menus } = await getGlobalData();
 
 	return (
 		<html lang="en">
-			{/* <head>
-				<Head
-					title={settings?.data?.title}
-					description={settings?.data?.text}
-					favicon={settings?.data?.favicon}
-				/>
-			</head> */}
+			{/* HEAD SHOULD NEVER BE WITHIN LAYOUT FILE AS IT WILL ALWAYS TRY TO FETCH INFORMATION FROM ITSELF UNLESS CHILD PAGES USE THEIR OWN LAYOUT FILES WHICH ARE NOT BEING USED */}
 			<body>
 				<Menu
 					auth={auth}

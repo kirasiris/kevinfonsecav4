@@ -1,17 +1,14 @@
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import { notFound } from "next/navigation";
 import Jumbotron from "@/components/course/jumbotron";
-
-async function getAuthenticatedUser() {
-	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
-	return res;
-}
+import Head from "@/app/head";
+import { getGlobalData } from "@/helpers/globalData";
 
 async function getCourse(params) {
 	const res = await fetchurl(
 		`/extras/stripe/courses${params}`,
 		"GET",
-		"no-cache"
+		"no-cache",
 	);
 	if (!res.success) notFound();
 	return res;
@@ -36,18 +33,18 @@ const CourseCommentsIndex = async ({ params, searchParams }) => {
 	const sort = awtdSearchParams.sort || "-createdAt";
 	// const decrypt = awtdSearchParams.decrypt === "true" ? "&decrypt=true" : "";
 
-	const auth = await getAuthenticatedUser();
+	const { auth, settings } = await getGlobalData();
 
 	const getCoursesData = getCourse(`/${awtdParams.id}`);
 
 	const getCourseCommentsData = getCourseComments(
-		`?resourceId=${awtdParams.id}&page=${page}&limit=${limit}&sort=${sort}&onModel=Course&decrypt=true`
+		`?resourceId=${awtdParams.id}&page=${page}&limit=${limit}&sort=${sort}&onModel=Course&decrypt=true`,
 	);
 
 	const verifyUserEnrollment = getCourseStudents(
 		`?user=${
 			auth?.data ? auth?.data?._id : process.env.NEXT_PUBLIC_ADMIN_ACCOUNT_ID
-		}&resourceId=${awtdParams.id}&onModel=Course`
+		}&resourceId=${awtdParams.id}&onModel=Course`,
 	);
 
 	const [course, comments, verifyAuthEnrollment] = await Promise.all([
@@ -58,6 +55,25 @@ const CourseCommentsIndex = async ({ params, searchParams }) => {
 
 	return (
 		<>
+			<Head
+				title={`${settings?.data?.title} - ${course.data.title}'s Comments`}
+				description={course.data.excerpt || course.data.text}
+				favicon={settings?.data?.favicon}
+				postImage={course.data.files.avatar.location.secure_location}
+				imageWidth=""
+				imageHeight=""
+				videoWidth=""
+				videoHeight=""
+				card="summary"
+				robots=""
+				category={course.data.category.title}
+				url={`course/${course.data._id}/${course.data.category._id}/${course.data.category.slug}/${course.data.slug}`}
+				author={course.data.user.name}
+				createdAt={course.data.createdAt}
+				updatedAt={course.data.updatedAt}
+				locales=""
+				posType="blog"
+			/>
 			<Jumbotron
 				auth={auth}
 				object={course}

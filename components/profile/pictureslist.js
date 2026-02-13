@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Single from "./post/photo";
+import PictureSingle from "./picturesingle";
 import NumericPagination from "@/layout/numericpagination";
 import NothingFoundAlert from "@/layout/nothingfoundalert";
 import Globalcontent from "@/layout/content";
@@ -79,7 +79,7 @@ const PicturesList = ({ object = {}, objects = [], searchParams = {} }) => {
 					{objects?.data?.length > 0 ? (
 						<>
 							{objects.data?.map((picture) => (
-								<Single key={picture._id} object={picture} />
+								<PictureSingle key={picture._id} object={picture} />
 							))}
 							<NumericPagination
 								totalPages={

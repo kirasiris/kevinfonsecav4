@@ -1,16 +1,12 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { fetchurl } from "@/helpers/setTokenOnServer";
 import Globalcontent from "@/layout/content";
 import RegisterForm from "@/forms/auth/registerform";
-
-async function getAuthenticatedUser() {
-	const res = await fetchurl(`/auth/me`, "GET", "no-cache");
-	return res;
-}
+import Head from "@/app/head";
+import { getGlobalData } from "@/helpers/globalData";
 
 const Register = async ({ params, searchParams }) => {
-	const auth = await getAuthenticatedUser();
+	const { auth, settings } = await getGlobalData();
 
 	// Redirect if user is logged in
 	auth?.data?.isOnline && redirect(`/`);
@@ -24,6 +20,25 @@ const Register = async ({ params, searchParams }) => {
 					}
 				`}
 			</style>
+			<Head
+				title={`${settings?.data?.title} - Register`}
+				description={"Create an account"}
+				favicon={settings?.data?.favicon}
+				postImage=""
+				imageWidth=""
+				imageHeight=""
+				videoWidth=""
+				videoHeight=""
+				card="summary"
+				robots=""
+				category=""
+				url={`/auth/register`}
+				author=""
+				createdAt=""
+				updatedAt=""
+				locales=""
+				posType="page"
+			/>
 			<div
 				className="container align-content-center"
 				style={{

@@ -9,6 +9,7 @@ import NewsletterForm from "@/components/global/newsletter";
 import ExportModal from "@/components/global/exportmodal";
 import ReportModal from "@/components/global/reportmodal";
 import Head from "@/app/head";
+import { getGlobalData } from "@/helpers/globalData";
 
 async function getChangelog(params) {
 	const res = await fetchurl(`/global/changelogs${params}`, "GET", "no-cache");
@@ -19,6 +20,8 @@ async function getChangelog(params) {
 const ChangelogRead = async ({ params }) => {
 	const awtdParams = await params;
 
+	const { settings } = await getGlobalData();
+
 	const auth = await getUserOnServer();
 	const getChangelogsData = getChangelog(`/${awtdParams.id}`);
 
@@ -27,9 +30,9 @@ const ChangelogRead = async ({ params }) => {
 	return (
 		<Suspense fallback={<Loading />}>
 			<Head
-				title={changelog.data.title}
-				description={changelog.data.text}
-				// favicon=""
+				title={`${settings?.data?.title} - ${changelog.data.title}`}
+				description={changelog.data.excerpt || changelog.data.text}
+				favicon={settings?.data?.favicon}
 				postImage=""
 				imageWidth=""
 				imageHeight=""

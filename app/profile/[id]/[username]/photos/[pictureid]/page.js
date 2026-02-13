@@ -1,6 +1,5 @@
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
-import Link from "next/link";
 import Image from "next/image";
 import Sidebar from "@/components/profile/sidebar";
 import Loading from "@/app/profile/loading";
@@ -8,10 +7,12 @@ import ExportModal from "@/components/global/exportmodal";
 import AuthorBox from "@/components/global/authorbox";
 import ParseHtml from "@/layout/parseHtml";
 import ReportModal from "@/components/global/reportmodal";
-import { fetchurl, getUserOnServer } from "@/helpers/setTokenOnServer";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 import Globalcontent from "@/layout/content";
 import ArticleHeader from "@/components/global/articleheader";
 import Jumbotron from "@/components/profile/jumbotron";
+import Head from "@/app/head";
+import { getGlobalData } from "@/helpers/globalData";
 
 async function getProfile(params) {
 	const res = await fetchurl(`/global/users${params}`, "GET", "no-cache");
@@ -29,14 +30,14 @@ const ProfilePhotoRead = async ({ params, searchParams }) => {
 	const awtdParams = await params;
 	const awtdSearchParams = await searchParams;
 
-	const auth = await getUserOnServer();
+	const { settings } = await getGlobalData();
 
 	const getProfilesData = getProfile(`/${awtdParams.id}`);
 
 	const getMediasData = getMedias(`/${awtdParams.pictureid}`);
 
 	const getSidebarMediasData = getMedias(
-		`?user=${awtdParams.id}&page=1&limit=9&sort=-createdAt&album=posts`
+		`?user=${awtdParams.id}&page=1&limit=9&sort=-createdAt&album=posts`,
 	);
 
 	const [profile, file, sidebarphotos] = await Promise.all([
@@ -47,6 +48,28 @@ const ProfilePhotoRead = async ({ params, searchParams }) => {
 
 	return (
 		<Suspense fallback={<Loading />}>
+			<Head
+				title={`${settings?.data?.title} - ${profile.data.username}'s ${file.data.title} Photo`}
+				description={profile.data.bio}
+				favicon={settings?.data?.favicon}
+				postImage={
+					profile.data.files.avatar.location.secure_location ||
+					`https://source.unsplash.com/random/416x416`
+				}
+				imageWidth="416"
+				imageHeight="416"
+				videoWidth=""
+				videoHeight=""
+				card="summary"
+				robots=""
+				category=""
+				url={`/profile/${profile.data._id}/${profile.data.username}/photos/${file.data._id}`}
+				author={profile.data.name}
+				createdAt={profile.data.createdAt}
+				updatedAt={profile.data.updatedAt}
+				locales=""
+				posType="user"
+			/>
 			<Jumbotron
 				object={profile}
 				headerStyle={{

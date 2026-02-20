@@ -13,7 +13,7 @@ const APIIndex = async ({ params, searchParams }) => {
 
 	const { settings } = await getGlobalData();
 
-	return settings.data.maintenance === false ? (
+	return (
 		<>
 			<Head
 				title={`${settings?.data?.title} - API`}
@@ -32,15 +32,17 @@ const APIIndex = async ({ params, searchParams }) => {
 				createdAt={settings.data.createdAt}
 				updatedAt={settings.data.updatedAt}
 				locales=""
-				posType="website"
+				posType="page"
 			/>
-			<Header
-				title={`${settings.data.title} API`}
-				description="Learn how to programatically communicate with my DB!"
-			/>
+			{settings.data.maintenance === false ? (
+				<Header
+					title={`${settings.data.title} API`}
+					description="Learn how to programatically communicate with my DB!"
+				/>
+			) : (
+				<ErrorPage />
+			)}
 		</>
-	) : (
-		<ErrorPage />
 	);
 };
 

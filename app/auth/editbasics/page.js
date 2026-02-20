@@ -6,6 +6,7 @@ import Loading from "@/app/blog/loading";
 import EditBasicsForm from "@/forms/auth/updatebasicsform";
 import Head from "@/app/head";
 import { getGlobalData } from "@/helpers/globalData";
+import ErrorPage from "@/layout/errorpage";
 
 const UpdateBasics = async ({ params, searchParams }) => {
 	const { auth, settings } = await getGlobalData();
@@ -15,7 +16,7 @@ const UpdateBasics = async ({ params, searchParams }) => {
 		redirect(`/auth/login`);
 
 	return (
-		<Suspense fallback={<Loading />}>
+		<>
 			<Head
 				title={`${settings?.data?.title} - Account Basics`}
 				description={"Your account basics"}
@@ -35,20 +36,26 @@ const UpdateBasics = async ({ params, searchParams }) => {
 				locales=""
 				posType="page"
 			/>
-			<div className="container my-4">
-				<div className="row">
-					<Sidebar />
-					<Globalcontent>
-						<div className="card">
-							<div className="card-header">Edit&nbsp;Basics</div>
-							<div className="card-body">
-								<EditBasicsForm auth={auth} />
-							</div>
+			{settings?.data?.maintenance === false ? (
+				<Suspense fallback={<Loading />}>
+					<div className="container my-4">
+						<div className="row">
+							<Sidebar />
+							<Globalcontent>
+								<div className="card">
+									<div className="card-header">Edit&nbsp;Basics</div>
+									<div className="card-body">
+										<EditBasicsForm auth={auth} />
+									</div>
+								</div>
+							</Globalcontent>
 						</div>
-					</Globalcontent>
-				</div>
-			</div>
-		</Suspense>
+					</div>
+				</Suspense>
+			) : (
+				<ErrorPage />
+			)}
+		</>
 	);
 };
 

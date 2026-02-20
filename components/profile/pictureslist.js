@@ -76,7 +76,8 @@ const PicturesList = ({ object = {}, objects = [], searchParams = {} }) => {
 				<div
 					className={`card-body ${objects?.data?.length >= 1 && "row g-2"} p-0`}
 				>
-					{objects?.data?.length > 0 ? (
+					<NothingFoundAlert classList="alert-dark w-100 rounded-0 m-0 border-0" />
+					{/* {objects?.data?.length > 0 ? (
 						<>
 							{objects.data?.map((picture) => (
 								<PictureSingle key={picture._id} object={picture} />
@@ -95,7 +96,7 @@ const PicturesList = ({ object = {}, objects = [], searchParams = {} }) => {
 							loading={false}
 							classNames="alert-dark w-100 rounded-0 m-0 border-0"
 						/>
-					)}
+					)} */}
 				</div>
 			</div>
 		</Globalcontent>

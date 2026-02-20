@@ -2,6 +2,7 @@ import Globalcontent from "@/layout/content";
 import ValidateTwoFactorAuthenticationForm from "@/forms/auth/validatetwofactorauthentication";
 import Head from "@/app/head";
 import { getGlobalData } from "@/helpers/globalData";
+import ErrorPage from "@/layout/errorpage";
 
 const ValidateTwoFactorAuthentication = async ({ params, searchParams }) => {
 	const awtdParams = await params;
@@ -36,25 +37,29 @@ const ValidateTwoFactorAuthentication = async ({ params, searchParams }) => {
 				locales=""
 				posType="page"
 			/>
-			<div
-				className="container align-content-center container"
-				style={{
-					height: "100vh",
-				}}
-			>
-				<div className="row">
-					<Globalcontent containerClasses="col-lg-12">
-						<div className="card">
-							<div className="card-header">
-								Please&nbsp;enter&nbsp;the&nbsp;2FA&nbsp;token&nbsp;given&nbsp;to&nbsp;you&nbsp;by&nbsp;your&nbsp;Authenticator&nbsp;app
+			{settins?.data?.maintenance === false ? (
+				<div
+					className="container align-content-center container"
+					style={{
+						height: "100vh",
+					}}
+				>
+					<div className="row">
+						<Globalcontent containerClasses="col-lg-12">
+							<div className="card">
+								<div className="card-header">
+									Please&nbsp;enter&nbsp;the&nbsp;2FA&nbsp;token&nbsp;given&nbsp;to&nbsp;you&nbsp;by&nbsp;your&nbsp;Authenticator&nbsp;app
+								</div>
+								<div className="card-body">
+									<ValidateTwoFactorAuthenticationForm />
+								</div>
 							</div>
-							<div className="card-body">
-								<ValidateTwoFactorAuthenticationForm />
-							</div>
-						</div>
-					</Globalcontent>
+						</Globalcontent>
+					</div>
 				</div>
-			</div>
+			) : (
+				<ErrorPage />
+			)}
 		</>
 	);
 };

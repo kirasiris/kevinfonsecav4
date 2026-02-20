@@ -5,6 +5,7 @@ import Loading from "@/app/blog/loading";
 import VerifyTwoFactorAuthenticationForm from "@/forms/auth/verifytwofactorauthform";
 import Head from "@/app/head";
 import { getGlobalData } from "@/helpers/globalData";
+import ErrorPage from "@/layout/errorpage";
 
 const VerifyTwoFactorAuthentication = async ({ params, searchParams }) => {
 	const awtdParams = await params;
@@ -16,7 +17,7 @@ const VerifyTwoFactorAuthentication = async ({ params, searchParams }) => {
 		redirect(`/auth/login`);
 
 	return (
-		<Suspense fallback={<Loading />}>
+		<>
 			<style>
 				{`
 					footer: {
@@ -43,26 +44,32 @@ const VerifyTwoFactorAuthentication = async ({ params, searchParams }) => {
 				locales=""
 				posType="page"
 			/>
-			<div
-				className="container align-content-center container"
-				style={{
-					height: "100vh",
-				}}
-			>
-				<div className="row">
-					<Globalcontent containerClasses="col-lg-12">
-						<div className="card">
-							<div className="card-header">
-								Please&nbsp;enter&nbsp;the&nbsp;2FA&nbsp;token&nbsp;given&nbsp;to&nbsp;you&nbsp;by&nbsp;your&nbsp;Authenticator&nbsp;app
-							</div>
-							<div className="card-body">
-								<VerifyTwoFactorAuthenticationForm auth={auth} />
-							</div>
+			{settings?.data?.maintenance === false ? (
+				<Suspense fallback={<Loading />}>
+					<div
+						className="container align-content-center container"
+						style={{
+							height: "100vh",
+						}}
+					>
+						<div className="row">
+							<Globalcontent containerClasses="col-lg-12">
+								<div className="card">
+									<div className="card-header">
+										Please&nbsp;enter&nbsp;the&nbsp;2FA&nbsp;token&nbsp;given&nbsp;to&nbsp;you&nbsp;by&nbsp;your&nbsp;Authenticator&nbsp;app
+									</div>
+									<div className="card-body">
+										<VerifyTwoFactorAuthenticationForm auth={auth} />
+									</div>
+								</div>
+							</Globalcontent>
 						</div>
-					</Globalcontent>
-				</div>
-			</div>
-		</Suspense>
+					</div>
+				</Suspense>
+			) : (
+				<ErrorPage />
+			)}
+		</>
 	);
 };
 

@@ -3,6 +3,7 @@ import Globalcontent from "@/layout/content";
 import ResetPasswordForm from "@/forms/auth/resetpasswordform";
 import Head from "@/app/head";
 import { getGlobalData } from "@/helpers/globalData";
+import ErrorPage from "@/layout/errorpage";
 
 const ResetPassword = async ({ params, searchParams }) => {
 	const awtdParams = await params;
@@ -41,23 +42,27 @@ const ResetPassword = async ({ params, searchParams }) => {
 				locales=""
 				posType="page"
 			/>
-			<div
-				className="container align-content-center container"
-				style={{
-					height: "100vh",
-				}}
-			>
-				<div className="row">
-					<Globalcontent containerClasses="col-lg-12">
-						<div className="card">
-							<div className="card-header">Reset password</div>
-							<div className="card-body">
-								<ResetPasswordForm />
+			{settings?.data?.maintenance === false ? (
+				<div
+					className="container align-content-center container"
+					style={{
+						height: "100vh",
+					}}
+				>
+					<div className="row">
+						<Globalcontent containerClasses="col-lg-12">
+							<div className="card">
+								<div className="card-header">Reset password</div>
+								<div className="card-body">
+									<ResetPasswordForm />
+								</div>
 							</div>
-						</div>
-					</Globalcontent>
+						</Globalcontent>
+					</div>
 				</div>
-			</div>
+			) : (
+				<ErrorPage />
+			)}
 		</>
 	);
 };

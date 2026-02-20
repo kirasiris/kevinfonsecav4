@@ -7,6 +7,7 @@ import Loading from "@/app/blog/loading";
 import ActivityChart from "@/components/auth/activitychart";
 import Head from "@/app/head";
 import { getGlobalData } from "@/helpers/globalData";
+import ErrorPage from "@/layout/errorpage";
 
 async function getActivities(params) {
 	const res = await fetchurl(`/global/activities${params}`, "GET", "no-cache");
@@ -25,7 +26,7 @@ const Activity = async ({ params, searchParams }) => {
 	const [activities] = await Promise.all([getActivitiesData]);
 
 	return (
-		<Suspense fallback={<Loading />}>
+		<>
 			<Head
 				title={`${settings?.data?.title} - Account Activity`}
 				description={"Your account activity"}
@@ -45,15 +46,21 @@ const Activity = async ({ params, searchParams }) => {
 				locales=""
 				posType="page"
 			/>
-			<div className="container my-4">
-				<div className="row">
-					<Sidebar />
-					<Globalcontent>
-						<ActivityChart data={activities?.data} />
-					</Globalcontent>
-				</div>
-			</div>
-		</Suspense>
+			{settings?.data?.maintenance === false ? (
+				<Suspense fallback={<Loading />}>
+					<div className="container my-4">
+						<div className="row">
+							<Sidebar />
+							<Globalcontent>
+								<ActivityChart data={activities?.data} />
+							</Globalcontent>
+						</div>
+					</div>
+				</Suspense>
+			) : (
+				<ErrorPage />
+			)}
+		</>
 	);
 };
 

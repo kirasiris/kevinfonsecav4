@@ -1,3 +1,11 @@
+/**
+ *
+ * LOGIN PAGE IS THE ONLY THAT SHOULD NOT BE BLOCKED BY MAINTENANCE
+ * ADMIN SHOULD BE ABLE TO ACCESS TO IT TO DISABLE IT ONCE MAINTENANCE HAS BEEN DONE OR WHILE ITS TAKING PLACE
+ *
+ *
+ */
+
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import Globalcontent from "@/layout/content";

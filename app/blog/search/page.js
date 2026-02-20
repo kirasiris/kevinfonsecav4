@@ -1,6 +1,7 @@
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import Header from "@/layout/header";
 import List from "@/components/blog/list";
+import ErrorPage from "@/layout/errorpage";
 import Head from "@/app/head";
 import { getGlobalData } from "@/helpers/globalData";
 
@@ -21,9 +22,12 @@ async function getQuotes() {
 
 const BlogSearchIndex = async ({ params, searchParams }) => {
 	const awtdSearchParams = await searchParams;
+	const keyword = awtdSearchParams.keyword;
 	const page = awtdSearchParams.page || 1;
 	const limit = awtdSearchParams.limit || 10;
 	const sort = awtdSearchParams.page || "-createdAt";
+	const keywordQuery =
+		keyword !== "" && keyword !== undefined ? `&keyword=${keyword}` : "";
 	const postType = awtdSearchParams.postType || "blog";
 	const decrypt = awtdSearchParams.decrypt === "true" ? "&decrypt=true" : "";
 
@@ -34,7 +38,7 @@ const BlogSearchIndex = async ({ params, searchParams }) => {
 	);
 
 	const getBlogsData = getBlogs(
-		`?page=${page}&limit=${limit}&sort=${sort}&postType=${postType}&status=published&keyword=${awtdSearchParams.keyword}${decrypt}`,
+		`?page=${page}&limit=${limit}&sort=${sort}&postType=${postType}&status=published${keywordQuery}${decrypt}`,
 	);
 
 	const getCategoriesData = getCategories(`?categoryType=blog`);

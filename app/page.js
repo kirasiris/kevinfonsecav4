@@ -6,11 +6,7 @@ import NewsletterForm from "@/components/global/newsletter";
 import ErrorPage from "@/layout/errorpage";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import Head from "@/app/head";
-
-async function getSetting(params) {
-	const res = await fetchurl(`/global/settings/${params}`, "GET", "no-cache");
-	return res;
-}
+import { getGlobalData } from "@/helpers/globalData";
 
 async function getBlogs(params) {
 	const res = await fetchurl(`/global/blogs${params}`, "GET", "no-cache");
@@ -29,14 +25,14 @@ const HomeIndex = async ({ params, searchParams }) => {
 	const sort = awtdSearchParams.sort || "-createdAt";
 	const decrypt = awtdSearchParams.decrypt === "true" ? "&decrypt=true" : "";
 
-	const settings = await getSetting(process.env.NEXT_PUBLIC_SETTINGS_ID);
+	const { settings } = await getGlobalData();
 
 	const getBlogsData = getBlogs(
-		`?page=${page}&limit=${limit}&sort=${sort}&postType=blog&status=published`
+		`?page=${page}&limit=${limit}&sort=${sort}&postType=blog&status=published`,
 	);
 
 	const getThemesData = getThemes(
-		`?page=${page}&limit=${limit}&sort=${sort}&postType=theme&status=published`
+		`?page=${page}&limit=${limit}&sort=${sort}&postType=theme&status=published`,
 	);
 
 	const [blogs, themes] = await Promise.all([getBlogsData, getThemesData]);

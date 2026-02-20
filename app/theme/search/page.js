@@ -63,16 +63,22 @@ const ThemeSearchIndex = async ({ params, searchParams }) => {
 				locales=""
 				posType="page"
 			/>
-			<Header
-				title={`${awtdSearchParams.keyword}`}
-				description="Search results..."
-			/>
-			<List
-				featured={featured}
-				objects={themes}
-				searchParams={awtdSearchParams}
-				categories={categories}
-			/>
+			{settings?.data?.maintenance === false ? (
+				<>
+					<Header
+						title={`${awtdSearchParams.keyword}`}
+						description="Search results..."
+					/>
+					<List
+						featured={featured}
+						objects={themes}
+						searchParams={awtdSearchParams}
+						categories={categories}
+					/>
+				</>
+			) : (
+				<ErrorPage />
+			)}
 		</>
 	);
 };

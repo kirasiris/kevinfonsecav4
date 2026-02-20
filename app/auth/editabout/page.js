@@ -7,6 +7,7 @@ import Loading from "@/app/blog/loading";
 import UpdateAboutForm from "@/forms/auth/updateaboutform";
 import Head from "@/app/head";
 import { getGlobalData } from "@/helpers/globalData";
+import ErrorPage from "@/layout/errorpage";
 
 async function getProfiles(params) {
 	const res = await fetchurl(`/global/users${params}`, "GET", "no-cache");
@@ -25,7 +26,7 @@ const UpdateAbout = async ({ params, searchParams }) => {
 	const [profiles] = await Promise.all([getProfilesData]);
 
 	return (
-		<Suspense fallback={<Loading />}>
+		<>
 			<Head
 				title={`${settings?.data?.title} - Account About`}
 				description={"Your account about"}
@@ -45,20 +46,26 @@ const UpdateAbout = async ({ params, searchParams }) => {
 				locales=""
 				posType="page"
 			/>
-			<div className="container my-4">
-				<div className="row">
-					<Sidebar />
-					<Globalcontent>
-						<div className="card">
-							<div className="card-header">Edit&nbsp;About</div>
-							<div className="card-body">
-								<UpdateAboutForm auth={auth} profiles={profiles} />
-							</div>
+			{settings?.data?.maintenance === false ? (
+				<Suspense fallback={<Loading />}>
+					<div className="container my-4">
+						<div className="row">
+							<Sidebar />
+							<Globalcontent>
+								<div className="card">
+									<div className="card-header">Edit&nbsp;About</div>
+									<div className="card-body">
+										<UpdateAboutForm auth={auth} profiles={profiles} />
+									</div>
+								</div>
+							</Globalcontent>
 						</div>
-					</Globalcontent>
-				</div>
-			</div>
-		</Suspense>
+					</div>
+				</Suspense>
+			) : (
+				<ErrorPage />
+			)}
+		</>
 	);
 };
 

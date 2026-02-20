@@ -1,6 +1,7 @@
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import Header from "@/layout/header";
 import List from "@/components/theme/list";
+import ErrorPage from "@/layout/errorpage";
 import Head from "@/app/head";
 import { getGlobalData } from "@/helpers/globalData";
 
@@ -61,16 +62,22 @@ const ThemeIndex = async ({ params, searchParams }) => {
 				locales=""
 				posType="page"
 			/>
-			<Header
-				title="Welcome to my Portfolio"
-				description="Check my projects out and tell me what you think!"
-			/>
-			<List
-				featured={featured}
-				objects={themes}
-				searchParams={awtdSearchParams}
-				categories={categories}
-			/>
+			{settings?.data?.maintenance === false ? (
+				<>
+					<Header
+						title="Welcome to my Portfolio"
+						description="Check my projects out and tell me what you think!"
+					/>
+					<List
+						featured={featured}
+						objects={themes}
+						searchParams={awtdSearchParams}
+						categories={categories}
+					/>
+				</>
+			) : (
+				<ErrorPage />
+			)}
 		</>
 	);
 };

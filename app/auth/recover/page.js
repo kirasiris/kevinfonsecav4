@@ -4,6 +4,7 @@ import Globalcontent from "@/layout/content";
 import RecoverForm from "@/forms/auth/recoverform";
 import Head from "@/app/head";
 import { getGlobalData } from "@/helpers/globalData";
+import ErrorPage from "@/layout/errorpage";
 
 const Recover = async ({ params, searchParams }) => {
 	const { auth, settings } = await getGlobalData();
@@ -39,42 +40,46 @@ const Recover = async ({ params, searchParams }) => {
 				locales=""
 				posType="page"
 			/>
-			<div
-				className="container align-content-center container"
-				style={{
-					height: "100vh",
-				}}
-			>
-				<div className="row">
-					<Globalcontent containerClasses="col-lg-12">
-						<div className="card">
-							<div className="card-header">Recover</div>
-							<div className="card-body">
-								<RecoverForm />
+			{settings?.data?.maintenance === false ? (
+				<div
+					className="container align-content-center container"
+					style={{
+						height: "100vh",
+					}}
+				>
+					<div className="row">
+						<Globalcontent containerClasses="col-lg-12">
+							<div className="card">
+								<div className="card-header">Recover</div>
+								<div className="card-body">
+									<RecoverForm />
+								</div>
+								<div className="card-footer">
+									<Link
+										href={{
+											pathname: `/auth/login`,
+											query: {},
+										}}
+									>
+										Login
+									</Link>
+									&nbsp;|&nbsp;
+									<Link
+										href={{
+											pathname: `/auth/register`,
+											query: {},
+										}}
+									>
+										Register
+									</Link>
+								</div>
 							</div>
-							<div className="card-footer">
-								<Link
-									href={{
-										pathname: `/auth/login`,
-										query: {},
-									}}
-								>
-									Login
-								</Link>
-								&nbsp;|&nbsp;
-								<Link
-									href={{
-										pathname: `/auth/register`,
-										query: {},
-									}}
-								>
-									Register
-								</Link>
-							</div>
-						</div>
-					</Globalcontent>
+						</Globalcontent>
+					</div>
 				</div>
-			</div>
+			) : (
+				<ErrorPage />
+			)}
 		</>
 	);
 };

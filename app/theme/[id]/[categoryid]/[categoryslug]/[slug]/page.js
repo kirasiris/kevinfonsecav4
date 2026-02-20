@@ -12,6 +12,7 @@ import ParseHtml from "@/layout/parseHtml";
 import ReportModal from "@/components/global/reportmodal";
 import { fetchurl, getUserOnServer } from "@/helpers/setTokenOnServer";
 import Globalcontent from "@/layout/content";
+import ErrorPage from "@/layout/errorpage";
 import ArticleHeader from "@/components/global/articleheader";
 import NewsletterForm from "@/components/global/newsletter";
 import Head from "@/app/head";
@@ -124,7 +125,7 @@ const ThemeRead = async ({ params, searchParams }) => {
 	// Handle Delete All
 
 	return (
-		<Suspense fallback={<Loading />}>
+		<>
 			<Head
 				title={`${settings?.data?.title} - ${theme.data.title}`}
 				description={theme.data.excerpt || theme.data.text}
@@ -144,89 +145,95 @@ const ThemeRead = async ({ params, searchParams }) => {
 				locales=""
 				posType="theme"
 			/>
-			<Header title={theme.data.title} />
-			<div className="container-fluid">
-				{theme.data.status === "published" ||
-				awtdSearchParams.isAdmin === "true" ? (
-					<div className="row">
-						<Globalcontent containerClasses={`col-lg-8`}>
-							<article>
-								<ArticleHeader
-									object={theme}
-									url={`/theme/category/${theme.data.category._id}/${theme.data.category.slug}`}
-								/>
-								{/* HERE GOES THE FIGURE */}
-								<section className="mb-5">
-									<ParseHtml text={theme.data.text} />
-									<div className="card mb-4">
-										<div className="card-header">ReadMe.md</div>
-										<div className="card-body">
-											<ParseHtml text={readme} />
-										</div>
-									</div>
-									<NewsletterForm
-										sectionClassList="text-bg-dark text-center pt-3 pb-3 mb-4"
-										headingClassList=""
-									/>
-									<div className="float-start">
-										{theme?.data?.category && (
-											<ExportModal
-												linkToShare={`/theme/${theme?.data?._id}/${theme?.data?.category?._id}/${theme?.data?.category.slug}/${theme?.data?.slug}`}
-												object={theme?.data}
-											/>
-										)}
-									</div>
-									<div className="float-end">
-										<ReportModal
-											resourceId={theme?.data?._id}
-											postType="theme"
-											onModel="Blog"
+			{settings?.data?.maintenance === false ? (
+				<Suspense fallback={<Loading />}>
+					<Header title={theme.data.title} />
+					<div className="container-fluid">
+						{theme.data.status === "published" ||
+						awtdSearchParams.isAdmin === "true" ? (
+							<div className="row">
+								<Globalcontent containerClasses={`col-lg-8`}>
+									<article>
+										<ArticleHeader
+											object={theme}
+											url={`/theme/category/${theme.data.category._id}/${theme.data.category.slug}`}
 										/>
-									</div>
-									<div style={{ clear: "both" }} />
-									<AuthorBox author={theme?.data?.user} />
-									{theme?.data?.commented ? (
-										<>
-											<CommentForm
-												auth={auth}
-												resourceId={theme?.data?._id}
-												parentId={undefined}
-												returtopageurl={`/theme/${theme?.data?._id}/${theme?.data?.category?._id}/${theme?.data?.category.slug}/${theme?.data?.slug}`}
-												onModel="Blog"
-												objects={comments}
+										{/* HERE GOES THE FIGURE */}
+										<section className="mb-5">
+											<ParseHtml text={theme.data.text} />
+											<div className="card mb-4">
+												<div className="card-header">ReadMe.md</div>
+												<div className="card-body">
+													<ParseHtml text={readme} />
+												</div>
+											</div>
+											<NewsletterForm
+												sectionClassList="text-bg-dark text-center pt-3 pb-3 mb-4"
+												headingClassList=""
 											/>
-											<CommentBox
-												auth={auth}
-												allLink={`/comment?resourceId=${theme?.data?._id}&page=1&limit=10&sort=-createdAt&status=published`}
-												pageText="Comments"
-												objects={comments}
-												searchParams={awtdSearchParams}
-												handleDraft={undefined}
-												handlePublish={undefined}
-												handleTrash={undefined}
-												handleSchedule={undefined}
-												handleDelete={handleDelete}
-												handleTrashAllFunction={undefined}
-												handleDeleteAllFunction={undefined}
-												displayPagination={false}
-												isChildCommment={false}
-											/>
-										</>
-									) : (
-										<div className="alert alert-danger">
-											Comments are closed
-										</div>
-									)}
-								</section>
-							</article>
-						</Globalcontent>
-						<Sidebar object={theme} />
+											<div className="float-start">
+												{theme?.data?.category && (
+													<ExportModal
+														linkToShare={`/theme/${theme?.data?._id}/${theme?.data?.category?._id}/${theme?.data?.category.slug}/${theme?.data?.slug}`}
+														object={theme?.data}
+													/>
+												)}
+											</div>
+											<div className="float-end">
+												<ReportModal
+													resourceId={theme?.data?._id}
+													postType="theme"
+													onModel="Blog"
+												/>
+											</div>
+											<div style={{ clear: "both" }} />
+											<AuthorBox author={theme?.data?.user} />
+											{theme?.data?.commented ? (
+												<>
+													<CommentForm
+														auth={auth}
+														resourceId={theme?.data?._id}
+														parentId={undefined}
+														returtopageurl={`/theme/${theme?.data?._id}/${theme?.data?.category?._id}/${theme?.data?.category.slug}/${theme?.data?.slug}`}
+														onModel="Blog"
+														objects={comments}
+													/>
+													<CommentBox
+														auth={auth}
+														allLink={`/comment?resourceId=${theme?.data?._id}&page=1&limit=10&sort=-createdAt&status=published`}
+														pageText="Comments"
+														objects={comments}
+														searchParams={awtdSearchParams}
+														handleDraft={undefined}
+														handlePublish={undefined}
+														handleTrash={undefined}
+														handleSchedule={undefined}
+														handleDelete={handleDelete}
+														handleTrashAllFunction={undefined}
+														handleDeleteAllFunction={undefined}
+														displayPagination={false}
+														isChildCommment={false}
+													/>
+												</>
+											) : (
+												<div className="alert alert-danger">
+													Comments are closed
+												</div>
+											)}
+										</section>
+									</article>
+								</Globalcontent>
+								<Sidebar object={theme} />
+							</div>
+						) : (
+							<p>Not visible</p>
+						)}
 					</div>
-				) : (
-					<p>Not visible</p>
-				)}
-			</div>
-		</Suspense>
+				</Suspense>
+			) : (
+				<ErrorPage />
+			)}
+		</>
 	);
 };
 

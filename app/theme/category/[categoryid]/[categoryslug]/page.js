@@ -1,11 +1,8 @@
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import Header from "@/layout/header";
 import List from "@/components/theme/list";
-
-async function getFeaturedTheme(params) {
-	const res = await fetchurl(`/global/themes${params}`, "GET", "no-cache");
-	return res;
-}
+import Head from "@/app/head";
+import { getGlobalData } from "@/helpers/globalData";
 
 async function getThemes(params) {
 	const res = await fetchurl(`/global/themes${params}`, "GET", "no-cache");
@@ -70,16 +67,22 @@ const ThemeCategoryIndex = async ({ params, searchParams }) => {
 				locales=""
 				posType="page"
 			/>
-			<Header
-				title={`Welcome to my ${capitalizeWord} Portfolios`}
-				description="Check my projects out and tell me what you think!"
-			/>
-			<List
-				featured={featured}
-				objects={themes}
-				searchParams={awtdSearchParams}
-				categories={categories}
-			/>
+			{settings?.data?.maintenance === false ? (
+				<>
+					<Header
+						title={`Welcome to my ${capitalizeWord} Portfolios`}
+						description="Check my projects out and tell me what you think!"
+					/>
+					<List
+						featured={featured}
+						objects={themes}
+						searchParams={awtdSearchParams}
+						categories={categories}
+					/>
+				</>
+			) : (
+				<ErrorPage />
+			)}
 		</>
 	);
 };

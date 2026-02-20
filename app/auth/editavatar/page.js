@@ -7,6 +7,7 @@ import Loading from "@/app/blog/loading";
 import UpdateAvatarForm from "@/forms/auth/updateavatarform";
 import Head from "@/app/head";
 import { getGlobalData } from "@/helpers/globalData";
+import ErrorPage from "@/layout/errorpage";
 
 const UpdateAvatar = async ({ params, searchParams }) => {
 	const { auth, settings } = await getGlobalData();
@@ -16,7 +17,7 @@ const UpdateAvatar = async ({ params, searchParams }) => {
 		redirect(`/auth/login`);
 
 	return (
-		<Suspense fallback={<Loading />}>
+		<>
 			<Head
 				title={`${settings?.data?.title} - Account Avatar`}
 				description={"Your account avatar"}
@@ -36,38 +37,44 @@ const UpdateAvatar = async ({ params, searchParams }) => {
 				locales=""
 				posType="page"
 			/>
-			<div className="container my-4">
-				<div className="row">
-					<Sidebar />
-					<Globalcontent>
-						<div className="card">
-							<div className="card-header">
-								<div className="float-start">
-									<p className="m-1">Edit&nbsp;Avatar</p>
-								</div>
-								<div className="float-end">
-									<div className="btn-group">
-										<Link
-											href="/auth/uploadpicture"
-											className="btn btn-secondary btn-sm"
-										>
-											Take a picture
-										</Link>
-										<Link
-											href="/auth/editcover"
-											className="btn btn-secondary btn-sm"
-										>
-											Update cover
-										</Link>
+			{settings?.data?.maintenance === false ? (
+				<Suspense fallback={<Loading />}>
+					<div className="container my-4">
+						<div className="row">
+							<Sidebar />
+							<Globalcontent>
+								<div className="card">
+									<div className="card-header">
+										<div className="float-start">
+											<p className="m-1">Edit&nbsp;Avatar</p>
+										</div>
+										<div className="float-end">
+											<div className="btn-group">
+												<Link
+													href="/auth/uploadpicture"
+													className="btn btn-secondary btn-sm"
+												>
+													Take a picture
+												</Link>
+												<Link
+													href="/auth/editcover"
+													className="btn btn-secondary btn-sm"
+												>
+													Update cover
+												</Link>
+											</div>
+										</div>
 									</div>
+									<UpdateAvatarForm auth={auth} />
 								</div>
-							</div>
-							<UpdateAvatarForm auth={auth} />
+							</Globalcontent>
 						</div>
-					</Globalcontent>
-				</div>
-			</div>
-		</Suspense>
+					</div>
+				</Suspense>
+			) : (
+				<ErrorPage />
+			)}
+		</>
 	);
 };
 

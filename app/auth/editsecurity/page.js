@@ -7,6 +7,7 @@ import UpdatePasswordForm from "@/forms/auth/updatepasswordform";
 import UpdatePasskeyForm from "@/forms/auth/updatepasskeyform";
 import Head from "@/app/head";
 import { getGlobalData } from "@/helpers/globalData";
+import ErrorPage from "@/layout/errorpage";
 
 const UpdatePasswords = async ({ params, searchParams }) => {
 	const { auth, settings } = await getGlobalData();
@@ -16,7 +17,7 @@ const UpdatePasswords = async ({ params, searchParams }) => {
 		redirect(`/auth/login`);
 
 	return (
-		<Suspense fallback={<Loading />}>
+		<>
 			<Head
 				title={`${settings?.data?.title} - Account Security`}
 				description={"Your account security"}
@@ -36,26 +37,32 @@ const UpdatePasswords = async ({ params, searchParams }) => {
 				locales=""
 				posType="page"
 			/>
-			<div className="container my-4">
-				<div className="row">
-					<Sidebar />
-					<Globalcontent>
-						<div className="card mb-3">
-							<div className="card-header">Edit&nbsp;Password</div>
-							<div className="card-body">
-								<UpdatePasswordForm auth={auth} />
-							</div>
+			{settings?.data?.maintenance === false ? (
+				<Suspense fallback={<Loading />}>
+					<div className="container my-4">
+						<div className="row">
+							<Sidebar />
+							<Globalcontent>
+								<div className="card mb-3">
+									<div className="card-header">Edit&nbsp;Password</div>
+									<div className="card-body">
+										<UpdatePasswordForm auth={auth} />
+									</div>
+								</div>
+								<div className="card">
+									<div className="card-header">Enable&nbsp;Passkeys</div>
+									<div className="card-body">
+										<UpdatePasskeyForm auth={auth} />
+									</div>
+								</div>
+							</Globalcontent>
 						</div>
-						<div className="card">
-							<div className="card-header">Enable&nbsp;Passkeys</div>
-							<div className="card-body">
-								<UpdatePasskeyForm auth={auth} />
-							</div>
-						</div>
-					</Globalcontent>
-				</div>
-			</div>
-		</Suspense>
+					</div>
+				</Suspense>
+			) : (
+				<ErrorPage />
+			)}
+		</>
 	);
 };
 

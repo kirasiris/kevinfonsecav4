@@ -1,7 +1,10 @@
-import { fetchurl } from "@/helpers/setTokenOnServer";
+import { Suspense } from "react";
 import { notFound } from "next/navigation";
-import Jumbotron from "@/components/course/jumbotron";
+import Loading from "@/app/course/loading";
+import ErrorPage from "@/layout/errorpage";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 import List from "@/components/course/profileslist";
+import Jumbotron from "@/components/course/jumbotron";
 import Head from "@/app/head";
 import { getGlobalData } from "@/helpers/globalData";
 
@@ -70,14 +73,20 @@ const CourseStudentsIndex = async ({ params, searchParams }) => {
 				locales=""
 				posType="blog"
 			/>
-			<Jumbotron
-				auth={auth}
-				object={course}
-				enrollmentVerification={verifyAuthEnrollment}
-				imageWidth="440"
-				imageHeight="570"
-			/>
-			<List objects={students} searchParams={awtdSearchParams} />
+			{settings?.data?.maintenance === false ? (
+				<Suspense fallback={<Loading />}>
+					<Jumbotron
+						auth={auth}
+						object={course}
+						enrollmentVerification={verifyAuthEnrollment}
+						imageWidth="440"
+						imageHeight="570"
+					/>
+					<List objects={students} searchParams={awtdSearchParams} />
+				</Suspense>
+			) : (
+				<ErrorPage />
+			)}
 		</>
 	);
 };

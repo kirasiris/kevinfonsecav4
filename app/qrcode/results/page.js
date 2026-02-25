@@ -1,6 +1,7 @@
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import Header from "@/layout/header";
 import List from "@/components/qrcode/resultlist";
+import ErrorPage from "@/layout/errorpage";
 import Head from "@/app/head";
 import { getGlobalData } from "@/helpers/globalData";
 
@@ -35,7 +36,7 @@ const QRCodeGeneratorResultIndex = async ({ params, searchParams }) => {
 				title={`${settings?.data?.title} - QR Code Results of ${awtdSearchParams.email}`}
 				description={"Check your previous qrcodes!"}
 				favicon={settings?.data?.favicon}
-				postImage=""
+				postImage={settings.data.showcase_image}
 				imageWidth=""
 				imageHeight=""
 				videoWidth=""
@@ -50,11 +51,17 @@ const QRCodeGeneratorResultIndex = async ({ params, searchParams }) => {
 				locales=""
 				posType="page"
 			/>
-			<Header
-				title={`QrCode results of ${awtdSearchParams.email}`}
-				description="Check your previous qrcodes!"
-			/>
-			<List objects={results} searchParams={awtdSearchParams} />
+			{settings?.data?.maintenance === false ? (
+				<>
+					<Header
+						title={`QrCode results of ${awtdSearchParams.email}`}
+						description="Check your previous qrcodes!"
+					/>
+					<List objects={results} searchParams={awtdSearchParams} />
+				</>
+			) : (
+				<ErrorPage />
+			)}
 		</>
 	);
 };

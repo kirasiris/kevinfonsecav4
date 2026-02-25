@@ -37,7 +37,7 @@ const ValidateTwoFactorAuthentication = async ({ params, searchParams }) => {
 				locales=""
 				posType="page"
 			/>
-			{settins?.data?.maintenance === false ? (
+			{settings?.data?.maintenance === false ? (
 				<div
 					className="container align-content-center container"
 					style={{

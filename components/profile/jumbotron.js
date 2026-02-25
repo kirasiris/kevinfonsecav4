@@ -63,55 +63,10 @@ const Jumbotron = ({
 										},
 									}}
 									className={`nav-link ${isActive(
-										`/profile/${object?.data?._id}/${object?.data?.username}`
+										`/profile/${object?.data?._id}/${object?.data?.username}`,
 									)}`}
 								>
 									Posts
-								</Link>
-								<Link
-									href={{
-										pathname: `/profile/${object?.data?._id}/${object?.data?.username}/socials/friends`,
-										query: {
-											page: 1,
-											limit: 10,
-											sort: `-createdAt`,
-										},
-									}}
-									className={`nav-link ${isActive(
-										`/profile/${object?.data?._id}/${object?.data?.username}/social/friends`
-									)}`}
-								>
-									Socials
-								</Link>
-								<Link
-									href={{
-										pathname: `/profile/${object?.data?._id}/${object?.data?.username}/photos`,
-										query: {
-											page: 1,
-											limit: 50,
-											sort: `-createdAt`,
-										},
-									}}
-									className={`nav-link ${isActive(
-										`/profile/${object?.data?._id}/${object?.data?.username}/photos`
-									)}`}
-								>
-									Photos
-								</Link>
-								<Link
-									href={{
-										pathname: `/profile/${object?.data?._id}/${object?.data?.username}/videos`,
-										query: {
-											page: 1,
-											limit: 50,
-											sort: `-createdAt`,
-										},
-									}}
-									className={`nav-link ${isActive(
-										`/profile/${object?.data?._id}/${object?.data?.username}/videos`
-									)}`}
-								>
-									Videos
 								</Link>
 								<Link
 									href={{
@@ -119,7 +74,7 @@ const Jumbotron = ({
 										query: {},
 									}}
 									className={`nav-link ${isActive(
-										`/profile/${object?.data?._id}/${object?.data?.username}/map`
+										`/profile/${object?.data?._id}/${object?.data?.username}/map`,
 									)}`}
 								>
 									Visit Registrations

@@ -1,7 +1,10 @@
+import { Suspense } from "react";
 import Header from "@/layout/header";
 import Globalcontent from "@/layout/content";
 import Sidebar from "@/layout/contact/sidebar";
+import ErrorPage from "@/layout/errorpage";
 import ContactForm from "@/forms/contact/contactform";
+import Loading from "@/app/contact/loading";
 import Head from "@/app/head";
 import { getGlobalData } from "@/helpers/globalData";
 
@@ -19,9 +22,9 @@ const ContactIndex = async ({ params, searchParams }) => {
 		<>
 			<Head
 				title={`${settings?.data?.title} - Contact`}
-				description={"Do not hesitate to contact me!"}
-				favicon={settings?.data?.favicon}
-				postImage=""
+				description={settings.data.text}
+				favicon={settings.data.favicon}
+				postImage={settings?.data?.showcase_image}
 				imageWidth=""
 				imageHeight=""
 				videoWidth=""
@@ -36,18 +39,24 @@ const ContactIndex = async ({ params, searchParams }) => {
 				locales=""
 				posType="page"
 			/>
-			<Header
-				title="Contact Page"
-				description="Do not hesitate to contact me!"
-			/>
-			<div className="container">
-				<div className="row">
-					<Globalcontent>
-						<ContactForm />
-					</Globalcontent>
-					<Sidebar address={address} />
-				</div>
-			</div>
+			{settings?.data?.maintenance === false ? (
+				<Suspense fallback={<Loading />}>
+					<Header
+						title="Contact Page"
+						description="Do not hesitate to contact me!"
+					/>
+					<div className="container">
+						<div className="row">
+							<Globalcontent>
+								<ContactForm />
+							</Globalcontent>
+							<Sidebar address={address} />
+						</div>
+					</div>
+				</Suspense>
+			) : (
+				<ErrorPage />
+			)}
 		</>
 	);
 };

@@ -1,6 +1,7 @@
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import Header from "@/layout/header";
 import List from "@/components/comment/list";
+import ErrorPage from "@/layout/errorpage";
 import Head from "@/app/head";
 import { getGlobalData } from "@/helpers/globalData";
 
@@ -27,7 +28,7 @@ const CommentIndex = async ({ params, searchParams }) => {
 				title={`${settings?.data?.title} - Comments`}
 				description={"See what everyone is commenting!"}
 				favicon={settings?.data?.favicon}
-				postImage=""
+				postImage={settings.data.showcase_image}
 				imageWidth=""
 				imageHeight=""
 				videoWidth=""
@@ -42,11 +43,17 @@ const CommentIndex = async ({ params, searchParams }) => {
 				locales=""
 				posType="page"
 			/>
-			<Header
-				title="Welcome to my comments"
-				description="See what everyone is commenting!"
-			/>
-			<List objects={comments} searchParams={awtdSearchParams} />
+			{settings?.data?.maintenance === false ? (
+				<>
+					<Header
+						title="Welcome to my comments"
+						description="See what everyone is commenting!"
+					/>
+					<List objects={comments} searchParams={awtdSearchParams} />
+				</>
+			) : (
+				<ErrorPage />
+			)}
 		</>
 	);
 };

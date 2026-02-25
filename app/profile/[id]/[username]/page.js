@@ -11,6 +11,7 @@ import List from "@/components/profile/list";
 import Sidebar from "@/components/profile/sidebar";
 import Jumbotron from "@/components/profile/jumbotron";
 import Globalcontent from "@/layout/content";
+import ErrorPage from "@/layout/errorpage";
 import PostNew from "@/components/profile/postnew";
 import Head from "@/app/head";
 import { getGlobalData } from "@/helpers/globalData";
@@ -23,11 +24,6 @@ async function getProfile(params) {
 
 async function getPosts(params) {
 	const res = await fetchurl(`/global/posts${params}`, "GET", "no-cache");
-	return res;
-}
-
-async function getMedias(params) {
-	const res = await fetchurl(`/global/files${params}`, "GET", "no-cache");
 	return res;
 }
 
@@ -61,8 +57,6 @@ const ProfileRead = async ({ params, searchParams }) => {
 	const posts = await getPosts(
 		`?user=${awtdParams.id}&page=${page}&limit=${limit}&sort=${sort}&status=published&postType=post${subtype}${decrypt}`,
 	);
-
-	const photos = await getMedias(`?user=${awtdParams.id}&limit=9&album=posts`);
 
 	const draftIt = async (id) => {
 		"use server";
@@ -186,7 +180,7 @@ const ProfileRead = async ({ params, searchParams }) => {
 	};
 
 	return (
-		<Suspense fallback={<Loading />}>
+		<>
 			<Head
 				title={`${settings?.data?.title} - ${profile.data.username}`}
 				description={profile.data.bio}
@@ -209,55 +203,61 @@ const ProfileRead = async ({ params, searchParams }) => {
 				locales=""
 				posType="user"
 			/>
-			<Jumbotron
-				object={profile}
-				headerStyle={{
-					background: `linear-gradient(to bottom, rgba(0,0,0,0.7) 0%,rgba(0,0,0,0.7) 100%), url(${
-						profile?.data?.files?.cover?.location.secure_location ||
-						`https://befreebucket-for-outputs.s3.amazonaws.com/2023/02/map-image.png`
-					})`,
-					backgroundPosition: "center",
-					backgroundSize: "cover",
-				}}
-			/>
-			<div className="container">
-				<div className="row">
-					<Sidebar object={profile} objects={photos} />
-					<Globalcontent>
-						<PostNew
-							auth={auth}
-							token={token}
-							object={profile}
-							params={awtdParams}
-							searchParams={awtdSearchParams}
-							revalidateUrl={`/profile/${awtdParams.id}/${awtdParams.username}?page=${page}&limit=${limit}&sort=${sort}${subtype}`}
-						/>
-						<List
-							auth={auth}
-							object={profile}
-							stories={stories}
-							featured={featured}
-							params={awtdParams}
-							objects={posts}
-							searchParams={awtdSearchParams}
-							handleDraft={draftIt}
-							handlePublish={publishIt}
-							handleTrash={trashIt}
-							handleSchedule={scheduleIt}
-							handleDelete={handleDelete}
-							handleTrashAllFunction={handleTrashAll}
-							handleDeleteAllFunction={handleDeleteAll}
-							handleFeature={featureIt}
-							handleUnfeature={unfeatureIt}
-							handleHide={hideIt}
-							handleUnhide={unhideIt}
-							handleCommented={commentIt}
-							handleUncommented={uncommentIt}
-						/>
-					</Globalcontent>
-				</div>
-			</div>
-		</Suspense>
+			{settings?.data?.maintenance === false ? (
+				<Suspense fallback={<Loading />}>
+					<Jumbotron
+						object={profile}
+						headerStyle={{
+							background: `linear-gradient(to bottom, rgba(0,0,0,0.7) 0%,rgba(0,0,0,0.7) 100%), url(${
+								profile?.data?.files?.cover?.location.secure_location ||
+								`https://befreebucket-for-outputs.s3.amazonaws.com/2023/02/map-image.png`
+							})`,
+							backgroundPosition: "center",
+							backgroundSize: "cover",
+						}}
+					/>
+					<div className="container">
+						<div className="row">
+							<Sidebar object={profile} />
+							<Globalcontent>
+								<PostNew
+									auth={auth}
+									token={token}
+									object={profile}
+									params={awtdParams}
+									searchParams={awtdSearchParams}
+									revalidateUrl={`/profile/${awtdParams.id}/${awtdParams.username}?page=${page}&limit=${limit}&sort=${sort}${subtype}`}
+								/>
+								<List
+									auth={auth}
+									object={profile}
+									stories={stories}
+									featured={featured}
+									params={awtdParams}
+									objects={posts}
+									searchParams={awtdSearchParams}
+									handleDraft={draftIt}
+									handlePublish={publishIt}
+									handleTrash={trashIt}
+									handleSchedule={scheduleIt}
+									handleDelete={handleDelete}
+									handleTrashAllFunction={handleTrashAll}
+									handleDeleteAllFunction={handleDeleteAll}
+									handleFeature={featureIt}
+									handleUnfeature={unfeatureIt}
+									handleHide={hideIt}
+									handleUnhide={unhideIt}
+									handleCommented={commentIt}
+									handleUncommented={uncommentIt}
+								/>
+							</Globalcontent>
+						</div>
+					</div>
+				</Suspense>
+			) : (
+				<ErrorPage />
+			)}
+		</>
 	);
 };
 

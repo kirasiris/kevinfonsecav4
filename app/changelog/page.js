@@ -1,7 +1,8 @@
-import Header from "@/layout/header";
-import Head from "@/app/head";
-import List from "@/components/changelog/list";
 import { fetchurl } from "@/helpers/setTokenOnServer";
+import Header from "@/layout/header";
+import List from "@/components/changelog/list";
+import ErrorPage from "@/layout/errorpage";
+import Head from "@/app/head";
 import { getGlobalData } from "@/helpers/globalData";
 
 async function getChangelogs(params) {
@@ -32,7 +33,7 @@ const ChangelogIndex = async ({ params, searchParams }) => {
 					"Here you can see every change that is taking place with the development of this app!"
 				}
 				favicon={settings?.data?.favicon}
-				postImage=""
+				postImage={settings.data.showcase_image}
 				imageWidth=""
 				imageHeight=""
 				videoWidth=""
@@ -47,11 +48,17 @@ const ChangelogIndex = async ({ params, searchParams }) => {
 				locales=""
 				posType="page"
 			/>
-			<Header
-				title="Changelog"
-				description="Here you can see every change that is taking place with the development of this app!"
-			/>
-			<List objects={changelogs} searchParams={awtdSearchParams} />
+			{settings?.data?.maintenance === false ? (
+				<>
+					<Header
+						title="Changelog"
+						description="Here you can see every change that is taking place with the development of this app!"
+					/>
+					<List objects={changelogs} searchParams={awtdSearchParams} />
+				</>
+			) : (
+				<ErrorPage />
+			)}
 		</>
 	);
 };

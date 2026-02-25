@@ -1,6 +1,7 @@
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import Header from "@/layout/header";
 import List from "@/components/course/list";
+import ErrorPage from "@/layout/errorpage";
 import Head from "@/app/head";
 import { getGlobalData } from "@/helpers/globalData";
 
@@ -43,7 +44,7 @@ const CourseIndex = async ({ params, searchParams }) => {
 				title={`${settings?.data?.title} - Courses`}
 				description={"Courses at your reach"}
 				favicon={settings?.data?.favicon}
-				postImage=""
+				postImage={settings.data.showcase_image}
 				imageWidth=""
 				imageHeight=""
 				videoWidth=""
@@ -58,15 +59,21 @@ const CourseIndex = async ({ params, searchParams }) => {
 				locales=""
 				posType="page"
 			/>
-			<Header
-				title="Welcome to my Courses"
-				description="Courses at your reach"
-			/>
-			<List
-				featured={featured}
-				objects={courses}
-				searchParams={awtdSearchParams}
-			/>
+			{settings?.data?.maintenance === false ? (
+				<>
+					<Header
+						title="Welcome to my Courses"
+						description="Courses at your reach"
+					/>
+					<List
+						featured={featured}
+						objects={courses}
+						searchParams={awtdSearchParams}
+					/>
+				</>
+			) : (
+				<ErrorPage />
+			)}
 		</>
 	);
 };

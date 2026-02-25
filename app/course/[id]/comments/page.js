@@ -1,5 +1,9 @@
-import { fetchurl } from "@/helpers/setTokenOnServer";
+import { Suspense } from "react";
 import { notFound } from "next/navigation";
+import Loading from "@/app/course/loading";
+import ErrorPage from "@/layout/errorpage";
+import { fetchurl } from "@/helpers/setTokenOnServer";
+// import List from "@/components/course/commentslist";
 import Jumbotron from "@/components/course/jumbotron";
 import Head from "@/app/head";
 import { getGlobalData } from "@/helpers/globalData";
@@ -31,14 +35,14 @@ const CourseCommentsIndex = async ({ params, searchParams }) => {
 	const page = awtdSearchParams.page || 1;
 	const limit = awtdSearchParams.limit || 10;
 	const sort = awtdSearchParams.sort || "-createdAt";
-	// const decrypt = awtdSearchParams.decrypt === "true" ? "&decrypt=true" : "";
+	const decrypt = awtdSearchParams.decrypt === "true" ? "&decrypt=true" : "";
 
 	const { auth, settings } = await getGlobalData();
 
 	const getCoursesData = getCourse(`/${awtdParams.id}`);
 
 	const getCourseCommentsData = getCourseComments(
-		`?resourceId=${awtdParams.id}&page=${page}&limit=${limit}&sort=${sort}&onModel=Course&decrypt=true`,
+		`?resourceId=${awtdParams.id}&page=${page}&limit=${limit}&sort=${sort}&onModel=Course&${decrypt}`,
 	);
 
 	const verifyUserEnrollment = getCourseStudents(
@@ -74,14 +78,20 @@ const CourseCommentsIndex = async ({ params, searchParams }) => {
 				locales=""
 				posType="blog"
 			/>
-			<Jumbotron
-				auth={auth}
-				object={course}
-				enrollmentVerification={verifyAuthEnrollment}
-				imageWidth="440"
-				imageHeight="570"
-			/>
-			{/* HERE GOES THE COMMENTS */}
+			{settings?.data?.maintenance === false ? (
+				<Suspense fallback={<Loading />}>
+					<Jumbotron
+						auth={auth}
+						object={course}
+						enrollmentVerification={verifyAuthEnrollment}
+						imageWidth="440"
+						imageHeight="570"
+					/>
+					{/* HERE GOES THE COMMENTS */}
+				</Suspense>
+			) : (
+				<ErrorPage />
+			)}
 		</>
 	);
 };

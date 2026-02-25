@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
-import Loading from "@/app/blog/loading";
+import Loading from "@/app/course/loading";
+import ErrorPage from "@/layout/errorpage";
 import { fetchurl, getUserOnServer } from "@/helpers/setTokenOnServer";
 import List from "@/components/chapter/list";
 import Jumbotron from "@/components/course/jumbotron";
@@ -30,13 +31,12 @@ async function getCourseStudents(params) {
 const CourseLessonsIndex = async ({ params, searchParams }) => {
 	const awtdParams = await params;
 	const awtdSearchParams = await searchParams;
-
-	const { settings } = await getGlobalData();
-
 	const page = awtdSearchParams.page || 1;
 	const limit = awtdSearchParams.limit || 1000;
 	const sort = awtdSearchParams.sort || "-createdAt";
 	const decrypt = awtdSearchParams.decrypt === "true" ? "&decrypt=true" : "";
+
+	const { settings } = await getGlobalData();
 
 	const auth = await getUserOnServer();
 
@@ -65,7 +65,7 @@ const CourseLessonsIndex = async ({ params, searchParams }) => {
 		]);
 
 	return (
-		<Suspense fallback={<Loading />}>
+		<>
 			<Head
 				title={`${settings?.data?.title} - ${course.data.title}`}
 				description={course.data.excerpt || course.data.text}
@@ -85,25 +85,31 @@ const CourseLessonsIndex = async ({ params, searchParams }) => {
 				locales=""
 				posType="blog"
 			/>
-			<Jumbotron
-				auth={auth}
-				object={course}
-				enrollmentVerification={verifyAuthEnrollment}
-				imageWidth="440"
-				imageHeight="570"
-			/>
-			<List
-				object={course}
-				objects={lessons}
-				students={enrolledstudents}
-				isAdmin={false}
-				searchParams={awtdSearchParams}
-				isIndex={true}
-				linkToShare={`/course/${course?.data?._id}/${course?.data?.category}/${course?.data?.sub_category}/${course?.data?.slug}/index`}
-				postType="course"
-				onModel="Course"
-			/>
-		</Suspense>
+			{settings?.data?.maintenance === false ? (
+				<Suspense fallback={<Loading />}>
+					<Jumbotron
+						auth={auth}
+						object={course}
+						enrollmentVerification={verifyAuthEnrollment}
+						imageWidth="440"
+						imageHeight="570"
+					/>
+					<List
+						object={course}
+						objects={lessons}
+						students={enrolledstudents}
+						isAdmin={false}
+						searchParams={awtdSearchParams}
+						isIndex={true}
+						linkToShare={`/course/${course?.data?._id}/${course?.data?.category}/${course?.data?.sub_category}/${course?.data?.slug}/index`}
+						postType="course"
+						onModel="Course"
+					/>
+				</Suspense>
+			) : (
+				<ErrorPage />
+			)}
+		</>
 	);
 };
 

@@ -1,6 +1,7 @@
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import Header from "@/layout/header";
 import List from "@/components/quiz/list";
+import ErrorPage from "@/layout/errorpage";
 import Head from "@/app/head";
 import { getGlobalData } from "@/helpers/globalData";
 
@@ -49,9 +50,9 @@ const QuizCategoryIndex = async ({ params, searchParams }) => {
 		<>
 			<Head
 				title={`${settings?.data?.title} - ${capitalizeWord}`}
-				description={`${capitalizeWord} search results`}
+				description={`${capitalizeWord} search results...`}
 				favicon={settings?.data?.favicon}
-				postImage=""
+				postImage={settings.data.showcase_image}
 				imageWidth=""
 				imageHeight=""
 				videoWidth=""
@@ -66,16 +67,22 @@ const QuizCategoryIndex = async ({ params, searchParams }) => {
 				locales=""
 				posType="blog"
 			/>
-			<Header
-				title={`Welcome to my ${capitalizeWord} Quizzes`}
-				description="Learn everything you need for free!"
-			/>
-			<List
-				featured={featured}
-				objects={quizzes}
-				searchParams={awtdSearchParams}
-				categories={categories}
-			/>
+			{settings?.data?.maintenance === false ? (
+				<>
+					<Header
+						title={`Welcome to my ${capitalizeWord} Quizzes`}
+						description="Learn everything you need for free!"
+					/>
+					<List
+						featured={featured}
+						objects={quizzes}
+						searchParams={awtdSearchParams}
+						categories={categories}
+					/>
+				</>
+			) : (
+				<ErrorPage />
+			)}
 		</>
 	);
 };

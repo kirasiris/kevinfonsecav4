@@ -1,6 +1,7 @@
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import Header from "@/layout/header";
 import List from "@/components/quiz/list";
+import ErrorPage from "@/layout/errorpage";
 import Head from "@/app/head";
 import { getGlobalData } from "@/helpers/globalData";
 
@@ -17,9 +18,12 @@ async function getCategories(params) {
 const QuizSearchIndex = async ({ params, searchParams }) => {
 	const awtdParams = await params;
 	const awtdSearchParams = await searchParams;
+	const keyword = awtdSearchParams.keyword;
 	const page = awtdSearchParams.page || 1;
 	const limit = awtdSearchParams.limit || 10;
 	const sort = awtdSearchParams.sort || "-createdAt";
+	const keywordQuery =
+		keyword !== "" && keyword !== undefined ? `&keyword=${keyword}` : "";
 	const decrypt = awtdSearchParams.decrypt === "true" ? "&decrypt=true" : "";
 
 	const { settings } = await getGlobalData();
@@ -61,16 +65,22 @@ const QuizSearchIndex = async ({ params, searchParams }) => {
 				locales=""
 				posType="page"
 			/>
-			<Header
-				title={`${awtdSearchParams.keyword}`}
-				description="Search results..."
-			/>
-			<List
-				featured={featured}
-				objects={quizzes}
-				searchParams={awtdSearchParams}
-				categories={categories}
-			/>
+			{settings?.data?.maintenance === false ? (
+				<>
+					<Header
+						title={`${awtdSearchParams.keyword}`}
+						description="Search results..."
+					/>
+					<List
+						featured={featured}
+						objects={quizzes}
+						searchParams={awtdSearchParams}
+						categories={categories}
+					/>
+				</>
+			) : (
+				<ErrorPage />
+			)}
 		</>
 	);
 };

@@ -1,6 +1,7 @@
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import Header from "@/layout/header";
 import ProfilesList from "@/components/profile/profileslist";
+import ErrorPage from "@/layout/errorpage";
 import Head from "@/app/head";
 import { getGlobalData } from "@/helpers/globalData";
 
@@ -30,7 +31,7 @@ const ProfileIndex = async ({ params, searchParams }) => {
 				title={`${settings?.data?.title} - Profiles`}
 				description={"Find out the community's members and become friends"}
 				favicon={settings?.data?.favicon}
-				postImage=""
+				postImage={settings?.data?.showcase_image}
 				imageWidth=""
 				imageHeight=""
 				videoWidth=""
@@ -45,11 +46,17 @@ const ProfileIndex = async ({ params, searchParams }) => {
 				locales=""
 				posType="page"
 			/>
-			<Header
-				title="Welcome to my Users Page"
-				description="Find out the community's members and become friends"
-			/>
-			<ProfilesList objects={profiles} searchParams={awtdSearchParams} />
+			{settings?.data?.maintenance === false ? (
+				<>
+					<Header
+						title="Welcome to my Users Page"
+						description="Find out the community's members and become friends"
+					/>
+					<ProfilesList objects={profiles} searchParams={awtdSearchParams} />
+				</>
+			) : (
+				<ErrorPage />
+			)}
 		</>
 	);
 };

@@ -1,6 +1,7 @@
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import Header from "@/layout/header";
 import List from "@/components/snippet/list";
+import ErrorPage from "@/layout/errorpage";
 import Head from "@/app/head";
 import { getGlobalData } from "@/helpers/globalData";
 
@@ -43,7 +44,7 @@ const SnippetCategoryIndex = async ({ params, searchParams }) => {
 				title={`${settings?.data?.title} - ${capitalizeWord}`}
 				description={`${capitalizeWord} search results`}
 				favicon={settings?.data?.favicon}
-				postImage=""
+				postImage={settings.data.showcase_image}
 				imageWidth=""
 				imageHeight=""
 				videoWidth=""
@@ -58,15 +59,21 @@ const SnippetCategoryIndex = async ({ params, searchParams }) => {
 				locales=""
 				posType="page"
 			/>
-			<Header
-				title={`Welcome to my ${capitalizeWord} Snippets`}
-				description="Create and Share HTML code with your Peers!"
-			/>
-			<List
-				featured={featured}
-				objects={snippets}
-				searchParams={awtdSearchParams}
-			/>
+			{settings?.data?.maintenance === false ? (
+				<>
+					<Header
+						title={`Welcome to my ${capitalizeWord} Snippets`}
+						description="Create and Share HTML code with your Peers!"
+					/>
+					<List
+						featured={featured}
+						objects={snippets}
+						searchParams={awtdSearchParams}
+					/>
+				</>
+			) : (
+				<ErrorPage />
+			)}
 		</>
 	);
 };

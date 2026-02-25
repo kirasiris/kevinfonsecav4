@@ -4,6 +4,7 @@ import Header from "@/layout/header";
 import Loading from "@/app/quiz/loading";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import Globalcontent from "@/layout/content";
+import ErrorPage from "@/layout/errorpage";
 import List from "@/components/quiz/multiplepagequestionlist";
 import Head from "@/app/head";
 import { getGlobalData } from "@/helpers/globalData";
@@ -41,7 +42,7 @@ const QuizMultiplePageRead = async ({ params, searchParams }) => {
 	]);
 
 	return (
-		<Suspense fallback={<Loading />}>
+		<>
 			<Head
 				title={`${settings?.data?.title} - ${quiz.data.title}`}
 				description={quiz.data.excerpt || quiz.data.text}
@@ -61,29 +62,35 @@ const QuizMultiplePageRead = async ({ params, searchParams }) => {
 				locales=""
 				posType="quiz"
 			/>
-			<Header title={quiz.data.title} />
-			<div className="container">
-				{quiz.data.status === "published" ||
-				awtdSearchParams.isAdmin === "true" ? (
-					<div className="row">
-						<Globalcontent containerClasses="col-lg-12">
-							<article>
-								<section className="mb-4">
-									<List
-										object={quiz}
-										objects={questions}
-										params={awtdParams}
-										searchParams={awtdSearchParams}
-									/>
-								</section>
-							</article>
-						</Globalcontent>
+			{settings?.data?.maintenance === false ? (
+				<Suspense fallback={<Loading />}>
+					<Header title={quiz.data.title} />
+					<div className="container">
+						{quiz.data.status === "published" ||
+						awtdSearchParams.isAdmin === "true" ? (
+							<div className="row">
+								<Globalcontent containerClasses="col-lg-12">
+									<article>
+										<section className="mb-4">
+											<List
+												object={quiz}
+												objects={questions}
+												params={awtdParams}
+												searchParams={awtdSearchParams}
+											/>
+										</section>
+									</article>
+								</Globalcontent>
+							</div>
+						) : (
+							<p>Not visible</p>
+						)}
 					</div>
-				) : (
-					<p>Not visible</p>
-				)}
-			</div>
-		</Suspense>
+				</Suspense>
+			) : (
+				<ErrorPage />
+			)}
+		</>
 	);
 };
 

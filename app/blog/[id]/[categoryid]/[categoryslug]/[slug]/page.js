@@ -11,6 +11,7 @@ import ParseHtml from "@/layout/parseHtml";
 import ReportModal from "@/components/global/reportmodal";
 import { fetchurl, getUserOnServer } from "@/helpers/setTokenOnServer";
 import Globalcontent from "@/layout/content";
+import ErrorPage from "@/layout/errorpage";
 import ArticleHeader from "@/components/global/articleheader";
 import NewsletterForm from "@/components/global/newsletter";
 import Head from "@/app/head";
@@ -86,7 +87,7 @@ const BlogRead = async ({ params, searchParams }) => {
 	// Handle Delete All
 
 	return (
-		<Suspense fallback={<Loading />}>
+		<>
 			<Head
 				title={`${settings?.data?.title} - ${blog.data.title}`}
 				description={blog.data.excerpt || blog.data.text}
@@ -106,99 +107,106 @@ const BlogRead = async ({ params, searchParams }) => {
 				locales=""
 				posType="blog"
 			/>
-			<Header title={blog.data.title} />
-			<div className="container">
-				{blog.data.status === "published" ||
-				awtdSearchParams.isAdmin === "true" ? (
-					<div className="row">
-						<Globalcontent
-							containerClasses={`col-lg-${blog?.data?.fullWidth ? "12" : "8"}`}
-						>
-							<article>
-								<ArticleHeader
-									object={blog}
-									url={`/blog/category/${blog?.data?.category?._id}/${blog?.data?.category?.slug}`}
-								/>
-								<figure className="mb-4">
-									<Image
-										className="img-fluid"
-										src={
-											blog?.data?.files?.avatar?.location?.secure_location ||
-											`https://source.unsplash.com/random/1200x900`
-										}
-										alt={`${blog?.data?.files?.avatar?.location?.filename}'s featured image`}
-										width={1200}
-										height={900}
-										priority
-									/>
-								</figure>
-								<section className="mb-5">
-									<ParseHtml text={blog?.data?.text} />
-									<NewsletterForm
-										sectionClassList="text-bg-dark text-center pt-3 pb-3 mb-4"
-										headingClassList=""
-									/>
-									<div className="float-start">
-										{blog?.data?.category && (
-											<ExportModal
-												linkToShare={`/blog/${blog?.data?._id}/${blog?.data?.category?._id}/${blog?.data?.category.slug}/${blog?.data?.slug}`}
-												object={blog?.data}
-											/>
-										)}
-									</div>
-									<div className="float-end">
-										<ReportModal
-											resourceId={blog?.data?._id}
-											postType="blog"
-											onModel="Blog"
+			{settings?.data?.maintenance === false ? (
+				<Suspense fallback={<Loading />}>
+					<Header title={blog.data.title} />
+					<div className="container">
+						{blog.data.status === "published" ||
+						awtdSearchParams.isAdmin === "true" ? (
+							<div className="row">
+								<Globalcontent
+									containerClasses={`col-lg-${blog?.data?.fullWidth ? "12" : "8"}`}
+								>
+									<article>
+										<ArticleHeader
+											object={blog}
+											url={`/blog/category/${blog?.data?.category?._id}/${blog?.data?.category?.slug}`}
 										/>
-									</div>
-									<div style={{ clear: "both" }} />
-									<AuthorBox author={blog?.data?.user} />
-									{blog?.data?.commented ? (
-										<>
-											<CommentForm
-												auth={auth}
-												resourceId={blog?.data?._id}
-												parentId={undefined}
-												returtopageurl={`/blog/${blog?.data?._id}/${blog?.data?.category?._id}/${blog?.data?.category?.slug}/${blog?.data?.slug}`}
-												onModel="Blog"
-												objects={comments}
+										<figure className="mb-4">
+											<Image
+												className="img-fluid"
+												src={
+													blog?.data?.files?.avatar?.location
+														?.secure_location ||
+													`https://source.unsplash.com/random/1200x900`
+												}
+												alt={`${blog?.data?.files?.avatar?.location?.filename}'s featured image`}
+												width={1200}
+												height={900}
+												priority
 											/>
-											<CommentBox
-												auth={auth}
-												allLink={`/comment?resourceId=${blog?.data?._id}&page=1&limit=10&sort=-createdAt&status=published`}
-												pageText="Comments"
-												objects={comments}
-												searchParams={awtdSearchParams}
-												handleDraft={undefined}
-												handlePublish={undefined}
-												handleTrash={undefined}
-												handleSchedule={undefined}
-												handleDelete={handleDelete}
-												handleTrashAllFunction={undefined}
-												handleDeleteAllFunction={undefined}
-												displayPagination={false}
-												isChildCommment={false}
+										</figure>
+										<section className="mb-5">
+											<ParseHtml text={blog?.data?.text} />
+											<NewsletterForm
+												sectionClassList="text-bg-dark text-center pt-3 pb-3 mb-4"
+												headingClassList=""
 											/>
-										</>
-									) : (
-										<div className="alert alert-danger">
-											Comments are closed
-										</div>
-									)}
-								</section>
-							</article>
-						</Globalcontent>
-						{blog?.data?.fullWidth !== true && (
-							<Sidebar quotes={quotes} categories={categories} />
+											<div className="float-start">
+												{blog?.data?.category && (
+													<ExportModal
+														linkToShare={`/blog/${blog?.data?._id}/${blog?.data?.category?._id}/${blog?.data?.category.slug}/${blog?.data?.slug}`}
+														object={blog?.data}
+													/>
+												)}
+											</div>
+											<div className="float-end">
+												<ReportModal
+													resourceId={blog?.data?._id}
+													postType="blog"
+													onModel="Blog"
+												/>
+											</div>
+											<div style={{ clear: "both" }} />
+											<AuthorBox author={blog?.data?.user} />
+											{blog?.data?.commented ? (
+												<>
+													<CommentForm
+														auth={auth}
+														resourceId={blog?.data?._id}
+														parentId={undefined}
+														returtopageurl={`/blog/${blog?.data?._id}/${blog?.data?.category?._id}/${blog?.data?.category?.slug}/${blog?.data?.slug}`}
+														onModel="Blog"
+														objects={comments}
+													/>
+													<CommentBox
+														auth={auth}
+														allLink={`/comment?resourceId=${blog?.data?._id}&page=1&limit=10&sort=-createdAt&status=published`}
+														pageText="Comments"
+														objects={comments}
+														searchParams={awtdSearchParams}
+														handleDraft={undefined}
+														handlePublish={undefined}
+														handleTrash={undefined}
+														handleSchedule={undefined}
+														handleDelete={handleDelete}
+														handleTrashAllFunction={undefined}
+														handleDeleteAllFunction={undefined}
+														displayPagination={false}
+														isChildCommment={false}
+													/>
+												</>
+											) : (
+												<div className="alert alert-danger">
+													Comments are closed
+												</div>
+											)}
+										</section>
+									</article>
+								</Globalcontent>
+								{blog?.data?.fullWidth !== true && (
+									<Sidebar quotes={quotes} categories={categories} />
+								)}
+							</div>
+						) : (
+							<p>Not visible</p>
 						)}
 					</div>
-				) : (
-					<p>Not visible</p>
-				)}
-			</div>
-		</Suspense>
+				</Suspense>
+			) : (
+				<ErrorPage />
+			)}
+		</>
 	);
 };
 

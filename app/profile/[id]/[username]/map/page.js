@@ -7,6 +7,7 @@ import Jumbotron from "@/components/profile/jumbotron";
 import Map from "@/components/profile/map";
 import Sidebar from "@/components/profile/sidebar";
 import Globalcontent from "@/layout/content";
+import ErrorPage from "@/layout/errorpage";
 import Head from "@/app/head";
 import { getGlobalData } from "@/helpers/globalData";
 
@@ -40,7 +41,7 @@ const ProfileMapIndex = async ({ params, searchParams }) => {
 	);
 
 	return (
-		<Suspense fallback={<Loading />}>
+		<>
 			<Head
 				title={`${settings?.data?.title} - ${profile.data.username}`}
 				description={profile.data.bio}
@@ -63,45 +64,52 @@ const ProfileMapIndex = async ({ params, searchParams }) => {
 				locales=""
 				posType="user"
 			/>
-			<Jumbotron
-				object={profile}
-				headerStyle={{
-					background: `linear-gradient(to bottom, rgba(0,0,0,0.7) 0%,rgba(0,0,0,0.7) 100%), url(${
-						profile.data?.files?.cover?.location.secure_location ||
-						`https://befreebucket-for-outputs.s3.amazonaws.com/2023/02/map-image.png`
-					})`,
-					backgroundPosition: "center",
-					backgroundSize: "cover",
-				}}
-			/>
-			<div className="container">
-				<div className="row">
-					<Sidebar object={profile} objects={[]} />
-					<Globalcontent>
-						<div className="card">
-							<div className="card-header">
-								Addresses entered by {profile.data.username} on his/her posts
-							</div>
-							<div className="card-body p-0">
-								<Map objects={posts} />
-							</div>
-							{auth?.userId !== undefined && (
-								<div className="card-footer">
-									<Link
-										href={{
-											pathname: `/profile/${auth?.userId}/${auth?.username}/map`,
-											query: {},
-										}}
-									>
-										Check yours!
-									</Link>
+			{settings?.data?.maintenance === false ? (
+				<Suspense fallback={<Loading />}>
+					<Jumbotron
+						object={profile}
+						headerStyle={{
+							background: `linear-gradient(to bottom, rgba(0,0,0,0.7) 0%,rgba(0,0,0,0.7) 100%), url(${
+								profile.data?.files?.cover?.location.secure_location ||
+								`https://befreebucket-for-outputs.s3.amazonaws.com/2023/02/map-image.png`
+							})`,
+							backgroundPosition: "center",
+							backgroundSize: "cover",
+						}}
+					/>
+					<div className="container">
+						<div className="row">
+							<Sidebar object={profile} />
+							<Globalcontent>
+								<div className="card">
+									<div className="card-header">
+										Addresses entered by {profile.data.username} on his/her
+										posts
+									</div>
+									<div className="card-body p-0">
+										<Map objects={posts} />
+									</div>
+									{auth?.userId !== undefined && (
+										<div className="card-footer">
+											<Link
+												href={{
+													pathname: `/profile/${auth?.userId}/${auth?.username}/map`,
+													query: {},
+												}}
+											>
+												Check yours!
+											</Link>
+										</div>
+									)}
 								</div>
-							)}
+							</Globalcontent>
 						</div>
-					</Globalcontent>
-				</div>
-			</div>
-		</Suspense>
+					</div>
+				</Suspense>
+			) : (
+				<ErrorPage />
+			)}
+		</>
 	);
 };
 

@@ -1,6 +1,7 @@
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import Header from "@/layout/header";
 import List from "@/components/quiz/resultlist";
+import ErrorPage from "@/layout/errorpage";
 import Head from "@/app/head";
 import { getGlobalData } from "@/helpers/globalData";
 
@@ -46,11 +47,17 @@ const QuizzesResultIndex = async ({ params, searchParams }) => {
 				locales=""
 				posType="page"
 			/>
-			<Header
-				title={`Quiz results of ${awtdSearchParams.email}`}
-				description="Keep the good job!"
-			/>
-			<List objects={results} searchParams={awtdSearchParams} />
+			{settings?.data?.maintenance === false ? (
+				<>
+					<Header
+						title={`Quiz results of ${awtdSearchParams.email}`}
+						description="Keep the good job!"
+					/>
+					<List objects={results} searchParams={awtdSearchParams} />
+				</>
+			) : (
+				<ErrorPage />
+			)}
 		</>
 	);
 };

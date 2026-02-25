@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
-import Loading from "@/app/blog/loading";
+import Loading from "@/app/course/loading";
+import ErrorPage from "@/layout/errorpage";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import List from "@/components/chapter/list";
 import Jumbotron from "@/components/course/jumbotron";
@@ -62,7 +63,7 @@ const CourseRead = async ({ params, searchParams }) => {
 		]);
 
 	return (
-		<Suspense fallback={<Loading />}>
+		<>
 			<Head
 				title={`${settings?.data?.title} - ${course.data.title}`}
 				description={course.data.excerpt || course.data.text}
@@ -82,27 +83,33 @@ const CourseRead = async ({ params, searchParams }) => {
 				locales=""
 				posType="blog"
 			/>
-			<Jumbotron
-				auth={auth}
-				object={course}
-				enrollmentVerification={verifyAuthEnrollment}
-				imageWidth="440"
-				imageHeight="570"
-			/>
-			<List
-				auth={auth}
-				enrollmentVerification={verifyAuthEnrollment}
-				object={course}
-				objects={lessons}
-				students={enrolledstudents}
-				isAdmin={false}
-				searchParams={awtdSearchParams}
-				isIndex={true}
-				linkToShare={`/course/${course?.data?._id}`}
-				postType="course"
-				onModel="Course"
-			/>
-		</Suspense>
+			{settings?.data?.maintenance === false ? (
+				<Suspense fallback={<Loading />}>
+					<Jumbotron
+						auth={auth}
+						object={course}
+						enrollmentVerification={verifyAuthEnrollment}
+						imageWidth="440"
+						imageHeight="570"
+					/>
+					<List
+						auth={auth}
+						enrollmentVerification={verifyAuthEnrollment}
+						object={course}
+						objects={lessons}
+						students={enrolledstudents}
+						isAdmin={false}
+						searchParams={awtdSearchParams}
+						isIndex={true}
+						linkToShare={`/course/${course?.data?._id}`}
+						postType="course"
+						onModel="Course"
+					/>
+				</Suspense>
+			) : (
+				<ErrorPage />
+			)}
+		</>
 	);
 };
 

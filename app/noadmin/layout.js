@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import "@/src/css/admin.css";
 import AdminMenu from "@/components/noadmin/adminmenu";
-import Loading from "@/app/blog/loading";
+import Loading from "@/app/noadmin/loading";
 import Head from "@/app/head";
 import { getGlobalData } from "@/helpers/globalData";
 

@@ -1,6 +1,7 @@
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import Header from "@/layout/header";
 import List from "@/components/course/list";
+import ErrorPage from "@/layout/errorpage";
 import Head from "@/app/head";
 import { getGlobalData } from "@/helpers/globalData";
 
@@ -57,15 +58,21 @@ const CourseSearchIndex = async ({ params, searchParams }) => {
 				locales=""
 				posType="page"
 			/>
-			<Header
-				title={`${awtdSearchParams.keyword}`}
-				description="Search results"
-			/>
-			<List
-				featured={featured}
-				objects={courses}
-				searchParams={awtdSearchParams}
-			/>
+			{settings?.data?.maintenance === false ? (
+				<>
+					<Header
+						title={`${awtdSearchParams.keyword}`}
+						description="Search results..."
+					/>
+					<List
+						featured={featured}
+						objects={courses}
+						searchParams={awtdSearchParams}
+					/>
+				</>
+			) : (
+				<ErrorPage />
+			)}
 		</>
 	);
 };

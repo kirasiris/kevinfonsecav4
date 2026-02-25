@@ -1,6 +1,7 @@
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import Header from "@/layout/header";
 import List from "@/components/blog/list";
+import ErrorPage from "@/layout/errorpage";
 import Head from "@/app/head";
 import { getGlobalData } from "@/helpers/globalData";
 
@@ -60,7 +61,7 @@ const BlogCategoryIndex = async ({ params, searchParams }) => {
 				title={`${settings?.data?.title} - ${capitalizeWord}`}
 				description={`${capitalizeWord} search results`}
 				favicon={settings?.data?.favicon}
-				postImage=""
+				postImage={settings.data.showcase_image}
 				imageWidth=""
 				imageHeight=""
 				videoWidth=""
@@ -75,17 +76,23 @@ const BlogCategoryIndex = async ({ params, searchParams }) => {
 				locales=""
 				posType="page"
 			/>
-			<Header
-				title={`Welcome to my ${capitalizeWord} Blogs`}
-				description="Learn everything about my programming and life journey"
-			/>
-			<List
-				featured={featured}
-				objects={blogs}
-				searchParams={awtdSearchParams}
-				categories={categories}
-				quotes={quotes}
-			/>
+			{settings?.data?.maintenance === false ? (
+				<>
+					<Header
+						title={`Welcome to my ${capitalizeWord} Blogs`}
+						description="Learn everything about my programming and life journey"
+					/>
+					<List
+						featured={featured}
+						objects={blogs}
+						searchParams={awtdSearchParams}
+						categories={categories}
+						quotes={quotes}
+					/>
+				</>
+			) : (
+				<ErrorPage />
+			)}
 		</>
 	);
 };

@@ -1,15 +1,15 @@
 import Header from "@/layout/header";
 import ErrorPage from "@/layout/errorpage";
-import { fetchurl } from "@/helpers/setTokenOnServer";
+// import { fetchurl } from "@/helpers/setTokenOnServer";
 import Head from "@/app/head";
 import { getGlobalData } from "@/helpers/globalData";
 
 const APIIndex = async ({ params, searchParams }) => {
 	const awtdSearchParams = await searchParams;
-	const page = awtdSearchParams.page || 1;
-	const limit = awtdSearchParams.limit || 10;
-	const sort = awtdSearchParams.sort || "-createdAt";
-	const decrypt = awtdSearchParams.decrypt === "true" ? "&decrypt=true" : "";
+	// const page = awtdSearchParams.page || 1;
+	// const limit = awtdSearchParams.limit || 10;
+	// const sort = awtdSearchParams.sort || "-createdAt";
+	// const decrypt = awtdSearchParams.decrypt === "true" ? "&decrypt=true" : "";
 
 	const { settings } = await getGlobalData();
 

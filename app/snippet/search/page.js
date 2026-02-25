@@ -1,6 +1,7 @@
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import Header from "@/layout/header";
 import List from "@/components/snippet/list";
+import ErrorPage from "@/layout/errorpage";
 import Head from "@/app/head";
 import { getGlobalData } from "@/helpers/globalData";
 
@@ -38,7 +39,7 @@ const SnippetSearchIndex = async ({ params, searchParams }) => {
 				title={`${settings?.data?.title} - Search results of ${awtdSearchParams.keyword}`}
 				description={"Search results..."}
 				favicon={settings?.data?.favicon}
-				postImage=""
+				postImage={settings.data.showcase_image}
 				imageWidth=""
 				imageHeight=""
 				videoWidth=""
@@ -53,15 +54,21 @@ const SnippetSearchIndex = async ({ params, searchParams }) => {
 				locales=""
 				posType="page"
 			/>
-			<Header
-				title={`${awtdSearchParams.keyword}`}
-				description="Search results..."
-			/>
-			<List
-				featured={featured}
-				objects={snippets}
-				searchParams={awtdSearchParams}
-			/>
+			{settings?.data?.maintenance === false ? (
+				<>
+					<Header
+						title={`${awtdSearchParams.keyword}`}
+						description="Search results..."
+					/>
+					<List
+						featured={featured}
+						objects={snippets}
+						searchParams={awtdSearchParams}
+					/>
+				</>
+			) : (
+				<ErrorPage />
+			)}
 		</>
 	);
 };

@@ -52,7 +52,7 @@ const ThemeCategoryIndex = async ({ params, searchParams }) => {
 				title={`${settings?.data?.title} - ${capitalizeWord}`}
 				description={`${capitalizeWord} search results`}
 				favicon={settings?.data?.favicon}
-				postImage=""
+				postImage={settings.data.showcase_image}
 				imageWidth=""
 				imageHeight=""
 				videoWidth=""

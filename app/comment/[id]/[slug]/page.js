@@ -13,6 +13,7 @@ import ReportModal from "@/components/global/reportmodal";
 import { fetchurl, getUserOnServer } from "@/helpers/setTokenOnServer";
 import Globalcontent from "@/layout/content";
 import ArticleHeader from "@/components/global/articleheader";
+
 async function getComment(params) {
 	const res = await fetchurl(`/comments${params}`, "GET", "no-cache");
 	if (!res.success) notFound();

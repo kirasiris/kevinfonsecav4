@@ -47,7 +47,7 @@ const ThemeIndex = async ({ params, searchParams }) => {
 				title={`${settings?.data?.title} - Portfolio`}
 				description={"Check my projects out and tell me what you think!"}
 				favicon={settings?.data?.favicon}
-				postImage=""
+				postImage={settings.data.showcase_image}
 				imageWidth=""
 				imageHeight=""
 				videoWidth=""

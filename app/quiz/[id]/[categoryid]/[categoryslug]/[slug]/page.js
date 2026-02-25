@@ -10,6 +10,7 @@ import AuthorBox from "@/components/global/authorbox";
 import ReportModal from "@/components/global/reportmodal";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import Globalcontent from "@/layout/content";
+import ErrorPage from "@/layout/errorpage";
 import ArticleHeader from "@/components/global/articleheader";
 import NewsletterForm from "@/components/global/newsletter";
 import ParseHtml from "@/layout/parseHtml";
@@ -89,7 +90,7 @@ const QuizRead = async ({ params, searchParams }) => {
 	};
 
 	return (
-		<Suspense fallback={<Loading />}>
+		<>
 			<Head
 				title={`${settings?.data?.title} - ${quiz.data.title}`}
 				description={quiz.data.excerpt || quiz.data.text}
@@ -109,107 +110,115 @@ const QuizRead = async ({ params, searchParams }) => {
 				locales=""
 				posType="quiz"
 			/>
-			<Header title={quiz.data.title} />
-			<div className="container">
-				{quiz.data.status === "published" ||
-				awtdSearchParams.isAdmin === "true" ? (
-					<div className="row">
-						<Globalcontent containerClasses="col-lg-12">
-							<article>
-								<ArticleHeader
-									object={quiz}
-									url={`/quiz/category/${quiz?.data?.category?._id}/${quiz?.data?.category?.slug}`}
-								/>
-								<figure className="mb-4">
-									<Image
-										src={
-											quiz.data.files?.avatar?.location?.secure_location ||
-											`https://source.unsplash.com/random/300x200`
-										}
-										className="img-fluid w-100 rounded-0"
-										alt={`${quiz?.data.title}'s featured image`}
-										width={`300`}
-										height={`200`}
-										priority
-									/>
-								</figure>
-								<section>
-									{quiz?.data?.singlePage && singlePageLink()}
-									{!quiz?.data?.singlePage && multiplePageLink()}
-									<h2>Instructions</h2>
-									<ParseHtml text={quiz?.data?.text} />
-									<ul className="list-group mt-2 mb-3">
-										<li className="list-group-item">
-											<p className="m-0">
-												Number&nbsp;of&nbsp;questions:&nbsp;
-												{questions.data?.length || "0"}
-											</p>
-										</li>
-										<li className="list-group-item">
-											<p className="m-0">
-												Category:&nbsp;
-												{quiz.data.category?.title || "No category"}
-											</p>
-										</li>
-										<li className="list-group-item">
-											<p className="m-0">Duration:&nbsp;{quiz.data.duration}</p>
-										</li>
-										<li className="list-group-item">
-											<p className="m-0">
-												Minimum&nbsp;score:&nbsp;{quiz.data.minimumScore}
-											</p>
-										</li>
-										<li className="list-group-item">
-											<p className="m-0">
-												Maximum&nbsp;score:&nbsp;{quiz.data.maximumScore}
-											</p>
-										</li>
-										<li className="list-group-item">
-											<p className="m-0">
-												Attempts&nbsp;allowed:&nbsp;{quiz.data.attempts}
-											</p>
-										</li>
-										<li className="list-group-item">
-											<p className="m-0">
-												Format:&nbsp;
-												{quiz.data.singlePage
-													? "Single page"
-													: "Multiple pages"}
-											</p>
-										</li>
-									</ul>
-									{quiz?.data?.singlePage && singlePageLink()}
-									{!quiz?.data?.singlePage && multiplePageLink()}
-									<NewsletterForm
-										sectionClassList="text-bg-dark text-center pt-3 pb-3 mb-4"
-										headingClassList=""
-									/>
-									<div className="float-start">
-										{quiz?.data?.category && (
-											<ExportModal
-												linkToShare={`/quiz/${quiz?.data?._id}/${quiz?.data?.category?._id}/${quiz?.data?.category.slug}/${quiz?.data?.slug}`}
-												object={quiz?.data}
-											/>
-										)}
-									</div>
-									<div className="float-end">
-										<ReportModal
-											resourceId={quiz?.data?._id}
-											postType="quiz"
-											onModel="Quiz"
+			{settings?.data?.maintenance === false ? (
+				<Suspense fallback={<Loading />}>
+					<Header title={quiz.data.title} />
+					<div className="container">
+						{quiz.data.status === "published" ||
+						awtdSearchParams.isAdmin === "true" ? (
+							<div className="row">
+								<Globalcontent containerClasses="col-lg-12">
+									<article>
+										<ArticleHeader
+											object={quiz}
+											url={`/quiz/category/${quiz?.data?.category?._id}/${quiz?.data?.category?.slug}`}
 										/>
-									</div>
-									<div style={{ clear: "both" }} />
-									<AuthorBox author={quiz?.data?.user} />
-								</section>
-							</article>
-						</Globalcontent>
+										<figure className="mb-4">
+											<Image
+												src={
+													quiz.data.files?.avatar?.location?.secure_location ||
+													`https://source.unsplash.com/random/300x200`
+												}
+												className="img-fluid w-100 rounded-0"
+												alt={`${quiz?.data.title}'s featured image`}
+												width={`300`}
+												height={`200`}
+												priority
+											/>
+										</figure>
+										<section>
+											{quiz?.data?.singlePage && singlePageLink()}
+											{!quiz?.data?.singlePage && multiplePageLink()}
+											<h2>Instructions</h2>
+											<ParseHtml text={quiz?.data?.text} />
+											<ul className="list-group mt-2 mb-3">
+												<li className="list-group-item">
+													<p className="m-0">
+														Number&nbsp;of&nbsp;questions:&nbsp;
+														{questions.data?.length || "0"}
+													</p>
+												</li>
+												<li className="list-group-item">
+													<p className="m-0">
+														Category:&nbsp;
+														{quiz.data.category?.title || "No category"}
+													</p>
+												</li>
+												<li className="list-group-item">
+													<p className="m-0">
+														Duration:&nbsp;{quiz.data.duration}
+													</p>
+												</li>
+												<li className="list-group-item">
+													<p className="m-0">
+														Minimum&nbsp;score:&nbsp;{quiz.data.minimumScore}
+													</p>
+												</li>
+												<li className="list-group-item">
+													<p className="m-0">
+														Maximum&nbsp;score:&nbsp;{quiz.data.maximumScore}
+													</p>
+												</li>
+												<li className="list-group-item">
+													<p className="m-0">
+														Attempts&nbsp;allowed:&nbsp;{quiz.data.attempts}
+													</p>
+												</li>
+												<li className="list-group-item">
+													<p className="m-0">
+														Format:&nbsp;
+														{quiz.data.singlePage
+															? "Single page"
+															: "Multiple pages"}
+													</p>
+												</li>
+											</ul>
+											{quiz?.data?.singlePage && singlePageLink()}
+											{!quiz?.data?.singlePage && multiplePageLink()}
+											<NewsletterForm
+												sectionClassList="text-bg-dark text-center pt-3 pb-3 mb-4"
+												headingClassList=""
+											/>
+											<div className="float-start">
+												{quiz?.data?.category && (
+													<ExportModal
+														linkToShare={`/quiz/${quiz?.data?._id}/${quiz?.data?.category?._id}/${quiz?.data?.category.slug}/${quiz?.data?.slug}`}
+														object={quiz?.data}
+													/>
+												)}
+											</div>
+											<div className="float-end">
+												<ReportModal
+													resourceId={quiz?.data?._id}
+													postType="quiz"
+													onModel="Quiz"
+												/>
+											</div>
+											<div style={{ clear: "both" }} />
+											<AuthorBox author={quiz?.data?.user} />
+										</section>
+									</article>
+								</Globalcontent>
+							</div>
+						) : (
+							<p>Not visible</p>
+						)}
 					</div>
-				) : (
-					<p>Not visible</p>
-				)}
-			</div>
-		</Suspense>
+				</Suspense>
+			) : (
+				<ErrorPage />
+			)}
+		</>
 	);
 };
 

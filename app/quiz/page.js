@@ -1,6 +1,7 @@
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import Header from "@/layout/header";
 import List from "@/components/quiz/list";
+import ErrorPage from "@/layout/errorpage";
 import Head from "@/app/head";
 import { getGlobalData } from "@/helpers/globalData";
 
@@ -46,7 +47,7 @@ const QuizIndex = async ({ params, searchParams }) => {
 				title={`${settings?.data?.title} - Quizzes`}
 				description={"Learn everything you need for free!"}
 				favicon={settings?.data?.favicon}
-				postImage=""
+				postImage={settings.data.showcase_image}
 				imageWidth=""
 				imageHeight=""
 				videoWidth=""
@@ -61,16 +62,22 @@ const QuizIndex = async ({ params, searchParams }) => {
 				locales=""
 				posType="page"
 			/>
-			<Header
-				title="Welcome to my Quizzes"
-				description="Learn everything you need for free!"
-			/>
-			<List
-				featured={featured}
-				objects={quizzes}
-				searchParams={awtdSearchParams}
-				categories={categories}
-			/>
+			{settings?.data?.maintenance === false ? (
+				<>
+					<Header
+						title="Welcome to my Quizzes"
+						description="Learn everything you need for free!"
+					/>
+					<List
+						featured={featured}
+						objects={quizzes}
+						searchParams={awtdSearchParams}
+						categories={categories}
+					/>
+				</>
+			) : (
+				<ErrorPage />
+			)}
 		</>
 	);
 };

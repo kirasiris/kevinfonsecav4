@@ -3,18 +3,20 @@ import { notFound } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import Header from "@/layout/header";
 import Sidebar from "@/layout/forum/sidebar";
-import Loading from "@/app/blog/loading";
+import Loading from "@/app/forum/loading";
 import ExportModal from "@/components/global/exportmodal";
 import AuthorBox from "@/components/global/authorbox";
 import ParseHtml from "@/layout/parseHtml";
 import ReportModal from "@/components/global/reportmodal";
 import { fetchurl, getUserOnServer } from "@/helpers/setTokenOnServer";
 import Globalcontent from "@/layout/content";
+import ErrorPage from "@/layout/errorpage";
 import ArticleHeader from "@/components/global/articleheader";
 import NewsletterForm from "@/components/global/newsletter";
 import Head from "@/app/head";
 import CommentBox from "@/components/global/commentbox";
 import CommentForm from "@/components/global/commentform";
+import { getGlobalData } from "@/helpers/globalData";
 
 async function getForum(params) {
 	const res = await fetchurl(`/global/forums${params}`, "GET", "no-cache");
@@ -42,7 +44,8 @@ const ForumRead = async ({ params, searchParams }) => {
 	const page = awtdSearchParams.page || 1;
 	const limit = awtdSearchParams.limit || 15;
 	const sort = awtdSearchParams.sort || "-createdAt";
-	const decrypt = awtdSearchParams.decrypt === "true" ? "&decrypt=true" : "";
+
+	const { settings } = await getGlobalData();
 
 	const auth = await getUserOnServer();
 
@@ -78,12 +81,12 @@ const ForumRead = async ({ params, searchParams }) => {
 	// Handle Delete All
 
 	return (
-		<Suspense fallback={<Loading />}>
+		<>
 			<Head
-				title={forum.data.title}
+				title={`${settings?.data?.title} - ${forum.data.title}`}
 				description={forum.data.excerpt || forum.data.text}
-				// favicon=""
-				postImage=""
+				favicon={settings?.data?.favicon}
+				postImage={settings.data.showcase_image}
 				imageWidth=""
 				imageHeight=""
 				videoWidth=""
@@ -98,80 +101,86 @@ const ForumRead = async ({ params, searchParams }) => {
 				locales=""
 				posType="forum"
 			/>
-			<Header title={forum.data.title} />
-			<div className="container">
-				{forum.data.status === "published" ||
-				awtdSearchParams.isAdmin === "true" ? (
-					<div className="row">
-						<Globalcontent containerClasses={`col-lg-8`}>
-							<article>
-								<ArticleHeader
-									object={forum}
-									url={`/forum/category/${forum?.data?.category}/${forum?.data?.sub_category}`}
-								/>
-								<section className="mb-5">
-									<ParseHtml text={forum?.data?.text} />
-									<NewsletterForm
-										sectionClassList="text-bg-dark text-center pt-3 pb-3 mb-4"
-										headingClassList=""
-									/>
-									<div className="float-start">
-										<ExportModal
-											linkToShare={`/forum/${forum?.data?._id}/${forum?.data?.category}/${forum?.data?.sub_category}/${forum?.data?.slug}`}
-											object={forum?.data}
+			{settings?.data?.maintenance === false ? (
+				<Suspense fallback={<Loading />}>
+					<Header title={forum.data.title} />
+					<div className="container">
+						{forum.data.status === "published" ||
+						awtdSearchParams.isAdmin === "true" ? (
+							<div className="row">
+								<Globalcontent containerClasses={`col-lg-8`}>
+									<article>
+										<ArticleHeader
+											object={forum}
+											url={`/forum/category/${forum?.data?.category}/${forum?.data?.sub_category}`}
 										/>
-									</div>
-									<div className="float-end">
-										<ReportModal
-											resourceId={forum?.data?._id}
-											postType="forum"
-											onModel="Forum"
-										/>
-									</div>
-									<div style={{ clear: "both" }} />
-									<AuthorBox author={forum?.data?.user} />
-									{forum?.data?.commented ? (
-										<>
-											<CommentForm
-												auth={auth}
-												resourceId={forum?.data?._id}
-												parentId={undefined}
-												returtopageurl={`/forum/${forum?.data?._id}/${forum?.data?.category}/${forum?.data?.sub_category}/${forum?.data?.slug}`}
-												onModel="Forum"
-												objects={comments}
+										<section className="mb-5">
+											<ParseHtml text={forum?.data?.text} />
+											<NewsletterForm
+												sectionClassList="text-bg-dark text-center pt-3 pb-3 mb-4"
+												headingClassList=""
 											/>
-											<CommentBox
-												auth={auth}
-												allLink={`/comment?resourceId=${forum?.data?._id}&page=1&limit=10&sort=-createdAt&status=published`}
-												pageText="Comments"
-												objects={comments}
-												searchParams={awtdSearchParams}
-												handleDraft={undefined}
-												handlePublish={undefined}
-												handleTrash={undefined}
-												handleSchedule={undefined}
-												handleDelete={handleDelete}
-												handleTrashAllFunction={undefined}
-												handleDeleteAllFunction={undefined}
-												displayPagination={false}
-												isChildCommment={false}
-											/>
-										</>
-									) : (
-										<div className="alert alert-danger">
-											Comments are closed
-										</div>
-									)}
-								</section>
-							</article>
-						</Globalcontent>
-						<Sidebar />
+											<div className="float-start">
+												<ExportModal
+													linkToShare={`/forum/${forum?.data?._id}/${forum?.data?.category}/${forum?.data?.sub_category}/${forum?.data?.slug}`}
+													object={forum?.data}
+												/>
+											</div>
+											<div className="float-end">
+												<ReportModal
+													resourceId={forum?.data?._id}
+													postType="forum"
+													onModel="Forum"
+												/>
+											</div>
+											<div style={{ clear: "both" }} />
+											<AuthorBox author={forum?.data?.user} />
+											{forum?.data?.commented ? (
+												<>
+													<CommentForm
+														auth={auth}
+														resourceId={forum?.data?._id}
+														parentId={undefined}
+														returtopageurl={`/forum/${forum?.data?._id}/${forum?.data?.category}/${forum?.data?.sub_category}/${forum?.data?.slug}`}
+														onModel="Forum"
+														objects={comments}
+													/>
+													<CommentBox
+														auth={auth}
+														allLink={`/comment?resourceId=${forum?.data?._id}&page=1&limit=10&sort=-createdAt&status=published`}
+														pageText="Comments"
+														objects={comments}
+														searchParams={awtdSearchParams}
+														handleDraft={undefined}
+														handlePublish={undefined}
+														handleTrash={undefined}
+														handleSchedule={undefined}
+														handleDelete={handleDelete}
+														handleTrashAllFunction={undefined}
+														handleDeleteAllFunction={undefined}
+														displayPagination={false}
+														isChildCommment={false}
+													/>
+												</>
+											) : (
+												<div className="alert alert-danger">
+													Comments are closed
+												</div>
+											)}
+										</section>
+									</article>
+								</Globalcontent>
+								<Sidebar />
+							</div>
+						) : (
+							<p>Not visible</p>
+						)}
 					</div>
-				) : (
-					<p>Not visible</p>
-				)}
-			</div>
-		</Suspense>
+				</Suspense>
+			) : (
+				<ErrorPage />
+			)}
+		</>
 	);
 };
 

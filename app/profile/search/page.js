@@ -1,6 +1,7 @@
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import Header from "@/layout/header";
 import ProfilesList from "@/components/profile/profileslist";
+import ErrorPage from "@/layout/errorpage";
 import Head from "@/app/head";
 import { getGlobalData } from "@/helpers/globalData";
 
@@ -31,7 +32,7 @@ const ProfileSearchIndex = async ({ params, searchParams }) => {
 				title={`${settings?.data?.title} - Search results of ${awtdSearchParams.keyword}`}
 				description={"Search results..."}
 				favicon={settings?.data?.favicon}
-				postImage=""
+				postImage={settings?.data?.showcase_image}
 				imageWidth=""
 				imageHeight=""
 				videoWidth=""
@@ -46,11 +47,17 @@ const ProfileSearchIndex = async ({ params, searchParams }) => {
 				locales=""
 				posType="page"
 			/>
-			<Header
-				title={awtdSearchParams.keyword}
-				description="Search results..."
-			/>
-			<ProfilesList objects={profiles} searchParams={awtdSearchParams} />
+			{settings?.data?.maintenance === false ? (
+				<>
+					<Header
+						title={awtdSearchParams.keyword}
+						description="Search results..."
+					/>
+					<ProfilesList objects={profiles} searchParams={awtdSearchParams} />
+				</>
+			) : (
+				<ErrorPage />
+			)}
 		</>
 	);
 };

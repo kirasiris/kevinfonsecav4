@@ -3,7 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import Globalsidebar from "@/layout/sidebar";
 
-const Sidebar = ({ object = {}, objects = [] }) => {
+const Sidebar = ({ object = {} }) => {
 	return (
 		<Globalsidebar>
 			<div className="card mb-3">
@@ -118,53 +118,6 @@ const Sidebar = ({ object = {}, objects = [] }) => {
 							))}
 				</div>
 			</div>
-			{objects?.data?.length > 0 && (
-				<div className="card mb-3">
-					<div className="card-header">
-						Photos
-						<Link
-							href={{
-								pathname: `/profile/${object.data?._id}/${object.data?.username}/photos`,
-								query: {
-									page: 1,
-									limit: 50,
-									sort: `-createdAt`,
-								},
-							}}
-							className="float-end"
-						>
-							View&nbsp;all
-						</Link>
-					</div>
-					<div className="card-body row g-2 p-0">
-						{objects.data.map((photo, index) => (
-							<Link
-								key={photo._id}
-								href={{
-									pathname: `/profile/${photo.user._id}/${photo.user.username}/photos/${photo._id}`,
-									query: {},
-								}}
-								className="col"
-							>
-								<Image
-									src={
-										photo.location.secure_location ||
-										`https://source.unsplash.com/random/150x150`
-									}
-									className={`${index}`}
-									width={130}
-									height={130}
-									alt={`${photo.user.username}'s profile avatars`}
-									style={{
-										objectFit: "cover",
-										margin: "1px",
-									}}
-								/>
-							</Link>
-						))}
-					</div>
-				</div>
-			)}
 			{object.data?.tags.length > 0 && (
 				<div className="card mb-3">
 					<div className="card-header">Interests</div>

@@ -17,15 +17,18 @@ async function getQRCodeGeneratorResult(params) {
 const QRCodeGeneratorSearchIndex = async ({ params, searchParams }) => {
 	const awtdParams = await params;
 	const awtdSearchParams = await searchParams;
+	const keyword = awtdSearchParams.keyword;
 	const page = awtdSearchParams.page || 1;
 	const limit = awtdSearchParams.limit || 10;
 	const sort = awtdSearchParams.sort || "-createdAt";
+	const keywordQuery =
+		keyword !== "" && keyword !== undefined ? `&email=${keyword}` : "";
 	const decrypt = awtdSearchParams.decrypt === "true" ? "&decrypt=true" : "";
 
 	const { settings } = await getGlobalData();
 
 	const getResultsData = getQRCodeGeneratorResult(
-		`?page=${page}&limit=${limit}&sort=${sort}&email=${awtdSearchParams.email}${decrypt}`,
+		`?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}${decrypt}`,
 	);
 
 	const [results] = await Promise.all([getResultsData]);

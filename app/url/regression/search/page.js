@@ -22,7 +22,7 @@ const UrlRegressionSearchIndex = async ({ params, searchParams }) => {
 	const limit = awtdSearchParams.limit || 10;
 	const sort = awtdSearchParams.sort || "-createdAt";
 	const keywordQuery =
-		keyword !== "" && keyword !== undefined ? `&keyword=${keyword}` : "";
+		keyword !== "" && keyword !== undefined ? `&email=${keyword}` : "";
 
 	const { settings } = await getGlobalData();
 

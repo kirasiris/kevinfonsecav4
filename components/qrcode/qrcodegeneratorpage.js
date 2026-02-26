@@ -19,7 +19,7 @@ const QRCodeGeneratorPage = ({ searchParams = {}, pushTo = true }) => {
 
 	const searchData = async (e) => {
 		e.preventDefault();
-		router.push(`/qrcode/results?email=${keyword}`);
+		router.push(`/qrcode/search?email=${keyword}`);
 	};
 
 	const [qrcode, setQrCode] = useState({});
@@ -108,7 +108,7 @@ const QRCodeGeneratorPage = ({ searchParams = {}, pushTo = true }) => {
 				{},
 				abortController.signal,
 				false,
-				false
+				false,
 			);
 			if (res?.data) {
 				setQrCode(res.data);

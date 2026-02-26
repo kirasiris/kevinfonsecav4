@@ -1,35 +1,40 @@
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import Header from "@/layout/header";
-import List from "@/components/url/regression/list";
+import List from "@/components/qrcode/resultlist";
 import ErrorPage from "@/layout/errorpage";
 import Head from "@/app/head";
 import { getGlobalData } from "@/helpers/globalData";
 
-async function getUrls(params) {
+async function getQRCodeGeneratorResult(params) {
 	const res = await fetchurl(
-		`/global/extras/tools/urls/regression${params}&postType=short`,
+		`/extras/tools/qrcodes${params}`,
 		"GET",
 		"no-cache",
 	);
 	return res;
 }
 
-const UrlRegressionIndex = async ({ params, searchParams }) => {
+const QRCodeGeneratorSearchIndex = async ({ params, searchParams }) => {
 	const awtdParams = await params;
 	const awtdSearchParams = await searchParams;
 	const page = awtdSearchParams.page || 1;
 	const limit = awtdSearchParams.limit || 10;
 	const sort = awtdSearchParams.sort || "-createdAt";
+	const decrypt = awtdSearchParams.decrypt === "true" ? "&decrypt=true" : "";
 
 	const { settings } = await getGlobalData();
 
-	const shorturls = await getUrls(`?page=${page}&limit=${limit}&sort=${sort}`);
+	const getResultsData = getQRCodeGeneratorResult(
+		`?page=${page}&limit=${limit}&sort=${sort}&email=${awtdSearchParams.email}${decrypt}`,
+	);
+
+	const [results] = await Promise.all([getResultsData]);
 
 	return (
 		<>
 			<Head
-				title={`${settings?.data?.title} - URL Regression`}
-				description={`Tired of long URLs?. Try to shorten them!`}
+				title={`${settings?.data?.title} - QR Code Results of ${awtdSearchParams.email}`}
+				description={"Check your previous qrcodes!"}
 				favicon={settings?.data?.favicon}
 				postImage={settings.data.showcase_image}
 				imageWidth=""
@@ -39,7 +44,7 @@ const UrlRegressionIndex = async ({ params, searchParams }) => {
 				card="summary"
 				robots=""
 				category=""
-				url={`/url/regression`}
+				url={`/qrcode/generator`}
 				author=""
 				createdAt=""
 				updatedAt=""
@@ -49,10 +54,10 @@ const UrlRegressionIndex = async ({ params, searchParams }) => {
 			{settings?.data?.maintenance === false ? (
 				<>
 					<Header
-						title="URL Regression"
-						description="Tired of long URLs?. Try to shorten them!"
+						title={`QrCode results of ${awtdSearchParams.email}`}
+						description="Check your previous qrcodes!"
 					/>
-					<List objects={shorturls} searchParams={awtdSearchParams} />
+					<List objects={results} searchParams={awtdSearchParams} />
 				</>
 			) : (
 				<ErrorPage />
@@ -61,4 +66,4 @@ const UrlRegressionIndex = async ({ params, searchParams }) => {
 	);
 };
 
-export default UrlRegressionIndex;
+export default QRCodeGeneratorSearchIndex;

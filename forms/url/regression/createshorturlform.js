@@ -21,6 +21,8 @@ const CreateShortUrlForm = ({ auth = {}, currentpage = "" }) => {
 			title: formData.get("title"),
 			longUrl: formData.get("longUrl"),
 			text: formData.get("text"),
+			name: formData.get("name"),
+			email: formData.get("email"),
 		};
 
 		const res = await fetchurl(
@@ -93,6 +95,37 @@ const CreateShortUrlForm = ({ auth = {}, currentpage = "" }) => {
 					charactersLimit={99999}
 					isRequired={true}
 				/>
+				<h2>User Information</h2>
+				<div className="row g-2">
+					<div className="col-md">
+						<div className="form-floating">
+							<input
+								id="name"
+								name="name"
+								defaultValue=""
+								type="text"
+								className="form-control mb-3"
+								required
+								placeholder="John Doe"
+							/>
+							<label htmlFor="name">Name</label>
+						</div>
+					</div>
+					<div className="col-md">
+						<div className="form-floating">
+							<input
+								id="email"
+								name="email"
+								defaultValue=""
+								type="text"
+								className="form-control mb-3"
+								required
+								placeholder="john.doe@demo.com"
+							/>
+							<label htmlFor="email">Type&nbsp;your&nbsp;email</label>
+						</div>
+					</div>
+				</div>
 				<br />
 				<FormButtons />
 			</form>

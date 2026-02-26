@@ -6,7 +6,7 @@ import CreateShortUrlForm from "@/forms/noadmin/shorturls/createshorturlform";
 
 async function getShortUrls(params) {
 	const res = await fetchurl(
-		`/global/extras/shorturls${params}`,
+		`/global/extras/shorturls${params}&postType=short`,
 		"GET",
 		"no-cache",
 	);

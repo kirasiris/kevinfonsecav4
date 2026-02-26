@@ -24,7 +24,7 @@ const QRCodeGeneratorIndex = async ({ params, searchParams }) => {
 				card="summary"
 				robots=""
 				category=""
-				url={`/blog`}
+				url={`/qrcode/generator`}
 				author=""
 				createdAt=""
 				updatedAt=""

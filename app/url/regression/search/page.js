@@ -1,40 +1,40 @@
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import Header from "@/layout/header";
-import List from "@/components/qrcode/resultlist";
+import List from "@/components/url/regression/list";
 import ErrorPage from "@/layout/errorpage";
 import Head from "@/app/head";
 import { getGlobalData } from "@/helpers/globalData";
 
-async function getQRCodeGeneratorResult(params) {
+async function getUrls(params) {
 	const res = await fetchurl(
-		`/extras/tools/qrcodes${params}`,
+		`/global/extras/tools/urls/regression${params}&postType=short`,
 		"GET",
 		"no-cache",
 	);
 	return res;
 }
 
-const QRCodeGeneratorResultIndex = async ({ params, searchParams }) => {
+const UrlRegressionSearchIndex = async ({ params, searchParams }) => {
 	const awtdParams = await params;
 	const awtdSearchParams = await searchParams;
+	const keyword = awtdSearchParams.keyword;
 	const page = awtdSearchParams.page || 1;
 	const limit = awtdSearchParams.limit || 10;
 	const sort = awtdSearchParams.sort || "-createdAt";
-	const decrypt = awtdSearchParams.decrypt === "true" ? "&decrypt=true" : "";
+	const keywordQuery =
+		keyword !== "" && keyword !== undefined ? `&keyword=${keyword}` : "";
 
 	const { settings } = await getGlobalData();
 
-	const getResultsData = getQRCodeGeneratorResult(
-		`?page=${page}&limit=${limit}&sort=${sort}&email=${awtdSearchParams.email}${decrypt}`,
+	const shorturls = await getUrls(
+		`?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 	);
-
-	const [results] = await Promise.all([getResultsData]);
 
 	return (
 		<>
 			<Head
-				title={`${settings?.data?.title} - QR Code Results of ${awtdSearchParams.email}`}
-				description={"Check your previous qrcodes!"}
+				title={`${settings?.data?.title} - Search results of ${awtdSearchParams.keyword}`}
+				description={"Search results..."}
 				favicon={settings?.data?.favicon}
 				postImage={settings.data.showcase_image}
 				imageWidth=""
@@ -44,7 +44,7 @@ const QRCodeGeneratorResultIndex = async ({ params, searchParams }) => {
 				card="summary"
 				robots=""
 				category=""
-				url={`/blog`}
+				url={`/url/regression/search?keyword=${awtdSearchParams.keyword}&page=${page}&limit=${limit}&sort=${sort}`}
 				author=""
 				createdAt=""
 				updatedAt=""
@@ -54,10 +54,10 @@ const QRCodeGeneratorResultIndex = async ({ params, searchParams }) => {
 			{settings?.data?.maintenance === false ? (
 				<>
 					<Header
-						title={`QrCode results of ${awtdSearchParams.email}`}
-						description="Check your previous qrcodes!"
+						title={awtdSearchParams.keyword}
+						description="Search results..."
 					/>
-					<List objects={results} searchParams={awtdSearchParams} />
+					<List objects={shorturls} searchParams={awtdSearchParams} />
 				</>
 			) : (
 				<ErrorPage />
@@ -66,4 +66,4 @@ const QRCodeGeneratorResultIndex = async ({ params, searchParams }) => {
 	);
 };
 
-export default QRCodeGeneratorResultIndex;
+export default UrlRegressionSearchIndex;

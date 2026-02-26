@@ -76,7 +76,7 @@ const CreateShortUrlForm = ({ auth = {}, currentpage = "" }) => {
 					type="text"
 					className="form-control mb-3"
 					required
-					placeholder=""
+					placeholder="Remove the https:// or http:// , please!"
 				/>
 				<label htmlFor="text" className="form-label">
 					Text

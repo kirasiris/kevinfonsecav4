@@ -9,7 +9,7 @@ import CreateLongUrlForm from "@/forms/url/extender/createlongurlform";
 
 async function getUrls(params) {
 	const res = await fetchurl(
-		`/global/extras/tools/urls/extender${params}`,
+		`/global/extras/tools/urls/extender${params}&postType=long`,
 		"GET",
 		"no-cache",
 	);

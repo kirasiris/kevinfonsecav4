@@ -96,7 +96,7 @@ const QuizResultsRead = async ({ params, searchParams }) => {
 	return (
 		<>
 			<Head
-				title={`${settings?.data?.title} - ${quizresult.data.title}`}
+				title={`${settings?.data?.title} - ${quizresult.data.resourceId.title}`}
 				description={quizresult.data.excerpt || quizresult.data.text}
 				favicon={settings?.data?.favicon}
 				postImage={settings?.data?.showcase_image}
@@ -106,11 +106,11 @@ const QuizResultsRead = async ({ params, searchParams }) => {
 				videoHeight=""
 				card="summary"
 				robots=""
-				category=""
+				category={quizresult.data.resourceId.category.slug}
 				url={`/quiz/results/${quizresult.data._id}`}
-				author={quizresult.data.user.name}
-				createdAt={quizresult.data.createdAt}
-				updatedAt={quizresult.data.updatedAt}
+				author={settings.data.user.name}
+				createdAt={settings.data.createdAt}
+				updatedAt={settings.data.updatedAt}
 				locales=""
 				posType="blog"
 			/>

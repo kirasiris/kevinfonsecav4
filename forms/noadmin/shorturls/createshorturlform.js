@@ -21,10 +21,11 @@ const CreateShortUrlForm = ({ auth = {}, currentpage = "" }) => {
 			title: formData.get("title"),
 			longUrl: formData.get("longUrl"),
 			text: formData.get("text"),
+			user: auth ? auth?.userId : undefined,
 		};
 
 		const res = await fetchurl(
-			`/global/extras/tools/urls/regression${auth ? `?user=${auth?.userId}` : ``}`,
+			`/global/extras/tools/urls/regression`,
 			"POST",
 			"no-cache",
 			rawFormData,

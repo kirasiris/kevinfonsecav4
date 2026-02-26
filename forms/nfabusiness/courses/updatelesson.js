@@ -41,7 +41,7 @@ const UpdateLessonForm = ({ token = {}, auth = {}, object = {} }) => {
 			`/noadmin/videos/${object?.data?._id}`,
 			"PUT",
 			"no-cache",
-			rawFormData
+			rawFormData,
 		);
 
 		if (res.status === "error") {
@@ -88,6 +88,8 @@ const UpdateLessonForm = ({ token = {}, auth = {}, object = {} }) => {
 					onModel="Lesson"
 					advancedTextEditor={true}
 					customPlaceholder="No description"
+					charactersLimit={99999}
+					isRequired={true}
 				/>
 				<div className="row">
 					<div className="col">

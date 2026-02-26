@@ -10,7 +10,7 @@ import FormButtons from "@/components/global/formbuttons";
 const UpdateMenuForm = ({ object = {} }) => {
 	const router = useRouter();
 
-	const [btnText, setBtnText] = useState(`Submit`);
+	const [, setBtnText] = useState(`Submit`);
 
 	const upgradeMenu = async (e) => {
 		e.preventDefault();
@@ -29,7 +29,7 @@ const UpdateMenuForm = ({ object = {} }) => {
 			`/noadmin/menus/${object?.data?._id}`,
 			"PUT",
 			"no-cache",
-			rawFormData
+			rawFormData,
 		);
 
 		if (res.status === "error") {
@@ -76,6 +76,8 @@ const UpdateMenuForm = ({ object = {} }) => {
 					onModel="Menu"
 					advancedTextEditor={false}
 					customPlaceholder="No description"
+					charactersLimit={99999}
+					isRequired={true}
 				/>
 				<label htmlFor="position" className="form-label">
 					Position

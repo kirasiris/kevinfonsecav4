@@ -24,10 +24,10 @@ const CreateShortUrlForm = ({ auth = {}, currentpage = "" }) => {
 		};
 
 		const res = await fetchurl(
-			`/extras/tools/urls/regression${auth ? `?user=${auth?.userId}` : ``}`,
+			`/global/extras/tools/urls/regression${auth ? `?user=${auth?.userId}` : ``}`,
 			"POST",
 			"no-cache",
-			rawFormData
+			rawFormData,
 		);
 
 		if (res.status === "error") {

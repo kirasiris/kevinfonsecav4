@@ -10,7 +10,7 @@ import FormButtons from "@/components/global/formbuttons";
 const CreateRealStateForm = ({ token = {}, auth = {} }) => {
 	const router = useRouter();
 
-	const [btnText, setBtnText] = useState(`Submit`);
+	const [, setBtnText] = useState(`Submit`);
 
 	const addRealState = async (e) => {
 		e.preventDefault();
@@ -94,6 +94,8 @@ const CreateRealStateForm = ({ token = {}, auth = {} }) => {
 					onModel="RealState"
 					advancedTextEditor={true}
 					customPlaceholder="No description"
+					charactersLimit={99999}
+					isRequired={true}
 				/>
 				<div className="row">
 					<div className="col">

@@ -12,7 +12,7 @@ const UpdateProductForm = ({ object = {}, token = "", auth = {} }) => {
 
 	const [showCategories, setShowCategories] = useState(object?.data?.category);
 
-	const [btnText, setBtnText] = useState("Submit");
+	const [, setBtnText] = useState("Submit");
 
 	const upgradeProduct = async (e) => {
 		e.preventDefault();
@@ -67,7 +67,7 @@ const UpdateProductForm = ({ object = {}, token = "", auth = {} }) => {
 			`/noadmin/stripe/products/${object?.data?._id}`,
 			"PUT",
 			"no-cache",
-			rawFormData
+			rawFormData,
 		);
 		if (res.status === "error") {
 			toast.error(res.message, "bottom");
@@ -114,6 +114,8 @@ const UpdateProductForm = ({ object = {}, token = "", auth = {} }) => {
 					onModel="Product"
 					advancedTextEditor={false}
 					customPlaceholder="No description"
+					charactersLimit={99999}
+					isRequired={true}
 				/>
 				<div className="row">
 					<div className="col">

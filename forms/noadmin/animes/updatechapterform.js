@@ -58,7 +58,7 @@ const UpdateChapterForm = ({ token = {}, auth = {}, object = {} }) => {
 			`/noadmin/videos/${object?.data._id}`,
 			"PUT",
 			"no-cache",
-			rawFormData
+			rawFormData,
 		);
 
 		if (res.status === "error") {
@@ -105,6 +105,8 @@ const UpdateChapterForm = ({ token = {}, auth = {}, object = {} }) => {
 					onModel="Video"
 					advancedTextEditor={false}
 					customPlaceholder="No description"
+					charactersLimit={99999}
+					isRequired={true}
 				/>
 				<label htmlFor="address" className="form-label">
 					Address

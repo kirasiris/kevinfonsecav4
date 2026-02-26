@@ -10,7 +10,7 @@ import FormButtons from "@/components/global/formbuttons";
 const UpdateForumForm = ({ token = {}, auth = {}, object = {} }) => {
 	const router = useRouter();
 
-	const [btnText, setBtnText] = useState(`Submit`);
+	const [, setBtnText] = useState(`Submit`);
 
 	const upgradeForum = async (e) => {
 		e.preventDefault();
@@ -33,7 +33,7 @@ const UpdateForumForm = ({ token = {}, auth = {}, object = {} }) => {
 			`/noadmin/forums/${object?.data?._id}`,
 			"PUT",
 			"no-cache",
-			rawFormData
+			rawFormData,
 		);
 
 		if (res.status === "error") {
@@ -80,6 +80,8 @@ const UpdateForumForm = ({ token = {}, auth = {}, object = {} }) => {
 					onModel="Forum"
 					advancedTextEditor={true}
 					customPlaceholder="No description"
+					charactersLimit={99999}
+					isRequired={true}
 				/>
 				<div className="row">
 					<div className="col">

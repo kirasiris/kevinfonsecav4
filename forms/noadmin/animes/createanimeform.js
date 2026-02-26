@@ -10,7 +10,7 @@ import FormButtons from "@/components/global/formbuttons";
 const CreateAnimeForm = ({ token = {}, auth = {}, objects = [] }) => {
 	const router = useRouter();
 
-	const [btnText, setBtnText] = useState(`Submit`);
+	const [, setBtnText] = useState(`Submit`);
 
 	const addAnime = async (e) => {
 		e.preventDefault();
@@ -81,6 +81,8 @@ const CreateAnimeForm = ({ token = {}, auth = {}, objects = [] }) => {
 					onModel="Playlist"
 					advancedTextEditor={true}
 					customPlaceholder="No description"
+					charactersLimit={99999}
+					isRequired={true}
 				/>
 				<div className="row">
 					<div className="col">

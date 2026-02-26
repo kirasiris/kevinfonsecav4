@@ -10,7 +10,7 @@ import FormButtons from "@/components/global/formbuttons";
 const CreateThemeForm = ({ token = {}, auth = {}, objects = [] }) => {
 	const router = useRouter();
 
-	const [btnText, setBtnText] = useState(`Submit`);
+	const [, setBtnText] = useState(`Submit`);
 
 	const addTheme = async (e) => {
 		e.preventDefault();
@@ -81,6 +81,8 @@ const CreateThemeForm = ({ token = {}, auth = {}, objects = [] }) => {
 					onModel="Blog"
 					advancedTextEditor={true}
 					customPlaceholder="No description"
+					charactersLimit={99999}
+					isRequired={true}
 				/>
 			</div>
 			<div className="col-lg-3">

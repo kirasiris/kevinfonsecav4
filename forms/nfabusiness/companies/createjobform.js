@@ -86,6 +86,8 @@ const CreateJobForm = ({ token = {}, auth = {}, params = {} }) => {
 					onModel="Job"
 					advancedTextEditor={true}
 					customPlaceholder="No description"
+					charactersLimit={99999}
+					isRequired={true}
 				/>
 				<div className="row">
 					<div className="col">

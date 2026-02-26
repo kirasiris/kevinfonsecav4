@@ -15,7 +15,7 @@ const UpdateQuizForm = ({
 }) => {
 	const router = useRouter();
 
-	const [btnText, setBtnText] = useState(`Submit`);
+	const [, setBtnText] = useState(`Submit`);
 
 	const upgradeQuiz = async (e) => {
 		e.preventDefault();
@@ -42,7 +42,7 @@ const UpdateQuizForm = ({
 			`/noadmin/quizzes/${object?.data?._id}`,
 			"PUT",
 			"no-cache",
-			rawFormData
+			rawFormData,
 		);
 
 		if (res.status === "error") {
@@ -89,6 +89,8 @@ const UpdateQuizForm = ({
 					onModel="Quiz"
 					advancedTextEditor={true}
 					customPlaceholder="No description"
+					charactersLimit={99999}
+					isRequired={true}
 				/>
 				<div className="row">
 					<div className="col">

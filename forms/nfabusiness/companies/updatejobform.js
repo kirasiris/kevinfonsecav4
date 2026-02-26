@@ -41,7 +41,7 @@ const UpdateJobForm = ({ token = {}, auth = {}, object = {} }) => {
 			`/noadmin/jobs/${object?.data?._id}`,
 			"PUT",
 			"no-cache",
-			rawFormData
+			rawFormData,
 		);
 
 		if (res.status === "error") {
@@ -88,6 +88,8 @@ const UpdateJobForm = ({ token = {}, auth = {}, object = {} }) => {
 					onModel="Job"
 					advancedTextEditor={true}
 					customPlaceholder="No description"
+					charactersLimit={99999}
+					isRequired={true}
 				/>
 				<div className="row">
 					<div className="col">

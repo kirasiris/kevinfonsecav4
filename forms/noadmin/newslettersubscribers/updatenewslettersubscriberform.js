@@ -8,7 +8,7 @@ import FormButtons from "@/components/global/formbuttons";
 const UpdateNewsletterSubscriberForm = ({ object = {} }) => {
 	const router = useRouter();
 
-	const [btnText, setBtnText] = useState(`Submit`);
+	const [, setBtnText] = useState(`Submit`);
 
 	const upgradeEmail = async (e) => {
 		e.preventDefault();
@@ -24,7 +24,7 @@ const UpdateNewsletterSubscriberForm = ({ object = {} }) => {
 			`/noadmin/newslettersubscribers/${object?.data?._id}`,
 			"PUT",
 			"no-cache",
-			rawFormData
+			rawFormData,
 		);
 
 		if (res.status === "error") {

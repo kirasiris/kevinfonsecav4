@@ -9,7 +9,7 @@ import FormButtons from "@/components/global/formbuttons";
 const CreateSecretForm = ({ token = {}, auth = {} }) => {
 	const router = useRouter();
 
-	const [btnText, setBtnText] = useState(`Submit`);
+	const [, setBtnText] = useState(`Submit`);
 
 	const addSecret = async (e) => {
 		e.preventDefault();
@@ -78,6 +78,8 @@ const CreateSecretForm = ({ token = {}, auth = {} }) => {
 					onModel="Secret"
 					advancedTextEditor={true}
 					customPlaceholder="No description"
+					charactersLimit={99999}
+					isRequired={true}
 				/>
 				<label htmlFor="password" className="form-label">
 					Password

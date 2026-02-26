@@ -10,7 +10,7 @@ import FormButtons from "@/components/global/formbuttons";
 const CreateLessonForm = ({ token = {}, auth = {}, params = {} }) => {
 	const router = useRouter();
 
-	const [btnText, setBtnText] = useState(`Submit`);
+	const [, setBtnText] = useState(`Submit`);
 
 	const addLesson = async (e) => {
 		e.preventDefault();
@@ -87,6 +87,8 @@ const CreateLessonForm = ({ token = {}, auth = {}, params = {} }) => {
 					onModel="Lesson"
 					advancedTextEditor={true}
 					customPlaceholder="No description"
+					charactersLimit={99999}
+					isRequired={true}
 				/>
 				<div className="row">
 					<div className="col">

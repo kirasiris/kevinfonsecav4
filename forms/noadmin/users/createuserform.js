@@ -9,7 +9,7 @@ import FormButtons from "@/components/global/formbuttons";
 const CreateUserForm = ({ auth = {}, objects = [] }) => {
 	const router = useRouter();
 
-	const [btnText, setBtnText] = useState(`Submit`);
+	const [, setBtnText] = useState(`Submit`);
 
 	const addUser = async (e) => {
 		e.preventDefault();
@@ -54,7 +54,7 @@ const CreateUserForm = ({ auth = {}, objects = [] }) => {
 			`/noadmin/users`,
 			"POST",
 			"no-cache",
-			rawFormData
+			rawFormData,
 		);
 
 		if (res.status === "error") {
@@ -353,6 +353,8 @@ const CreateUserForm = ({ auth = {}, objects = [] }) => {
 						onModel="User"
 						advancedTextEditor={false}
 						customPlaceholder="No description"
+						charactersLimit={99999}
+						isRequired={true}
 					/>
 				</div>
 			</div>

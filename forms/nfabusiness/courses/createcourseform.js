@@ -98,6 +98,8 @@ const CreateCourseForm = ({ token = {}, auth = {} }) => {
 					onModel="Course"
 					advancedTextEditor={true}
 					customPlaceholder="No description"
+					charactersLimit={99999}
+					isRequired={true}
 				/>
 				<div className="row">
 					<div className="col">

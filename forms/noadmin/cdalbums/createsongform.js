@@ -10,7 +10,7 @@ import FormButtons from "@/components/global/formbuttons";
 const CreateSongForm = ({ token = {}, auth = {}, params = {} }) => {
 	const router = useRouter();
 
-	const [btnText, setBtnText] = useState(`Submit`);
+	const [, setBtnText] = useState(`Submit`);
 
 	const addSong = async (e) => {
 		e.preventDefault();
@@ -99,6 +99,8 @@ const CreateSongForm = ({ token = {}, auth = {}, params = {} }) => {
 					onModel="Song"
 					advancedTextEditor={true}
 					customPlaceholder="No description"
+					charactersLimit={99999}
+					isRequired={true}
 				/>
 				<div className="row">
 					<div className="col">

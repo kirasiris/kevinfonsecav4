@@ -11,7 +11,7 @@ import FormButtons from "@/components/global/formbuttons";
 const CreateSnippetForm = ({}) => {
 	const router = useRouter();
 
-	const [btnText, setBtnText] = useState(`Submit`);
+	const [, setBtnText] = useState(`Submit`);
 
 	const addSnippet = async (e) => {
 		e.preventDefault();
@@ -34,7 +34,7 @@ const CreateSnippetForm = ({}) => {
 			`/noadmin/snippets`,
 			"POST",
 			"no-cache",
-			rawFormData
+			rawFormData,
 		);
 
 		if (res.status === "error") {
@@ -81,6 +81,8 @@ const CreateSnippetForm = ({}) => {
 					onModel="Snippet"
 					advancedTextEditor={false}
 					customPlaceholder="No description"
+					charactersLimit={99999}
+					isRequired={true}
 				/>
 			</div>
 			<div className="col-lg-2">

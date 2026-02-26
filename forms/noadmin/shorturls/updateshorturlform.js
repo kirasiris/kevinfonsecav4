@@ -3,16 +3,15 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { fetchurl } from "@/helpers/setTokenOnServer";
-import AdminSidebar from "@/components/noadmin/myfinaladminsidebar";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
 
-const CreateMenuForm = ({}) => {
+const UpdateShortUrlForm = ({ object = {}, currentpage = "" }) => {
 	const router = useRouter();
 
-	const [btnText, setBtnText] = useState(`Submit`);
+	const [btnText, setBtnText] = useState("Submit");
 
-	const addMenu = async (e) => {
+	const upgradeShortUrl = async (e) => {
 		e.preventDefault();
 		setBtnText("...");
 		const form = e.target;
@@ -20,14 +19,13 @@ const CreateMenuForm = ({}) => {
 
 		const rawFormData = {
 			title: formData.get("title"),
+			longUrl: formData.get("longUrl"),
 			text: formData.get("text"),
-			position: formData.getAll("position"),
-			status: formData.get("status"),
 		};
 
 		const res = await fetchurl(
-			`/noadmin/menus`,
-			"POST",
+			`/noadmin/extras/tools/urls/regression/${object?.data?._id}`,
+			"PUT",
 			"no-cache",
 			rawFormData,
 		);
@@ -42,8 +40,9 @@ const CreateMenuForm = ({}) => {
 			setBtnText("Submit");
 			return;
 		}
-		toast.success(`Menu created`, "bottom");
-		router.push(`/noadmin/menus`);
+		setBtnText(btnText);
+		//resetForm();
+		router.push(currentpage);
 	};
 
 	const resetForm = (e) => {
@@ -51,17 +50,30 @@ const CreateMenuForm = ({}) => {
 	};
 
 	return (
-		<form className="row" onSubmit={addMenu}>
-			<div className="col">
+		<div className="d-grid gap-2 mb-4">
+			<form onSubmit={upgradeShortUrl}>
 				<label htmlFor="title" className="form-label">
 					Title
 				</label>
 				<input
 					id="title"
 					name="title"
-					defaultValue="Untitled"
+					defaultValue={object?.data?.title}
 					type="text"
 					className="form-control mb-3"
+					required
+					placeholder=""
+				/>
+				<label htmlFor="longUrl" className="form-label">
+					Long Url
+				</label>
+				<input
+					id="longUrl"
+					name="longUrl"
+					defaultValue={object?.data?.longUrl}
+					type="text"
+					className="form-control mb-3"
+					required
 					placeholder=""
 				/>
 				<label htmlFor="text" className="form-label">
@@ -72,49 +84,18 @@ const CreateMenuForm = ({}) => {
 					token={undefined}
 					id="text"
 					name="text"
-					defaultValue="No description..."
-					onModel="Menu"
+					defaultValue={object?.dta?.text}
+					onModel="ShortUrl"
 					advancedTextEditor={false}
-					customPlaceholder="No description"
+					customPlaceholder="Type something..."
 					charactersLimit={99999}
 					isRequired={true}
 				/>
-				<label htmlFor="position" className="form-label">
-					Position
-				</label>
-				<select
-					id="position"
-					name="position"
-					defaultValue="top"
-					className="form-control"
-					multiple
-				>
-					<option value={`top`}>Top</option>
-					<option value={`bottom`}>Bottom</option>
-				</select>
-			</div>
-			<div className="col-lg-3">
-				<AdminSidebar
-					displayCategoryField={false}
-					displayAvatar={false}
-					avatar={undefined}
-					avatarFormat={""}
-					status="draft"
-					fullWidth={false}
-					password={""}
-					featured={false}
-					commented={false}
-					embedding={false}
-					github_readme={""}
-					category={undefined}
-					categories={[]}
-					multiple_categories={false}
-				/>
 				<br />
 				<FormButtons />
-			</div>
-		</form>
+			</form>
+		</div>
 	);
 };
 
-export default CreateMenuForm;
+export default UpdateShortUrlForm;

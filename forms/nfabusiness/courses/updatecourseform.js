@@ -40,7 +40,7 @@ const UpdateCourseForm = ({ token = {}, auth = {}, object = {} }) => {
 			`/noadmin/stripe/courses/${object?.data?._id}`,
 			"PUT",
 			"no-cache",
-			rawFormData
+			rawFormData,
 		);
 
 		if (res.status === "error") {
@@ -98,6 +98,8 @@ const UpdateCourseForm = ({ token = {}, auth = {}, object = {} }) => {
 					onModel="Course"
 					advancedTextEditor={true}
 					customPlaceholder="No description"
+					charactersLimit={99999}
+					isRequired={true}
 				/>
 				<div className="row">
 					<div className="col">

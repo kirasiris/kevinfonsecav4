@@ -20,6 +20,7 @@ const UpdateCategoryForm = ({
 		setBtnText("...");
 		const form = e.target;
 		const formData = new FormData(form);
+
 		const rawFormData = {
 			title: formData.get("title"),
 			text: formData.get("text"),
@@ -31,7 +32,7 @@ const UpdateCategoryForm = ({
 			`/noadmin/categories/${object?.data?._id}`,
 			"PUT",
 			"no-cache",
-			rawFormData
+			rawFormData,
 		);
 
 		if (res.status === "error") {
@@ -71,12 +72,15 @@ const UpdateCategoryForm = ({
 			</label>
 			<MyTextArea
 				auth={undefined}
+				token={undefined}
 				id="text"
 				name="text"
-				customPlaceholder="Type something..."
 				defaultValue={object?.data?.text}
 				onModel="Category"
 				advancedTextEditor={false}
+				customPlaceholder="Type something..."
+				charactersLimit={99999}
+				isRequired={true}
 			/>
 			<label htmlFor="parentId" className="form-label">
 				Parent Category

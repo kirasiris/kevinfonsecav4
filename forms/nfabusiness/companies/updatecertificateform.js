@@ -39,7 +39,7 @@ const UpdateCertificateForm = ({
 			`/noadmin/companies/${params.id}/certificates/${object?.data?._id}`,
 			"PUT",
 			"no-cache",
-			rawFormData
+			rawFormData,
 		);
 
 		if (res.status === "error") {
@@ -102,7 +102,7 @@ const UpdateCertificateForm = ({
 							object?.data?.from
 								? new Date(object.data.from).toLocaleDateString("en-CA", {
 										timeZone: "UTC",
-								  })
+									})
 								: ""
 						}
 						type="date"
@@ -121,7 +121,7 @@ const UpdateCertificateForm = ({
 							object?.data?.to
 								? new Date(object.data.to).toLocaleDateString("en-CA", {
 										timeZone: "UTC",
-								  })
+									})
 								: ""
 						}
 						type="date"
@@ -184,6 +184,8 @@ const UpdateCertificateForm = ({
 						onModel="Job"
 						advancedTextEditor={true}
 						customPlaceholder="No description"
+						charactersLimit={99999}
+						isRequired={false}
 					/>
 				</div>
 			</div>

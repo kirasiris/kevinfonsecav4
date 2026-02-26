@@ -15,7 +15,7 @@ const UpdateMovieForm = ({
 }) => {
 	const router = useRouter();
 
-	const [btnText, setBtnText] = useState(`Submit`);
+	const [, setBtnText] = useState(`Submit`);
 
 	const upgradeMovie = async (e) => {
 		e.preventDefault();
@@ -43,7 +43,7 @@ const UpdateMovieForm = ({
 				...rawFormData,
 				onairtype: "movie",
 				playlistType: "video",
-			}
+			},
 		);
 
 		if (res.status === "error") {
@@ -91,6 +91,8 @@ const UpdateMovieForm = ({
 					onModel="Playlist"
 					advancedTextEditor={true}
 					customPlaceholder="No description"
+					charactersLimit={99999}
+					isRequired={true}
 				/>
 				<div className="row">
 					<div className="col">

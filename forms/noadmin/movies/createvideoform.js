@@ -105,10 +105,12 @@ const CreateVideoForm = ({
 					token={token}
 					id="text"
 					name="text"
+					defaultValue="No description..."
 					onModel="Video"
 					advancedTextEditor={false}
 					customPlaceholder="No description"
-					defaultValue="No description..."
+					charactersLimit={99999}
+					isRequired={true}
 				/>
 				<label htmlFor="address" className="form-label">
 					Address

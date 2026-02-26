@@ -34,7 +34,7 @@ const CreateCompanyForm = ({ token = {}, auth = {} }) => {
 			`/noadmin/companies`,
 			"POST",
 			"no-cache",
-			rawFormData
+			rawFormData,
 		);
 
 		if (res.status === "error") {
@@ -81,6 +81,8 @@ const CreateCompanyForm = ({ token = {}, auth = {} }) => {
 					onModel="Company"
 					advancedTextEditor={true}
 					customPlaceholder="No description"
+					charactersLimit={99999}
+					isRequired={true}
 				/>
 				<div className="row">
 					<div className="col">

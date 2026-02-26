@@ -61,7 +61,7 @@ const UpdateWeaponForm = ({ token = "", auth = {}, object = {} }) => {
 			`/noadmin/weapons/${object?.data?._id}`,
 			"PUT",
 			"no-cache",
-			rawFormData
+			rawFormData,
 		);
 		if (res.status === "error") {
 			toast.error(res.message, "bottom");
@@ -229,6 +229,8 @@ const UpdateWeaponForm = ({ token = "", auth = {}, object = {} }) => {
 					onModel="Weapon"
 					advancedTextEditor={false}
 					customPlaceholder="No description"
+					charactersLimit={99999}
+					isRequired={false}
 				/>
 				<button type="submit" className="btn btn-secondary btn-sm float-start">
 					{btnText}

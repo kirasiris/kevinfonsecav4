@@ -6,9 +6,9 @@ import CreateShortUrlForm from "@/forms/noadmin/shorturls/createshorturlform";
 
 async function getShortUrls(params) {
 	const res = await fetchurl(
-		`/extras/tools/urls/regression${params}`,
+		`/global/extras/tools/urls/regression${params}`,
 		"GET",
-		"no-cache"
+		"no-cache",
 	);
 	return res;
 }
@@ -23,19 +23,19 @@ const AdminShortUrlsIndex = async ({ params, searchParams }) => {
 	const auth = await getUserOnServer();
 
 	const shorturls = await getShortUrls(
-		`?page=${page}&limit=${limit}&sort=${sort}`
+		`?page=${page}&limit=${limit}&sort=${sort}`,
 	);
 
 	const draftIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(
-			`/extras/tools/urls/regression/${id}/draftit`,
+			`/noadmin/extras/tools/urls/regression/${id}/draftit`,
 			"PUT",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/shorturls?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/shorturls?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -43,12 +43,12 @@ const AdminShortUrlsIndex = async ({ params, searchParams }) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(
-			`/extras/tools/urls/regression/${id}/publishit`,
+			`/noadmin/extras/tools/urls/regression/${id}/publishit`,
 			"PUT",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/shorturls?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/shorturls?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -56,12 +56,12 @@ const AdminShortUrlsIndex = async ({ params, searchParams }) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(
-			`/extras/tools/urls/regression/${id}/trashit`,
+			`/noadmin/extras/tools/urls/regression/${id}/trashit`,
 			"PUT",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/shorturls?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/shorturls?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -69,12 +69,12 @@ const AdminShortUrlsIndex = async ({ params, searchParams }) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(
-			`/extras/tools/urls/regression/${id}/scheduleit`,
+			`/noadmin/extras/tools/urls/regression/${id}/scheduleit`,
 			"PUT",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/shorturls?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/shorturls?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -82,12 +82,12 @@ const AdminShortUrlsIndex = async ({ params, searchParams }) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(
-			`/extras/tools/urls/regression/${id}/permanently`,
+			`/noadmin/extras/tools/urls/regression/${id}/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/shorturls?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/shorturls?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -95,12 +95,12 @@ const AdminShortUrlsIndex = async ({ params, searchParams }) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(
-			`/extras/tools/urls/regression/${id}/all`,
+			`/noadmin/extras/tools/urls/regression/${id}/all`,
 			"PUT",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/shorturls?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/shorturls?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -108,12 +108,12 @@ const AdminShortUrlsIndex = async ({ params, searchParams }) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(
-			`/extras/shorturls/deleteall/permanently`,
+			`/noadmin/extras/shorturls/deleteall/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/shorturls?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/shorturls?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 

@@ -10,7 +10,7 @@ import FormButtons from "@/components/global/formbuttons";
 const UpdatePollForm = ({ token = {}, auth = {}, object = {} }) => {
 	const router = useRouter();
 
-	const [btnText, setBtnText] = useState(`Submit`);
+	const [, setBtnText] = useState(`Submit`);
 
 	const upgradePoll = async (e) => {
 		e.preventDefault();
@@ -29,7 +29,7 @@ const UpdatePollForm = ({ token = {}, auth = {}, object = {} }) => {
 			`/noadmin/polls/${object?.data?._id}`,
 			"PUT",
 			"no-cache",
-			rawFormData
+			rawFormData,
 		);
 
 		if (res.status === "error") {
@@ -76,6 +76,8 @@ const UpdatePollForm = ({ token = {}, auth = {}, object = {} }) => {
 					onModel="Poll"
 					advancedTextEditor={true}
 					customPlaceholder="No description"
+					charactersLimit={99999}
+					isRequired={true}
 				/>
 			</div>
 			<div className="col-lg-3">

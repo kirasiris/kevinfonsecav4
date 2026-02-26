@@ -15,7 +15,7 @@ const UpdateAnimeForm = ({
 }) => {
 	const router = useRouter();
 
-	const [btnText, setBtnText] = useState(`Submit`);
+	const [, setBtnText] = useState(`Submit`);
 
 	const upgradeAnime = async (e) => {
 		e.preventDefault();
@@ -91,6 +91,8 @@ const UpdateAnimeForm = ({
 					onModel="Playlist"
 					advancedTextEditor={true}
 					customPlaceholder="No description"
+					charactersLimit={99999}
+					isRequired={true}
 				/>
 				<div className="row">
 					<div className="col">

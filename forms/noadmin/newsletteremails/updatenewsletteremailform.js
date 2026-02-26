@@ -33,7 +33,7 @@ const UpdateNewsletterEmailForm = ({
 			`/noadmin/newsletteremails/${object?.data?._id}`,
 			"PUT",
 			"no-cache",
-			rawFormData
+			rawFormData,
 		);
 
 		if (res.status === "error") {
@@ -94,10 +94,12 @@ const UpdateNewsletterEmailForm = ({
 					token={token}
 					id="text"
 					name="text"
+					defaultValue={object?.data?.text}
 					onModel="NewsletterEmail"
 					advancedTextEditor={false}
 					customPlaceholder="No description"
-					defaultValue={object?.data?.text}
+					charactersLimit={99999}
+					isRequired={true}
 				/>
 			</div>
 			<div className="col-lg-3">

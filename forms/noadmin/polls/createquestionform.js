@@ -15,7 +15,7 @@ const CreateQuestionForm = ({
 }) => {
 	const router = useRouter();
 
-	const [btnText, setBtnText] = useState(`Submit`);
+	const [, setBtnText] = useState(`Submit`);
 
 	const addQuestion = async (e) => {
 		e.preventDefault();
@@ -91,10 +91,12 @@ const CreateQuestionForm = ({
 					token={token}
 					id="text"
 					name="text"
+					defaultValue="No description..."
 					onModel="Question"
 					advancedTextEditor={false}
 					customPlaceholder="No description"
-					defaultValue="No description..."
+					charactersLimit={99999}
+					isRequired={true}
 				/>
 				<div className="row">
 					<div className="col">

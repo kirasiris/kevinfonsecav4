@@ -10,7 +10,7 @@ import FormButtons from "@/components/global/formbuttons";
 const UpdateMembershipForm = ({ token = {}, auth = {}, object = {} }) => {
 	const router = useRouter();
 
-	const [btnText, setBtnText] = useState(`Submit`);
+	const [, setBtnText] = useState(`Submit`);
 
 	const upgradeMembership = async (e) => {
 		e.preventDefault();
@@ -42,7 +42,7 @@ const UpdateMembershipForm = ({ token = {}, auth = {}, object = {} }) => {
 			`/noadmin/stripe/memberships/${object?.data?._id}`,
 			"PUT",
 			"no-cache",
-			rawFormData
+			rawFormData,
 		);
 
 		if (res.status === "error") {

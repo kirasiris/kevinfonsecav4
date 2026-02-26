@@ -10,7 +10,7 @@ import FormButtons from "@/components/global/formbuttons";
 const UpdatePageForm = ({ object = {}, params = {} }) => {
 	const router = useRouter();
 
-	const [btnText, setBtnText] = useState(`Submit`);
+	const [, setBtnText] = useState(`Submit`);
 
 	const updatePage = async (e) => {
 		e.preventDefault();
@@ -35,7 +35,7 @@ const UpdatePageForm = ({ object = {}, params = {} }) => {
 			`/noadmin/pages/${params.id}`,
 			"PUT",
 			"no-cache",
-			rawFormData
+			rawFormData,
 		);
 
 		if (res.status === "error") {
@@ -89,10 +89,12 @@ const UpdatePageForm = ({ object = {}, params = {} }) => {
 					token={undefined}
 					id="text"
 					name="text"
+					defaultValue={object?.data?.text}
 					onModel="Page"
 					advancedTextEditor={true}
 					customPlaceholder="No description"
-					defaultValue={object?.data?.text}
+					charactersLimit={99999}
+					isRequired={true}
 				/>
 				<div className="row">
 					<div className="col">

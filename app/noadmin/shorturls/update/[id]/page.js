@@ -2,29 +2,30 @@ import { revalidatePath } from "next/cache";
 import { fetchurl, getUserOnServer } from "@/helpers/setTokenOnServer";
 import AdminStatusesMenu from "@/components/noadmin/adminstatusesmenu";
 import List from "@/components/noadmin/shorturls/list";
-import CreateShortUrlForm from "@/forms/noadmin/shorturls/createshorturlform";
+import UpdateShortUrlForm from "@/forms/noadmin/shorturls/updateshorturlform";
 
 async function getShortUrls(params) {
 	const res = await fetchurl(
-		`/global/extras/shorturls${params}`,
+		`/global/extras/tools/urls/regression${params}`,
 		"GET",
 		"no-cache",
 	);
 	return res;
 }
 
-const AdminShortUrlsSearchIndex = async ({ params, searchParams }) => {
+const UpdateShortUrl = async ({ params, searchParams }) => {
 	const awtdParams = await params;
 	const awtdSearchParams = await searchParams;
-	const keyword = awtdSearchParams.keyword || "";
 	const page = awtdSearchParams.page || 1;
 	const limit = awtdSearchParams.limit || 10;
 	const sort = awtdSearchParams.sort || "-createdAt";
 
 	const auth = await getUserOnServer();
 
+	const shorturl = await getShortUrls(`/${awtdParams.id}`);
+
 	const shorturls = await getShortUrls(
-		`?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+		`?page=${page}&limit=${limit}&sort=${sort}`,
 	);
 
 	const draftIt = async (id) => {
@@ -36,7 +37,7 @@ const AdminShortUrlsSearchIndex = async ({ params, searchParams }) => {
 			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/shorturls/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/noadmin/shorturls?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -49,7 +50,7 @@ const AdminShortUrlsSearchIndex = async ({ params, searchParams }) => {
 			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/shorturls/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/noadmin/shorturls?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -62,7 +63,7 @@ const AdminShortUrlsSearchIndex = async ({ params, searchParams }) => {
 			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/shorturls/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/noadmin/shorturls?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -75,7 +76,7 @@ const AdminShortUrlsSearchIndex = async ({ params, searchParams }) => {
 			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/shorturls/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/noadmin/shorturls?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -88,7 +89,7 @@ const AdminShortUrlsSearchIndex = async ({ params, searchParams }) => {
 			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/shorturls/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/noadmin/shorturls?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -96,12 +97,12 @@ const AdminShortUrlsSearchIndex = async ({ params, searchParams }) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(
-			`/noadmin/extras/tools/urls/regression/deleteall`,
+			`/noadmin/extras/tools/urls/regression/${id}/all`,
 			"PUT",
 			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/shorturls/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/noadmin/shorturls?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -109,12 +110,12 @@ const AdminShortUrlsSearchIndex = async ({ params, searchParams }) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(
-			`/noadmin/extras/tools/urls/regression/deleteall/permanently`,
+			`/noadmin/extras/shorturls/deleteall/permanently`,
 			"DELETE",
 			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/shorturls/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/noadmin/shorturls?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -129,9 +130,9 @@ const AdminShortUrlsSearchIndex = async ({ params, searchParams }) => {
 				categoriesLink=""
 				categoryType=""
 			/>
-			<CreateShortUrlForm
-				auth={auth}
-				currentpage={`/noadmin/shorturls/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`}
+			<UpdateShortUrlForm
+				object={shorturl}
+				currentpage={`/noadmin/shorturls?page=${page}&limit=${limit}&sort=${sort}`}
 			/>
 			<div className="card rounded-0">
 				<List
@@ -139,7 +140,7 @@ const AdminShortUrlsSearchIndex = async ({ params, searchParams }) => {
 					pageText="Short Urls"
 					addLink="/noadmin/shorturls/create"
 					searchOn="/noadmin/shorturls"
-					searchedKeyword={keyword}
+					searchedKeyword=""
 					objects={shorturls}
 					searchParams={awtdSearchParams}
 					handleDraft={draftIt}
@@ -155,4 +156,4 @@ const AdminShortUrlsSearchIndex = async ({ params, searchParams }) => {
 	);
 };
 
-export default AdminShortUrlsSearchIndex;
+export default UpdateShortUrl;

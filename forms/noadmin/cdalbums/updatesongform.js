@@ -10,7 +10,7 @@ import FormButtons from "@/components/global/formbuttons";
 const UpdateSongForm = ({ token = {}, auth = {}, object = {} }) => {
 	const router = useRouter();
 
-	const [btnText, setBtnText] = useState(`Submit`);
+	const [, setBtnText] = useState(`Submit`);
 
 	const upgradeSong = async (e) => {
 		e.preventDefault();
@@ -41,7 +41,7 @@ const UpdateSongForm = ({ token = {}, auth = {}, object = {} }) => {
 			`/noadmin/songs/${object?.data?._id}`,
 			"PUT",
 			"no-cache",
-			rawFormData
+			rawFormData,
 		);
 
 		if (res.status === "error") {
@@ -100,6 +100,8 @@ const UpdateSongForm = ({ token = {}, auth = {}, object = {} }) => {
 					onModel="Song"
 					advancedTextEditor={true}
 					customPlaceholder="No description"
+					charactersLimit={99999}
+					isRequired={true}
 				/>
 				<div className="row">
 					<div className="col">

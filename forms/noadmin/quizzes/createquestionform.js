@@ -15,7 +15,7 @@ const CreateQuestionForm = ({
 }) => {
 	const router = useRouter();
 
-	const [btnText, setBtnText] = useState(`Submit`);
+	const [, setBtnText] = useState(`Submit`);
 
 	const addQuestion = async (e) => {
 		e.preventDefault();
@@ -96,6 +96,8 @@ const CreateQuestionForm = ({
 					advancedTextEditor={false}
 					customPlaceholder="No description"
 					defaultValue="No description..."
+					charactersLimit={99999}
+					isRequired={true}
 				/>
 				<label htmlFor="correctAnswer" className="form-label">
 					Correct Answer

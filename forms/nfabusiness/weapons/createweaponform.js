@@ -61,7 +61,7 @@ const CreateWeaponForm = ({ token = "", auth = {} }) => {
 			`/noadmin/weapons`,
 			"POST",
 			"no-cache",
-			rawFormData
+			rawFormData,
 		);
 		if (res.status === "error") {
 			toast.error(res.message, "bottom");
@@ -229,6 +229,8 @@ const CreateWeaponForm = ({ token = "", auth = {} }) => {
 					onModel="Weapon"
 					advancedTextEditor={false}
 					customPlaceholder="No description"
+					charactersLimit={99999}
+					isRequired={false}
 				/>
 				<button type="submit" className="btn btn-secondary btn-sm float-start">
 					{btnText}

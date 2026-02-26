@@ -15,7 +15,7 @@ const UpdateQuestionForm = ({
 }) => {
 	const router = useRouter();
 
-	const [btnText, setBtnText] = useState(`Submit`);
+	const [, setBtnText] = useState(`Submit`);
 
 	const upgradeQuestion = async (e) => {
 		e.preventDefault();
@@ -49,7 +49,7 @@ const UpdateQuestionForm = ({
 			`/noadmin/questions/${params.id}`,
 			"PUT",
 			"no-cache",
-			rawFormData
+			rawFormData,
 		);
 
 		if (res.status === "error") {
@@ -92,10 +92,12 @@ const UpdateQuestionForm = ({
 					token={token}
 					id="text"
 					name="text"
+					defaultValue={object?.data?.text}
 					onModel="Question"
 					advancedTextEditor={false}
 					customPlaceholder="No description"
-					defaultValue={object?.data?.text}
+					charactersLimit={99999}
+					isRequired={true}
 				/>
 				<div className="row">
 					<div className="col">

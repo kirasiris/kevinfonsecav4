@@ -10,7 +10,7 @@ import FormButtons from "@/components/global/formbuttons";
 const CreateChapterForm = ({ token = {}, auth = {}, params = {} }) => {
 	const router = useRouter();
 
-	const [btnText, setBtnText] = useState(`Submit`);
+	const [, setBtnText] = useState(`Submit`);
 
 	const addChapter = async (e) => {
 		e.preventDefault();
@@ -104,6 +104,8 @@ const CreateChapterForm = ({ token = {}, auth = {}, params = {} }) => {
 					advancedTextEditor={false}
 					customPlaceholder="No description"
 					defaultValue="No description..."
+					charactersLimit={99999}
+					isRequired={true}
 				/>
 				<label htmlFor="address" className="form-label">
 					Address

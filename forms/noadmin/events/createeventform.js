@@ -10,7 +10,7 @@ import FormButtons from "@/components/global/formbuttons";
 const CreateEventForm = ({ token = {}, auth = {} }) => {
 	const router = useRouter();
 
-	const [btnText, setBtnText] = useState(`Submit`);
+	const [, setBtnText] = useState(`Submit`);
 
 	const addEvent = async (e) => {
 		e.preventDefault();
@@ -84,6 +84,8 @@ const CreateEventForm = ({ token = {}, auth = {} }) => {
 					onModel="Event"
 					advancedTextEditor={true}
 					customPlaceholder="No description"
+					charactersLimit={99999}
+					isRequired={true}
 				/>
 				<div className="row">
 					{/* fullCalendarDateFormat, recurrenceRule */}

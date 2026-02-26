@@ -32,7 +32,7 @@ const CreateCertificateForm = ({ token = {}, auth = {}, params = {} }) => {
 			`/noadmin/companies/${params.id}/certificates`,
 			"POST",
 			"no-cache",
-			rawFormData
+			rawFormData,
 		);
 
 		if (res.status === "error") {
@@ -165,6 +165,8 @@ const CreateCertificateForm = ({ token = {}, auth = {}, params = {} }) => {
 						onModel="Job"
 						advancedTextEditor={true}
 						customPlaceholder="No description"
+						charactersLimit={99999}
+						isRequired={false}
 					/>
 				</div>
 			</div>

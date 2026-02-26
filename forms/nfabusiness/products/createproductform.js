@@ -12,7 +12,7 @@ const CreateProductForm = ({ token = {}, auth = {} }) => {
 
 	const [showCategories, setShowCategories] = useState(true);
 
-	const [btnText, setBtnText] = useState("Submit");
+	const [, setBtnText] = useState("Submit");
 
 	const addProduct = async (e) => {
 		e.preventDefault();
@@ -115,6 +115,8 @@ const CreateProductForm = ({ token = {}, auth = {} }) => {
 					onModel="Product"
 					advancedTextEditor={false}
 					customPlaceholder="No description"
+					charactersLimit={99999}
+					isRequired={true}
 				/>
 				<div className="row">
 					<div className="col">

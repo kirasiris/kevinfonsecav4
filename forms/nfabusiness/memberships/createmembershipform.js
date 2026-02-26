@@ -10,7 +10,7 @@ import FormButtons from "@/components/global/formbuttons";
 const CreateMembershipForm = ({ token = {}, auth = {} }) => {
 	const router = useRouter();
 
-	const [btnText, setBtnText] = useState(`Submit`);
+	const [, setBtnText] = useState(`Submit`);
 
 	const addMembership = async (e) => {
 		e.preventDefault();
@@ -42,7 +42,7 @@ const CreateMembershipForm = ({ token = {}, auth = {} }) => {
 			`/noadmin/stripe/memberships`,
 			"POST",
 			"no-cache",
-			rawFormData
+			rawFormData,
 		);
 
 		if (res.status === "error") {

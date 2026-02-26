@@ -15,7 +15,7 @@ const UpdateVideoForm = ({
 }) => {
 	const router = useRouter();
 
-	const [btnText, setBtnText] = useState(`Submit`);
+	const [, setBtnText] = useState(`Submit`);
 
 	const upgradeVideo = async (e) => {
 		e.preventDefault();
@@ -63,7 +63,7 @@ const UpdateVideoForm = ({
 			`/noadmin/videos/${params.id}`,
 			"PUT",
 			"no-cache",
-			rawFormData
+			rawFormData,
 		);
 
 		if (res.status === "error") {
@@ -110,6 +110,8 @@ const UpdateVideoForm = ({
 					onModel="Video"
 					advancedTextEditor={false}
 					customPlaceholder="No description"
+					charactersLimit={99999}
+					isRequired={true}
 				/>
 				<label htmlFor="address" className="form-label">
 					Address

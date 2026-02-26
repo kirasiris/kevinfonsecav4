@@ -10,7 +10,7 @@ import FormButtons from "@/components/global/formbuttons";
 const CreateQuizForm = ({ token = {}, auth = {}, objects = [] }) => {
 	const router = useRouter();
 
-	const [btnText, setBtnText] = useState(`Submit`);
+	const [, setBtnText] = useState(`Submit`);
 
 	const addQuiz = async (e) => {
 		e.preventDefault();
@@ -37,7 +37,7 @@ const CreateQuizForm = ({ token = {}, auth = {}, objects = [] }) => {
 			`/noadmin/quizzes`,
 			"POST",
 			"no-cache",
-			rawFormData
+			rawFormData,
 		);
 
 		if (res.status === "error") {
@@ -84,6 +84,8 @@ const CreateQuizForm = ({ token = {}, auth = {}, objects = [] }) => {
 					onModel="Quiz"
 					advancedTextEditor={true}
 					customPlaceholder="No description"
+					charactersLimit={99999}
+					isRequired={true}
 				/>
 				<div className="row">
 					<div className="col">

@@ -11,7 +11,7 @@ const UpdateAboutForm = ({ auth = {}, profiles = [] }) => {
 	const awtdSearchParams = useSearchParams();
 
 	const [showPartner, setShowPartner] = useState(
-		auth?.data?.relationshipStatus === "taken"
+		auth?.data?.relationshipStatus === "taken",
 	);
 
 	const [btnText, setBtnText] = useState("Submit");
@@ -43,7 +43,7 @@ const UpdateAboutForm = ({ auth = {}, profiles = [] }) => {
 			rawFormData,
 			undefined,
 			false,
-			false
+			false,
 		);
 		if (res.status === "error") {
 			toast.error(res.message, "bottom");
@@ -198,10 +198,12 @@ const UpdateAboutForm = ({ auth = {}, profiles = [] }) => {
 				token={undefined}
 				id="text"
 				name="text"
+				defaultValue={auth?.data?.bio}
 				onModel="User"
 				advancedTextEditor={false}
 				customPlaceholder="Lets get to know you!"
-				defaultValue={auth?.data?.bio}
+				charactersLimit={99999}
+				isRequired={false}
 			/>
 			<label htmlFor="tags" className="form-label">
 				Skills

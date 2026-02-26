@@ -10,7 +10,7 @@ import FormButtons from "@/components/global/formbuttons";
 const UpdateCompanyForm = ({ token = {}, auth = {}, object = {} }) => {
 	const router = useRouter();
 
-	const [btnText, setBtnText] = useState(`Submit`);
+	const [, setBtnText] = useState(`Submit`);
 
 	const upgradeCompany = async (e) => {
 		e.preventDefault();
@@ -34,7 +34,7 @@ const UpdateCompanyForm = ({ token = {}, auth = {}, object = {} }) => {
 			`/noadmin/companies/${object?.data?._id}`,
 			"PUT",
 			"no-cache",
-			rawFormData
+			rawFormData,
 		);
 
 		if (res.status === "error") {
@@ -81,6 +81,8 @@ const UpdateCompanyForm = ({ token = {}, auth = {}, object = {} }) => {
 					onModel="Company"
 					advancedTextEditor={true}
 					customPlaceholder="No description"
+					charactersLimit={99999}
+					isRequired={true}
 				/>
 				<div className="row">
 					<div className="col">

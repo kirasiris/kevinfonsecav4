@@ -10,7 +10,7 @@ import FormButtons from "@/components/global/formbuttons";
 const CreatePollForm = ({ token = {}, auth = {} }) => {
 	const router = useRouter();
 
-	const [btnText, setBtnText] = useState(`Submit`);
+	const [, setBtnText] = useState(`Submit`);
 
 	const addPoll = async (e) => {
 		e.preventDefault();
@@ -29,7 +29,7 @@ const CreatePollForm = ({ token = {}, auth = {} }) => {
 			`/noadmin/polls`,
 			"POST",
 			"no-cache",
-			rawFormData
+			rawFormData,
 		);
 
 		if (res.status === "error") {
@@ -76,6 +76,8 @@ const CreatePollForm = ({ token = {}, auth = {} }) => {
 					onModel="Poll"
 					advancedTextEditor={true}
 					customPlaceholder="No description"
+					charactersLimit={99999}
+					isRequired={true}
 				/>
 			</div>
 			<div className="col-lg-3">

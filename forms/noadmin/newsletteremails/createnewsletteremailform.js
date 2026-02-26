@@ -9,7 +9,7 @@ import FormButtons from "@/components/global/formbuttons";
 const CreateNewsletterEmailForm = ({ token = {}, auth = {}, objects = [] }) => {
 	const router = useRouter();
 
-	const [btnText, setBtnText] = useState(`Submit`);
+	const [, setBtnText] = useState(`Submit`);
 
 	const addEmail = async (e) => {
 		e.preventDefault();
@@ -28,7 +28,7 @@ const CreateNewsletterEmailForm = ({ token = {}, auth = {}, objects = [] }) => {
 			`/noadmin/newsletteremails`,
 			"POST",
 			"no-cache",
-			rawFormData
+			rawFormData,
 		);
 
 		if (res.status === "error") {
@@ -89,10 +89,12 @@ const CreateNewsletterEmailForm = ({ token = {}, auth = {}, objects = [] }) => {
 					token={token}
 					id="text"
 					name="text"
+					defaultValue="No description..."
 					onModel="NewsletterEmail"
 					advancedTextEditor={false}
 					customPlaceholder="No description"
-					defaultValue="No description..."
+					charactersLimit={99999}
+					isRequired={true}
 				/>
 			</div>
 			<div className="col-lg-3">

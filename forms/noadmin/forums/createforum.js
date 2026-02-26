@@ -10,7 +10,7 @@ import FormButtons from "@/components/global/formbuttons";
 const CreateForumForm = ({ token = {}, auth = {} }) => {
 	const router = useRouter();
 
-	const [btnText, setBtnText] = useState(`Submit`);
+	const [, setBtnText] = useState(`Submit`);
 
 	const addForum = async (e) => {
 		e.preventDefault();
@@ -33,7 +33,7 @@ const CreateForumForm = ({ token = {}, auth = {} }) => {
 			`/noadmin/forums`,
 			"POST",
 			"no-cache",
-			rawFormData
+			rawFormData,
 		);
 
 		if (res.status === "error") {
@@ -80,6 +80,8 @@ const CreateForumForm = ({ token = {}, auth = {} }) => {
 					onModel="Forum"
 					advancedTextEditor={true}
 					customPlaceholder="No description"
+					charactersLimit={99999}
+					isRequired={true}
 				/>
 				<div className="row">
 					<div className="col">

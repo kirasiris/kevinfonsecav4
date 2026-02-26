@@ -9,7 +9,7 @@ import FormButtons from "@/components/global/formbuttons";
 const CreateSettingForm = ({ token = {}, auth = {} }) => {
 	const router = useRouter();
 
-	const [btnText, setBtnText] = useState(`Submit`);
+	const [, setBtnText] = useState(`Submit`);
 
 	const addSetting = async (e) => {
 		e.preventDefault();
@@ -61,7 +61,7 @@ const CreateSettingForm = ({ token = {}, auth = {} }) => {
 			`/noadmin/settings`,
 			"POST",
 			"no-cache",
-			rawFormData
+			rawFormData,
 		);
 
 		if (res.status === "error") {
@@ -119,6 +119,8 @@ const CreateSettingForm = ({ token = {}, auth = {} }) => {
 					onModel="Setting"
 					advancedTextEditor={false}
 					customPlaceholder="No description"
+					charactersLimit={99999}
+					isRequired={true}
 				/>
 				<div className="row">
 					<div className="col">

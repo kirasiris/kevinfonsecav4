@@ -9,7 +9,7 @@ import FormButtons from "@/components/global/formbuttons";
 const UpdateUserForm = ({ auth = {}, object = {}, objects = [] }) => {
 	const router = useRouter();
 
-	const [btnText, setBtnText] = useState(`Submit`);
+	const [, setBtnText] = useState(`Submit`);
 
 	const upgradeUser = async (e) => {
 		e.preventDefault();
@@ -54,7 +54,7 @@ const UpdateUserForm = ({ auth = {}, object = {}, objects = [] }) => {
 			`/noadmin/users/${object?.data?._id}`,
 			"PUT",
 			"no-cache",
-			rawFormData
+			rawFormData,
 		);
 
 		if (res.status === "error") {
@@ -353,6 +353,8 @@ const UpdateUserForm = ({ auth = {}, object = {}, objects = [] }) => {
 						onModel="User"
 						advancedTextEditor={false}
 						customPlaceholder="No description"
+						charactersLimit={99999}
+						isRequired={true}
 					/>
 				</div>
 			</div>

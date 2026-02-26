@@ -9,7 +9,7 @@ import CreateShortUrlForm from "@/forms/url/regression/createshorturlform";
 
 async function getUrls(params) {
 	const res = await fetchurl(
-		`/extras/tools/urls/regression${params}`,
+		`/global/extras/tools/urls/regression${params}`,
 		"GET",
 		"no-cache",
 	);

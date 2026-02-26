@@ -267,6 +267,8 @@ const CreateAcquisitionDisposalForm = ({ token = "", auth = {} }) => {
 					onModel="Weapon"
 					advancedTextEditor={true}
 					customPlaceholder="No description"
+					charactersLimit={99999}
+					isRequired={false}
 				/>
 				<label htmlFor="status" className="form-label">
 					Status

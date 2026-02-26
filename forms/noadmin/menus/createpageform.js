@@ -10,7 +10,7 @@ import FormButtons from "@/components/global/formbuttons";
 const CreatePageForm = ({ params = {} }) => {
 	const router = useRouter();
 
-	const [btnText, setBtnText] = useState(`Submit`);
+	const [, setBtnText] = useState(`Submit`);
 
 	const addPage = async (e) => {
 		e.preventDefault();
@@ -87,10 +87,12 @@ const CreatePageForm = ({ params = {} }) => {
 					token={undefined}
 					id="text"
 					name="text"
+					defaultValue="No description..."
 					onModel="Page"
 					advancedTextEditor={true}
 					customPlaceholder="No description"
-					defaultValue="No description..."
+					charactersLimit={99999}
+					isRequired={true}
 				/>
 				<div className="row">
 					<div className="col">

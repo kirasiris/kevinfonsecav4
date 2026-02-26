@@ -271,6 +271,8 @@ const UpdateAcquisitionDisposalForm = ({
 					onModel="Weapon"
 					advancedTextEditor={false}
 					customPlaceholder="No description"
+					charactersLimit={99999}
+					isRequired={false}
 				/>
 				<label htmlFor="status" className="form-label">
 					Status

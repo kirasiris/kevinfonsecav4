@@ -24,11 +24,13 @@ const CreateShortUrlForm = ({ auth = {}, currentpage = "" }) => {
 		};
 
 		const res = await fetchurl(
-			`/extras/tools/urls/regression${auth ? `?user=${auth?.userId}` : ``}`,
+			`/global/extras/tools/urls/regression${auth ? `?user=${auth?.userId}` : ``}`,
 			"POST",
 			"no-cache",
 			rawFormData,
 		);
+
+		console.log("response", res);
 
 		if (res.status === "error") {
 			toast.error(res.message, "bottom");

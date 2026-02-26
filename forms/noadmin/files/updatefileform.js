@@ -11,7 +11,7 @@ import FormButtons from "@/components/global/formbuttons";
 const UpdateFileForm = ({ token = {}, auth = {}, object = {} }) => {
 	const router = useRouter();
 
-	const [btnText, setBtnText] = useState(`Submit`);
+	const [, setBtnText] = useState(`Submit`);
 
 	const upgradeFile = async (e) => {
 		e.preventDefault();
@@ -30,7 +30,7 @@ const UpdateFileForm = ({ token = {}, auth = {}, object = {} }) => {
 			`/noadmin/files/${object?.data?._id}`,
 			"PUT",
 			"no-cache",
-			rawFormData
+			rawFormData,
 		);
 
 		if (res.status === "error") {
@@ -168,10 +168,12 @@ const UpdateFileForm = ({ token = {}, auth = {}, object = {} }) => {
 					token={token}
 					id="file-caption"
 					name="caption"
+					defaultValue={object?.data?.caption}
 					onModel="File"
 					advancedTextEditor={false}
 					customPlaceholder="No description"
-					defaultValue={object?.data?.caption}
+					charactersLimit={99999}
+					isRequired={false}
 				/>
 				<label htmlFor="file-alt-text" className="form-label">
 					Alt text

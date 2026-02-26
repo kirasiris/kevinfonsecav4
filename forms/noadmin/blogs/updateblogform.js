@@ -15,7 +15,7 @@ const UpdateBlogForm = ({
 }) => {
 	const router = useRouter();
 
-	const [btnText, setBtnText] = useState(`Submit`);
+	const [, setBtnText] = useState(`Submit`);
 
 	const upgradeBlog = async (e) => {
 		e.preventDefault();
@@ -40,7 +40,7 @@ const UpdateBlogForm = ({
 			`/noadmin/blogs/${object?.data?._id}`,
 			"PUT",
 			"no-cache",
-			rawFormData
+			rawFormData,
 		);
 
 		if (res.status === "error") {
@@ -87,6 +87,8 @@ const UpdateBlogForm = ({
 					onModel="Blog"
 					advancedTextEditor={true}
 					customPlaceholder="No description"
+					charactersLimit={99999}
+					isRequired={true}
 				/>
 			</div>
 			<div className="col-lg-3">

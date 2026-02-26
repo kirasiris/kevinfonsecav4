@@ -99,7 +99,7 @@ const QuizResultsRead = async ({ params, searchParams }) => {
 				title={`${settings?.data?.title} - ${quizresult.data.title}`}
 				description={quizresult.data.excerpt || quizresult.data.text}
 				favicon={settings?.data?.favicon}
-				postImage={quizresult.data.files.avatar.location.secure_location}
+				postImage={settings?.data?.showcase_image}
 				imageWidth=""
 				imageHeight=""
 				videoWidth=""

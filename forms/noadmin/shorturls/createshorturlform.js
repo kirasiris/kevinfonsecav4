@@ -22,6 +22,7 @@ const CreateShortUrlForm = ({ auth = {}, currentpage = "" }) => {
 			longUrl: formData.get("longUrl"),
 			text: formData.get("text"),
 			user: auth ? auth?.userId : undefined,
+			website: process.env.NEXT_PUBLIC_WEBSITE_NAME,
 		};
 
 		const res = await fetchurl(

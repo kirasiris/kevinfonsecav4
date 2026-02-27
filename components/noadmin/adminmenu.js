@@ -67,7 +67,7 @@ const AdminMenu = () => {
 				</li>
 				<li
 					className={`list-group-item ${isActive(
-						`/noadmin/newslettersubscribers`
+						`/noadmin/newslettersubscribers`,
 					)}`}
 				>
 					<Link href={"/noadmin/newslettersubscribers"}>
@@ -103,9 +103,6 @@ const AdminMenu = () => {
 				</li>
 				<li className={`list-group-item ${isActive(`/noadmin/users`)}`}>
 					<Link href={"/noadmin/users"}>Users</Link>
-				</li>
-				<li className={`list-group-item ${isActive(`/noadmin/youtube`)}`}>
-					<Link href={"/noadmin/youtube"}>Youtube</Link>
 				</li>
 			</ul>
 		</div>

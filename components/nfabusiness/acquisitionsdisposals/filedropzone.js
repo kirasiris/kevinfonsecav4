@@ -42,6 +42,7 @@ const UseDropzone = ({
 								onModel: "WeaponAcquisitionDisposal",
 								resourceId: object?._id,
 								file: acceptedFiles[i],
+								album: "atf-files",
 							},
 							{
 								headers: {
@@ -52,12 +53,12 @@ const UseDropzone = ({
 									setUploadPercentage(
 										parseInt(
 											Math.round(ProgressEvent.loaded * 100) /
-												ProgressEvent.total
-										)
+												ProgressEvent.total,
+										),
 									);
 									setTimeout(() => setUploadPercentage(0), 10000);
 								},
-							}
+							},
 						);
 						await axios.put(
 							`${process.env.NEXT_PUBLIC_API_URL}/noadmin/weaponacquisitionsdisposals/${object?._id}/files`,
@@ -68,7 +69,7 @@ const UseDropzone = ({
 								headers: {
 									Authorization: `Bearer ${token?.value}`,
 								},
-							}
+							},
 						);
 					}
 					setUploadPercentage(0);

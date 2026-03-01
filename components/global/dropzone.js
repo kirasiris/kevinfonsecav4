@@ -44,6 +44,7 @@ const UseDropzone = ({
 								userEmail: auth?.email,
 								onModel: onModel,
 								file: acceptedFiles[i],
+								album: "all",
 							},
 							{
 								headers: {
@@ -54,12 +55,12 @@ const UseDropzone = ({
 									setUploadPercentage(
 										parseInt(
 											Math.round(ProgressEvent.loaded * 100) /
-												ProgressEvent.total
-										)
+												ProgressEvent.total,
+										),
 									);
 									setTimeout(() => setUploadPercentage(0), 10000);
 								},
-							}
+							},
 						);
 					}
 					setUploadPercentage(0);

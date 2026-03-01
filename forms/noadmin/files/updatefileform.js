@@ -24,6 +24,7 @@ const UpdateFileForm = ({ token = {}, auth = {}, object = {} }) => {
 			caption: formData.get("caption"),
 			altText: formData.get("altText"),
 			text: formData.get("text"),
+			album: formData.get("album"),
 		};
 
 		const res = await fetchurl(
@@ -199,6 +200,23 @@ const UpdateFileForm = ({ token = {}, auth = {}, object = {} }) => {
 					customPlaceholder="No description"
 					defaultValue={object?.data?.text}
 				/>
+				<label htmlFor="album" className="form-label">
+					Album
+				</label>
+				<select
+					id="album"
+					name="album"
+					defaultValue={object?.data?.album}
+					className="form-control mb-3"
+				>
+					<option value={`all`}>None</option>
+					<option value={`profile-avatars`}>Profile Avatars</option>
+					<option value={`profile-covers`}>Profile Covers</option>
+					<option value={`posts`}>Posts</option>
+					<option value={`atf-files`}>ATF Files</option>
+					<option value={`albums`}>Album</option>
+					<option value={`tv-shows`}>ATF Files</option>
+				</select>
 				<label htmlFor="objectId" className="form-label">
 					Object ID
 				</label>

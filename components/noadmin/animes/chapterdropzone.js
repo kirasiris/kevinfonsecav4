@@ -42,6 +42,7 @@ const UseDropzone = ({
 								onModel: "Playlist",
 								resourceId: object?._id,
 								file: acceptedFiles[i],
+								album: "tv-show",
 							},
 							{
 								headers: {
@@ -52,12 +53,12 @@ const UseDropzone = ({
 									setUploadPercentage(
 										parseInt(
 											Math.round(ProgressEvent.loaded * 100) /
-												ProgressEvent.total
-										)
+												ProgressEvent.total,
+										),
 									);
 									setTimeout(() => setUploadPercentage(0), 10000);
 								},
-							}
+							},
 						);
 
 						await axios.post(
@@ -78,7 +79,7 @@ const UseDropzone = ({
 								headers: {
 									Authorization: `Bearer ${token?.value}`,
 								},
-							}
+							},
 						);
 					}
 					setUploadPercentage(0);

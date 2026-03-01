@@ -50,7 +50,7 @@ const UseDropzone = ({
 						files: acceptedFiles.map((file) =>
 							Object.assign(file, {
 								preview: URL.createObjectURL(file),
-							})
+							}),
 						),
 					});
 
@@ -65,6 +65,7 @@ const UseDropzone = ({
 								onModel: onModel,
 								resourceId: object?._id,
 								file: file,
+								album: "posts",
 							},
 							{
 								headers: {
@@ -73,11 +74,13 @@ const UseDropzone = ({
 								},
 								onUploadProgress: (ProgressEvent) => {
 									setUploadPercentage(
-										parseInt((ProgressEvent.loaded * 100) / ProgressEvent.total)
+										parseInt(
+											(ProgressEvent.loaded * 100) / ProgressEvent.total,
+										),
 									);
 									setTimeout(() => setUploadPercentage(0), 10000);
 								},
-							}
+							},
 						);
 						return res?.data?.data?._id;
 					});

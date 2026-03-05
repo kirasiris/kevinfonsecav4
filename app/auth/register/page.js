@@ -25,7 +25,7 @@ const Register = async ({ params, searchParams }) => {
 				title={`${settings?.data?.title} - Register`}
 				description={"Create an account"}
 				favicon={settings?.data?.favicon}
-				postImage=""
+				postImage={settings?.data?.showcase_image}
 				imageWidth=""
 				imageHeight=""
 				videoWidth=""

@@ -1,5 +1,5 @@
 import Globalcontent from "@/layout/content";
-import ValidateTwoFactorAuthenticationForm from "@/forms/auth/validatetwofactorauthentication";
+import ValidateTwoFactorAuthenticationForm from "@/forms/auth/validatetwofactorauthenticationform";
 import Head from "@/app/head";
 import { getGlobalData } from "@/helpers/globalData";
 import ErrorPage from "@/layout/errorpage";

@@ -32,7 +32,7 @@ const Login = async ({ params, searchParams }) => {
 				title={`${settings?.data?.title} - Login`}
 				description={"Access your account"}
 				favicon={settings?.data?.favicon}
-				postImage=""
+				postImage={settings?.data?.showcase_image}
 				imageWidth=""
 				imageHeight=""
 				videoWidth=""

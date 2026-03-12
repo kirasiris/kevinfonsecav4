@@ -28,17 +28,12 @@ const CreateProductForm = ({ token = {}, auth = {} }) => {
 			active: formData.get("active"),
 			statement_descriptor: formData.get("statement_descriptor"),
 			comparePrice: formData.get("comparePrice"),
-			cost: formData.get("cost"),
 			sku: formData.get("sku"),
 			barcode: formData.get("barcode"),
 			category: formData.get("category"),
 			sub_category: formData.getAll("sub_category"),
 			brand: formData.get("brand"),
 			model: formData.get("model"),
-			type: formData.get("type"),
-			caliber: formData.get("caliber"),
-			serialNumber: formData.get("serialNumber"),
-			nfaClassification: formData.get("nfaClassification"),
 			files: { avatar: formData.get("file") || undefined },
 			variants: {},
 			specifications: {},
@@ -49,9 +44,6 @@ const CreateProductForm = ({ token = {}, auth = {} }) => {
 			inStock: formData.get("inStock"),
 			status: formData.get("status"),
 			featured: formData.get("featured"),
-			nfaItem: formData.get("nfaItem"),
-			requiresBackgroundCheck: formData.get("requiresBackgroundCheck"),
-			ageRestriction: formData.get("ageRestriction"),
 			package_dimensions: {
 				weight: formData.get("weight"),
 				length: formData.get("length"),
@@ -149,19 +141,6 @@ const CreateProductForm = ({ token = {}, auth = {} }) => {
 							Should always be bigger than price to apply discount
 						</p>
 					</div>
-					<div className="col">
-						<label htmlFor="cost" className="form-label">
-							Cost
-						</label>
-						<input
-							id="cost"
-							name="cost"
-							defaultValue="0"
-							type="text"
-							className="form-control mb-3"
-							placeholder=""
-						/>
-					</div>
 				</div>
 				<div className="row">
 					<div className="col">
@@ -253,7 +232,6 @@ const CreateProductForm = ({ token = {}, auth = {} }) => {
 							required
 						>
 							<option value="all">Choose an option</option>
-							<option value="weapons">Weapons</option>
 							<option value="accessories">Accessories</option>
 							<option value="clothing">Clothing</option>
 						</select>
@@ -307,154 +285,34 @@ const CreateProductForm = ({ token = {}, auth = {} }) => {
 						</div>
 					)}
 				</div>
-				{showCategories === "weapons" && (
-					<>
-						<div className="row">
-							<div className="col">
-								<label htmlFor="nfaItem" className="form-label">
-									NFA Item
-								</label>
-								<select
-									id="nfaItem"
-									name="nfaItem"
-									defaultValue={true}
-									className="form-control mb-3"
-								>
-									<option value={true}>Yes</option>
-									<option value={false}>No</option>
-								</select>
-							</div>
-							<div className="col">
-								<label htmlFor="requiresBackgroundCheck" className="form-label">
-									Requires Background Check?
-								</label>
-								<select
-									id="requiresBackgroundCheck"
-									name="requiresBackgroundCheck"
-									defaultValue={true}
-									className="form-control mb-3"
-								>
-									<option value={true}>Yes</option>
-									<option value={false}>No</option>
-								</select>
-							</div>
-							<div className="col">
-								<label htmlFor="ageRestriction" className="form-label">
-									Age Restriction
-								</label>
-								<input
-									id="ageRestriction"
-									name="ageRestriction"
-									defaultValue="18"
-									type="text"
-									className="form-control mb-3"
-									placeholder=""
-								/>
-							</div>
-						</div>
-						<div className="row">
-							<div className="col">
-								<label htmlFor="brand" className="form-label">
-									Brand / Manufacturer
-								</label>
-								<input
-									id="brand"
-									name="brand"
-									defaultValue="Brand"
-									type="text"
-									className="form-control mb-3"
-									placeholder="Ruger"
-								/>
-							</div>
-							<div className="col">
-								<label htmlFor="model" className="form-label">
-									Model
-								</label>
-								<input
-									id="model"
-									name="model"
-									defaultValue="AR15"
-									type="text"
-									className="form-control mb-3"
-									placeholder="AR15"
-								/>
-							</div>
-							<div className="col">
-								<label htmlFor="type" className="form-label">
-									Type
-								</label>
-								<select
-									id="type"
-									name="type"
-									className="form-control mb-3"
-									required
-									defaultValue="all"
-								>
-									<option value="all">Choose an option</option>
-									<option value="rifle">Rifle</option>
-									<option value="shotgun">Shotgun</option>
-									<option value="pistol">Pistol</option>
-									<option value="supressor">Supressor</option>
-									<option value="short-barrel-rifle">Short Barrel Rifle</option>
-									<option value="short-barrel-shotgun">
-										Short Barrel Shotgun
-									</option>
-									<option value="any-other-weapon">Any Other Weapon</option>
-									<option value="destructive-device">Destructive Device</option>
-									<option value="machine-gun">Machine Gun</option>
-								</select>
-							</div>
-							<div className="col">
-								<label htmlFor="caliber" className="form-label">
-									Caliber
-								</label>
-								<input
-									id="caliber"
-									name="caliber"
-									defaultValue="5.56x45mm NATO"
-									type="text"
-									className="form-control mb-3"
-									placeholder="5.56x45mm NATO"
-								/>
-							</div>
-							<div className="col">
-								<label htmlFor="serialNumber" className="form-label">
-									Serial Number
-								</label>
-								<input
-									id="serialNumber"
-									name="serialNumber"
-									defaultValue="COL123456"
-									type="text"
-									className="form-control mb-3"
-									placeholder="COL123456"
-								/>
-							</div>
-							<div className="col">
-								<label htmlFor="nfaClassification" className="form-label">
-									NFA Classification
-								</label>
-								<select
-									id="nfaClassification"
-									name="nfaClassification"
-									defaultValue="none"
-									className="form-control mb-3"
-									required
-								>
-									<option value="none">Choose an option</option>
-									<option value="short-barrel-rifle">Short Barrel Rifle</option>
-									<option value="short-barrel-shotgun">
-										Short Barrel Shotgun
-									</option>
-									<option value="supressor">Supressor</option>
-									<option value="any-other-weapon">Any Other Weapon</option>
-									<option value="destructive-device">Destructive Device</option>
-									<option value="machine-gun">Machine Gun</option>
-								</select>
-							</div>
-						</div>
-					</>
-				)}
+				<div className="row">
+					<div className="col">
+						<label htmlFor="brand" className="form-label">
+							Brand / Manufacturer
+						</label>
+						<input
+							id="brand"
+							name="brand"
+							defaultValue="Brand"
+							type="text"
+							className="form-control mb-3"
+							placeholder="Ruger"
+						/>
+					</div>
+					<div className="col">
+						<label htmlFor="model" className="form-label">
+							Model
+						</label>
+						<input
+							id="model"
+							name="model"
+							defaultValue="AR15"
+							type="text"
+							className="form-control mb-3"
+							placeholder="AR15"
+						/>
+					</div>
+				</div>
 				{/* Files */}
 				{/* Variants */}
 				{/* Specifications */}

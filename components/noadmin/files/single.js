@@ -31,7 +31,6 @@ const Single = ({
 						height={`200`}
 					/>
 				</figure>
-				<p>{object.album}</p>
 				<div className="btn-group">
 					<Link
 						href={{
@@ -85,6 +84,7 @@ const Single = ({
 						setTotalResults={setTotalResults}
 					/>
 				</div>
+				<p>{object.album}</p>
 			</div>
 		);
 	};
@@ -99,7 +99,6 @@ const Single = ({
 				<figure title={object.title}>
 					<FaFilePdf style={{ fontSize: "184px" }} />
 				</figure>
-				<p>{object.album}</p>
 				<div className="btn-group">
 					<Link
 						href={{
@@ -152,6 +151,7 @@ const Single = ({
 						setTotalResults={setTotalResults}
 					/>
 				</div>
+				<p>{object.album}</p>
 			</div>
 		);
 	};
@@ -166,7 +166,6 @@ const Single = ({
 				<figure title={object.title}>
 					<FaFileVideo style={{ fontSize: "184px" }} />
 				</figure>
-				<p>{object.album}</p>
 				<div className="btn-group">
 					<Link
 						href={{
@@ -219,6 +218,7 @@ const Single = ({
 						setTotalResults={setTotalResults}
 					/>
 				</div>
+				<p>{object.album}</p>
 			</div>
 		);
 	};
@@ -233,7 +233,6 @@ const Single = ({
 				<figure title={object.title}>
 					<FaFileAudio style={{ fontSize: "184px" }} />
 				</figure>
-				<p>{object.album}</p>
 				<div className="btn-group">
 					<Link
 						href={{
@@ -286,6 +285,7 @@ const Single = ({
 						setTotalResults={setTotalResults}
 					/>
 				</div>
+				<p>{object.album}</p>
 			</div>
 		);
 	};

@@ -35,7 +35,7 @@ const OpenGraphViewerPage = ({ searchParams = {} }) => {
 			`/extras/tools/opengraphs`,
 			"POST",
 			"no-cache",
-			openGraphData
+			openGraphData,
 		);
 
 		setCheckWebsiteBtnText(checkWebsiteBtnText);
@@ -61,7 +61,7 @@ const OpenGraphViewerPage = ({ searchParams = {} }) => {
 				{},
 				abortController.signal,
 				false,
-				false
+				false,
 			);
 			if (res?.data) {
 				// setOpenGraph(res.data);
@@ -142,7 +142,7 @@ const OpenGraphViewerPage = ({ searchParams = {} }) => {
 								});
 							}}
 						/>
-						<spa>Recommended: 60 characters</spa>
+						<span>Recommended: 60 characters</span>
 					</div>
 					<div className="mb-3">
 						<label htmlFor="text" className="form-label">

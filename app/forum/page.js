@@ -1,4 +1,4 @@
-import { fetchurl } from "@/helpers/setTokenOnServer";
+import { fetchurl, getUserOnServer } from "@/helpers/setTokenOnServer";
 import Header from "@/layout/header";
 import List from "@/components/forum/list";
 import ErrorPage from "@/layout/errorpage";

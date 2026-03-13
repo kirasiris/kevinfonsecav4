@@ -18,6 +18,8 @@ const ForumSubCategoryIndex = async ({ params, searchParams }) => {
 	const sort = awtdSearchParams.sort || "-createdAt";
 	const decrypt = awtdSearchParams.decrypt === "true" ? "&decrypt=true" : "";
 
+	const { settings } = await getGlobalData();
+
 	const getForumsData = getForums(
 		`?page=${page}&limit=${limit}&sort=${sort}&status=published&sub_category=${awtdParams.subcategory}${decrypt}`,
 	);

@@ -1,11 +1,10 @@
 "use client";
-import { getUserOnServer } from "@/helpers/setTokenOnServer";
 import Single from "./single";
 import NumericPagination from "@/layout/numericpagination";
 import NothingFoundAlert from "@/layout/nothingfoundalert";
 import Sidebar from "@/layout/forum/sidebar";
 import Globalcontent from "@/layout/content";
-import Form from "@/app/forum/form";
+import CreateForumForm from "@/forms/forum/createforumform";
 
 const List = async ({
 	featured = {},
@@ -13,17 +12,14 @@ const List = async ({
 	params = {},
 	searchParams = {},
 }) => {
-	const auth = await getUserOnServer();
-
 	return (
 		<div className="container">
 			<div className="row">
 				<Globalcontent>
-					{auth?.userId !== undefined &&
-						params.category !== undefined &&
+					{/* {params.category !== undefined &&
 						params.subcategory !== undefined && (
-							<Form params={params} searchParams={searchParams} />
-						)}
+							<CreateForumForm params={params} searchParams={searchParams} />
+						)} */}
 					{/* Featured list */}
 					{featured?.data?.length > 0 &&
 						featured.data.map((featured) => (

@@ -262,7 +262,6 @@ const CreateJobForm = ({ token = {}, auth = {}, params = {} }) => {
 					featured={true}
 					commented={true}
 					embedding={false}
-					github_readme={""}
 					category={undefined}
 					categories={[]}
 					multiple_categories={false}

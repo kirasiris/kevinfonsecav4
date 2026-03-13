@@ -1,3 +1,4 @@
+"use client";
 import { Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -19,7 +20,7 @@ const Single = ({
 						<Image
 							src={
 								object?.files?.avatar?.location?.secure_location ||
-								`https://source.unsplash.com/random/415x207`
+								`https://picsum.photos/${imageWidth}/${imageHeight}?blur`
 							}
 							className="card-img-top"
 							alt={`${object?.title || "Untitled"}'s featured image`}

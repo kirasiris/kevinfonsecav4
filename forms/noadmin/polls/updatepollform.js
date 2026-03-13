@@ -92,7 +92,6 @@ const UpdatePollForm = ({ token = {}, auth = {}, object = {} }) => {
 					featured={object?.data?.featured}
 					commented={false}
 					embedding={false}
-					github_readme={""}
 					category={undefined}
 					categories={[]}
 					multiple_categories={false}

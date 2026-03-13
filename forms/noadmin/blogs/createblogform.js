@@ -96,7 +96,6 @@ const CreateBlogForm = ({ token = {}, auth = {}, objects = [] }) => {
 					featured={true}
 					commented={true}
 					embedding={true}
-					github_readme={""}
 					category={undefined}
 					categories={objects?.data}
 					multiple_categories={false}

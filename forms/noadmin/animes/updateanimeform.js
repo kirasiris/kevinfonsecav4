@@ -125,7 +125,6 @@ const UpdateAnimeForm = ({
 					featured={object?.data?.featured.toString()}
 					commented={object?.data?.commented.toString()}
 					embedding={false}
-					github_readme={""}
 					category={object?.data?.category?._id || object?.data?.category}
 					categories={objects?.data}
 					multiple_categories={false}

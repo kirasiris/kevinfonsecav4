@@ -26,7 +26,7 @@ const Jumbotron = ({
 					onModel: "Course",
 					isPaid: true,
 					website: process.env.NEXT_PUBLIC_WEBSITE_NAME, // THIS IS IMPORTANT FOR DB
-				}
+				},
 			);
 
 			// Reload entire page
@@ -66,12 +66,12 @@ const Jumbotron = ({
 					onModel: "Course",
 					isPaid: false,
 					website: process.env.NEXT_PUBLIC_WEBSITE_NAME, // THIS IS IMPORTANT FOR DB
-				}
+				},
 			);
 
 			// Redirect to stripe
 			const stripe = await loadStripe(
-				process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY
+				process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY,
 			);
 			stripe.redirectToCheckout({ sessionId: res?.stripe.id });
 		} catch (err) {
@@ -102,7 +102,7 @@ const Jumbotron = ({
 			await fetchurl(
 				`/extras/stripe/subscriptions/courses/${object.data._id}/cancel`,
 				"PUT",
-				"no-cache"
+				"no-cache",
 			);
 
 			// Reload page
@@ -188,7 +188,7 @@ const Jumbotron = ({
 						<div className="col-lg-4">
 							{/* show video or image preview */}
 							{object?.data?.files?.avatar?.location?.secure_location.includes(
-								".mp4"
+								".mp4",
 							) ? (
 								<figure className="mb-4 bg-dark">
 									<p>VIDEO</p>
@@ -199,7 +199,7 @@ const Jumbotron = ({
 										className="img-fluid p-3"
 										src={
 											object?.data?.files?.avatar?.location?.secure_location ||
-											`https://source.unsplash.com/random/440x570`
+											`https://picsum.photos/${imageWidth}/${imageHeight}?blur`
 										}
 										alt={`featured image`}
 										width={imageWidth}

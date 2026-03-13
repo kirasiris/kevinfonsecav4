@@ -18,6 +18,16 @@ const Sidebar = ({ object = {} }) => {
 					priority
 				/>
 			</figure>
+			{object?.data?.preview_theme_url !== "#" && (
+				<a
+					href={object?.data?.preview_theme_url}
+					className="btn btn-secondary btn-sm w-100"
+					target="_blank"
+					rel="noreferrer noopener"
+				>
+					Preview theme
+				</a>
+			)}
 		</Globalsidebar>
 	);
 };

@@ -82,8 +82,7 @@ const Sidebar = ({ object = {} }) => {
 								<Image
 									src={
 										object.data?.inRelationshipWith.files?.avatar?.location
-											?.secure_location ||
-										`https://source.unsplash.com/random/1200x900`
+											?.secure_location || `https://picsum.photos/45/45?blur`
 									}
 									className="mr-3"
 									width={45}

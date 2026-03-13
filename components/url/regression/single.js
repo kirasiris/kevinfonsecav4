@@ -1,5 +1,6 @@
+"use client";
 import { Suspense } from "react";
-import Loading from "@/app/blog/loading";
+import Loading from "@/app/url/loading";
 
 const Single = ({ object = {} }) => {
 	return (

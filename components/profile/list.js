@@ -271,7 +271,7 @@ const List = ({
 				</>
 			)}
 			{/* Post timeline */}
-			{objects?.data?.length > 0 && (
+			{objects?.data?.length > 0 ? (
 				<>
 					<h2>Timeline</h2>
 					{objects.data?.map((post) => (
@@ -296,6 +296,13 @@ const List = ({
 						/>
 					))}
 				</>
+			) : (
+				<div className="d-flex user-timeline-nothing-found">
+					<div className="m-auto text-center">
+						<i className="fa-solid fa-triangle-exclamation fa-10x" />
+						<p>Nothing found</p>
+					</div>
+				</div>
 			)}
 		</>
 	);

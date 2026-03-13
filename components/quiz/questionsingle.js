@@ -1,3 +1,4 @@
+"use client";
 import ParseHtml from "@/layout/parseHtml";
 
 const Single = ({ object = {}, objectData = {}, setObjectData = () => {} }) => {
@@ -33,7 +34,7 @@ const Single = ({ object = {}, objectData = {}, setObjectData = () => {} }) => {
 
 										// Otherwise replace with new record
 										const isNewQuestion = !objectData.chosen.some(
-											(item) => item.question === object?._id
+											(item) => item.question === object?._id,
 										);
 
 										setObjectData({
@@ -47,13 +48,14 @@ const Single = ({ object = {}, objectData = {}, setObjectData = () => {} }) => {
 															correctanswer: object?.correctAnswer,
 															answerbyuser: key,
 														},
-												  ]
+													]
 												: updatedChosen,
 										});
 									}}
 									defaultChecked={objectData.chosen.some(
 										(item) =>
-											item.question === object?._id && item.answerbyuser === key
+											item.question === object?._id &&
+											item.answerbyuser === key,
 									)}
 								/>
 								&nbsp;

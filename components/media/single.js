@@ -1,3 +1,4 @@
+// "use client"
 // import { Suspense } from "react";
 // import Image from "next/image";
 // import Link from "next/link";
@@ -20,7 +21,7 @@
 // 						<Image
 // 							src={
 // 								media?.location.secure_location ||
-// 								`https://source.unsplash.com/random/168x168`
+// 								`https://picsum.photos/${imageWidth}/${imageHeight}?blur`
 // 							}
 // 							alt={`${media?.user?.username}'s image`}
 // 							width={imageWidth}

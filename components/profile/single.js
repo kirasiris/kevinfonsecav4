@@ -1,3 +1,4 @@
+"use client";
 import { Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -36,7 +37,7 @@ const Single = ({
 								style={{
 									background: `url(${
 										object?.files?.cover?.location?.secure_location ||
-										`https://source.unsplash.com/random/${imageWidth}x${imageHeight}`
+										`https://picsum.photos/${imageWidth}/${imageHeight}?blur`
 									})`,
 								}}
 							></div>
@@ -46,7 +47,7 @@ const Single = ({
 								<Image
 									src={
 										object?.files?.avatar?.location?.secure_location ||
-										`https://source.unsplash.com/random/${imageWidth}x${imageHeight}`
+										`https://picsum.photos/${imageWidth}/${imageHeight}?blur`
 									}
 									className="widget-img img-circle img-border"
 									alt={`${object?.username || "Username"}'s profile's picture`}
@@ -103,7 +104,7 @@ const Single = ({
 						style={{
 							background: `url(${
 								object?.files?.cover?.location?.secure_location ||
-								`https://source.unsplash.com/random/${imageWidth}x${imageHeight}`
+								`https://picsum.photos/${imageWidth}/${imageHeight}?blur`
 							})`,
 						}}
 					/>
@@ -111,7 +112,7 @@ const Single = ({
 						<Image
 							src={
 								object?.files?.avatar?.location?.secure_location ||
-								`https://source.unsplash.com/random/${imageWidth}x${imageHeight}`
+								`https://picsum.photos/${imageWidth}/${imageHeight}?blur`
 							}
 							className="widget-img img-circle img-border"
 							alt={`${object?.username || "Username"}'s profile's picture`}

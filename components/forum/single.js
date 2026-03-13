@@ -1,14 +1,10 @@
+"use client";
 import { Suspense } from "react";
 import Link from "next/link";
 import { calculateTimeSincePublished } from "befree-utilities";
 import Loading from "@/app/blog/loading";
 
-const Single = ({
-	object = {},
-	fullWidth = false,
-	imageWidth = "415",
-	imageHeight = "207",
-}) => {
+const Single = ({ object = {} }) => {
 	return (
 		<Suspense fallback={<Loading />}>
 			<li

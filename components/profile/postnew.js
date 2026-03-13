@@ -69,7 +69,10 @@ const PostNew = ({
 							}}
 						>
 							<Image
-								src={object?.data?.files?.avatar?.location.secure_location}
+								src={
+									object?.data?.files?.avatar?.location.secure_location ||
+									`https://picsum.photos/48/48?blur`
+								}
 								className="rounded-5"
 								alt={`${object?.data?.username}'s avatar`}
 								width={48}
@@ -201,28 +204,28 @@ const PostNew = ({
 			</div>
 		</form>
 	) : (
-		<div className="card">
-			<div className="card-header">Sorry! :/</div>
-			<div
-				className="card-body align-content-center align-items-center card-body d-flex m-auto"
-				style={{
-					height: "280px",
-				}}
-			>
-				<Link
-					href={{
-						pathname: `/auth/login`,
-						query: {
-							returnpage: `/profile/${object?.data?._id}/${object?.data?.username}?page=1&limit=100&sort=-createdAt`,
-						},
-					}}
-					passHref
-					legacyBehavior
-				>
-					<a className="btn btn-secondary btn-sm">Login to Post</a>
-				</Link>
+		<>
+			<div className="card">
+				<div className="card-header">Sorry! :/</div>
+				<div className="card-body">
+					<div className="d-flex user-timeline-nothing-found">
+						<div className="m-auto text-center">
+							<Link
+								href={{
+									pathname: `/auth/login`,
+									query: {
+										returnpage: `/profile/${object?.data?._id}/${object?.data?.username}?page=1&limit=100&sort=-createdAt`,
+									},
+								}}
+								className="btn btn-secondary btn-sm"
+							>
+								Login to Post
+							</Link>
+						</div>
+					</div>
+				</div>
 			</div>
-		</div>
+		</>
 	);
 };
 

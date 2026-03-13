@@ -296,7 +296,6 @@ const UpdateMembershipForm = ({ token = {}, auth = {}, object = {} }) => {
 					featured={false}
 					commented={false}
 					embedding={false}
-					github_readme=""
 					category={undefined}
 					categories={[]}
 					multiple_categories={false}

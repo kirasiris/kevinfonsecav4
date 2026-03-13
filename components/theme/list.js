@@ -1,3 +1,4 @@
+"use client";
 import Link from "next/link";
 import Single from "./single";
 import NumericPagination from "@/layout/numericpagination";

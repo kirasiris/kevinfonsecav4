@@ -1,3 +1,4 @@
+"use client";
 import { Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -15,7 +16,7 @@ const Single = ({ object = {} }) => {
 					<Image
 						src={
 							object?.files?.avatar?.location?.secure_location ||
-							`https://source.unsplash.com/random/1200x900`
+							`https://picsum.photos/1200/900?blur`
 						}
 						className="img-thumbnail"
 						alt={`${object?.title || "Untitled"}'s featured image`}

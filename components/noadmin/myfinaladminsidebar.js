@@ -14,7 +14,6 @@ const AdminSidebar = ({
 	featured = false,
 	commented = false,
 	embedding = false,
-	github_readme = "",
 	category = undefined,
 	categories = [],
 	multiple_categories = false,
@@ -22,7 +21,7 @@ const AdminSidebar = ({
 	const [fileId, setFileId] = useState(avatar?.avatar?._id);
 	const [loading, setLoading] = useState("Paste file Id");
 	const [featuredFile, setFeaturedFile] = useState(
-		avatar?.avatar?.location?.secure_location
+		avatar?.avatar?.location?.secure_location,
 	);
 
 	// Load file attached to object from DB
@@ -47,7 +46,7 @@ const AdminSidebar = ({
 		const res = await fetchurl(
 			`/global/files/${pastedText}`,
 			"GET",
-			"no-cache"
+			"no-cache",
 		);
 		// If the file is valid, update state
 		if (res.success) {
@@ -126,23 +125,6 @@ const AdminSidebar = ({
 					/>
 				</>
 			)}
-			{github_readme !== "" &&
-				github_readme !== null &&
-				github_readme !== undefined && (
-					<>
-						<label htmlFor="github_readme" className="form-label">
-							GitHub readME
-						</label>
-						<input
-							id="github_readme"
-							name="github_readme"
-							defaultValue={github_readme}
-							type="text"
-							className="form-control mb-3"
-							placeholder="#"
-						/>
-					</>
-				)}
 			{featured && (
 				<>
 					<label htmlFor="featured" className="form-label">
@@ -212,7 +194,7 @@ const AdminSidebar = ({
 										.filter(
 											(c) =>
 												c.parentCategory?._id === category._id ||
-												c._id === category._id // also include top-level category itself as option
+												c._id === category._id, // also include top-level category itself as option
 										)
 										.map((childC) => (
 											<option key={childC._id} value={childC._id}>

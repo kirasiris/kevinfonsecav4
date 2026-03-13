@@ -182,7 +182,6 @@ const UpdatePageForm = ({ object = {}, params = {} }) => {
 					featured={false}
 					commented={object?.data?.commented.toString()}
 					embedding={false}
-					github_readme={""}
 					category={undefined}
 					categories={[]}
 					multiple_categories={false}

@@ -500,7 +500,6 @@ const UpdateRealStateForm = ({ token = {}, auth = {}, object = {} }) => {
 					featured={false}
 					commented={object?.data?.commented.toString()}
 					embedding={false}
-					github_readme={""}
 					category={undefined}
 					categories={[]}
 					multiple_categories={false}

@@ -79,7 +79,7 @@ const Single = ({
 						<Image
 							src={
 								object.files?.avatar?.location?.secure_location ||
-								`https://source.unsplash.com/random/83x63`
+								`https://picsum.photos/83/63?blur`
 							}
 							className="blog-type-list__blog-thumbnail"
 							alt="Blog titles image"

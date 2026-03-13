@@ -149,7 +149,6 @@ const CreateCompanyForm = ({ token = {}, auth = {} }) => {
 					featured={false}
 					commented={false}
 					embedding={false}
-					github_readme={""}
 					category={undefined}
 					categories={[]}
 					multiple_categories={false}

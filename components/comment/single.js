@@ -149,12 +149,12 @@ const Single = ({
 												replyButton === "Reply"
 													? `Replying to ${
 															object?.user?.username || object?.name
-													  }`
-													: "Reply"
+														}`
+													: "Reply",
 											);
 											setOpenCommentForm(!openCommentForm);
 											await fetchComments(
-												`?parentId=${object?._id}&decrypt=true`
+												`?parentId=${object?._id}&decrypt=true`,
 											);
 										}}
 										type="button"

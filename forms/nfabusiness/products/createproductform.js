@@ -488,7 +488,6 @@ const CreateProductForm = ({ token = {}, auth = {} }) => {
 					featured={true}
 					commented={true}
 					embedding={false}
-					github_readme=""
 					category={undefined}
 					categories={[]}
 					multiple_categories={false}

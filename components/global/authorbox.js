@@ -20,7 +20,7 @@ const AuthorBox = ({ author = {}, imageWidth = "64", imageHeight = "64" }) => {
 					<Image
 						src={
 							author?.files?.avatar?.location?.secure_location ||
-							`https://source.unsplash.com/random/64x64`
+							`https://picsum.photos/64/64?blur`
 						}
 						alt={`${author?.username}'s featured image`}
 						width={imageWidth}

@@ -115,7 +115,6 @@ const CreateMovieForm = ({ token = {}, auth = {}, objects = [] }) => {
 					featured={true}
 					commented={true}
 					embedding={false}
-					github_readme={""}
 					category={undefined}
 					categories={objects?.data}
 					multiple_categories={false}

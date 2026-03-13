@@ -152,6 +152,7 @@ const ThemeRead = async ({ params, searchParams }) => {
 						{theme.data.status === "published" ||
 						awtdSearchParams.isAdmin === "true" ? (
 							<div className="row">
+								<Sidebar object={theme} />
 								<Globalcontent containerClasses={`col-lg-8`}>
 									<article>
 										<ArticleHeader
@@ -223,7 +224,6 @@ const ThemeRead = async ({ params, searchParams }) => {
 										</section>
 									</article>
 								</Globalcontent>
-								<Sidebar object={theme} />
 							</div>
 						) : (
 							<p>Not visible</p>

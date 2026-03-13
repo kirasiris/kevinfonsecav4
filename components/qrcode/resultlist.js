@@ -1,3 +1,4 @@
+"use client";
 import Single from "./resultsingle";
 import NumericPagination from "@/layout/numericpagination";
 import NothingFoundAlert from "@/layout/nothingfoundalert";

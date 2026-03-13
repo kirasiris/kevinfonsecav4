@@ -179,7 +179,6 @@ const CreateQuizForm = ({ token = {}, auth = {}, objects = [] }) => {
 					featured={false}
 					commented={true}
 					embedding={true}
-					github_readme={""}
 					category={undefined}
 					categories={objects?.data}
 					multiple_categories={false}

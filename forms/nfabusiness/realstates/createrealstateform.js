@@ -468,7 +468,6 @@ const CreateRealStateForm = ({ token = {}, auth = {} }) => {
 					featured={false}
 					commented={true}
 					embedding={false}
-					github_readme={""}
 					category={undefined}
 					categories={[]}
 					multiple_categories={false}

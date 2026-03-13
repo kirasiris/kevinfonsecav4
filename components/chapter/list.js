@@ -1,3 +1,4 @@
+"use client";
 import Link from "next/link";
 import Image from "next/image";
 import ParseHtml from "@/layout/parseHtml";
@@ -156,7 +157,10 @@ const List = ({
 											className="col"
 										>
 											<Image
-												src={student.user.files.avatar.location.secure_location}
+												src={
+													student.user.files.avatar.location.secure_location ||
+													`https://picsum.photos/130/130?blur`
+												}
 												className={`${index}`}
 												width={130}
 												height={130}

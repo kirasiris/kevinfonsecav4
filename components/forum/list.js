@@ -1,3 +1,4 @@
+"use client";
 import { getUserOnServer } from "@/helpers/setTokenOnServer";
 import Single from "./single";
 import NumericPagination from "@/layout/numericpagination";

@@ -28,6 +28,7 @@ const CreateThemeForm = ({ token = {}, auth = {}, objects = [] }) => {
 			password: formData.get("password"),
 			status: formData.get("status"),
 			fullWidth: formData.get("fullWidth"),
+			preview_theme_url: formData.get("preview_theme_url"),
 			github_readme: formData.get("github_readme"),
 			files: { avatar: formData.get("file") || undefined },
 		};
@@ -84,6 +85,34 @@ const CreateThemeForm = ({ token = {}, auth = {}, objects = [] }) => {
 					charactersLimit={99999}
 					isRequired={true}
 				/>
+				<div className="row">
+					<div className="col">
+						<label htmlFor="preview_theme_url" className="form-label">
+							Preview URL
+						</label>
+						<input
+							id="preview_theme_url"
+							name="preview_theme_url"
+							defaultValue="#"
+							type="text"
+							className="form-control"
+							placeholder=""
+						/>
+					</div>
+					<div className="col">
+						<label htmlFor="github_readme" className="form-label">
+							GitHub ReadME.md
+						</label>
+						<input
+							id="github_readme"
+							name="github_readme"
+							defaultValue="#"
+							type="text"
+							className="form-control"
+							placeholder=""
+						/>
+					</div>
+				</div>
 			</div>
 			<div className="col-lg-3">
 				<AdminSidebar
@@ -97,7 +126,6 @@ const CreateThemeForm = ({ token = {}, auth = {}, objects = [] }) => {
 					featured={true}
 					commented={true}
 					embedding={true}
-					github_readme={"#"}
 					category={undefined}
 					categories={objects?.data}
 					multiple_categories={false}

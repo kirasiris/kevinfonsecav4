@@ -97,7 +97,6 @@ const CreateSnippetForm = ({}) => {
 					featured={true}
 					commented={true}
 					embedding={false}
-					github_readme={""}
 					category={undefined}
 					categories={[]}
 					multiple_categories={false}

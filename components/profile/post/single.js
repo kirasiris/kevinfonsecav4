@@ -230,8 +230,6 @@ const Post = ({
 		);
 	}
 
-	const images = ["https://source.unsplash.com/random/1200x900"];
-
 	return (
 		<Suspense fallback={<Loading />}>
 			{object?.postedto !== "" &&
@@ -292,7 +290,10 @@ const Post = ({
 								}}
 							>
 								<Image
-									src={object?.user?.files?.avatar?.location?.secure_location}
+									src={
+										object?.user?.files?.avatar?.location?.secure_location ||
+										`https://picsum.photos/35/35?blur`
+									}
 									className="rounded-5"
 									width={35}
 									height={35}

@@ -176,7 +176,6 @@ const UpdateSongForm = ({ token = {}, auth = {}, object = {} }) => {
 					featured={object?.data?.featured.toString()}
 					commented={object?.data?.commented.toString()}
 					embedding={object?.data?.commented.toString()}
-					github_readme={""}
 					category={undefined}
 					categories={[]}
 					multiple_categories={false}

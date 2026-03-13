@@ -412,7 +412,6 @@ const UpdateChapterForm = ({ token = {}, auth = {}, object = {} }) => {
 					featured={object?.data?.featured.toString()}
 					commented={object?.data?.commented.toString()}
 					embedding={object?.data?.embedding.toString()}
-					github_readme={""}
 					category={undefined}
 					categories={[]}
 					multiple_categories={false}

@@ -33,6 +33,7 @@ const UpdateThemeForm = ({
 			password: formData.get("password"),
 			status: formData.get("status"),
 			fullWidth: formData.get("fullWidth"),
+			preview_theme_url: formData.get("preview_theme_url"),
 			github_readme: formData.get("github_readme"),
 			files: { avatar: formData.get("file") || undefined },
 		};
@@ -91,6 +92,34 @@ const UpdateThemeForm = ({
 					charactersLimit={99999}
 					isRequired={true}
 				/>
+				<div className="row">
+					<div className="col">
+						<label htmlFor="preview_theme_url" className="form-label">
+							Preview URL
+						</label>
+						<input
+							id="preview_theme_url"
+							name="preview_theme_url"
+							defaultValue={object?.data?.preview_theme_url}
+							type="text"
+							className="form-control"
+							placeholder=""
+						/>
+					</div>
+					<div className="col">
+						<label htmlFor="github_readme" className="form-label">
+							GitHub ReadME.md
+						</label>
+						<input
+							id="github_readme"
+							name="github_readme"
+							defaultValue={object?.data?.github_readme}
+							type="text"
+							className="form-control"
+							placeholder=""
+						/>
+					</div>
+				</div>
 			</div>
 			<div className="col-lg-3">
 				<AdminSidebar
@@ -104,7 +133,6 @@ const UpdateThemeForm = ({
 					featured={object?.data?.featured.toString()}
 					commented={object?.data?.commented.toString()}
 					embedding={object?.data?.embedding.toString()}
-					github_readme={object?.data?.github_readme}
 					category={object?.data?.category?._id || object?.data?.category}
 					categories={objects?.data}
 					multiple_categories={false}

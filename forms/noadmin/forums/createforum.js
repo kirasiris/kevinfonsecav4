@@ -250,7 +250,6 @@ const CreateForumForm = ({ token = {}, auth = {} }) => {
 					featured={true}
 					commented={true}
 					embedding={true}
-					github_readme={""}
 					category={undefined}
 					categories={[]}
 					multiple_categories={false}

@@ -27,7 +27,7 @@ const Jumbotron = ({
 									className="img-thumbnail"
 									src={
 										object?.data?.files?.avatar?.location?.secure_location ||
-										`https://source.unsplash.com/random/168x168`
+										`https://picsum.photos/${imageWidth}/${imageHeight}?blur`
 									}
 									alt={`profile image`}
 									width={imageWidth}

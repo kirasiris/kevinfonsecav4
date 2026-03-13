@@ -24,7 +24,7 @@ const Single = ({
 					<Image
 						src={
 							object?.location?.secure_location ||
-							`https://source.unsplash.com/random/184x184`
+							`https://picsum.photos/250/200?blur`
 						}
 						alt={object.title}
 						width={`250`}

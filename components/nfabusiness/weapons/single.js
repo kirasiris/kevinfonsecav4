@@ -56,9 +56,7 @@ const Single = ({
 						className="blog-type-list__blog-thumbnail-link"
 					>
 						<Image
-							src={
-								object.files[0] || `https://source.unsplash.com/random/83x63`
-							}
+							src={object.files[0] || `https://picsum.photos/83/63?blur`}
 							className="blog-type-list__blog-thumbnail"
 							alt="Blog titles image"
 							width="83"

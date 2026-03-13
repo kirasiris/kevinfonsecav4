@@ -186,8 +186,8 @@ const ProfileRead = async ({ params, searchParams }) => {
 				description={profile.data.bio}
 				favicon={settings?.data?.favicon}
 				postImage={
-					profile.data.files.avatar.location.secure_location ||
-					`https://source.unsplash.com/random/416x416`
+					profile.data?.files?.avatar?.location?.secure_location ||
+					`https://picsum.photos/416/416?blur`
 				}
 				imageWidth="416"
 				imageHeight="416"

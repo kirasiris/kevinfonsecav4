@@ -30,7 +30,6 @@ const UpdateRealStateForm = ({ token = {}, auth = {}, object = {} }) => {
 			bathrooms: formData.get("bathrooms"),
 			squarefeet: formData.get("squarefeet"),
 			inStock: formData.get("inStock"),
-			itemType: formData.get("itemType"),
 			buldingType: formData.get("buldingType"),
 			amenities: formData.getAll("amenities"),
 			status: formData.get("status"),
@@ -209,20 +208,6 @@ const UpdateRealStateForm = ({ token = {}, auth = {}, object = {} }) => {
 					</div>
 				</div>
 				<div className="row">
-					<div className="col">
-						<label htmlFor="itemType" className="form-label">
-							Property Type
-						</label>
-						<select
-							id="itemType"
-							name="itemType"
-							defaultValue={object?.data?.itemType}
-							className="form-control"
-						>
-							<option value={`sale`}>Sale</option>
-							<option value={`rent`}>Rent</option>
-						</select>
-					</div>
 					<div className="col">
 						<label htmlFor="builtOnYear" className="form-label">
 							Built On?

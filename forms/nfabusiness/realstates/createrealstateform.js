@@ -30,7 +30,6 @@ const CreateRealStateForm = ({ token = {}, auth = {} }) => {
 			bathrooms: formData.get("bathrooms"),
 			squarefeet: formData.get("squarefeet"),
 			inStock: formData.get("inStock"),
-			itemType: formData.get("itemType"),
 			buldingType: formData.get("buldingType"),
 			amenities: formData.getAll("amenities"),
 			status: formData.get("status"),
@@ -214,20 +213,6 @@ const CreateRealStateForm = ({ token = {}, auth = {} }) => {
 					</div>
 				</div>
 				<div className="row">
-					<div className="col">
-						<label htmlFor="itemType" className="form-label">
-							Property Type
-						</label>
-						<select
-							id="itemType"
-							name="itemType"
-							defaultValue="sale"
-							className="form-control mb-3"
-						>
-							<option value={`sale`}>Sale</option>
-							<option value={`rent`}>Rent</option>
-						</select>
-					</div>
 					<div className="col">
 						<label htmlFor="builtOnYear" className="form-label">
 							Built On?

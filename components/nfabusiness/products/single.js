@@ -2,7 +2,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import DropdownButton from "react-bootstrap/DropdownButton";
-import { formatDateWithoutTime } from "befree-utilities";
+import {
+	formatDateWithoutTime,
+	stripeCurrencyFormatter,
+} from "befree-utilities";
 import DeleteModal from "@/components/global/deletemodal";
 
 const Single = ({
@@ -31,9 +34,7 @@ const Single = ({
 							}}
 							className="blog-item__title-link"
 						>
-							{object.price.inHumanFormat}&nbsp;-&nbsp;{object.title}
-							&nbsp;-&nbsp;
-							{object.sku}
+							{object.title}
 						</Link>
 					</h1>
 					<div className="blog-item__meta">
@@ -41,30 +42,8 @@ const Single = ({
 							{formatDateWithoutTime(object.createdAt)}
 						</span>
 						<span className="badge bg-dark me-1">{object.status}</span>
-						<span className="badge bg-dark me-1">
-							Brand:&nbsp;{object.brand}
-						</span>
-						<span className="badge bg-dark me-1">
-							Model:&nbsp;{object.model}
-						</span>
-						<span className="badge bg-dark me-1">{object.category}</span>
-						<span className="badge bg-dark me-1">{object.sub_category}</span>
-						<span className="badge bg-dark me-1">
-							Stock:&nbsp;{object.stockQuantity}
-						</span>
-						<span className="badge bg-dark me-1">
-							In&nbsp;Stock&nbsp;{object?.inStock?.toString()}
-						</span>
-						<span className="badge bg-dark me-1">
-							NFA&nbsp;Item:&nbsp;{object?.nfaItem?.toString()}
-						</span>
-						<span className="badge bg-dark me-1">
-							Background&nbsp;Check?:&nbsp;
-							{object?.requiresBackgroundCheck?.toString()}
-						</span>
-						<span className="badge bg-dark me-1">
-							Age&nbsp;Restriction:&nbsp;
-							{object.ageRestriction}
+						<span className="badge bg-danger">
+							{stripeCurrencyFormatter(object.price.inCentsFormat)}
 						</span>
 					</div>
 				</div>

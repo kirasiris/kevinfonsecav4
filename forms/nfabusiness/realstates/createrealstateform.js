@@ -132,7 +132,7 @@ const CreateRealStateForm = ({ token = {}, auth = {} }) => {
 						<input
 							id="statement_descriptor"
 							name="statement_descriptor"
-							defaultValue="ARMED CODE, LLC BANK STATEMENT"
+							defaultValue="ARMEDCODELLC_"
 							type="text"
 							className="form-control mb-3"
 							placeholder="This is what will appear in the user's bank statement account"

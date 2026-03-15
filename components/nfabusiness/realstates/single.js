@@ -41,7 +41,7 @@ const Single = ({
 						</span>
 						<span className="badge bg-dark me-1">{object.status}</span>
 						<span className="badge bg-danger">
-							{stripeCurrencyFormatter(object.price.inHumanFormat)}
+							{stripeCurrencyFormatter(object.price.inCentsFormat)}
 						</span>
 					</div>
 				</div>

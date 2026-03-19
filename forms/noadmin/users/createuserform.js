@@ -47,7 +47,7 @@ const CreateUserForm = ({ auth = {}, objects = [] }) => {
 				xboxId: formData.get("xboxId"),
 				indeed: formData.get("indeed"),
 			},
-			registeredFrom: process.env.NEXT_PUBLIC_NO_REPLY_EMAIL,
+			registeredFrom: process.env.NEXT_PUBLIC_WEBSITE_NAME,
 		};
 
 		const res = await fetchurl(

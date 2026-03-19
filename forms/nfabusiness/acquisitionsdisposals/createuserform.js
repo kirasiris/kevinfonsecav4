@@ -1,13 +1,11 @@
 "use client";
 import { useState } from "react";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 
-const RegisterForm = () => {
+const CreateUserForm = ({ object = {} }) => {
 	const router = useRouter();
-	const awtdParams = useParams();
-	const awtdSearchParams = useSearchParams();
 
 	const [btnText, setBtnText] = useState("Submit");
 
@@ -19,12 +17,11 @@ const RegisterForm = () => {
 		const formData = new FormData(form);
 
 		const rawFormData = {
-			username: formData.get("username"),
-			name: formData.get("name"),
-			email: formData.get("email"),
+			username: object.email.split("@")[0],
+			name: object.name,
+			email: object.email,
 			password: formData.get("password"),
 			password2: formData.get("password2"),
-			captcha: formData.get("captcha"),
 		};
 
 		if (rawFormData.captcha !== "5") {
@@ -38,10 +35,15 @@ const RegisterForm = () => {
 			return;
 		}
 
-		const res = await fetchurl(`/auth/register`, "POST", "no-cache", {
-			...rawFormData,
-			website: process.env.NEXT_PUBLIC_WEBSITE_NAME,
-		});
+		const res = await fetchurl(
+			`/noadmin/weaponacquisitiondisposal/${object._id}/createuseraccount`,
+			"POST",
+			"no-cache",
+			{
+				...rawFormData,
+				website: process.env.NEXT_PUBLIC_WEBSITE_NAME,
+			},
+		);
 		if (res.status === "error") {
 			toast.error(res.message, "bottom");
 			setBtnText("Submit");
@@ -54,10 +56,7 @@ const RegisterForm = () => {
 		}
 		setBtnText("Submit");
 		toast.success("Account registered", "bottom");
-		toast.success(
-			`An email has been sent to ${rawFormData.email}. Please verify account`,
-		);
-		router.push(`/auth/login`);
+		router.push(`/nfabusiness/acquisitionsdisposals/read/${object._id}`);
 	};
 
 	const resetForm = (e) => {
@@ -66,41 +65,12 @@ const RegisterForm = () => {
 
 	return (
 		<form onSubmit={registerAccount}>
-			<label htmlFor="username" className="form-label">
-				Username
-			</label>
-			<input
-				id="username"
-				name="username"
-				defaultValue=""
-				type="text"
-				className="form-control mb-3"
-				required
-				placeholder="john.doe"
-			/>
-			<label htmlFor="name" className="form-label">
-				Name
-			</label>
-			<input
-				id="name"
-				name="name"
-				defaultValue=""
-				type="text"
-				className="form-control mb-3"
-				placeholder="John Doe"
-			/>
-			<label htmlFor="email" className="form-label">
-				Email
-			</label>
-			<input
-				id="email"
-				name="email"
-				defaultValue=""
-				type="email"
-				className="form-control mb-3"
-				required
-				placeholder="john@doe.com"
-			/>
+			<h1>Create&nbsp;account</h1>
+			<p>This&nbsp;account&nbsp;will&nbsp;be&nbsp;under&nbsp;{object.name}</p>
+			<p>
+				Furthermore,&nbsp;the&nbsp;following&nbsp;email&nbsp;will&nbsp;be&nbsp;used&nbsp;
+				{object.email}&nbsp;also
+			</p>
 			<label htmlFor="password" className="form-label">
 				Password
 			</label>
@@ -123,18 +93,6 @@ const RegisterForm = () => {
 				className="form-control mb-3"
 				placeholder="******"
 			/>
-			<label htmlFor="captcha" className="form-label">
-				Captcha: 3+2?
-			</label>
-			<input
-				id="captcha"
-				name="captcha"
-				defaultValue=""
-				type="number"
-				className="form-control mb-3"
-				required
-				placeholder="0"
-			/>
 			<button type="submit" className="btn btn-secondary btn-sm float-start">
 				{btnText}
 			</button>
@@ -149,4 +107,4 @@ const RegisterForm = () => {
 	);
 };
 
-export default RegisterForm;
+export default CreateUserForm;

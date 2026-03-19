@@ -55,6 +55,15 @@ const Single = ({
 							>
 								View&nbsp;It
 							</Link>
+							<Link
+								href={{
+									pathname: `/nfabusiness/acquisitionsdisposals/read/${object._id}/create/useraccount`,
+									query: {},
+								}}
+								className="dropdown-item btn btn-link"
+							>
+								Create&nbsp;Account
+							</Link>
 							<button
 								className="dropdown-item btn btn-sm"
 								onClick={() => handleDraft(object._id)}

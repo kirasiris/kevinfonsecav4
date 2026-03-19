@@ -7,7 +7,7 @@ import AdminSidebar from "@/components/noadmin/myfinaladminsidebar";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
 
-const UpdateRealStateForm = ({ token = {}, auth = {}, object = {} }) => {
+const UpdateRealEstateForm = ({ token = {}, auth = {}, object = {} }) => {
 	const router = useRouter();
 
 	const [, setBtnText] = useState(`Submit`);
@@ -496,4 +496,4 @@ const UpdateRealStateForm = ({ token = {}, auth = {}, object = {} }) => {
 	);
 };
 
-export default UpdateRealStateForm;
+export default UpdateRealEstateForm;

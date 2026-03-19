@@ -8,21 +8,21 @@ import {
 } from "@/helpers/setTokenOnServer";
 import ParseHtml from "@/layout/parseHtml";
 import Map from "@/components/global/map";
-import UseDropzone from "@/components/nfabusiness/realstates/filedropzone";
-import Gallery from "@/components/nfabusiness/realstates/gallery";
+import UseDropzone from "@/components/nfabusiness/realestates/filedropzone";
+import Gallery from "@/components/nfabusiness/realestates/gallery";
 
-async function getRealState(params) {
-	const res = await fetchurl(`/global/realstates${params}`, "GET", "no-cache");
+async function getRealEstate(params) {
+	const res = await fetchurl(`/global/realestates${params}`, "GET", "no-cache");
 	if (!res.success) notFound();
 	return res;
 }
 
-const ReadRealState = async ({ params, searchParams }) => {
+const ReadRealEstate = async ({ params, searchParams }) => {
 	const awtdParams = await params;
 	const awtdSearchParams = await searchParams;
 	const token = await getAuthTokenOnServer();
 	const auth = await getUserOnServer();
-	const realstate = await getRealState(`/${awtdParams.id}`);
+	const realstate = await getRealEstate(`/${awtdParams.id}`);
 
 	return (
 		<div className="row">
@@ -151,4 +151,4 @@ const ReadRealState = async ({ params, searchParams }) => {
 	);
 };
 
-export default ReadRealState;
+export default ReadRealEstate;

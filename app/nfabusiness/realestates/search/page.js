@@ -1,18 +1,18 @@
 import { revalidatePath } from "next/cache";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import NFAStatusesMenu from "@/components/nfabusiness/nfastatusesmenu";
-import List from "@/components/nfabusiness/realstates/list";
+import List from "@/components/nfabusiness/realestates/list";
 
-async function getRealStates(params) {
+async function getRealEstates(params) {
 	const res = await fetchurl(
-		`/global/realstates${params}&postType=realstate`,
+		`/global/realestates${params}&postType=realestate`,
 		"GET",
-		"no-cache"
+		"no-cache",
 	);
 	return res;
 }
 
-const NFARealStatesSearchIndex = async ({ params, searchParams }) => {
+const NFARealEstatesSearchIndex = async ({ params, searchParams }) => {
 	const awtdParams = await params;
 	const awtdSearchParams = await searchParams;
 	const keyword = awtdSearchParams.keyword || "";
@@ -20,20 +20,20 @@ const NFARealStatesSearchIndex = async ({ params, searchParams }) => {
 	const limit = awtdSearchParams.limit || 10;
 	const sort = awtdSearchParams.sort || "-createdAt";
 
-	const realstates = await getRealStates(
-		`?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+	const realstates = await getRealEstates(
+		`?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
 	);
 
 	const draftIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(
-			`/noadmin/stripe/realstates/${id}/draftit`,
+			`/noadmin/stripe/realestates/${id}/draftit`,
 			"PUT",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/nfabusiness/realstates/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/realestates/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -41,12 +41,12 @@ const NFARealStatesSearchIndex = async ({ params, searchParams }) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(
-			`/noadmin/stripe/realstates/${id}/publishit`,
+			`/noadmin/stripe/realestates/${id}/publishit`,
 			"PUT",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/nfabusiness/realstates/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/realestates/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -54,12 +54,12 @@ const NFARealStatesSearchIndex = async ({ params, searchParams }) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(
-			`/noadmin/stripe/realstates/${id}/trashit`,
+			`/noadmin/stripe/realestates/${id}/trashit`,
 			"PUT",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/nfabusiness/realstates/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/realestates/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -67,12 +67,12 @@ const NFARealStatesSearchIndex = async ({ params, searchParams }) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(
-			`/noadmin/stripe/realstates/${id}/scheduleit`,
+			`/noadmin/stripe/realestates/${id}/scheduleit`,
 			"PUT",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/nfabusiness/realstates/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/realestates/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -80,21 +80,21 @@ const NFARealStatesSearchIndex = async ({ params, searchParams }) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(
-			`/noadmin/stripe/realstates/${id}/permanently`,
+			`/noadmin/stripe/realestates/${id}/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/nfabusiness/realstates/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/realestates/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
 	const handleTrashAll = async () => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/noadmin/stripe/realstates/deleteall`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/stripe/realestates/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`/nfabusiness/realstates/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/realestates/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -102,23 +102,23 @@ const NFARealStatesSearchIndex = async ({ params, searchParams }) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(
-			`/noadmin/stripe/realstates/deleteall/permanently`,
+			`/noadmin/stripe/realestates/deleteall/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/nfabusiness/realstates/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/realestates/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
 	return (
 		<>
 			<NFAStatusesMenu
-				allLink="/nfabusiness/realstates"
-				publishedLink="/nfabusiness/realstates/published"
-				draftLink="/nfabusiness/realstates/draft"
-				scheduledLink="/nfabusiness/realstates/scheduled"
-				trashedLink="/nfabusiness/realstates/trashed"
+				allLink="/nfabusiness/realestates"
+				publishedLink="/nfabusiness/realestates/published"
+				draftLink="/nfabusiness/realestates/draft"
+				scheduledLink="/nfabusiness/realestates/scheduled"
+				trashedLink="/nfabusiness/realestates/trashed"
 				categoriesLink=""
 				categoryType=""
 				pendingLink=""
@@ -128,10 +128,10 @@ const NFARealStatesSearchIndex = async ({ params, searchParams }) => {
 			/>
 			<div className="card rounded-0">
 				<List
-					allLink="/nfabusiness/realstates"
+					allLink="/nfabusiness/realestates"
 					pageText="Real States"
-					addLink="/nfabusiness/realstates/create"
-					searchOn="/nfabusiness/realstates"
+					addLink="/nfabusiness/realestates/create"
+					searchOn="/nfabusiness/realestates"
 					searchedKeyword={keyword}
 					objects={realstates}
 					searchParams={awtdSearchParams}
@@ -148,4 +148,4 @@ const NFARealStatesSearchIndex = async ({ params, searchParams }) => {
 	);
 };
 
-export default NFARealStatesSearchIndex;
+export default NFARealEstatesSearchIndex;

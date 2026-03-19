@@ -4,15 +4,15 @@ import {
 	getAuthTokenOnServer,
 	getUserOnServer,
 } from "@/helpers/setTokenOnServer";
-import UpdateRealStateForm from "@/forms/nfabusiness/realstates/updaterealstateform";
+import UpdateRealEstateForm from "@/forms/nfabusiness/realestates/updaterealestateform";
 
 async function getRealState(params) {
-	const res = await fetchurl(`/global/realstates${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/realestates${params}`, "GET", "no-cache");
 	if (!res.success) notFound();
 	return res;
 }
 
-const UpdateRealState = async ({ params, searchParams }) => {
+const UpdateRealEstate = async ({ params, searchParams }) => {
 	const awtdParams = await params;
 	const awtdSearchParams = await searchParams;
 	const token = await getAuthTokenOnServer();
@@ -20,7 +20,7 @@ const UpdateRealState = async ({ params, searchParams }) => {
 
 	const realstate = await getRealState(`/${awtdParams.id}`);
 
-	return <UpdateRealStateForm token={token} auth={auth} object={realstate} />;
+	return <UpdateRealEstateForm token={token} auth={auth} object={realstate} />;
 };
 
-export default UpdateRealState;
+export default UpdateRealEstate;

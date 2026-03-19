@@ -93,6 +93,7 @@ const AdminSidebar = ({
 				<option value={`published`}>Published</option>
 				<option value={`trash`}>Trash</option>
 				<option value={`scheduled`}>Scheduled</option>
+				<option value={`archived`}>Archived - Stripe Objects</option>
 			</select>
 			{fullWidth && (
 				<>

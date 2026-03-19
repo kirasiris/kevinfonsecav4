@@ -17,7 +17,7 @@ const NFAMenu = () => {
 				</li>
 				<li
 					className={`list-group-item ${isActive(
-						`/nfabusiness/acquisitionsdisposals`
+						`/nfabusiness/acquisitionsdisposals`,
 					)}`}
 				>
 					<Link href={"/nfabusiness/acquisitionsdisposals"}>
@@ -39,16 +39,16 @@ const NFAMenu = () => {
 					<Link href={"/nfabusiness/products"}>Products</Link>
 				</li>
 				<li
-					className={`list-group-item ${isActive(`/nfabusiness/realstates`)}`}
+					className={`list-group-item ${isActive(`/nfabusiness/realestates`)}`}
 				>
-					<Link href={"/nfabusiness/realstates"}>Real State</Link>
+					<Link href={"/nfabusiness/realestates"}>Real Estate</Link>
 				</li>
 				<li className={`list-group-item ${isActive(`/nfabusiness/reviews`)}`}>
 					<Link href={"/nfabusiness/reviews"}>Service Reviews</Link>
 				</li>
 				<li
 					className={`list-group-item ${isActive(
-						`/nfabusiness/serviceemails`
+						`/nfabusiness/serviceemails`,
 					)}`}
 				>
 					<Link href={"/nfabusiness/serviceemails"}>Service Requests</Link>

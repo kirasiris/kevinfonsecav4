@@ -30,7 +30,7 @@ const CreateUserForm = ({ object = {} }) => {
 		}
 
 		const res = await fetchurl(
-			`/noadmin/weaponacquisitiondisposal/${object._id}/createuseraccount`,
+			`/noadmin/weaponacquisitionsdisposals/${object._id}/createuseraccount`,
 			"POST",
 			"no-cache",
 			{

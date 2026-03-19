@@ -104,7 +104,7 @@ const UpdateProductForm = ({ object = {}, token = "", auth = {} }) => {
 					name="text"
 					defaultValue={object?.data?.text}
 					onModel="Product"
-					advancedTextEditor={false}
+					advancedTextEditor={true}
 					customPlaceholder="No description"
 					charactersLimit={99999}
 					isRequired={true}

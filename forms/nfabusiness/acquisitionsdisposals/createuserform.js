@@ -24,12 +24,6 @@ const CreateUserForm = ({ object = {} }) => {
 			password2: formData.get("password2"),
 		};
 
-		if (rawFormData.captcha !== "5") {
-			toast.error("There was an error, try again");
-			setBtnText("Submit");
-			return;
-		}
-
 		if (rawFormData.password !== rawFormData.password2) {
 			toast.error(`Passwords do not match`);
 			return;

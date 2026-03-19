@@ -10,7 +10,7 @@ import FormButtons from "@/components/global/formbuttons";
 const CreateCourseForm = ({ token = {}, auth = {} }) => {
 	const router = useRouter();
 
-	const [btnText, setBtnText] = useState(`Submit`);
+	const [, setBtnText] = useState(`Submit`);
 
 	const addCourse = async (e) => {
 		e.preventDefault();

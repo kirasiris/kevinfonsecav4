@@ -10,7 +10,7 @@ import FormButtons from "@/components/global/formbuttons";
 const UpdateLessonForm = ({ token = {}, auth = {}, object = {} }) => {
 	const router = useRouter();
 
-	const [btnText, setBtnText] = useState(`Submit`);
+	const [, setBtnText] = useState(`Submit`);
 
 	const upgradeLesson = async (e) => {
 		e.preventDefault();

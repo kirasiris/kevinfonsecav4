@@ -38,7 +38,7 @@ const UpdateRealEstateForm = ({ token = {}, auth = {}, object = {} }) => {
 		};
 
 		const res = await fetchurl(
-			`/noadmin/stripe/realstates/${object?.data?._id}`,
+			`/noadmin/stripe/realestates/${object?.data?._id}`,
 			"PUT",
 			"no-cache",
 			rawFormData,
@@ -55,7 +55,7 @@ const UpdateRealEstateForm = ({ token = {}, auth = {}, object = {} }) => {
 			return;
 		}
 		toast.success(`Real State updated`, "bottom");
-		router.push(`/nfabusiness/realstates`);
+		router.push(`/nfabusiness/realestates`);
 	};
 
 	const resetForm = (e) => {

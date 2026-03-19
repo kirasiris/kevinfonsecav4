@@ -38,7 +38,7 @@ const CreateRealStateForm = ({ token = {}, auth = {} }) => {
 		};
 
 		const res = await fetchurl(
-			`/noadmin/stripe/realstates`,
+			`/noadmin/stripe/realestates`,
 			"POST",
 			"no-cache",
 			{
@@ -60,7 +60,7 @@ const CreateRealStateForm = ({ token = {}, auth = {} }) => {
 			return;
 		}
 		toast.success(`Real State created`, "bottom");
-		router.push(`/nfabusiness/realstates`);
+		router.push(`/nfabusiness/realestates`);
 	};
 
 	const resetForm = (e) => {

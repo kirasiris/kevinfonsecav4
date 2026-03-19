@@ -47,8 +47,14 @@ const UpdateUserForm = ({ auth = {}, object = {}, objects = [] }) => {
 				xboxId: formData.get("xboxId"),
 				indeed: formData.get("indeed"),
 			},
-			registeredFrom: process.env.NEXT_PUBLIC_NO_REPLY_EMAIL,
+			registeredFrom: process.env.NEXT_PUBLIC_WEBSITE_NAME,
 		};
+
+		if (rawFormData.password !== rawFormData.password2) {
+			toast.error(`Passwords do not match`);
+			setBtnText("Submit");
+			return;
+		}
 
 		const res = await fetchurl(
 			`/noadmin/users/${object?.data?._id}`,

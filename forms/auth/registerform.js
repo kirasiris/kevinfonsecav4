@@ -35,6 +35,7 @@ const RegisterForm = () => {
 
 		if (rawFormData.password !== rawFormData.password2) {
 			toast.error(`Passwords do not match`);
+			setBtnText("Submit");
 			return;
 		}
 

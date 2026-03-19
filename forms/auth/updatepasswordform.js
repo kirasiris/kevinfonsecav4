@@ -25,6 +25,12 @@ const UpdatePasswordForm = ({ auth = {} }) => {
 			token: formData.get("token"),
 		};
 
+		if (rawFormData.newpassword !== rawFormData.newpassword2) {
+			toast.error(`Passwords do not match`);
+			setBtnText("Submit");
+			return;
+		}
+
 		const res = await fetchurl(
 			`/auth/updatepassword`,
 			"PUT",

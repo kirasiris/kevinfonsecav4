@@ -50,6 +50,12 @@ const CreateUserForm = ({ auth = {}, objects = [] }) => {
 			registeredFrom: process.env.NEXT_PUBLIC_WEBSITE_NAME,
 		};
 
+		if (rawFormData.password !== rawFormData.password2) {
+			toast.error(`Passwords do not match`);
+			setBtnText("Submit");
+			return;
+		}
+
 		const res = await fetchurl(
 			`/noadmin/users`,
 			"POST",

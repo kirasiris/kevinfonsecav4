@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import Image from "next/image";
 import {
 	fetchurl,
 	getAuthTokenOnServer,
@@ -12,7 +13,7 @@ async function getAcquisitionsDisposals(params) {
 	const res = await fetchurl(
 		`/global/weaponacquisitionsdisposals${params}`,
 		"GET",
-		"no-cache"
+		"no-cache",
 	);
 	if (!res.success) notFound();
 	return res;
@@ -25,13 +26,33 @@ const ReadAcquisitionDisposal = async ({ params, searchParams }) => {
 	const auth = await getUserOnServer();
 
 	const acquisitionsdisposal = await getAcquisitionsDisposals(
-		`/${awtdParams.id}`
+		`/${awtdParams.id}`,
 	);
+
+	const owner = acquisitionsdisposal?.data?.hasAccount;
 
 	return (
 		<article>
 			<div className="row">
-				<div className="col-lg-6">
+				{owner && (
+					<div className={`col-lg-${owner && "4"}`}>
+						<h6 className="display-6">Picture</h6>
+						<figure>
+							<Image
+								className="img-fluid img-thumbnail w-100"
+								src={
+									owner?.files?.nfa_avatar?.location?.secure_location ||
+									`https://picsum.photos/168/168?blur`
+								}
+								alt={`profile image`}
+								width={168}
+								height={168}
+								priority
+							/>
+						</figure>
+					</div>
+				)}
+				<div className={`col-lg-${owner ? "4" : "6"}`}>
 					<h6 className="display-6">Description</h6>
 					<label htmlFor="manufacturer" className="form-label">
 						Manufacturer and/or Importer
@@ -107,7 +128,7 @@ const ReadAcquisitionDisposal = async ({ params, searchParams }) => {
 						disabled
 					/>
 				</div>
-				<div className="col-lg-6">
+				<div className={`col-lg-${owner ? "4" : "6"}`}>
 					<h6 className="display-6">Receipt</h6>
 					<label htmlFor="fromWhomReceived" className="form-label">
 						From Whom Received

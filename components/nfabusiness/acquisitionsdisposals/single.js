@@ -38,6 +38,9 @@ const Single = ({
 						<span className="badge bg-dark me-1">
 							{formatDateWithoutTime(object.createdAt)}
 						</span>
+						<span className="badge bg-danger me-1">
+							Account:&nbsp;-&nbsp;{object.hasAccount.toString()}
+						</span>
 						<span className="badge bg-dark me-1">{object.status}</span>
 					</div>
 				</div>

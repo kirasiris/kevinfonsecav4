@@ -26,7 +26,7 @@ const ReadUser = async ({ params, searchParams }) => {
 									className="img-thumbnail"
 									src={
 										user?.data?.files?.avatar?.location?.secure_location ||
-										`https://source.unsplash.com/random/168x168`
+										`https://picsum.photos/168/168?blur`
 									}
 									alt={`profile image`}
 									width={407}

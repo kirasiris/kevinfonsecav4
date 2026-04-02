@@ -42,11 +42,12 @@ const UseDropzone = ({
 								onModel: "Product",
 								resourceId: object?._id,
 								file: acceptedFiles[i],
+								album: "products",
 							},
 							{
 								headers: {
-									Authorization: `Bearer ${token?.value}`,
 									"Content-Type": "multipart/form-data",
+									Authorization: `Bearer ${token?.value}`,
 								},
 								onUploadProgress: (ProgressEvent) => {
 									setUploadPercentage(

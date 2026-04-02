@@ -29,7 +29,9 @@ const UploadPictureForm = ({ auth = {} }) => {
 			e.preventDefault();
 			try {
 				const src = webcamRef.current.getScreenshot();
+				console.log("webcam src", src);
 				const blob = base64toBlob(src);
+				console.log("webcam blob", blob);
 				setBtnTxt("Submit...");
 				const token = await getAuthTokenOnServer();
 				const res = await axios.put(
@@ -46,22 +48,23 @@ const UploadPictureForm = ({ auth = {} }) => {
 						// method: "PUT",
 						headers: {
 							"Content-Type": "multipart/form-data",
-							Authorization: `Bearer ${token.value}`,
+							Authorization: `Bearer ${token?.value}`,
 						},
 						onUploadProgress: (ProgressEvent) => {
 							setUploadPercentage(
 								parseInt(
-									Math.round(ProgressEvent.loaded * 100) / ProgressEvent.total
-								)
+									Math.round(ProgressEvent.loaded * 100) / ProgressEvent.total,
+								),
 							);
 							setTimeout(() => setUploadPercentage(0), 10000);
 						},
-					}
+					},
 				);
 				await fetchurl(`/auth/updateavatar`, "PUT", "no-cache", {
 					avatar: res.data.data._id,
 				});
 				// resetForm();
+				setUploadPercentage(0);
 				toast.success("Avatar uploaded");
 				setBtnTxt(btnText);
 				setCameraModal(false);
@@ -77,7 +80,7 @@ const UploadPictureForm = ({ auth = {} }) => {
 					// dispatch(setAlert(error, 'danger'));
 					error &&
 						Object.entries(error).map(([, value]) =>
-							toast.error(value.message)
+							toast.error(value.message),
 						);
 				}
 
@@ -92,7 +95,7 @@ const UploadPictureForm = ({ auth = {} }) => {
 				};
 			}
 		},
-		[webcamRef]
+		[webcamRef],
 	);
 
 	const resetForm = () => {};

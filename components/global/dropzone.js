@@ -48,8 +48,8 @@ const UseDropzone = ({
 							},
 							{
 								headers: {
-									Authorization: `Bearer ${token?.value}`,
 									"Content-Type": "multipart/form-data",
+									Authorization: `Bearer ${token?.value}`,
 								},
 								onUploadProgress: (ProgressEvent) => {
 									setUploadPercentage(

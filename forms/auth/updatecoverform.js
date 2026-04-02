@@ -39,17 +39,17 @@ const UpdateCoverForm = ({ auth = {} }) => {
 				{
 					headers: {
 						"Content-Type": "multipart/form-data",
-						Authorization: `Bearer ${token.value}`,
+						Authorization: `Bearer ${token?.value}`,
 					},
 					onUploadProgress: (ProgressEvent) => {
 						setUploadPercentage(
 							parseInt(
-								Math.round(ProgressEvent.loaded * 100) / ProgressEvent.total
-							)
+								Math.round(ProgressEvent.loaded * 100) / ProgressEvent.total,
+							),
 						);
 						setTimeout(() => setUploadPercentage(0), 10000);
 					},
-				}
+				},
 			);
 			await fetchurl(`/auth/updatecover`, "PUT", "no-cache", {
 				cover: res.data.data._id,

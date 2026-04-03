@@ -22,6 +22,7 @@ const UpdateRealEstateForm = ({ token = {}, auth = {}, object = {} }) => {
 			title: formData.get("title"),
 			text: formData.get("text"),
 			price: formData.get("price"),
+			isFree: formData.get("isFree"),
 			active: formData.get("active"),
 			statement_descriptor: formData.get("statement_descriptor"),
 			commented: formData.get("commented"),
@@ -85,7 +86,7 @@ const UpdateRealEstateForm = ({ token = {}, auth = {}, object = {} }) => {
 					id="text"
 					name="text"
 					defaultValue={object?.data?.text}
-					onModel="RealState"
+					onModel="Product"
 					advancedTextEditor={true}
 					customPlaceholder="No description"
 					charactersLimit={99999}
@@ -105,6 +106,23 @@ const UpdateRealEstateForm = ({ token = {}, auth = {}, object = {} }) => {
 							required
 							placeholder=""
 						/>
+					</div>
+					<div className="col">
+						<label htmlFor="isFree" className="form-label">
+							Is it free?
+						</label>
+						<select
+							id="isFree"
+							name="isFree"
+							defaultValue={object?.data?.isFree.toString()}
+							className="form-control mb-3"
+						>
+							<option value={true}>Yes</option>
+							<option value={false}>No</option>
+						</select>
+						<p className="text-small mb-3">
+							If free, price will be set to zero
+						</p>
 					</div>
 					<div className="col">
 						<label htmlFor="active" className="form-label">

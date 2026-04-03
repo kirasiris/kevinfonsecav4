@@ -22,6 +22,7 @@ const CreateRealStateForm = ({ token = {}, auth = {} }) => {
 			title: formData.get("title"),
 			text: formData.get("text"),
 			price: formData.get("price"),
+			isFree: formData.get("isFree"),
 			active: formData.get("active"),
 			statement_descriptor: formData.get("statement_descriptor"),
 			commented: formData.get("commented"),
@@ -90,7 +91,7 @@ const CreateRealStateForm = ({ token = {}, auth = {} }) => {
 					id="text"
 					name="text"
 					defaultValue="No description..."
-					onModel="RealState"
+					onModel="Product"
 					advancedTextEditor={true}
 					customPlaceholder="No description"
 					charactersLimit={99999}
@@ -110,6 +111,23 @@ const CreateRealStateForm = ({ token = {}, auth = {} }) => {
 							required
 							placeholder=""
 						/>
+					</div>
+					<div className="col">
+						<label htmlFor="isFree" className="form-label">
+							Is it free?
+						</label>
+						<select
+							id="isFree"
+							name="isFree"
+							defaultValue={true}
+							className="form-control mb-3"
+						>
+							<option value={true}>Yes</option>
+							<option value={false}>No</option>
+						</select>
+						<p className="text-small mb-3">
+							If free, price will be set to zero
+						</p>
 					</div>
 					<div className="col">
 						<label htmlFor="active" className="form-label">

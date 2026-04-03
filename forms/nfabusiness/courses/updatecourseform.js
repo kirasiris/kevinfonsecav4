@@ -23,15 +23,16 @@ const UpdateCourseForm = ({ token = {}, auth = {}, object = {} }) => {
 			sub_title: formData.get("sub_title"),
 			text: formData.get("text"),
 			price: formData.get("price"),
+			isFree: formData.get("isFree"),
+			active: formData.get("active"),
+			statement_descriptor: formData.get("statement_descriptor"),
+			comparePrice: formData.get("comparePrice"),
 			featured: formData.get("featured"),
-			embedding: formData.get("embedding"),
 			category: formData.get("category"),
 			sub_category: formData.get("sub_category"),
-			isFree: formData.get("isFree"),
 			language: formData.get("language"),
 			difficulty: formData.get("difficulty"),
 			commented: formData.get("commented"),
-			password: formData.get("password"),
 			status: formData.get("status"),
 			files: { avatar: formData.get("file") || undefined },
 		};
@@ -95,7 +96,7 @@ const UpdateCourseForm = ({ token = {}, auth = {}, object = {} }) => {
 					id="text"
 					name="text"
 					defaultValue={object?.data?.text}
-					onModel="Course"
+					onModel="Product"
 					advancedTextEditor={true}
 					customPlaceholder="No description"
 					charactersLimit={99999}
@@ -257,6 +258,39 @@ const UpdateCourseForm = ({ token = {}, auth = {}, object = {} }) => {
 				</div>
 				<div className="row">
 					<div className="col">
+						<label htmlFor="price" className="form-label">
+							Price
+						</label>
+						<input
+							id="price"
+							name="price"
+							defaultValue={object?.data?.price.inHumanFormat}
+							type="text"
+							className="form-control mb-3"
+							required
+							placeholder=""
+						/>
+					</div>
+					<div className="col">
+						<label htmlFor="comparePrice" className="form-label">
+							Compare Price
+						</label>
+						<input
+							id="comparePrice"
+							name="comparePrice"
+							defaultValue={object?.data?.comparePrice.inHumanFormat}
+							type="text"
+							className="form-control"
+							placeholder=""
+						/>
+
+						<p className="text-small mb-3">
+							Should always be bigger than price to apply discount
+						</p>
+					</div>
+				</div>
+				<div className="row">
+					<div className="col">
 						<label htmlFor="isFree" className="form-label">
 							Is it free?
 						</label>
@@ -269,18 +303,39 @@ const UpdateCourseForm = ({ token = {}, auth = {}, object = {} }) => {
 							<option value={true}>Yes</option>
 							<option value={false}>No</option>
 						</select>
-						<label htmlFor="price" className="form-label">
-							Price
+						<p className="text-small mb-3">
+							If free, price will be set to zero
+						</p>
+					</div>
+					<div className="col">
+						<label htmlFor="active" className="form-label">
+							Activate
+						</label>
+						<select
+							id="active"
+							name="active"
+							defaultValue={object?.data?.active.toString()}
+							className="form-control mb-3"
+						>
+							<option value={true}>Yes</option>
+							<option value={false}>No</option>
+						</select>
+					</div>
+					<div className="col">
+						<label htmlFor="statement_descriptor" className="form-label">
+							Statement Descriptor (22 characters. max)
 						</label>
 						<input
-							id="price"
-							name="price"
-							defaultValue={object?.data?.price}
+							id="statement_descriptor"
+							name="statement_descriptor"
+							defaultValue={object?.data?.statement_descriptor}
 							type="text"
 							className="form-control mb-3"
-							placeholder=""
+							placeholder="This is what will appear in the user's bank statement account"
 						/>
 					</div>
+				</div>
+				<div className="row">
 					<div className="col">
 						<label htmlFor="language" className="form-label">
 							Language
@@ -329,10 +384,10 @@ const UpdateCourseForm = ({ token = {}, auth = {}, object = {} }) => {
 					avatarFormat={"image"}
 					status={object?.data?.status}
 					fullWidth={false}
-					password={object?.data?.password}
+					password={""}
 					featured={object?.data?.featured.toString()}
 					commented={object?.data?.commented.toString()}
-					embedding={object?.data?.embedding.toString()}
+					embedding={false}
 					category={undefined}
 					categories={[]}
 					multiple_categories={false}

@@ -25,6 +25,7 @@ const CreateRealStateForm = ({ token = {}, auth = {} }) => {
 			isFree: formData.get("isFree"),
 			active: formData.get("active"),
 			statement_descriptor: formData.get("statement_descriptor"),
+			comparePrice: formData.get("comparePrice"),
 			commented: formData.get("commented"),
 			address: formData.get("address"),
 			bedrooms: formData.get("bedrooms"),
@@ -112,6 +113,24 @@ const CreateRealStateForm = ({ token = {}, auth = {} }) => {
 							placeholder=""
 						/>
 					</div>
+					<div className="col">
+						<label htmlFor="comparePrice" className="form-label">
+							Compare Price
+						</label>
+						<input
+							id="comparePrice"
+							name="comparePrice"
+							defaultValue="0"
+							type="text"
+							className="form-control"
+							placeholder=""
+						/>
+						<p className="text-small mb-3">
+							Should always be bigger than price to apply discount
+						</p>
+					</div>
+				</div>
+				<div className="row">
 					<div className="col">
 						<label htmlFor="isFree" className="form-label">
 							Is it free?

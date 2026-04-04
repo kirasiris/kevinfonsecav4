@@ -174,8 +174,6 @@ const CreateProductForm = ({ token = {}, auth = {} }) => {
 							<option value={false}>No</option>
 						</select>
 					</div>
-				</div>
-				<div className="row">
 					<div className="col">
 						<label htmlFor="statement_descriptor" className="form-label">
 							Statement Descriptor (22 characters. max)
@@ -189,6 +187,8 @@ const CreateProductForm = ({ token = {}, auth = {} }) => {
 							placeholder="This is what will appear in the user's bank statement account"
 						/>
 					</div>
+				</div>
+				<div className="row">
 					<div className="col">
 						<label htmlFor="sku" className="form-label">
 							SKU

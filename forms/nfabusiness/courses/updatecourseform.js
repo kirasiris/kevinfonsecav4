@@ -380,8 +380,8 @@ const UpdateCourseForm = ({ token = {}, auth = {}, object = {} }) => {
 				<AdminSidebar
 					displayCategoryField={false}
 					displayAvatar={true}
-					avatar={object?.data?.files?.avatar}
-					avatarFormat={"image"}
+					avatar={object?.data?.files}
+					avatarFormat={object?.data?.files?.avatar?.format_type}
 					status={object?.data?.status}
 					fullWidth={false}
 					password={""}

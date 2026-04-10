@@ -57,7 +57,9 @@ const ReadRealEstate = async ({ params, searchParams }) => {
 							</div>
 							<div className="col text-center">
 								<i aria-hidden className="fa-solid fa-bath fa-2x" />
-								<p className="text-capitalize mb-0">{realstate?.data?.type}</p>
+								<p className="text-capitalize mb-0">
+									{realstate?.data?.buldingType}
+								</p>
 								<p className="mb-0">Type</p>
 							</div>
 						</div>
@@ -123,7 +125,9 @@ const ReadRealEstate = async ({ params, searchParams }) => {
 							</li>
 							<li className="d-flex justify-content-between list-group-item border-0 border-bottom rounded-0">
 								<span>Type</span>
-								<span className="text-capitalize">{realstate?.data?.type}</span>
+								<span className="text-capitalize">
+									{realstate?.data?.buldingType}
+								</span>
 							</li>
 							<li className="d-flex justify-content-between list-group-item border-0 border-bottom rounded-0">
 								<span>Status</span>

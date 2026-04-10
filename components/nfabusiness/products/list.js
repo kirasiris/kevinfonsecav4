@@ -18,8 +18,6 @@ const List = ({
 	handlePublish = () => {},
 	handleTrash = () => {},
 	handleSchedule = () => {},
-	handleFeature = () => {},
-	handleUnfeature = () => {},
 	handleDelete = () => {},
 	handleTrashAllFunction = () => {},
 	handleDeleteAllFunction = () => {},
@@ -85,36 +83,6 @@ const List = ({
 			<ErrorPage
 				statusCodeMessage={
 					"The handleSchedule parameter is not a function!. Please try again"
-				}
-			/>
-		);
-	}
-
-	if (
-		typeof handleFeature !== "function" &&
-		handleFeature !== "" &&
-		handleFeature !== undefined &&
-		handleFeature !== null
-	) {
-		return (
-			<ErrorPage
-				statusCodeMessage={
-					"The handleFeature parameter is not a function!. Please try again"
-				}
-			/>
-		);
-	}
-
-	if (
-		typeof handleUnfeature !== "function" &&
-		handleUnfeature !== "" &&
-		handleUnfeature !== undefined &&
-		handleUnfeature !== null
-	) {
-		return (
-			<ErrorPage
-				statusCodeMessage={
-					"The handleUnfeature parameter is not a function!. Please try again"
 				}
 			/>
 		);
@@ -189,8 +157,6 @@ const List = ({
 								handlePublish={handlePublish}
 								handleTrash={handleTrash}
 								handleSchedule={handleSchedule}
-								handleFeature={handleFeature}
-								handleUnfeature={handleUnfeature}
 								handleDelete={handleDelete}
 								objects={newobjects.data}
 								setObjects={setNewObjects}
@@ -198,7 +164,8 @@ const List = ({
 							/>
 						))}
 						<li className="list-group-item">
-							{objects?.pagination?.current} / {objects?.pagination?.totalpages}
+							{objects?.pagination?.current}&nbsp;/&nbsp;
+							{objects?.pagination?.totalpages}
 						</li>
 					</ul>
 					<NumericPagination

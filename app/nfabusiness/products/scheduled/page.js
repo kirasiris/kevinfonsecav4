@@ -130,8 +130,6 @@ const NFAProductsScheduledIndex = async ({ params, searchParams }) => {
 					handlePublish={publishIt}
 					handleTrash={trashIt}
 					handleSchedule={scheduleIt}
-					handleFeature={undefined}
-					handleUnfeature={undefined}
 					handleDelete={handleDelete}
 					handleTrashAllFunction={handleTrashAll}
 					handleDeleteAllFunction={handleDeleteAll}

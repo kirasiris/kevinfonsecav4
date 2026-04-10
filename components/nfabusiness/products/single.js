@@ -14,8 +14,6 @@ const Single = ({
 	handlePublish = () => {},
 	handleTrash = () => {},
 	handleSchedule = () => {},
-	handleFeature = () => {},
-	handleUnfeature = () => {},
 	handleDelete = () => {},
 	objects = [],
 	setObjects = () => {},

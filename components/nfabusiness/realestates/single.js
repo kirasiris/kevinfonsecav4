@@ -109,7 +109,7 @@ const Single = ({
 									pathname: `/noadmin/comments/create`,
 									query: {
 										resourceId: object._id,
-										onModel: `RealState`,
+										onModel: `Product`,
 									},
 								}}
 								className="dropdown-item btn btn-link"
@@ -121,7 +121,7 @@ const Single = ({
 									pathname: `/noadmin/reports/create`,
 									query: {
 										resourceId: object._id,
-										onModel: `RealState`,
+										onModel: `Product`,
 									},
 								}}
 								className="dropdown-item btn btn-link"

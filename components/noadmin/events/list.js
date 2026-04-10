@@ -166,7 +166,8 @@ const List = ({
 					</div>
 					<ul className="list-group list-group-flush">
 						<li className="list-group-item">
-							{objects?.pagination?.current} / {objects?.pagination?.totalpages}
+							{objects?.pagination?.current}&nbsp;/&nbsp;
+							{objects?.pagination?.totalpages}
 						</li>
 					</ul>
 					<NumericPagination

@@ -167,7 +167,7 @@ const List = ({
 								/>
 							))}
 							<li className="list-group-item">
-								{objects?.pagination?.current} /{" "}
+								{objects?.pagination?.current}&nbsp;/&nbsp;
 								{objects?.pagination?.totalpages}
 							</li>
 						</ul>

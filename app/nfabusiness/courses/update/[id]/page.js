@@ -8,11 +8,7 @@ import OnboardingLink from "@/components/nfabusiness/onboardinglink";
 import UpdateCourseForm from "@/forms/nfabusiness/courses/updatecourseform";
 
 async function getCourse(params) {
-	const res = await fetchurl(
-		`/extras/stripe/courses${params}`,
-		"GET",
-		"no-cache"
-	);
+	const res = await fetchurl(`/global/courses${params}`, "GET", "no-cache");
 	if (!res.success) notFound();
 	return res;
 }
@@ -26,7 +22,7 @@ const UpdateCourse = async ({ params, searchParams }) => {
 	const course = await getCourse(`/${awtdParams.id}`);
 
 	// Redirect if not charges enabled
-	!auth?.data?.stripe?.stripeChargesEnabled && <OnboardingLink auth={auth} />;
+	!auth?.userStripeChargesEnabled && <OnboardingLink />;
 
 	return <UpdateCourseForm token={token} auth={auth} object={course} />;
 };

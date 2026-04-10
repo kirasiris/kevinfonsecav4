@@ -4,6 +4,7 @@ import {
 	getAuthTokenOnServer,
 	getUserOnServer,
 } from "@/helpers/setTokenOnServer";
+import OnboardingLink from "@/components/nfabusiness/onboardinglink";
 import UpdateRealEstateForm from "@/forms/nfabusiness/realestates/updaterealestateform";
 
 async function getRealState(params) {
@@ -19,6 +20,9 @@ const UpdateRealEstate = async ({ params, searchParams }) => {
 	const auth = await getUserOnServer();
 
 	const realstate = await getRealState(`/${awtdParams.id}`);
+
+	// Redirect if not charges enabled
+	!auth?.userStripeChargesEnabled && <OnboardingLink />;
 
 	return <UpdateRealEstateForm token={token} auth={auth} object={realstate} />;
 };

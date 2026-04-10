@@ -13,7 +13,7 @@ const CreateMembership = async ({ params, searchParams }) => {
 	const auth = await getUserOnServer();
 
 	// Redirect if not charges enabled
-	!auth?.userStripeChargesEnabled && <OnboardingLink auth={auth} />;
+	!auth?.userStripeChargesEnabled && <OnboardingLink />;
 
 	return <CreateMembershipForm token={token} auth={auth} />;
 };

@@ -1,6 +1,6 @@
 "use client";
 
-const OnboardingLink = ({ auth = {} }) => {
+const OnboardingLink = ({}) => {
 	return (
 		<div className="alert alert-link rounded-0 m-0 border-0">
 			<p>
@@ -9,12 +9,6 @@ const OnboardingLink = ({ auth = {} }) => {
 			<p className="m-0">
 				The&nbsp;link&nbsp;should&nbsp;have&nbsp;been&nbsp;sent&nbsp;to&nbsp;your&nbsp;inbox&nbsp;whenever&nbsp;you
 				created&nbsp;your&nbsp;account.
-				{/* &nbsp;Otherwise,&nbsp;here&nbsp;it&nbsp;is,&nbsp;
-				<a href={auth?.user?.stripe?.stripeOnboardingLink} target="_blank">
-					<b className="text-bg-primary text-decoration-underline">
-						CLICK HERE!.
-					</b>
-				</a> */}
 			</p>
 			<p>
 				If&nbsp;for&nbsp;some&nbsp;reason,&nbsp;you&nbsp;did&nbsp;not&nbsp;get&nbsp;the&nbsp;email,&nbsp;please&nbsp;make&nbsp;sure&nbsp;it&nbsp;did

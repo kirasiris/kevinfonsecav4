@@ -25,7 +25,7 @@ const ReadCourse = async ({ params, searchParams }) => {
 
 	const course = await getCourse(`/${awtdParams.id}`);
 	const lessons = await getLessons(
-		`?resourceId=${course?.data?._id}&page=${page}&limit=${limit}&sort=${sort}`
+		`?resourceId=${course?.data?._id}&page=${page}&limit=${limit}&sort=${sort}`,
 	);
 
 	const draftIt = async (id) => {
@@ -81,7 +81,7 @@ const ReadCourse = async ({ params, searchParams }) => {
 			"no-cache",
 			{
 				onModel: "Course",
-			}
+			},
 		);
 		revalidatePath(`/nfabusiness/courses/read/${awtdParams.id}`);
 	};
@@ -99,7 +99,7 @@ const ReadCourse = async ({ params, searchParams }) => {
 					<LessonList
 						allLink={`/nfabusiness/courses/read/${course?.data?._id}`}
 						pageText="Lessons"
-						addLink={`/noadmin/courses/lesson/${course?.data?._id}/create`}
+						addLink={`/nfabusiness/courses/lesson/${course?.data?._id}/create`}
 						searchOn={`/nfabusiness/courses/read/${course?.data?._id}`}
 						objects={lessons}
 						searchParams={awtdSearchParams}

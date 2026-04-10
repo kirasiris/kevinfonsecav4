@@ -22,7 +22,7 @@ const UpdateMembership = async ({ params, searchParams }) => {
 	const membership = await getMembership(`/${awtdParams.id}`);
 
 	// Redirect if not charges enabled
-	!auth?.userStripeChargesEnabled && <OnboardingLink auth={auth} />;
+	!auth?.userStripeChargesEnabled && <OnboardingLink />;
 
 	return <UpdateMembershipForm token={token} auth={auth} object={membership} />;
 };

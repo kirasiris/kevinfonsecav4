@@ -9,6 +9,10 @@ import FormButtons from "@/components/global/formbuttons";
 const UpdateUserForm = ({ auth = {}, object = {}, objects = [] }) => {
 	const router = useRouter();
 
+	const [showPartner, setShowPartner] = useState(
+		object?.data?.relationshipStatus === "taken",
+	);
+
 	const [, setBtnText] = useState(`Submit`);
 
 	const upgradeUser = async (e) => {
@@ -286,6 +290,7 @@ const UpdateUserForm = ({ auth = {}, object = {}, objects = [] }) => {
 						name="relationshipStatus"
 						defaultValue={object?.data?.relationshipStatus}
 						className="form-control"
+						onChange={(e) => setShowPartner(e.target.value === "taken")}
 					>
 						<option value={`single`}>Single</option>
 						<option value={`taken`}>Taken</option>
@@ -294,25 +299,27 @@ const UpdateUserForm = ({ auth = {}, object = {}, objects = [] }) => {
 						<option value={`divorced`}>Divorced</option>
 					</select>
 				</div>
-				<div className="col">
-					<label htmlFor="inRelationshipWith" className="form-label">
-						In Relationship With?
-					</label>
-					<select
-						id="inRelationshipWith"
-						name="inRelationshipWith"
-						defaultValue={object?.data?.inRelationshipWith}
-						className="form-control"
-					>
-						{objects.data
-							.filter((excludedUser) => excludedUser._id !== auth?.id)
-							.map((user) => (
-								<option key={user._id} value={user._id}>
-									{user.username}
-								</option>
-							))}
-					</select>
-				</div>
+				{showPartner && objects.data.length >= 1 && (
+					<div className="col">
+						<label htmlFor="inRelationshipWith" className="form-label">
+							In Relationship With?
+						</label>
+						<select
+							id="inRelationshipWith"
+							name="inRelationshipWith"
+							defaultValue={object?.data?.inRelationshipWith?._id}
+							className="form-control"
+						>
+							{objects.data
+								.filter((excludedUser) => excludedUser._id !== auth?.id)
+								.map((user) => (
+									<option key={user._id} value={user._id}>
+										{user.username}
+									</option>
+								))}
+						</select>
+					</div>
+				)}
 			</div>
 			<div className="row">
 				<div className="col">

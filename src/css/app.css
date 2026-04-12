@@ -640,6 +640,28 @@ ERROR COMPONENT
 }
 
 /*****************************
+MANSORY LAYOUT FOR AUTH EDIT AVATAR, COVER AND UPLOAD PICTURE PAGES
+*****************************/
+.masonry-container {
+	column-count: 3;
+	column-gap: 1rem;
+}
+.masonry-item {
+	break-inside: avoid;
+	margin-bottom: 1rem;
+}
+@media (max-width: 768px) {
+	.masonry-container {
+		column-count: 2;
+	}
+}
+@media (max-width: 576px) {
+	.masonry-container {
+		column-count: 1;
+	}
+}
+
+/*****************************
 BODY-DARK
 *****************************/
 body.ligth-mode {

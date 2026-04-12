@@ -11,6 +11,8 @@ const CreateUserForm = ({ auth = {}, objects = [] }) => {
 
 	const [, setBtnText] = useState(`Submit`);
 
+	const [showPartner, setShowPartner] = useState("");
+
 	const addUser = async (e) => {
 		e.preventDefault();
 		setBtnText("...");
@@ -198,7 +200,7 @@ const CreateUserForm = ({ auth = {}, objects = [] }) => {
 					<select
 						id="role"
 						name="role"
-						defaultValue="subscriber"
+						defaultValue={["subscriber"]}
 						className="form-control"
 						multiple
 					>
@@ -286,6 +288,7 @@ const CreateUserForm = ({ auth = {}, objects = [] }) => {
 						name="relationshipStatus"
 						defaultValue="single"
 						className="form-control"
+						onChange={(e) => setShowPartner(e.target.value === "taken")}
 					>
 						<option value={`single`}>Single</option>
 						<option value={`taken`}>Taken</option>
@@ -294,25 +297,27 @@ const CreateUserForm = ({ auth = {}, objects = [] }) => {
 						<option value={`divorced`}>Divorced</option>
 					</select>
 				</div>
-				<div className="col">
-					<label htmlFor="inRelationshipWith" className="form-label">
-						In Relationship With?
-					</label>
-					<select
-						id="inRelationshipWith"
-						name="inRelationshipWith"
-						defaultValue={undefined}
-						className="form-control"
-					>
-						{objects.data
-							.filter((excludedUser) => excludedUser._id !== auth?.id)
-							.map((user) => (
-								<option key={user._id} value={user._id}>
-									{user.username}
-								</option>
-							))}
-					</select>
-				</div>
+				{showPartner && objects.data.length >= 1 && (
+					<div className="col">
+						<label htmlFor="inRelationshipWith" className="form-label">
+							In Relationship With?
+						</label>
+						<select
+							id="inRelationshipWith"
+							name="inRelationshipWith"
+							defaultValue={undefined}
+							className="form-control"
+						>
+							{objects.data
+								.filter((excludedUser) => excludedUser._id !== auth?.id)
+								.map((user) => (
+									<option key={user._id} value={user._id}>
+										{user.username}
+									</option>
+								))}
+						</select>
+					</div>
+				)}
 			</div>
 			<div className="row">
 				<div className="col">

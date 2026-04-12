@@ -132,7 +132,6 @@ const UpdateAboutForm = ({ auth = {}, profiles = [] }) => {
 						<option value="divorced">Divorced</option>
 					</select>
 				</div>
-
 				{showPartner && profiles.data.length >= 1 && (
 					<div className="col">
 						<label htmlFor="inRelationshipWith" className="form-label">

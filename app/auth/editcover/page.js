@@ -1,5 +1,7 @@
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 import Link from "next/link";
 import Sidebar from "@/layout/auth/sidebar";
 import Globalcontent from "@/layout/content";
@@ -8,6 +10,16 @@ import UpdateCoverForm from "@/forms/auth/updatecoverform";
 import Head from "@/app/head";
 import { getGlobalData } from "@/helpers/globalData";
 import ErrorPage from "@/layout/errorpage";
+import MasonryLayout from "@/components/auth/masonrylayout";
+
+async function getFiles(params) {
+	const res = await fetchurl(
+		`/global/files${params}&album=profile-covers&select=-data`,
+		"GET",
+		"no-cache",
+	);
+	return res;
+}
 
 const UpdateCover = async ({ params, searchParams }) => {
 	const { auth, settings } = await getGlobalData();
@@ -15,6 +27,17 @@ const UpdateCover = async ({ params, searchParams }) => {
 	// Redirect if user is not logged in
 	(auth?.error?.statusCode === 401 || !auth?.data?.isOnline) &&
 		redirect(`/auth/login`);
+
+	const files = await getFiles(`?user=${auth?.data?._id}`);
+
+	const setCover = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/auth/updatecover`, "PUT", "no-cache", {
+			cover: id,
+		});
+		revalidatePath(`/auth/editcover`);
+	};
 
 	return (
 		<>
@@ -66,6 +89,15 @@ const UpdateCover = async ({ params, searchParams }) => {
 										</div>
 									</div>
 									<UpdateCoverForm auth={auth} />
+								</div>
+								<div className="card">
+									<div className="card-header">Previous&nbsp;Avatars</div>
+									<div className="card-body">
+										<MasonryLayout
+											setNewAvatar={setCover}
+											objects={files.data}
+										/>
+									</div>
 								</div>
 							</Globalcontent>
 						</div>

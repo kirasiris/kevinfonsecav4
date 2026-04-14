@@ -1,8 +1,10 @@
+import { notFound } from "next/navigation";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import ParseHtml from "@/layout/parseHtml";
 
 async function getSecret(params) {
 	const res = await fetchurl(`/global/secrets${params}`, "GET", "no-cache");
+	if (!res.success) notFound();
 	return res;
 }
 

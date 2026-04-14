@@ -35,7 +35,7 @@ const UpdatePasswordForm = ({ auth = {} }) => {
 			`/auth/updatepassword`,
 			"PUT",
 			"no-cache",
-			{ ...rawFormData, website: "beFree" },
+			{ ...rawFormData, website: process.env.NEXT_PUBLIC_WEBSITE_NAME },
 			undefined,
 			false,
 			false,

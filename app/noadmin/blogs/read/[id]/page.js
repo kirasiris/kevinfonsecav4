@@ -1,3 +1,4 @@
+import { notFound } from "next/navigation";
 import Image from "next/image";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import ParseHtml from "@/layout/parseHtml";
@@ -5,6 +6,7 @@ import ArticleHeader from "@/components/global/articleheader";
 
 async function getBlog(params) {
 	const res = await fetchurl(`/global/blogs${params}`, "GET", "no-cache");
+	if (!res.success) notFound();
 	return res;
 }
 

@@ -27,8 +27,6 @@ const UpdateUserForm = ({ auth = {}, object = {}, objects = [] }) => {
 			email: formData.get("email"),
 			secondaryEmail: formData.get("secondaryEmail"),
 			phoneNumber: formData.get("phoneNumber"),
-			password: formData.get("password"),
-			password2: formData.get("password2"),
 			isEmailConfirmed: formData.get("isEmailConfirmed"),
 			role: formData.getAll("role"),
 			sex: formData.get("sex"),
@@ -53,12 +51,6 @@ const UpdateUserForm = ({ auth = {}, object = {}, objects = [] }) => {
 			},
 			registeredFrom: process.env.NEXT_PUBLIC_WEBSITE_NAME,
 		};
-
-		if (rawFormData.password !== rawFormData.password2) {
-			toast.error(`Passwords do not match`);
-			setBtnText("Submit");
-			return;
-		}
 
 		const res = await fetchurl(
 			`/noadmin/users/${object?.data?._id}`,
@@ -153,34 +145,6 @@ const UpdateUserForm = ({ auth = {}, object = {}, objects = [] }) => {
 					className="form-control mb-3"
 					placeholder="012-345-6789"
 				/>
-				<div className="row">
-					<div className="col">
-						<label htmlFor="password" className="form-label">
-							Password
-						</label>
-						<input
-							id="password"
-							name="password"
-							defaultValue=""
-							type="password"
-							className="form-control mb-3"
-							placeholder="******"
-						/>
-					</div>
-					<div className="col">
-						<label htmlFor="password2" className="form-label">
-							Confirm Password?
-						</label>
-						<input
-							id="password2"
-							name="password2"
-							defaultValue=""
-							type="password"
-							className="form-control mb-3"
-							placeholder="******"
-						/>
-					</div>
-				</div>
 				<label htmlFor="isEmailConfirmed" className="form-label">
 					Activate Account?
 				</label>

@@ -1,12 +1,14 @@
+import { notFound } from "next/navigation";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import QRC from "@/components/global/qrcode";
 
-async function getQRCodes(params) {
+async function getQRCode(params) {
 	const res = await fetchurl(
 		`/extras/tools/qrcodes${params}`,
 		"GET",
-		"no-cache"
+		"no-cache",
 	);
+	if (!res.success) notFound();
 	return res;
 }
 
@@ -14,7 +16,7 @@ const ReadQrCode = async ({ params, searchParams }) => {
 	const awtdParams = await params;
 	const awtdSearchParams = await searchParams;
 
-	const qrcode = await getQRCodes(`/${awtdParams.id}`);
+	const qrcode = await getQRCode(`/${awtdParams.id}`);
 
 	return (
 		<div className="row">

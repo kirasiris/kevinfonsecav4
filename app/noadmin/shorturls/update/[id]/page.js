@@ -1,3 +1,4 @@
+import { notFound } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { fetchurl, getUserOnServer } from "@/helpers/setTokenOnServer";
 import AdminStatusesMenu from "@/components/noadmin/adminstatusesmenu";
@@ -10,6 +11,7 @@ async function getShortUrls(params) {
 		"GET",
 		"no-cache",
 	);
+	if (!res.success) notFound();
 	return res;
 }
 

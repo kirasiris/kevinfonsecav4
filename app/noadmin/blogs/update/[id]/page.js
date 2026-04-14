@@ -1,3 +1,4 @@
+import { notFound } from "next/navigation";
 import {
 	fetchurl,
 	getAuthTokenOnServer,
@@ -12,6 +13,7 @@ async function getCategories(params) {
 
 async function getBlog(params) {
 	const res = await fetchurl(`/global/blogs${params}`, "GET", "no-cache");
+	if (!res.success) notFound();
 	return res;
 }
 

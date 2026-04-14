@@ -14,7 +14,7 @@ const UpdateUserPassword = async ({ params, searchParams }) => {
 
 	const user = await getUser(`/${awtdParams.id}`);
 
-	return <UpdateUserPasswordForm object={user.data} />;
+	return <UpdateUserPasswordForm object={user} />;
 };
 
 export default UpdateUserPassword;

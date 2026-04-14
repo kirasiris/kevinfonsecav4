@@ -13,9 +13,9 @@ const videoConstraints = {
 	facingMode: "user",
 };
 
-const UploadPictureForm = ({ auth = {}, object = {} }) => {
+const UploadPictureForm = ({ object = {} }) => {
 	const fileurl =
-		object.files?.nfa_avatar?.location?.secure_location ||
+		object?.data?.files?.nfa_avatar?.location?.secure_location ||
 		`https://static.vecteezy.com/system/resources/previews/005/337/799/original/icon-image-not-found-free-vector.jpg`;
 	const [uploadPercentage, setUploadPercentage] = useState(0);
 	const [cameraModal, setCameraModal] = useState(false);
@@ -35,9 +35,9 @@ const UploadPictureForm = ({ auth = {}, object = {} }) => {
 				const res = await axios.put(
 					`${process.env.NEXT_PUBLIC_FILE_UPLOADER_URL}/uploads/uploadobject`,
 					{
-						userId: object?._id,
-						username: object?.username,
-						userEmail: object?.email,
+						userId: object?.data?._id,
+						username: object?.data?.username,
+						userEmail: object?.data?.email,
 						onModel: "User",
 						file: blob.file,
 						album: "profile-avatars",
@@ -51,20 +51,20 @@ const UploadPictureForm = ({ auth = {}, object = {} }) => {
 						onUploadProgress: (ProgressEvent) => {
 							setUploadPercentage(
 								parseInt(
-									Math.round(ProgressEvent.loaded * 100) / ProgressEvent.total
-								)
+									Math.round(ProgressEvent.loaded * 100) / ProgressEvent.total,
+								),
 							);
 							setTimeout(() => setUploadPercentage(0), 10000);
 						},
-					}
+					},
 				);
 				await fetchurl(
-					`/noadmin/users/${object?._id}/updatenfaavatar`,
+					`/noadmin/users/${object?.data?._id}/updatenfaavatar`,
 					"PUT",
 					"no-cache",
 					{
 						nfa_avatar: res.data.data._id,
-					}
+					},
 				);
 				// resetForm();
 				toast.success("NFA Avatar uploaded");
@@ -82,7 +82,7 @@ const UploadPictureForm = ({ auth = {}, object = {} }) => {
 					// dispatch(setAlert(error, 'danger'));
 					error &&
 						Object.entries(error).map(([, value]) =>
-							toast.error(value.message)
+							toast.error(value.message),
 						);
 				}
 
@@ -97,7 +97,7 @@ const UploadPictureForm = ({ auth = {}, object = {} }) => {
 				};
 			}
 		},
-		[webcamRef]
+		[webcamRef],
 	);
 
 	const resetForm = () => {};

@@ -17,13 +17,13 @@ const UpdateUserPasswordForm = ({ object = {} }) => {
 		const formData = new FormData(form);
 
 		const rawFormData = {
-			password: formData.get("password"),
-			password2: formData.get("password2"),
+			newpassword: formData.get("newpassword"),
+			newpassword2: formData.get("newpassword2"),
 			website: formData.get("website"),
 			registeredFrom: process.env.NEXT_PUBLIC_WEBSITE_NAME,
 		};
 
-		if (rawFormData.password !== rawFormData.password2) {
+		if (rawFormData.newpassword !== rawFormData.newpassword2) {
 			toast.error(`Passwords do not match`);
 			setBtnText("Submit");
 			return;
@@ -61,23 +61,23 @@ const UpdateUserPasswordForm = ({ object = {} }) => {
 		<form onSubmit={upgradeUserPassword}>
 			<div className="row">
 				<div className="col">
-					<label htmlFor="password" className="form-label">
+					<label htmlFor="newpassword" className="form-label">
 						Password
 					</label>
 					<input
-						id="password"
-						name="password"
+						id="newpassword"
+						name="newpassword"
 						defaultValue=""
 						type="password"
 						className="form-control mb-3"
 						placeholder="******"
 					/>
-					<label htmlFor="password2" className="form-label">
+					<label htmlFor="newpassword2" className="form-label">
 						Confirm Password?
 					</label>
 					<input
-						id="password2"
-						name="password2"
+						id="newpassword2"
+						name="newpassword2"
 						defaultValue=""
 						type="password"
 						className="form-control"

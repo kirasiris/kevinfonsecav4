@@ -28,10 +28,18 @@ const CreateCDAlbumCategoryForm = ({
 			deletable: formData.get("deletable"),
 		};
 
-		const res = await fetchurl(`/noadmin/categories`, "POST", "no-cache", {
-			...rawFormData,
-			categoryType: "album",
-		});
+		const res = await fetchurl(
+			`/noadmin/categories`,
+			"POST",
+			"no-cache",
+			{
+				...rawFormData,
+				categoryType: "album",
+			},
+			undefined,
+			false,
+			false,
+		);
 
 		if (res.status === "error") {
 			toast.error(res.message, "bottom");
@@ -46,7 +54,7 @@ const CreateCDAlbumCategoryForm = ({
 		setBtnText(btnText);
 		//resetForm();
 		router.push(
-			`/noadmin/cdalbums/categories?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/cdalbums/categories?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 

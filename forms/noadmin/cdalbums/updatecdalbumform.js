@@ -44,6 +44,9 @@ const UpdateCDAlbumForm = ({
 				onairtype: "cd-album",
 				playlistType: "audio",
 			},
+			undefined,
+			false,
+			false,
 		);
 
 		if (res.status === "error") {

@@ -28,10 +28,18 @@ const CreateQuizCategoryForm = ({
 			deletable: formData.get("deletable"),
 		};
 
-		const res = await fetchurl(`/noadmin/categories`, "POST", "no-cache", {
-			...rawFormData,
-			categoryType: "quiz",
-		});
+		const res = await fetchurl(
+			`/noadmin/categories`,
+			"POST",
+			"no-cache",
+			{
+				...rawFormData,
+				categoryType: "quiz",
+			},
+			undefined,
+			false,
+			false,
+		);
 
 		if (res.status === "error") {
 			toast.error(res.message, "bottom");
@@ -46,7 +54,7 @@ const CreateQuizCategoryForm = ({
 		setBtnText(btnText);
 		//resetForm();
 		router.push(
-			`/noadmin/quizzes/categories?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/quizzes/categories?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 

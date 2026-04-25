@@ -28,7 +28,7 @@ const AdminCompanyReadSearchIndex = async ({ params, searchParams }) => {
 
 	const company = await getCompany(`/${awtdParams.id}`);
 	const jobs = await getJobs(
-		`?resourceId=${company?.data?._id}&page=${page}&limit=${limit}&sort=${sort}&keyword=${keyword}`
+		`?resourceId=${company?.data?._id}&page=${page}&limit=${limit}&sort=${sort}&keyword=${keyword}`,
 	);
 
 	const draftIt = async (id) => {
@@ -90,19 +90,6 @@ const AdminCompanyReadSearchIndex = async ({ params, searchParams }) => {
 								{company?.data?.title || "Untitled"}
 							</div>
 						</div>
-						<div className="float-end my-1">
-							<div className="btn-group">
-								<Link
-									href={{
-										pathname: `/nfabusiness/companies/certificate/${company?.data?._id}/create`,
-										query: {},
-									}}
-									className="btn btn-primary btn-sm"
-								>
-									Add License
-								</Link>
-							</div>
-						</div>
 					</div>
 					<div className="card-body">
 						<ParseHtml text={company?.data?.text} />
@@ -127,7 +114,24 @@ const AdminCompanyReadSearchIndex = async ({ params, searchParams }) => {
 					/>
 				</div>
 				<div className="card rounded-0 mb-3">
-					<div className="card-header">Certificates</div>
+					<div className="card-header">
+						<div className="float-start">
+							<div className="d-flex align-items-center my-2">Certificates</div>
+						</div>
+						<div className="float-end my-1">
+							<div className="btn-group">
+								<Link
+									href={{
+										pathname: `/nfabusiness/companies/certificate/${company?.data?._id}/create`,
+										query: {},
+									}}
+									className="btn btn-primary btn-sm"
+								>
+									Add License
+								</Link>
+							</div>
+						</div>
+					</div>
 					<ul className="list-group list-group-flush">
 						{company?.data?.certificates?.map((cert) => (
 							<li key={cert._id} className="list-group-item">

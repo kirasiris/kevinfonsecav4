@@ -28,7 +28,10 @@ const CreateCategoryForm = ({ currentpage = "", objects = [] }) => {
 			`/noadmin/categories`,
 			"POST",
 			"no-cache",
-			rawFormData
+			rawFormData,
+			undefined,
+			false,
+			false,
 		);
 
 		if (res.status === "error") {

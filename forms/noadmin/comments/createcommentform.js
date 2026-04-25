@@ -31,12 +31,20 @@ const CreateCommentForm = ({
 			status: formData.get("status"),
 		};
 
-		const res = await fetchurl(`/noadmin/comments`, "POST", "no-cache", {
-			...rawFormData,
-			resourceId: searchParams.resourceId,
-			parentId: searchParams.parentId || undefined,
-			onModel: searchParams.onModel,
-		});
+		const res = await fetchurl(
+			`/noadmin/comments`,
+			"POST",
+			"no-cache",
+			{
+				...rawFormData,
+				resourceId: searchParams.resourceId,
+				parentId: searchParams.parentId || undefined,
+				onModel: searchParams.onModel,
+			},
+			undefined,
+			false,
+			false,
+		);
 
 		if (res.status === "error") {
 			toast.error(res.message, "bottom");

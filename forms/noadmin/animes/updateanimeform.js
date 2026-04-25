@@ -44,6 +44,9 @@ const UpdateAnimeForm = ({
 				onairtype: "anime",
 				playlistType: "video",
 			},
+			undefined,
+			false,
+			false,
 		);
 
 		if (res.status === "error") {

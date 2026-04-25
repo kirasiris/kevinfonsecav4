@@ -62,6 +62,9 @@ const CreateSettingForm = ({ token = {}, auth = {} }) => {
 			"POST",
 			"no-cache",
 			rawFormData,
+			undefined,
+			false,
+			false,
 		);
 
 		if (res.status === "error") {

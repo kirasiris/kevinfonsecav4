@@ -53,12 +53,20 @@ const List = ({
 	const addScore = async (e) => {
 		e.preventDefault();
 		try {
-			const res = await fetchurl(`/global/quizresults`, "POST", "no-cache", {
-				...selectedOptionsData,
-				resourceId: params.id,
-				onModel: "Quiz",
-				website: process.env.NEXT_PUBLIC_WEBSITE_NAME, // Needed for DB mass email functionality
-			});
+			const res = await fetchurl(
+				`/global/quizresults`,
+				"POST",
+				"no-cache",
+				{
+					...selectedOptionsData,
+					resourceId: params.id,
+					onModel: "Quiz",
+					website: process.env.NEXT_PUBLIC_WEBSITE_NAME, // Needed for DB mass email functionality
+				},
+				undefined,
+				false,
+				false,
+			);
 			router.push(`/quiz/results/${res?.data?._id}`);
 		} catch (err) {
 			console.log(err);

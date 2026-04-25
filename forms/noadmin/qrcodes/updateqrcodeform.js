@@ -56,18 +56,24 @@ const UpdateQRCodeForm = ({ object = {} }) => {
 					width: formData.get("imagewidth"),
 					height: formData.get("imageheight"),
 				},
-			}
+			},
+			undefined,
+			false,
+			false,
 		);
+
 		if (res.status === "error") {
 			toast.error(res.message, "bottom");
 			setBtnText("Submit");
 			return;
 		}
+
 		if (res.status === "fail") {
 			toast.error(res.message, "bottom");
 			setBtnText("Submit");
 			return;
 		}
+
 		toast.success("QR Code upgraded", "bottom");
 		setBtnText(btnText);
 		router.push(`/noadmin/qrcodes?page=1&limit=10&sort=-createdAt`);

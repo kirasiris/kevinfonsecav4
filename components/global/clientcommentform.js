@@ -38,7 +38,10 @@ const ClientCommentForm = ({
 				{
 					...newCommentData,
 					user: auth?.userId || undefined,
-				}
+				},
+				undefined,
+				false,
+				false,
 			);
 
 			console.log("API Response:", res);

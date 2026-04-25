@@ -27,12 +27,20 @@ const ReportModal = ({
 
 	const sendReport = async (e) => {
 		e.preventDefault();
-		await fetchurl(`/global/reports/${resourceId}`, "POST", "no-cache", {
-			...reportData,
-			postType: postType,
-			onModel: onModel,
-			website: "beFree",
-		});
+		await fetchurl(
+			`/global/reports/${resourceId}`,
+			"POST",
+			"no-cache",
+			{
+				...reportData,
+				postType: postType,
+				onModel: onModel,
+				website: "beFree",
+			},
+			undefined,
+			false,
+			false,
+		);
 		setReportModal(false);
 		resetForm();
 	};

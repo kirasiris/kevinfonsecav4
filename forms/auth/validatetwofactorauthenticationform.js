@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import {
 	fetchurl,
@@ -11,7 +11,6 @@ import {
 const ValidateTwoFactorAuthenticationForm = () => {
 	const router = useRouter();
 	const awtdParams = useParams();
-	const awtdSearchParams = useSearchParams();
 
 	const [btnText, setBtnText] = useState("Submit");
 

@@ -32,9 +32,10 @@ const CreateShortUrlForm = ({ auth = {}, currentpage = "" }) => {
 			"POST",
 			"no-cache",
 			rawFormData,
+			undefined,
+			false,
+			false,
 		);
-
-		console.log("response", res);
 
 		if (res.status === "error") {
 			toast.error(res.message, "bottom");

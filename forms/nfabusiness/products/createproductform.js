@@ -55,12 +55,20 @@ const CreateProductForm = ({ token = {}, auth = {} }) => {
 			commented: formData.get("commented"),
 		};
 
-		const res = await fetchurl(`/noadmin/stripe/products`, "POST", "no-cache", {
-			...rawFormData,
-			postType: "product",
-			resourceId: auth?.companyId,
-			onModel: "Company",
-		});
+		const res = await fetchurl(
+			`/noadmin/stripe/products`,
+			"POST",
+			"no-cache",
+			{
+				...rawFormData,
+				postType: "product",
+				resourceId: auth?.companyId,
+				onModel: "Company",
+			},
+			undefined,
+			false,
+			false,
+		);
 
 		if (res.status === "error") {
 			toast.error(res.message, "bottom");

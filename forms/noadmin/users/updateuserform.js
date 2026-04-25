@@ -25,7 +25,6 @@ const UpdateUserForm = ({ auth = {}, object = {}, objects = [] }) => {
 			username: formData.get("username"),
 			name: formData.get("name"),
 			email: formData.get("email"),
-			secondaryEmail: formData.get("secondaryEmail"),
 			phoneNumber: formData.get("phoneNumber"),
 			isEmailConfirmed: formData.get("isEmailConfirmed"),
 			role: formData.getAll("role"),
@@ -57,6 +56,9 @@ const UpdateUserForm = ({ auth = {}, object = {}, objects = [] }) => {
 			"PUT",
 			"no-cache",
 			rawFormData,
+			undefined,
+			false,
+			false,
 		);
 
 		if (res.status === "error") {
@@ -115,19 +117,6 @@ const UpdateUserForm = ({ auth = {}, object = {}, objects = [] }) => {
 							id="email"
 							name="email"
 							defaultValue={object?.data?.email}
-							type="email"
-							className="form-control mb-3"
-							placeholder="john@doe.com"
-						/>
-					</div>
-					<div className="col">
-						<label htmlFor="secondaryEmail" className="form-label">
-							Secondary Email
-						</label>
-						<input
-							id="secondaryEmail"
-							name="secondaryEmail"
-							defaultValue={object?.data?.secondaryEmail}
 							type="email"
 							className="form-control mb-3"
 							placeholder="john@doe.com"

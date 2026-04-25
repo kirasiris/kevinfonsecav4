@@ -29,10 +29,18 @@ const CreateSecretForm = ({ token = {}, auth = {} }) => {
 			deletable: formData.get("deletable"),
 		};
 
-		const res = await fetchurl(`/noadmin/secrets`, "POST", "no-cache", {
-			...rawFormData,
-			status: "published",
-		});
+		const res = await fetchurl(
+			`/noadmin/secrets`,
+			"POST",
+			"no-cache",
+			{
+				...rawFormData,
+				status: "published",
+			},
+			undefined,
+			false,
+			false,
+		);
 
 		if (res.status === "error") {
 			toast.error(res.message, "bottom");

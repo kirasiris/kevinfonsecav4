@@ -34,7 +34,10 @@ const UpdateCommentForm = ({ token = {}, auth = {}, object = {} }) => {
 				...rawFormData,
 				resourceId: object?.data?.resourceId?._id,
 				onModel: object?.data?.onModel,
-			}
+			},
+			undefined,
+			false,
+			false,
 		);
 
 		if (res.status === "error") {

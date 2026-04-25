@@ -1,14 +1,9 @@
 "use client";
 import { useState } from "react";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { toast } from "react-toastify";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 
 const VerifyTwoFactorAuthenticationForm = ({ auth = {} }) => {
-	const router = useRouter();
-	const awtdParams = useParams();
-	const awtdSearchParams = useSearchParams();
-
 	const [displayToken, setDisplayToken] = useState("");
 	const [displayText, setDisplayText] = useState(false);
 

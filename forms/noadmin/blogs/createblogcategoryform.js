@@ -28,10 +28,18 @@ const CreateBlogCategoryForm = ({
 			deletable: formData.get("deletable"),
 		};
 
-		const res = await fetchurl(`/noadmin/categories`, "POST", "no-cache", {
-			...rawFormData,
-			categoryType: "blog",
-		});
+		const res = await fetchurl(
+			`/noadmin/categories`,
+			"POST",
+			"no-cache",
+			{
+				...rawFormData,
+				categoryType: "blog",
+			},
+			undefined,
+			false,
+			false,
+		);
 
 		if (res.status === "error") {
 			toast.error(res.message, "bottom");
@@ -46,7 +54,7 @@ const CreateBlogCategoryForm = ({
 		setBtnText(btnText);
 		//resetForm();
 		router.push(
-			`/noadmin/blogs/categories?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/blogs/categories?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 

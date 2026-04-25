@@ -44,6 +44,9 @@ const UpdateMovieForm = ({
 				onairtype: "movie",
 				playlistType: "video",
 			},
+			undefined,
+			false,
+			false,
 		);
 
 		if (res.status === "error") {

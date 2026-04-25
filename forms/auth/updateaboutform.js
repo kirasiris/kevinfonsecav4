@@ -1,14 +1,12 @@
 "use client";
 import { useState } from "react";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import MyTextArea from "@/components/global/myfinaltextarea";
 
 const UpdateAboutForm = ({ auth = {}, profiles = [] }) => {
 	const router = useRouter();
-	const awtdParams = useParams();
-	const awtdSearchParams = useSearchParams();
 
 	const [showPartner, setShowPartner] = useState(
 		auth?.data?.relationshipStatus === "taken",

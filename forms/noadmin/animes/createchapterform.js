@@ -54,11 +54,19 @@ const CreateChapterForm = ({ token = {}, auth = {}, params = {} }) => {
 			},
 		};
 
-		const res = await fetchurl(`/noadmin/videos`, "POST", "no-cache", {
-			...rawFormData,
-			resourceId: params.id,
-			onModel: "Playlist",
-		});
+		const res = await fetchurl(
+			`/noadmin/videos`,
+			"POST",
+			"no-cache",
+			{
+				...rawFormData,
+				resourceId: params.id,
+				onModel: "Playlist",
+			},
+			undefined,
+			false,
+			false,
+		);
 
 		if (res.status === "error") {
 			toast.error(res.message, "bottom");

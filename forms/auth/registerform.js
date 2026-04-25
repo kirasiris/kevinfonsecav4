@@ -1,13 +1,11 @@
 "use client";
 import { useState } from "react";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 
 const RegisterForm = () => {
 	const router = useRouter();
-	const awtdParams = useParams();
-	const awtdSearchParams = useSearchParams();
 
 	const [btnText, setBtnText] = useState("Submit");
 
@@ -39,15 +37,25 @@ const RegisterForm = () => {
 			return;
 		}
 
-		const res = await fetchurl(`/auth/register`, "POST", "no-cache", {
-			...rawFormData,
-			website: process.env.NEXT_PUBLIC_WEBSITE_NAME,
-		});
+		const res = await fetchurl(
+			`/auth/register`,
+			"POST",
+			"no-cache",
+			{
+				...rawFormData,
+				website: process.env.NEXT_PUBLIC_WEBSITE_NAME,
+			},
+			undefined,
+			false,
+			false,
+		);
+
 		if (res.status === "error") {
 			toast.error(res.message, "bottom");
 			setBtnText("Submit");
 			return;
 		}
+
 		if (res.status === "fail") {
 			toast.error(res.message, "bottom");
 			setBtnText("Submit");
@@ -58,6 +66,7 @@ const RegisterForm = () => {
 		toast.success(
 			`An email has been sent to ${rawFormData.email}. Please verify account`,
 		);
+
 		router.push(`/auth/login`);
 	};
 

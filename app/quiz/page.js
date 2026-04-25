@@ -47,7 +47,7 @@ const QuizIndex = async ({ params, searchParams }) => {
 				title={`${settings?.data?.title} - Quizzes`}
 				description={"Learn everything you need for free!"}
 				favicon={settings?.data?.favicon}
-				postImage={settings.data.showcase_image}
+				postImage={settings?.data?.showcase_image}
 				imageWidth=""
 				imageHeight=""
 				videoWidth=""

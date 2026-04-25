@@ -29,16 +29,24 @@ const CreateEventForm = ({ token = {}, auth = {} }) => {
 			status: formData.get("status"),
 		};
 
-		const res = await fetchurl(`/noadmin/events`, "POST", "no-cache", {
-			...rawFormData,
-			attendees: [
-				{
-					name: process.env.NEXT_PUBLIC_WEBSITE_NAME,
-					email: process.env.NEXT_PUBLIC_WEBSITE_EMAIL,
-					phoneNumber: "682-375-9607",
-				},
-			],
-		});
+		const res = await fetchurl(
+			`/noadmin/events`,
+			"POST",
+			"no-cache",
+			{
+				...rawFormData,
+				attendees: [
+					{
+						name: process.env.NEXT_PUBLIC_WEBSITE_NAME,
+						email: process.env.NEXT_PUBLIC_WEBSITE_EMAIL,
+						phoneNumber: "682-375-9607",
+					},
+				],
+			},
+			undefined,
+			false,
+			false,
+		);
 
 		if (res.status === "error") {
 			toast.error(res.message, "bottom");

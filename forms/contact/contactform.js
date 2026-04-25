@@ -34,7 +34,10 @@ const ContactForm = () => {
 			`/global/contactemails`,
 			"POST",
 			"no-cache",
-			rawFormData
+			rawFormData,
+			undefined,
+			false,
+			false,
 		);
 		if (res.status === "error") {
 			toast.error(res.message, "bottom");

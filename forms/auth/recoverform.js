@@ -1,12 +1,11 @@
 "use client";
 import { useState } from "react";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "react-toastify";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 
 const RecoverForm = () => {
 	const router = useRouter();
-	const awtdParams = useParams();
 	const awtdSearchParams = useSearchParams();
 
 	const [btnText, setBtnText] = useState("Submit");
@@ -22,10 +21,19 @@ const RecoverForm = () => {
 			email: formData.get("email"),
 		};
 
-		const res = await fetchurl(`/auth/forgotpassword`, "POST", "no-cache", {
-			...rawFormData,
-			website: "beFree",
-		});
+		const res = await fetchurl(
+			`/auth/forgotpassword`,
+			"POST",
+			"no-cache",
+			{
+				...rawFormData,
+				website: process.env.NEXT_PUBLIC_WEBSITE_NAME,
+			},
+			undefined,
+			false,
+			false,
+		);
+
 		if (res.status === "error") {
 			toast.error(res.message, "bottom");
 			setBtnText("Submit");
@@ -39,7 +47,7 @@ const RecoverForm = () => {
 		setBtnText("Submit");
 		toast.success(
 			`An email has been sent to ${rawFormData.email} associated with this account`,
-			"bottom"
+			"bottom",
 		);
 		let returnpage = awtdSearchParams.get("returnpage");
 		router.push(returnpage || `/auth/profile`);

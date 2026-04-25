@@ -56,16 +56,25 @@ const QRCodeGeneratorPage = ({ searchParams = {}, pushTo = true }) => {
 	const createQrCode = async (e) => {
 		e.preventDefault();
 		setBtnText("...");
-		const res = await fetchurl(`/extras/tools/qrcodes`, "POST", "no-cache", {
-			...qrcodeData,
-			logo: {
-				url: imageurl,
-				width: imagewidth,
-				height: imageheight,
+		const res = await fetchurl(
+			`/extras/tools/qrcodes`,
+			"POST",
+			"no-cache",
+			{
+				...qrcodeData,
+				logo: {
+					url: imageurl,
+					width: imagewidth,
+					height: imageheight,
+				},
+				website: process.env.NEXT_PUBLIC_WEBSITE_NAME,
+				status: "published",
 			},
-			website: process.env.NEXT_PUBLIC_WEBSITE_NAME,
-			status: "published",
-		});
+			undefined,
+			false,
+			false,
+		);
+
 		if (res.status === "error") {
 			toast.error(res.message, "bottom");
 			setBtnText("Submit");

@@ -33,10 +33,18 @@ const CreateThemeForm = ({ token = {}, auth = {}, objects = [] }) => {
 			files: { avatar: formData.get("file") || undefined },
 		};
 
-		const res = await fetchurl(`/noadmin/themes`, "POST", "no-cache", {
-			...rawFormData,
-			postType: "theme",
-		});
+		const res = await fetchurl(
+			`/noadmin/themes`,
+			"POST",
+			"no-cache",
+			{
+				...rawFormData,
+				postType: "theme",
+			},
+			undefined,
+			false,
+			false,
+		);
 
 		if (res.status === "error") {
 			toast.error(res.message, "bottom");

@@ -60,9 +60,17 @@ const UploadPictureForm = ({ auth = {} }) => {
 						},
 					},
 				);
-				await fetchurl(`/auth/updateavatar`, "PUT", "no-cache", {
-					avatar: res.data.data._id,
-				});
+				await fetchurl(
+					`/auth/updateavatar`,
+					"PUT",
+					"no-cache",
+					{
+						avatar: res.data.data._id,
+					},
+					undefined,
+					false,
+					false,
+				);
 				// resetForm();
 				setUploadPercentage(0);
 				toast.success("Avatar uploaded");

@@ -32,6 +32,9 @@ const UpdateFileForm = ({ token = {}, auth = {}, object = {} }) => {
 			"PUT",
 			"no-cache",
 			rawFormData,
+			undefined,
+			false,
+			false,
 		);
 
 		if (res.status === "error") {

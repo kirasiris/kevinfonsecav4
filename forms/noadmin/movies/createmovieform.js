@@ -30,11 +30,19 @@ const CreateMovieForm = ({ token = {}, auth = {}, objects = [] }) => {
 			files: { avatar: formData.get("file") || undefined },
 		};
 
-		const res = await fetchurl(`/noadmin/playlists`, "POST", "no-cache", {
-			...rawFormData,
-			onairtype: "movie",
-			playlistType: "video",
-		});
+		const res = await fetchurl(
+			`/noadmin/playlists`,
+			"POST",
+			"no-cache",
+			{
+				...rawFormData,
+				onairtype: "movie",
+				playlistType: "video",
+			},
+			undefined,
+			false,
+			false,
+		);
 
 		if (res.status === "error") {
 			toast.error(res.message, "bottom");

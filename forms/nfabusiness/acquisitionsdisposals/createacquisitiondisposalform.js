@@ -40,6 +40,9 @@ const CreateAcquisitionDisposalForm = ({ token = "", auth = {} }) => {
 			"POST",
 			"no-cache",
 			rawFormData,
+			undefined,
+			false,
+			false,
 		);
 		if (res.status === "error") {
 			toast.error(res.message, "bottom");

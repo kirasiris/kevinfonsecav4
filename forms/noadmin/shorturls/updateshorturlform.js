@@ -28,6 +28,9 @@ const UpdateShortUrlForm = ({ object = {}, currentpage = "" }) => {
 			"PUT",
 			"no-cache",
 			rawFormData,
+			undefined,
+			false,
+			false,
 		);
 
 		if (res.status === "error") {

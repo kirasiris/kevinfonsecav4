@@ -13,7 +13,11 @@ const NewsletterForm = ({
 		const res = await fetchurl(
 			`/global/newslettersubscribers${params}`,
 			"GET",
-			"no-cache"
+			"no-cache",
+			{},
+			undefined,
+			false,
+			false,
 		);
 		setNewsletters(res?.data);
 	};
@@ -50,7 +54,10 @@ const NewsletterForm = ({
 			{
 				...rawFormData,
 				website: process.env.NEXT_PUBLIC_NO_REPLY_EMAIL, // Needed for DB mass email functionality
-			}
+			},
+			undefined,
+			false,
+			false,
 		);
 
 		if (res.status === "error") {

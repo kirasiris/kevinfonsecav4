@@ -30,7 +30,10 @@ const UpdateQuoteForm = ({ currentpage = "", object = {} }) => {
 			`/extras/quotes/${object?.data?._id}`,
 			"PUT",
 			"no-cache",
-			rawFormData
+			rawFormData,
+			undefined,
+			false,
+			false,
 		);
 
 		if (res.status === "error") {

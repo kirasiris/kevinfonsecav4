@@ -30,6 +30,9 @@ const CreateShortUrlForm = ({ auth = {}, currentpage = "" }) => {
 			"POST",
 			"no-cache",
 			rawFormData,
+			undefined,
+			false,
+			false,
 		);
 
 		if (res.status === "error") {

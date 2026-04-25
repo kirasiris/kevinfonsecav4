@@ -46,22 +46,32 @@ const CreateQuestionForm = ({
 			answers: options,
 		};
 
-		const res = await fetchurl(`/noadmin/questions`, "POST", "no-cache", {
-			...rawFormData,
-			resourceId: params.id,
-			onModel: "Quiz",
-		});
+		const res = await fetchurl(
+			`/noadmin/questions`,
+			"POST",
+			"no-cache",
+			{
+				...rawFormData,
+				resourceId: params.id,
+				onModel: "Quiz",
+			},
+			undefined,
+			false,
+			false,
+		);
 
 		if (res.status === "error") {
 			toast.error(res.message, "bottom");
 			setBtnText("Submit");
 			return;
 		}
+
 		if (res.status === "fail") {
 			toast.error(res.message, "bottom");
 			setBtnText("Submit");
 			return;
 		}
+
 		toast.success(`Quiz question created`, "bottom");
 		router.push(`/noadmin/quizzes/read/${params.id}`);
 	};

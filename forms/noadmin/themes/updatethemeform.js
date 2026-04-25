@@ -43,6 +43,9 @@ const UpdateThemeForm = ({
 			"PUT",
 			"no-cache",
 			rawFormData,
+			undefined,
+			false,
+			false,
 		);
 
 		if (res.status === "error") {

@@ -29,7 +29,10 @@ const CreateChangelogForm = ({ token = {}, auth = {} }) => {
 			`/noadmin/changelogs`,
 			"POST",
 			"no-cache",
-			rawFormData
+			rawFormData,
+			undefined,
+			false,
+			false,
 		);
 
 		if (res.status === "error") {

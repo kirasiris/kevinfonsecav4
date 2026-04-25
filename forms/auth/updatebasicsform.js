@@ -1,13 +1,11 @@
 "use client";
 import { useState } from "react";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 
 const UpdateBasicsForm = ({ auth = {} }) => {
 	const router = useRouter();
-	const awtdParams = useParams();
-	const awtdSearchParams = useSearchParams();
 
 	const [btnText, setBtnText] = useState("Submit");
 
@@ -21,7 +19,6 @@ const UpdateBasicsForm = ({ auth = {} }) => {
 		const rawFormData = {
 			username: formData.get("username"),
 			workstatus: formData.get("workstatus"),
-			secondaryEmail: formData.get("secondaryEmail"),
 			website: formData.get("website"),
 			facebook: formData.get("facebook"),
 			twitter: formData.get("twitter"),
@@ -40,7 +37,7 @@ const UpdateBasicsForm = ({ auth = {} }) => {
 			rawFormData,
 			undefined,
 			false,
-			false
+			false,
 		);
 		if (res.status === "error") {
 			toast.error(res.message, "bottom");
@@ -75,7 +72,7 @@ const UpdateBasicsForm = ({ auth = {} }) => {
 				placeholder="john.doe"
 			/>
 			<label htmlFor="email" className="form-label">
-				Email
+				Primary&nbsp;Email&nbsp;(to&nbsp;manage&nbsp;your&nbsp;emails&nbsp;go&nbsp;to&nbsp;the&nbsp;security&nbsp;page)
 			</label>
 			<input
 				id="email"
@@ -85,17 +82,6 @@ const UpdateBasicsForm = ({ auth = {} }) => {
 				className="form-control mb-3"
 				disabled
 				placeholder="john.doe@demo.com"
-			/>
-			<label htmlFor="secondaryEmail" className="form-label">
-				Secondary&nbsp;Email
-			</label>
-			<input
-				id="secondaryEmail"
-				name="secondaryEmail"
-				defaultValue={auth?.data?.secondaryEmail}
-				type="email"
-				className="form-control mb-3"
-				placeholder="john.doe2@demo.com"
 			/>
 			<label htmlFor="workstatus" className="form-label">
 				Work&nbsp;Status

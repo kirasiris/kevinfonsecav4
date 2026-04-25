@@ -27,7 +27,14 @@ const AdminSidebar = ({
 	// Load file attached to object from DB
 	useEffect(() => {
 		const loadFile = async () => {
-			const res = await fetchurl(`/global/files/${fileId}`, "GET", "no-cache");
+			const res = await fetchurl(
+				`/global/files/${fileId}`,
+				"GET",
+				"no-cache",
+				undefined,
+				false,
+				false,
+			);
 			setLoading("Loading...");
 			setFileId(res?.data?._id);
 			setFeaturedFile(res?.data);
@@ -47,6 +54,9 @@ const AdminSidebar = ({
 			`/global/files/${pastedText}`,
 			"GET",
 			"no-cache",
+			undefined,
+			false,
+			false,
 		);
 		// If the file is valid, update state
 		if (res.success) {

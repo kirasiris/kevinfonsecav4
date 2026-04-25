@@ -39,10 +39,10 @@ const ResetPasswordForm = () => {
 			`/auth/resetpassword/${userid}/${resettoken}`,
 			"PUT",
 			"no-cache",
-			{
-				...rawFormData,
-				website: "beFree",
-			}
+			rawFormData,
+			undefined,
+			false,
+			false,
 		);
 		if (res.status === "error") {
 			toast.error(res.message, "bottom");

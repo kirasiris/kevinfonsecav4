@@ -1,14 +1,12 @@
 "use client";
 import { useState } from "react";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import { startRegistration } from "@simplewebauthn/browser";
 
 const UpdatePasskeyForm = ({ auth = {} }) => {
 	const router = useRouter();
-	const awtdParams = useParams();
-	const awtdSearchParams = useSearchParams();
 
 	const [, setBtnText] = useState("Submit");
 

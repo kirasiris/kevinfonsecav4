@@ -60,6 +60,9 @@ const UpdateProductForm = ({ object = {}, token = "", auth = {} }) => {
 			"PUT",
 			"no-cache",
 			rawFormData,
+			undefined,
+			false,
+			false,
 		);
 		if (res.status === "error") {
 			toast.error(res.message, "bottom");

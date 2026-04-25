@@ -29,7 +29,10 @@ const UpdateChangelogForm = ({ token = {}, auth = {}, object = {} }) => {
 			`/noadmin/changelogs/${object?.data?._id}`,
 			"PUT",
 			"no-cache",
-			rawFormData
+			rawFormData,
+			undefined,
+			false,
+			false,
 		);
 
 		if (res.status === "error") {

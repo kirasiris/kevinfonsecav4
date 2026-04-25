@@ -45,11 +45,19 @@ const CreateQuestionForm = ({
 			answers: options,
 		};
 
-		const res = await fetchurl(`/noadmin/questions`, "POST", "no-cache", {
-			...rawFormData,
-			resourceId: params.id,
-			onModel: "Poll",
-		});
+		const res = await fetchurl(
+			`/noadmin/questions`,
+			"POST",
+			"no-cache",
+			{
+				...rawFormData,
+				resourceId: params.id,
+				onModel: "Poll",
+			},
+			undefined,
+			false,
+			false,
+		);
 
 		if (res.status === "error") {
 			toast.error(res.message, "bottom");

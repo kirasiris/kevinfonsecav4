@@ -31,10 +31,18 @@ const CreateBlogForm = ({ token = {}, auth = {}, objects = [] }) => {
 			files: { avatar: formData.get("file") || undefined },
 		};
 
-		const res = await fetchurl(`/noadmin/blogs`, "POST", "no-cache", {
-			...rawFormData,
-			postType: "blog",
-		});
+		const res = await fetchurl(
+			`/noadmin/blogs`,
+			"POST",
+			"no-cache",
+			{
+				...rawFormData,
+				postType: "blog",
+			},
+			undefined,
+			false,
+			false,
+		);
 
 		if (res.status === "error") {
 			toast.error(res.message, "bottom");

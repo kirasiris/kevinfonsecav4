@@ -68,21 +68,21 @@ const AuthIndex = async ({ params, searchParams }) => {
 													)}
 													{auth.data.email && (
 														<li className="list-group-item">
-															{auth.data.email}&nbsp;-&nbsp;
+															<Link
+																href={{
+																	pathname: `/auth/editsecurity`,
+																	query: {},
+																}}
+															>
+																{auth.data.email}
+															</Link>
+															&nbsp;-&nbsp;
 															<span className="badge bg-secondary">
 																primary
 															</span>
 														</li>
 													)}
-													{auth.data.secondaryEmail && (
-														<li className="list-group-item">
-															{auth.data.secondaryEmail}&nbsp;-&nbsp;
-															<span className="badge bg-secondary">
-																secondary
-															</span>
-														</li>
-													)}
-													{auth.data.email && (
+													{auth.data.website && (
 														<li className="list-group-item">
 															{auth.data.website}
 														</li>

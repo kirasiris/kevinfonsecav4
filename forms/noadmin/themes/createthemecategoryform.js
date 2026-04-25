@@ -28,10 +28,18 @@ const CreateThemeCategoryForm = ({
 			deletable: formData.get("deletable"),
 		};
 
-		const res = await fetchurl(`/noadmin/categories`, "POST", "no-cache", {
-			...rawFormData,
-			categoryType: "theme",
-		});
+		const res = await fetchurl(
+			`/noadmin/categories`,
+			"POST",
+			"no-cache",
+			{
+				...rawFormData,
+				categoryType: "theme",
+			},
+			undefined,
+			false,
+			false,
+		);
 
 		if (res.status === "error") {
 			toast.error(res.message, "bottom");
@@ -46,7 +54,7 @@ const CreateThemeCategoryForm = ({
 		setBtnText(btnText);
 		//resetForm();
 		router.push(
-			`/noadmin/themes/categories?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/themes/categories?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 

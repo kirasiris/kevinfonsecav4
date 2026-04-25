@@ -1,13 +1,12 @@
 "use client";
 import { useState } from "react";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 
 const ConfirmEmailForm = () => {
 	const router = useRouter();
 	const awtdParams = useParams();
-	const awtdSearchParams = useSearchParams();
 
 	const [btnText, setBtnText] = useState("Submit");
 
@@ -33,19 +32,26 @@ const ConfirmEmailForm = () => {
 			`/auth/confirmemail/${confirmtoken}`,
 			"PUT",
 			"no-cache",
-			rawFormData
+			rawFormData,
+			undefined,
+			false,
+			false,
 		);
+
 		if (res.status === "error") {
 			toast.error(res.message, "bottom");
 			setBtnText("Submit");
 			return;
 		}
+
 		if (res.status === "fail") {
 			toast.error(res.message, "bottom");
 			setBtnText("Submit");
 			return;
 		}
+
 		toast.success("Account confirmed", "bottom");
+
 		router.push(`/auth/login`);
 	};
 

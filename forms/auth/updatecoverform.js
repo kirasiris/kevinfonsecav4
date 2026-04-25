@@ -51,9 +51,17 @@ const UpdateCoverForm = ({ auth = {} }) => {
 					},
 				},
 			);
-			await fetchurl(`/auth/updatecover`, "PUT", "no-cache", {
-				cover: res.data.data._id,
-			});
+			await fetchurl(
+				`/auth/updatecover`,
+				"PUT",
+				"no-cache",
+				{
+					cover: res.data.data._id,
+				},
+				undefined,
+				false,
+				false,
+			);
 			resetForm();
 			toast.success("Cover uploaded");
 			setBtnTxt(btnText);
@@ -132,7 +140,7 @@ const UpdateCoverForm = ({ auth = {} }) => {
 					}}
 					type="file"
 					className="form-control mb-3"
-					placeholder={fileurl}
+					placeholder={fileurl || filename}
 					accept={`image/*`}
 				/>
 				<UseProgress percentage={uploadPercentage} />

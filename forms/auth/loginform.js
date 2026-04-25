@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "react-toastify";
 import { startAuthentication } from "@simplewebauthn/browser";
 import {
@@ -70,7 +70,6 @@ function handleWebAuthnError(err) {
 
 const LoginForm = () => {
 	const router = useRouter();
-	const awtdParams = useParams();
 	const awtdSearchParams = useSearchParams();
 
 	const [btnText, setBtnText] = useState("Submit");

@@ -1,13 +1,11 @@
 "use client";
 import { useState } from "react";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 
 const UpdatePasswordForm = ({ auth = {} }) => {
 	const router = useRouter();
-	const awtdParams = useParams();
-	const awtdSearchParams = useSearchParams();
 
 	const [btnText, setBtnText] = useState("Submit");
 
@@ -35,7 +33,10 @@ const UpdatePasswordForm = ({ auth = {} }) => {
 			`/auth/updatepassword`,
 			"PUT",
 			"no-cache",
-			{ ...rawFormData, website: process.env.NEXT_PUBLIC_WEBSITE_NAME },
+			{
+				...rawFormData,
+				website: process.env.NEXT_PUBLIC_WEBSITE_NAME,
+			},
 			undefined,
 			false,
 			false,

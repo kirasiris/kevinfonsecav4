@@ -5,6 +5,7 @@ import Dropzone from "react-dropzone";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import UseProgress from "@/components/global/useprogress";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 
 const UseDropzone = ({
 	auth = {},
@@ -60,8 +61,32 @@ const UseDropzone = ({
 								},
 							},
 						);
-						await axios.post(
+						// await axios.post(
+						// 	`${process.env.NEXT_PUBLIC_API_URL}/noadmin/songs`,
+						// 	{
+						// 		resourceId: object?._id,
+						// 		duration: "0:0",
+						// 		status: "draft",
+						// 		averageRating: 5,
+						// 		onModel: "Playlist",
+						// 		title: res?.data?.data?.title,
+						// 		sub_title: res?.data?.data?.title,
+						// 		text: "No description",
+						// 		files: { audio_url: res?.data?.data?._id },
+						// 		embedding: false,
+						// 		commented: false,
+						// 	},
+						// 	{
+						// 		headers: {
+						// 			Authorization: `Bearer ${token?.value}`,
+						// 		},
+						// 	},
+						// );
+
+						await fetchurl(
 							`${process.env.NEXT_PUBLIC_API_URL}/noadmin/songs`,
+							"POST",
+							"no-cache",
 							{
 								resourceId: object?._id,
 								duration: "0:0",
@@ -75,11 +100,9 @@ const UseDropzone = ({
 								embedding: false,
 								commented: false,
 							},
-							{
-								headers: {
-									Authorization: `Bearer ${token?.value}`,
-								},
-							},
+							undefined,
+							false,
+							false,
 						);
 					}
 					setUploadPercentage(0);

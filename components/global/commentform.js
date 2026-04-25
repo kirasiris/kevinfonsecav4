@@ -22,10 +22,18 @@ const CommentForm = ({
 			parentId: parentId,
 			onModel: onModel,
 		};
-		await fetchurl(`/global/comments/${resourceId}`, "POST", "no-cache", {
-			...rawFormData,
-			user: auth?.userId || undefined,
-		});
+		await fetchurl(
+			`/global/comments/${resourceId}`,
+			"POST",
+			"no-cache",
+			{
+				...rawFormData,
+				user: auth?.userId || undefined,
+			},
+			undefined,
+			false,
+			false,
+		);
 		revalidatePath(returtopageurl);
 	};
 

@@ -37,11 +37,19 @@ const CreateLessonForm = ({ token = {}, auth = {}, params = {} }) => {
 			// address: "4442 Jackson Blvd, Columbia, SC 29209",
 		};
 
-		const res = await fetchurl(`/noadmin/videos`, "POST", "no-cache", {
-			...rawFormData,
-			resourceId: params.id,
-			onModel: "Product",
-		});
+		const res = await fetchurl(
+			`/noadmin/videos`,
+			"POST",
+			"no-cache",
+			{
+				...rawFormData,
+				resourceId: params.id,
+				onModel: "Product",
+			},
+			undefined,
+			false,
+			false,
+		);
 
 		if (res.status === "error") {
 			toast.error(res.message, "bottom");

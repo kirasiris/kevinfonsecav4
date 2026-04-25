@@ -31,6 +31,9 @@ const CreateForumForm = ({ params, searchParams }) => {
 			"POST",
 			"no-cache",
 			rawFormData,
+			undefined,
+			false,
+			false,
 		);
 
 		if (res.status === "error") {

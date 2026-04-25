@@ -38,6 +38,9 @@ const CreateQuizForm = ({ token = {}, auth = {}, objects = [] }) => {
 			"POST",
 			"no-cache",
 			rawFormData,
+			undefined,
+			false,
+			false,
 		);
 
 		if (res.status === "error") {
@@ -45,11 +48,13 @@ const CreateQuizForm = ({ token = {}, auth = {}, objects = [] }) => {
 			setBtnText("Submit");
 			return;
 		}
+
 		if (res.status === "fail") {
 			toast.error(res.message, "bottom");
 			setBtnText("Submit");
 			return;
 		}
+
 		toast.success(`Quizz created`, "bottom");
 		router.push(`/noadmin/quizzes`);
 	};

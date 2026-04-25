@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import Sidebar from "@/layout/auth/sidebar";
 import Globalcontent from "@/layout/content";
 import Loading from "@/app/blog/loading";
+import UpdateEmailsForm from "@/forms/auth/updateemailsform";
 import UpdatePasswordForm from "@/forms/auth/updatepasswordform";
 import UpdatePasskeyForm from "@/forms/auth/updatepasskeyform";
 import Head from "@/app/head";
@@ -15,6 +16,10 @@ const UpdatePasswords = async ({ params, searchParams }) => {
 	// Redirect if user is not logged in
 	(auth?.error?.statusCode === 401 || !auth?.data?.isOnline) &&
 		redirect(`/auth/login`);
+
+	const removeEmail = async () => {};
+
+	const setPrimaryEmail = async () => {};
 
 	return (
 		<>
@@ -43,6 +48,12 @@ const UpdatePasswords = async ({ params, searchParams }) => {
 						<div className="row">
 							<Sidebar />
 							<Globalcontent>
+								<div className="card mb-3">
+									<div className="card-header">Manage&nbsp;Emails</div>
+									<div className="card-body">
+										<UpdateEmailsForm auth={auth} />
+									</div>
+								</div>
 								<div className="card mb-3">
 									<div className="card-header">Edit&nbsp;Password</div>
 									<div className="card-body">

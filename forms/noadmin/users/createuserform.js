@@ -23,7 +23,6 @@ const CreateUserForm = ({ auth = {}, objects = [] }) => {
 			username: formData.get("username"),
 			name: formData.get("name"),
 			email: formData.get("email"),
-			secondaryEmail: formData.get("secondaryEmail"),
 			phoneNumber: formData.get("phoneNumber"),
 			password: formData.get("password"),
 			password2: formData.get("password2"),
@@ -63,6 +62,9 @@ const CreateUserForm = ({ auth = {}, objects = [] }) => {
 			"POST",
 			"no-cache",
 			rawFormData,
+			undefined,
+			false,
+			false,
 		);
 
 		if (res.status === "error") {
@@ -120,19 +122,6 @@ const CreateUserForm = ({ auth = {}, objects = [] }) => {
 						<input
 							id="email"
 							name="email"
-							defaultValue=""
-							type="email"
-							className="form-control mb-3"
-							placeholder="john@doe.com"
-						/>
-					</div>
-					<div className="col">
-						<label htmlFor="secondaryEmail" className="form-label">
-							Secondary Email
-						</label>
-						<input
-							id="secondaryEmail"
-							name="secondaryEmail"
 							defaultValue=""
 							type="email"
 							className="form-control mb-3"

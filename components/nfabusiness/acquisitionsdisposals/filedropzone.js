@@ -5,6 +5,7 @@ import Dropzone from "react-dropzone";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import UseProgress from "@/components/global/useprogress";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 
 const UseDropzone = ({
 	auth = {},
@@ -60,16 +61,27 @@ const UseDropzone = ({
 								},
 							},
 						);
-						await axios.put(
+						// await axios.put(
+						// 	`${process.env.NEXT_PUBLIC_API_URL}/noadmin/weaponacquisitionsdisposals/${object?._id}/files`,
+						// 	{
+						// 		file: res?.data?.data?._id,
+						// 	},
+						// 	{
+						// 		headers: {
+						// 			Authorization: `Bearer ${token?.value}`,
+						// 		},
+						// 	},
+						// );
+						await fetchurl(
 							`${process.env.NEXT_PUBLIC_API_URL}/noadmin/weaponacquisitionsdisposals/${object?._id}/files`,
+							"PUT",
+							"no-cache",
 							{
 								file: res?.data?.data?._id,
 							},
-							{
-								headers: {
-									Authorization: `Bearer ${token?.value}`,
-								},
-							},
+							undefined,
+							false,
+							false,
 						);
 					}
 					setUploadPercentage(0);

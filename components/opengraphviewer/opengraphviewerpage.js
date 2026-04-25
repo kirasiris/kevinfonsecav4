@@ -36,6 +36,9 @@ const OpenGraphViewerPage = ({ searchParams = {} }) => {
 			"POST",
 			"no-cache",
 			openGraphData,
+			undefined,
+			false,
+			false,
 		);
 
 		setCheckWebsiteBtnText(checkWebsiteBtnText);

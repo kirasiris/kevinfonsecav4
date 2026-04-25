@@ -52,9 +52,17 @@ const UpdateAvatarForm = ({ auth = {} }) => {
 				},
 			);
 
-			await fetchurl(`/auth/updateavatar`, "PUT", "no-cache", {
-				avatar: res.data.data._id,
-			});
+			await fetchurl(
+				`/auth/updateavatar`,
+				"PUT",
+				"no-cache",
+				{
+					avatar: res.data.data._id,
+				},
+				undefined,
+				false,
+				false,
+			);
 			resetForm();
 			toast.success("Avatar uploaded");
 			setBtnTxt(btnText);
@@ -133,7 +141,7 @@ const UpdateAvatarForm = ({ auth = {} }) => {
 					}}
 					type="file"
 					className="form-control mb-3"
-					placeholder={fileurl}
+					placeholder={fileurl || filename}
 					accept={`image/*`}
 				/>
 				<UseProgress percentage={uploadPercentage} />

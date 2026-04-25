@@ -29,12 +29,20 @@ const CreateCDAlbumForm = ({ token = {}, auth = {}, objects = [] }) => {
 			files: { avatar: formData.get("file") },
 		};
 
-		const res = await fetchurl(`/noadmin/playlists`, "POST", "no-cache", {
-			...rawFormData,
-			onairstatus: "finished",
-			onairtype: "cd-album",
-			playlistType: "audio",
-		});
+		const res = await fetchurl(
+			`/noadmin/playlists`,
+			"POST",
+			"no-cache",
+			{
+				...rawFormData,
+				onairstatus: "finished",
+				onairtype: "cd-album",
+				playlistType: "audio",
+			},
+			undefined,
+			false,
+			false,
+		);
 
 		if (res.status === "error") {
 			toast.error(res.message, "bottom");

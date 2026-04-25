@@ -37,10 +37,18 @@ const CreateJobForm = ({ token = {}, auth = {}, params = {} }) => {
 			status: formData.get("status"),
 		};
 
-		const res = await fetchurl(`/noadmin/jobs`, "POST", "no-cache", {
-			...rawFormData,
-			resourceId: params.id,
-		});
+		const res = await fetchurl(
+			`/noadmin/jobs`,
+			"POST",
+			"no-cache",
+			{
+				...rawFormData,
+				resourceId: params.id,
+			},
+			undefined,
+			false,
+			false,
+		);
 
 		if (res.status === "error") {
 			toast.error(res.message, "bottom");

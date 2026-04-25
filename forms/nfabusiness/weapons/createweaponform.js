@@ -62,6 +62,9 @@ const CreateWeaponForm = ({ token = "", auth = {} }) => {
 			"POST",
 			"no-cache",
 			rawFormData,
+			undefined,
+			false,
+			false,
 		);
 		if (res.status === "error") {
 			toast.error(res.message, "bottom");
@@ -101,7 +104,7 @@ const CreateWeaponForm = ({ token = "", auth = {} }) => {
 					</div>
 					<div className="col">
 						<label htmlFor="title" className="form-label">
-							Model / Title
+							Model&nbsp;/&nbsp;Title
 						</label>
 						<input
 							id="title"
@@ -124,16 +127,24 @@ const CreateWeaponForm = ({ token = "", auth = {} }) => {
 							className="form-control mb-3"
 							required
 						>
-							<option value="none">Choose an option</option>
+							<option value="none">Choose&nbsp;an&nbsp;option</option>
 							<option value="rifle">Rifle</option>
 							<option value="shotgun">Shotgun</option>
 							<option value="pistol">Pistol</option>
 							<option value="supressor">Supressor</option>
-							<option value="short-barrel-rifle">Short Barrel Rifle</option>
-							<option value="short-barrel-shotgun">Short Barrel Shotgun</option>
-							<option value="any-other-weapon">Any Other Weapon</option>
-							<option value="destructive-device">Destructive Device</option>
-							<option value="machine-gun">Machine Gun</option>
+							<option value="short-barrel-rifle">
+								Short&nbsp;Barrel&nbsp;Rifle
+							</option>
+							<option value="short-barrel-shotgun">
+								Short&nbsp;Barrel&nbsp;Shotgun
+							</option>
+							<option value="any-other-weapon">
+								Any&nbsp;Other&nbsp;Weapon
+							</option>
+							<option value="destructive-device">
+								Destructive&nbsp;Device
+							</option>
+							<option value="machine-gun">Machine&nbsp;Gun</option>
 						</select>
 					</div>
 				</div>
@@ -154,7 +165,7 @@ const CreateWeaponForm = ({ token = "", auth = {} }) => {
 					</div>
 					<div className="col">
 						<label htmlFor="serialNumber" className="form-label">
-							Serial Number
+							Serial&nbsp;Number
 						</label>
 						<input
 							id="serialNumber"
@@ -167,7 +178,7 @@ const CreateWeaponForm = ({ token = "", auth = {} }) => {
 					</div>
 					<div className="col">
 						<label htmlFor="nfaClassification" className="form-label">
-							NFA Classification
+							NFA&nbsp;Classification
 						</label>
 						<select
 							id="nfaClassification"
@@ -176,18 +187,26 @@ const CreateWeaponForm = ({ token = "", auth = {} }) => {
 							className="form-control mb-3"
 							required
 						>
-							<option value="none">Choose an option</option>
-							<option value="short-barrel-rifle">Short Barrel Rifle</option>
-							<option value="short-barrel-shotgun">Short Barrel Shotgun</option>
+							<option value="none">Choose&nbsp;an&nbsp;option</option>
+							<option value="short-barrel-rifle">
+								Short&nbsp;Barrel&nbsp;Rifle
+							</option>
+							<option value="short-barrel-shotgun">
+								Short&nbsp;Barrel&nbsp;Shotgun
+							</option>
 							<option value="supressor">Supressor</option>
-							<option value="any-other-weapon">Any Other Weapon</option>
-							<option value="destructive-device">Destructive Device</option>
-							<option value="machine-gun">Machine Gun</option>
+							<option value="any-other-weapon">
+								Any&nbsp;Other&nbsp;Weapon
+							</option>
+							<option value="destructive-device">
+								Destructive&nbsp;Device
+							</option>
+							<option value="machine-gun">Machine&nbsp;Gun</option>
 						</select>
 					</div>
 				</div>
 				<label htmlFor="files" className="form-label">
-					Files (File URLs)
+					Files&nbsp;(File&nbsp;URLs)
 				</label>
 				{files.map((file, index) => (
 					<div key={index} className="d-flex mb-3">
@@ -215,7 +234,7 @@ const CreateWeaponForm = ({ token = "", auth = {} }) => {
 					className="btn btn-secondary mb-3 w-100"
 					onClick={handleAddFile}
 				>
-					Add File
+					Add&nbsp;File
 				</button>
 				<label htmlFor="text" className="form-label">
 					Message

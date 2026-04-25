@@ -40,10 +40,10 @@ const HomeIndex = async ({ params, searchParams }) => {
 	return (
 		<>
 			<Head
-				title={settings.data.title}
-				description={settings.data.text}
-				favicon={settings.data.favicon}
-				postImage={settings.data.showcase_image}
+				title={settings?.data?.title}
+				description={settings?.data?.text}
+				favicon={settings?.data?.favicon}
+				postImage={settings?.data?.showcase_image}
 				imageWidth="800"
 				imageHeight="450"
 				videoWidth=""
@@ -52,17 +52,17 @@ const HomeIndex = async ({ params, searchParams }) => {
 				robots=""
 				category=""
 				url="/"
-				author={settings.data.author}
-				createdAt={settings.data.createdAt}
-				updatedAt={settings.data.updatedAt}
+				author={settings?.data?.author}
+				createdAt={settings?.data?.createdAt}
+				updatedAt={settings?.data?.updatedAt}
 				locales=""
 				posType="website"
 			/>
 			{settings.data?.maintenance === false ? (
 				<>
 					<Header
-						title={settings.data.title}
-						description={settings.data.text}
+						title={settings?.data?.title}
+						description={settings?.data?.text}
 						headerClasses="d-flex flex-column vh-100 vw-100"
 						headerContainerClasses="m-auto"
 						headerStyle={{
@@ -71,7 +71,7 @@ const HomeIndex = async ({ params, searchParams }) => {
 							backgroundSize: "cover !important",
 							backgroundPosition: "50% 50%",
 							background: `linear-gradient(to bottom, rgba(0,0,0,0.7) 0%,rgba(0,0,0,0.7) 100%), url(${
-								settings.data.showcase_image ||
+								settings?.data?.showcase_image ||
 								`https://befreebucket-for-outputs.s3.amazonaws.com/2023/02/map-image.png`
 							}) no-repeat center center`,
 						}}

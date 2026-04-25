@@ -63,8 +63,11 @@ const UploadPictureForm = ({ object = {} }) => {
 					"PUT",
 					"no-cache",
 					{
-						nfa_avatar: res.data.data._id,
+						nfa_avatar: res?.data?.data?._id,
 					},
+					undefined,
+					false,
+					false,
 				);
 				// resetForm();
 				toast.success("NFA Avatar uploaded");

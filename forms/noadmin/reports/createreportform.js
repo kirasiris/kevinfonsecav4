@@ -22,11 +22,19 @@ const CreateReportForm = ({ token = {}, auth = {}, searchParams = {} }) => {
 			website: formData.get("website"),
 		};
 
-		const res = await fetchurl(`/noadmin/reports`, "POST", "no-cache", {
-			...rawFormData,
-			resourceId: searchParams.resourceId,
-			onModel: searchParams.onModel,
-		});
+		const res = await fetchurl(
+			`/noadmin/reports`,
+			"POST",
+			"no-cache",
+			{
+				...rawFormData,
+				resourceId: searchParams.resourceId,
+				onModel: searchParams.onModel,
+			},
+			undefined,
+			false,
+			false,
+		);
 
 		if (res.status === "error") {
 			toast.error(res.message, "bottom");

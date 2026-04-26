@@ -101,9 +101,6 @@ const UpdateEmailsForm = ({ auth = {} }) => {
 				disabled
 				placeholder="john.doe@demo.com"
 			/>
-			<label htmlFor="currentpassword" className="form-label">
-				Current&nbsp;Password
-			</label>
 			{emails.map((email, index) => (
 				<div key={index} className="d-flex mb-3">
 					<input

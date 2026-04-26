@@ -1,5 +1,8 @@
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
+import Link from "next/link";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 import Sidebar from "@/layout/auth/sidebar";
 import Globalcontent from "@/layout/content";
 import Loading from "@/app/blog/loading";
@@ -9,6 +12,7 @@ import UpdatePasskeyForm from "@/forms/auth/updatepasskeyform";
 import Head from "@/app/head";
 import { getGlobalData } from "@/helpers/globalData";
 import ErrorPage from "@/layout/errorpage";
+import List from "@/components/auth/emails/list";
 
 const UpdatePasswords = async ({ params, searchParams }) => {
 	const { auth, settings } = await getGlobalData();
@@ -17,9 +21,41 @@ const UpdatePasswords = async ({ params, searchParams }) => {
 	(auth?.error?.statusCode === 401 || !auth?.data?.isOnline) &&
 		redirect(`/auth/login`);
 
-	const removeEmail = async () => {};
+	const removeEmail = async (id) => {
+		"use server";
 
-	const setPrimaryEmail = async () => {};
+		// const rawFormData = {};
+
+		await fetchurl(
+			`/auth/emails/remove/${id}`,
+			"DELETE",
+			"no-cache",
+			{},
+			undefined,
+			false,
+			false,
+		);
+
+		revalidatePath(`/auth/editsecurity`);
+	};
+
+	const setPrimaryEmail = async (id) => {
+		"use server";
+
+		// const rawFormData = {};
+
+		await fetchurl(
+			`/auth/emails/primary/${id}`,
+			"PUT",
+			"no-cache",
+			{},
+			undefined,
+			false,
+			false,
+		);
+
+		revalidatePath(`/auth/editsecurity`);
+	};
 
 	return (
 		<>
@@ -49,9 +85,45 @@ const UpdatePasswords = async ({ params, searchParams }) => {
 							<Sidebar />
 							<Globalcontent>
 								<div className="card mb-3">
-									<div className="card-header">Manage&nbsp;Emails</div>
+									<div className="card-header">
+										<div className="float-start">
+											<div className="d-flex align-items-center my-2">
+												Manage&nbsp;Emails
+											</div>
+										</div>
+										<div className="float-end my-1">
+											<div className="btn-group">
+												<Link
+													href={{
+														pathname: `/auth/emails/create`,
+														query: {},
+													}}
+													className="btn btn-primary btn-sm"
+												>
+													Add&nbsp;Email
+												</Link>
+											</div>
+										</div>
+									</div>
 									<div className="card-body">
-										<UpdateEmailsForm auth={auth} />
+										<label htmlFor="email" className="form-label">
+											Primary&nbsp;Email
+										</label>
+										<input
+											id="email"
+											name="email"
+											defaultValue={auth?.data?.email}
+											type="email"
+											className="form-control mb-3"
+											disabled
+											placeholder="john.doe@demo.com"
+										/>
+										<List
+											objects={auth?.data?.emails}
+											handleIsPrimary={setPrimaryEmail}
+											handleRemoveEmail={removeEmail}
+										/>
+										{/* <UpdateEmailsForm auth={auth} /> */}
 									</div>
 								</div>
 								<div className="card mb-3">

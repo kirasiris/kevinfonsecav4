@@ -134,36 +134,18 @@ const RegisterForm = () => {
 				className="form-control mb-3"
 				placeholder="******"
 			/>
-			<div className="row mb-3">
-				<div className="col">
-					<label htmlFor="captcha" className="form-label">
-						Captcha: 3+2?
-					</label>
-					<input
-						id="captcha"
-						name="captcha"
-						defaultValue=""
-						type="number"
-						className="form-control"
-						required
-						placeholder="0"
-					/>
-				</div>
-				<div className="col">
-					<label htmlFor="becomemerchant" className="form-label">
-						Become a merchant?
-					</label>
-					<select
-						id="becomemerchant"
-						name="becomemerchant"
-						defaultValue={true}
-						className="form-control"
-					>
-						<option value={true}>Yes</option>
-						<option value={false}>No</option>
-					</select>
-				</div>
-			</div>
+			<label htmlFor="captcha" className="form-label">
+				Captcha: 3+2?
+			</label>
+			<input
+				id="captcha"
+				name="captcha"
+				defaultValue=""
+				type="number"
+				className="form-control mb-3"
+				required
+				placeholder="0"
+			/>
 			<button type="submit" className="btn btn-secondary btn-sm float-start">
 				{btnText}
 			</button>

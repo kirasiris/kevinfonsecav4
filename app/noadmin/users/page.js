@@ -4,7 +4,7 @@ import AdminStatusesMenu from "@/components/noadmin/adminstatusesmenu";
 import List from "@/components/noadmin/users/list";
 
 async function getUsers(params) {
-	const res = await fetchurl(`/global/users${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/protected/users${params}`, "GET", "no-cache");
 	return res;
 }
 
@@ -25,7 +25,7 @@ const AdminUsersIndex = async ({ params, searchParams }) => {
 			"no-cache",
 			{
 				website: "beFree",
-			}
+			},
 		);
 		revalidatePath(`/noadmin/users?page=${page}&limit=${limit}&sort=${sort}`);
 	};
@@ -38,7 +38,7 @@ const AdminUsersIndex = async ({ params, searchParams }) => {
 			"no-cache",
 			{
 				website: "beFree",
-			}
+			},
 		);
 		revalidatePath(`/noadmin/users?page=${page}&limit=${limit}&sort=${sort}`);
 	};
@@ -52,7 +52,7 @@ const AdminUsersIndex = async ({ params, searchParams }) => {
 			"no-cache",
 			{
 				website: "beFree",
-			}
+			},
 		);
 		revalidatePath(`/noadmin/users?page=${page}&limit=${limit}&sort=${sort}`);
 	};
@@ -63,7 +63,7 @@ const AdminUsersIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/extras/stripe/accounts/updateseller/${id}`,
 			"PUT",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(`/noadmin/users?page=${page}&limit=${limit}&sort=${sort}`);
 	};
@@ -77,7 +77,7 @@ const AdminUsersIndex = async ({ params, searchParams }) => {
 			"no-cache",
 			{
 				website: process.env.NEXT_PUBLIC_WEBSITE_NAME,
-			}
+			},
 		);
 		revalidatePath(`/noadmin/users?page=${page}&limit=${limit}&sort=${sort}`);
 	};
@@ -94,7 +94,7 @@ const AdminUsersIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/users/deleteall/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(`/noadmin/users?page=${page}&limit=${limit}&sort=${sort}`);
 	};

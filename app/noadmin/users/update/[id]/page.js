@@ -7,7 +7,7 @@ import {
 import UpdateUserForm from "@/forms/noadmin/users/updateuserform";
 
 async function getUsers(params) {
-	const res = await fetchurl(`/global/users${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/protected/users${params}`, "GET", "no-cache");
 	if (!res.success) notFound();
 	return res;
 }

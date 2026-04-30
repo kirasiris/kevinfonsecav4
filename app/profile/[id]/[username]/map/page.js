@@ -12,7 +12,7 @@ import Head from "@/app/head";
 import { getGlobalData } from "@/helpers/globalData";
 
 async function getProfile(params) {
-	const res = await fetchurl(`/global/users${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/protected/users${params}`, "GET", "no-cache");
 	if (!res.success) notFound();
 	return res;
 }

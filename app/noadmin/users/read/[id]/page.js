@@ -3,7 +3,7 @@ import { formatDateWithoutTime } from "befree-utilities";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 
 async function getUser(params) {
-	const res = await fetchurl(`/global/users${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/protected/users${params}`, "GET", "no-cache");
 	return res;
 }
 

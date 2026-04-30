@@ -6,7 +6,7 @@ import {
 import CreateUserForm from "@/forms/noadmin/users/createuserform";
 
 async function getUsers(params) {
-	const res = await fetchurl(`/global/users${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/protected/users${params}`, "GET", "no-cache");
 	return res;
 }
 

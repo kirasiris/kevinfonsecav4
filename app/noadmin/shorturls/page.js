@@ -128,27 +128,33 @@ const AdminShortUrlsIndex = async ({ params, searchParams }) => {
 				categoriesLink=""
 				categoryType=""
 			/>
-			<CreateShortUrlForm
-				auth={auth}
-				currentpage={`/noadmin/shorturls?page=${page}&limit=${limit}&sort=${sort}`}
-			/>
-			<div className="card rounded-0">
-				<List
-					allLink="/noadmin/shorturls"
-					pageText="Short Urls"
-					addLink="/noadmin/shorturls/create"
-					searchOn="/noadmin/shorturls"
-					searchedKeyword=""
-					objects={shorturls}
-					searchParams={awtdSearchParams}
-					handleDraft={draftIt}
-					handlePublish={publishIt}
-					handleTrash={trashIt}
-					handleSchedule={scheduleIt}
-					handleDelete={handleDelete}
-					handleTrashAllFunction={handleTrashAll}
-					handleDeleteAllFunction={handleDeleteAll}
-				/>
+			<div className="row">
+				<div className="col">
+					<CreateShortUrlForm
+						auth={auth}
+						currentpage={`/noadmin/shorturls?page=${page}&limit=${limit}&sort=${sort}`}
+					/>
+				</div>
+				<div className="col-lg-10">
+					<div className="card rounded-0">
+						<List
+							allLink="/noadmin/shorturls"
+							pageText="Short Urls"
+							addLink="/noadmin/shorturls/create"
+							searchOn="/noadmin/shorturls"
+							searchedKeyword=""
+							objects={shorturls}
+							searchParams={awtdSearchParams}
+							handleDraft={draftIt}
+							handlePublish={publishIt}
+							handleTrash={trashIt}
+							handleSchedule={scheduleIt}
+							handleDelete={handleDelete}
+							handleTrashAllFunction={handleTrashAll}
+							handleDeleteAllFunction={handleDeleteAll}
+						/>
+					</div>
+				</div>
 			</div>
 		</>
 	);

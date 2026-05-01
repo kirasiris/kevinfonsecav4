@@ -95,7 +95,7 @@ const AdminShortUrlsIndex = async ({ params, searchParams }) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(
-			`/noadmin/extras/tools/urls/regression/${id}/all`,
+			`/noadmin/extras/tools/urls/regression/deleteall`,
 			"PUT",
 			"no-cache",
 		);
@@ -108,7 +108,7 @@ const AdminShortUrlsIndex = async ({ params, searchParams }) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(
-			`/noadmin/extras/shorturls/deleteall/permanently`,
+			`/noadmin/extras/tools/urls/regression/deleteall/permanently`,
 			"DELETE",
 			"no-cache",
 		);

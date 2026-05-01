@@ -1,6 +1,6 @@
 import { Suspense } from "react";
-import { fetchurl } from "@/helpers/setTokenOnServer";
 import { redirect } from "next/navigation";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 import Sidebar from "@/layout/auth/sidebar";
 import Globalcontent from "@/layout/content";
 import Loading from "@/app/blog/loading";

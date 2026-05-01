@@ -1,6 +1,5 @@
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
-import { revalidatePath } from "next/cache";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import Link from "next/link";
 import Sidebar from "@/layout/auth/sidebar";
@@ -36,7 +35,7 @@ const UpdateAvatar = async ({ params, searchParams }) => {
 		await fetchurl(`/auth/updateavatar`, "PUT", "no-cache", {
 			avatar: id,
 		});
-		revalidatePath(`/auth/editavatar`);
+		redirect(`/auth/profile`);
 	};
 
 	return (

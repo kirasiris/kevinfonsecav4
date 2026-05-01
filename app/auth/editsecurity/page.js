@@ -54,7 +54,7 @@ const UpdatePasswords = async ({ params, searchParams }) => {
 			false,
 		);
 
-		revalidatePath(`/auth/editsecurity`);
+		redirect(`/auth/profile`);
 	};
 
 	return (

@@ -6,11 +6,7 @@ import Head from "@/app/head";
 import { getGlobalData } from "@/helpers/globalData";
 
 async function getQRCodeGeneratorResult(params) {
-	const res = await fetchurl(
-		`/extras/tools/qrcodes${params}`,
-		"GET",
-		"no-cache",
-	);
+	const res = await fetchurl(`/global/qrcodes${params}`, "GET", "no-cache");
 	return res;
 }
 

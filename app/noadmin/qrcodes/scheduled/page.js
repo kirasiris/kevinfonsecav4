@@ -6,9 +6,9 @@ import List from "@/components/noadmin/qrcodes/list";
 
 async function getQRCodes(params) {
 	const res = await fetchurl(
-		`/extras/tools/qrcodes${params}&status=scheduled`,
+		`/global/qrcodes${params}&status=scheduled`,
 		"GET",
-		"no-cache"
+		"no-cache",
 	);
 	return res;
 }
@@ -30,58 +30,54 @@ const AdminQRCodesGeneratorScheduledIndex = async ({
 	const draftIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/extras/tools/qrcodes/${id}/draftit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/qrcodes/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/qrcodes/scheduled?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/qrcodes/scheduled?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
 	const publishIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/extras/tools/qrcodes/${id}/publishit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/qrcodes/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/qrcodes/scheduled?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/qrcodes/scheduled?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
 	const trashIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/extras/tools/qrcodes/${id}/trashit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/qrcodes/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/qrcodes/scheduled?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/qrcodes/scheduled?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
 	const scheduleIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/extras/tools/qrcodes/${id}/scheduleit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/qrcodes/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/qrcodes/scheduled?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/qrcodes/scheduled?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
 	const handleDelete = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(
-			`/extras/tools/qrcodes/${id}/permanently`,
-			"DELETE",
-			"no-cache"
-		);
+		await fetchurl(`/noadmin/qrcodes/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`/noadmin/qrcodes/scheduled?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/qrcodes/scheduled?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
 	const handleTrashAll = async () => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/extras/tools/qrcodes/deleteall`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/qrcodes/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/qrcodes/scheduled?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/qrcodes/scheduled?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -89,12 +85,12 @@ const AdminQRCodesGeneratorScheduledIndex = async ({
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(
-			`/extras/tools/qrcodes/deleteall/permanently`,
+			`/noadmin/qrcodes/deleteall/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/qrcodes/scheduled?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/qrcodes/scheduled?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 

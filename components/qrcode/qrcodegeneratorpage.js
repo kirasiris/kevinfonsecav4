@@ -57,7 +57,7 @@ const QRCodeGeneratorPage = ({ searchParams = {}, pushTo = true }) => {
 		e.preventDefault();
 		setBtnText("...");
 		const res = await fetchurl(
-			`/extras/tools/qrcodes`,
+			`/global/qrcodes`,
 			"POST",
 			"no-cache",
 			{
@@ -111,7 +111,7 @@ const QRCodeGeneratorPage = ({ searchParams = {}, pushTo = true }) => {
 		const abortController = new AbortController();
 		const fetchQRCode = async (id) => {
 			const res = await fetchurl(
-				`/extras/tools/qrcodes/${id}`,
+				`/global/qrcodes/${id}`,
 				"GET",
 				"default",
 				{},

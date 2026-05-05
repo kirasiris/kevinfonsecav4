@@ -68,7 +68,11 @@ const Footer = ({
 												</Link>
 											</>
 										) : (
-											<a href={p.url} target="_blank" rel="noreferrer noopener">
+											<a
+												href={p.url}
+												target={p.target || "_blank"}
+												rel="noreferrer noopener"
+											>
 												{p.title}
 											</a>
 										)}
@@ -109,7 +113,11 @@ const Footer = ({
 												{p.title}
 											</Link>
 										) : (
-											<a href={p.url} target="_blank" rel="noreferrer noopener">
+											<a
+												href={p.url}
+												target={p.target || "_blank"}
+												rel="noreferrer noopener"
+											>
 												{p.title}
 											</a>
 										)}
@@ -135,7 +143,11 @@ const Footer = ({
 												{p.title}
 											</Link>
 										) : (
-											<a href={p.url} target="_blank" rel="noreferrer noopener">
+											<a
+												href={p.url}
+												target={p.target || "_blank"}
+												rel="noreferrer noopener"
+											>
 												{p.title}
 											</a>
 										)}
@@ -161,7 +173,11 @@ const Footer = ({
 												{p.title}
 											</Link>
 										) : (
-											<a href={p.url} target="_blank" rel="noreferrer noopener">
+											<a
+												href={p.url}
+												target={p.target || "_blank"}
+												rel="noreferrer noopener"
+											>
 												{p.title}
 											</a>
 										)}

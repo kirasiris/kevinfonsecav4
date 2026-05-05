@@ -6,21 +6,13 @@ import UpdateQRCodeForm from "@/forms/noadmin/qrcodes/updateqrcodeform";
 import List from "@/components/noadmin/qrcodes/list";
 
 async function getQRCode(params) {
-	const res = await fetchurl(
-		`/extras/tools/qrcodes${params}`,
-		"GET",
-		"no-cache"
-	);
+	const res = await fetchurl(`/global/qrcodes${params}`, "GET", "no-cache");
 	if (!res.success) notFound();
 	return res;
 }
 
 async function getQRCodes(params) {
-	const res = await fetchurl(
-		`/extras/tools/qrcodes${params}`,
-		"GET",
-		"no-cache"
-	);
+	const res = await fetchurl(`/global/qrcodes${params}`, "GET", "no-cache");
 	return res;
 }
 
@@ -39,46 +31,42 @@ const UpdateQRCode = async ({ params, searchParams }) => {
 	const draftIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/extras/tools/qrcodes/${id}/draftit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/qrcodes/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(`?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const publishIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/extras/tools/qrcodes/${id}/publishit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/qrcodes/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(`?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const trashIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/extras/tools/qrcodes/${id}/trashit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/qrcodes/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(`?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const scheduleIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/extras/tools/qrcodes/${id}/scheduleit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/qrcodes/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(`?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const handleDelete = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(
-			`/extras/tools/qrcodes/${id}/permanently`,
-			"DELETE",
-			"no-cache"
-		);
+		await fetchurl(`/noadmin/qrcodes/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(`?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const handleTrashAll = async () => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/extras/tools/qrcodes/deleteall`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/qrcodes/deleteall`, "PUT", "no-cache");
 		revalidatePath(`?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
@@ -86,9 +74,9 @@ const UpdateQRCode = async ({ params, searchParams }) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(
-			`/extras/tools/qrcodes/deleteall/permanently`,
+			`/noadmin/qrcodes/deleteall/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(`?page=${page}&limit=${limit}&sort=${sort}`);
 	};

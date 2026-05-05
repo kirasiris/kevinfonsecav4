@@ -3,11 +3,7 @@ import { fetchurl } from "@/helpers/setTokenOnServer";
 import QRC from "@/components/global/qrcode";
 
 async function getQRCode(params) {
-	const res = await fetchurl(
-		`/extras/tools/qrcodes${params}`,
-		"GET",
-		"no-cache",
-	);
+	const res = await fetchurl(`/global/qrcodes${params}`, "GET", "no-cache");
 	if (!res.success) notFound();
 	return res;
 }

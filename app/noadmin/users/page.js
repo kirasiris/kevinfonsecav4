@@ -4,7 +4,7 @@ import AdminStatusesMenu from "@/components/noadmin/adminstatusesmenu";
 import List from "@/components/noadmin/users/list";
 
 async function getUsers(params) {
-	const res = await fetchurl(`/protected/users${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/users${params}`, "GET", "no-cache");
 	return res;
 }
 

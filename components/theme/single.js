@@ -2,11 +2,10 @@
 import { Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import Loading from "@/app/theme/loading";
 
 const Single = ({ object = {} }) => {
 	return (
-		<Suspense fallback={<Loading />}>
+		<Suspense fallback={<>Loading themes...</>}>
 			<article className={`${object?._id} col-lg-4 mb-4`}>
 				<Link
 					href={{

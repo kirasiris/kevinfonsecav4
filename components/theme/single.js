@@ -9,7 +9,7 @@ const Single = ({ object = {} }) => {
 			<article className={`${object?._id} col-lg-4 mb-4`}>
 				<Link
 					href={{
-						pathname: `${process.env.NEXT_PUBLIC_ARMED_CODELLC_URL}/${object?._id}/${object?.category?._id}/${object?.category?.slug}/${object?.slug}`,
+						pathname: `${process.env.NEXT_PUBLIC_ARMED_CODELLC_URL}/theme/${object?._id}/${object?.category?._id}/${object?.category?.slug}/${object?.slug}`,
 					}}
 				>
 					<Image

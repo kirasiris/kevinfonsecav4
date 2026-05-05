@@ -107,7 +107,13 @@ const HomeIndex = async ({ params, searchParams }) => {
 						>
 							<div className="container">
 								<h2 className="page-section-heading display-5 text-uppercase text-secondary my-5">
-									<Link href={`/theme`}>Latest Themes</Link>
+									<a
+										href={`${process.env.NEXT_PUBLIC_ARMED_CODELLC_URL}/theme`}
+										target="_blank"
+										rel="noreferrer noopener"
+									>
+										Latest Themes
+									</a>
 								</h2>
 								<div className="row">
 									{themes.data.map((theme) => (

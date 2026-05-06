@@ -46,7 +46,7 @@ const CreateQrCodeForm = ({ auth = {} }) => {
 		};
 
 		const res = await fetchurl(
-			`/extras/tools/qrcodes`,
+			`/global/qrcodes`,
 			"POST",
 			"no-cache",
 			{

@@ -46,7 +46,7 @@ const UpdateQRCodeForm = ({ object = {} }) => {
 		};
 
 		const res = await fetchurl(
-			`/extras/tools/qrcodes/${object?.data?._id}`,
+			`/noadmin/qrcodes/${object?.data?._id}`,
 			"PUT",
 			"no-cache",
 			{

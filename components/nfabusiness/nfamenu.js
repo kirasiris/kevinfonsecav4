@@ -7,7 +7,7 @@ const NFAMenu = ({ auth = {}, settings = {} }) => {
 	const pathname = usePathname();
 
 	const isActive = (path = "") => {
-		return pathname === path ? " active" : "";
+		return pathname === path ? " active text-bg-primary" : "";
 	};
 
 	return (
@@ -32,8 +32,8 @@ const NFAMenu = ({ auth = {}, settings = {} }) => {
 				</div>
 			</div>
 			{/* Navigation */}
-			<div className="p-3">
-				<small className="text-uppercase fw-semibold">Navigation</small>
+			<div className="py-3">
+				<small className="text-uppercase fw-semibold px-3">Navigation</small>
 				<nav className="nav flex-column mt-2">
 					<Link
 						href={{

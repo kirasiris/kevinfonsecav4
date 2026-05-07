@@ -131,6 +131,9 @@ const UpdateChangelogForm = ({ token = {}, auth = {}, object = {} }) => {
 							<option value={`all`}>All</option>
 							<option value={`personal`}>Personal</option>
 							<option value={`armedcodellc`}>Armed Code, LLC</option>
+							<option value={`armedcodellc-entertainment`}>
+								Armed Code, LLC - Entertainment
+							</option>
 							<option value={`anonymous-secrets-app`}>
 								Anonymous Secrets App
 							</option>

@@ -5,7 +5,7 @@ import Modal from "react-bootstrap/Modal";
 import {
 	EmailShareButton,
 	FacebookShareButton,
-	TwitterShareButton,
+	XShareButton,
 	RedditShareButton,
 	WhatsappShareButton,
 	PinterestShareButton,
@@ -57,20 +57,6 @@ const ExportModal = ({
 						value={`${process.env.NEXT_PUBLIC_WEBSITE_URL}${linkToShare}`}
 					/>
 					<hr />
-					<pre>
-						<code>
-							<iframe
-								src={`${process.env.NEXT_PUBLIC_WEBSITE_URL}${linkToShare}`}
-								srcDoc={`${process.env.NEXT_PUBLIC_WEBSITE_URL}${linkToShare}`}
-								title={object?.title}
-								style={{
-									width: "100%",
-									height: "25px",
-								}}
-							/>
-						</code>
-					</pre>
-					<hr />
 					<EmailShareButton subject={object?.title} body={object?.text}>
 						<EmailIcon size={iconSize} />
 					</EmailShareButton>
@@ -78,28 +64,28 @@ const ExportModal = ({
 						url={`${process.env.NEXT_PUBLIC_WEBSITE_URL}${linkToShare}`}
 						title={
 							object.title
-								? `beFree - ` + object.title
-								: `beFree - ` + object._id
+								? `${process.env.NEXT_PUBLIC_WEBSITE_NAME} - ` + object.title
+								: `${process.env.NEXT_PUBLIC_WEBSITE_NAME} - ` + object._id
 						}
 					>
 						<FacebookIcon size={iconSize} />
 					</FacebookShareButton>
-					<TwitterShareButton
+					<XShareButton
 						url={`${process.env.NEXT_PUBLIC_WEBSITE_URL}${linkToShare}`}
 						title={
 							object.title
-								? `beFree - ` + object.title
-								: `beFree - ` + object._id
+								? `${process.env.NEXT_PUBLIC_WEBSITE_NAME} - ` + object.title
+								: `${process.env.NEXT_PUBLIC_WEBSITE_NAME} - ` + object._id
 						}
 					>
 						<TwitterIcon size={iconSize} />
-					</TwitterShareButton>
+					</XShareButton>
 					<RedditShareButton
 						url={`${process.env.NEXT_PUBLIC_WEBSITE_URL}${linkToShare}`}
 						title={
 							object.title
-								? `beFree - ` + object.title
-								: `beFree - ` + object._id
+								? `${process.env.NEXT_PUBLIC_WEBSITE_NAME} - ` + object.title
+								: `${process.env.NEXT_PUBLIC_WEBSITE_NAME} - ` + object._id
 						}
 					>
 						<RedditIcon size={iconSize} />
@@ -108,8 +94,8 @@ const ExportModal = ({
 						url={`${process.env.NEXT_PUBLIC_WEBSITE_URL}${linkToShare}`}
 						title={
 							object.title
-								? `beFree - ` + object.title
-								: `beFree - ` + object._id
+								? `${process.env.NEXT_PUBLIC_WEBSITE_NAME} - ` + object.title
+								: `${process.env.NEXT_PUBLIC_WEBSITE_NAME} - ` + object._id
 						}
 					>
 						<WhatsappIcon size={iconSize} />
@@ -118,8 +104,8 @@ const ExportModal = ({
 						url={`${process.env.NEXT_PUBLIC_WEBSITE_URL}${linkToShare}`}
 						title={
 							object.title
-								? `beFree - ` + object.title
-								: `beFree - ` + object._id
+								? `${process.env.NEXT_PUBLIC_WEBSITE_NAME} - ` + object.title
+								: `${process.env.NEXT_PUBLIC_WEBSITE_NAME} - ` + object._id
 						}
 					>
 						<PinterestIcon size={iconSize} />
@@ -128,8 +114,8 @@ const ExportModal = ({
 						url={`${process.env.NEXT_PUBLIC_WEBSITE_URL}${linkToShare}`}
 						title={
 							object.title
-								? `beFree - ` + object.title
-								: `beFree - ` + object._id
+								? `${process.env.NEXT_PUBLIC_WEBSITE_NAME} - ` + object.title
+								: `${process.env.NEXT_PUBLIC_WEBSITE_NAME} - ` + object._id
 						}
 					>
 						<LinkedinIcon size={iconSize} />
@@ -138,8 +124,8 @@ const ExportModal = ({
 						url={`${process.env.NEXT_PUBLIC_WEBSITE_URL}${linkToShare}`}
 						title={
 							object.title
-								? `beFree - ` + object.title
-								: `beFree - ` + object._id
+								? `${process.env.NEXT_PUBLIC_WEBSITE_NAME} - ` + object.title
+								: `${process.env.NEXT_PUBLIC_WEBSITE_NAME} - ` + object._id
 						}
 					>
 						<TelegramIcon size={iconSize} />

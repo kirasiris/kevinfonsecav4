@@ -142,3 +142,10 @@ a.blog-relative-time-status__link {
 body.dark-mode .dropzone {
 	background-color: #212529;
 }
+
+/* ---------------------------------------------------
+  FOOTER
+----------------------------------------------------- */
+footer {
+	margin-top: 0;
+}

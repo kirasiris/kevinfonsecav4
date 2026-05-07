@@ -1,8 +1,9 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { deleteAuthTokenOnServer } from "@/helpers/setTokenOnServer";
 
-const NFAMenu = () => {
+const NFAMenu = ({ auth = {}, settings = {} }) => {
 	const pathname = usePathname();
 
 	const isActive = (path = "") => {
@@ -10,54 +11,148 @@ const NFAMenu = () => {
 	};
 
 	return (
-		<div className="col-lg-1 mb-3">
-			<ul className="list-group">
-				<li className={`list-group-item ${isActive(`/nfabusiness`)}`}>
-					<Link href={"/nfabusiness"}>Dashboard</Link>
-				</li>
-				<li
-					className={`list-group-item ${isActive(
-						`/nfabusiness/acquisitionsdisposals`,
-					)}`}
-				>
-					<Link href={"/nfabusiness/acquisitionsdisposals"}>
+		<>
+			{/* Logo/Brand */}
+			<div className="d-flex align-items-center gap-2 p-3 border-bottom">
+				<div
+					className="text-white d-flex align-items-center justify-content-center"
+					style={{
+						width: 32,
+						height: 32,
+						backgroundImage: `url(${settings?.data?.favicon})`,
+						backgroundSize: "cover",
+						backgroundPosition: "center",
+					}}
+				/>
+				<div>
+					<div className="fw-semibold">
+						{process.env.NEXT_PUBLIC_WEBSITE_NAME}
+					</div>
+					<small>Dashboard</small>
+				</div>
+			</div>
+			{/* Navigation */}
+			<div className="p-3">
+				<small className="text-uppercase fw-semibold">Navigation</small>
+				<nav className="nav flex-column mt-2">
+					<Link
+						href={{
+							pathname: `/nfabusiness`,
+							query: {},
+						}}
+						className={`nav-link d-flex align-items-center gap-2 ${isActive(`/nfabusiness`)}`}
+					>
+						Dashboard
+					</Link>
+					<Link
+						href={{
+							pathname: `/nfabusiness/acquisitionsdisposals`,
+							query: {},
+						}}
+						className={`nav-link d-flex align-items-center gap-2 ${isActive(`/nfabusiness/acquisitionsdisposals`)}`}
+					>
 						Acquisition and Disposals
 					</Link>
-				</li>
-				<li className={`list-group-item ${isActive(`/nfabusiness/companies`)}`}>
-					<Link href={"/nfabusiness/companies"}>Companies</Link>
-				</li>
-				<li className={`list-group-item ${isActive(`/nfabusiness/courses`)}`}>
-					<Link href={"/nfabusiness/courses"}>Courses</Link>
-				</li>
-				<li
-					className={`list-group-item ${isActive(`/nfabusiness/memberships`)}`}
+					<Link
+						href={{
+							pathname: `/nfabusiness/companies`,
+							query: {},
+						}}
+						className={`nav-link d-flex align-items-center gap-2 ${isActive(`/nfabusiness/companies`)}`}
+					>
+						Companies
+					</Link>
+					<Link
+						href={{
+							pathname: `/nfabusiness/courses`,
+							query: {},
+						}}
+						className={`nav-link d-flex align-items-center gap-2 ${isActive(`/nfabusiness/courses`)}`}
+					>
+						Courses
+					</Link>
+					<Link
+						href={{
+							pathname: `/nfabusiness/memberships`,
+							query: {},
+						}}
+						className={`nav-link d-flex align-items-center gap-2 ${isActive(`/nfabusiness/memberships`)}`}
+					>
+						Memberships
+					</Link>
+					<Link
+						href={{
+							pathname: `/nfabusiness/products`,
+							query: {},
+						}}
+						className={`nav-link d-flex align-items-center gap-2 ${isActive(`/nfabusiness/products`)}`}
+					>
+						Products
+					</Link>
+					<Link
+						href={{
+							pathname: `/nfabusiness/realestates`,
+							query: {},
+						}}
+						className={`nav-link d-flex align-items-center gap-2 ${isActive(`/nfabusiness/realestates`)}`}
+					>
+						Real Estate
+					</Link>
+					<Link
+						href={{
+							pathname: `/nfabusiness/reviews`,
+							query: {},
+						}}
+						className={`nav-link d-flex align-items-center gap-2 ${isActive(`/nfabusiness/reviews`)}`}
+					>
+						Service Reviews
+					</Link>
+					<Link
+						href={{
+							pathname: `/nfabusiness/serviceemails`,
+							query: {},
+						}}
+						className={`nav-link d-flex align-items-center gap-2 ${isActive(`/nfabusiness/serviceemails`)}`}
+					>
+						Service Requests
+					</Link>
+					<Link
+						href={{
+							pathname: `/nfabusiness/weapons`,
+							query: {},
+						}}
+						className={`nav-link d-flex align-items-center gap-2 ${isActive(`/nfabusiness/weapons`)}`}
+					>
+						Weapons
+					</Link>
+				</nav>
+			</div>
+			<div className="mt-auto border-top p-3">
+				<div className="d-flex align-items-center gap-2 mb-2">
+					<img
+						src={auth?.data?.files?.avatar?.location?.secure_location}
+						alt="User"
+						className="rounded-circle"
+						width={32}
+						height={32}
+					/>
+					<div>
+						<div className="fw-medium small">{auth?.data?.username}</div>
+						<small>{auth?.data?.email}</small>
+					</div>
+				</div>
+				<button
+					type="button"
+					className="nav-link d-flex align-items-center gap-2 text-danger"
+					onClick={async () => {
+						await deleteAuthTokenOnServer();
+					}}
 				>
-					<Link href={"/nfabusiness/memberships"}>Memberships</Link>
-				</li>
-				<li className={`list-group-item ${isActive(`/nfabusiness/products`)}`}>
-					<Link href={"/nfabusiness/products"}>Products</Link>
-				</li>
-				<li
-					className={`list-group-item ${isActive(`/nfabusiness/realestates`)}`}
-				>
-					<Link href={"/nfabusiness/realestates"}>Real Estate</Link>
-				</li>
-				<li className={`list-group-item ${isActive(`/nfabusiness/reviews`)}`}>
-					<Link href={"/nfabusiness/reviews"}>Service Reviews</Link>
-				</li>
-				<li
-					className={`list-group-item ${isActive(
-						`/nfabusiness/serviceemails`,
-					)}`}
-				>
-					<Link href={"/nfabusiness/serviceemails"}>Service Requests</Link>
-				</li>
-				<li className={`list-group-item ${isActive(`/nfabusiness/weapons`)}`}>
-					<Link href={"/nfabusiness/weapons"}>Weapons</Link>
-				</li>
-			</ul>
-		</div>
+					<i className="bi bi-box-arrow-right" />
+					Log Out
+				</button>
+			</div>
+		</>
 	);
 };
 

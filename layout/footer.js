@@ -13,7 +13,7 @@ const Footer = ({
 	menus = [],
 }) => {
 	return (
-		<footer className={`py-5 mt-4 bg-dark ${classList}`} style={styleList}>
+		<footer className={`py-5 bg-dark ${classList}`} style={styleList}>
 			<div className="container">
 				<div className="text-center text-white">
 					<p>

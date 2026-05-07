@@ -46,7 +46,7 @@ const Single = ({
 						size="sm"
 						style={{
 							position: "absolute",
-							right: "10px",
+							right: "-40px",
 							bottom: "211px",
 						}}
 					>
@@ -114,8 +114,8 @@ const Single = ({
 						size="sm"
 						style={{
 							position: "absolute",
-							right: "10px",
-							bottom: "211px",
+							right: "0px",
+							bottom: "193px",
 						}}
 					>
 						<Link
@@ -181,7 +181,7 @@ const Single = ({
 						size="sm"
 						style={{
 							position: "absolute",
-							right: "10px",
+							right: "-40px",
 							bottom: "211px",
 						}}
 					>
@@ -248,8 +248,8 @@ const Single = ({
 						size="sm"
 						style={{
 							position: "absolute",
-							right: "10px",
-							bottom: "211px",
+							right: "0px",
+							bottom: "193px",
 						}}
 					>
 						<Link

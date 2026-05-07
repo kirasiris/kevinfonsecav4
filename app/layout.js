@@ -1,10 +1,10 @@
 import "@/src/css/bootstrap.css";
-// import "@/src/js/bootstrap.js";
 import "@/src/css/global.css";
 import "@/src/css/app.css";
 import Menu from "@/layout/menu";
 import Footer from "@/layout/footer";
 import { getGlobalData } from "@/helpers/globalData";
+import { BootstrapClient } from "@/helpers/bootstrapClient";
 
 export default async function RootLayout({ children }) {
 	const { auth, settings, menus } = await getGlobalData();
@@ -25,6 +25,7 @@ export default async function RootLayout({ children }) {
 					canonical={process.env.NEXT_PUBLIC_WEBSITE_URL}
 					menus={menus?.data}
 				/>
+				<BootstrapClient />
 			</body>
 		</html>
 	);

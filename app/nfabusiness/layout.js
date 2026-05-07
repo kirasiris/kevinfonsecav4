@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
+import Link from "next/link";
 import "@/src/css/admin.css";
 import NFAMenu from "@/components/nfabusiness/nfamenu";
 import Loading from "@/app/nfabusiness/loading";
@@ -39,10 +40,73 @@ export default async function AdminLayout({ children }) {
 				locales=""
 				posType="page"
 			/>
-			<div className="container-fluid my-4">
-				<div className="row">
-					<NFAMenu />
-					<div className="col-lg-11">{children}</div>
+			<header
+				className="bg-secondary p-3 d-flex align-items-center gap-3"
+				style={{
+					borderBottom: "1px solid #dee2e6 !important",
+				}}
+			>
+				{/* Mobile menu button - visible on smaller screens */}
+				<button
+					className="btn btn-light d-lg-none"
+					type="button"
+					data-bs-toggle="offcanvas"
+					data-bs-target="#mobileSidebar"
+					aria-controls="mobileSidebar"
+				>
+					<i className="fa-solid fa-bars" />
+				</button>
+				<h5 className="text-white mb-0">Dashboard</h5>
+				<div className="ms-auto">
+					<Link
+						href={{
+							pathname: process.env.NEXT_PUBLIC_WEBSITE_URL,
+							query: {},
+						}}
+						className="btn btn-light btn-sm text-black"
+						target="_blank"
+					>
+						View Site
+					</Link>
+				</div>
+			</header>
+			<div className="d-flex">
+				{/* Desktop Sidebar - visible on lg and up */}
+				<aside className="sidebar border-end d-none d-lg-flex flex-column">
+					<NFAMenu auth={auth} settings={settings} />
+				</aside>
+				{/* Smaller Device Sidebar */}
+				<div
+					className="offcanvas offcanvas-start"
+					tabIndex={-1}
+					id="mobileSidebar"
+					aria-labelledby="mobileSidebarLabel"
+					style={{
+						backgroundColor: "#212529",
+					}}
+				>
+					<div className="offcanvas-header border-bottom">
+						<h5 className="text-white offcanvas-title" id="mobileSidebarLabel">
+							Menu
+						</h5>
+						<button
+							type="button"
+							className="btn-close btn-close-white"
+							data-bs-dismiss="offcanvas"
+							aria-label="Close"
+						/>
+					</div>
+					<div
+						className="offcanvas-body p-0 d-flex flex-column"
+						style={{
+							color: "#fff",
+						}}
+					>
+						<NFAMenu auth={auth} settings={settings} />
+					</div>
+				</div>
+				<div className="flex-grow-1 min-vh-100">
+					<main className="p-3 p-md-4">{children}</main>
 				</div>
 			</div>
 		</Suspense>

@@ -51,7 +51,7 @@ const NumericPagination = ({
 		let leftSiblingsIndex = Math.max(pageNo - Number(siblings), 1);
 		let rightSiblingsIndex = Math.min(
 			pageNo + Number(siblings),
-			Number(totalPages)
+			Number(totalPages),
 		);
 
 		let showLeftDots = leftSiblingsIndex > 2;
@@ -65,7 +65,7 @@ const NumericPagination = ({
 			let rightItemsCount = 3 + 2 * Number(siblings);
 			let rightRange = _.range(
 				Number(totalPages) - rightItemsCount + 1,
-				Number(totalPages) + 1
+				Number(totalPages) + 1,
 			);
 			return [1, "...", ...rightRange];
 		} else {
@@ -122,7 +122,7 @@ const NumericPagination = ({
 				<li className={`page-item ${Number(pageNo) - 1 === 0 && `disabled`}`}>
 					<Link
 						href={`?page=${Number(pageNo) - 1}&limit=${Number(
-							limit
+							limit,
 						)}${newParams}`}
 						className="page-link"
 						scroll={false}
@@ -150,7 +150,7 @@ const NumericPagination = ({
 								pageNo !== 1 && (
 									<Link
 										href={`?page=${Number(pageNo) - 1}&limit=${Number(
-											limit
+											limit,
 										)}${newParams}`}
 										className={`page-link${index === "..." ? " disabled" : ""}`}
 										scroll={false}
@@ -162,7 +162,7 @@ const NumericPagination = ({
 								pageNo !== totalPages && (
 									<Link
 										href={`?page=${Number(pageNo) + 1}&limit=${Number(
-											limit
+											limit,
 										)}${newParams}`}
 										className={`page-link${index === "..." ? " disabled" : ""}`}
 										scroll={false}
@@ -173,7 +173,7 @@ const NumericPagination = ({
 							) : index === "&raquo;" ? (
 								<Link
 									href={`?page=${Number(totalPages)}&limit=${Number(
-										limit
+										limit,
 									)}${newParams}`}
 									className={`page-link${index === "..." ? " disabled" : ""}`}
 									scroll={false}
@@ -200,7 +200,7 @@ const NumericPagination = ({
 				>
 					<Link
 						href={`?page=${Number(pageNo) + 1}&limit=${Number(
-							limit
+							limit,
 						)}${newParams}`}
 						className="page-link"
 						scroll={false}
@@ -215,7 +215,7 @@ const NumericPagination = ({
 				>
 					<Link
 						href={`?page=${Number(totalPages)}&limit=${Number(
-							limit
+							limit,
 						)}${newParams}`}
 						className="page-link"
 						scroll={false}

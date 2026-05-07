@@ -1,8 +1,9 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { deleteAuthTokenOnServer } from "@/helpers/setTokenOnServer";
 
-const AdminMenu = () => {
+const AdminMenu = ({ auth = {}, settings = {} }) => {
 	const pathname = usePathname();
 
 	const isActive = (path = "") => {
@@ -10,102 +11,310 @@ const AdminMenu = () => {
 	};
 
 	return (
-		<div className="col-lg-1 mb-3">
-			<ul className="list-group">
-				<li className={`list-group-item ${isActive(`/noadmin`)}`}>
-					<Link href={"/noadmin"}>Dashboard</Link>
-				</li>
-				<li className={`list-group-item ${isActive(`/noadmin/animes`)}`}>
-					<Link href={"/noadmin/animes"}>Animes</Link>
-				</li>
-				<li className={`list-group-item ${isActive(`/noadmin/blogs`)}`}>
-					<Link href={"/noadmin/blogs"}>Blog</Link>
-				</li>
-				<li className={`list-group-item ${isActive(`/noadmin/categories`)}`}>
-					<Link href={"/noadmin/categories"}>Categories</Link>
-				</li>
-				<li className={`list-group-item ${isActive(`/noadmin/cdalbums`)}`}>
-					<Link href={"/noadmin/cdalbums"}>CD Albums</Link>
-				</li>
-				<li className={`list-group-item ${isActive(`/noadmin/changelogs`)}`}>
-					<Link href={"/noadmin/changelogs"}>Changelogs</Link>
-				</li>
-				<li className={`list-group-item ${isActive(`/noadmin/comments`)}`}>
-					<Link href={"/noadmin/comments"}>Comments</Link>
-				</li>
-				<li className={`list-group-item ${isActive(`/noadmin/contactemails`)}`}>
-					<Link href={"/noadmin/contactemails"}>Contact Emails</Link>
-				</li>
-				<li className={`list-group-item ${isActive(`/noadmin/events`)}`}>
-					<Link href={"/noadmin/events"}>Events</Link>
-				</li>
-				<li className={`list-group-item ${isActive(`/noadmin/files`)}`}>
-					<Link href={"/noadmin/files"}>Files</Link>
-				</li>
-				<li className={`list-group-item ${isActive(`/noadmin/forums`)}`}>
-					<Link href={"/noadmin/forums"}>Forums</Link>
-				</li>
-				<li className={`list-group-item ${isActive(`/noadmin/logs`)}`}>
-					<Link href={"/noadmin/logs"}>Logs</Link>
-				</li>
-				<li className={`list-group-item ${isActive(`/noadmin/menus`)}`}>
-					<Link href={"/noadmin/menus"}>Menus</Link>
-				</li>
-				<li className={`list-group-item ${isActive(`/noadmin/movies`)}`}>
-					<Link href={"/noadmin/movies"}>Movies</Link>
-				</li>
-				<li
-					className={`list-group-item ${isActive(`/noadmin/newsletteremails`)}`}
-				>
-					<Link href={"/noadmin/newsletteremails"}>Newsletter Emails</Link>
-				</li>
-				<li className={`list-group-item ${isActive(`/noadmin/polls`)}`}>
-					<Link href={"/noadmin/polls"}>Polls</Link>
-				</li>
-				<li className={`list-group-item ${isActive(`/noadmin/qrcodes`)}`}>
-					<Link href={"/noadmin/qrcodes"}>QR Code Generator</Link>
-				</li>
-				<li
-					className={`list-group-item ${isActive(
-						`/noadmin/newslettersubscribers`,
-					)}`}
-				>
-					<Link href={"/noadmin/newslettersubscribers"}>
+		<>
+			{/* Logo/Brand */}
+			<div className="d-flex align-items-center gap-2 p-3 border-bottom">
+				<div
+					className="text-white d-flex align-items-center justify-content-center"
+					style={{
+						width: 32,
+						height: 32,
+						backgroundImage: `url(${settings?.data?.favicon})`,
+						backgroundSize: "cover",
+						backgroundPosition: "center",
+					}}
+				/>
+				<div>
+					<div className="fw-semibold">
+						{process.env.NEXT_PUBLIC_WEBSITE_NAME}
+					</div>
+					<small>Dashboard</small>
+				</div>
+			</div>
+			{/* Navigation */}
+			<div className="p-3">
+				<small className="text-uppercase fw-semibold">Navigation</small>
+				<nav className="nav flex-column mt-2">
+					<Link
+						href={{
+							pathname: `/noadmin`,
+							query: {},
+						}}
+						className={`nav-link d-flex align-items-center gap-2 ${isActive(`/noadmin`)}`}
+					>
+						Dashboard
+					</Link>
+					<Link
+						href={{
+							pathname: `/noadmin/animes`,
+							query: {},
+						}}
+						className={`nav-link d-flex align-items-center gap-2 ${isActive(`/noadmin/animes`)}`}
+					>
+						Animes
+					</Link>
+					<Link
+						href={{
+							pathname: `/noadmin/blogs`,
+							query: {},
+						}}
+						className={`nav-link d-flex align-items-center gap-2 ${isActive(`/noadmin/blogs`)}`}
+					>
+						Blogs
+					</Link>
+					<Link
+						href={{
+							pathname: `/noadmin/categories`,
+							query: {},
+						}}
+						className={`nav-link d-flex align-items-center gap-2 ${isActive(`/noadmin/categories`)}`}
+					>
+						Categories
+					</Link>
+					<Link
+						href={{
+							pathname: `/noadmin/cdalbums`,
+							query: {},
+						}}
+						className={`nav-link d-flex align-items-center gap-2 ${isActive(`/noadmin/cdalbums`)}`}
+					>
+						CD Albums
+					</Link>
+					<Link
+						href={{
+							pathname: `/noadmin/changelogs`,
+							query: {},
+						}}
+						className={`nav-link d-flex align-items-center gap-2 ${isActive(`/noadmin/changelogs`)}`}
+					>
+						Changelogs
+					</Link>
+					<Link
+						href={{
+							pathname: `/noadmin/comments`,
+							query: {},
+						}}
+						className={`nav-link d-flex align-items-center gap-2 ${isActive(`/noadmin/comments`)}`}
+					>
+						Comments
+					</Link>
+					<Link
+						href={{
+							pathname: `/noadmin/contactemails`,
+							query: {},
+						}}
+						className={`nav-link d-flex align-items-center gap-2 ${isActive(`/noadmin/contactemails`)}`}
+					>
+						Contact Emails
+					</Link>
+					<Link
+						href={{
+							pathname: `/noadmin/events`,
+							query: {},
+						}}
+						className={`nav-link d-flex align-items-center gap-2 ${isActive(`/noadmin/events`)}`}
+					>
+						Events
+					</Link>
+					<Link
+						href={{
+							pathname: `/noadmin/files`,
+							query: {},
+						}}
+						className={`nav-link d-flex align-items-center gap-2 ${isActive(`/noadmin/files`)}`}
+					>
+						Files
+					</Link>
+					<Link
+						href={{
+							pathname: `/noadmin/forums`,
+							query: {},
+						}}
+						className={`nav-link d-flex align-items-center gap-2 ${isActive(`/noadmin/forums`)}`}
+					>
+						Forums
+					</Link>
+					<Link
+						href={{
+							pathname: `/noadmin/logs`,
+							query: {},
+						}}
+						className={`nav-link d-flex align-items-center gap-2 ${isActive(`/noadmin/logs`)}`}
+					>
+						Logs
+					</Link>
+					<Link
+						href={{
+							pathname: `/noadmin/menus`,
+							query: {},
+						}}
+						className={`nav-link d-flex align-items-center gap-2 ${isActive(`/noadmin/menus`)}`}
+					>
+						Menus
+					</Link>
+					<Link
+						href={{
+							pathname: `/noadmin/movies`,
+							query: {},
+						}}
+						className={`nav-link d-flex align-items-center gap-2 ${isActive(`/noadmin/movies`)}`}
+					>
+						Movies
+					</Link>
+					<Link
+						href={{
+							pathname: `/noadmin/newsletteremails`,
+							query: {},
+						}}
+						className={`nav-link d-flex align-items-center gap-2 ${isActive(`/noadmin/newsletteremails`)}`}
+					>
+						Newsletter Emails
+					</Link>
+					<Link
+						href={{
+							pathname: `/noadmin/polls`,
+							query: {},
+						}}
+						className={`nav-link d-flex align-items-center gap-2 ${isActive(`/noadmin/polls`)}`}
+					>
+						Polls
+					</Link>
+					<Link
+						href={{
+							pathname: `/noadmin/qrcodes`,
+							query: {},
+						}}
+						className={`nav-link d-flex align-items-center gap-2 ${isActive(`/noadmin/qrcodes`)}`}
+					>
+						QR Code Generator
+					</Link>
+					<Link
+						href={{
+							pathname: `/noadmin/newslettersubscribers`,
+							query: {},
+						}}
+						className={`nav-link d-flex align-items-center gap-2 ${isActive(`/noadmin/newslettersubscribers`)}`}
+					>
 						Newsletter Subscribers
 					</Link>
-				</li>
-				<li className={`list-group-item ${isActive(`/noadmin/posts`)}`}>
-					<Link href={"/noadmin/posts"}>Posts</Link>
-				</li>
-				<li className={`list-group-item ${isActive(`/noadmin/quizzes`)}`}>
-					<Link href={"/noadmin/quizzes"}>Quizzes</Link>
-				</li>
-				<li className={`list-group-item ${isActive(`/noadmin/quotes`)}`}>
-					<Link href={"/noadmin/quotes"}>Quotes</Link>
-				</li>
-				<li className={`list-group-item ${isActive(`/noadmin/reports`)}`}>
-					<Link href={"/noadmin/reports"}>Reports</Link>
-				</li>
-				<li className={`list-group-item ${isActive(`/noadmin/secrets`)}`}>
-					<Link href={"/noadmin/secrets"}>Secrets</Link>
-				</li>
-				<li className={`list-group-item ${isActive(`/noadmin/settings`)}`}>
-					<Link href={"/noadmin/settings"}>Settings</Link>
-				</li>
-				<li className={`list-group-item ${isActive(`/noadmin/shorturls`)}`}>
-					<Link href={"/noadmin/shorturls"}>Shortened Urls</Link>
-				</li>
-				<li className={`list-group-item ${isActive(`/noadmin/snippets`)}`}>
-					<Link href={"/noadmin/snippets"}>Snippets</Link>
-				</li>
-				<li className={`list-group-item ${isActive(`/noadmin/themes`)}`}>
-					<Link href={"/noadmin/themes"}>Themes</Link>
-				</li>
-				<li className={`list-group-item ${isActive(`/noadmin/users`)}`}>
-					<Link href={"/noadmin/users"}>Users</Link>
-				</li>
-			</ul>
-		</div>
+					<Link
+						href={{
+							pathname: `/noadmin/posts`,
+							query: {},
+						}}
+						className={`nav-link d-flex align-items-center gap-2 ${isActive(`/noadmin/posts`)}`}
+					>
+						Posts
+					</Link>
+					<Link
+						href={{
+							pathname: `/noadmin/quizzes`,
+							query: {},
+						}}
+						className={`nav-link d-flex align-items-center gap-2 ${isActive(`/noadmin/quizzes`)}`}
+					>
+						Quizzes
+					</Link>
+					<Link
+						href={{
+							pathname: `/noadmin/quotes`,
+							query: {},
+						}}
+						className={`nav-link d-flex align-items-center gap-2 ${isActive(`/noadmin/quotes`)}`}
+					>
+						Quotes
+					</Link>
+					<Link
+						href={{
+							pathname: `/noadmin/reports`,
+							query: {},
+						}}
+						className={`nav-link d-flex align-items-center gap-2 ${isActive(`/noadmin/reports`)}`}
+					>
+						Reports
+					</Link>
+					<Link
+						href={{
+							pathname: `/noadmin/secrets`,
+							query: {},
+						}}
+						className={`nav-link d-flex align-items-center gap-2 ${isActive(`/noadmin/secrets`)}`}
+					>
+						Secrets
+					</Link>
+					<Link
+						href={{
+							pathname: `/noadmin/settings`,
+							query: {},
+						}}
+						className={`nav-link d-flex align-items-center gap-2 ${isActive(`/noadmin/settings`)}`}
+					>
+						Settings
+					</Link>
+					<Link
+						href={{
+							pathname: `/noadmin/shorturls`,
+							query: {},
+						}}
+						className={`nav-link d-flex align-items-center gap-2 ${isActive(`/noadmin/shorturls`)}`}
+					>
+						Shortened Urls
+					</Link>
+					<Link
+						href={{
+							pathname: `/noadmin/snippets`,
+							query: {},
+						}}
+						className={`nav-link d-flex align-items-center gap-2 ${isActive(`/noadmin/snippets`)}`}
+					>
+						Snippets
+					</Link>
+					<Link
+						href={{
+							pathname: `/noadmin/themes`,
+							query: {},
+						}}
+						className={`nav-link d-flex align-items-center gap-2 ${isActive(`/noadmin/themes`)}`}
+					>
+						Themes
+					</Link>
+					<Link
+						href={{
+							pathname: `/noadmin/users`,
+							query: {},
+						}}
+						className={`nav-link d-flex align-items-center gap-2 ${isActive(`/noadmin/users`)}`}
+					>
+						Users
+					</Link>
+				</nav>
+			</div>
+			<div className="mt-auto border-top p-3">
+				<div className="d-flex align-items-center gap-2 mb-2">
+					<img
+						src={auth?.data?.files?.avatar?.location?.secure_location}
+						alt="User"
+						className="rounded-circle"
+						width={32}
+						height={32}
+					/>
+					<div>
+						<div className="fw-medium small">{auth?.data?.username}</div>
+						<small>{auth?.data?.email}</small>
+					</div>
+				</div>
+				<button
+					type="button"
+					className="nav-link d-flex align-items-center gap-2 text-danger"
+					onClick={async () => {
+						await deleteAuthTokenOnServer();
+					}}
+				>
+					<i className="bi bi-box-arrow-right" />
+					Log Out
+				</button>
+			</div>
+		</>
 	);
 };
 

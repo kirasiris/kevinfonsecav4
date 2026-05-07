@@ -16,7 +16,7 @@ const AdminFilesIndex = async ({ params, searchParams }) => {
 	const awtdParams = await params;
 	const awtdSearchParams = await searchParams;
 	const page = awtdSearchParams.page || 1;
-	const limit = (awtdSearchParams.limit = 28);
+	const limit = awtdSearchParams.limit || 32;
 	const sort = awtdSearchParams.sort || "-createdAt";
 
 	const token = await getAuthTokenOnServer();
@@ -31,7 +31,7 @@ const AdminFilesIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/uploads/deleteobject?publicId=${publicId}`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(`/noadmin/files?page=${page}&limit=${limit}&sort=${sort}`);
 	};
@@ -49,7 +49,7 @@ const AdminFilesIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/files/deleteall/failed/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(`/noadmin/files?page=${page}&limit=${limit}&sort=${sort}`);
 	};

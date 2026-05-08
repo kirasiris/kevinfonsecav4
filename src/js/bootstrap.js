@@ -5,9 +5,9 @@
  */
 (function (global, factory) {
 	typeof exports === "object" && typeof module !== "undefined"
-		? (module.exports = factory(require("@popperjs/core")))
+		? (module.exports = factory(require("@/src/js/popper")))
 		: typeof define === "function" && define.amd
-			? define(["@popperjs/core"], factory)
+			? define(["@/src/js/popper"], factory)
 			: ((global =
 					typeof globalThis !== "undefined" ? globalThis : global || self),
 				(global.bootstrap = factory(global.Popper)));

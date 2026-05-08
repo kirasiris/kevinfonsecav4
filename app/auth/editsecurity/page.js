@@ -6,7 +6,6 @@ import { fetchurl } from "@/helpers/setTokenOnServer";
 import Sidebar from "@/layout/auth/sidebar";
 import Globalcontent from "@/layout/content";
 import Loading from "@/app/blog/loading";
-import UpdateEmailsForm from "@/forms/auth/updateemailsform";
 import UpdatePasswordForm from "@/forms/auth/updatepasswordform";
 import UpdatePasskeyForm from "@/forms/auth/updatepasskeyform";
 import Head from "@/app/head";
@@ -123,7 +122,6 @@ const UpdatePasswords = async ({ params, searchParams }) => {
 											handleIsPrimary={setPrimaryEmail}
 											handleRemoveEmail={removeEmail}
 										/>
-										{/* <UpdateEmailsForm auth={auth} /> */}
 									</div>
 								</div>
 								<div className="card mb-3">

@@ -61,17 +61,7 @@ const UseDropzone = ({
 								},
 							},
 						);
-						// await axios.put(
-						// 	`${process.env.NEXT_PUBLIC_API_URL}/noadmin/weaponacquisitionsdisposals/${object?._id}/files`,
-						// 	{
-						// 		file: res?.data?.data?._id,
-						// 	},
-						// 	{
-						// 		headers: {
-						// 			Authorization: `Bearer ${token?.value}`,
-						// 		},
-						// 	},
-						// );
+
 						await fetchurl(
 							`${process.env.NEXT_PUBLIC_API_URL}/noadmin/weaponacquisitionsdisposals/${object?._id}/files`,
 							"PUT",

@@ -61,19 +61,9 @@ const UseDropzone = ({
 								},
 							},
 						);
-						// await axios.put(
-						// 	`${process.env.NEXT_PUBLIC_API_URL}/noadmin/stripe/realstates/${object?._id}/files`,
-						// 	{
-						// 		file: res?.data?.data?._id,
-						// 	},
-						// 	{
-						// 		headers: {
-						// 			Authorization: `Bearer ${token?.value}`,
-						// 		},
-						// 	},
-						// );
+
 						await fetchurl(
-							`${process.env.NEXT_PUBLIC_API_URL}/noadmin/stripe/realstates/${object?._id}/files`,
+							`${process.env.NEXT_PUBLIC_API_URL}/noadmin/stripe/realestates/${object?._id}/files`,
 							"PUT",
 							"no-cache",
 							{
@@ -85,7 +75,7 @@ const UseDropzone = ({
 						);
 					}
 					setUploadPercentage(0);
-					router.push(`/nfabusiness/realstates/read/${object?._id}`);
+					router.push(`/nfabusiness/realestates/read/${object?._id}`);
 				}}
 			>
 				{({ getRootProps, getInputProps }) => (

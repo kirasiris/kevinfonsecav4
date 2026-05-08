@@ -62,27 +62,6 @@ const UseDropzone = ({
 							},
 						);
 
-						// await axios.post(
-						// 	`${process.env.NEXT_PUBLIC_API_URL}/noadmin/videos`,
-						// 	{
-						// 		resourceId: object?._id,
-						// 		duration: "0:0",
-						// 		status: "draft",
-						// 		averageRating: 10,
-						// 		onModel: "Playlist",
-						// 		title: res?.data?.data?.title,
-						// 		text: "No description",
-						// 		files: { video_url: res?.data?.data?._id },
-						// 		embedding: false,
-						// 		commented: false,
-						// 	},
-						// 	{
-						// 		headers: {
-						// 			Authorization: `Bearer ${token?.value}`,
-						// 		},
-						// 	},
-						// );
-
 						await fetchurl(
 							`${process.env.NEXT_PUBLIC_API_URL}/noadmin/videos`,
 							"POST",

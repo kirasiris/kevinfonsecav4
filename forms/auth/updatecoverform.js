@@ -2,7 +2,6 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
 import Image from "next/image";
-import axios from "axios";
 import { fetchurl, getAuthTokenOnServer } from "@/helpers/setTokenOnServer";
 import UseProgress from "@/components/global/useprogress";
 
@@ -18,76 +17,88 @@ const UpdateCoverForm = ({ auth = {} }) => {
 	const { file, filename, fileurl } = coverData;
 
 	const [uploadPercentage, setUploadPercentage] = useState(0);
-	const [, setError] = useState(false);
+
 	const [btnText, setBtnText] = useState("Submit");
 
 	const upgradeCover = async (e) => {
 		e.preventDefault();
+		setBtnText(`Processing`);
+		const token = await getAuthTokenOnServer();
 		try {
-			setBtnText("Submit...");
-			const token = await getAuthTokenOnServer();
-			const res = await axios.put(
-				`${process.env.NEXT_PUBLIC_FILE_UPLOADER_URL}/uploads/uploadobject`,
-				{
-					userId: auth?.data?._id,
-					username: auth?.data?.username,
-					userEmail: auth?.data?.email,
-					onModel: "User",
-					file: file,
-					album: "profile-covers",
-				},
-				{
-					headers: {
-						"Content-Type": "multipart/form-data",
-						Authorization: `Bearer ${token?.value}`,
-					},
-					onUploadProgress: (ProgressEvent) => {
-						setUploadPercentage(
-							parseInt(
-								Math.round(ProgressEvent.loaded * 100) / ProgressEvent.total,
+			const res = await new Promise((resolve, reject) => {
+				const formData = new FormData();
+				formData.append("userId", auth?.data?._id);
+				formData.append("username", auth?.data?.username);
+				formData.append("userEmail", auth?.data?.email);
+				formData.append("onModel", "User");
+				formData.append("file", file);
+				formData.append("album", "profile-covers");
+
+				const xhr = new XMLHttpRequest();
+
+				xhr.upload.addEventListener("progress", (event) => {
+					if (event.lengthComputable) {
+						setUploadPercentage(Math.round((event.loaded * 100) / event.total));
+						setTimeout(() => setUploadPercentage(0), 10000);
+					}
+				});
+
+				xhr.addEventListener("load", () => {
+					if (xhr.status >= 200 && xhr.status < 300) {
+						const parsed = JSON.parse(xhr.responseText);
+						resolve(parsed);
+						setCoverData({
+							file: file,
+							filename: parsed.data.location.filename,
+							fileurl: parsed.data.location.secure_location,
+						});
+					} else {
+						reject(
+							new Error(
+								`Upload failed with status ${xhr.status}: ${xhr.statusText}`,
 							),
 						);
-						setTimeout(() => setUploadPercentage(0), 10000);
-					},
-				},
-			);
+					}
+				});
+
+				xhr.addEventListener("error", () =>
+					reject(new Error("Network error during upload")),
+				);
+				xhr.addEventListener("abort", () =>
+					reject(new Error("Upload aborted")),
+				);
+				xhr.addEventListener("timeout", () =>
+					reject(new Error("Upload timed out")),
+				);
+
+				xhr.open(
+					"PUT",
+					`${process.env.NEXT_PUBLIC_FILE_UPLOADER_URL}/uploads/uploadobject`,
+				);
+				xhr.setRequestHeader("Authorization", `Bearer ${token?.value}`);
+
+				xhr.send(formData);
+			});
+
 			await fetchurl(
 				`/auth/updatecover`,
 				"PUT",
 				"no-cache",
 				{
-					cover: res.data.data._id,
+					cover: res?.data?._id,
 				},
 				undefined,
 				false,
 				false,
 			);
-			resetForm();
+		} catch (err) {
+			toast.error(
+				err?.message || "Something went wrong during upload",
+				"bottom",
+			);
+		} finally {
 			toast.success("Cover uploaded");
 			setBtnText(btnText);
-		} catch (err) {
-			console.log(err);
-			setBtnText(btnText);
-			setError(true);
-			// const error = err.response.data.message;
-			const error = err?.response?.data?.error?.errors;
-			const errors = err?.response?.data?.errors;
-
-			if (error) {
-				// dispatch(setAlert(error, 'danger'));
-				error &&
-					Object.entries(error).map(([, value]) => toast.error(value.message));
-			}
-
-			if (errors) {
-				errors.forEach((error) => toast.error(error.msg));
-			}
-
-			toast.error(err?.response?.statusText);
-			return {
-				msg: err?.response?.statusText,
-				status: err?.response?.status,
-			};
 		}
 	};
 

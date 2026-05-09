@@ -217,8 +217,9 @@ const UpdateFileForm = ({ token = {}, auth = {}, object = {} }) => {
 					<option value={`profile-covers`}>Profile Covers</option>
 					<option value={`posts`}>Posts</option>
 					<option value={`atf-files`}>ATF Files</option>
-					<option value={`albums`}>Album</option>
+					<option value={`albums`}>Albums</option>
 					<option value={`tv-shows`}>TV Shows</option>
+					<option value={`products`}>Products, Real Estates & Courses</option>
 				</select>
 				<label htmlFor="objectId" className="form-label">
 					Object ID

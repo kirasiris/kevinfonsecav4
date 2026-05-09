@@ -1,6 +1,5 @@
 import Calendar from "@/components/global/calendar";
 import UseDropzone from "@/components/global/dropzone";
-import RecordAudioModal from "@/components/global/recordaudiomodal";
 import { fetchurl, getUserOnServer } from "@/helpers/setTokenOnServer";
 import Waveform from "@/layout/waveform";
 
@@ -19,7 +18,6 @@ const PlaygroundIndex = async ({ params, searchParams }) => {
 	return (
 		<div className="container">
 			<div className="row">PlaygroundIndex</div>
-			<RecordAudioModal auth={auth} />
 			<Waveform
 				src="/JinMoriSaysRun.mp3"
 				mediaTitle="The God of High School OST - Seoul Team / Monkey King Say Run ( HQ Cover)"

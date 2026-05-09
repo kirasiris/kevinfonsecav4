@@ -1,6 +1,6 @@
 "use client";
-import axios from "axios";
 import { useState, useEffect } from "react";
+import { toast } from "react-toastify";
 import Dropzone from "react-dropzone";
 import Image from "next/image";
 import UseProgress from "@/components/global/useprogress";
@@ -56,85 +56,68 @@ const UseDropzone = ({
 
 					// Upload files
 					const uploadPromises = acceptedFiles.map(async (file) => {
-						// const res = await axios.put(
-						// 	`${process.env.NEXT_PUBLIC_FILE_UPLOADER_URL}/uploads/uploadobject`,
-						// 	{
-						// 		userId: auth?.userId,
-						// 		username: auth?.username,
-						// 		userEmail: auth?.email,
-						// 		onModel: onModel,
-						// 		resourceId: object?._id,
-						// 		file: file,
-						// 		album: "posts",
-						// 	},
-						// 	{
-						// 		headers: {
-						// 			"Content-Type": "multipart/form-data",
-						// 			Authorization: `Bearer ${token?.value}`,
-						// 		},
-						// 		onUploadProgress: (ProgressEvent) => {
-						// 			setUploadPercentage(
-						// 				parseInt(
-						// 					(ProgressEvent.loaded * 100) / ProgressEvent.total,
-						// 				),
-						// 			);
-						// 			setTimeout(() => setUploadPercentage(0), 10000);
-						// 		},
-						// 	},
-						// );
-						// return res?.data?.data?._id;
-						const res = await new Promise((resolve, reject) => {
-							const formData = new FormData();
-							formData.append("userId", auth?.userId);
-							formData.append("username", auth?.username);
-							formData.append("userEmail", auth?.email);
-							formData.append("onModel", onModel);
-							formData.append("resourceId", object?._id);
-							formData.append("file", file);
-							formData.append("album", "posts");
+						try {
+							const res = await new Promise((resolve, reject) => {
+								const formData = new FormData();
+								formData.append("userId", auth?.userId);
+								formData.append("username", auth?.username);
+								formData.append("userEmail", auth?.email);
+								formData.append("onModel", onModel);
+								formData.append("resourceId", object?._id);
+								formData.append("file", file);
+								formData.append("album", "posts");
 
-							const xhr = new XMLHttpRequest();
+								const xhr = new XMLHttpRequest();
 
-							xhr.upload.addEventListener("progress", (event) => {
-								if (event.lengthComputable) {
-									setUploadPercentage(
-										Math.round((event.loaded * 100) / event.total),
-									);
-									setTimeout(() => setUploadPercentage(0), 10000);
-								}
+								xhr.upload.addEventListener("progress", (event) => {
+									if (event.lengthComputable) {
+										setUploadPercentage(
+											Math.round((event.loaded * 100) / event.total),
+										);
+										setTimeout(() => setUploadPercentage(0), 10000);
+									}
+								});
+
+								xhr.addEventListener("load", () => {
+									if (xhr.status >= 200 && xhr.status < 300) {
+										const parsed = JSON.parse(xhr.responseText);
+										resolve(parsed);
+									} else {
+										reject(
+											new Error(
+												`Upload failed with status ${xhr.status}: ${xhr.statusText}`,
+											),
+										);
+									}
+								});
+
+								xhr.addEventListener("error", () =>
+									reject(new Error("Network error during upload")),
+								);
+								xhr.addEventListener("abort", () =>
+									reject(new Error("Upload aborted")),
+								);
+								xhr.addEventListener("timeout", () =>
+									reject(new Error("Upload timed out")),
+								);
+
+								xhr.open(
+									"PUT",
+									`${process.env.NEXT_PUBLIC_FILE_UPLOADER_URL}/uploads/uploadobject`,
+								);
+								xhr.setRequestHeader("Authorization", `Bearer ${token?.value}`);
+
+								xhr.send(formData);
 							});
-
-							xhr.addEventListener("load", () => {
-								if (xhr.status >= 200 && xhr.status < 300) {
-									resolve(JSON.parse(xhr.responseText));
-								} else {
-									reject(
-										new Error(
-											`Upload failed with status ${xhr.status}: ${xhr.statusText}`,
-										),
-									);
-								}
-							});
-
-							xhr.addEventListener("error", () =>
-								reject(new Error("Network error during upload")),
+							return res?.data?._id;
+						} catch (err) {
+							toast.error(
+								err?.message || "Something went wrong during upload",
+								"bottom",
 							);
-							xhr.addEventListener("abort", () =>
-								reject(new Error("Upload aborted")),
-							);
-							xhr.addEventListener("timeout", () =>
-								reject(new Error("Upload timed out")),
-							);
-
-							xhr.open(
-								"PUT",
-								`${process.env.NEXT_PUBLIC_FILE_UPLOADER_URL}/uploads/uploadobject`,
-							);
-							xhr.setRequestHeader("Authorization", `Bearer ${token?.value}`);
-
-							xhr.send(formData);
-						});
-						return res?.data?._id;
+						} finally {
+							toast.success("Files uploaded", "bottom");
+						}
 					});
 
 					const uploadedFiles = await Promise.all(uploadPromises);

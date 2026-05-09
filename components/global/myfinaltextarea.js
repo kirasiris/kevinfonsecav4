@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import { toast } from "react-toastify";
 import he from "he";
 import { Editor } from "@tinymce/tinymce-react";
 import { Nav, Tab } from "react-bootstrap";
@@ -27,26 +27,65 @@ const MyTextArea = ({
 	}, [html]);
 
 	const uploadFile = async (file) => {
-		console.log("Auth from image.beforeUpload event", auth);
-		const data = new FormData();
-		data.append("userId", auth?.userId);
-		data.append("username", auth?.username);
-		data.append("userEmail", auth?.email);
-		data.append("onModel", onModel);
-		data.append("file", file);
-		const res = await axios.put(
-			`${process.env.NEXT_PUBLIC_FILE_UPLOADER_URL}/uploads/uploadobject`,
-			data,
-			{
-				headers: {
-					accept: "application/json",
-					Authorization: `Bearer ${token?.value}`,
-					"Content-Type": `multipart/form-data; boundary=${data._boundary}`,
-				},
-			}
-		);
+		try {
+			const res = await new Promise((resolve, reject) => {
+				const formData = new FormData();
+				formData.append("userId", auth?.userId);
+				formData.append("username", auth?.username);
+				formData.append("userEmail", auth?.email);
+				formData.append("onModel", onModel);
+				formData.append("file", file);
+				formData.append("album", "posts");
 
-		return res?.data?.data.location.secure_location;
+				const xhr = new XMLHttpRequest();
+
+				xhr.upload.addEventListener("progress", (event) => {
+					if (event.lengthComputable) {
+						setUploadPercentage(Math.round((event.loaded * 100) / event.total));
+						setTimeout(() => setUploadPercentage(0), 10000);
+					}
+				});
+
+				xhr.addEventListener("load", () => {
+					if (xhr.status >= 200 && xhr.status < 300) {
+						const parsed = JSON.parse(xhr.responseText);
+						resolve(parsed);
+					} else {
+						reject(
+							new Error(
+								`Upload failed with status ${xhr.status}: ${xhr.statusText}`,
+							),
+						);
+					}
+				});
+
+				xhr.addEventListener("error", () =>
+					reject(new Error("Network error during upload")),
+				);
+				xhr.addEventListener("abort", () =>
+					reject(new Error("Upload aborted")),
+				);
+				xhr.addEventListener("timeout", () =>
+					reject(new Error("Upload timed out")),
+				);
+
+				xhr.open(
+					"PUT",
+					`${process.env.NEXT_PUBLIC_FILE_UPLOADER_URL}/uploads/uploadobject`,
+				);
+				xhr.setRequestHeader("Authorization", `Bearer ${token?.value}`);
+
+				xhr.send(formData);
+			});
+			return res?.data?.location.secure_location;
+		} catch (err) {
+			toast.error(
+				err?.message || "Something went wrong during upload",
+				"bottom",
+			);
+		} finally {
+			toast.success("Files uploaded", "bottom");
+		}
 	};
 
 	// Never delete these lines above

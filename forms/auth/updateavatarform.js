@@ -1,14 +1,11 @@
 "use client";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import Image from "next/image";
 import { fetchurl, getAuthTokenOnServer } from "@/helpers/setTokenOnServer";
 import UseProgress from "@/components/global/useprogress";
 
 const UpdateAvatarForm = ({ auth = {} }) => {
-	const router = useRouter();
-
 	const [avatarData, setAvatarData] = useState({
 		file: null,
 		filename: `Choose file`,
@@ -25,76 +22,84 @@ const UpdateAvatarForm = ({ auth = {} }) => {
 
 	const upgradeAvatar = async (e) => {
 		e.preventDefault();
-		setBtnText(`Processing`);
-
 		const token = await getAuthTokenOnServer();
+		setBtnText(`Processing`);
+		try {
+			const res = await new Promise((resolve, reject) => {
+				const formData = new FormData();
+				formData.append("userId", auth?.data?._id);
+				formData.append("username", auth?.data?.username);
+				formData.append("userEmail", auth?.data?.email);
+				formData.append("onModel", "User");
+				formData.append("file", file);
+				formData.append("album", "profile-avatars");
 
-		const res = await new Promise((resolve, reject) => {
-			const formData = new FormData();
-			formData.append("userId", auth?.data?._id);
-			formData.append("username", auth?.data?.username);
-			formData.append("userEmail", auth?.data?.email);
-			formData.append("onModel", "User");
-			formData.append("file", file);
-			formData.append("album", "profile-avatars");
+				const xhr = new XMLHttpRequest();
 
-			const xhr = new XMLHttpRequest();
+				xhr.upload.addEventListener("progress", (event) => {
+					if (event.lengthComputable) {
+						setUploadPercentage(Math.round((event.loaded * 100) / event.total));
+						setTimeout(() => setUploadPercentage(0), 10000);
+					}
+				});
 
-			xhr.upload.addEventListener("progress", (event) => {
-				if (event.lengthComputable) {
-					setUploadPercentage(Math.round((event.loaded * 100) / event.total));
-					setTimeout(() => setUploadPercentage(0), 10000);
-				}
+				xhr.addEventListener("load", () => {
+					if (xhr.status >= 200 && xhr.status < 300) {
+						const parsed = JSON.parse(xhr.responseText);
+						resolve(parsed);
+						setAvatarData({
+							file: file,
+							filename: parsed.data.location.filename,
+							fileurl: parsed.data.location.secure_location,
+						});
+					} else {
+						reject(
+							new Error(
+								`Upload failed with status ${xhr.status}: ${xhr.statusText}`,
+							),
+						);
+					}
+				});
+
+				xhr.addEventListener("error", () =>
+					reject(new Error("Network error during upload")),
+				);
+				xhr.addEventListener("abort", () =>
+					reject(new Error("Upload aborted")),
+				);
+				xhr.addEventListener("timeout", () =>
+					reject(new Error("Upload timed out")),
+				);
+
+				xhr.open(
+					"PUT",
+					`${process.env.NEXT_PUBLIC_FILE_UPLOADER_URL}/uploads/uploadobject`,
+				);
+				xhr.setRequestHeader("Authorization", `Bearer ${token?.value}`);
+
+				xhr.send(formData);
 			});
 
-			xhr.addEventListener("load", () => {
-				if (xhr.status >= 200 && xhr.status < 300) {
-					resolve(JSON.parse(xhr.responseText));
-					setAvatarData({
-						file: file,
-						filename: xhr.responseText.data.location.filename,
-						fileurl: xhr.responseText.data.location.secure_location,
-					});
-				} else {
-					reject(
-						new Error(
-							`Upload failed with status ${xhr.status}: ${xhr.statusText}`,
-						),
-					);
-				}
-			});
-
-			xhr.addEventListener("error", () =>
-				reject(new Error("Network error during upload")),
-			);
-			xhr.addEventListener("abort", () => reject(new Error("Upload aborted")));
-			xhr.addEventListener("timeout", () =>
-				reject(new Error("Upload timed out")),
-			);
-
-			xhr.open(
+			await fetchurl(
+				`/auth/updateavatar`,
 				"PUT",
-				`${process.env.NEXT_PUBLIC_FILE_UPLOADER_URL}/uploads/uploadobject`,
+				"no-cache",
+				{
+					avatar: res?.data?._id,
+				},
+				undefined,
+				false,
+				false,
 			);
-			xhr.setRequestHeader("Authorization", `Bearer ${token?.value}`);
-
-			xhr.send(formData);
-		});
-
-		await fetchurl(
-			`/auth/updateavatar`,
-			"PUT",
-			"no-cache",
-			{
-				avatar: res.data._id,
-			},
-			undefined,
-			false,
-			false,
-		);
-		resetForm();
-		toast.success("Avatar uploaded");
-		setBtnText(btnText);
+		} catch (err) {
+			toast.error(
+				err?.message || "Something went wrong during upload",
+				"bottom",
+			);
+		} finally {
+			toast.success("Avatar uploaded");
+			setBtnText(btnText);
+		}
 	};
 
 	const resetForm = () => {

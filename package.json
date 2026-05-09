@@ -78,7 +78,6 @@
     "@tinymce/tinymce-react": "^6.3.0",
     "@uiw/codemirror-theme-vscode": "^4.25.9",
     "@uiw/react-codemirror": "^4.25.9",
-    "axios": "^1.14.0",
     "base-64": "^1.0.0",
     "befree-utilities": "^1.0.4",
     "bootstrap": "^5.3.8",

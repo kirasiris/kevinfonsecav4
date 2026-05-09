@@ -1,8 +1,7 @@
 "use client";
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef } from "react";
 import { toast } from "react-toastify";
 import Image from "next/image";
-import axios from "axios";
 import { Modal } from "react-bootstrap";
 import Webcam from "react-webcam";
 import { base64toBlob } from "befree-utilities";
@@ -19,92 +18,90 @@ const UploadPictureForm = ({ auth = {} }) => {
 		`https://static.vecteezy.com/system/resources/previews/005/337/799/original/icon-image-not-found-free-vector.jpg`;
 	const [uploadPercentage, setUploadPercentage] = useState(0);
 	const [cameraModal, setCameraModal] = useState(false);
-	const [, setError] = useState(false);
 	const [btnText, setBtnText] = useState("Submit");
 
 	const webcamRef = useRef(null);
 
-	const upgradeAvatar = useCallback(
-		async (e) => {
-			e.preventDefault();
-			try {
-				const src = webcamRef.current.getScreenshot();
-				console.log("webcam src", src);
-				const blob = base64toBlob(src);
-				console.log("webcam blob", blob);
-				setBtnText("Submit...");
-				const token = await getAuthTokenOnServer();
-				const res = await axios.put(
-					`${process.env.NEXT_PUBLIC_FILE_UPLOADER_URL}/uploads/uploadobject`,
-					{
-						userId: auth?.data?._id,
-						username: auth?.data?.username,
-						userEmail: auth?.data?.email,
-						onModel: "User",
-						file: blob.file,
-						album: "profile-avatars",
-					},
-					{
-						// method: "PUT",
-						headers: {
-							"Content-Type": "multipart/form-data",
-							Authorization: `Bearer ${token?.value}`,
-						},
-						onUploadProgress: (ProgressEvent) => {
-							setUploadPercentage(
-								parseInt(
-									Math.round(ProgressEvent.loaded * 100) / ProgressEvent.total,
-								),
-							);
-							setTimeout(() => setUploadPercentage(0), 10000);
-						},
-					},
-				);
-				await fetchurl(
-					`/auth/updateavatar`,
-					"PUT",
-					"no-cache",
-					{
-						avatar: res.data.data._id,
-					},
-					undefined,
-					false,
-					false,
-				);
-				// resetForm();
-				setUploadPercentage(0);
-				toast.success("Avatar uploaded");
-				setBtnText(btnText);
-				setCameraModal(false);
-			} catch (err) {
-				console.log(err);
-				setBtnText(btnText);
-				setError(true);
-				// const error = err.response.data.message;
-				const error = err?.response?.data?.error?.errors;
-				const errors = err?.response?.data?.errors;
+	const upgradeAvatar = async (e) => {
+		e.preventDefault();
+		setBtnText(`Processing`);
+		const token = await getAuthTokenOnServer();
+		const src = webcamRef.current.getScreenshot();
+		const blob = base64toBlob(src);
+		try {
+			const res = await new Promise((resolve, reject) => {
+				const formData = new FormData();
+				formData.append("userId", auth?.userId);
+				formData.append("username", auth?.username);
+				formData.append("userEmail", auth?.email);
+				formData.append("onModel", "User");
+				formData.append("file", blob.file);
+				formData.append("album", "profile-avatars");
 
-				if (error) {
-					// dispatch(setAlert(error, 'danger'));
-					error &&
-						Object.entries(error).map(([, value]) =>
-							toast.error(value.message),
+				const xhr = new XMLHttpRequest();
+
+				xhr.upload.addEventListener("progress", (event) => {
+					if (event.lengthComputable) {
+						setUploadPercentage(Math.round((event.loaded * 100) / event.total));
+						setTimeout(() => setUploadPercentage(0), 10000);
+					}
+				});
+
+				xhr.addEventListener("load", () => {
+					if (xhr.status >= 200 && xhr.status < 300) {
+						const parsed = JSON.parse(xhr.responseText);
+						resolve(parsed);
+					} else {
+						reject(
+							new Error(
+								`Upload failed with status ${xhr.status}: ${xhr.statusText}`,
+							),
 						);
-				}
+					}
+				});
 
-				if (errors) {
-					errors.forEach((error) => toast.error(error.msg));
-				}
+				xhr.addEventListener("error", () =>
+					reject(new Error("Network error during upload")),
+				);
+				xhr.addEventListener("abort", () =>
+					reject(new Error("Upload aborted")),
+				);
+				xhr.addEventListener("timeout", () =>
+					reject(new Error("Upload timed out")),
+				);
 
-				toast.error(err?.response?.statusText);
-				return {
-					msg: err?.response?.statusText,
-					status: err?.response?.status,
-				};
-			}
-		},
-		[webcamRef],
-	);
+				xhr.open(
+					"PUT",
+					`${process.env.NEXT_PUBLIC_FILE_UPLOADER_URL}/uploads/uploadobject`,
+				);
+				xhr.setRequestHeader("Authorization", `Bearer ${token?.value}`);
+
+				xhr.send(formData);
+			});
+			await fetchurl(
+				`/auth/updateavatar`,
+				"PUT",
+				"no-cache",
+				{
+					avatar: res?.data?._id,
+				},
+				undefined,
+				false,
+				false,
+			);
+		} catch (err) {
+			toast.error(
+				err?.message || "Something went wrong during upload",
+				"bottom",
+			);
+		} finally {
+			// resetForm();
+			setUploadPercentage(0);
+			toast.success("Avatar uploaded");
+			setBtnText(btnText);
+			setCameraModal(false);
+		}
+	};
 
 	const resetForm = () => {};
 

@@ -1,12 +1,14 @@
 "use client";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import Image from "next/image";
-import axios from "axios";
 import { fetchurl, getAuthTokenOnServer } from "@/helpers/setTokenOnServer";
 import UseProgress from "@/components/global/useprogress";
 
 const UpdateAvatarForm = ({ auth = {} }) => {
+	const router = useRouter();
+
 	const [avatarData, setAvatarData] = useState({
 		file: null,
 		filename: `Choose file`,
@@ -18,7 +20,7 @@ const UpdateAvatarForm = ({ auth = {} }) => {
 	const { file, filename, fileurl } = avatarData;
 
 	const [uploadPercentage, setUploadPercentage] = useState(0);
-	const [, setError] = useState(false);
+
 	const [btnText, setBtnText] = useState("Submit");
 
 	const upgradeAvatar = async (e) => {
@@ -26,31 +28,7 @@ const UpdateAvatarForm = ({ auth = {} }) => {
 		setBtnText(`Processing`);
 
 		const token = await getAuthTokenOnServer();
-		// const res = await axios.put(
-		// 	`${process.env.NEXT_PUBLIC_FILE_UPLOADER_URL}/uploads/uploadobject`,
-		// 	{
-		// 		userId: auth?.data?._id,
-		// 		username: auth?.data?.username,
-		// 		userEmail: auth?.data?.email,
-		// 		onModel: "User",
-		// 		file: file,
-		// 		album: "profile-avatars",
-		// 	},
-		// 	{
-		// 		headers: {
-		// 			"Content-Type": "multipart/form-data",
-		// 			Authorization: `Bearer ${token?.value}`,
-		// 		},
-		// 		onUploadProgress: (ProgressEvent) => {
-		// 			setUploadPercentage(
-		// 				parseInt(
-		// 					Math.round(ProgressEvent.loaded * 100) / ProgressEvent.total,
-		// 				),
-		// 			);
-		// 			setTimeout(() => setUploadPercentage(0), 10000);
-		// 		},
-		// 	},
-		// );
+
 		const res = await new Promise((resolve, reject) => {
 			const formData = new FormData();
 			formData.append("userId", auth?.data?._id);
@@ -72,6 +50,7 @@ const UpdateAvatarForm = ({ auth = {} }) => {
 			xhr.addEventListener("load", () => {
 				if (xhr.status >= 200 && xhr.status < 300) {
 					resolve(JSON.parse(xhr.responseText));
+					console.log("uploaded avatar object", xhr.responseText);
 				} else {
 					reject(
 						new Error(
@@ -103,7 +82,6 @@ const UpdateAvatarForm = ({ auth = {} }) => {
 			"PUT",
 			"no-cache",
 			{
-				// avatar: res.data.data._id,
 				avatar: res.data._id,
 			},
 			undefined,

@@ -19,12 +19,12 @@ const UpdateCoverForm = ({ auth = {} }) => {
 
 	const [uploadPercentage, setUploadPercentage] = useState(0);
 	const [, setError] = useState(false);
-	const [btnText, setBtnTxt] = useState("Submit");
+	const [btnText, setBtnText] = useState("Submit");
 
 	const upgradeCover = async (e) => {
 		e.preventDefault();
 		try {
-			setBtnTxt("Submit...");
+			setBtnText("Submit...");
 			const token = await getAuthTokenOnServer();
 			const res = await axios.put(
 				`${process.env.NEXT_PUBLIC_FILE_UPLOADER_URL}/uploads/uploadobject`,
@@ -64,10 +64,10 @@ const UpdateCoverForm = ({ auth = {} }) => {
 			);
 			resetForm();
 			toast.success("Cover uploaded");
-			setBtnTxt(btnText);
+			setBtnText(btnText);
 		} catch (err) {
 			console.log(err);
-			setBtnTxt(btnText);
+			setBtnText(btnText);
 			setError(true);
 			// const error = err.response.data.message;
 			const error = err?.response?.data?.error?.errors;

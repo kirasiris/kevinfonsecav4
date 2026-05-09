@@ -20,7 +20,7 @@ const UploadPictureForm = ({ auth = {} }) => {
 	const [uploadPercentage, setUploadPercentage] = useState(0);
 	const [cameraModal, setCameraModal] = useState(false);
 	const [, setError] = useState(false);
-	const [btnText, setBtnTxt] = useState("Submit");
+	const [btnText, setBtnText] = useState("Submit");
 
 	const webcamRef = useRef(null);
 
@@ -32,7 +32,7 @@ const UploadPictureForm = ({ auth = {} }) => {
 				console.log("webcam src", src);
 				const blob = base64toBlob(src);
 				console.log("webcam blob", blob);
-				setBtnTxt("Submit...");
+				setBtnText("Submit...");
 				const token = await getAuthTokenOnServer();
 				const res = await axios.put(
 					`${process.env.NEXT_PUBLIC_FILE_UPLOADER_URL}/uploads/uploadobject`,
@@ -74,11 +74,11 @@ const UploadPictureForm = ({ auth = {} }) => {
 				// resetForm();
 				setUploadPercentage(0);
 				toast.success("Avatar uploaded");
-				setBtnTxt(btnText);
+				setBtnText(btnText);
 				setCameraModal(false);
 			} catch (err) {
 				console.log(err);
-				setBtnTxt(btnText);
+				setBtnText(btnText);
 				setError(true);
 				// const error = err.response.data.message;
 				const error = err?.response?.data?.error?.errors;

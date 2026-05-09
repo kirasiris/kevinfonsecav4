@@ -48,7 +48,7 @@ const List = ({
 		<div key={object._id} className="d-flex mb-3">
 			<input
 				id={`email-${object._id}`}
-				name=""
+				name="address"
 				value={object?.address}
 				type="email"
 				className={`form-control me-2${object?.isVerified ? " is-valid" : " is-invalid"}`}

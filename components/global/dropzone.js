@@ -36,32 +36,6 @@ const UseDropzone = ({
 				// accept={}
 				onDrop={async (acceptedFiles) => {
 					for (let i = 0; i < acceptedFiles.length; i++) {
-						// await axios.put(
-						// 	`${process.env.NEXT_PUBLIC_FILE_UPLOADER_URL}/uploads/uploadobject`,
-						// 	{
-						// 		userId: auth?.userId,
-						// 		username: auth?.username,
-						// 		userEmail: auth?.email,
-						// 		onModel: onModel,
-						// 		file: acceptedFiles[i],
-						// 		album: "all",
-						// 	},
-						// 	{
-						// 		headers: {
-						// 			"Content-Type": "multipart/form-data",
-						// 			Authorization: `Bearer ${token?.value}`,
-						// 		},
-						// 		onUploadProgress: (ProgressEvent) => {
-						// 			setUploadPercentage(
-						// 				parseInt(
-						// 					Math.round(ProgressEvent.loaded * 100) /
-						// 						ProgressEvent.total,
-						// 				),
-						// 			);
-						// 			setTimeout(() => setUploadPercentage(0), 10000);
-						// 		},
-						// 	},
-						// );
 						await new Promise((resolve, reject) => {
 							const formData = new FormData();
 							formData.append("userId", auth?.userId);
@@ -109,8 +83,6 @@ const UseDropzone = ({
 								`${process.env.NEXT_PUBLIC_FILE_UPLOADER_URL}/uploads/uploadobject`,
 							);
 							xhr.setRequestHeader("Authorization", `Bearer ${token?.value}`);
-							// NOTE: Do NOT manually set Content-Type when sending FormData —
-							// the browser sets it automatically with the correct multipart boundary.
 
 							xhr.send(formData);
 						});

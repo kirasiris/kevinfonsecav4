@@ -50,7 +50,11 @@ const UpdateAvatarForm = ({ auth = {} }) => {
 			xhr.addEventListener("load", () => {
 				if (xhr.status >= 200 && xhr.status < 300) {
 					resolve(JSON.parse(xhr.responseText));
-					console.log("uploaded avatar object", xhr.responseText);
+					setAvatarData({
+						file: file,
+						filename: xhr.responseText.data.location.filename,
+						fileurl: xhr.responseText.data.location.secure_location,
+					});
 				} else {
 					reject(
 						new Error(
@@ -121,11 +125,11 @@ const UpdateAvatarForm = ({ auth = {} }) => {
 				/>
 			</div>
 			<form onSubmit={upgradeAvatar}>
-				<label htmlFor="cover" className="form-label">
+				<label htmlFor="avatar" className="form-label">
 					File
 				</label>
 				<input
-					id="cover"
+					id="avatar"
 					name="file"
 					label={file}
 					onChange={(e) => {

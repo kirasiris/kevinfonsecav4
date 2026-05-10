@@ -40,12 +40,6 @@ export default async function AdminLayout({ children }) {
 				locales=""
 				posType="page"
 			/>
-			{/* <div className="container-fluid my-4">
-				<div className="row">
-					<AdminMenu auth={auth} settings={settings} />
-					<div className="col-lg-11">{children}</div>
-				</div>
-			</div> */}
 			<header
 				className="bg-secondary p-3 d-flex align-items-center gap-3"
 				style={{
@@ -92,7 +86,7 @@ export default async function AdminLayout({ children }) {
 					}}
 				>
 					<div className="offcanvas-header border-bottom">
-						<h5 className="offcanvas-title" id="mobileSidebarLabel">
+						<h5 className="text-white offcanvas-title" id="mobileSidebarLabel">
 							Menu
 						</h5>
 						<button

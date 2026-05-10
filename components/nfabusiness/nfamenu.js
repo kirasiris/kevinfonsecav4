@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
 import { deleteAuthTokenOnServer } from "@/helpers/setTokenOnServer";
 
 const NFAMenu = ({ auth = {}, settings = {} }) => {
@@ -129,12 +130,18 @@ const NFAMenu = ({ auth = {}, settings = {} }) => {
 			</div>
 			<div className="mt-auto border-top p-3">
 				<div className="d-flex align-items-center gap-2 mb-2">
-					<img
-						src={auth?.data?.files?.avatar?.location?.secure_location}
-						alt="User"
+					<Image
+						src={
+							auth?.data?.files?.avatar?.location?.secure_location ||
+							`https://picsum.photos/32/32?blur`
+						}
 						className="rounded-circle"
+						alt={`${auth?.data?.username || "Username"}'s profile's picture`}
 						width={32}
 						height={32}
+						style={{
+							objectFit: "cover",
+						}}
 					/>
 					<div>
 						<div className="fw-medium small">{auth?.data?.username}</div>

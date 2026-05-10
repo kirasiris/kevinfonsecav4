@@ -6,7 +6,7 @@ import Sidebar from "@/layout/forum/sidebar";
 import Globalcontent from "@/layout/content";
 import CreateForumForm from "@/forms/forum/createforumform";
 
-const List = async ({
+const List = ({
 	featured = {},
 	objects = [],
 	params = {},

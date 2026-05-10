@@ -4,28 +4,29 @@ import Image from "next/image";
 import Link from "next/link";
 import Loading from "@/app/profile/loading";
 
+const UrlToProfileContainer = ({ children }) => {
+	return (
+		<Link
+			href={{
+				pathname: `/profile/${object?._id}/${object?.username}`,
+				query: {
+					page: 1,
+					limit: 50,
+					sort: `-createdAt`,
+				},
+			}}
+		>
+			{children}
+		</Link>
+	);
+};
+
 const Single = ({
 	object = {},
 	imageWidth = "500",
 	imageHeight = "320",
 	isSingle = true,
 }) => {
-	const UrlToProfileContainer = ({ children }) => {
-		return (
-			<Link
-				href={{
-					pathname: `/profile/${object?._id}/${object?.username}`,
-					query: {
-						page: 1,
-						limit: 50,
-						sort: `-createdAt`,
-					},
-				}}
-			>
-				{children}
-			</Link>
-		);
-	};
 	return (
 		<Suspense fallback={<Loading />}>
 			{isSingle ? (

@@ -71,6 +71,9 @@ const UpdateFileForm = ({ token = {}, auth = {}, object = {} }) => {
 					alt={file?.data?.title || "No alt text"}
 					width={`1200`}
 					height={`900`}
+					style={{
+						objectFit: "contain",
+					}}
 				/>
 			</figure>
 		);

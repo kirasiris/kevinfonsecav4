@@ -849,10 +849,11 @@ body.dark-mode blockquote {
 	border-left: 5px solid #00ff00 !important;
 }
 
-body.dark-mode .dropzone {
-	background-color: #212529;
-}
-
-body.dark-mode .user-timeline-nothing-found {
+body.dark-mode .dropzone,
+body.dark-mode .user-timeline-nothing-found,
+body.dark-mode .admin-sidebar,
+body.dark-mode .admin-header,
+body.dark-mode .nfabusiness-sidebar,
+body.dark-mode .nfabusiness-header {
 	background-color: #212529;
 }

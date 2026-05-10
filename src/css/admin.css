@@ -139,8 +139,19 @@ a.blog-relative-time-status__link {
 	text-align: center;
 }
 
-body.dark-mode .dropzone {
-	background-color: #212529;
+/* ---------------------------------------------------
+  SIDEBAR FOR ADMIN AND NFABUSINESS LAYOUT
+----------------------------------------------------- */
+.admin-header,
+.nfabusiness-header {
+	border-bottom: 1px solid #dee2e6;
+}
+
+.admin-sidebar,
+.admin-header,
+.nfabusiness-sidebar,
+.nfabusiness-header {
+	background-color: #f8f8f8;
 }
 
 /* ---------------------------------------------------

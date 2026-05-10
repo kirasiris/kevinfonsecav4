@@ -41,7 +41,7 @@ const AdminFeaturedImage = ({ avatar = "", avatarFormat = "image" }) => {
 					alt="xD"
 					width={`558`}
 					height={`558`}
-					style={{ maxWidth: "1920px", maxHeight: "1920px" }}
+					style={{ maxWidth: "100%", maxHeight: "1920px" }}
 					priority={true}
 				/>
 			</figure>

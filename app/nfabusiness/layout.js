@@ -40,12 +40,7 @@ export default async function AdminLayout({ children }) {
 				locales=""
 				posType="page"
 			/>
-			<header
-				className="bg-secondary p-3 d-flex align-items-center gap-3"
-				style={{
-					borderBottom: "1px solid #dee2e6 !important",
-				}}
-			>
+			<header className="nfabusiness-header p-3 d-flex align-items-center gap-3">
 				{/* Mobile menu button - visible on smaller screens */}
 				<button
 					className="btn btn-light d-lg-none"
@@ -56,14 +51,14 @@ export default async function AdminLayout({ children }) {
 				>
 					<i className="fa-solid fa-bars" />
 				</button>
-				<h5 className="text-white mb-0">Dashboard</h5>
+				<h5 className="mb-0">Dashboard</h5>
 				<div className="ms-auto">
 					<Link
 						href={{
 							pathname: process.env.NEXT_PUBLIC_WEBSITE_URL,
 							query: {},
 						}}
-						className="btn btn-light btn-sm text-black"
+						className="btn btn-secondary btn-sm"
 						target="_blank"
 					>
 						View Site
@@ -72,18 +67,15 @@ export default async function AdminLayout({ children }) {
 			</header>
 			<div className="d-flex">
 				{/* Desktop Sidebar - visible on lg and up */}
-				<aside className="sidebar border-end d-none d-lg-flex flex-column">
+				<aside className="nfabusiness-sidebar border-end d-none d-lg-flex flex-column">
 					<NFAMenu auth={auth} settings={settings} />
 				</aside>
 				{/* Smaller Device Sidebar */}
 				<div
-					className="offcanvas offcanvas-start"
+					className="bg-dark text-bg-dark offcanvas offcanvas-start"
 					tabIndex={-1}
 					id="mobileSidebar"
 					aria-labelledby="mobileSidebarLabel"
-					style={{
-						backgroundColor: "#212529",
-					}}
 				>
 					<div className="offcanvas-header border-bottom">
 						<h5 className="text-white offcanvas-title" id="mobileSidebarLabel">
@@ -96,12 +88,7 @@ export default async function AdminLayout({ children }) {
 							aria-label="Close"
 						/>
 					</div>
-					<div
-						className="offcanvas-body p-0 d-flex flex-column"
-						style={{
-							color: "#fff",
-						}}
-					>
+					<div className="offcanvas-body p-0 d-flex flex-column">
 						<NFAMenu auth={auth} settings={settings} />
 					</div>
 				</div>

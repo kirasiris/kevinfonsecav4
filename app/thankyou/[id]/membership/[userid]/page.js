@@ -60,12 +60,7 @@ const ThankYouRead = async ({ params, searchParams }) => {
 			/>
 			{settings?.data?.maintenance === false ? (
 				<Suspense fallback={<Loading />}>
-					<div
-						className="bg-secondary py-5"
-						style={{
-							marginBottom: "-24px",
-						}}
-					>
+					<div className="bg-secondary py-5">
 						<div className="container">
 							<div className="row my-5">
 								<div className="col-lg-12">

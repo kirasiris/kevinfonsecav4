@@ -11,10 +11,13 @@ const Sidebar = ({}) => {
 
 	const { keyword } = searchParams;
 
+	const keywordQuery =
+		keyword !== "" && keyword !== undefined ? `&keyword=${keyword}` : "";
+
 	const searchData = async (e) => {
 		e.preventDefault();
 		router.push(
-			`/snippet/search?keyword=${keyword}&page=1&limit=10&sort=-createdAt`
+			`/snippet/search?page=1&limit=10&sort=-createdAt${keywordQuery}`,
 		);
 	};
 

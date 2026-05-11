@@ -104,78 +104,80 @@ const ForumRead = async ({ params, searchParams }) => {
 			{settings?.data?.maintenance === false ? (
 				<Suspense fallback={<Loading />}>
 					<Header title={forum.data.title} />
-					<div className="container">
-						{forum.data.status === "published" ||
-						awtdSearchParams.isAdmin === "true" ? (
-							<div className="row">
-								<Globalcontent containerClasses={`col-lg-8`}>
-									<article>
-										<ArticleHeader
-											object={forum}
-											url={`/forum/category/${forum?.data?.category}/${forum?.data?.sub_category}`}
-										/>
-										<section className="mb-5">
-											<ParseHtml text={forum?.data?.text} />
-											<NewsletterForm
-												sectionClassList="text-bg-dark text-center pt-3 pb-3 mb-4"
-												headingClassList=""
+					<section className="py-5">
+						<div className="container">
+							{forum.data.status === "published" ||
+							awtdSearchParams.isAdmin === "true" ? (
+								<div className="row">
+									<Globalcontent containerClasses={`col-lg-8`}>
+										<article>
+											<ArticleHeader
+												object={forum}
+												url={`/forum/category/${forum?.data?.category}/${forum?.data?.sub_category}`}
 											/>
-											<div className="float-start">
-												<ExportModal
-													linkToShare={`/forum/${forum?.data?._id}/${forum?.data?.category}/${forum?.data?.sub_category}/${forum?.data?.slug}`}
-													object={forum?.data}
+											<section className="mb-5">
+												<ParseHtml text={forum?.data?.text} />
+												<NewsletterForm
+													sectionClassList="text-bg-dark text-center pt-3 pb-3 mb-4"
+													headingClassList=""
 												/>
-											</div>
-											<div className="float-end">
-												<ReportModal
-													resourceId={forum?.data?._id}
-													postType="forum"
-													onModel="Forum"
-												/>
-											</div>
-											<div style={{ clear: "both" }} />
-											<AuthorBox author={forum?.data?.user} />
-											{forum?.data?.commented ? (
-												<>
-													<CommentForm
-														auth={auth}
-														resourceId={forum?.data?._id}
-														parentId={undefined}
-														returtopageurl={`/forum/${forum?.data?._id}/${forum?.data?.category}/${forum?.data?.sub_category}/${forum?.data?.slug}`}
-														onModel="Forum"
-														objects={comments}
+												<div className="float-start">
+													<ExportModal
+														linkToShare={`/forum/${forum?.data?._id}/${forum?.data?.category}/${forum?.data?.sub_category}/${forum?.data?.slug}`}
+														object={forum?.data}
 													/>
-													<CommentBox
-														auth={auth}
-														allLink={`/comment?resourceId=${forum?.data?._id}&page=1&limit=10&sort=-createdAt&status=published`}
-														pageText="Comments"
-														objects={comments}
-														searchParams={awtdSearchParams}
-														handleDraft={undefined}
-														handlePublish={undefined}
-														handleTrash={undefined}
-														handleSchedule={undefined}
-														handleDelete={handleDelete}
-														handleTrashAllFunction={undefined}
-														handleDeleteAllFunction={undefined}
-														displayPagination={false}
-														isChildCommment={false}
-													/>
-												</>
-											) : (
-												<div className="alert alert-danger">
-													Comments are closed
 												</div>
-											)}
-										</section>
-									</article>
-								</Globalcontent>
-								<Sidebar />
-							</div>
-						) : (
-							<p>Not visible</p>
-						)}
-					</div>
+												<div className="float-end">
+													<ReportModal
+														resourceId={forum?.data?._id}
+														postType="forum"
+														onModel="Forum"
+													/>
+												</div>
+												<div style={{ clear: "both" }} />
+												<AuthorBox author={forum?.data?.user} />
+												{forum?.data?.commented ? (
+													<>
+														<CommentForm
+															auth={auth}
+															resourceId={forum?.data?._id}
+															parentId={undefined}
+															returtopageurl={`/forum/${forum?.data?._id}/${forum?.data?.category}/${forum?.data?.sub_category}/${forum?.data?.slug}`}
+															onModel="Forum"
+															objects={comments}
+														/>
+														<CommentBox
+															auth={auth}
+															allLink={`/comment?resourceId=${forum?.data?._id}&page=1&limit=10&sort=-createdAt&status=published`}
+															pageText="Comments"
+															objects={comments}
+															searchParams={awtdSearchParams}
+															handleDraft={undefined}
+															handlePublish={undefined}
+															handleTrash={undefined}
+															handleSchedule={undefined}
+															handleDelete={handleDelete}
+															handleTrashAllFunction={undefined}
+															handleDeleteAllFunction={undefined}
+															displayPagination={false}
+															isChildCommment={false}
+														/>
+													</>
+												) : (
+													<div className="alert alert-danger">
+														Comments are closed
+													</div>
+												)}
+											</section>
+										</article>
+									</Globalcontent>
+									<Sidebar />
+								</div>
+							) : (
+								<p>Not visible</p>
+							)}
+						</div>
+					</section>
 				</Suspense>
 			) : (
 				<ErrorPage />

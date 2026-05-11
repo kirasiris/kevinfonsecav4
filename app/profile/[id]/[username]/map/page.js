@@ -77,34 +77,36 @@ const ProfileMapIndex = async ({ params, searchParams }) => {
 							backgroundSize: "cover",
 						}}
 					/>
-					<div className="container">
-						<div className="row">
-							<Sidebar object={profile} />
-							<Globalcontent>
-								<div className="card">
-									<div className="card-header">
-										Addresses entered by {profile.data.username} on his/her
-										posts
-									</div>
-									<div className="card-body p-0">
-										<Map objects={posts} />
-									</div>
-									{auth?.userId !== undefined && (
-										<div className="card-footer">
-											<Link
-												href={{
-													pathname: `/profile/${auth?.userId}/${auth?.username}/map`,
-													query: {},
-												}}
-											>
-												Check yours!
-											</Link>
+					<section className="py-5">
+						<div className="container">
+							<div className="row">
+								<Sidebar object={profile} />
+								<Globalcontent>
+									<div className="card">
+										<div className="card-header">
+											Addresses entered by {profile.data.username} on his/her
+											posts
 										</div>
-									)}
-								</div>
-							</Globalcontent>
+										<div className="card-body p-0">
+											<Map objects={posts} />
+										</div>
+										{auth?.userId !== undefined && (
+											<div className="card-footer">
+												<Link
+													href={{
+														pathname: `/profile/${auth?.userId}/${auth?.username}/map`,
+														query: {},
+													}}
+												>
+													Check yours!
+												</Link>
+											</div>
+										)}
+									</div>
+								</Globalcontent>
+							</div>
 						</div>
-					</div>
+					</section>
 				</Suspense>
 			) : (
 				<ErrorPage />

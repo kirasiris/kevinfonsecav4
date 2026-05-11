@@ -60,27 +60,29 @@ const SnippetRead = async ({ params, searchParams }) => {
 			{settings?.data?.maintenance === false ? (
 				<Suspense fallback={<Loading />}>
 					<Header title={snippet.data.title} />
-					<div className="container">
-						{snippet.data.status === "published" ||
-						awtdSearchParams.isAdmin === "true" ? (
-							<div className="row">
-								<Globalcontent containerClasses={`col-lg-12`}>
-									<LiveCode
-										object={snippet?.data}
-										title={snippet?.data?.title}
-										MyHtml={snippet?.data?.code?.html}
-										MyCss={snippet?.data?.code?.css}
-										MyJs={snippet?.data?.code?.javascript}
-										hasId={true}
-										positionFixed={false}
-										isFull={false}
-									/>
-								</Globalcontent>
-							</div>
-						) : (
-							<p>Not visible</p>
-						)}
-					</div>
+					<section className="py-5">
+						<div className="container">
+							{snippet.data.status === "published" ||
+							awtdSearchParams.isAdmin === "true" ? (
+								<div className="row">
+									<Globalcontent containerClasses={`col-lg-12`}>
+										<LiveCode
+											object={snippet?.data}
+											title={snippet?.data?.title}
+											MyHtml={snippet?.data?.code?.html}
+											MyCss={snippet?.data?.code?.css}
+											MyJs={snippet?.data?.code?.javascript}
+											hasId={true}
+											positionFixed={false}
+											isFull={false}
+										/>
+									</Globalcontent>
+								</div>
+							) : (
+								<p>Not visible</p>
+							)}
+						</div>
+					</section>
 				</Suspense>
 			) : (
 				<ErrorPage />

@@ -117,137 +117,142 @@ const QuizResultsRead = async ({ params, searchParams }) => {
 			{settings?.data?.maintenance === false ? (
 				<Suspense fallback={<Loading />}>
 					<Header title={quizresult.data.resourceId.title} />
-					<div className="container">
-						{quizresult.data.resourceId.status === "published" ||
-						awtdSearchParams.isAdmin === "true" ? (
-							<div className="row">
-								<Globalcontent containerClasses="col-lg-12">
-									<article>
-										<section>
-											{!quizresult?.data?.singlePage && multiplePageLink()}
-											<h2>How&nbsp;to&nbsp;read&nbsp;your&nbsp;Score</h2>
-											<div className="row">
-												<div className="col-lg-3">
-													<ul className="list-group mt-2 mb-3">
-														<li className="list-group-item">
-															<p className="m-0">
-																Name:&nbsp;
-																{quizresult.data.name || "Uknown"}
-															</p>
-														</li>
-														<li className="list-group-item">
-															<p className="m-0">
-																Email:&nbsp;
-																{quizresult.data.email || "john@doe.com"}
-															</p>
-														</li>
-														<li className="list-group-item">
-															<p className="m-0">
-																Score:&nbsp;{quizresult.data.score || "0"}
-																&nbsp;questions
-															</p>
-														</li>
-														<li className="list-group-item">
-															<p className="m-0">
-																Minimum&nbsp;Score&nbsp;to&nbsp;Pass:&nbsp;
-																{quizresult.data?.minimumScore || "0"}
-															</p>
-														</li>
-														<li className="list-group-item">
-															<p className="m-0">
-																Number&nbsp;of&nbsp;questions:&nbsp;
-																{quizresult.data?.totalQuestions || "0"}
-															</p>
-														</li>
-														<li className="list-group-item">
-															<p className="m-0">
-																Percentage:&nbsp;
-																{quizresult.data?.percentageScore || "0.00"}
-															</p>
-														</li>
-														{quizresult.data?.score >=
-															quizresult.data?.minimumScore && (
-															<li className="list-group-item text-bg-success">
+					<section className="py-5">
+						<div className="container">
+							{quizresult.data.resourceId.status === "published" ||
+							awtdSearchParams.isAdmin === "true" ? (
+								<div className="row">
+									<Globalcontent containerClasses="col-lg-12">
+										<article>
+											<section>
+												{!quizresult?.data?.singlePage && multiplePageLink()}
+												<h2>How&nbsp;to&nbsp;read&nbsp;your&nbsp;Score</h2>
+												<div className="row">
+													<div className="col-lg-3">
+														<ul className="list-group mt-2 mb-3">
+															<li className="list-group-item">
 																<p className="m-0">
-																	Final&nbsp;grade:&nbsp;
-																	{quizresult.data?.grade || "FAIL"}
+																	Name:&nbsp;
+																	{quizresult.data.name || "Uknown"}
 																</p>
 															</li>
-														)}
-														{quizresult.data?.score <
-															quizresult.data?.minimumScore && (
-															<li className="list-group-item text-bg-danger">
+															<li className="list-group-item">
 																<p className="m-0">
-																	Final&nbsp;grade:&nbsp;
-																	{quizresult.data?.grade || "FAIL"}
+																	Email:&nbsp;
+																	{quizresult.data.email || "john@doe.com"}
 																</p>
 															</li>
-														)}
-													</ul>
-												</div>
-												<div className="col">
-													{quizresult.data.grade === "PASS" &&
-														fetchQuotes("pass")}
-													{quizresult.data.grade === "FAIL" &&
-														fetchQuotes("fail")}
-													<div className="card">
-														<div className="card-header">
-															Review&nbsp;your&nbsp;Results
-														</div>
-														<ul className="list-group list-group-flush">
-															{quizresult.data.chosen.map(
-																(questions, index) => (
-																	<div key={questions.question._id}>
-																		{/* Question Title */}
-																		<li className={`list-group-item ${index}`}>
-																			{questions.question.title}
-
-																			{/* Iterate over the single object in questionanswers */}
-																			{Object.entries(
-																				questions.questionanswers[0],
-																			).map(([key, value]) => (
-																				<ul key={key}>
-																					<li
-																						className={`list-group-item ${
-																							questions.correctanswer === key
-																								? "correct"
-																								: questions.answerbyuser === key
-																									? "selected"
-																									: ""
-																						}`}
-																					>
-																						{/* Render answer key and text */}
-																						{key}:&nbsp;{value.text}
-																					</li>
-																				</ul>
-																			))}
-																		</li>
-
-																		{/* Correct and Given Answers */}
-																		<li className="list-group-item text-bg-success">
-																			Correct&nbsp;answer:&nbsp;
-																			{questions.correctanswer}
-																		</li>
-																		<li className="list-group-item text-bg-primary">
-																			Given&nbsp;answer:&nbsp;
-																			{questions.answerbyuser}
-																		</li>
-																	</div>
-																),
+															<li className="list-group-item">
+																<p className="m-0">
+																	Score:&nbsp;{quizresult.data.score || "0"}
+																	&nbsp;questions
+																</p>
+															</li>
+															<li className="list-group-item">
+																<p className="m-0">
+																	Minimum&nbsp;Score&nbsp;to&nbsp;Pass:&nbsp;
+																	{quizresult.data?.minimumScore || "0"}
+																</p>
+															</li>
+															<li className="list-group-item">
+																<p className="m-0">
+																	Number&nbsp;of&nbsp;questions:&nbsp;
+																	{quizresult.data?.totalQuestions || "0"}
+																</p>
+															</li>
+															<li className="list-group-item">
+																<p className="m-0">
+																	Percentage:&nbsp;
+																	{quizresult.data?.percentageScore || "0.00"}
+																</p>
+															</li>
+															{quizresult.data?.score >=
+																quizresult.data?.minimumScore && (
+																<li className="list-group-item text-bg-success">
+																	<p className="m-0">
+																		Final&nbsp;grade:&nbsp;
+																		{quizresult.data?.grade || "FAIL"}
+																	</p>
+																</li>
+															)}
+															{quizresult.data?.score <
+																quizresult.data?.minimumScore && (
+																<li className="list-group-item text-bg-danger">
+																	<p className="m-0">
+																		Final&nbsp;grade:&nbsp;
+																		{quizresult.data?.grade || "FAIL"}
+																	</p>
+																</li>
 															)}
 														</ul>
 													</div>
+													<div className="col">
+														{quizresult.data.grade === "PASS" &&
+															fetchQuotes("pass")}
+														{quizresult.data.grade === "FAIL" &&
+															fetchQuotes("fail")}
+														<div className="card">
+															<div className="card-header">
+																Review&nbsp;your&nbsp;Results
+															</div>
+															<ul className="list-group list-group-flush">
+																{quizresult.data.chosen.map(
+																	(questions, index) => (
+																		<div key={questions.question._id}>
+																			{/* Question Title */}
+																			<li
+																				className={`list-group-item ${index}`}
+																			>
+																				{questions.question.title}
+
+																				{/* Iterate over the single object in questionanswers */}
+																				{Object.entries(
+																					questions.questionanswers[0],
+																				).map(([key, value]) => (
+																					<ul key={key}>
+																						<li
+																							className={`list-group-item ${
+																								questions.correctanswer === key
+																									? "correct"
+																									: questions.answerbyuser ===
+																										  key
+																										? "selected"
+																										: ""
+																							}`}
+																						>
+																							{/* Render answer key and text */}
+																							{key}:&nbsp;{value.text}
+																						</li>
+																					</ul>
+																				))}
+																			</li>
+
+																			{/* Correct and Given Answers */}
+																			<li className="list-group-item text-bg-success">
+																				Correct&nbsp;answer:&nbsp;
+																				{questions.correctanswer}
+																			</li>
+																			<li className="list-group-item text-bg-primary">
+																				Given&nbsp;answer:&nbsp;
+																				{questions.answerbyuser}
+																			</li>
+																		</div>
+																	),
+																)}
+															</ul>
+														</div>
+													</div>
 												</div>
-											</div>
-											{!quizresult?.data?.singlePage && multiplePageLink()}
-										</section>
-									</article>
-								</Globalcontent>
-							</div>
-						) : (
-							<p>Not&nbsp;visible</p>
-						)}
-					</div>
+												{!quizresult?.data?.singlePage && multiplePageLink()}
+											</section>
+										</article>
+									</Globalcontent>
+								</div>
+							) : (
+								<p>Not&nbsp;visible</p>
+							)}
+						</div>
+					</section>
 				</Suspense>
 			) : (
 				<ErrorPage />

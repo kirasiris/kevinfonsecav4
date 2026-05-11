@@ -7,38 +7,40 @@ import Globalcontent from "@/layout/content";
 
 const List = ({ featured = {}, objects = [], searchParams = {} }) => {
 	return (
-		<div className="container">
-			<div className="row">
-				<Globalcontent>
-					{/* Featured list */}
-					{featured?.data?.length > 0 &&
-						featured.data.map((featured) => (
-							<Single key={featured._id} object={featured} fullWidth={true} />
-						))}
-					{/* Blog list */}
-					<div className="row">
-						{objects?.data?.length > 0 ? (
-							<>
-								{objects.data?.map((blog) => (
-									<Single key={blog._id} object={blog} />
-								))}
-								<NumericPagination
-									totalPages={
-										objects?.pagination?.totalpages ||
-										Math.ceil(objects?.data?.length / searchParams.limit)
-									}
-									searchParams={searchParams}
-									siblings={1}
-								/>
-							</>
-						) : (
-							<NothingFoundAlert />
-						)}
-					</div>
-				</Globalcontent>
-				<Sidebar />
+		<section className="py-5">
+			<div className="container">
+				<div className="row">
+					<Globalcontent>
+						{/* Featured list */}
+						{featured?.data?.length > 0 &&
+							featured.data.map((featured) => (
+								<Single key={featured._id} object={featured} fullWidth={true} />
+							))}
+						{/* Blog list */}
+						<div className="row">
+							{objects?.data?.length > 0 ? (
+								<>
+									{objects.data?.map((blog) => (
+										<Single key={blog._id} object={blog} />
+									))}
+									<NumericPagination
+										totalPages={
+											objects?.pagination?.totalpages ||
+											Math.ceil(objects?.data?.length / searchParams.limit)
+										}
+										searchParams={searchParams}
+										siblings={1}
+									/>
+								</>
+							) : (
+								<NothingFoundAlert />
+							)}
+						</div>
+					</Globalcontent>
+					<Sidebar />
+				</div>
 			</div>
-		</div>
+		</section>
 	);
 };
 

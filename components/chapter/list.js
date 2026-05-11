@@ -22,165 +22,170 @@ const List = ({
 	onModel = "",
 }) => {
 	return (
-		<div className="container">
-			{object.data.status === "published" || searchParams.isAdmin === true ? (
-				<div className="row">
-					<Globalcontent>
-						<article>
-							<div className="card mb-3">
-								<div className="card-header">{object.data.title}</div>
-								<div className="card-body">
-									<ParseHtml text={object.data?.text} />
+		<section className="py-5">
+			<div className="container">
+				{object.data.status === "published" || searchParams.isAdmin === true ? (
+					<div className="row">
+						<Globalcontent>
+							<article>
+								<div className="card mb-3">
+									<div className="card-header">{object.data.title}</div>
+									<div className="card-body">
+										<ParseHtml text={object.data?.text} />
+									</div>
 								</div>
-							</div>
-							{isIndex && (
-								<>
-									<div className="card">
-										<div className="card-header">
-											<div className="float-start">
-												<div className="d-flex align-items-center">
-													<p className="mt-2 mb-0">Episodes</p>
+								{isIndex && (
+									<>
+										<div className="card">
+											<div className="card-header">
+												<div className="float-start">
+													<div className="d-flex align-items-center">
+														<p className="mt-2 mb-0">Episodes</p>
+													</div>
 												</div>
+												{isAdmin && (
+													<div className="float-end my-1">
+														<Link
+															href={{
+																pathname: `/noadmin/courses/lesson/${object.data._id}/create`,
+																query: {},
+															}}
+															className="btn btn-outline-secondary btn-sm"
+														>
+															Add&nbsp;lesson
+														</Link>
+													</div>
+												)}
 											</div>
-											{isAdmin && (
-												<div className="float-end my-1">
-													<Link
-														href={{
-															pathname: `/noadmin/courses/lesson/${object.data._id}/create`,
-															query: {},
-														}}
-														className="btn btn-outline-secondary btn-sm"
-													>
-														Add&nbsp;lesson
-													</Link>
+											{objects?.data?.length > 0 ? (
+												<ul
+													className="list-group list-group-flush overflow-x-hidden"
+													style={{ maxHeight: "1000px" }}
+												>
+													{objects.data.map((lesson, index) => (
+														<li
+															key={lesson._id}
+															className={`${index} list-group-item ${lesson.orderingNumber}`}
+														>
+															<div className="float-start">
+																<Link
+																	href={`/course/${object.data._id}/${object.data.category}/${object.data.sub_category}/${object.data.slug}/video/${lesson._id}`}
+																>
+																	<span className="badge bg-secondary me-1">
+																		{lesson.orderingNumber}
+																	</span>
+																	{lesson.title}
+																</Link>
+															</div>
+															<div className="float-end">
+																{lesson.free_preview && (
+																	<PreviewModal object={lesson} />
+																)}
+																<span className="badge bg-info me-1">
+																	{lesson.duration}
+																</span>
+																<span className="badge bg-secondary me-1">
+																	{lesson.views}&nbsp;Views
+																</span>
+																<span className="badge bg-dark me-1">
+																	{lesson.language.toUpperCase()}
+																</span>
+															</div>
+														</li>
+													))}
+												</ul>
+											) : (
+												<div className="alert alert-danger rounded-0  m-0 border-0">
+													Nothing&nbsp;found
 												</div>
 											)}
 										</div>
-										{objects?.data?.length > 0 ? (
-											<ul
-												className="list-group list-group-flush overflow-x-hidden"
-												style={{ maxHeight: "1000px" }}
-											>
-												{objects.data.map((lesson, index) => (
-													<li
-														key={lesson._id}
-														className={`${index} list-group-item ${lesson.orderingNumber}`}
-													>
-														<div className="float-start">
-															<Link
-																href={`/course/${object.data._id}/${object.data.category}/${object.data.sub_category}/${object.data.slug}/video/${lesson._id}`}
-															>
-																<span className="badge bg-secondary me-1">
-																	{lesson.orderingNumber}
-																</span>
-																{lesson.title}
-															</Link>
-														</div>
-														<div className="float-end">
-															{lesson.free_preview && (
-																<PreviewModal object={lesson} />
-															)}
-															<span className="badge bg-info me-1">
-																{lesson.duration}
-															</span>
-															<span className="badge bg-secondary me-1">
-																{lesson.views}&nbsp;Views
-															</span>
-															<span className="badge bg-dark me-1">
-																{lesson.language.toUpperCase()}
-															</span>
-														</div>
-													</li>
-												))}
-											</ul>
-										) : (
-											<div className="alert alert-danger rounded-0  m-0 border-0">
-												Nothing&nbsp;found
-											</div>
-										)}
-									</div>
-									<NewsletterForm
-										sectionClassList="text-bg-dark text-center pt-3 pb-3 mb-4"
-										headingClassList=""
-									/>
-									<div className="float-start">
-										<ExportModal
-											linkToShare={linkToShare}
-											object={object?.data}
+										<NewsletterForm
+											sectionClassList="text-bg-dark text-center pt-3 pb-3 mb-4"
+											headingClassList=""
 										/>
-									</div>
-									<div className="float-end">
-										<ReportModal
-											postId={object?.data?._id}
-											postType={postType}
-											onModel={onModel}
-										/>
-									</div>
+										<div className="float-start">
+											<ExportModal
+												linkToShare={linkToShare}
+												object={object?.data}
+											/>
+										</div>
+										<div className="float-end">
+											<ReportModal
+												postId={object?.data?._id}
+												postType={postType}
+												onModel={onModel}
+											/>
+										</div>
 
-									<div style={{ clear: "both" }} />
-									<AuthorBox author={object?.data?.user} />
-									<div className="comments">{/* HERE GOES THE COMMENTS */}</div>
-								</>
-							)}
-						</article>
-					</Globalcontent>
-					<Globalsidebar>
-						{students?.data?.length > 0 && (
-							<div className="card mb-3">
-								<div className="card-header">
-									Enrolled&nbsp;Students
-									<Link
-										href={{
-											pathname: `/course/${object.data?._id}/students`,
-											query: {
-												page: 1,
-												limit: 10,
-												sort: `-createdAt`,
-											},
-										}}
-										className="float-end"
-									>
-										View&nbsp;all
-									</Link>
-								</div>
-								<div className="card-body row g-2 p-0">
-									{students.data.map((student, index) => (
+										<div style={{ clear: "both" }} />
+										<AuthorBox author={object?.data?.user} />
+										<div className="comments">
+											{/* HERE GOES THE COMMENTS */}
+										</div>
+									</>
+								)}
+							</article>
+						</Globalcontent>
+						<Globalsidebar>
+							{students?.data?.length > 0 && (
+								<div className="card mb-3">
+									<div className="card-header">
+										Enrolled&nbsp;Students
 										<Link
-											key={student._id}
 											href={{
-												pathname: `/profile/${student.user._id}/${student.user.username}`,
+												pathname: `/course/${object.data?._id}/students`,
 												query: {
 													page: 1,
-													limit: 50,
+													limit: 10,
+													sort: `-createdAt`,
 												},
 											}}
-											className="col"
+											className="float-end"
 										>
-											<Image
-												src={
-													student.user.files.avatar.location.secure_location ||
-													`https://picsum.photos/130/130?blur`
-												}
-												className={`${index}`}
-												width={130}
-												height={130}
-												alt={`${student.user.username}'s profile avatars`}
-												style={{
-													objectFit: "cover",
-													margin: "1px",
-												}}
-											/>
+											View&nbsp;all
 										</Link>
-									))}
+									</div>
+									<div className="card-body row g-2 p-0">
+										{students.data.map((student, index) => (
+											<Link
+												key={student._id}
+												href={{
+													pathname: `/profile/${student.user._id}/${student.user.username}`,
+													query: {
+														page: 1,
+														limit: 50,
+													},
+												}}
+												className="col"
+											>
+												<Image
+													src={
+														student.user.files.avatar.location
+															.secure_location ||
+														`https://picsum.photos/130/130?blur`
+													}
+													className={`${index}`}
+													width={130}
+													height={130}
+													alt={`${student.user.username}'s profile avatars`}
+													style={{
+														objectFit: "cover",
+														margin: "1px",
+													}}
+												/>
+											</Link>
+										))}
+									</div>
 								</div>
-							</div>
-						)}
-					</Globalsidebar>
-				</div>
-			) : (
-				<p>Nothing found</p>
-			)}
-		</div>
+							)}
+						</Globalsidebar>
+					</div>
+				) : (
+					<p>Nothing found</p>
+				)}
+			</div>
+		</section>
 	);
 };
 

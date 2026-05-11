@@ -35,10 +35,13 @@ const APIIndex = async ({ params, searchParams }) => {
 				posType="page"
 			/>
 			{settings.data.maintenance === false ? (
-				<Header
-					title={`${settings.data.title} API`}
-					description="Learn how to programatically communicate with my DB!"
-				/>
+				<>
+					<Header
+						title={`${settings.data.title} API`}
+						description="Learn how to programatically communicate with my DB!"
+					/>
+					<section className="py-5"></section>
+				</>
 			) : (
 				<ErrorPage />
 			)}

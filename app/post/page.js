@@ -54,15 +54,17 @@ const PostIndex = async ({ params, searchParams }) => {
 						title="Welcome to my Users Page"
 						description="Find out the community's members and become friends"
 					/>
-					<div className="container">
-						<div className="row">
-							<List
-								params={params}
-								objects={posts}
-								searchParams={awtdSearchParams}
-							/>
+					<section className="py-5">
+						<div className="container">
+							<div className="row">
+								<List
+									params={params}
+									objects={posts}
+									searchParams={awtdSearchParams}
+								/>
+							</div>
 						</div>
-					</div>
+					</section>
 				</>
 			) : (
 				<ErrorPage />

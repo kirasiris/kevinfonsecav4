@@ -45,14 +45,16 @@ const ContactIndex = async ({ params, searchParams }) => {
 						title="Contact Page"
 						description="Do not hesitate to contact me!"
 					/>
-					<div className="container">
-						<div className="row">
-							<Globalcontent>
-								<ContactForm />
-							</Globalcontent>
-							<Sidebar address={address} />
+					<section className="py-5">
+						<div className="container">
+							<div className="row">
+								<Globalcontent>
+									<ContactForm />
+								</Globalcontent>
+								<Sidebar address={address} />
+							</div>
 						</div>
-					</div>
+					</section>
 				</Suspense>
 			) : (
 				<ErrorPage />

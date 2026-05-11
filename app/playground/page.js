@@ -16,17 +16,19 @@ const PlaygroundIndex = async ({ params, searchParams }) => {
 	const settings = await getSetting(process.env.NEXT_PUBLIC_SETTINGS_ID);
 
 	return (
-		<div className="container">
-			<div className="row">PlaygroundIndex</div>
-			<Waveform
-				src="/JinMoriSaysRun.mp3"
-				mediaTitle="The God of High School OST - Seoul Team / Monkey King Say Run ( HQ Cover)"
-				mediaAuthor="Dude's Cover"
-				mediaAlbum=""
-			/>
-			<UseDropzone />
-			<Calendar settings={settings} />
-		</div>
+		<section className="py-5">
+			<div className="container">
+				<div className="row">PlaygroundIndex</div>
+				<Waveform
+					src="/JinMoriSaysRun.mp3"
+					mediaTitle="The God of High School OST - Seoul Team / Monkey King Say Run ( HQ Cover)"
+					mediaAuthor="Dude's Cover"
+					mediaAlbum=""
+				/>
+				<UseDropzone />
+				<Calendar settings={settings} />
+			</div>
+		</section>
 	);
 };
 

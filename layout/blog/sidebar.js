@@ -17,11 +17,12 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 
 	const { keyword } = searchParams;
 
+	const keywordQuery =
+		keyword !== "" && keyword !== undefined ? `&keyword=${keyword}` : "";
+
 	const searchData = async (e) => {
 		e.preventDefault();
-		router.push(
-			`/blog/search?keyword=${keyword}&page=1&limit=10&sort=-createdAt`
-		);
+		router.push(`/blog/search?page=1&limit=10&sort=-createdAt${keywordQuery}`);
 	};
 
 	useEffect(() => {
@@ -34,7 +35,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 					undefined,
 					undefined,
 					false,
-					true
+					true,
 				);
 				setForecast(res);
 			} catch (err) {
@@ -47,7 +48,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 					// dispatch(setAlert(error, 'danger'));
 					error &&
 						Object.entries(error).map(([, value]) =>
-							toast.error(value.message)
+							toast.error(value.message),
 						);
 				}
 

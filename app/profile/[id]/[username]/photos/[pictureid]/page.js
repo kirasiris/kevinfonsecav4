@@ -76,49 +76,51 @@ const ProfilePhotoRead = async ({ params, searchParams }) => {
 							backgroundSize: "cover",
 						}}
 					/>
-					<div className="container">
-						<div className="row">
-							<Sidebar object={profile} />
-							<Globalcontent>
-								<article>
-									<ArticleHeader object={file} />
-									<figure className="mb-4">
-										<Image
-											src={file.data.location.secure_location}
-											width={file.data.dimensions.width}
-											height={file.data.dimensions.height}
-											alt={`${profile.data.username}'s photo`}
-											style={{
-												width: "100%",
-												height: "auto",
-											}}
-											priority
-										/>
-									</figure>
-									<section className="mb-5">
-										<ParseHtml text={file?.data?.text} />
-										<hr />
-										<div className="float-start">
-											<ExportModal
-												linkToShare={`localhost:3000/profile/${profile?.data?._id}/${profile?.data?.username}/photos/${file?.data?._id}`}
-												object={file?.data}
+					<section className="py-5">
+						<div className="container">
+							<div className="row">
+								<Sidebar object={profile} />
+								<Globalcontent>
+									<article>
+										<ArticleHeader object={file} />
+										<figure className="mb-4">
+											<Image
+												src={file.data.location.secure_location}
+												width={file.data.dimensions.width}
+												height={file.data.dimensions.height}
+												alt={`${profile.data.username}'s photo`}
+												style={{
+													width: "100%",
+													height: "auto",
+												}}
+												priority
 											/>
-										</div>
-										<div className="float-end">
-											<ReportModal
-												postId={file?.data?._id}
-												postType="file"
-												onModel="File"
-											/>
-										</div>
-										<div style={{ clear: "both" }} />
-										<AuthorBox author={profile?.data} />
-										{/* HERE GOES THE COMMENTS */}
-									</section>
-								</article>
-							</Globalcontent>
+										</figure>
+										<section className="mb-5">
+											<ParseHtml text={file?.data?.text} />
+											<hr />
+											<div className="float-start">
+												<ExportModal
+													linkToShare={`localhost:3000/profile/${profile?.data?._id}/${profile?.data?.username}/photos/${file?.data?._id}`}
+													object={file?.data}
+												/>
+											</div>
+											<div className="float-end">
+												<ReportModal
+													postId={file?.data?._id}
+													postType="file"
+													onModel="File"
+												/>
+											</div>
+											<div style={{ clear: "both" }} />
+											<AuthorBox author={profile?.data} />
+											{/* HERE GOES THE COMMENTS */}
+										</section>
+									</article>
+								</Globalcontent>
+							</div>
 						</div>
-					</div>
+					</section>
 				</Suspense>
 			) : (
 				<ErrorPage />

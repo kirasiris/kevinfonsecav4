@@ -100,11 +100,7 @@ const HomeIndex = async ({ params, searchParams }) => {
 						</section>
 					)}
 					{themes?.data?.length > 0 && (
-						<section
-							id="themes"
-							className="py-5"
-							style={{ marginBottom: "-24px" }}
-						>
+						<section id="themes" className="py-5">
 							<div className="container">
 								<h2 className="page-section-heading display-5 text-uppercase text-secondary my-5">
 									<a

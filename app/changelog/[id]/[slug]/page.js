@@ -52,43 +52,45 @@ const ChangelogRead = async ({ params }) => {
 			{settings?.data?.maintenance === false ? (
 				<Suspense fallback={<Loading />}>
 					<Header title={changelog?.data?.title} />
-					<div className="container">
-						<div className="row">
-							<div className={`col-lg-12`}>
-								<article>
-									<header className="mb-4">
-										<h1>{changelog?.data?.title}</h1>
-										<div className="text-muted fst-italic mb-2">
-											Posted on {changelog?.data?.createdAt} by{" "}
-											{changelog?.data?.user?.username}
-										</div>
-									</header>
-									<section className="mb-5">
-										<ParseHtml text={changelog?.data?.text} />
-										<NewsletterForm
-											sectionClassList="text-bg-dark text-center pt-3 pb-3 mt-4 mb-4"
-											headingClassList=""
-										/>
-										<div className="float-start">
-											<ExportModal
-												linkToShare={`/changelog/${changelog?.data?._id}/${changelog?.data?.slug}`}
-												object={changelog?.data}
+					<section className="py-5">
+						<div className="container">
+							<div className="row">
+								<div className={`col-lg-12`}>
+									<article>
+										<header className="mb-4">
+											<h1>{changelog?.data?.title}</h1>
+											<div className="text-muted fst-italic mb-2">
+												Posted on {changelog?.data?.createdAt} by{" "}
+												{changelog?.data?.user?.username}
+											</div>
+										</header>
+										<section className="mb-5">
+											<ParseHtml text={changelog?.data?.text} />
+											<NewsletterForm
+												sectionClassList="text-bg-dark text-center pt-3 pb-3 mt-4 mb-4"
+												headingClassList=""
 											/>
-										</div>
-										<div className="float-end">
-											<ReportModal
-												resourceId={changelog?.data?._id}
-												postType="changelog"
-												onModel="Changelog"
-											/>
-										</div>
-										<div style={{ clear: "both" }} />
-										<AuthorBox author={changelog?.data?.user} />
-									</section>
-								</article>
+											<div className="float-start">
+												<ExportModal
+													linkToShare={`/changelog/${changelog?.data?._id}/${changelog?.data?.slug}`}
+													object={changelog?.data}
+												/>
+											</div>
+											<div className="float-end">
+												<ReportModal
+													resourceId={changelog?.data?._id}
+													postType="changelog"
+													onModel="Changelog"
+												/>
+											</div>
+											<div style={{ clear: "both" }} />
+											<AuthorBox author={changelog?.data?.user} />
+										</section>
+									</article>
+								</div>
 							</div>
 						</div>
-					</div>
+					</section>
 				</Suspense>
 			) : (
 				<ErrorPage />

@@ -216,43 +216,45 @@ const ProfileRead = async ({ params, searchParams }) => {
 							backgroundSize: "cover",
 						}}
 					/>
-					<div className="container">
-						<div className="row">
-							<Sidebar object={profile} />
-							<Globalcontent>
-								<PostNew
-									auth={auth}
-									token={token}
-									object={profile}
-									params={awtdParams}
-									searchParams={awtdSearchParams}
-									revalidateUrl={`/profile/${awtdParams.id}/${awtdParams.username}?page=${page}&limit=${limit}&sort=${sort}${subtype}`}
-								/>
-								<List
-									auth={auth}
-									object={profile}
-									stories={stories}
-									featured={featured}
-									params={awtdParams}
-									objects={posts}
-									searchParams={awtdSearchParams}
-									handleDraft={draftIt}
-									handlePublish={publishIt}
-									handleTrash={trashIt}
-									handleSchedule={scheduleIt}
-									handleDelete={handleDelete}
-									handleTrashAllFunction={handleTrashAll}
-									handleDeleteAllFunction={handleDeleteAll}
-									handleFeature={featureIt}
-									handleUnfeature={unfeatureIt}
-									handleHide={hideIt}
-									handleUnhide={unhideIt}
-									handleCommented={commentIt}
-									handleUncommented={uncommentIt}
-								/>
-							</Globalcontent>
+					<section className="py-5">
+						<div className="container">
+							<div className="row">
+								<Sidebar object={profile} />
+								<Globalcontent>
+									<PostNew
+										auth={auth}
+										token={token}
+										object={profile}
+										params={awtdParams}
+										searchParams={awtdSearchParams}
+										revalidateUrl={`/profile/${awtdParams.id}/${awtdParams.username}?page=${page}&limit=${limit}&sort=${sort}${subtype}`}
+									/>
+									<List
+										auth={auth}
+										object={profile}
+										stories={stories}
+										featured={featured}
+										params={awtdParams}
+										objects={posts}
+										searchParams={awtdSearchParams}
+										handleDraft={draftIt}
+										handlePublish={publishIt}
+										handleTrash={trashIt}
+										handleSchedule={scheduleIt}
+										handleDelete={handleDelete}
+										handleTrashAllFunction={handleTrashAll}
+										handleDeleteAllFunction={handleDeleteAll}
+										handleFeature={featureIt}
+										handleUnfeature={unfeatureIt}
+										handleHide={hideIt}
+										handleUnhide={unhideIt}
+										handleCommented={commentIt}
+										handleUncommented={uncommentIt}
+									/>
+								</Globalcontent>
+							</div>
 						</div>
-					</div>
+					</section>
 				</Suspense>
 			) : (
 				<ErrorPage />

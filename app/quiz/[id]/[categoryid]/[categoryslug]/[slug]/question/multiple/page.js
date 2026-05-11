@@ -65,27 +65,29 @@ const QuizMultiplePageRead = async ({ params, searchParams }) => {
 			{settings?.data?.maintenance === false ? (
 				<Suspense fallback={<Loading />}>
 					<Header title={quiz.data.title} />
-					<div className="container">
-						{quiz.data.status === "published" ||
-						awtdSearchParams.isAdmin === "true" ? (
-							<div className="row">
-								<Globalcontent containerClasses="col-lg-12">
-									<article>
-										<section className="mb-4">
-											<List
-												object={quiz}
-												objects={questions}
-												params={awtdParams}
-												searchParams={awtdSearchParams}
-											/>
-										</section>
-									</article>
-								</Globalcontent>
-							</div>
-						) : (
-							<p>Not visible</p>
-						)}
-					</div>
+					<section className="py-5">
+						<div className="container">
+							{quiz.data.status === "published" ||
+							awtdSearchParams.isAdmin === "true" ? (
+								<div className="row">
+									<Globalcontent containerClasses="col-lg-12">
+										<article>
+											<section className="mb-4">
+												<List
+													object={quiz}
+													objects={questions}
+													params={awtdParams}
+													searchParams={awtdSearchParams}
+												/>
+											</section>
+										</article>
+									</Globalcontent>
+								</div>
+							) : (
+								<p>Not visible</p>
+							)}
+						</div>
+					</section>
 				</Suspense>
 			) : (
 				<ErrorPage />

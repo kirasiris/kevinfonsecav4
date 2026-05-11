@@ -2,14 +2,14 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-function range(start, end) {
+const range = (start, end) => {
 	const length = Math.max(end - start, 0);
 	const result = new Array(length);
 	for (let i = 0; i < length; i++) {
 		result[i] = start + i;
 	}
 	return result;
-}
+};
 
 const NumericPagination = ({
 	totalPages,
@@ -29,11 +29,11 @@ const NumericPagination = ({
 	const keyword = searchParams.keyword || "";
 	const posttype = searchParams.postType || "";
 
-	// Coerce to numbers once, upfront — this fixes the string concatenation bug
+	// Fixes the string concatenation bug
 	const totalPagesNum = Number(totalPages);
 	const siblingsNum = Number(siblings);
 
-	// Clamp current page to a valid range
+	// Current page
 	const currentPage = Math.max(1, Math.min(page, totalPagesNum));
 
 	/**
@@ -51,6 +51,20 @@ const NumericPagination = ({
 		if (random === "true") params.set("random", "true");
 		if (email) params.set("email", email);
 		return `?${params.toString()}`;
+	};
+	/**
+	 * Build the extra params string for handlePageLimit.
+	 */
+	const buildExtraParams = () => {
+		const params = new URLSearchParams();
+		params.set("sort", sort);
+		if (keyword) params.set("keyword", keyword);
+		if (posttype) params.set("postType", posttype);
+		if (decrypt === "true") params.set("decrypt", "true");
+		if (random === "true") params.set("random", "true");
+		if (email) params.set("email", email);
+		const str = params.toString();
+		return str ? `&${str}` : "";
 	};
 
 	/**
@@ -101,6 +115,7 @@ const NumericPagination = ({
 	const isLastPage = currentPage === totalPagesNum;
 
 	const handlePageLimit = (value) => {
+		const newParams = buildExtraParams();
 		router.push(
 			`?page=${Number(currentPage)}&limit=${Number(value)}${newParams}`,
 		);
@@ -136,8 +151,8 @@ const NumericPagination = ({
 			aria-label="Pagination"
 			className="pagination-container d-flex align-items-center justify-content-end"
 		>
+			{isAdmin && selectLimit()}
 			<ul className="pagination justify-content-end m-0 my-1 mx-1">
-				{isAdmin === true && selectLimit()}
 				{/* First page */}
 				<li className={`page-item ${isFirstPage ? "disabled" : ""}`}>
 					<Link

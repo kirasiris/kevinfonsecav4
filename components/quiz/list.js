@@ -12,38 +12,40 @@ const List = ({
 	categories = [],
 }) => {
 	return (
-		<div className="container">
-			<div className="row">
-				<Globalcontent>
-					{/* Featured list */}
-					{featured?.data?.length > 0 &&
-						featured.data.map((featured) => (
-							<Single key={featured._id} object={featured} fullWidth={true} />
-						))}
-					{/* Blog list */}
-					<div className="row">
-						{objects?.data?.length > 0 ? (
-							<>
-								{objects.data?.map((quiz) => (
-									<Single key={quiz._id} object={quiz} />
-								))}
-								<NumericPagination
-									totalPages={
-										objects?.pagination?.totalpages ||
-										Math.ceil(objects?.data?.length / searchParams.limit)
-									}
-									searchParams={searchParams}
-									siblings={1}
-								/>
-							</>
-						) : (
-							<NothingFoundAlert />
-						)}
-					</div>
-				</Globalcontent>
-				<Sidebar categories={categories} />
+		<section className="py-5">
+			<div className="container">
+				<div className="row">
+					<Globalcontent>
+						{/* Featured list */}
+						{featured?.data?.length > 0 &&
+							featured.data.map((featured) => (
+								<Single key={featured._id} object={featured} fullWidth={true} />
+							))}
+						{/* Blog list */}
+						<div className="row">
+							{objects?.data?.length > 0 ? (
+								<>
+									{objects.data?.map((quiz) => (
+										<Single key={quiz._id} object={quiz} />
+									))}
+									<NumericPagination
+										totalPages={
+											objects?.pagination?.totalpages ||
+											Math.ceil(objects?.data?.length / searchParams.limit)
+										}
+										searchParams={searchParams}
+										siblings={1}
+									/>
+								</>
+							) : (
+								<NothingFoundAlert />
+							)}
+						</div>
+					</Globalcontent>
+					<Sidebar categories={categories} />
+				</div>
 			</div>
-		</div>
+		</section>
 	);
 };
 

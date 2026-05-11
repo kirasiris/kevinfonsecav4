@@ -66,17 +66,18 @@ const PageRead = async ({ params, searchParams }) => {
 			{settings?.data?.maintenance === false ? (
 				<Suspense fallback={<Loading />}>
 					<Header title={page.data.title} />
-					<div className="container">
-						{page.data.status === "published" ||
-						awtdSearchParams.isAdmin === "true" ? (
-							<div className="row">
-								<Globalcontent containerClasses={`col-lg-12`}>
-									<article>
-										<ArticleHeader
-											object={page}
-											url={`/page/category/${page?.data?.category?._id}/${page?.data?.category?.slug}`}
-										/>
-										{/* <figure className="mb-4">
+					<section className="py-5">
+						<div className="container">
+							{page.data.status === "published" ||
+							awtdSearchParams.isAdmin === "true" ? (
+								<div className="row">
+									<Globalcontent containerClasses={`col-lg-12`}>
+										<article>
+											<ArticleHeader
+												object={page}
+												url={`/page/category/${page?.data?.category?._id}/${page?.data?.category?.slug}`}
+											/>
+											{/* <figure className="mb-4">
 									<Image
 										className="img-fluid"
 										src={
@@ -89,35 +90,36 @@ const PageRead = async ({ params, searchParams }) => {
 										priority
 									/>
 								</figure> */}
-										<section className="mb-5">
-											<ParseHtml text={page?.data?.text} />
-											<NewsletterForm
-												sectionClassList="text-bg-dark text-center pt-3 pb-3 mb-4"
-												headingClassList=""
-											/>
-											<div className="float-start">
-												<ExportModal
-													linkToShare={`/page/${page?.data?._id}/${page?.data?.slug}`}
-													object={page?.data}
+											<section className="mb-5">
+												<ParseHtml text={page?.data?.text} />
+												<NewsletterForm
+													sectionClassList="text-bg-dark text-center pt-3 pb-3 mb-4"
+													headingClassList=""
 												/>
-											</div>
-											<div className="float-end">
-												<ReportModal
-													resourceId={page?.data?._id}
-													postType="page"
-													onModel="Page"
-												/>
-											</div>
-											<div style={{ clear: "both" }} />
-											<AuthorBox author={page?.data?.user} />
-										</section>
-									</article>
-								</Globalcontent>
-							</div>
-						) : (
-							<p>Not visible</p>
-						)}
-					</div>
+												<div className="float-start">
+													<ExportModal
+														linkToShare={`/page/${page?.data?._id}/${page?.data?.slug}`}
+														object={page?.data}
+													/>
+												</div>
+												<div className="float-end">
+													<ReportModal
+														resourceId={page?.data?._id}
+														postType="page"
+														onModel="Page"
+													/>
+												</div>
+												<div style={{ clear: "both" }} />
+												<AuthorBox author={page?.data?.user} />
+											</section>
+										</article>
+									</Globalcontent>
+								</div>
+							) : (
+								<p>Not visible</p>
+							)}
+						</div>
+					</section>
 				</Suspense>
 			) : (
 				<ErrorPage />

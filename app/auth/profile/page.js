@@ -62,7 +62,7 @@ const AuthIndex = async ({ params, searchParams }) => {
 													)}
 
 													{auth.data.workstatus && (
-														<li className="list-group-item">
+														<li className="list-group-item text-capitalize">
 															{auth.data.workstatus}
 														</li>
 													)}
@@ -147,15 +147,17 @@ const AuthIndex = async ({ params, searchParams }) => {
 														</li>
 													)}
 													{auth.data.sex && (
-														<li className="list-group-item">{auth.data.sex}</li>
+														<li className="list-group-item text-capitalize">
+															{auth.data.sex}
+														</li>
 													)}
 													{auth.data.gender && (
-														<li className="list-group-item">
+														<li className="list-group-item text-capitalize">
 															{auth.data.gender}
 														</li>
 													)}
 													{auth.data.relationshipStatus && (
-														<li className="list-group-item">
+														<li className="list-group-item text-capitalize">
 															{auth.data.relationshipStatus}
 														</li>
 													)}
@@ -170,7 +172,9 @@ const AuthIndex = async ({ params, searchParams }) => {
 														</li>
 													)}
 													{auth.data.age && (
-														<li className="list-group-item">{auth.data.age}</li>
+														<li className="list-group-item">
+															{auth.data.age}&nbsp;years&nbsp;old
+														</li>
 													)}
 													{auth.data.bio && (
 														<li className="list-group-item">

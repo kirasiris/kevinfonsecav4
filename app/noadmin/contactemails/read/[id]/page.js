@@ -6,8 +6,9 @@ async function getContactEmails(params) {
 	const res = await fetchurl(
 		`/global/contactemails${params}`,
 		"GET",
-		"no-cache"
+		"no-cache",
 	);
+
 	if (!res.success) notFound();
 	return res;
 }

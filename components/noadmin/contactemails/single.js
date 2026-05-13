@@ -18,7 +18,7 @@ const Single = ({
 					<h1 className="blog-item__title">
 						<Link
 							href={{
-								pathname: `/noadmin/emails/update/${object._id}`,
+								pathname: `/noadmin/contactemails/update/${object._id}`,
 								query: {},
 							}}
 							className="blog-item__title-link"
@@ -37,7 +37,7 @@ const Single = ({
 						<DropdownButton title="Options" variant="secondary">
 							<Link
 								href={{
-									pathname: `/noadmin/emails/read/${object._id}`,
+									pathname: `/noadmin/contactemails/read/${object._id}`,
 									query: {
 										isAdmin: true,
 									},

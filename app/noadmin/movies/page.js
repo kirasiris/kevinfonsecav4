@@ -7,7 +7,7 @@ async function getPlaylists(params) {
 	const res = await fetchurl(
 		`/global/playlists${params}&onairtype=movie`,
 		"GET",
-		"no-cache"
+		"no-cache",
 	);
 	return res;
 }
@@ -20,7 +20,7 @@ const AdminMoviesIndex = async ({ params, searchParams }) => {
 	const sort = awtdSearchParams.sort || "-createdAt";
 
 	const movies = await getPlaylists(
-		`?page=${page}&limit=${limit}&sort=${sort}`
+		`?page=${page}&limit=${limit}&sort=${sort}`,
 	);
 
 	const draftIt = async (id) => {
@@ -51,13 +51,27 @@ const AdminMoviesIndex = async ({ params, searchParams }) => {
 		revalidatePath(`/noadmin/movies?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
+	const featureIt = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/noadmin/playlists/${id}/featureit`, "PUT", "no-cache");
+		revalidatePath(`/noadmin/movies?page=${page}&limit=${limit}&sort=${sort}`);
+	};
+
+	const unfeatureIt = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/noadmin/playlists/${id}/unfeatureit`, "PUT", "no-cache");
+		revalidatePath(`/noadmin/movies?page=${page}&limit=${limit}&sort=${sort}`);
+	};
+
 	const handleDelete = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(
 			`/noadmin/playlists/${id}/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(`/noadmin/movies?page=${page}&limit=${limit}&sort=${sort}`);
 	};
@@ -75,7 +89,7 @@ const AdminMoviesIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/playlists/deleteall/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(`/noadmin/movies?page=${page}&limit=${limit}&sort=${sort}`);
 	};
@@ -104,6 +118,8 @@ const AdminMoviesIndex = async ({ params, searchParams }) => {
 					handlePublish={publishIt}
 					handleTrash={trashIt}
 					handleSchedule={scheduleIt}
+					handleFeature={featureIt}
+					handleUnfeature={unfeatureIt}
 					handleDelete={handleDelete}
 					handleTrashAllFunction={handleTrashAll}
 					handleDeleteAllFunction={handleDeleteAll}

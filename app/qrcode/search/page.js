@@ -1,11 +1,11 @@
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import Header from "@/layout/header";
-import List from "@/components/qrcode/resultlist";
+import List from "@/components/qrcode/list";
 import ErrorPage from "@/layout/errorpage";
 import Head from "@/app/head";
 import { getGlobalData } from "@/helpers/globalData";
 
-async function getQRCodeGeneratorResult(params) {
+async function getQRCodes(params) {
 	const res = await fetchurl(`/global/qrcodes${params}`, "GET", "no-cache");
 	return res;
 }
@@ -23,17 +23,17 @@ const QRCodeGeneratorSearchIndex = async ({ params, searchParams }) => {
 
 	const { settings } = await getGlobalData();
 
-	const getResultsData = getQRCodeGeneratorResult(
+	const getQRCodesData = getQRCodes(
 		`?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}${decrypt}`,
 	);
 
-	const [results] = await Promise.all([getResultsData]);
+	const [qrcodes] = await Promise.all([getQRCodesData]);
 
 	return (
 		<>
 			<Head
-				title={`${settings?.data?.title} - QR Code Results of ${awtdSearchParams.email}`}
-				description={"Check your previous qrcodes!"}
+				title={`${settings?.data?.title} - Search results of ${awtdSearchParams.email}`}
+				description={"Search results..."}
 				favicon={settings?.data?.favicon}
 				postImage={settings.data.showcase_image}
 				imageWidth=""
@@ -43,7 +43,7 @@ const QRCodeGeneratorSearchIndex = async ({ params, searchParams }) => {
 				card="summary"
 				robots=""
 				category=""
-				url={`/qrcode/generator`}
+				url={`/qrcode/search?keyword=${awtdSearchParams.email}&page=${page}&limit=${limit}&sort=${sort}`}
 				author=""
 				createdAt=""
 				updatedAt=""
@@ -53,10 +53,10 @@ const QRCodeGeneratorSearchIndex = async ({ params, searchParams }) => {
 			{settings?.data?.maintenance === false ? (
 				<>
 					<Header
-						title={`QrCode results of ${awtdSearchParams.email}`}
-						description="Check your previous qrcodes!"
+						title={awtdSearchParams.keyword}
+						description="Search results..."
 					/>
-					<List objects={results} searchParams={awtdSearchParams} />
+					<List objects={qrcodes} searchParams={awtdSearchParams} />
 				</>
 			) : (
 				<ErrorPage />

@@ -7,7 +7,7 @@ async function getPlaylists(params) {
 	const res = await fetchurl(
 		`/global/playlists${params}&onairtype=movie&status=draft`,
 		"GET",
-		"no-cache"
+		"no-cache",
 	);
 	return res;
 }
@@ -20,7 +20,7 @@ const AdminMoviesDraftIndex = async ({ params, searchParams }) => {
 	const sort = awtdSearchParams.sort || "-createdAt";
 
 	const movies = await getPlaylists(
-		`?page=${page}&limit=${limit}&sort=${sort}`
+		`?page=${page}&limit=${limit}&sort=${sort}`,
 	);
 
 	const draftIt = async (id) => {
@@ -28,7 +28,7 @@ const AdminMoviesDraftIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/playlists/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/movies/draft?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/movies/draft?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -37,7 +37,7 @@ const AdminMoviesDraftIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/playlists/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/movies/draft?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/movies/draft?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -46,7 +46,7 @@ const AdminMoviesDraftIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/playlists/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/movies/draft?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/movies/draft?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -55,7 +55,25 @@ const AdminMoviesDraftIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/playlists/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/movies/draft?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/movies/draft?page=${page}&limit=${limit}&sort=${sort}`,
+		);
+	};
+
+	const featureIt = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/noadmin/playlists/${id}/featureit`, "PUT", "no-cache");
+		revalidatePath(
+			`/noadmin/cdalbums/draft?page=${page}&limit=${limit}&sort=${sort}`,
+		);
+	};
+
+	const unfeatureIt = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(`/noadmin/playlists/${id}/unfeatureit`, "PUT", "no-cache");
+		revalidatePath(
+			`/noadmin/cdalbums/draft?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -65,10 +83,10 @@ const AdminMoviesDraftIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/playlists/${id}/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/movies/draft?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/movies/draft?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -77,7 +95,7 @@ const AdminMoviesDraftIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/playlists/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/movies/draft?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/movies/draft?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -87,10 +105,10 @@ const AdminMoviesDraftIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/playlists/deleteall/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/movies/draft?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/movies/draft?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -118,6 +136,8 @@ const AdminMoviesDraftIndex = async ({ params, searchParams }) => {
 					handlePublish={publishIt}
 					handleTrash={trashIt}
 					handleSchedule={scheduleIt}
+					handleFeature={featureIt}
+					handleUnfeature={unfeatureIt}
 					handleDelete={handleDelete}
 					handleTrashAllFunction={handleTrashAll}
 					handleDeleteAllFunction={handleDeleteAll}

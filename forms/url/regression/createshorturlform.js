@@ -47,13 +47,9 @@ const CreateShortUrlForm = ({ auth = {}, currentpage = "" }) => {
 			setBtnText("Submit");
 			return;
 		}
+		toast.success("Short URL created", "bottom");
 		setBtnText(btnText);
-		//resetForm();
 		router.push(currentpage);
-	};
-
-	const resetForm = (e) => {
-		e.target.closest("form").reset();
 	};
 
 	return (

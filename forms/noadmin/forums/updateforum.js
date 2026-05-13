@@ -21,7 +21,6 @@ const UpdateForumForm = ({ token = {}, auth = {}, object = {} }) => {
 		const rawFormData = {
 			title: formData.get("title"),
 			text: formData.get("text"),
-			featured: formData.get("featured"),
 			embedding: formData.get("embedding"),
 			category: formData.get("category"),
 			sub_category: formData.get("sub_category"),
@@ -250,7 +249,7 @@ const UpdateForumForm = ({ token = {}, auth = {}, object = {} }) => {
 					status={object?.data?.status}
 					fullWidth={false}
 					password=""
-					featured={object?.data?.featured.toString()}
+					featured={false}
 					commented={object?.data?.commented.toString()}
 					embedding={object?.data?.embedding.toString()}
 					category={undefined}

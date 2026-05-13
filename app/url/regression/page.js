@@ -5,7 +5,7 @@ import ErrorPage from "@/layout/errorpage";
 import Head from "@/app/head";
 import { getGlobalData } from "@/helpers/globalData";
 
-async function getUrls(params) {
+async function getShortUrls(params) {
 	const res = await fetchurl(
 		`/global/extras/tools/urls/regression${params}&postType=short`,
 		"GET",
@@ -23,7 +23,11 @@ const UrlRegressionIndex = async ({ params, searchParams }) => {
 
 	const { settings } = await getGlobalData();
 
-	const shorturls = await getUrls(`?page=${page}&limit=${limit}&sort=${sort}`);
+	const getShortUrlsData = getShortUrls(
+		`?page=${page}&limit=${limit}&sort=${sort}`,
+	);
+
+	const [shorturls] = await Promise.all([getShortUrlsData]);
 
 	return (
 		<>

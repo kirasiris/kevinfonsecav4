@@ -21,7 +21,6 @@ const CreateForumForm = ({ token = {}, auth = {} }) => {
 		const rawFormData = {
 			title: formData.get("title"),
 			text: formData.get("text"),
-			featured: formData.get("featured"),
 			embedding: formData.get("embedding"),
 			category: formData.get("category"),
 			sub_category: formData.get("sub_category"),
@@ -250,7 +249,7 @@ const CreateForumForm = ({ token = {}, auth = {} }) => {
 					status="draft"
 					fullWidth={false}
 					password=""
-					featured={true}
+					featured={false}
 					commented={true}
 					embedding={true}
 					category={undefined}

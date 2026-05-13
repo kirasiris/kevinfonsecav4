@@ -6,9 +6,9 @@ import NumericPagination from "@/layout/numericpagination";
 import NothingFoundAlert from "@/layout/nothingfoundalert";
 import Globalsidebar from "@/layout/sidebar";
 import Globalcontent from "@/layout/content";
-import CreateQrCodeForm from "@/forms/qrcodes/createqrcodeform";
+import CreateQrCodeForm from "@/forms/qrcode/createqrcodeform";
 
-const List = ({ objects = [], searchParams = {} }) => {
+const List = ({ object = {}, objects = [], searchParams = {} }) => {
 	const router = useRouter();
 
 	const [searchEmailParams, setEmailSearchParams] = useState({
@@ -27,10 +27,7 @@ const List = ({ objects = [], searchParams = {} }) => {
 			<div className="container-fluid">
 				<div className="row">
 					<Globalsidebar>
-						<CreateQrCodeForm
-							auth={undefined}
-							currentpage={`/qrcode/generator?page=${searchParams.page}&limit=${searchParams.limit}&sort=${searchParams.sort}`}
-						/>
+						<CreateQrCodeForm auth={undefined} object={object} />
 					</Globalsidebar>
 					<Globalcontent containerClasses="col-lg-8">
 						<div className="card rounded-0 mb-3">
@@ -83,9 +80,6 @@ const List = ({ objects = [], searchParams = {} }) => {
 								/>
 							)}
 						</div>
-						<p className="p-3 text-bg-danger">
-							Data gets deleted on the 15 of each month
-						</p>
 					</Globalcontent>
 				</div>
 			</div>

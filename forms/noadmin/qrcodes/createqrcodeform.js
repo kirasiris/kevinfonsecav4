@@ -11,12 +11,12 @@ const CreateQrCodeForm = ({ auth = {} }) => {
 
 	const [qrcodeData, setQrCodeData] = useState({
 		url: "",
-		qrmargin: 4,
-		qrcodesize: 200,
+		qrmargin: 5,
+		qrcodesize: 300,
 		securitylevel: "L",
 		imageurl: "",
-		imagewidth: 30,
-		imageheight: 30,
+		imagewidth: 100,
+		imageheight: 100,
 	});
 
 	const {
@@ -130,7 +130,7 @@ const CreateQrCodeForm = ({ auth = {} }) => {
 				<input
 					id="qrmargin"
 					name="qrmargin"
-					defaultValue="4"
+					defaultValue="5"
 					onChange={(e) => {
 						setQrCodeData({
 							...qrcodeData,
@@ -139,7 +139,7 @@ const CreateQrCodeForm = ({ auth = {} }) => {
 					}}
 					type="number"
 					className="form-control mb-3"
-					placeholder="4"
+					placeholder="5"
 				/>
 				<label htmlFor="qrcodesize" className="form-label">
 					QR Code Size
@@ -147,7 +147,7 @@ const CreateQrCodeForm = ({ auth = {} }) => {
 				<input
 					id="qrcodesize"
 					name="qrcodesize"
-					defaultValue="200"
+					defaultValue="300"
 					onChange={(e) => {
 						setQrCodeData({
 							...qrcodeData,
@@ -156,7 +156,7 @@ const CreateQrCodeForm = ({ auth = {} }) => {
 					}}
 					type="number"
 					className="form-control mb-3"
-					placeholder="200"
+					placeholder="300"
 				/>
 				<label htmlFor="securitylevel" className="form-label">
 					Security Level
@@ -201,7 +201,7 @@ const CreateQrCodeForm = ({ auth = {} }) => {
 				<input
 					id="imagewidth"
 					name="imagewidth"
-					defaultValue="30"
+					defaultValue="100"
 					onChange={(e) => {
 						setQrCodeData({
 							...qrcodeData,
@@ -210,7 +210,7 @@ const CreateQrCodeForm = ({ auth = {} }) => {
 					}}
 					type="number"
 					className="form-control mb-3"
-					placeholder="30"
+					placeholder="100"
 				/>
 				<label htmlFor="imageheight" className="form-label">
 					Image Height
@@ -218,7 +218,7 @@ const CreateQrCodeForm = ({ auth = {} }) => {
 				<input
 					id="imageheight"
 					name="imageheight"
-					defaultValue="30"
+					defaultValue="100"
 					onChange={(e) => {
 						setQrCodeData({
 							...qrcodeData,
@@ -227,7 +227,7 @@ const CreateQrCodeForm = ({ auth = {} }) => {
 					}}
 					type="number"
 					className="form-control mb-3"
-					placeholder="30"
+					placeholder="100"
 				/>
 				<FormButtons />
 			</form>

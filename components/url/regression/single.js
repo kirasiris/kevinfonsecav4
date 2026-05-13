@@ -1,10 +1,9 @@
 "use client";
 import { Suspense } from "react";
-import Loading from "@/app/url/loading";
 
 const Single = ({ object = {} }) => {
 	return (
-		<Suspense fallback={<Loading />}>
+		<Suspense fallback={<>Loading qrcodes...</>}>
 			<li className={`list-group-item`}>
 				<a target="_blank" rel="noreferrer noopener" href={object.shortUrl}>
 					{object.title}

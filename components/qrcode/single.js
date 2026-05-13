@@ -1,11 +1,10 @@
 "use client";
 import { Suspense } from "react";
-import Loading from "@/app/url/loading";
 import Link from "next/link";
 
 const Single = ({ object = {} }) => {
 	return (
-		<Suspense fallback={<Loading />}>
+		<Suspense fallback={<>Loading qrcodes...</>}>
 			<li className={`list-group-item`}>
 				<Link
 					href={{

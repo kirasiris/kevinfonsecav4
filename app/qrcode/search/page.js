@@ -56,7 +56,11 @@ const QRCodeGeneratorSearchIndex = async ({ params, searchParams }) => {
 						title={awtdSearchParams.keyword}
 						description="Search results..."
 					/>
-					<List objects={qrcodes} searchParams={awtdSearchParams} />
+					<List
+						object={undefined}
+						objects={qrcodes}
+						searchParams={awtdSearchParams}
+					/>
 				</>
 			) : (
 				<ErrorPage />

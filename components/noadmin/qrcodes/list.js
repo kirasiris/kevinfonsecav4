@@ -152,7 +152,6 @@ const List = ({
 						{objects?.data?.map((qrcode) => (
 							<Single
 								key={qrcode._id}
-								linkTo={`/noadmin/qrcodes/update/${qrcode._id}`}
 								object={qrcode}
 								handleDraft={handleDraft}
 								handlePublish={handlePublish}

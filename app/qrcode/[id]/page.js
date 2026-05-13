@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import Header from "@/layout/header";
 import List from "@/components/qrcode/list";
@@ -5,12 +6,18 @@ import ErrorPage from "@/layout/errorpage";
 import Head from "@/app/head";
 import { getGlobalData } from "@/helpers/globalData";
 
+async function getQRCode(params) {
+	const res = await fetchurl(`/global/qrcodes${params}`, "GET", "no-cache");
+	if (!res.success) notFound();
+	return res;
+}
+
 async function getQRCodes(params) {
 	const res = await fetchurl(`/global/qrcodes${params}`, "GET", "no-cache");
 	return res;
 }
 
-const QRCodeGeneratorIndex = async ({ params, searchParams }) => {
+const QRCodeGeneratorRead = async ({ params, searchParams }) => {
 	const awtdParams = await params;
 	const awtdSearchParams = await searchParams;
 	const page = awtdSearchParams.page || 1;
@@ -19,19 +26,21 @@ const QRCodeGeneratorIndex = async ({ params, searchParams }) => {
 
 	const { settings } = await getGlobalData();
 
+	const getQRCodeData = getQRCode(`/${awtdParams.id}`);
+
 	const getQRCodesData = getQRCodes(
 		`?page=${page}&limit=${limit}&sort=${sort}`,
 	);
 
-	const [qrcodes] = await Promise.all([getQRCodesData]);
+	const [qrcode, qrcodes] = await Promise.all([getQRCodeData, getQRCodesData]);
 
 	return (
 		<>
 			<Head
-				title={`${settings?.data?.title} - QR Code Generator`}
+				title={`${settings?.data?.title} - ${qrcode?.data?.title}`}
 				description={"Give it a try!"}
 				favicon={settings?.data?.favicon}
-				postImage={settings.data.showcase_image}
+				postImage={qrcode?.data?.logo?.url}
 				imageWidth=""
 				imageHeight=""
 				videoWidth=""
@@ -39,22 +48,22 @@ const QRCodeGeneratorIndex = async ({ params, searchParams }) => {
 				card="summary"
 				robots=""
 				category=""
-				url={`/qrcode/generator`}
-				author=""
-				createdAt=""
-				updatedAt=""
+				url={`/qrcode/generator/${qrcode?.data?._id}`}
+				author={qrcode?.data?.name}
+				createdAt={qrcode?.data?.createdAt}
+				updatedAt={qrcode?.data?.updatedAt}
 				locales=""
-				posType="page"
+				posType="blog"
 			/>
 			{settings?.data?.maintenance === false ? (
-				<>
-					<Header title="QR Code Generator" description="Give it a try!" />
+				<Suspense fallback={<>Loading qrcodes...</>}>
+					<Header title={qrcode?.data?.title} />
 					<List
-						object={undefined}
+						object={qrcode}
 						objects={qrcodes}
 						searchParams={awtdSearchParams}
 					/>
-				</>
+				</Suspense>
 			) : (
 				<ErrorPage />
 			)}
@@ -62,4 +71,4 @@ const QRCodeGeneratorIndex = async ({ params, searchParams }) => {
 	);
 };
 
-export default QRCodeGeneratorIndex;
+export default QRCodeGeneratorRead;

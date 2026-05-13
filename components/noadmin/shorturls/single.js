@@ -41,14 +41,15 @@ const Single = ({
 				<div className="blog-actions-ellipsis-menu">
 					<span className="ellipsis-menu">
 						<DropdownButton title="Options" variant="secondary">
-							<a
+							<Link
+								href={{
+									pathname: `/noadmin/shorturls/update/${object._id}`,
+									query: {},
+								}}
 								className="dropdown-item btn btn-link"
-								target="_blank"
-								rel="noreferrer noopener"
-								href={object.shortUrl}
 							>
 								View&nbsp;It
-							</a>
+							</Link>
 							<button
 								className="dropdown-item btn btn-sm"
 								onClick={() => handleDraft(object._id)}

@@ -44,33 +44,40 @@ const List = ({
 		);
 	}
 
-	return objects.map((object) => (
-		<div key={object._id} className="d-flex mb-3">
-			<input
-				id={`email-${object._id}`}
-				name="address"
-				value={object?.address}
-				type="email"
-				className={`form-control me-2${object?.isVerified ? " is-valid" : " is-invalid"}`}
-				disabled
-				placeholder={object?.address}
-			/>
-			<button
-				className="btn btn-success btn-sm me-2"
-				onClick={() => handleIsPrimary(object?._id)}
-			>
-				Primary?
-			</button>
-			<DeleteModal
-				id={object?._id}
-				action={handleRemoveEmail}
-				classStr="btn btn-danger btn-sm"
-				objects={newobjects}
-				setObjects={setNewObjects}
-				setTotalResults={setTotalResults}
-			/>
-		</div>
-	));
+	return (
+		objects.length > 0 && (
+			<>
+				<hr />
+				{objects.map((object) => (
+					<div key={object._id} className="d-flex mb-3">
+						<input
+							id={`email-${object._id}`}
+							name="address"
+							value={object?.address}
+							type="email"
+							className={`form-control me-2${object?.isVerified ? " is-valid" : " is-invalid"}`}
+							disabled
+							placeholder={object?.address}
+						/>
+						<button
+							className="btn btn-success btn-sm me-2"
+							onClick={() => handleIsPrimary(object?._id)}
+						>
+							Primary?
+						</button>
+						<DeleteModal
+							id={object?._id}
+							action={handleRemoveEmail}
+							classStr="btn btn-danger btn-sm"
+							objects={newobjects}
+							setObjects={setNewObjects}
+							setTotalResults={setTotalResults}
+						/>
+					</div>
+				))}
+			</>
+		)
+	);
 };
 
 export default List;

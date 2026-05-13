@@ -1,11 +1,12 @@
 "use client";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "react-toastify";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 
 const RegisterForm = () => {
 	const router = useRouter();
+	const awtdSearchParams = useSearchParams();
 
 	const [btnText, setBtnText] = useState("Submit");
 
@@ -23,7 +24,8 @@ const RegisterForm = () => {
 			password: formData.get("password"),
 			password2: formData.get("password2"),
 			captcha: formData.get("captcha"),
-			becomemerchant: formData.get("becomemerchant"),
+			referralCode: awtdSearchParams.get("referral") || "",
+			website: process.env.NEXT_PUBLIC_WEBSITE_NAME,
 		};
 
 		if (rawFormData.captcha !== "5") {
@@ -42,10 +44,7 @@ const RegisterForm = () => {
 			`/auth/register`,
 			"POST",
 			"no-cache",
-			{
-				...rawFormData,
-				website: process.env.NEXT_PUBLIC_WEBSITE_NAME,
-			},
+			rawFormData,
 			undefined,
 			false,
 			false,

@@ -122,8 +122,9 @@ const UpdateTwoFactorAuthentication = async ({ params, searchParams }) => {
 												</ul>
 											</li>
 										</ol>
-										{auth?.data?.twoFactorToken.otpauth_url !== "" &&
-											auth?.data?.twoFactorToken.otpauth_url !== null && (
+										{auth?.data?.twoFactorToken?.otpauth_url !== "" &&
+											auth?.data?.twoFactorToken?.otpauth_url !== undefined &&
+											auth?.data?.twoFactorToken?.otpauth_url !== null && (
 												<>
 													<hr />
 													<div className="align-content-center border border-5 d-flex justify-content-center">

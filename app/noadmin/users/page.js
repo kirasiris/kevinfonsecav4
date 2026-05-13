@@ -20,7 +20,7 @@ const AdminUsersIndex = async ({ params, searchParams }) => {
 	const assignStripeCustomerId = async (id) => {
 		"use server";
 		await fetchurl(
-			`/extras/stripe/accounts/${id}/assignstripecustomerid`,
+			`/noadmin/stripe/accounts/${id}/assignstripecustomerid`,
 			"PUT",
 			"no-cache",
 			{
@@ -33,7 +33,7 @@ const AdminUsersIndex = async ({ params, searchParams }) => {
 	const assignStripeAccountId = async (id) => {
 		"use server";
 		await fetchurl(
-			`/extras/stripe/accounts/${id}/assignstripeaccountid`,
+			`/noadmin/stripe/accounts/${id}/assignstripeaccountid`,
 			"PUT",
 			"no-cache",
 			{
@@ -47,7 +47,7 @@ const AdminUsersIndex = async ({ params, searchParams }) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(
-			`/extras/stripe/accounts/${id}/assignstripeid`,
+			`/noadmin/stripe/accounts/${id}/assignstripeid`,
 			"PUT",
 			"no-cache",
 			{
@@ -61,7 +61,7 @@ const AdminUsersIndex = async ({ params, searchParams }) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(
-			`/extras/stripe/accounts/updateseller/${id}`,
+			`/noadmin/stripe/accounts/updateseller/${id}`,
 			"PUT",
 			"no-cache",
 		);
@@ -72,12 +72,22 @@ const AdminUsersIndex = async ({ params, searchParams }) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(
-			`/extras/stripe/accounts/${id}/assignstripeonboardinglink`,
+			`/noadmin/stripe/accounts/${id}/assignstripeonboardinglink`,
 			"PUT",
 			"no-cache",
 			{
 				website: process.env.NEXT_PUBLIC_WEBSITE_NAME,
 			},
+		);
+		revalidatePath(`/noadmin/users?page=${page}&limit=${limit}&sort=${sort}`);
+	};
+
+	const handleAssignReferralCode = async (id) => {
+		"use server";
+		await fetchurl(
+			`/noadmin/users/${id}/assignreferralcode`,
+			"PUT",
+			"no-cache",
 		);
 		revalidatePath(`/noadmin/users?page=${page}&limit=${limit}&sort=${sort}`);
 	};
@@ -124,6 +134,7 @@ const AdminUsersIndex = async ({ params, searchParams }) => {
 					handleAssignStripeId={assignStripeId}
 					handleUpdateStripeSellerAccount={updateStripeSellerAccount}
 					handleAssignStripeOnBoardingLink={assignStripeOnBoardingLink}
+					handleAssignReferralCode={handleAssignReferralCode}
 					handleDelete={handleDelete}
 					handleDeleteAllFunction={handleDeleteAll}
 				/>

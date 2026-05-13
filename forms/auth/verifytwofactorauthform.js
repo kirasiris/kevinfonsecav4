@@ -18,6 +18,7 @@ const VerifyTwoFactorAuthenticationForm = ({ auth = {} }) => {
 
 		const rawFormData = {
 			token: formData.get("token"),
+			website: process.env.NEXT_PUBLIC_WEBSITE_NAME,
 		};
 
 		if (!rawFormData.token) {
@@ -29,7 +30,7 @@ const VerifyTwoFactorAuthenticationForm = ({ auth = {} }) => {
 			`/auth/2fa/verify/${auth?.data?._id}`,
 			"PUT",
 			"no-cache",
-			{ ...rawFormData, website: "beFree" },
+			rawFormData,
 			undefined,
 			false,
 			false,

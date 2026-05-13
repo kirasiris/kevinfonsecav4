@@ -85,6 +85,7 @@ const LoginForm = () => {
 			email: formData.get("email"),
 			password: formData.get("password"),
 			captcha: formData.get("captcha"),
+			website: process.env.NEXT_PUBLIC_WEBSITE_NAME,
 		};
 
 		if (rawFormData.captcha !== "5") {
@@ -97,10 +98,7 @@ const LoginForm = () => {
 			`/auth/login`,
 			"POST",
 			"no-cache",
-			{
-				...rawFormData,
-				website: "beFree",
-			},
+			rawFormData,
 			undefined,
 			false,
 			false,
@@ -169,7 +167,7 @@ const LoginForm = () => {
 
 		await setUserOnServer(await loadUser?.data);
 
-		let returnpage = awtdSearchParams.get("returnpage");
+		const returnpage = awtdSearchParams.get("returnpage");
 
 		router.push(returnpage || `/auth/profile`);
 	};

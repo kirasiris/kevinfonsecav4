@@ -19,6 +19,7 @@ const List = ({
 	handleAssignStripeId = () => {},
 	handleUpdateStripeSellerAccount = () => {},
 	handleAssignStripeOnBoardingLink = () => {},
+	handleAssignReferralCode = () => {},
 	handleDelete = () => {},
 	handleDeleteAllFunction = () => {},
 }) => {
@@ -104,6 +105,21 @@ const List = ({
 	}
 
 	if (
+		typeof handleAssignReferralCode !== "function" &&
+		handleAssignReferralCode !== "" &&
+		handleAssignReferralCode !== undefined &&
+		handleAssignReferralCode !== null
+	) {
+		return (
+			<ErrorPage
+				statusCodeMessage={
+					"The handleAssignReferralCode parameter is not a function!. Please try again"
+				}
+			/>
+		);
+	}
+
+	if (
 		typeof handleDelete !== "function" &&
 		handleDelete !== "" &&
 		handleDelete !== undefined &&
@@ -162,6 +178,7 @@ const List = ({
 								handleAssignStripeOnBoardingLink={
 									handleAssignStripeOnBoardingLink
 								}
+								handleAssignReferralCode={handleAssignReferralCode}
 								handleDelete={handleDelete}
 								objects={newobjects.data}
 								setObjects={setNewObjects}

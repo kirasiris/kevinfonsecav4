@@ -21,6 +21,7 @@ const UpdatePasswordForm = ({ auth = {} }) => {
 			newpassword: formData.get("newpassword"),
 			newpassword2: formData.get("newpassword2"),
 			token: formData.get("token"),
+			website: process.env.NEXT_PUBLIC_WEBSITE_NAME,
 		};
 
 		if (rawFormData.newpassword !== rawFormData.newpassword2) {
@@ -33,19 +34,18 @@ const UpdatePasswordForm = ({ auth = {} }) => {
 			`/auth/updatepassword`,
 			"PUT",
 			"no-cache",
-			{
-				...rawFormData,
-				website: process.env.NEXT_PUBLIC_WEBSITE_NAME,
-			},
+			rawFormData,
 			undefined,
 			false,
 			false,
 		);
+
 		if (res.status === "error") {
 			toast.error(res.message, "bottom");
 			setBtnText("Submit");
 			return;
 		}
+
 		if (res.status === "fail") {
 			toast.error(res.message, "bottom");
 			setBtnText("Submit");

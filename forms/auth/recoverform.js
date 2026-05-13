@@ -19,16 +19,14 @@ const RecoverForm = () => {
 
 		const rawFormData = {
 			email: formData.get("email"),
+			website: process.env.NEXT_PUBLIC_WEBSITE_NAME,
 		};
 
 		const res = await fetchurl(
 			`/auth/forgotpassword`,
 			"POST",
 			"no-cache",
-			{
-				...rawFormData,
-				website: process.env.NEXT_PUBLIC_WEBSITE_NAME,
-			},
+			rawFormData,
 			undefined,
 			false,
 			false,

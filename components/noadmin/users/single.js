@@ -12,6 +12,7 @@ const Single = ({
 	handleAssignStripeId = () => {},
 	handleUpdateStripeSellerAccount = () => {},
 	handleAssignStripeOnBoardingLink = () => {},
+	handleAssignReferralCode = () => {},
 	handleDelete = () => {},
 	objects = [],
 	setObjects = () => {},
@@ -129,6 +130,12 @@ const Single = ({
 									Request OnBoardLink
 								</button>
 							)}
+							<button
+								className="dropdown-item btn btn-sm"
+								onClick={() => handleAssignReferralCode(object._id)}
+							>
+								Assign Referral Code
+							</button>
 							<hr />
 							<Link
 								href={{

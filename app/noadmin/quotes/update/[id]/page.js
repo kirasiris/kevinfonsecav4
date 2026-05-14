@@ -6,7 +6,7 @@ import List from "@/components/noadmin/quotes/list";
 import UpdateQuoteForm from "@/forms/noadmin/quotes/updatequoteform";
 
 async function getQuotes(params) {
-	const res = await fetchurl(`/extras/quotes${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/quotes${params}`, "GET", "no-cache");
 	if (!res.success) notFound();
 	return res;
 }
@@ -24,42 +24,42 @@ const UpdateQuote = async ({ params, searchParams }) => {
 	const draftIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/extras/quotes/${id}/draftit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/quotes/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(`/noadmin/quotes?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const publishIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/extras/quotes/${id}/publishit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/quotes/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(`/noadmin/quotes?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const trashIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/extras/quotes/${id}/trashit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/quotes/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(`/noadmin/quotes?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const scheduleIt = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/extras/quotes/${id}/scheduleit`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/quotes/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(`/noadmin/quotes?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const handleDelete = async (id) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/extras/quotes/${id}/permanently`, "DELETE", "no-cache");
+		await fetchurl(`/noadmin/quotes/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(`/noadmin/quotes?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	const handleTrashAll = async () => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/extras/quotes/deleteall`, "PUT", "no-cache");
+		await fetchurl(`/noadmin/quotes/deleteall`, "PUT", "no-cache");
 		revalidatePath(`/noadmin/quotes?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
@@ -67,9 +67,9 @@ const UpdateQuote = async ({ params, searchParams }) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(
-			`/extras/quotes/deleteall/permanently`,
+			`/noadmin/quotes/deleteall/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(`/noadmin/quotes?page=${page}&limit=${limit}&sort=${sort}`);
 	};

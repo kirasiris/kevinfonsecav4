@@ -20,7 +20,7 @@ async function getReadMe(repoName) {
 				Authorization: process.env.NEXT_PUBLIC_GITHUB_TOKEN,
 			},
 			cache: "no-store",
-		}
+		},
 	)
 		.then(async (res) => {
 			if (!res.ok) {
@@ -65,7 +65,7 @@ const ReadTheme = async ({ params, searchParams }) => {
 	};
 
 	const readme = readMEDecoder(
-		readMeResponse.content || "Tm8gcmVhZE1FIGZpbGU="
+		readMeResponse.content || "Tm8gcmVhZE1FIGZpbGU=",
 	);
 
 	return (
@@ -78,7 +78,7 @@ const ReadTheme = async ({ params, searchParams }) => {
 							className="img-fluid"
 							src={
 								theme?.data?.files?.avatar?.location?.secure_location ||
-								`https://source.unsplash.com/random/1200x900`
+								`https://picsum.photos/1200/900?blur`
 							}
 							alt={`${theme?.data?.avatar?.location?.fileName}'s featured image`}
 							width={1200}

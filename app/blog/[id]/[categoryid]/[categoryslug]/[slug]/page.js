@@ -129,7 +129,7 @@ const BlogRead = async ({ params, searchParams }) => {
 													src={
 														blog?.data?.files?.avatar?.location
 															?.secure_location ||
-														`https://source.unsplash.com/random/1200x900`
+														`https://picsum.photos/1200/900?blur`
 													}
 													alt={`${blog?.data?.files?.avatar?.location?.filename}'s featured image`}
 													width={1200}

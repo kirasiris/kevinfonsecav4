@@ -18,7 +18,7 @@ const Single = ({ object = {}, imageWidth = "415", imageHeight = "207" }) => {
 						<Image
 							src={
 								object?.files?.avatar?.location?.secure_location ||
-								`https://picsum.photos/415/207?blur`
+								`https://picsum.photos/${imageWidth}/${imageHeight}?blur`
 							}
 							className="card-img-top"
 							alt={`${object.title || "Untitled"}'s featured image`}

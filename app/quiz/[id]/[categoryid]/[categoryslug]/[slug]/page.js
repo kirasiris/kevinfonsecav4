@@ -129,7 +129,7 @@ const QuizRead = async ({ params, searchParams }) => {
 													src={
 														quiz.data.files?.avatar?.location
 															?.secure_location ||
-														`https://source.unsplash.com/random/300x200`
+														`https://picsum.photos/300/200?blur`
 													}
 													className="img-fluid w-100 rounded-0"
 													alt={`${quiz?.data.title}'s featured image`}

@@ -245,7 +245,7 @@ const VideoRead = async ({ params, searchParams }) => {
 											{/* <img src="..." class="card-img" alt="..."> */}
 											<Image
 												className="card-image"
-												src={`https://source.unsplash.com/random/500x250`}
+												src={`https://picsum.photos/500/250?blur`}
 												alt={"featured image"}
 												width={500}
 												height={250}

@@ -13,7 +13,7 @@ async function RemoveEmailFromNewsletters(email = "") {
 		"DELETE",
 		"no-cache",
 		{
-			website: "beFree",
+			website: process.env.NEXT_PUBLIC_WEBSITE_NAME,
 		},
 	);
 	return res;

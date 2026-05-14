@@ -85,7 +85,10 @@ const ProfilePhotoRead = async ({ params, searchParams }) => {
 										<ArticleHeader object={file} />
 										<figure className="mb-4">
 											<Image
-												src={file.data.location.secure_location}
+												src={
+													file.data.location.secure_location ||
+													`https://picsum.photos/100/100?blur`
+												}
 												width={file.data.dimensions.width}
 												height={file.data.dimensions.height}
 												alt={`${profile.data.username}'s photo`}

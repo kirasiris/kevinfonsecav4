@@ -23,7 +23,7 @@ const Single = ({
 					<h1 className="blog-item__title">
 						<Link
 							href={{
-								pathname: `/noadmin/secrets/update/${object._id}`,
+								pathname: `/noadmin/secrets/read/${object._id}`,
 								query: {},
 							}}
 							className="blog-item__title-link"
@@ -52,7 +52,6 @@ const Single = ({
 									},
 								}}
 								className="dropdown-item btn btn-link"
-								target="_blank"
 							>
 								View&nbsp;It
 							</Link>

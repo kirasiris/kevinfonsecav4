@@ -43,13 +43,12 @@ const Single = ({
 						<DropdownButton title="Options" variant="secondary">
 							<Link
 								href={{
-									pathname: `/noadmin/quotes/read/${object._id}`,
+									pathname: `/noadmin/quotes/update/${object._id}`,
 									query: {
 										isAdmin: true,
 									},
 								}}
 								className="dropdown-item btn btn-link"
-								target="_blank"
 							>
 								View&nbsp;It
 							</Link>

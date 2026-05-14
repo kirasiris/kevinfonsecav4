@@ -187,7 +187,6 @@ const List = ({
 						{objects?.data?.map((category) => (
 							<Single
 								key={category._id}
-								linkTo={`/noadmin/categories/update/${category._id}`}
 								object={category}
 								handleDraft={handleDraft}
 								handlePublish={handlePublish}

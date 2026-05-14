@@ -64,9 +64,10 @@ const ReadTheme = async ({ params, searchParams }) => {
 		return textConverted;
 	};
 
-	const readme = readMEDecoder(
-		readMeResponse.content || "Tm8gcmVhZE1FIGZpbGU=",
-	);
+	let readme = "";
+	if (theme.data.github_readme !== "#") {
+		readme = readMEDecoder(readMeResponse.content || "Tm8gcmVhZE1FIGZpbGU=");
+	}
 
 	return (
 		<div className="row">
@@ -88,12 +89,14 @@ const ReadTheme = async ({ params, searchParams }) => {
 					</figure>
 					<section className="mb-5">
 						<ParseHtml text={theme.data.text} />
-						<div className="card mb-4">
-							<div className="card-header">ReadMe.md</div>
-							<div className="card-body">
-								<ParseHtml text={readme} />
+						{theme.data.github_readme !== "#" && (
+							<div className="card mb-4">
+								<div className="card-header">ReadMe.md</div>
+								<div className="card-body">
+									<ParseHtml text={readme} />
+								</div>
 							</div>
-						</div>
+						)}
 					</section>
 				</article>
 			</div>

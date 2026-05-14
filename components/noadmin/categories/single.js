@@ -5,7 +5,6 @@ import { formatDateWithoutTime } from "befree-utilities";
 import DeleteModal from "@/components/global/deletemodal";
 
 const Single = ({
-	linkTo = "",
 	object = {},
 	handleDraft = () => {},
 	handlePublish = () => {},
@@ -25,7 +24,7 @@ const Single = ({
 					<h1 className="blog-item__title">
 						<Link
 							href={{
-								pathname: linkTo,
+								pathname: `/noadmin/categories/update/${object._id}`,
 								query: {},
 							}}
 							className="blog-item__title-link"
@@ -55,7 +54,7 @@ const Single = ({
 						<DropdownButton title="Options" variant="secondary">
 							<Link
 								href={{
-									pathname: `/noadmin/categories/read/${object._id}`,
+									pathname: `/noadmin/categories/update/${object._id}`,
 									query: {
 										isAdmin: true,
 									},

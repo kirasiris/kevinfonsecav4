@@ -27,9 +27,8 @@ const AdminFilesIndex = async ({ params, searchParams }) => {
 	const handleDelete = async (id, publicId) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/noadmin/files/${id}/permanently`, "DELETE", "no-cache");
 		await fetchurl(
-			`/uploads/deleteobject?publicId=${publicId}`,
+			`/noadmin/files/${id}/permanently?force=true`,
 			"DELETE",
 			"no-cache",
 		);

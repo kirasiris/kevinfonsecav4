@@ -75,7 +75,6 @@ const Single = ({
 									},
 								}}
 								className="dropdown-item btn btn-link"
-								target="_blank"
 							>
 								View&nbsp;It
 							</Link>

@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import AdminCardHeaderMenu from "@/components/noadmin/admincardheadermenu";
+import AdminCardHeaderMenu from "@/components/noadmin/files/filecardheadermenu";
 import Single from "./single";
 import NumericPagination from "@/layout/numericpagination";
 import NothingFoundAlert from "@/layout/nothingfoundalert";
@@ -22,6 +22,7 @@ const List = ({
 	searchParams = {},
 	handleDelete = () => {},
 	handleDeleteAllFunction = () => {},
+	handleDeleteAllUnusedPermanently = () => {},
 }) => {
 	const [newobjects, setNewObjects] = useState(objects);
 	const [, setTotalResults] = useState({
@@ -59,23 +60,32 @@ const List = ({
 		);
 	}
 
+	if (
+		typeof handleDeleteAllUnusedPermanently !== "function" &&
+		handleDeleteAllUnusedPermanently !== "" &&
+		handleDeleteAllUnusedPermanently !== undefined &&
+		handleDeleteAllUnusedPermanently !== null
+	) {
+		return (
+			<ErrorPage
+				statusCodeMessage={
+					"The handleDeleteAllUnusedPermanently parameter is not a function!. Please try again"
+				}
+			/>
+		);
+	}
+
 	return (
 		<>
 			<AdminCardHeaderMenu
-				stripeChargesEnabled={false}
 				allLink={allLink}
 				pageText={pageText}
 				currentResults={objects?.count}
 				totalResults={objects?.countAll}
-				addLink={addLink}
 				searchOn={searchOn}
 				handleDeleteAllFunction={handleDeleteAllFunction}
+				handleDeleteAllUnusedPermanently={handleDeleteAllUnusedPermanently}
 				classList="mb-5"
-				handleAllUsageCountEnabled={false}
-				handleAllUsageCount={undefined}
-				// isDirty={isDirty}
-				// saving={saving}
-				// handleSave={handleSave}
 			/>
 			<UseDropzone
 				auth={auth}

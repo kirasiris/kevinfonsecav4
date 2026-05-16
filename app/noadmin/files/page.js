@@ -35,18 +35,18 @@ const AdminFilesIndex = async ({ params, searchParams }) => {
 		revalidatePath(`/noadmin/files?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
-	const handleDeleteAll = async () => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/files/deleteall`, "PUT", "no-cache");
-		revalidatePath(`/noadmin/files?page=${page}&limit=${limit}&sort=${sort}`);
-	};
-
 	const handleDeleteAllPermanently = async () => {
 		"use server";
 		// const rawFormData = {}
+		await fetchurl(`/noadmin/files/deleteall`, "DELETE", "no-cache");
+		revalidatePath(`/noadmin/files?page=${page}&limit=${limit}&sort=${sort}`);
+	};
+
+	const handleDeleteAllUnusedPermanently = async () => {
+		"use server";
+		// const rawFormData = {}
 		await fetchurl(
-			`/noadmin/files/deleteall/failed/permanently`,
+			`/noadmin/files/deleteall/unused/permanently`,
 			"DELETE",
 			"no-cache",
 		);
@@ -80,6 +80,7 @@ const AdminFilesIndex = async ({ params, searchParams }) => {
 					searchParams={awtdSearchParams}
 					handleDelete={handleDelete}
 					handleDeleteAllFunction={handleDeleteAllPermanently}
+					handleDeleteAllUnusedPermanently={handleDeleteAllUnusedPermanently}
 				/>
 			</div>
 		</>

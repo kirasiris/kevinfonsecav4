@@ -16,7 +16,7 @@ const AdminChangelogsIndex = async ({ params, searchParams }) => {
 	const sort = awtdSearchParams.sort || "-createdAt";
 
 	const changelogs = await getChangelogs(
-		`?page=${page}&limit=${limit}&sort=${sort}`
+		`?page=${page}&limit=${limit}&sort=${sort}`,
 	);
 
 	const draftIt = async (id) => {
@@ -24,7 +24,7 @@ const AdminChangelogsIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/changelogs/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/changelogs?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/changelogs?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -33,7 +33,7 @@ const AdminChangelogsIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/changelogs/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/changelogs?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/changelogs?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -42,7 +42,7 @@ const AdminChangelogsIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/changelogs/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/changelogs?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/changelogs?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -51,7 +51,7 @@ const AdminChangelogsIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/changelogs/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/changelogs?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/changelogs?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -61,10 +61,10 @@ const AdminChangelogsIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/changelogs/${id}/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/changelogs?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/changelogs?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -73,7 +73,7 @@ const AdminChangelogsIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/changelogs/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/changelogs?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/changelogs?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -83,23 +83,10 @@ const AdminChangelogsIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/changelogs/deleteall/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/changelogs?page=${page}&limit=${limit}&sort=${sort}`
-		);
-	};
-
-	const handleDeleteAllEmpty = async () => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/changelogs/deleteall/empty/permanently`,
-			"DELETE",
-			"no-cache"
-		);
-		revalidatePath(
-			`/noadmin/changelogs?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/changelogs?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -128,7 +115,6 @@ const AdminChangelogsIndex = async ({ params, searchParams }) => {
 					handleDelete={handleDelete}
 					handleTrashAllFunction={handleTrashAll}
 					handleDeleteAllFunction={handleDeleteAll}
-					handleDeleteAllEmptyFunction={handleDeleteAllEmpty}
 				/>
 			</div>
 		</>

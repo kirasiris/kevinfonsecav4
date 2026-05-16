@@ -21,7 +21,6 @@ const UpdateLessonForm = ({ token = {}, auth = {}, object = {} }) => {
 		const rawFormData = {
 			title: formData.get("title"),
 			text: formData.get("text"),
-			featured: formData.get("featured"),
 			commented: formData.get("commented"),
 			embedding: formData.get("embedding"),
 			category: formData.get("category"),
@@ -161,7 +160,7 @@ const UpdateLessonForm = ({ token = {}, auth = {}, object = {} }) => {
 					status={object?.data?.status}
 					fullWidth={false}
 					password={object?.data?.password}
-					featured={object?.data?.featured.toString()}
+					featured={false}
 					commented={object?.data?.commented.toString()}
 					embedding={object?.data?.embedding.toString()}
 					category={undefined}

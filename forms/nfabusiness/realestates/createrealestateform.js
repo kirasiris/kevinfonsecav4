@@ -45,7 +45,7 @@ const CreateRealStateForm = ({ token = {}, auth = {} }) => {
 			"no-cache",
 			{
 				...rawFormData,
-				postType: "realstate",
+				postType: "realestate",
 				resourceId: auth?.companyId,
 				onModel: "Company",
 			},

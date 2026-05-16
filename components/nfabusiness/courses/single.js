@@ -14,6 +14,8 @@ const Single = ({
 	handlePublish = () => {},
 	handleTrash = () => {},
 	handleSchedule = () => {},
+	handleFeature = () => {},
+	handleUnfeature = () => {},
 	handleDelete = () => {},
 	objects = [],
 	setObjects = () => {},
@@ -103,6 +105,22 @@ const Single = ({
 							>
 								Schedule&nbsp;It
 							</button>
+							{!object.featured && (
+								<button
+									className="dropdown-item btn btn-sm"
+									onClick={() => handleFeature(object._id)}
+								>
+									Feature&nbsp;It
+								</button>
+							)}
+							{object.featured && (
+								<button
+									className="dropdown-item btn btn-sm"
+									onClick={() => handleUnfeature(object._id)}
+								>
+									Unfeature&nbsp;It
+								</button>
+							)}
 							<hr />
 							<Link
 								href={{

@@ -33,7 +33,7 @@ const ReadAnime = async ({ params, searchParams }) => {
 
 	const anime = await getAnime(`/${awtdParams.id}`);
 	const chapters = await getChapters(
-		`?resourceId=${anime?.data?._id}&page=${page}&limit=${limit}&sort=${sort}`
+		`?resourceId=${anime?.data?._id}&page=${page}&limit=${limit}&sort=${sort}`,
 	);
 
 	const draftIt = async (id) => {
@@ -64,20 +64,6 @@ const ReadAnime = async ({ params, searchParams }) => {
 		revalidatePath(`/noadmin/animes/read/${awtdParams.id}`);
 	};
 
-	const featureIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/videos/${id}/featureit`, "PUT", "no-cache");
-		revalidatePath(`/noadmin/animes/read/${awtdParams.id}`);
-	};
-
-	const unfeatureIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/videos/${id}/unfeatureit`, "PUT", "no-cache");
-		revalidatePath(`/noadmin/animes/read/${awtdParams.id}`);
-	};
-
 	const handleDelete = async (id) => {
 		"use server";
 		// const rawFormData = {}
@@ -103,7 +89,7 @@ const ReadAnime = async ({ params, searchParams }) => {
 			"no-cache",
 			{
 				onModel: "Playlist",
-			}
+			},
 		);
 		revalidatePath(`/noadmin/animes/read/${awtdParams.id}`);
 	};
@@ -132,14 +118,13 @@ const ReadAnime = async ({ params, searchParams }) => {
 						addLink={`/noadmin/animes/chapter/${anime?.data?._id}/create`}
 						searchOn={`/noadmin/animes/read/${anime?.data?._id}`}
 						searchedKeyword=""
+						object={anime?.data}
 						objects={chapters}
 						searchParams={awtdSearchParams}
 						handleDraft={draftIt}
 						handlePublish={publishIt}
 						handleTrash={trashIt}
 						handleSchedule={scheduleIt}
-						handleFeature={featureIt}
-						handleUnfeature={unfeatureIt}
 						handleDelete={handleDelete}
 						handleTrashAllFunction={handleTrashAll}
 						handleDeleteAllFunction={handleDeleteAll}

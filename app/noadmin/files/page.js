@@ -79,8 +79,7 @@ const AdminFilesIndex = async ({ params, searchParams }) => {
 					objects={files}
 					searchParams={awtdSearchParams}
 					handleDelete={handleDelete}
-					handleDeleteAllFunction={handleDeleteAll}
-					handleDeleteAllInvalidPermanentlyFunction={handleDeleteAllPermanently}
+					handleDeleteAllFunction={handleDeleteAllPermanently}
 				/>
 			</div>
 		</>

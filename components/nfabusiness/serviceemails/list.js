@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import AdminCardHeaderMenu from "@/components/noadmin/contactemails/emailcardheadermenu";
+import AdminCardHeaderMenu from "@/components/nfabusiness/serviceemails/emailcardheadermenu";
 import Single from "./single";
 import NumericPagination from "@/layout/numericpagination";
 import NothingFoundAlert from "@/layout/nothingfoundalert";

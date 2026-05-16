@@ -20,7 +20,7 @@ const NFAMenu = ({ auth = {}, settings = {} }) => {
 					style={{
 						width: 32,
 						height: 32,
-						backgroundImage: `url(${settings?.data?.favicon})`,
+						backgroundImage: `url(${settings?.data?.favicon || `https://picsum.photos/32/32?blur`})`,
 						backgroundSize: "cover",
 						backgroundPosition: "center",
 					}}

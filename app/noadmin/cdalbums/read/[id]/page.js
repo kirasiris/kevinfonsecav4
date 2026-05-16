@@ -33,7 +33,7 @@ const ReadCDAlbum = async ({ params, searchParams }) => {
 
 	const cdalbum = await getCDAlbum(`/${awtdParams.id}`);
 	const songs = await getSongs(
-		`?resourceId=${cdalbum?.data?._id}&page=${page}&limit=${limit}&sort=${sort}`
+		`?resourceId=${cdalbum?.data?._id}&page=${page}&limit=${limit}&sort=${sort}`,
 	);
 
 	const draftIt = async (id) => {
@@ -84,7 +84,7 @@ const ReadCDAlbum = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/songs/deleteall/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(`/noadmin/cdalbums/read/${awtdParams.id}`);
 	};
@@ -114,6 +114,7 @@ const ReadCDAlbum = async ({ params, searchParams }) => {
 						pageText="Songs"
 						addLink={`/noadmin/cdalbums/song/${cdalbum?.data?._id}/create`}
 						searchOn={`/noadmin/cdalbums/read/${cdalbum?.data?._id}`}
+						object={cdalbum?.data}
 						objects={songs}
 						searchParams={awtdSearchParams}
 						handleDraft={draftIt}

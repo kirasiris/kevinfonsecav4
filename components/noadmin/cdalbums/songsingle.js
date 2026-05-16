@@ -15,7 +15,21 @@ const Single = ({
 	objects = [],
 	setObjects = () => {},
 	setTotalResults = () => {},
+	index = 0,
+	// isDragging = false,
+	// isOver = false,
+	// onDragStart = () => {},
+	// onDragOver = () => {},
+	// onDrop = () => {},
+	// onDragEnd = () => {},
 }) => {
+	// const itemStyle = {
+	// 	cursor: "grab",
+	// 	opacity: isDragging ? 0.4 : 1,
+	// 	borderTop: isOver ? "2px solid #0d6efd" : undefined,
+	// 	transition: "opacity 0.15s ease",
+	// };
+
 	return (
 		<li className="list-group-item">
 			<div className="blog-item__panel">
@@ -33,6 +47,9 @@ const Single = ({
 						</Link>
 					</h1>
 					<div className="blog-item__meta">
+						<span className="badge bg-secondary me-1">
+							{object?.orderingNumber || index + 1}
+						</span>
 						<span className="badge bg-dark me-1">
 							{formatDateWithoutTime(object.createdAt)}
 						</span>

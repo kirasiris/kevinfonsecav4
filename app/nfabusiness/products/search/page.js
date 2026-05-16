@@ -68,6 +68,32 @@ const NFAProductsSearchIndex = async ({ params, searchParams }) => {
 		);
 	};
 
+	const featureIt = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(
+			`/noadmin/stripe/products/${id}/featureit`,
+			"PUT",
+			"no-cache",
+		);
+		revalidatePath(
+			`/nfabusiness/products/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+		);
+	};
+
+	const unfeatureIt = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(
+			`/noadmin/stripe/products/${id}/unfeatureit`,
+			"PUT",
+			"no-cache",
+		);
+		revalidatePath(
+			`/nfabusiness/products/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+		);
+	};
+
 	const handleDelete = async (id) => {
 		"use server";
 		// const rawFormData = {}
@@ -131,6 +157,8 @@ const NFAProductsSearchIndex = async ({ params, searchParams }) => {
 					handlePublish={publishIt}
 					handleTrash={trashIt}
 					handleSchedule={scheduleIt}
+					handleFeature={featureIt}
+					handleUnfeature={unfeatureIt}
 					handleDelete={handleDelete}
 					handleTrashAllFunction={handleTrashAll}
 					handleDeleteAllFunction={handleDeleteAll}

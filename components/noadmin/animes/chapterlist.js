@@ -1,10 +1,12 @@
 "use client";
-import { useState } from "react";
+import { useState, useRef } from "react";
+import { toast } from "react-toastify";
 import AdminCardHeaderMenu from "@/components/noadmin/admincardheadermenu";
 import Single from "./chaptersingle";
 import NumericPagination from "@/layout/numericpagination";
 import NothingFoundAlert from "@/layout/nothingfoundalert";
 import ErrorPage from "@/layout/errorpage";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 
 const ChapterList = ({
 	allLink = "",
@@ -12,14 +14,13 @@ const ChapterList = ({
 	addLink = "",
 	searchOn = "",
 	searchedKeyword = "",
+	object = {},
 	objects = [],
 	searchParams = {},
 	handleDraft = () => {},
 	handlePublish = () => {},
 	handleTrash = () => {},
 	handleSchedule = () => {},
-	handleFeature = () => {},
-	handleUnfeature = () => {},
 	handleDelete = () => {},
 	handleTrashAllFunction = () => {},
 	handleDeleteAllFunction = () => {},
@@ -29,6 +30,104 @@ const ChapterList = ({
 		...objects,
 		countAll: objects?.countAll,
 	});
+
+	// const initial = objects;
+	// const [items, setItems] = useState(initial?.data || []);
+	// const [, setTotalResults] = useState({
+	// 	...objects,
+	// 	countAll: objects?.countAll,
+	// });
+	// const [isDirty, setIsDirty] = useState(false);
+	// const [saving, setSaving] = useState(false);
+
+	// const dragIndex = useRef(null);
+	// const overIndex = useRef(null);
+	// const [draggingIndex, setDraggingIndex] = useState(null);
+	// const [overIdx, setOverIdx] = useState(null);
+
+	// const handleDragStart = (e, index) => {
+	// 	dragIndex.current = index;
+	// 	setDraggingIndex(index);
+	// 	e.dataTransfer.effectAllowed = "move";
+	// 	// Required for Firefox to initiate drag
+	// 	try {
+	// 		e.dataTransfer.setData("text/plain", String(index));
+	// 	} catch (err) {}
+	// };
+
+	// const handleDragOver = (e, index) => {
+	// 	e.preventDefault();
+	// 	e.dataTransfer.dropEffect = "move";
+	// 	if (overIndex.current !== index) {
+	// 		overIndex.current = index;
+	// 		setOverIdx(index);
+	// 	}
+	// };
+
+	// const handleDrop = (e, index) => {
+	// 	e.preventDefault();
+	// 	const from = dragIndex.current;
+	// 	const to = index;
+	// 	if (from === null || from === undefined || from === to) {
+	// 		resetDrag();
+	// 		return;
+	// 	}
+	// 	const next = [...items];
+	// 	const [moved] = next.splice(from, 1);
+	// 	next.splice(to, 0, moved);
+	// 	setItems(next);
+	// 	setIsDirty(true);
+	// 	resetDrag();
+	// };
+
+	// const handleDragEnd = () => {
+	// 	resetDrag();
+	// };
+
+	// const resetDrag = () => {
+	// 	dragIndex.current = null;
+	// 	overIndex.current = null;
+	// 	setDraggingIndex(null);
+	// 	setOverIdx(null);
+	// };
+
+	// const handleSave = async () => {
+	// 	setSaving(true);
+	// 	const rawFormData = {
+	// 		order: items.map((it, idx) => ({
+	// 			_id: it._id,
+	// 			orderingNumber: idx + 1,
+	// 		})),
+	// 	};
+
+	// 	const res = await fetchurl(
+	// 		`/noadmin/videos/${object?._id}/updateorder`,
+	// 		"PUT",
+	// 		"no-cache",
+	// 		rawFormData,
+	// 		undefined,
+	// 		false,
+	// 		false,
+	// 	);
+
+	// 	if (res.status === "error") {
+	// 		toast.error(res.message, "bottom");
+	// 		return;
+	// 	}
+	// 	if (res.status === "fail") {
+	// 		toast.error(res.message, "bottom");
+	// 		return;
+	// 	}
+
+	// 	setIsDirty(false);
+	// 	setSaving(false);
+	// 	toast.success("Order saved successfully");
+	// };
+
+	// const handleReset = () => {
+	// 	setItems(items);
+	// 	setIsDirty(false);
+	// };
 
 	if (
 		typeof handleDraft !== "function" &&
@@ -91,36 +190,6 @@ const ChapterList = ({
 	}
 
 	if (
-		typeof handleFeature !== "function" &&
-		handleFeature !== "" &&
-		handleFeature !== undefined &&
-		handleFeature !== null
-	) {
-		return (
-			<ErrorPage
-				statusCodeMessage={
-					"The handleFeature parameter is not a function!. Please try again"
-				}
-			/>
-		);
-	}
-
-	if (
-		typeof handleUnfeature !== "function" &&
-		handleUnfeature !== "" &&
-		handleUnfeature !== undefined &&
-		handleUnfeature !== null
-	) {
-		return (
-			<ErrorPage
-				statusCodeMessage={
-					"The handleUnfeature parameter is not a function!. Please try again"
-				}
-			/>
-		);
-	}
-
-	if (
 		typeof handleDelete !== "function" &&
 		handleDelete !== "" &&
 		handleDelete !== undefined &&
@@ -168,6 +237,7 @@ const ChapterList = ({
 	return (
 		<>
 			<AdminCardHeaderMenu
+				stripeChargesEnabled={false}
 				allLink={allLink}
 				pageText={pageText}
 				currentResults={objects?.count}
@@ -177,6 +247,11 @@ const ChapterList = ({
 				handleTrashAllFunction={handleTrashAllFunction}
 				handleDeleteAllFunction={handleDeleteAllFunction}
 				classList=""
+				handleAllUsageCountEnabled={false}
+				handleAllUsageCount={undefined}
+				// isDirty={isDirty}
+				// saving={saving}
+				// handleSave={handleSave}
 			/>
 			{objects?.data?.length > 0 ? (
 				<>
@@ -184,7 +259,7 @@ const ChapterList = ({
 						className="list-group list-group-flush"
 						style={{ maxHeight: "1000px" }}
 					>
-						{objects?.data?.map((chapter) => (
+						{objects?.data?.map((chapter, index) => (
 							<Single
 								key={chapter._id}
 								object={chapter}
@@ -192,12 +267,17 @@ const ChapterList = ({
 								handlePublish={handlePublish}
 								handleTrash={handleTrash}
 								handleSchedule={handleSchedule}
-								handleFeature={handleFeature}
-								handleUnfeature={handleUnfeature}
 								handleDelete={handleDelete}
 								objects={newobjects.data}
 								setObjects={setNewObjects}
 								setTotalResults={setTotalResults}
+								// index={index}
+								// isDragging={draggingIndex === index}
+								// isOver={overIdx === index && draggingIndex !== index}
+								// onDragStart={handleDragStart}
+								// onDragOver={handleDragOver}
+								// onDrop={handleDrop}
+								// onDragEnd={handleDragEnd}
 							/>
 						))}
 						<li className="list-group-item">

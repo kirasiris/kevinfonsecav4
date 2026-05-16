@@ -21,7 +21,6 @@ const List = ({
 	handleDelete = () => {},
 	handleTrashAllFunction = () => {},
 	handleDeleteAllFunction = () => {},
-	handleDeleteAllEmptyFunction = () => {},
 }) => {
 	const [newobjects, setNewObjects] = useState(objects);
 	const [, setTotalResults] = useState({
@@ -143,24 +142,10 @@ const List = ({
 		);
 	}
 
-	if (
-		typeof handleDeleteAllEmptyFunction !== "function" &&
-		handleDeleteAllEmptyFunction !== "" &&
-		handleDeleteAllEmptyFunction !== undefined &&
-		handleDeleteAllEmptyFunction !== null
-	) {
-		return (
-			<ErrorPage
-				statusCodeMessage={
-					"The handleDeleteAllEmptyFunction parameter is not a function!. Please try again"
-				}
-			/>
-		);
-	}
-
 	return (
 		<>
 			<AdminCardHeaderMenu
+				stripeChargesEnabled={false}
 				allLink={allLink}
 				pageText={pageText}
 				currentResults={objects?.count}
@@ -169,8 +154,12 @@ const List = ({
 				searchOn={searchOn}
 				handleTrashAllFunction={handleTrashAllFunction}
 				handleDeleteAllFunction={handleDeleteAllFunction}
-				// handleDeleteAllEmptyFunction={handleDeleteAllEmptyFunction}
 				classList=""
+				handleAllUsageCountEnabled={false}
+				handleAllUsageCount={undefined}
+				// isDirty={isDirty}
+				// saving={saving}
+				// handleSave={handleSave}
 			/>
 			{objects?.data?.length > 0 ? (
 				<>

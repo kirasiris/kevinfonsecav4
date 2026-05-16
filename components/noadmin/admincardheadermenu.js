@@ -18,6 +18,9 @@ const AdminCardHeaderMenu = ({
 	classList = "",
 	handleAllUsageCountEnabled = false,
 	handleAllUsageCount = () => {},
+	isDirty = false,
+	saving = false,
+	handleSave = () => {},
 }) => {
 	const router = useRouter();
 
@@ -97,6 +100,32 @@ const AdminCardHeaderMenu = ({
 						</Link>
 					) : (
 						<></>
+					)}
+					{isDirty && (
+						<>
+							<button
+								type="button"
+								className="btn btn-sm btn-success"
+								onClick={handleSave}
+								disabled={saving}
+							>
+								{saving ? (
+									<>
+										<span
+											className="spinner-border spinner-border-sm me-1"
+											role="status"
+											aria-hidden="true"
+										></span>
+										Saving...
+									</>
+								) : (
+									<>
+										<i className="bi bi-save me-1" />
+										Save order
+									</>
+								)}
+							</button>
+						</>
 					)}
 					{addLink !== "" && addLink !== undefined && addLink !== null && (
 						<Link

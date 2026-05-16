@@ -10,7 +10,7 @@ import FormButtons from "@/components/global/formbuttons";
 const CreateJobForm = ({ token = {}, auth = {}, params = {} }) => {
 	const router = useRouter();
 
-	const [btnText, setBtnText] = useState(`Submit`);
+	const [, setBtnText] = useState(`Submit`);
 
 	const addJob = async (e) => {
 		e.preventDefault();
@@ -21,7 +21,6 @@ const CreateJobForm = ({ token = {}, auth = {}, params = {} }) => {
 		const rawFormData = {
 			title: formData.get("title"),
 			text: formData.get("text"),
-			featured: formData.get("featured"),
 			positionFilled: formData.get("positionFilled"),
 			experience_level: formData.getAll("experience_level"),
 			job_type: formData.getAll("job_type"),
@@ -267,7 +266,7 @@ const CreateJobForm = ({ token = {}, auth = {}, params = {} }) => {
 					status="draft"
 					fullWidth={false}
 					password=""
-					featured={true}
+					featured={false}
 					commented={true}
 					embedding={false}
 					category={undefined}

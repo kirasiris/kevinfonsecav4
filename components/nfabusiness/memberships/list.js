@@ -170,6 +170,7 @@ const List = ({
 	return (
 		<>
 			<AdminCardHeaderMenu
+				stripeChargesEnabled={false}
 				allLink={allLink}
 				pageText={pageText}
 				currentResults={objects?.count}
@@ -179,6 +180,9 @@ const List = ({
 				handleTrashAllFunction={handleTrashAllFunction}
 				handleDeleteAllFunction={handleDeleteAllFunction}
 				classList=""
+				// isDirty={isDirty}
+				// saving={saving}
+				// handleSave={handleSave}
 			/>
 			{objects?.data?.length > 0 ? (
 				stripeChargesEnabled ? (

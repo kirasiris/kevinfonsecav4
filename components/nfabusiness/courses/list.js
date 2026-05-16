@@ -20,6 +20,8 @@ const List = ({
 	handlePublish = () => {},
 	handleTrash = () => {},
 	handleSchedule = () => {},
+	handleFeature = () => {},
+	handleUnfeature = () => {},
 	handleDelete = () => {},
 	handleTrashAllFunction = () => {},
 	handleDeleteAllFunction = () => {},
@@ -91,6 +93,36 @@ const List = ({
 	}
 
 	if (
+		typeof handleFeature !== "function" &&
+		handleFeature !== "" &&
+		handleFeature !== undefined &&
+		handleFeature !== null
+	) {
+		return (
+			<ErrorPage
+				statusCodeMessage={
+					"The handleFeature parameter is not a function!. Please try again"
+				}
+			/>
+		);
+	}
+
+	if (
+		typeof handleUnfeature !== "function" &&
+		handleUnfeature !== "" &&
+		handleUnfeature !== undefined &&
+		handleUnfeature !== null
+	) {
+		return (
+			<ErrorPage
+				statusCodeMessage={
+					"The handleUnfeature parameter is not a function!. Please try again"
+				}
+			/>
+		);
+	}
+
+	if (
 		typeof handleDelete !== "function" &&
 		handleDelete !== "" &&
 		handleDelete !== undefined &&
@@ -138,6 +170,7 @@ const List = ({
 	return (
 		<>
 			<AdminCardHeaderMenu
+				stripeChargesEnabled={false}
 				allLink={allLink}
 				pageText={pageText}
 				currentResults={objects?.count}
@@ -147,6 +180,9 @@ const List = ({
 				handleTrashAllFunction={handleTrashAllFunction}
 				handleDeleteAllFunction={handleDeleteAllFunction}
 				classList=""
+				// isDirty={isDirty}
+				// saving={saving}
+				// handleSave={handleSave}
 			/>
 			{objects?.data?.length > 0 ? (
 				stripeChargesEnabled ? (
@@ -160,6 +196,8 @@ const List = ({
 									handlePublish={handlePublish}
 									handleTrash={handleTrash}
 									handleSchedule={handleSchedule}
+									handleFeature={handleFeature}
+									handleUnfeature={handleUnfeature}
 									handleDelete={handleDelete}
 									objects={newobjects.data}
 									setObjects={setNewObjects}

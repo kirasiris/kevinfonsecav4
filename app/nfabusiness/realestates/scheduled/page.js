@@ -75,6 +75,32 @@ const NFARealEstatesScheduledIndex = async ({ params, searchParams }) => {
 		);
 	};
 
+	const featureIt = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(
+			`/noadmin/stripe/realestates/${id}/featureit`,
+			"PUT",
+			"no-cache",
+		);
+		revalidatePath(
+			`/nfabusiness/realestates/scheduled?page=${page}&limit=${limit}&sort=${sort}`,
+		);
+	};
+
+	const unfeatureIt = async (id) => {
+		"use server";
+		// const rawFormData = {}
+		await fetchurl(
+			`/noadmin/stripe/realestates/${id}/unfeatureit`,
+			"PUT",
+			"no-cache",
+		);
+		revalidatePath(
+			`/nfabusiness/realestates/scheduled?page=${page}&limit=${limit}&sort=${sort}`,
+		);
+	};
+
 	const handleDelete = async (id) => {
 		"use server";
 		// const rawFormData = {}
@@ -138,6 +164,8 @@ const NFARealEstatesScheduledIndex = async ({ params, searchParams }) => {
 					handlePublish={publishIt}
 					handleTrash={trashIt}
 					handleSchedule={scheduleIt}
+					handleFeature={featureIt}
+					handleUnfeature={unfeatureIt}
 					handleDelete={handleDelete}
 					handleTrashAllFunction={handleTrashAll}
 					handleDeleteAllFunction={handleDeleteAll}

@@ -21,7 +21,6 @@ const CreateChapterForm = ({ token = {}, auth = {}, params = {} }) => {
 		const rawFormData = {
 			title: formData.get("title"),
 			text: formData.get("text"),
-			featured: formData.get("featured"),
 			commented: formData.get("commented"),
 			embedding: formData.get("embedding"),
 			status: formData.get("status"),
@@ -416,7 +415,7 @@ const CreateChapterForm = ({ token = {}, auth = {}, params = {} }) => {
 					status="draft"
 					fullWidth={false}
 					password=""
-					featured={true}
+					featured={false}
 					commented={true}
 					embedding={true}
 					category={undefined}

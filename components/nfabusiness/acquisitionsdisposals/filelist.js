@@ -7,6 +7,7 @@ const FileList = ({ allLink = "", pageText = "", objects = [] }) => {
 	return (
 		<>
 			<AdminCardHeaderMenu
+				stripeChargesEnabled={false}
 				allLink={allLink}
 				pageText={pageText}
 				currentResults={objects?.count}
@@ -16,6 +17,9 @@ const FileList = ({ allLink = "", pageText = "", objects = [] }) => {
 				handleTrashAllFunction=""
 				handleDeleteAllFunction=""
 				classList=""
+				// isDirty={isDirty}
+				// saving={saving}
+				// handleSave={handleSave}
 			/>
 			{objects?.length > 0 ? (
 				<ul

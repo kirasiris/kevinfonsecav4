@@ -95,7 +95,7 @@ const UpdateCommentForm = ({ token = {}, auth = {}, object = {} }) => {
 				<input
 					id="user"
 					name="user"
-					defaultValue={comment?.data.user?._id || undefined}
+					defaultValue={object?.data.user?._id || undefined}
 					type="text"
 					className="form-control mb-3"
 					placeholder="0123456789"

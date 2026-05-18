@@ -3,7 +3,13 @@ import Image from "next/image";
 import showdown from "showdown";
 import base64 from "base-64";
 import ParseHtml from "@/layout/parseHtml";
-import { fetchurl } from "@/helpers/setTokenOnServer";
+import {
+	fetchurl,
+	getAuthTokenOnServer,
+	getUserOnServer,
+} from "@/helpers/setTokenOnServer";
+import UseDropzone from "@/components/noadmin/themes/themedropzone";
+import Link from "next/link";
 
 async function getTheme(params) {
 	const res = await fetchurl(`/global/themes${params}`, "GET", "no-cache");
@@ -53,6 +59,9 @@ const ReadTheme = async ({ params, searchParams }) => {
 	const awtdParams = await params;
 	const awtdSearchParams = await searchParams;
 
+	const token = await getAuthTokenOnServer();
+	const auth = await getUserOnServer();
+
 	const theme = await getTheme(`/${awtdParams.id}`);
 
 	const readMeResponse = await getReadMe(theme.data.github_readme);
@@ -74,19 +83,63 @@ const ReadTheme = async ({ params, searchParams }) => {
 			<div className="col-lg-12">
 				<article>
 					{/* HERE GOES THE FIGURE */}
-					<figure className="mb-4">
-						<Image
-							className="img-fluid"
-							src={
-								theme?.data?.files?.avatar?.location?.secure_location ||
-								`https://picsum.photos/1200/900?blur`
-							}
-							alt={`${theme?.data?.avatar?.location?.fileName}'s featured image`}
-							width={1200}
-							height={900}
-							priority
-						/>
-					</figure>
+					<div className="row">
+						<div className="col">
+							<figure className="mb-4">
+								<Image
+									className="img-fluid"
+									src={
+										theme?.data?.files?.avatar?.location?.secure_location ||
+										`https://picsum.photos/1200/900?blur`
+									}
+									alt={`${theme?.data?.files?.avatar?.location?.fileName}'s featured image`}
+									width={1200}
+									height={900}
+									priority
+								/>
+							</figure>
+						</div>
+						{theme?.data?.files?.extras.length > 0 && (
+							<div className="col">
+								<div className="card rounded-0">
+									<div className="card-header">Files</div>
+									<ul className="list-group list-group-flush">
+										{theme?.data?.files?.extras.map((file, index) => (
+											<li
+												key={file?._id}
+												className={`list-group-item ${file?._id}`}
+											>
+												<div className="float-start">
+													<Link
+														href={{
+															pathname: `/noadmin/files/update/${file?._id}`,
+															query: {},
+														}}
+													>
+														{file?.location?.filename}
+													</Link>
+													<div className="blog-item__meta">
+														<span className="badge bg-dark me-1">
+															{file?.location?.format_type}
+														</span>
+													</div>
+												</div>
+												<div className="float-end"></div>
+											</li>
+										))}
+									</ul>
+								</div>
+							</div>
+						)}
+					</div>
+					<UseDropzone
+						auth={auth}
+						token={token}
+						id="file"
+						name="file"
+						multipleFiles={true}
+						object={theme?.data}
+					/>
 					<section className="mb-5">
 						<ParseHtml text={theme.data.text} />
 						{theme.data.github_readme !== "#" && (

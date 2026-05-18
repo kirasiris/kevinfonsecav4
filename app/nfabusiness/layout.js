@@ -40,7 +40,7 @@ export default async function AdminLayout({ children }) {
 				locales=""
 				posType="page"
 			/>
-			<header className="nfabusiness-header p-3 d-flex align-items-center gap-3">
+			<div className="nfabusiness-header p-3 d-flex align-items-center gap-3">
 				{/* Mobile menu button - visible on smaller screens */}
 				<button
 					className="btn btn-light d-lg-none"
@@ -64,7 +64,7 @@ export default async function AdminLayout({ children }) {
 						View Site
 					</Link>
 				</div>
-			</header>
+			</div>
 			<div className="d-flex">
 				{/* Desktop Sidebar - visible on lg and up */}
 				<aside className="nfabusiness-sidebar border-end d-none d-lg-flex flex-column">

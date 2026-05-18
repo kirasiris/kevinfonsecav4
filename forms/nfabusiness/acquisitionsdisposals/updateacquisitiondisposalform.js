@@ -37,6 +37,7 @@ const UpdateAcquisitionDisposalForm = ({
 			},
 			text: formData.get("text"),
 			status: formData.get("status"),
+			orderingNumber: formData.get("orderingNumber"),
 		};
 
 		const res = await fetchurl(
@@ -154,7 +155,7 @@ const UpdateAcquisitionDisposalForm = ({
 					placeholder="Shootsmart"
 				/>
 				<small className="mb-3">
-					Name and Address or Name and License Number "FFL"
+					Name and Address or Name and License Number &quot;FFL&quot;
 				</small>
 				<h6 className="display-6">Disposal</h6>
 				<label htmlFor="name" className="form-label">
@@ -277,21 +278,39 @@ const UpdateAcquisitionDisposalForm = ({
 					charactersLimit={99999}
 					isRequired={false}
 				/>
-				<label htmlFor="status" className="form-label">
-					Status
-				</label>
-				<select
-					id="status"
-					name="status"
-					defaultValue={object?.data?.status}
-					className="form-control mb-3"
-					required
-				>
-					<option value={`pending`}>Pending</option>
-					<option value={`fbidenied`}>FBI Denied</option>
-					<option value={`acquired`}>Acquired</option>
-					<option value={`disposed`}>Disposed</option>
-				</select>
+				<div className="row mb-3">
+					<div className="col">
+						<label htmlFor="status" className="form-label">
+							Status
+						</label>
+						<select
+							id="status"
+							name="status"
+							defaultValue={object?.data?.status}
+							className="form-control"
+							required
+						>
+							<option value={`pending`}>Pending</option>
+							<option value={`fbidenied`}>FBI Denied</option>
+							<option value={`acquired`}>Acquired</option>
+							<option value={`disposed`}>Disposed</option>
+						</select>
+					</div>
+					<div className="col">
+						<label htmlFor="orderingNumber" className="form-label">
+							FFL Transfer
+						</label>
+						<input
+							id="orderingNumber"
+							name="orderingNumber"
+							defaultValue={object?.data?.orderingNumber}
+							type="number"
+							className="form-control"
+							required
+							placeholder="1"
+						/>
+					</div>
+				</div>
 				<button type="submit" className="btn btn-secondary btn-sm float-start">
 					{btnText}
 				</button>

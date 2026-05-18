@@ -1,5 +1,4 @@
 "use client";
-import { useState } from "react";
 import AdminCardHeaderMenu from "@/components/noadmin/admincardheadermenu";
 import Single from "./single";
 import NumericPagination from "@/layout/numericpagination";
@@ -16,20 +15,7 @@ const List = ({
 	searchParams = {},
 	handleDraft = () => {},
 	handlePublish = () => {},
-	handleTrash = () => {},
-	handleSchedule = () => {},
-	handleFeature = () => {},
-	handleUnfeature = () => {},
-	handleDelete = () => {},
-	handleTrashAllFunction = () => {},
-	handleDeleteAllFunction = () => {},
 }) => {
-	const [newobjects, setNewObjects] = useState(objects);
-	const [, setTotalResults] = useState({
-		...objects,
-		countAll: objects?.countAll,
-	});
-
 	if (
 		typeof handleDraft !== "function" &&
 		handleDraft !== "" &&
@@ -60,111 +46,6 @@ const List = ({
 		);
 	}
 
-	if (
-		typeof handleTrash !== "function" &&
-		handleTrash !== "" &&
-		handleTrash !== undefined &&
-		handleTrash !== null
-	) {
-		return (
-			<ErrorPage
-				statusCodeMessage={
-					"The handleTrash parameter is not a function!. Please try again"
-				}
-			/>
-		);
-	}
-
-	if (
-		typeof handleSchedule !== "function" &&
-		handleSchedule !== "" &&
-		handleSchedule !== undefined &&
-		handleSchedule !== null
-	) {
-		return (
-			<ErrorPage
-				statusCodeMessage={
-					"The handleSchedule parameter is not a function!. Please try again"
-				}
-			/>
-		);
-	}
-
-	if (
-		typeof handleFeature !== "function" &&
-		handleFeature !== "" &&
-		handleFeature !== undefined &&
-		handleFeature !== null
-	) {
-		return (
-			<ErrorPage
-				statusCodeMessage={
-					"The handleFeature parameter is not a function!. Please try again"
-				}
-			/>
-		);
-	}
-
-	if (
-		typeof handleUnfeature !== "function" &&
-		handleUnfeature !== "" &&
-		handleUnfeature !== undefined &&
-		handleUnfeature !== null
-	) {
-		return (
-			<ErrorPage
-				statusCodeMessage={
-					"The handleUnfeature parameter is not a function!. Please try again"
-				}
-			/>
-		);
-	}
-
-	if (
-		typeof handleDelete !== "function" &&
-		handleDelete !== "" &&
-		handleDelete !== undefined &&
-		handleDelete !== null
-	) {
-		return (
-			<ErrorPage
-				statusCodeMessage={
-					"The handleDelete parameter is not a function!. Please try again"
-				}
-			/>
-		);
-	}
-
-	if (
-		typeof handleTrashAllFunction !== "function" &&
-		handleTrashAllFunction !== "" &&
-		handleTrashAllFunction !== undefined &&
-		handleTrashAllFunction !== null
-	) {
-		return (
-			<ErrorPage
-				statusCodeMessage={
-					"The handleTrashAllFunction parameter is not a function!. Please try again"
-				}
-			/>
-		);
-	}
-
-	if (
-		typeof handleDeleteAllFunction !== "function" &&
-		handleDeleteAllFunction !== "" &&
-		handleDeleteAllFunction !== undefined &&
-		handleDeleteAllFunction !== null
-	) {
-		return (
-			<ErrorPage
-				statusCodeMessage={
-					"The handleDeleteAllFunction parameter is not a function!. Please try again"
-				}
-			/>
-		);
-	}
-
 	return (
 		<>
 			<AdminCardHeaderMenu
@@ -175,8 +56,8 @@ const List = ({
 				totalResults={objects?.countAll}
 				addLink={addLink}
 				searchOn={searchOn}
-				handleTrashAllFunction={handleTrashAllFunction}
-				handleDeleteAllFunction={handleDeleteAllFunction}
+				handleTrashAllFunction={undefined}
+				handleDeleteAllFunction={undefined}
 				classList=""
 				// isDirty={isDirty}
 				// saving={saving}
@@ -191,14 +72,6 @@ const List = ({
 								object={acquisitiondisposal}
 								handleDraft={handleDraft}
 								handlePublish={handlePublish}
-								handleTrash={handleTrash}
-								handleSchedule={handleSchedule}
-								handleFeature={handleFeature}
-								handleUnfeature={handleUnfeature}
-								handleDelete={handleDelete}
-								objects={newobjects.data}
-								setObjects={setNewObjects}
-								setTotalResults={setTotalResults}
 							/>
 						))}
 						<li className="list-group-item">

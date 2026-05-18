@@ -7,7 +7,7 @@ async function getAcquisitionsDisposals(params) {
 	const res = await fetchurl(
 		`/global/weaponacquisitionsdisposals${params}`,
 		"GET",
-		"no-cache"
+		"no-cache",
 	);
 	return res;
 }
@@ -17,10 +17,10 @@ const NFAAcquisitionDisposalsIndex = async ({ params, searchParams }) => {
 	const awtdSearchParams = await searchParams;
 	const page = awtdSearchParams.page || 1;
 	const limit = awtdSearchParams.limit || 10;
-	const sort = awtdSearchParams.sort || "-createdAt";
+	const sort = awtdSearchParams.sort || "-orderingNumber";
 
 	const acquisitionsdisposals = await getAcquisitionsDisposals(
-		`?page=${page}&limit=${limit}&sort=${sort}`
+		`?page=${page}&limit=${limit}&sort=${sort}`,
 	);
 
 	const acquireIt = async (id) => {
@@ -29,10 +29,10 @@ const NFAAcquisitionDisposalsIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/weaponacquisitionsdisposals/${id}/acquireit`,
 			"PUT",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/nfabusiness/acquisitionsdisposals?page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/acquisitionsdisposals?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -42,10 +42,10 @@ const NFAAcquisitionDisposalsIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/weaponacquisitionsdisposals/${id}/disposeit`,
 			"PUT",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/nfabusiness/acquisitionsdisposals?page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/acquisitionsdisposals?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -75,13 +75,6 @@ const NFAAcquisitionDisposalsIndex = async ({ params, searchParams }) => {
 					searchParams={awtdSearchParams}
 					handleDraft={acquireIt}
 					handlePublish={disposeIt}
-					handleTrash={undefined}
-					handleSchedule={undefined}
-					handleFeature={undefined}
-					handleUnfeature={undefined}
-					handleDelete={undefined}
-					handleTrashAllFunction={""}
-					handleDeleteAllFunction={""}
 				/>
 			</div>
 		</>

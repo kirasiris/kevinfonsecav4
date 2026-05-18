@@ -7,14 +7,6 @@ const Single = ({
 	object = {},
 	handleDraft = () => {},
 	handlePublish = () => {},
-	handleTrash = () => {},
-	handleSchedule = () => {},
-	handleFeature = () => {},
-	handleUnfeature = () => {},
-	handleDelete = () => {},
-	objects = [],
-	setObjects = () => {},
-	setTotalResults = () => {},
 }) => {
 	return (
 		<li className="list-group-item">
@@ -35,6 +27,9 @@ const Single = ({
 						</Link>
 					</h1>
 					<div className="blog-item__meta">
+						<span className="badge bg-primary me-1">
+							Transfer:&nbsp;#{object.orderingNumber}
+						</span>
 						<span className="badge bg-dark me-1">
 							{formatDateWithoutTime(object.createdAt)}
 						</span>

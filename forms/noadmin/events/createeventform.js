@@ -27,43 +27,37 @@ const CreateEventForm = ({ token = {}, auth = {} }) => {
 			priority: formData.get("priority"),
 			recurrenceRule: formData.get("recurrenceRule"),
 			status: formData.get("status"),
+			attendees: [
+				{
+					name: process.env.NEXT_PUBLIC_WEBSITE_NAME,
+					email: process.env.NEXT_PUBLIC_WEBSITE_EMAIL,
+					phoneNumber: "682-375-9607",
+				},
+			],
 		};
 
 		const res = await fetchurl(
 			`/noadmin/events`,
 			"POST",
 			"no-cache",
-			{
-				...rawFormData,
-				attendees: [
-					{
-						name: process.env.NEXT_PUBLIC_WEBSITE_NAME,
-						email: process.env.NEXT_PUBLIC_WEBSITE_EMAIL,
-						phoneNumber: "682-375-9607",
-					},
-				],
-			},
+			rawFormData,
 			undefined,
 			false,
 			false,
 		);
 
 		if (res.status === "error") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
 		if (res.status === "fail") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
-		toast.success(`Event created`, "bottom");
+		toast.success(`Event created`);
 		router.push(`/noadmin/events`);
-	};
-
-	const resetForm = (e) => {
-		e.target.closest("form").reset();
 	};
 
 	return (

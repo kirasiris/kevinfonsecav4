@@ -37,22 +37,17 @@ const UpdateQuoteForm = ({ currentpage = "", object = {} }) => {
 		);
 
 		if (res.status === "error") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
 		if (res.status === "fail") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
 		setBtnText(btnText);
-		//resetForm();
 		router.push(currentpage);
-	};
-
-	const resetForm = (e) => {
-		e.target.closest("form").reset();
 	};
 
 	return (

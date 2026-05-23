@@ -24,39 +24,32 @@ const UpdateReviewForm = ({ token = {}, auth = {}, object = {} }) => {
 			title: formData.get("title"),
 			text: formData.get("text"),
 			status: formData.get("status"),
+			resourceId: object?.data?.resourceId?._id,
+			onModel: object?.data?.onModel,
 		};
 
 		const res = await fetchurl(
 			`/noadmin/reviews/${object?.data?._id}`,
 			"PUT",
 			"no-cache",
-			{
-				...rawFormData,
-				resourceId: object?.data?.resourceId?._id,
-				onModel: object?.data?.onModel,
-			},
+			rawFormData,
 			undefined,
 			false,
 			false,
 		);
 
 		if (res.status === "error") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
 		if (res.status === "fail") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
 		setBtnText(btnText);
-		//resetForm();
 		router.push(`/nfabusiness/reviews`);
-	};
-
-	const resetForm = (e) => {
-		e.target.closest("form").reset();
 	};
 
 	return (

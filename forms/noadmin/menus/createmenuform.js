@@ -10,7 +10,7 @@ import FormButtons from "@/components/global/formbuttons";
 const CreateMenuForm = ({}) => {
 	const router = useRouter();
 
-	const [btnText, setBtnText] = useState(`Submit`);
+	const [, setBtnText] = useState(`Submit`);
 
 	const addMenu = async (e) => {
 		e.preventDefault();
@@ -36,21 +36,17 @@ const CreateMenuForm = ({}) => {
 		);
 
 		if (res.status === "error") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
 		if (res.status === "fail") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
-		toast.success(`Menu created`, "bottom");
+		toast.success(`Menu created`);
 		router.push(`/noadmin/menus`);
-	};
-
-	const resetForm = (e) => {
-		e.target.closest("form").reset();
 	};
 
 	return (

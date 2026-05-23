@@ -3,11 +3,12 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { fetchurl } from "@/helpers/setTokenOnServer";
+import FormButtons from "@/components/global/formbuttons";
 
 const CreateUserForm = ({ object = {} }) => {
 	const router = useRouter();
 
-	const [btnText, setBtnText] = useState("Submit");
+	const [, setBtnText] = useState("Submit");
 
 	const registerAccount = async (e) => {
 		e.preventDefault();
@@ -43,22 +44,18 @@ const CreateUserForm = ({ object = {} }) => {
 			false,
 		);
 		if (res.status === "error") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
 		if (res.status === "fail") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
 		setBtnText("Submit");
-		toast.success("Account registered", "bottom");
+		toast.success("Account registered");
 		router.push(`/nfabusiness/acquisitionsdisposals/read/${object._id}`);
-	};
-
-	const resetForm = (e) => {
-		e.target.closest("form").reset();
 	};
 
 	return (
@@ -91,16 +88,7 @@ const CreateUserForm = ({ object = {} }) => {
 				className="form-control mb-3"
 				placeholder="******"
 			/>
-			<button type="submit" className="btn btn-secondary btn-sm float-start">
-				{btnText}
-			</button>
-			<button
-				type="reset"
-				onClick={resetForm}
-				className="btn btn-secondary btn-sm float-end"
-			>
-				Reset
-			</button>
+			<FormButtons />
 		</form>
 	);
 };

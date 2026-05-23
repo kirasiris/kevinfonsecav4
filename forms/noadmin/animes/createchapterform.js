@@ -51,38 +51,32 @@ const CreateChapterForm = ({ token = {}, auth = {}, params = {} }) => {
 				avatar: formData.get("file") || undefined,
 				video_url: formData.get("video_url") || undefined,
 			},
+			resourceId: params.id,
+			onModel: "Playlist",
 		};
 
 		const res = await fetchurl(
 			`/noadmin/videos`,
 			"POST",
 			"no-cache",
-			{
-				...rawFormData,
-				resourceId: params.id,
-				onModel: "Playlist",
-			},
+			rawFormData,
 			undefined,
 			false,
 			false,
 		);
 
 		if (res.status === "error") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
 		if (res.status === "fail") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
-		toast.success(`Anime chapter created`, "bottom");
+		toast.success(`Anime chapter created`);
 		router.push(`/noadmin/animes/read/${params.id}`);
-	};
-
-	const resetForm = (e) => {
-		e.target.closest("form").reset();
 	};
 
 	return (

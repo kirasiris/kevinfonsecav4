@@ -43,41 +43,39 @@ const CreateQrCodeForm = ({ auth = {} }) => {
 			qrmargin: formData.get("qrmargin"),
 			qrcodesize: formData.get("qrcodesize"),
 			securitylevel: formData.get("securitylevel"),
+			user: auth?.userId,
+			logo: {
+				url: formData.get("imageurl"),
+				width: formData.get("imagewidth"),
+				height: formData.get("imageheight"),
+			},
+			website: process.env.NEXT_PUBLIC_WEBSITE_NAME,
+			status: "published",
 		};
 
 		const res = await fetchurl(
 			`/global/qrcodes`,
 			"POST",
 			"no-cache",
-			{
-				...rawFormData,
-				user: auth?.userId,
-				logo: {
-					url: formData.get("imageurl"),
-					width: formData.get("imagewidth"),
-					height: formData.get("imageheight"),
-				},
-				website: process.env.NEXT_PUBLIC_WEBSITE_NAME,
-				status: "published",
-			},
+			rawFormData,
 			undefined,
 			false,
 			false,
 		);
 
 		if (res.status === "error") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
 
 		if (res.status === "fail") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
 
-		toast.success("QR Code created", "bottom");
+		toast.success("QR Code created");
 		setBtnText(btnText);
 		router.push(`/noadmin/qrcodes?page=1&limit=10&sort=-createdAt`);
 	};

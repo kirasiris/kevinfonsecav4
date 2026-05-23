@@ -31,21 +31,17 @@ const UpdateNewsletterSubscriberForm = ({ object = {} }) => {
 		);
 
 		if (res.status === "error") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
 		if (res.status === "fail") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
-		toast.success(`Newsletter subscriber updated`, "bottom");
+		toast.success(`Newsletter subscriber updated`);
 		router.push(`/noadmin/newslettersubscribers`);
-	};
-
-	const resetForm = (e) => {
-		e.target.closest("form").reset();
 	};
 
 	return (

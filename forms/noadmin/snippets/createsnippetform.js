@@ -41,21 +41,17 @@ const CreateSnippetForm = ({}) => {
 		);
 
 		if (res.status === "error") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
 		if (res.status === "fail") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
-		toast.success(`Snippet created`, "bottom");
+		toast.success(`Snippet created`);
 		router.push(`/noadmin/snippets`);
-	};
-
-	const resetForm = (e) => {
-		e.target.closest("form").reset();
 	};
 
 	return (

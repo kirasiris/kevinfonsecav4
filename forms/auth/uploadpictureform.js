@@ -90,10 +90,7 @@ const UploadPictureForm = ({ auth = {} }) => {
 				false,
 			);
 		} catch (err) {
-			toast.error(
-				err?.message || "Something went wrong during upload",
-				"bottom",
-			);
+			toast.error(err?.message || "Something went wrong during upload");
 		} finally {
 			// resetForm();
 			setUploadPercentage(0);

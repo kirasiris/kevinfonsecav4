@@ -27,7 +27,7 @@ const ResetPasswordForm = () => {
 		const resettoken = awtdParams.resettoken;
 
 		if (!userid || !resettoken) {
-			toast.error("There was an error, please try again", "bottom");
+			toast.error("There was an error, please try again");
 		}
 
 		if (rawFormData.password !== rawFormData.password2) {
@@ -45,16 +45,16 @@ const ResetPasswordForm = () => {
 			false,
 		);
 		if (res.status === "error") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
 		if (res.status === "fail") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
-		toast.success("Password has been updated", "bottom");
+		toast.success("Password has been updated");
 		let returnpage = awtdSearchParams.get("returnpage");
 		router.push(returnpage || `/auth/login`);
 	};

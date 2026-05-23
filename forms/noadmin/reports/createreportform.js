@@ -20,39 +20,32 @@ const CreateReportForm = ({ token = {}, auth = {}, searchParams = {} }) => {
 			title: formData.get("title"),
 			text: formData.get("text"),
 			website: formData.get("website"),
+			resourceId: searchParams.resourceId,
+			onModel: searchParams.onModel,
 		};
 
 		const res = await fetchurl(
 			`/noadmin/reports`,
 			"POST",
 			"no-cache",
-			{
-				...rawFormData,
-				resourceId: searchParams.resourceId,
-				onModel: searchParams.onModel,
-			},
+			rawFormData,
 			undefined,
 			false,
 			false,
 		);
 
 		if (res.status === "error") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
 		if (res.status === "fail") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
 		setBtnText(btnText);
-		//resetForm();
 		router.push(`/noadmin/reports`);
-	};
-
-	const resetForm = (e) => {
-		e.target.closest("form").reset();
 	};
 
 	return (

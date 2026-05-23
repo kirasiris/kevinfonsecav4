@@ -48,21 +48,17 @@ const UpdateCourseForm = ({ token = {}, auth = {}, object = {} }) => {
 		);
 
 		if (res.status === "error") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
 		if (res.status === "fail") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
-		toast.success(`Course updated`, "bottom");
+		toast.success(`Course updated`);
 		router.push(`/nfabusiness/courses`);
-	};
-
-	const resetForm = (e) => {
-		e.target.closest("form").reset();
 	};
 
 	return (

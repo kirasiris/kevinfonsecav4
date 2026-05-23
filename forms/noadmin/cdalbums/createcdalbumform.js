@@ -27,40 +27,33 @@ const CreateCDAlbumForm = ({ token = {}, auth = {}, objects = [] }) => {
 			onairtype: formData.get("onairtype"),
 			status: formData.get("status"),
 			files: { avatar: formData.get("file") },
+			onairstatus: "finished",
+			onairtype: "cd-album",
+			playlistType: "audio",
 		};
 
 		const res = await fetchurl(
 			`/noadmin/playlists`,
 			"POST",
 			"no-cache",
-			{
-				...rawFormData,
-				onairstatus: "finished",
-				onairtype: "cd-album",
-				playlistType: "audio",
-			},
+			rawFormData,
 			undefined,
 			false,
 			false,
 		);
 
 		if (res.status === "error") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
 		if (res.status === "fail") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
 		setBtnText(btnText);
-		//resetForm();
 		router.push(`/noadmin/cdalbums`);
-	};
-
-	const resetForm = (e) => {
-		e.target.closest("form").reset();
 	};
 
 	return (

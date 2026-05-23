@@ -48,6 +48,13 @@ const CreateQrCodeForm = ({ auth = {}, object = {} }) => {
 			email: formData.get("email"),
 			user: auth ? auth?.userId : undefined,
 			website: process.env.NEXT_PUBLIC_WEBSITE_NAME,
+			logo: {
+				url: formData.get("imageurl"),
+				width: formData.get("imagewidth"),
+				height: formData.get("imageheight"),
+			},
+			website: process.env.NEXT_PUBLIC_WEBSITE_NAME,
+			status: "published",
 		};
 
 		console.log("rawFormData", rawFormData);
@@ -56,33 +63,24 @@ const CreateQrCodeForm = ({ auth = {}, object = {} }) => {
 			`/global/qrcodes`,
 			"POST",
 			"no-cache",
-			{
-				...rawFormData,
-				logo: {
-					url: formData.get("imageurl"),
-					width: formData.get("imagewidth"),
-					height: formData.get("imageheight"),
-				},
-				website: process.env.NEXT_PUBLIC_WEBSITE_NAME,
-				status: "published",
-			},
+			rawFormData,
 			undefined,
 			false,
 			false,
 		);
 
 		if (res.status === "error") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
 
 		if (res.status === "fail") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
-		toast.success("QR Code created", "bottom");
+		toast.success("QR Code created");
 		setBtnText(btnText);
 		router.push(`/qrcode/${res.data._id}`);
 	};

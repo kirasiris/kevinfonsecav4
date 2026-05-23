@@ -35,21 +35,17 @@ const CreateNewsletterEmailForm = ({ token = {}, auth = {}, objects = [] }) => {
 		);
 
 		if (res.status === "error") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
 		if (res.status === "fail") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
-		toast.success(`Newsletter email created and sent`, "bottom");
+		toast.success(`Newsletter email created and sent`);
 		router.push(`/noadmin/newsletteremails`);
-	};
-
-	const resetForm = (e) => {
-		e.target.closest("form").reset();
 	};
 
 	return (

@@ -9,7 +9,7 @@ import FormButtons from "@/components/global/formbuttons";
 const CreateCertificateForm = ({ token = {}, auth = {}, params = {} }) => {
 	const router = useRouter();
 
-	const [btnText, setBtnText] = useState(`Submit`);
+	const [, setBtnText] = useState(`Submit`);
 
 	const addCertificate = async (e) => {
 		e.preventDefault();
@@ -39,21 +39,17 @@ const CreateCertificateForm = ({ token = {}, auth = {}, params = {} }) => {
 		);
 
 		if (res.status === "error") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
 		if (res.status === "fail") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
-		toast.success(`Certificate created`, "bottom");
+		toast.success(`Certificate created`);
 		router.push(`/nfabusiness/companies/read/${params.id}`);
-	};
-
-	const resetForm = (e) => {
-		e.target.closest("form").reset();
 	};
 
 	return (

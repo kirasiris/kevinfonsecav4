@@ -33,38 +33,32 @@ const UpdateAnimeForm = ({
 			onairstatus: formData.get("onairstatus"),
 			status: formData.get("status"),
 			files: { avatar: formData.get("file") || undefined },
+			onairtype: "anime",
+			playlistType: "video",
 		};
 
 		const res = await fetchurl(
 			`/noadmin/playlists/${object?.data?._id}`,
 			"PUT",
 			"no-cache",
-			{
-				...rawFormData,
-				onairtype: "anime",
-				playlistType: "video",
-			},
+			rawFormData,
 			undefined,
 			false,
 			false,
 		);
 
 		if (res.status === "error") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
 		if (res.status === "fail") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
-		toast.success(`Anime updated`, "bottom");
+		toast.success(`Anime updated`);
 		router.push(`/noadmin/animes`);
-	};
-
-	const resetForm = (e) => {
-		e.target.closest("form").reset();
 	};
 
 	return (

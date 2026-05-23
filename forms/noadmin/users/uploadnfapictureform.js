@@ -91,10 +91,7 @@ const UploadPictureForm = ({ object = {} }) => {
 				false,
 			);
 		} catch (err) {
-			toast.error(
-				err?.message || "Something went wrong during upload",
-				"bottom",
-			);
+			toast.error(err?.message || "Something went wrong during upload");
 		} finally {
 			// resetForm();
 			setUploadPercentage(0);
@@ -103,8 +100,6 @@ const UploadPictureForm = ({ object = {} }) => {
 			setCameraModal(false);
 		}
 	};
-
-	const resetForm = () => {};
 
 	return (
 		<>

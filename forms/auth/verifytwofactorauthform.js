@@ -22,7 +22,7 @@ const VerifyTwoFactorAuthenticationForm = ({ auth = {} }) => {
 		};
 
 		if (!rawFormData.token) {
-			toast.error("Token cannot be empty", "bottom");
+			toast.error("Token cannot be empty");
 			return;
 		}
 
@@ -36,12 +36,12 @@ const VerifyTwoFactorAuthenticationForm = ({ auth = {} }) => {
 			false,
 		);
 		if (res.status === "error") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
 		if (res.status === "fail") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}

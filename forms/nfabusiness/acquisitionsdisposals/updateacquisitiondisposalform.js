@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import MyTextArea from "@/components/global/myfinaltextarea";
+import FormButtons from "@/components/global/formbuttons";
 
 const UpdateAcquisitionDisposalForm = ({
 	object = {},
@@ -12,7 +13,7 @@ const UpdateAcquisitionDisposalForm = ({
 }) => {
 	const router = useRouter();
 
-	const [btnText, setBtnText] = useState("Submit");
+	const [, setBtnText] = useState("Submit");
 
 	const upgradeAcquisitionDisposal = async (e) => {
 		e.preventDefault();
@@ -50,21 +51,17 @@ const UpdateAcquisitionDisposalForm = ({
 			false,
 		);
 		if (res.status === "error") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
 		if (res.status === "fail") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
-		toast.success("Weapon acquistion and disposal updated", "bottom");
+		toast.success("Weapon acquistion and disposal updated");
 		router.push(`/nfabusiness/acquisitionsdisposals`);
-	};
-
-	const resetForm = (e) => {
-		e.target.closest("form").reset();
 	};
 
 	return (
@@ -311,16 +308,7 @@ const UpdateAcquisitionDisposalForm = ({
 						/>
 					</div>
 				</div>
-				<button type="submit" className="btn btn-secondary btn-sm float-start">
-					{btnText}
-				</button>
-				<button
-					type="reset"
-					onClick={resetForm}
-					className="btn btn-secondary btn-sm float-end"
-				>
-					Reset
-				</button>
+				<FormButtons />
 			</div>
 		</form>
 	);

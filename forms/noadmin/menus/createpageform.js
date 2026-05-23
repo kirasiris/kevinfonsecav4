@@ -29,37 +29,31 @@ const CreatePageForm = ({ params = {} }) => {
 			commented: formData.get("commented"),
 			password: formData.get("password"),
 			status: formData.get("status"),
+			resourceId: params.id,
 		};
 
 		const res = await fetchurl(
 			`/noadmin/pages`,
 			"POST",
 			"no-cache",
-			{
-				...rawFormData,
-				resourceId: params.id,
-			},
+			rawFormData,
 			undefined,
 			false,
 			false,
 		);
 
 		if (res.status === "error") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
 		if (res.status === "fail") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
-		toast.success(`Menu page created`, "bottom");
+		toast.success(`Menu page created`);
 		router.push(`/noadmin/menus/read/${params.id}`);
-	};
-
-	const resetForm = (e) => {
-		e.target.closest("form").reset();
 	};
 
 	return (

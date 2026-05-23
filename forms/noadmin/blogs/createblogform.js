@@ -29,37 +29,31 @@ const CreateBlogForm = ({ token = {}, auth = {}, objects = [] }) => {
 			status: formData.get("status"),
 			fullWidth: formData.get("fullWidth"),
 			files: { avatar: formData.get("file") || undefined },
+			postType: "blog",
 		};
 
 		const res = await fetchurl(
 			`/noadmin/blogs`,
 			"POST",
 			"no-cache",
-			{
-				...rawFormData,
-				postType: "blog",
-			},
+			rawFormData,
 			undefined,
 			false,
 			false,
 		);
 
 		if (res.status === "error") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
 		if (res.status === "fail") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
-		toast.success(`Blog created`, "bottom");
+		toast.success(`Blog created`);
 		router.push(`/noadmin/blogs`);
-	};
-
-	const resetForm = (e) => {
-		e.target.closest("form").reset();
 	};
 
 	return (

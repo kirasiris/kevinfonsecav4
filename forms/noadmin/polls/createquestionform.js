@@ -43,38 +43,32 @@ const CreateQuestionForm = ({
 			password: formData.get("password"),
 			status: formData.get("status"),
 			answers: options,
+			resourceId: params.id,
+			onModel: "Poll",
 		};
 
 		const res = await fetchurl(
 			`/noadmin/questions`,
 			"POST",
 			"no-cache",
-			{
-				...rawFormData,
-				resourceId: params.id,
-				onModel: "Poll",
-			},
+			rawFormData,
 			undefined,
 			false,
 			false,
 		);
 
 		if (res.status === "error") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
 		if (res.status === "fail") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
-		toast.success(`Poll question created`, "bottom");
+		toast.success(`Poll question created`);
 		router.push(`/noadmin/polls/read/${params.id}`);
-	};
-
-	const resetForm = (e) => {
-		e.target.closest("form").reset();
 	};
 
 	return (

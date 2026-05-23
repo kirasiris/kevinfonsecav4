@@ -104,19 +104,19 @@ const LoginForm = () => {
 			false,
 		);
 		if (res.status === "error") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
 		if (res.status === "fail") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
 
 		// If 2fa enabled
 		if (res?.data?.twoFactorTokenEnabled) {
-			toast.info("Please enter your 2FA token", "bottom");
+			toast.info("Please enter your 2FA token");
 			router.push(`/auth/validatetwofactorauth/${res?.data?._id}`);
 			return;
 		}

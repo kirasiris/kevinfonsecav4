@@ -47,21 +47,17 @@ const UpdateJobForm = ({ token = {}, auth = {}, object = {} }) => {
 		);
 
 		if (res.status === "error") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
 		if (res.status === "fail") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
-		toast.success(`Job updated`, "bottom");
+		toast.success(`Job updated`);
 		router.push(`/nfabusiness/companies/read/${object?.data?.resourceId?._id}`);
-	};
-
-	const resetForm = (e) => {
-		e.target.closest("form").reset();
 	};
 
 	return (

@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import MyTextArea from "@/components/global/myfinaltextarea";
+import FormButtons from "@/components/global/formbuttons";
 
 const CreateWeaponForm = ({ token = "", auth = {} }) => {
 	const router = useRouter();
@@ -67,21 +68,17 @@ const CreateWeaponForm = ({ token = "", auth = {} }) => {
 			false,
 		);
 		if (res.status === "error") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
 		if (res.status === "fail") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
-		toast.success("Weapon created", "bottom");
+		toast.success("Weapon created");
 		router.push(`/nfabusiness/weapons`);
-	};
-
-	const resetForm = (e) => {
-		e.target.closest("form").reset();
 	};
 
 	return (
@@ -251,16 +248,7 @@ const CreateWeaponForm = ({ token = "", auth = {} }) => {
 					charactersLimit={99999}
 					isRequired={false}
 				/>
-				<button type="submit" className="btn btn-secondary btn-sm float-start">
-					{btnText}
-				</button>
-				<button
-					type="reset"
-					onClick={resetForm}
-					className="btn btn-secondary btn-sm float-end"
-				>
-					Reset
-				</button>
+				<FormButtons />
 			</div>
 		</form>
 	);

@@ -21,6 +21,7 @@ const UpdateUserPasswordForm = ({ object = {} }) => {
 			newpassword2: formData.get("newpassword2"),
 			website: formData.get("website"),
 			registeredFrom: process.env.NEXT_PUBLIC_WEBSITE_NAME,
+			website: process.env.NEXT_PUBLIC_WEBSITE_NAME,
 		};
 
 		if (rawFormData.newpassword !== rawFormData.newpassword2) {
@@ -33,31 +34,24 @@ const UpdateUserPasswordForm = ({ object = {} }) => {
 			`/noadmin/users/${object?.data?._id}/updatepassword`,
 			"PUT",
 			"no-cache",
-			{
-				...rawFormData,
-				website: process.env.NEXT_PUBLIC_WEBSITE_NAME,
-			},
+			rawFormData,
 			undefined,
 			false,
 			false,
 		);
 
 		if (res.status === "error") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
 		if (res.status === "fail") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
-		toast.success(`User password updated`, "bottom");
+		toast.success(`User password updated`);
 		router.push(`/noadmin/users`);
-	};
-
-	const resetForm = (e) => {
-		e.target.closest("form").reset();
 	};
 
 	return (

@@ -24,7 +24,7 @@ const ConfirmEmailForm = () => {
 		const confirmtoken = awtdParams.confirmtoken;
 
 		if (!confirmtoken) {
-			toast.error("There was an error, please try again", "bottom");
+			toast.error("There was an error, please try again");
 			router.push("/auth/login");
 		}
 
@@ -39,18 +39,18 @@ const ConfirmEmailForm = () => {
 		);
 
 		if (res.status === "error") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
 
 		if (res.status === "fail") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
 
-		toast.success("Account confirmed", "bottom");
+		toast.success("Account confirmed");
 
 		router.push(`/auth/login`);
 	};

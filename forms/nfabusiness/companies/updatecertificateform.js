@@ -14,9 +14,7 @@ const UpdateCertificateForm = ({
 }) => {
 	const router = useRouter();
 
-	console.log("Object", params);
-
-	const [btnText, setBtnText] = useState(`Submit`);
+	const [, setBtnText] = useState(`Submit`);
 
 	const upgradeCertificate = async (e) => {
 		e.preventDefault();
@@ -46,21 +44,17 @@ const UpdateCertificateForm = ({
 		);
 
 		if (res.status === "error") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
 		if (res.status === "fail") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
-		toast.success(`Certificate updated`, "bottom");
+		toast.success(`Certificate updated`);
 		router.push(`/nfabusiness/companies/read/${params.id}`);
-	};
-
-	const resetForm = (e) => {
-		e.target.closest("form").reset();
 	};
 
 	return (

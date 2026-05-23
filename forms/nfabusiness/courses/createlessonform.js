@@ -33,6 +33,8 @@ const CreateLessonForm = ({ token = {}, auth = {}, params = {} }) => {
 				avatar: formData.get("file") || undefined,
 				video_url: formData.get("video_url") || undefined,
 			},
+			resourceId: params.id,
+			onModel: "Product",
 			// address: "4442 Jackson Blvd, Columbia, SC 29209",
 		};
 
@@ -40,32 +42,24 @@ const CreateLessonForm = ({ token = {}, auth = {}, params = {} }) => {
 			`/noadmin/videos`,
 			"POST",
 			"no-cache",
-			{
-				...rawFormData,
-				resourceId: params.id,
-				onModel: "Product",
-			},
+			rawFormData,
 			undefined,
 			false,
 			false,
 		);
 
 		if (res.status === "error") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
 		if (res.status === "fail") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
-		toast.success(`Lesson created`, "bottom");
+		toast.success(`Lesson created`);
 		router.push(`/nfabusiness/courses/read/${params.id}`);
-	};
-
-	const resetForm = (e) => {
-		e.target.closest("form").reset();
 	};
 
 	return (

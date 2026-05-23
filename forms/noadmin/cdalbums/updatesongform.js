@@ -48,21 +48,17 @@ const UpdateSongForm = ({ token = {}, auth = {}, object = {} }) => {
 		);
 
 		if (res.status === "error") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
 		if (res.status === "fail") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
-		toast.success(`Song updated`, "bottom");
+		toast.success(`Song updated`);
 		router.push(`/noadmin/cdalbums/read/${object?.data?.resourceId?._id}`);
-	};
-
-	const resetForm = (e) => {
-		e.target.closest("form").reset();
 	};
 
 	return (

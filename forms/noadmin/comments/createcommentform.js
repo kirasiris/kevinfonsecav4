@@ -29,40 +29,33 @@ const CreateCommentForm = ({
 			title: formData.get("title"),
 			text: formData.get("text"),
 			status: formData.get("status"),
+			resourceId: searchParams.resourceId,
+			parentId: searchParams.parentId || undefined,
+			onModel: searchParams.onModel,
 		};
 
 		const res = await fetchurl(
 			`/noadmin/comments`,
 			"POST",
 			"no-cache",
-			{
-				...rawFormData,
-				resourceId: searchParams.resourceId,
-				parentId: searchParams.parentId || undefined,
-				onModel: searchParams.onModel,
-			},
+			rawFormData,
 			undefined,
 			false,
 			false,
 		);
 
 		if (res.status === "error") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
 		if (res.status === "fail") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
 		setBtnText(btnText);
-		//resetForm();
 		router.push(`/noadmin/comments`);
-	};
-
-	const resetForm = (e) => {
-		e.target.closest("form").reset();
 	};
 
 	return (

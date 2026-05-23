@@ -33,38 +33,32 @@ const UpdateMovieForm = ({
 			onairstatus: formData.get("onairstatus"),
 			status: formData.get("status"),
 			files: { avatar: formData.get("file") || undefined },
+			onairtype: "movie",
+			playlistType: "video",
 		};
 
 		const res = await fetchurl(
 			`/noadmin/playlists/${object?.data?._id}`,
 			"PUT",
 			"no-cache",
-			{
-				...rawFormData,
-				onairtype: "movie",
-				playlistType: "video",
-			},
+			rawFormData,
 			undefined,
 			false,
 			false,
 		);
 
 		if (res.status === "error") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
 		if (res.status === "fail") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
-		toast.success(`Movie updated`, "bottom");
+		toast.success(`Movie updated`);
 		router.push(`/noadmin/movies`);
-	};
-
-	const resetForm = (e) => {
-		e.target.closest("form").reset();
 	};
 
 	return (

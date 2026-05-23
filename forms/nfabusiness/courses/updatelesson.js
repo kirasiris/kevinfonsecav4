@@ -47,21 +47,17 @@ const UpdateLessonForm = ({ token = {}, auth = {}, object = {} }) => {
 		);
 
 		if (res.status === "error") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
 		if (res.status === "fail") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
-		toast.success(`Lesson updated`, "bottom");
+		toast.success(`Lesson updated`);
 		router.push(`/nfabusiness/courses/read/${object?.data?.resourceId?._id}`);
-	};
-
-	const resetForm = (e) => {
-		e.target.closest("form").reset();
 	};
 
 	return (

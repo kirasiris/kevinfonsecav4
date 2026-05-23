@@ -31,37 +31,31 @@ const CreateThemeForm = ({ token = {}, auth = {}, objects = [] }) => {
 			preview_theme_url: formData.get("preview_theme_url"),
 			github_readme: formData.get("github_readme"),
 			files: { avatar: formData.get("file") || undefined },
+			postType: "theme",
 		};
 
 		const res = await fetchurl(
 			`/noadmin/themes`,
 			"POST",
 			"no-cache",
-			{
-				...rawFormData,
-				postType: "theme",
-			},
+			rawFormData,
 			undefined,
 			false,
 			false,
 		);
 
 		if (res.status === "error") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
 		if (res.status === "fail") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
-		toast.success(`Theme created`, "bottom");
+		toast.success(`Theme created`);
 		router.push(`/noadmin/themes`);
-	};
-
-	const resetForm = (e) => {
-		e.target.closest("form").reset();
 	};
 
 	return (

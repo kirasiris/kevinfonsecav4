@@ -43,38 +43,36 @@ const UpdateQRCodeForm = ({ object = {} }) => {
 			qrmargin: formData.get("qrmargin"),
 			qrcodesize: formData.get("qrcodesize"),
 			securitylevel: formData.get("securitylevel"),
+			logo: {
+				url: formData.get("imageurl"),
+				width: formData.get("imagewidth"),
+				height: formData.get("imageheight"),
+			},
 		};
 
 		const res = await fetchurl(
 			`/noadmin/qrcodes/${object?.data?._id}`,
 			"PUT",
 			"no-cache",
-			{
-				...rawFormData,
-				logo: {
-					url: formData.get("imageurl"),
-					width: formData.get("imagewidth"),
-					height: formData.get("imageheight"),
-				},
-			},
+			rawFormData,
 			undefined,
 			false,
 			false,
 		);
 
 		if (res.status === "error") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
 
 		if (res.status === "fail") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
 
-		toast.success("QR Code upgraded", "bottom");
+		toast.success("QR Code upgraded");
 		setBtnText(btnText);
 		router.push(`/noadmin/qrcodes?page=1&limit=10&sort=-createdAt`);
 	};

@@ -26,40 +26,33 @@ const CreateAnimeCategoryForm = ({
 			text: formData.get("text"),
 			parentId: formData.get("parentId"),
 			deletable: formData.get("deletable"),
+			categoryType: "anime",
 		};
 
 		const res = await fetchurl(
 			`/noadmin/categories`,
 			"POST",
 			"no-cache",
-			{
-				...rawFormData,
-				categoryType: "anime",
-			},
+			rawFormData,
 			undefined,
 			false,
 			false,
 		);
 
 		if (res.status === "error") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
 		if (res.status === "fail") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
 		setBtnText(btnText);
-		//resetForm();
 		router.push(
 			`/noadmin/animes/categories?page=${page}&limit=${limit}&sort=${sort}`,
 		);
-	};
-
-	const resetForm = (e) => {
-		e.target.closest("form").reset();
 	};
 
 	return (

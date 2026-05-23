@@ -27,37 +27,31 @@ const CreateSecretForm = ({ token = {}, auth = {} }) => {
 			nsfw: formData.get("nsfw"),
 			commented: formData.get("commented"),
 			deletable: formData.get("deletable"),
+			status: "published",
 		};
 
 		const res = await fetchurl(
 			`/noadmin/secrets`,
 			"POST",
 			"no-cache",
-			{
-				...rawFormData,
-				status: "published",
-			},
+			rawFormData,
 			undefined,
 			false,
 			false,
 		);
 
 		if (res.status === "error") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
 		if (res.status === "fail") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
-		toast.success(`Secret created`, "bottom");
+		toast.success(`Secret created`);
 		router.push(`/noadmin/secrets`);
-	};
-
-	const resetForm = (e) => {
-		e.target.closest("form").reset();
 	};
 
 	return (

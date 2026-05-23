@@ -35,39 +35,33 @@ const CreateCourseForm = ({ token = {}, auth = {} }) => {
 			commented: formData.get("commented"),
 			status: formData.get("status"),
 			files: { avatar: formData.get("file") || undefined },
+			postType: "course",
+			resourceId: auth?.companyId,
+			onModel: "Company",
 		};
 
 		const res = await fetchurl(
 			`/noadmin/stripe/courses/`,
 			"POST",
 			"no-cache",
-			{
-				...rawFormData,
-				postType: "course",
-				resourceId: auth?.companyId,
-				onModel: "Company",
-			},
+			rawFormData,
 			undefined,
 			false,
 			false,
 		);
 
 		if (res.status === "error") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
 		if (res.status === "fail") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
-		toast.success(`Course created`, "bottom");
+		toast.success(`Course created`);
 		router.push(`/nfabusiness/courses`);
-	};
-
-	const resetForm = (e) => {
-		e.target.closest("form").reset();
 	};
 
 	return (

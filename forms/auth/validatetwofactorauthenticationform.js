@@ -28,7 +28,7 @@ const ValidateTwoFactorAuthenticationForm = () => {
 		const userid = awtdParams.userid;
 
 		if (!userid) {
-			toast.error("There was an error, please try again", "bottom");
+			toast.error("There was an error, please try again");
 			router.push(`/auth/login`);
 		}
 
@@ -42,12 +42,12 @@ const ValidateTwoFactorAuthenticationForm = () => {
 			false,
 		);
 		if (res.status === "error") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
 		if (res.status === "fail") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}

@@ -49,21 +49,17 @@ const UpdateMembershipForm = ({ token = {}, auth = {}, object = {} }) => {
 		);
 
 		if (res.status === "error") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
 		if (res.status === "fail") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
-		toast.success(`Membership updated`, "bottom");
+		toast.success(`Membership updated`);
 		router.push(`/nfabusiness/memberships`);
-	};
-
-	const resetForm = (e) => {
-		e.target.closest("form").reset();
 	};
 
 	return (

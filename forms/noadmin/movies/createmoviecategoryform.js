@@ -26,28 +26,26 @@ const CreateMovieCategoryForm = ({
 			text: formData.get("text"),
 			parentId: formData.get("parentId"),
 			deletable: formData.get("deletable"),
+			categoryType: "movie",
 		};
 
 		const res = await fetchurl(
 			`/noadmin/categories`,
 			"POST",
 			"no-cache",
-			{
-				...rawFormData,
-				categoryType: "movie",
-			},
+			rawFormData,
 			undefined,
 			false,
 			false,
 		);
 
 		if (res.status === "error") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
 		if (res.status === "fail") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
@@ -56,10 +54,6 @@ const CreateMovieCategoryForm = ({
 		router.push(
 			`/noadmin/movies/categories?page=${page}&limit=${limit}&sort=${sort}`,
 		);
-	};
-
-	const resetForm = (e) => {
-		e.target.closest("form").reset();
 	};
 
 	return (

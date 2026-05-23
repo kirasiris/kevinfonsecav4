@@ -10,7 +10,7 @@ import FormButtons from "@/components/global/formbuttons";
 const CreateCompanyForm = ({ token = {}, auth = {} }) => {
 	const router = useRouter();
 
-	const [btnText, setBtnText] = useState(`Submit`);
+	const [, setBtnText] = useState(`Submit`);
 
 	const addCompany = async (e) => {
 		e.preventDefault();
@@ -41,21 +41,17 @@ const CreateCompanyForm = ({ token = {}, auth = {} }) => {
 		);
 
 		if (res.status === "error") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
 		if (res.status === "fail") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
-		toast.success(`Company created`, "bottom");
+		toast.success(`Company created`);
 		router.push(`/nfabusiness/companies`);
-	};
-
-	const resetForm = (e) => {
-		e.target.closest("form").reset();
 	};
 
 	return (

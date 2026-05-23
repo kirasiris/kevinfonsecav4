@@ -51,18 +51,18 @@ const RegisterForm = () => {
 		);
 
 		if (res.status === "error") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
 
 		if (res.status === "fail") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
 		setBtnText("Submit");
-		toast.success("Account registered", "bottom");
+		toast.success("Account registered");
 		toast.success(
 			`An email has been sent to ${rawFormData.email}. Please verify account`,
 		);

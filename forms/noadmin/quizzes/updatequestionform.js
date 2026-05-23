@@ -58,21 +58,17 @@ const UpdateQuestionForm = ({
 		);
 
 		if (res.status === "error") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
 		if (res.status === "fail") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
-		toast.success(`Quiz question updated`, "bottom");
+		toast.success(`Quiz question updated`);
 		router.push(`/noadmin/quizzes/read/${object?.data?.resourceId?._id}`);
-	};
-
-	const resetForm = (e) => {
-		e.target.closest("form").reset();
 	};
 
 	return (

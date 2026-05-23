@@ -65,21 +65,17 @@ const UpdateProductForm = ({ object = {}, token = "", auth = {} }) => {
 			false,
 		);
 		if (res.status === "error") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
 		if (res.status === "fail") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
-		toast.success("Product updated", "bottom");
+		toast.success("Product updated");
 		router.push(`/nfabusiness/products`);
-	};
-
-	const resetForm = (e) => {
-		e.target.closest("form").reset();
 	};
 
 	return (

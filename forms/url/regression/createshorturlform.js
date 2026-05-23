@@ -38,16 +38,16 @@ const CreateShortUrlForm = ({ auth = {}, currentpage = "" }) => {
 		);
 
 		if (res.status === "error") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
 		if (res.status === "fail") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
-		toast.success("Short URL created", "bottom");
+		toast.success("Short URL created");
 		setBtnText(btnText);
 		router.push(currentpage);
 	};

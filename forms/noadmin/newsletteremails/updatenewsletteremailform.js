@@ -14,7 +14,7 @@ const UpdateNewsletterEmailForm = ({
 }) => {
 	const router = useRouter();
 
-	const [btnText, setBtnText] = useState(`Submit`);
+	const [, setBtnText] = useState(`Submit`);
 
 	const upgradeEmail = async (e) => {
 		e.preventDefault();
@@ -40,21 +40,17 @@ const UpdateNewsletterEmailForm = ({
 		);
 
 		if (res.status === "error") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
 		if (res.status === "fail") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
-		toast.success(`Newsletter email updated`, "bottom");
+		toast.success(`Newsletter email updated`);
 		router.push(`/noadmin/newsletteremails`);
-	};
-
-	const resetForm = (e) => {
-		e.target.closest("form").reset();
 	};
 
 	return (

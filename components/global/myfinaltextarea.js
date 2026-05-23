@@ -224,7 +224,6 @@ const MyTextArea = ({
 			id={id}
 			name={name}
 			defaultValue={defaultValue}
-			// type
 			className="form-control mb-3"
 			required={isRequired}
 			placeholder={customPlaceholder}

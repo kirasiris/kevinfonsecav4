@@ -44,40 +44,34 @@ const CreateQuestionForm = ({
 			status: formData.get("status"),
 			correctAnswer: formData.get("correctAnswer"),
 			answers: options,
+			resourceId: params.id,
+			onModel: "Quiz",
 		};
 
 		const res = await fetchurl(
 			`/noadmin/questions`,
 			"POST",
 			"no-cache",
-			{
-				...rawFormData,
-				resourceId: params.id,
-				onModel: "Quiz",
-			},
+			rawFormData,
 			undefined,
 			false,
 			false,
 		);
 
 		if (res.status === "error") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
 
 		if (res.status === "fail") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
 
-		toast.success(`Quiz question created`, "bottom");
+		toast.success(`Quiz question created`);
 		router.push(`/noadmin/quizzes/read/${params.id}`);
-	};
-
-	const resetForm = (e) => {
-		e.target.closest("form").reset();
 	};
 
 	return (

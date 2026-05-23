@@ -37,39 +37,33 @@ const CreateRealStateForm = ({ token = {}, auth = {} }) => {
 			status: formData.get("status"),
 			builtOnYear: formData.get("builtOnYear"),
 			files: { avatar: formData.get("file") || undefined },
+			postType: "realestate",
+			resourceId: auth?.companyId,
+			onModel: "Company",
 		};
 
 		const res = await fetchurl(
 			`/noadmin/stripe/realestates`,
 			"POST",
 			"no-cache",
-			{
-				...rawFormData,
-				postType: "realestate",
-				resourceId: auth?.companyId,
-				onModel: "Company",
-			},
+			rawFormData,
 			undefined,
 			false,
 			false,
 		);
 
 		if (res.status === "error") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
 		if (res.status === "fail") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
-		toast.success(`Real State created`, "bottom");
+		toast.success(`Real State created`);
 		router.push(`/nfabusiness/realestates`);
-	};
-
-	const resetForm = (e) => {
-		e.target.closest("form").reset();
 	};
 
 	return (

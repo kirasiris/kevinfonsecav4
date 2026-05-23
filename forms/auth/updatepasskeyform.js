@@ -27,12 +27,12 @@ const UpdatePasskeyForm = ({ auth = {} }) => {
 			false,
 		);
 		if (res.status === "error") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
 		if (res.status === "fail") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
@@ -55,21 +55,21 @@ const UpdatePasskeyForm = ({ auth = {} }) => {
 		);
 
 		if (passkeyVerification.status === "error") {
-			toast.error(passkeyVerification.message, "bottom");
+			toast.error(passkeyVerification.message);
 			setBtnText("Submit");
 			return;
 		}
 		if (passkeyVerification.status === "fail") {
-			toast.error(passkeyVerification.message, "bottom");
+			toast.error(passkeyVerification.message);
 			setBtnText("Submit");
 			return;
 		}
 
 		if (passkeyVerification.data) {
-			toast.success("Passkey registered", "bottom");
+			toast.success("Passkey registered");
 		}
 
-		toast.success("Account has been updated", "bottom");
+		toast.success("Account has been updated");
 		router.push(`/auth/profile`);
 	};
 
@@ -89,17 +89,17 @@ const UpdatePasskeyForm = ({ auth = {} }) => {
 			false,
 		);
 		if (res.status === "error") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
 		if (res.status === "fail") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
 
-		toast.success("Account has been updated", "bottom");
+		toast.success("Account has been updated");
 		router.push(`/auth/profile`);
 	};
 

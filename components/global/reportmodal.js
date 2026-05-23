@@ -14,6 +14,9 @@ const ReportModal = ({
 	const [reportData, setReportData] = useState({
 		title: ``,
 		text: ``,
+		postType: postType,
+		onModel: onModel,
+		website: "beFree",
 	});
 
 	const { title, text } = reportData;
@@ -22,6 +25,9 @@ const ReportModal = ({
 		setReportData({
 			title: ``,
 			text: ``,
+			postType: postType,
+			onModel: onModel,
+			website: "beFree",
 		});
 	};
 
@@ -31,12 +37,7 @@ const ReportModal = ({
 			`/global/reports/${resourceId}`,
 			"POST",
 			"no-cache",
-			{
-				...reportData,
-				postType: postType,
-				onModel: onModel,
-				website: "beFree",
-			},
+			reportData,
 			undefined,
 			false,
 			false,

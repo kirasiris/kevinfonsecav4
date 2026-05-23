@@ -111,12 +111,9 @@ const UseDropzone = ({
 								false,
 							);
 						} catch (err) {
-							toast.error(
-								err?.message || "Something went wrong during upload",
-								"bottom",
-							);
+							toast.error(err?.message || "Something went wrong during upload");
 						} finally {
-							toast.success("Files uploaded", "bottom");
+							toast.success("Files uploaded");
 						}
 					}
 					setUploadPercentage(0);

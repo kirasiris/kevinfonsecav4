@@ -24,6 +24,8 @@ const PostNew = ({
 		address: "",
 		subType: searchParams.subType || undefined,
 		files: [],
+		commented: true,
+		status: "published",
 	});
 
 	const { privacy, title, text, address } = postData;
@@ -37,6 +39,8 @@ const PostNew = ({
 			address: "",
 			subType: searchParams.subType || undefined,
 			files: [],
+			commented: true,
+			status: "published",
 		});
 	};
 
@@ -48,11 +52,7 @@ const PostNew = ({
 			`/protected/posts`,
 			"POST",
 			"no-cache",
-			{
-				...postData,
-				commented: true,
-				status: "published",
-			},
+			postData,
 			undefined,
 			false,
 			false,

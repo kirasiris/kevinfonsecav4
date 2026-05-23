@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { formatDateWithoutTime } from "befree-utilities";
-import Loading from "@/app/blog/loading";
+import Loading from "@/app/snippet/loading";
 import ParseHtml from "@/layout/parseHtml";
 
 const Single = ({

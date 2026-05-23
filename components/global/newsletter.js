@@ -22,7 +22,7 @@ const NewsletterForm = ({
 			);
 			setNewsletters(res?.data);
 		};
-		fetchNewsletters(``);
+		fetchNewsletters(`?`);
 	}, []);
 
 	const [emailBtnTxt, setEmailBtnTxt] = useState("Subscribe Now");
@@ -58,13 +58,13 @@ const NewsletterForm = ({
 		);
 
 		if (res.status === "error") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setEmailBtnTxt("Submit");
 			return;
 		}
 
 		if (res.status === "fail") {
-			toast.error(res.message, "bottom");
+			toast.error(res.message);
 			setEmailBtnTxt("Submit");
 			return;
 		}

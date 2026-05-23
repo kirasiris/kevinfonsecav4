@@ -220,6 +220,7 @@ const UpdateFileForm = ({ token = {}, auth = {}, object = {} }) => {
 					<option value={`tv-shows`}>TV Shows</option>
 					<option value={`products`}>Products, Real Estates & Courses</option>
 					<option value={`themes`}>Themes</option>
+					<option value={`comments-and-reviews`}>Comments and Reviews</option>
 				</select>
 				<label htmlFor="objectId" className="form-label">
 					Object ID

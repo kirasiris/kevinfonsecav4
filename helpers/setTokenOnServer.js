@@ -125,12 +125,6 @@ export const fetchurl = async (
 	myHeaders.append("Content-Type", "application/json");
 	myHeaders.append("credentials", "include");
 
-	// let customHeaders = {
-	// 	Authorization: `Bearer ${token?.value}`,
-	// 	"Content-Type": "application/json",
-	// 	credentials: "include",
-	// };
-
 	if (
 		bodyData &&
 		typeof bodyData === "object" &&
@@ -144,8 +138,6 @@ export const fetchurl = async (
 
 	if (multipart) {
 		const data = new FormData();
-		// customHeaders["Content-Type"] =
-		// 	`multipart/form-data; boundary=${data._boundary}`;
 		myHeaders.set(
 			"Content-Type",
 			`multipart/form-data; boundary=${data._boundary}`,

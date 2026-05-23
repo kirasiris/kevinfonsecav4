@@ -109,11 +109,6 @@ const List = ({ auth = {}, objects = [] }) => {
 						</ul>
 					</>
 				) : (
-					// <div className="text-center text-muted py-4">
-					// 	<i className="bi bi-people fs-1 d-block mb-2"></i>
-					// 	<p className="mb-0">No referrals yet</p>
-					// 	<small>Share your code to start earning rewards!</small>
-					// </div>
 					<NothingFoundAlert text="Share your code to start earning rewards!" />
 				)}
 			</div>

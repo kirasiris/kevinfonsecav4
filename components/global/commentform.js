@@ -21,15 +21,13 @@ const CommentForm = ({
 			resourceId: resourceId,
 			parentId: parentId,
 			onModel: onModel,
+			user: auth?.userId || undefined,
 		};
 		await fetchurl(
 			`/global/comments/${resourceId}`,
 			"POST",
 			"no-cache",
-			{
-				...rawFormData,
-				user: auth?.userId || undefined,
-			},
+			rawFormData,
 			undefined,
 			false,
 			false,

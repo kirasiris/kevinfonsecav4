@@ -22,6 +22,7 @@ const ClientCommentForm = ({
 		parentId: parentId,
 		postType: postType,
 		onModel: onModel,
+		user: auth?.userId || undefined,
 	});
 
 	const { title, text, name, email, website } = newCommentData;
@@ -35,10 +36,7 @@ const ClientCommentForm = ({
 				`/comments/${resourceId}`,
 				"POST",
 				"no-cache",
-				{
-					...newCommentData,
-					user: auth?.userId || undefined,
-				},
+				newCommentData,
 				undefined,
 				false,
 				false,
@@ -77,6 +75,7 @@ const ClientCommentForm = ({
 			parentId: parentId,
 			postType: postType,
 			onModel: onModel,
+			user: auth?.userId || undefined,
 		});
 	};
 

@@ -9,20 +9,19 @@ const NewsletterForm = ({
 }) => {
 	const [newsletters, setNewsletters] = useState([]);
 
-	const fetchNewsletters = async (params = "") => {
-		const res = await fetchurl(
-			`/global/newslettersubscribers${params}`,
-			"GET",
-			"no-cache",
-			{},
-			undefined,
-			false,
-			false,
-		);
-		setNewsletters(res?.data);
-	};
-
 	useEffect(() => {
+		const fetchNewsletters = async (params = "") => {
+			const res = await fetchurl(
+				`/global/newslettersubscribers${params}`,
+				"GET",
+				"no-cache",
+				{},
+				undefined,
+				false,
+				false,
+			);
+			setNewsletters(res?.data);
+		};
 		fetchNewsletters(``);
 	}, []);
 
@@ -39,6 +38,7 @@ const NewsletterForm = ({
 			name: formData.get("name"),
 			email: formData.get("email"),
 			captcha: formData.get("captcha"),
+			website: process.env.NEXT_PUBLIC_NO_REPLY_EMAIL, // Needed for DB mass email functionality
 		};
 
 		if (rawFormData.captcha !== "5") {
@@ -51,10 +51,7 @@ const NewsletterForm = ({
 			`/global/newslettersubscribers`,
 			"POST",
 			"no-cache",
-			{
-				...rawFormData,
-				website: process.env.NEXT_PUBLIC_NO_REPLY_EMAIL, // Needed for DB mass email functionality
-			},
+			rawFormData,
 			undefined,
 			false,
 			false,

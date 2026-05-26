@@ -16,9 +16,11 @@ const AdminCategoriesSearchIndex = async ({ params, searchParams }) => {
 	const page = awtdSearchParams.page || 1;
 	const limit = awtdSearchParams.limit || 10;
 	const sort = awtdSearchParams.sort || "-createdAt";
+	const keywordQuery =
+		keyword !== "" && keyword !== undefined ? `&keyword=${keyword}` : "";
 
 	const categories = await getCategories(
-		`?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+		`?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 	);
 
 	const draftIt = async (id) => {
@@ -26,7 +28,7 @@ const AdminCategoriesSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/categories/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/categories/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/noadmin/categories/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -35,7 +37,7 @@ const AdminCategoriesSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/categories/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/categories/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/noadmin/categories/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -44,7 +46,7 @@ const AdminCategoriesSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/categories/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/categories/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/noadmin/categories/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -53,7 +55,7 @@ const AdminCategoriesSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/categories/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/categories/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/noadmin/categories/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -66,7 +68,7 @@ const AdminCategoriesSearchIndex = async ({ params, searchParams }) => {
 			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/categories/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/noadmin/categories/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -75,7 +77,7 @@ const AdminCategoriesSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/categories/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/categories/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/noadmin/categories/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -88,7 +90,7 @@ const AdminCategoriesSearchIndex = async ({ params, searchParams }) => {
 			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/categories/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/noadmin/categories/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -97,7 +99,7 @@ const AdminCategoriesSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/categories/${id}/usagecount`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/categories/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/noadmin/categories/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -106,7 +108,7 @@ const AdminCategoriesSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/categories/allusagecount`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/categories/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/noadmin/categories/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -122,7 +124,7 @@ const AdminCategoriesSearchIndex = async ({ params, searchParams }) => {
 			<div className="row">
 				<div className="col">
 					<CreateCategoryForm
-						currentpage={`/noadmin/categories/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`}
+						currentpage={`/noadmin/categories/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`}
 						objects={categories}
 					/>
 				</div>

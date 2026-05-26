@@ -14,9 +14,11 @@ const AdminChangelogsSearchIndex = async ({ params, searchParams }) => {
 	const page = awtdSearchParams.page || 1;
 	const limit = awtdSearchParams.limit || 10;
 	const sort = awtdSearchParams.sort || "-createdAt";
+	const keywordQuery =
+		keyword !== "" && keyword !== undefined ? `&keyword=${keyword}` : "";
 
 	const changelogs = await getChangelogs(
-		`?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+		`?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 	);
 
 	const draftIt = async (id) => {
@@ -24,7 +26,7 @@ const AdminChangelogsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/changelogs/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/changelogs/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/noadmin/changelogs/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -33,7 +35,7 @@ const AdminChangelogsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/changelogs/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/changelogs/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/noadmin/changelogs/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -42,7 +44,7 @@ const AdminChangelogsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/changelogs/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/changelogs/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/noadmin/changelogs/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -51,7 +53,7 @@ const AdminChangelogsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/changelogs/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/changelogs/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/noadmin/changelogs/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -64,7 +66,7 @@ const AdminChangelogsSearchIndex = async ({ params, searchParams }) => {
 			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/changelogs/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/noadmin/changelogs/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -73,7 +75,7 @@ const AdminChangelogsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/changelogs/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/changelogs/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/noadmin/changelogs/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -86,7 +88,7 @@ const AdminChangelogsSearchIndex = async ({ params, searchParams }) => {
 			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/changelogs/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/noadmin/changelogs/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 

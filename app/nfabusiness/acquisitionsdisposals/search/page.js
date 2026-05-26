@@ -19,9 +19,11 @@ const NFAAcquisitionDisposalsSearchIndex = async ({ params, searchParams }) => {
 	const page = awtdSearchParams.page || 1;
 	const limit = awtdSearchParams.limit || 10;
 	const sort = awtdSearchParams.sort || "-orderingNumber";
+	const keywordQuery =
+		keyword !== "" && keyword !== undefined ? `&keyword=${keyword}` : "";
 
 	const acquisitionsdisposals = await getAcquisitionsDisposals(
-		`?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+		`?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 	);
 
 	const acquireIt = async (id) => {
@@ -33,7 +35,7 @@ const NFAAcquisitionDisposalsSearchIndex = async ({ params, searchParams }) => {
 			"no-cache",
 		);
 		revalidatePath(
-			`/nfabusiness/acquisitionsdisposals/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/nfabusiness/acquisitionsdisposals/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -46,7 +48,7 @@ const NFAAcquisitionDisposalsSearchIndex = async ({ params, searchParams }) => {
 			"no-cache",
 		);
 		revalidatePath(
-			`/nfabusiness/acquisitionsdisposals/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/nfabusiness/acquisitionsdisposals/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 

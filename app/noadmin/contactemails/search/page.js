@@ -19,9 +19,11 @@ const AdminContactEmailsSearchIndex = async ({ params, searchParams }) => {
 	const page = awtdSearchParams.page || 1;
 	const limit = awtdSearchParams.limit || 10;
 	const sort = awtdSearchParams.sort || "-createdAt";
+	const keywordQuery =
+		keyword !== "" && keyword !== undefined ? `&keyword=${keyword}` : "";
 
 	const contactemails = await getContactEmails(
-		`?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+		`?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 	);
 
 	const handleDelete = async (id) => {
@@ -33,7 +35,7 @@ const AdminContactEmailsSearchIndex = async ({ params, searchParams }) => {
 			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/contactemails/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/noadmin/contactemails/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -42,7 +44,7 @@ const AdminContactEmailsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/contactemails/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/contactemails?page=${page}&limit=${limit}&sort=${sort}`,
+			`/noadmin/contactemails/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -55,7 +57,7 @@ const AdminContactEmailsSearchIndex = async ({ params, searchParams }) => {
 			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/contactemails/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/noadmin/contactemails/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 

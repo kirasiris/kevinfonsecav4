@@ -15,9 +15,11 @@ const AdminPollsSearchIndex = async ({ params, searchParams }) => {
 	const page = awtdSearchParams.page || 1;
 	const limit = awtdSearchParams.limit || 10;
 	const sort = awtdSearchParams.sort || "-createdAt";
+	const keywordQuery =
+		keyword !== "" && keyword !== undefined ? `&keyword=${keyword}` : "";
 
 	const polls = await getPolls(
-		`?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+		`?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 	);
 
 	const draftIt = async (id) => {
@@ -25,7 +27,7 @@ const AdminPollsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/polls/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/polls/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/polls/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -34,7 +36,7 @@ const AdminPollsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/polls/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/polls/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/polls/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -43,7 +45,7 @@ const AdminPollsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/polls/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/polls/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/polls/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -52,7 +54,7 @@ const AdminPollsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/polls/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/polls/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/polls/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -61,7 +63,7 @@ const AdminPollsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/polls/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`/noadmin/polls/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/polls/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -70,7 +72,7 @@ const AdminPollsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/polls/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/polls/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/polls/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -80,10 +82,10 @@ const AdminPollsSearchIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/polls/deleteall/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/polls/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/polls/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 

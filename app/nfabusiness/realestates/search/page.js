@@ -19,9 +19,11 @@ const NFARealEstatesSearchIndex = async ({ params, searchParams }) => {
 	const page = awtdSearchParams.page || 1;
 	const limit = awtdSearchParams.limit || 10;
 	const sort = awtdSearchParams.sort || "-createdAt";
+	const keywordQuery =
+		keyword !== "" && keyword !== undefined ? `&keyword=${keyword}` : "";
 
 	const realstates = await getRealEstates(
-		`?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+		`?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 	);
 
 	const draftIt = async (id) => {
@@ -33,7 +35,7 @@ const NFARealEstatesSearchIndex = async ({ params, searchParams }) => {
 			"no-cache",
 		);
 		revalidatePath(
-			`/nfabusiness/realestates/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/nfabusiness/realestates/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -46,7 +48,7 @@ const NFARealEstatesSearchIndex = async ({ params, searchParams }) => {
 			"no-cache",
 		);
 		revalidatePath(
-			`/nfabusiness/realestates/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/nfabusiness/realestates/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -59,7 +61,7 @@ const NFARealEstatesSearchIndex = async ({ params, searchParams }) => {
 			"no-cache",
 		);
 		revalidatePath(
-			`/nfabusiness/realestates/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/nfabusiness/realestates/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -72,7 +74,7 @@ const NFARealEstatesSearchIndex = async ({ params, searchParams }) => {
 			"no-cache",
 		);
 		revalidatePath(
-			`/nfabusiness/realestates/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/nfabusiness/realestates/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -85,7 +87,7 @@ const NFARealEstatesSearchIndex = async ({ params, searchParams }) => {
 			"no-cache",
 		);
 		revalidatePath(
-			`/nfabusiness/realestates/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/nfabusiness/realestates/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -98,7 +100,7 @@ const NFARealEstatesSearchIndex = async ({ params, searchParams }) => {
 			"no-cache",
 		);
 		revalidatePath(
-			`/nfabusiness/realestates/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/nfabusiness/realestates/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -111,7 +113,7 @@ const NFARealEstatesSearchIndex = async ({ params, searchParams }) => {
 			"no-cache",
 		);
 		revalidatePath(
-			`/nfabusiness/realestates/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/nfabusiness/realestates/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -120,7 +122,7 @@ const NFARealEstatesSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/stripe/realestates/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`/nfabusiness/realestates/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/nfabusiness/realestates/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -133,7 +135,7 @@ const NFARealEstatesSearchIndex = async ({ params, searchParams }) => {
 			"no-cache",
 		);
 		revalidatePath(
-			`/nfabusiness/realestates/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/nfabusiness/realestates/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 

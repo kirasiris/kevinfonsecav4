@@ -15,9 +15,11 @@ const NFAWeaponsSearchIndex = async ({ params, searchParams }) => {
 	const page = awtdSearchParams.page || 1;
 	const limit = awtdSearchParams.limit || 10;
 	const sort = awtdSearchParams.sort || "-createdAt";
+	const keywordQuery =
+		keyword !== "" && keyword !== undefined ? `&keyword=${keyword}` : "";
 
 	const weapons = await getWeapons(
-		`?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+		`?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 	);
 
 	const draftIt = async (id) => {
@@ -25,7 +27,7 @@ const NFAWeaponsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/weapons/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
-			`/nfabusiness/weapons/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/weapons/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -34,7 +36,7 @@ const NFAWeaponsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/weapons/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
-			`/nfabusiness/weapons/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/weapons/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -43,7 +45,7 @@ const NFAWeaponsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/weapons/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`/nfabusiness/weapons/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/weapons/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -53,10 +55,10 @@ const NFAWeaponsSearchIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/weapons/deleteall/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/nfabusiness/weapons/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/weapons/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 

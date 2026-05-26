@@ -23,10 +23,12 @@ const AdminReadQuizSearchIndex = async ({ params, searchParams }) => {
 	const page = awtdSearchParams.page || 1;
 	const limit = awtdSearchParams.limit || 10;
 	const sort = awtdSearchParams.sort || "orderingNumber";
+	const keywordQuery =
+		keyword !== "" && keyword !== undefined ? `&keyword=${keyword}` : "";
 
 	const quiz = await getQuiz(`/${awtdParams.id}`);
 	const questions = await getQuestions(
-		`?resourceId=${quiz?.data?._id}&page=${page}&limit=${limit}&sort=${sort}&keyword=${keyword}`
+		`?resourceId=${quiz?.data?._id}&page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 	);
 
 	const draftIt = async (id) => {
@@ -63,7 +65,7 @@ const AdminReadQuizSearchIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/questions/${id}/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(`/noadmin/quizzes/read/${awtdParams.id}`);
 	};
@@ -81,7 +83,7 @@ const AdminReadQuizSearchIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/questions/deleteall/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(`/noadmin/quizzes/read/${awtdParams.id}`);
 	};

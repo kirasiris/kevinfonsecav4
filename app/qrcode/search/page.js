@@ -13,7 +13,7 @@ async function getQRCodes(params) {
 const QRCodeGeneratorSearchIndex = async ({ params, searchParams }) => {
 	const awtdParams = await params;
 	const awtdSearchParams = await searchParams;
-	const keyword = awtdSearchParams.keyword;
+	const keyword = awtdSearchParams.keyword || "";
 	const page = awtdSearchParams.page || 1;
 	const limit = awtdSearchParams.limit || 10;
 	const sort = awtdSearchParams.sort || "-createdAt";
@@ -32,7 +32,7 @@ const QRCodeGeneratorSearchIndex = async ({ params, searchParams }) => {
 	return (
 		<>
 			<Head
-				title={`${settings?.data?.title} - Search results of ${awtdSearchParams.email}`}
+				title={`${settings?.data?.title} - Search results of ${keyword}`}
 				description={"Search results..."}
 				favicon={settings?.data?.favicon}
 				postImage={settings.data.showcase_image}
@@ -43,7 +43,7 @@ const QRCodeGeneratorSearchIndex = async ({ params, searchParams }) => {
 				card="summary"
 				robots=""
 				category=""
-				url={`/qrcode/search?keyword=${awtdSearchParams.email}&page=${page}&limit=${limit}&sort=${sort}`}
+				url={`/qrcode/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`}
 				author=""
 				createdAt=""
 				updatedAt=""
@@ -52,10 +52,7 @@ const QRCodeGeneratorSearchIndex = async ({ params, searchParams }) => {
 			/>
 			{settings?.data?.maintenance === false ? (
 				<>
-					<Header
-						title={awtdSearchParams.keyword}
-						description="Search results..."
-					/>
+					<Header title={keyword} description="Search results..." />
 					<List
 						object={undefined}
 						objects={qrcodes}

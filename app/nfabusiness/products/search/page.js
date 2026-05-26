@@ -19,9 +19,11 @@ const NFAProductsSearchIndex = async ({ params, searchParams }) => {
 	const page = awtdSearchParams.page || 1;
 	const limit = awtdSearchParams.limit || 10;
 	const sort = awtdSearchParams.sort || "-createdAt";
+	const keywordQuery =
+		keyword !== "" && keyword !== undefined ? `&keyword=${keyword}` : "";
 
 	const products = await getProducts(
-		`?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+		`?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 	);
 
 	const draftIt = async (id) => {
@@ -29,7 +31,7 @@ const NFAProductsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/stripe/products/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
-			`/nfabusiness/products/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/nfabusiness/products/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -42,7 +44,7 @@ const NFAProductsSearchIndex = async ({ params, searchParams }) => {
 			"no-cache",
 		);
 		revalidatePath(
-			`/nfabusiness/products/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/nfabusiness/products/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -51,7 +53,7 @@ const NFAProductsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/stripe/products/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
-			`/nfabusiness/products/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/nfabusiness/products/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -64,7 +66,7 @@ const NFAProductsSearchIndex = async ({ params, searchParams }) => {
 			"no-cache",
 		);
 		revalidatePath(
-			`/nfabusiness/products/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/nfabusiness/products/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -77,7 +79,7 @@ const NFAProductsSearchIndex = async ({ params, searchParams }) => {
 			"no-cache",
 		);
 		revalidatePath(
-			`/nfabusiness/products/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/nfabusiness/products/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -90,7 +92,7 @@ const NFAProductsSearchIndex = async ({ params, searchParams }) => {
 			"no-cache",
 		);
 		revalidatePath(
-			`/nfabusiness/products/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/nfabusiness/products/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -103,7 +105,7 @@ const NFAProductsSearchIndex = async ({ params, searchParams }) => {
 			"no-cache",
 		);
 		revalidatePath(
-			`/nfabusiness/products/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/nfabusiness/products/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -112,7 +114,7 @@ const NFAProductsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/stripe/products/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`/nfabusiness/products/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/nfabusiness/products/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -125,7 +127,7 @@ const NFAProductsSearchIndex = async ({ params, searchParams }) => {
 			"no-cache",
 		);
 		revalidatePath(
-			`/nfabusiness/products/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/nfabusiness/products/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 

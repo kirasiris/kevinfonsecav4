@@ -15,9 +15,11 @@ const AdminUsersSearchIndex = async ({ params, searchParams }) => {
 	const page = awtdSearchParams.page || 1;
 	const limit = awtdSearchParams.limit || 10;
 	const sort = awtdSearchParams.sort || "-createdAt";
+	const keywordQuery =
+		keyword !== "" && keyword !== undefined ? `&keyword=${keyword}` : "";
 
 	const users = await getUsers(
-		`?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+		`?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 	);
 
 	const assignStripeCustomerId = async (id) => {
@@ -27,10 +29,12 @@ const AdminUsersSearchIndex = async ({ params, searchParams }) => {
 			"PUT",
 			"no-cache",
 			{
-				website: "beFree",
+				website: process.env.NEXT_PUBLIC_WEBSITE_NAME,
 			},
 		);
-		revalidatePath(`/noadmin/users?page=${page}&limit=${limit}&sort=${sort}`);
+		revalidatePath(
+			`/noadmin/users/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
+		);
 	};
 
 	const assignStripeAccountId = async (id) => {
@@ -40,10 +44,12 @@ const AdminUsersSearchIndex = async ({ params, searchParams }) => {
 			"PUT",
 			"no-cache",
 			{
-				website: "beFree",
+				website: process.env.NEXT_PUBLIC_WEBSITE_NAME,
 			},
 		);
-		revalidatePath(`/noadmin/users?page=${page}&limit=${limit}&sort=${sort}`);
+		revalidatePath(
+			`/noadmin/users/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
+		);
 	};
 
 	const assignStripeId = async (id) => {
@@ -54,10 +60,12 @@ const AdminUsersSearchIndex = async ({ params, searchParams }) => {
 			"PUT",
 			"no-cache",
 			{
-				website: "beFree",
+				website: process.env.NEXT_PUBLIC_WEBSITE_NAME,
 			},
 		);
-		revalidatePath(`/noadmin/users?page=${page}&limit=${limit}&sort=${sort}`);
+		revalidatePath(
+			`/noadmin/users/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
+		);
 	};
 
 	const updateStripeSellerAccount = async (id) => {
@@ -68,7 +76,9 @@ const AdminUsersSearchIndex = async ({ params, searchParams }) => {
 			"PUT",
 			"no-cache",
 		);
-		revalidatePath(`/noadmin/users?page=${page}&limit=${limit}&sort=${sort}`);
+		revalidatePath(
+			`/noadmin/users/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
+		);
 	};
 
 	const assignStripeOnBoardingLink = async (id) => {
@@ -82,7 +92,9 @@ const AdminUsersSearchIndex = async ({ params, searchParams }) => {
 				website: process.env.NEXT_PUBLIC_WEBSITE_NAME,
 			},
 		);
-		revalidatePath(`/noadmin/users?page=${page}&limit=${limit}&sort=${sort}`);
+		revalidatePath(
+			`/noadmin/users/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
+		);
 	};
 
 	const handleAssignReferralCode = async (id) => {
@@ -92,13 +104,17 @@ const AdminUsersSearchIndex = async ({ params, searchParams }) => {
 			"PUT",
 			"no-cache",
 		);
-		revalidatePath(`/noadmin/users?page=${page}&limit=${limit}&sort=${sort}`);
+		revalidatePath(
+			`/noadmin/users/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
+		);
 	};
 
 	const handleDelete = async (id) => {
 		"use server";
 		await fetchurl(`/noadmin/users/${id}/permanently`, "DELETE", "no-cache");
-		revalidatePath(`/noadmin/users?page=${page}&limit=${limit}&sort=${sort}`);
+		revalidatePath(
+			`/noadmin/users/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
+		);
 	};
 
 	const handleDeleteAll = async () => {
@@ -109,7 +125,9 @@ const AdminUsersSearchIndex = async ({ params, searchParams }) => {
 			"DELETE",
 			"no-cache",
 		);
-		revalidatePath(`/noadmin/users?page=${page}&limit=${limit}&sort=${sort}`);
+		revalidatePath(
+			`/noadmin/users/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
+		);
 	};
 
 	return (

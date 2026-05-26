@@ -27,14 +27,15 @@ const AdminCDAlbumReadIndex = async ({ params, searchParams }) => {
 	const keyword = awtdSearchParams.keyword || "";
 	const token = await getAuthTokenOnServer();
 	const auth = await getUserOnServer();
-
 	const page = awtdSearchParams.page || 1;
 	const limit = awtdSearchParams.limit || 10;
 	const sort = awtdSearchParams.sort || "-createdAt";
+	const keywordQuery =
+		keyword !== "" && keyword !== undefined ? `&keyword=${keyword}` : "";
 
 	const cdalbum = await getCDAlbum(`/${awtdParams.id}`);
 	const songs = await getSongs(
-		`?resourceId=${cdalbum?.data?._id}&page=${page}&limit=${limit}&sort=${sort}&keyword=${keyword}`,
+		`?resourceId=${cdalbum?.data?._id}&page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 	);
 
 	const draftIt = async (id) => {

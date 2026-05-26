@@ -16,11 +16,13 @@ const AdminQRCodesGeneratorSearchIndex = async ({ params, searchParams }) => {
 	const page = awtdSearchParams.page || 1;
 	const limit = awtdSearchParams.limit || 10;
 	const sort = awtdSearchParams.sort || "-createdAt";
+	const keywordQuery =
+		keyword !== "" && keyword !== undefined ? `&keyword=${keyword}` : "";
 
 	const auth = await getUserOnServer();
 
 	const qrcodes = await getQRCodes(
-		`?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+		`?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 	);
 
 	const draftIt = async (id) => {
@@ -28,7 +30,7 @@ const AdminQRCodesGeneratorSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/qrcodes/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/qrcodes/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/noadmin/qrcodes/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -37,7 +39,7 @@ const AdminQRCodesGeneratorSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/qrcodes/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/qrcodes/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/noadmin/qrcodes/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -46,7 +48,7 @@ const AdminQRCodesGeneratorSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/qrcodes/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/qrcodes/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/noadmin/qrcodes/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -55,7 +57,7 @@ const AdminQRCodesGeneratorSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/qrcodes/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/qrcodes/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/noadmin/qrcodes/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -64,7 +66,7 @@ const AdminQRCodesGeneratorSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/qrcodes/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`/noadmin/qrcodes/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/noadmin/qrcodes/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -73,7 +75,7 @@ const AdminQRCodesGeneratorSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/qrcodes/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/qrcodes/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/noadmin/qrcodes/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -86,7 +88,7 @@ const AdminQRCodesGeneratorSearchIndex = async ({ params, searchParams }) => {
 			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/qrcodes/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/noadmin/qrcodes/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 

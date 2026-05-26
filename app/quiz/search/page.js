@@ -18,7 +18,7 @@ async function getCategories(params) {
 const QuizSearchIndex = async ({ params, searchParams }) => {
 	const awtdParams = await params;
 	const awtdSearchParams = await searchParams;
-	const keyword = awtdSearchParams.keyword;
+	const keyword = awtdSearchParams.keyword || "";
 	const page = awtdSearchParams.page || 1;
 	const limit = awtdSearchParams.limit || 10;
 	const sort = awtdSearchParams.sort || "-createdAt";
@@ -33,7 +33,7 @@ const QuizSearchIndex = async ({ params, searchParams }) => {
 	);
 
 	const getQuizzesData = getQuizzes(
-		`?page=${page}&limit=${limit}&sort=${sort}&status=published&keyword=${awtdSearchParams.keyword}${decrypt}`,
+		`?page=${page}&limit=${limit}&sort=${sort}&status=published${keywordQuery}${decrypt}`,
 	);
 
 	const getCategoriesData = getCategories(`?categoryType=quiz`);
@@ -47,7 +47,7 @@ const QuizSearchIndex = async ({ params, searchParams }) => {
 	return (
 		<>
 			<Head
-				title={`${settings?.data?.title} - Search results of ${awtdSearchParams.keyword}`}
+				title={`${settings?.data?.title} - Search results of ${keyword}`}
 				description={"Search results..."}
 				favicon={settings?.data?.favicon}
 				postImage=""
@@ -58,7 +58,7 @@ const QuizSearchIndex = async ({ params, searchParams }) => {
 				card="summary"
 				robots=""
 				category=""
-				url={`/quiz/search?keyword=${awtdSearchParams.keyword}&page=${page}&limit=${limit}&sort=${sort}`}
+				url={`/quiz/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`}
 				author=""
 				createdAt=""
 				updatedAt=""
@@ -67,10 +67,7 @@ const QuizSearchIndex = async ({ params, searchParams }) => {
 			/>
 			{settings?.data?.maintenance === false ? (
 				<>
-					<Header
-						title={`${awtdSearchParams.keyword}`}
-						description="Search results..."
-					/>
+					<Header title={`${keyword}`} description="Search results..." />
 					<List
 						featured={featured}
 						objects={quizzes}

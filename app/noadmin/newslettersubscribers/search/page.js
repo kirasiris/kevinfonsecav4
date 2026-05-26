@@ -7,7 +7,7 @@ async function getNewsletterSubscribers(params) {
 	const res = await fetchurl(
 		`/global/newslettersubscribers${params}`,
 		"GET",
-		"no-cache"
+		"no-cache",
 	);
 	return res;
 }
@@ -22,9 +22,11 @@ const AdminNewsletterSubscribersSearchIndex = async ({
 	const page = awtdSearchParams.page || 1;
 	const limit = awtdSearchParams.limit || 10;
 	const sort = awtdSearchParams.sort || "-createdAt";
+	const keywordQuery =
+		keyword !== "" && keyword !== undefined ? `&keyword=${keyword}` : "";
 
 	const newslettersubscribers = await getNewsletterSubscribers(
-		`?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+		`?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 	);
 
 	const handleDelete = async (id) => {
@@ -33,10 +35,10 @@ const AdminNewsletterSubscribersSearchIndex = async ({
 		await fetchurl(
 			`/noadmin/newslettersubscribers/${id}/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/newslettersubscribers/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/newslettersubscribers/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -46,10 +48,10 @@ const AdminNewsletterSubscribersSearchIndex = async ({
 		await fetchurl(
 			`/noadmin/newslettersubscribers/deleteall/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/newslettersubscribers/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/newslettersubscribers/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 

@@ -15,9 +15,11 @@ const AdminReportsSearchIndex = async ({ params, searchParams }) => {
 	const page = awtdSearchParams.page || 1;
 	const limit = awtdSearchParams.limit || 10;
 	const sort = awtdSearchParams.sort || "-createdAt";
+	const keywordQuery =
+		keyword !== "" && keyword !== undefined ? `&keyword=${keyword}` : "";
 
 	const reports = await getReports(
-		`?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+		`?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 	);
 
 	const handleDelete = async (id) => {
@@ -25,7 +27,7 @@ const AdminReportsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/reports/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`/noadmin/reports/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/reports/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -35,10 +37,10 @@ const AdminReportsSearchIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/reports/deleteall/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/reports/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/reports/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 

@@ -19,9 +19,11 @@ const NFAServiceEmailsSearchIndex = async ({ params, searchParams }) => {
 	const page = awtdSearchParams.page || 1;
 	const limit = awtdSearchParams.limit || 10;
 	const sort = awtdSearchParams.sort || "-createdAt";
+	const keywordQuery =
+		keyword !== "" && keyword !== undefined ? `&keyword=${keyword}` : "";
 
 	const serviceemails = await getServiceEmails(
-		`?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+		`?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 	);
 
 	const handleDelete = async (id) => {
@@ -33,7 +35,7 @@ const NFAServiceEmailsSearchIndex = async ({ params, searchParams }) => {
 			"no-cache",
 		);
 		revalidatePath(
-			`/nfabusiness/serviceemails/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/nfabusiness/serviceemails/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -55,7 +57,7 @@ const NFAServiceEmailsSearchIndex = async ({ params, searchParams }) => {
 			"no-cache",
 		);
 		revalidatePath(
-			`/nfabusiness/serviceemails/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/nfabusiness/serviceemails/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 

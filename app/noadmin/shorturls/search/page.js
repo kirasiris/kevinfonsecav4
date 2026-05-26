@@ -20,11 +20,13 @@ const AdminShortUrlsSearchIndex = async ({ params, searchParams }) => {
 	const page = awtdSearchParams.page || 1;
 	const limit = awtdSearchParams.limit || 10;
 	const sort = awtdSearchParams.sort || "-createdAt";
+	const keywordQuery =
+		keyword !== "" && keyword !== undefined ? `&keyword=${keyword}` : "";
 
 	const auth = await getUserOnServer();
 
 	const shorturls = await getShortUrls(
-		`?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+		`?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 	);
 
 	const draftIt = async (id) => {
@@ -36,7 +38,7 @@ const AdminShortUrlsSearchIndex = async ({ params, searchParams }) => {
 			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/shorturls/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/noadmin/shorturls/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -49,7 +51,7 @@ const AdminShortUrlsSearchIndex = async ({ params, searchParams }) => {
 			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/shorturls/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/noadmin/shorturls/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -62,7 +64,7 @@ const AdminShortUrlsSearchIndex = async ({ params, searchParams }) => {
 			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/shorturls/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/noadmin/shorturls/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -75,7 +77,7 @@ const AdminShortUrlsSearchIndex = async ({ params, searchParams }) => {
 			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/shorturls/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/noadmin/shorturls/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -88,7 +90,7 @@ const AdminShortUrlsSearchIndex = async ({ params, searchParams }) => {
 			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/shorturls/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/noadmin/shorturls/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -101,7 +103,7 @@ const AdminShortUrlsSearchIndex = async ({ params, searchParams }) => {
 			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/shorturls/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/noadmin/shorturls/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -114,7 +116,7 @@ const AdminShortUrlsSearchIndex = async ({ params, searchParams }) => {
 			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/shorturls/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/noadmin/shorturls/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -133,7 +135,7 @@ const AdminShortUrlsSearchIndex = async ({ params, searchParams }) => {
 				<div className="col">
 					<CreateShortUrlForm
 						auth={auth}
-						currentpage={`/noadmin/shorturls/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`}
+						currentpage={`/noadmin/shorturls/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`}
 					/>
 				</div>
 				<div className="col-lg-10">

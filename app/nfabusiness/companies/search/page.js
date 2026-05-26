@@ -15,9 +15,11 @@ const AdminCompaniesSearchIndex = async ({ params, searchParams }) => {
 	const page = awtdSearchParams.page || 1;
 	const limit = awtdSearchParams.limit || 10;
 	const sort = awtdSearchParams.sort || "-createdAt";
+	const keywordQuery =
+		keyword !== "" && keyword !== undefined ? `&keyword=${keyword}` : "";
 
 	const companies = await getCompanies(
-		`?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+		`?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 	);
 
 	const draftIt = async (id) => {
@@ -25,7 +27,7 @@ const AdminCompaniesSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/companies/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
-			`/nfabusiness/companies/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/companies/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -34,7 +36,7 @@ const AdminCompaniesSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/companies/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
-			`/nfabusiness/companies/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/companies/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -43,7 +45,7 @@ const AdminCompaniesSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/companies/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
-			`/nfabusiness/companies/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/companies/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -52,7 +54,7 @@ const AdminCompaniesSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/companies/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
-			`/nfabusiness/companies/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/companies/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -62,10 +64,10 @@ const AdminCompaniesSearchIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/companies/${id}/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/nfabusiness/companies/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/companies/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -74,7 +76,7 @@ const AdminCompaniesSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/companies/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`/nfabusiness/companies/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/companies/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -84,10 +86,10 @@ const AdminCompaniesSearchIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/companies/deleteall/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/nfabusiness/companies/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/companies/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 

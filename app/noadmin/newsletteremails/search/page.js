@@ -7,7 +7,7 @@ async function getNewsletterEmails(params) {
 	const res = await fetchurl(
 		`/global/newsletteremails${params}`,
 		"GET",
-		"no-cache"
+		"no-cache",
 	);
 	return res;
 }
@@ -19,9 +19,11 @@ const AdminNewsletterEmailsSearchIndex = async ({ params, searchParams }) => {
 	const page = awtdSearchParams.page || 1;
 	const limit = awtdSearchParams.limit || 10;
 	const sort = awtdSearchParams.sort || "-createdAt";
+	const keywordQuery =
+		keyword !== "" && keyword !== undefined ? `&keyword=${keyword}` : "";
 
 	const newsletteremails = await getNewsletterEmails(
-		`?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+		`?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 	);
 
 	const draftIt = async (id) => {
@@ -30,10 +32,10 @@ const AdminNewsletterEmailsSearchIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/newsletteremails/${id}/draftit`,
 			"PUT",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/newsletteremails/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/newsletteremails/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -43,10 +45,10 @@ const AdminNewsletterEmailsSearchIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/newsletteremails/${id}/publishit`,
 			"PUT",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/newsletteremails/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/newsletteremails/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -56,10 +58,10 @@ const AdminNewsletterEmailsSearchIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/newsletteremails/${id}/trashit`,
 			"PUT",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/newsletteremails/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/newsletteremails/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -69,10 +71,10 @@ const AdminNewsletterEmailsSearchIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/newsletteremails/${id}/scheduleit`,
 			"PUT",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/newsletteremails/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/newsletteremails/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -82,10 +84,10 @@ const AdminNewsletterEmailsSearchIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/newsletteremails/${id}/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/newsletteremails/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/newsletteremails/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -94,7 +96,7 @@ const AdminNewsletterEmailsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/newsletteremails/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/newsletteremails/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/newsletteremails/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -104,10 +106,10 @@ const AdminNewsletterEmailsSearchIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/newsletteremails/deleteall/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/newsletteremails/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/newsletteremails/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 

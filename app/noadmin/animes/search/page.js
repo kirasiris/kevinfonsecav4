@@ -7,7 +7,7 @@ async function getPlaylists(params) {
 	const res = await fetchurl(
 		`/global/playlists${params}&onairtype=anime`,
 		"GET",
-		"no-cache"
+		"no-cache",
 	);
 	return res;
 }
@@ -19,9 +19,11 @@ const AdminAnimesSearchIndex = async ({ params, searchParams }) => {
 	const page = awtdSearchParams.page || 1;
 	const limit = awtdSearchParams.limit || 10;
 	const sort = awtdSearchParams.sort || "-createdAt";
+	const keywordQuery =
+		keyword !== "" && keyword !== undefined ? `&keyword=${keyword}` : "";
 
 	const animes = await getPlaylists(
-		`?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+		`?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 	);
 
 	const draftIt = async (id) => {
@@ -29,7 +31,7 @@ const AdminAnimesSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/playlists/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/animes/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/animes/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -38,7 +40,7 @@ const AdminAnimesSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/playlists/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/animes/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/animes/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -47,7 +49,7 @@ const AdminAnimesSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/playlists/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/animes/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/animes/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -56,7 +58,7 @@ const AdminAnimesSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/playlists/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/animes/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/animes/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -65,7 +67,7 @@ const AdminAnimesSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/playlists/${id}/featureit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/animes/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/animes/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -74,7 +76,7 @@ const AdminAnimesSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/playlists/${id}/unfeatureit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/animes/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/animes/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -84,10 +86,10 @@ const AdminAnimesSearchIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/playlists/${id}/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/animes/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/animes/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -96,7 +98,7 @@ const AdminAnimesSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/playlists/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/animes/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/animes/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -106,10 +108,10 @@ const AdminAnimesSearchIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/playlists/deleteall/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/animes/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/animes/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 

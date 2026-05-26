@@ -17,9 +17,12 @@ async function getCourses(params) {
 const CourseSearchIndex = async ({ params, searchParams }) => {
 	// const awtdParams = await params;
 	const awtdSearchParams = await searchParams;
+	const keyword = awtdSearchParams.keyword || "";
 	const page = awtdSearchParams.page || 1;
 	const limit = awtdSearchParams.limit || 32;
 	const sort = awtdSearchParams.sort || "-createdAt";
+	const keywordQuery =
+		keyword !== "" && keyword !== undefined ? `&keyword=${keyword}` : "";
 	const decrypt = awtdSearchParams.decrypt === "true" ? "&decrypt=true" : "";
 
 	const { settings } = await getGlobalData();
@@ -29,7 +32,7 @@ const CourseSearchIndex = async ({ params, searchParams }) => {
 	);
 
 	const getCoursesData = getCourses(
-		`?page=${page}&limit=${limit}&sort=${sort}&status=published&keyword=${awtdSearchParams.keyword}${decrypt}`,
+		`?page=${page}&limit=${limit}&sort=${sort}&status=published${keywordQuery}${decrypt}`,
 	);
 
 	const [featured, courses] = await Promise.all([
@@ -40,7 +43,7 @@ const CourseSearchIndex = async ({ params, searchParams }) => {
 	return (
 		<>
 			<Head
-				title={`${settings?.data?.title} - Search results of ${awtdSearchParams.keyword}`}
+				title={`${settings?.data?.title} - Search results of ${keyword}`}
 				description={"Search results..."}
 				favicon={settings?.data?.favicon}
 				postImage=""
@@ -51,7 +54,7 @@ const CourseSearchIndex = async ({ params, searchParams }) => {
 				card="summary"
 				robots=""
 				category=""
-				url={`/course/search?keyword=${awtdSearchParams.keyword}&page=${page}&limit=${limit}&sort=${sort}`}
+				url={`/course/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`}
 				author=""
 				createdAt=""
 				updatedAt=""
@@ -60,10 +63,7 @@ const CourseSearchIndex = async ({ params, searchParams }) => {
 			/>
 			{settings?.data?.maintenance === false ? (
 				<>
-					<Header
-						title={`${awtdSearchParams.keyword}`}
-						description="Search results..."
-					/>
+					<Header title={`${keyword}`} description="Search results..." />
 					<List
 						featured={featured}
 						objects={courses}

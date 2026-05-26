@@ -15,10 +15,12 @@ const NFAMembershipsSearchIndex = async ({ params, searchParams }) => {
 	const page = awtdSearchParams.page || 1;
 	const limit = awtdSearchParams.limit || 10;
 	const sort = awtdSearchParams.sort || "-createdAt";
+	const keywordQuery =
+		keyword !== "" && keyword !== undefined ? `&keyword=${keyword}` : "";
 
 	const auth = await getUserOnServer();
 	const memberships = await getMembershipsPublished(
-		`?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+		`?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 	);
 
 	const activateIt = async (id) => {
@@ -27,10 +29,10 @@ const NFAMembershipsSearchIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/stripe/memberships/${id}/activateit`,
 			"PUT",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/nfabusiness/memberships/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/memberships/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -40,10 +42,10 @@ const NFAMembershipsSearchIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/stripe/memberships/${id}/disactivateit`,
 			"PUT",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/nfabusiness/memberships/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/memberships/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -53,10 +55,10 @@ const NFAMembershipsSearchIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/stripe/memberships/${id}/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/nfabusiness/memberships/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/memberships/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -65,7 +67,7 @@ const NFAMembershipsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/stripe/memberships/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`/nfabusiness/memberships/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/memberships/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -75,10 +77,10 @@ const NFAMembershipsSearchIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/stripe/memberships/deleteall/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/nfabusiness/memberships/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/memberships/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 

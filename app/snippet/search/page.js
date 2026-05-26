@@ -13,9 +13,12 @@ async function getSnippets(params) {
 const SnippetSearchIndex = async ({ params, searchParams }) => {
 	const awtdParams = await params;
 	const awtdSearchParams = await searchParams;
+	const keyword = awtdSearchParams.keyword || "";
 	const page = awtdSearchParams.page || 1;
 	const limit = awtdSearchParams.limit || 10;
 	const sort = awtdSearchParams.sort || "-createdAt";
+	const keywordQuery =
+		keyword !== "" && keyword !== undefined ? `&keyword=${keyword}` : "";
 	const decrypt = awtdSearchParams.decrypt === "true" ? "&decrypt=true" : "";
 
 	const { settings } = await getGlobalData();
@@ -25,7 +28,7 @@ const SnippetSearchIndex = async ({ params, searchParams }) => {
 	);
 
 	const getSnippetsData = getSnippets(
-		`?page=${page}&limit=${limit}&sort=${sort}&status=published&keyword=${awtdSearchParams.keyword}${decrypt}`,
+		`?page=${page}&limit=${limit}&sort=${sort}&status=published${keywordQuery}${decrypt}`,
 	);
 
 	const [featured, snippets] = await Promise.all([
@@ -36,7 +39,7 @@ const SnippetSearchIndex = async ({ params, searchParams }) => {
 	return (
 		<>
 			<Head
-				title={`${settings?.data?.title} - Search results of ${awtdSearchParams.keyword}`}
+				title={`${settings?.data?.title} - Search results of ${keyword}`}
 				description={"Search results..."}
 				favicon={settings?.data?.favicon}
 				postImage={settings.data.showcase_image}
@@ -47,7 +50,7 @@ const SnippetSearchIndex = async ({ params, searchParams }) => {
 				card="summary"
 				robots=""
 				category=""
-				url={`/snippet/search?keyword=${awtdSearchParams.keyword}&page=${page}&limit=${limit}&sort=${sort}`}
+				url={`/snippet/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`}
 				author=""
 				createdAt=""
 				updatedAt=""
@@ -56,10 +59,7 @@ const SnippetSearchIndex = async ({ params, searchParams }) => {
 			/>
 			{settings?.data?.maintenance === false ? (
 				<>
-					<Header
-						title={`${awtdSearchParams.keyword}`}
-						description="Search results..."
-					/>
+					<Header title={`${keyword}`} description="Search results..." />
 					<List
 						featured={featured}
 						objects={snippets}

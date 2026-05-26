@@ -17,9 +17,11 @@ const AdminQuotesSearchIndex = async ({ params, searchParams }) => {
 	const page = awtdSearchParams.page || 1;
 	const limit = awtdSearchParams.limit || 10;
 	const sort = awtdSearchParams.sort || "-createdAt";
+	const keywordQuery =
+		keyword !== "" && keyword !== undefined ? `&keyword=${keyword}` : "";
 
 	const quotes = await getQuotes(
-		`?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+		`?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 	);
 
 	const createQuote = async (formData) => {
@@ -36,7 +38,7 @@ const AdminQuotesSearchIndex = async ({ params, searchParams }) => {
 
 		await fetchurl(`/noadmin/quotes`, "POST", "no-cache", rawFormData);
 		revalidatePath(
-			`/noadmin/quotes/search?keyword=${keyword}&&page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/quotes/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -45,7 +47,7 @@ const AdminQuotesSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/quotes/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/quotes/search?keyword=${keyword}&&page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/quotes/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -54,7 +56,7 @@ const AdminQuotesSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/quotes/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/quotes/search?keyword=${keyword}&&page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/quotes/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -63,7 +65,7 @@ const AdminQuotesSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/quotes/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/quotes/search?keyword=${keyword}&&page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/quotes/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -72,7 +74,7 @@ const AdminQuotesSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/quotes/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/quotes/search?keyword=${keyword}&&page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/quotes/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -81,7 +83,7 @@ const AdminQuotesSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/quotes/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`/noadmin/quotes/search?keyword=${keyword}&&page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/quotes/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -90,7 +92,7 @@ const AdminQuotesSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/quotes/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/quotes/search?keyword=${keyword}&&page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/quotes/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -100,10 +102,10 @@ const AdminQuotesSearchIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/quotes/deleteall/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/quotes/search?keyword=${keyword}&&page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/quotes/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 

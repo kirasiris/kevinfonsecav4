@@ -25,10 +25,11 @@ const AdminCompanyReadSearchIndex = async ({ params, searchParams }) => {
 	const page = awtdSearchParams.page || 1;
 	const limit = awtdSearchParams.limit || 10;
 	const sort = awtdSearchParams.sort || "-createdAt";
-
+	const keywordQuery =
+		keyword !== "" && keyword !== undefined ? `&keyword=${keyword}` : "";
 	const company = await getCompany(`/${awtdParams.id}`);
 	const jobs = await getJobs(
-		`?resourceId=${company?.data?._id}&page=${page}&limit=${limit}&sort=${sort}&keyword=${keyword}`,
+		`?resourceId=${company?.data?._id}&page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 	);
 
 	const draftIt = async (id) => {

@@ -7,7 +7,7 @@ async function getBlogs(params) {
 	const res = await fetchurl(
 		`/global/blogs${params}&postType=blog`,
 		"GET",
-		"no-cache"
+		"no-cache",
 	);
 	return res;
 }
@@ -19,9 +19,11 @@ const AdminBlogsSearchIndex = async ({ params, searchParams }) => {
 	const page = awtdSearchParams.page || 1;
 	const limit = awtdSearchParams.limit || 10;
 	const sort = awtdSearchParams.sort || "-createdAt";
+	const keywordQuery =
+		keyword !== "" && keyword !== undefined ? `&keyword=${keyword}` : "";
 
 	const blogs = await getBlogs(
-		`?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+		`?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 	);
 
 	const draftIt = async (id) => {
@@ -29,7 +31,7 @@ const AdminBlogsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/blogs/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/blogs/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/blogs/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -38,7 +40,7 @@ const AdminBlogsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/blogs/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/blogs/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/blogs/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -47,7 +49,7 @@ const AdminBlogsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/blogs/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/blogs/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/blogs/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -56,7 +58,7 @@ const AdminBlogsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/blogs/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/blogs/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/blogs/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -65,7 +67,7 @@ const AdminBlogsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/blogs/${id}/featureit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/blogs/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/blogs/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -74,7 +76,7 @@ const AdminBlogsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/blogs/${id}/unfeatureit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/blogs/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/blogs/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -83,7 +85,7 @@ const AdminBlogsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/blogs/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`/noadmin/blogs/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/blogs/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -92,7 +94,7 @@ const AdminBlogsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/blogs/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/blogs/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/blogs/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -102,10 +104,10 @@ const AdminBlogsSearchIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/blogs/deleteall/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/blogs/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/blogs/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 

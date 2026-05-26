@@ -19,10 +19,12 @@ const NFACoursesSearchIndex = async ({ params, searchParams }) => {
 	const page = awtdSearchParams.page || 1;
 	const limit = awtdSearchParams.limit || 10;
 	const sort = awtdSearchParams.sort || "-createdAt";
+	const keywordQuery =
+		keyword !== "" && keyword !== undefined ? `&keyword=${keyword}` : "";
 
 	const auth = await getUserOnServer();
 	const courses = await getCourses(
-		`?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+		`?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 	);
 
 	const draftIt = async (id) => {
@@ -30,7 +32,7 @@ const NFACoursesSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/stripe/courses/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
-			`/nfabusiness/courses/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/nfabusiness/courses/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -43,7 +45,7 @@ const NFACoursesSearchIndex = async ({ params, searchParams }) => {
 			"no-cache",
 		);
 		revalidatePath(
-			`/nfabusiness/courses/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/nfabusiness/courses/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -52,7 +54,7 @@ const NFACoursesSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/stripe/courses/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
-			`/nfabusiness/courses/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/nfabusiness/courses/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -65,7 +67,7 @@ const NFACoursesSearchIndex = async ({ params, searchParams }) => {
 			"no-cache",
 		);
 		revalidatePath(
-			`/nfabusiness/courses/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/nfabusiness/courses/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -78,7 +80,7 @@ const NFACoursesSearchIndex = async ({ params, searchParams }) => {
 			"no-cache",
 		);
 		revalidatePath(
-			`/nfabusiness/courses/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/nfabusiness/courses/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -91,7 +93,7 @@ const NFACoursesSearchIndex = async ({ params, searchParams }) => {
 			"no-cache",
 		);
 		revalidatePath(
-			`/nfabusiness/courses/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/nfabusiness/courses/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -104,7 +106,7 @@ const NFACoursesSearchIndex = async ({ params, searchParams }) => {
 			"no-cache",
 		);
 		revalidatePath(
-			`/nfabusiness/courses/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/nfabusiness/courses/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -113,7 +115,7 @@ const NFACoursesSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/stripe/courses/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`/nfabusiness/courses/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/nfabusiness/courses/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -126,7 +128,7 @@ const NFACoursesSearchIndex = async ({ params, searchParams }) => {
 			"no-cache",
 		);
 		revalidatePath(
-			`/nfabusiness/courses/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`,
+			`/nfabusiness/courses/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 

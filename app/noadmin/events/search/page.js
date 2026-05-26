@@ -15,9 +15,11 @@ const AdminEventsSearchIndex = async ({ params, searchParams }) => {
 	const page = awtdSearchParams.page || 1;
 	const limit = awtdSearchParams.limit || 10;
 	const sort = awtdSearchParams.sort || "-createdAt";
+	const keywordQuery =
+		keyword !== "" && keyword !== undefined ? `&keyword=${keyword}` : "";
 
 	const events = await getEvents(
-		`?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}&decrypt=true`
+		`?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}&decrypt=true`,
 	);
 
 	const draftIt = async (id) => {
@@ -25,7 +27,7 @@ const AdminEventsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/events/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/events/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/events/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -34,7 +36,7 @@ const AdminEventsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/events/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/events/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/events/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -43,7 +45,7 @@ const AdminEventsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/events/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/events/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/events/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -52,7 +54,7 @@ const AdminEventsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/events/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/events/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/events/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -61,7 +63,7 @@ const AdminEventsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/events/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`/noadmin/events/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/events/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -70,7 +72,7 @@ const AdminEventsSearchIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/events/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/events/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/events/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 
@@ -80,10 +82,10 @@ const AdminEventsSearchIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/events/deleteall/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/events/search?keyword=${keyword}&page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/events/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);
 	};
 

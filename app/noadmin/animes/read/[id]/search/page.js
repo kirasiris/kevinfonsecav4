@@ -31,10 +31,12 @@ const AdminAnimeReadSearchIndex = async ({ params, searchParams }) => {
 	const page = awtdSearchParams.page || 1;
 	const limit = awtdSearchParams.limit || 10;
 	const sort = awtdSearchParams.sort || "orderingNumber";
+	const keywordQuery =
+		keyword !== "" && keyword !== undefined ? `&keyword=${keyword}` : "";
 
 	const anime = await getAnime(`/${awtdParams.id}`);
 	const chapters = await getChapters(
-		`?resourceId=${anime?.data?._id}&page=${page}&limit=${limit}&sort=${sort}&keyword=${keyword}`,
+		`?resourceId=${anime?.data?._id}&page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 	);
 
 	const draftIt = async (id) => {

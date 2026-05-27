@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Form } from "react-bootstrap";
 import Modal from "react-bootstrap/Modal";
 import {
@@ -27,6 +27,44 @@ const ExportModal = ({
 	iconSize = "45",
 }) => {
 	const [showExportModal, setShowExportModal] = useState(false);
+	const [copiedUrl, setCopiedUrl] = useState(false);
+	const [copiedEmbed, setCopiedEmbed] = useState(false);
+	const timeoutRef = useRef(null);
+
+	useEffect(() => {
+		return () => {
+			if (timeoutRef.current) {
+				clearTimeout(timeoutRef.current);
+			}
+		};
+	}, []);
+
+	useEffect(() => {
+		if (!showExportModal) {
+			setCopiedUrl(false);
+			setCopiedEmbed(false);
+		}
+	}, [showExportModal]);
+
+	const copyToClipboard = useCallback((text, type) => {
+		navigator.clipboard.writeText(text);
+		if (timeoutRef.current) clearTimeout(timeoutRef.current);
+		if (type === "url") {
+			setCopiedUrl(true);
+			timeoutRef.current = setTimeout(() => setCopiedUrl(false), 2000);
+		} else {
+			setCopiedEmbed(true);
+			timeoutRef.current = setTimeout(() => setCopiedEmbed(false), 2000);
+		}
+	}, []);
+
+	// if (!showExportModal) {
+	// 	return null;
+	// }
+
+	const presentationUrl = `${process.env.NEXT_PUBLIC_WEBSITE_URL}${linkToShare}`;
+	const embedCode = `<iframe src="${presentationUrl}" width="100%" height="600" frameborder="0" allowfullscreen></iframe>`;
+
 	return (
 		<>
 			<button
@@ -51,17 +89,37 @@ const ExportModal = ({
 					</Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
-					<Form.Control
-						readOnly
-						disabled
-						value={`${process.env.NEXT_PUBLIC_WEBSITE_URL}${linkToShare}`}
-					/>
+					<div className="input-group">
+						<Form.Control readOnly disabled value={presentationUrl} />
+						<button
+							className={`btn ${copiedUrl ? "btn-success" : "btn-outline-secondary"}`}
+							onClick={() => copyToClipboard(presentationUrl, "url")}
+						>
+							{copiedUrl ? "Copied!" : "Copy"}
+						</button>
+					</div>
+					<hr />
+					<div className="position-relative">
+						<pre
+							className="bg-dark text-light p-3 rounded mb-2"
+							style={{ fontSize: "13px", overflowX: "auto" }}
+						>
+							<code>{embedCode}</code>
+						</pre>
+						<button
+							className={`btn btn-sm ${copiedEmbed ? "btn-success" : "btn-outline-light"} position-absolute`}
+							style={{ top: "8px", right: "8px" }}
+							onClick={() => copyToClipboard(embedCode, "embed")}
+						>
+							{copiedEmbed ? "Copied!" : "Copy"}
+						</button>
+					</div>
 					<hr />
 					<EmailShareButton subject={object?.title} body={object?.text}>
 						<EmailIcon size={iconSize} />
 					</EmailShareButton>
 					<FacebookShareButton
-						url={`${process.env.NEXT_PUBLIC_WEBSITE_URL}${linkToShare}`}
+						url={presentationUrl}
 						title={
 							object.title
 								? `${process.env.NEXT_PUBLIC_WEBSITE_NAME} - ` + object.title
@@ -71,7 +129,7 @@ const ExportModal = ({
 						<FacebookIcon size={iconSize} />
 					</FacebookShareButton>
 					<XShareButton
-						url={`${process.env.NEXT_PUBLIC_WEBSITE_URL}${linkToShare}`}
+						url={presentationUrl}
 						title={
 							object.title
 								? `${process.env.NEXT_PUBLIC_WEBSITE_NAME} - ` + object.title
@@ -81,7 +139,7 @@ const ExportModal = ({
 						<TwitterIcon size={iconSize} />
 					</XShareButton>
 					<RedditShareButton
-						url={`${process.env.NEXT_PUBLIC_WEBSITE_URL}${linkToShare}`}
+						url={presentationUrl}
 						title={
 							object.title
 								? `${process.env.NEXT_PUBLIC_WEBSITE_NAME} - ` + object.title
@@ -91,7 +149,7 @@ const ExportModal = ({
 						<RedditIcon size={iconSize} />
 					</RedditShareButton>
 					<WhatsappShareButton
-						url={`${process.env.NEXT_PUBLIC_WEBSITE_URL}${linkToShare}`}
+						url={presentationUrl}
 						title={
 							object.title
 								? `${process.env.NEXT_PUBLIC_WEBSITE_NAME} - ` + object.title
@@ -101,7 +159,7 @@ const ExportModal = ({
 						<WhatsappIcon size={iconSize} />
 					</WhatsappShareButton>
 					<PinterestShareButton
-						url={`${process.env.NEXT_PUBLIC_WEBSITE_URL}${linkToShare}`}
+						url={presentationUrl}
 						title={
 							object.title
 								? `${process.env.NEXT_PUBLIC_WEBSITE_NAME} - ` + object.title
@@ -111,7 +169,7 @@ const ExportModal = ({
 						<PinterestIcon size={iconSize} />
 					</PinterestShareButton>
 					<LinkedinShareButton
-						url={`${process.env.NEXT_PUBLIC_WEBSITE_URL}${linkToShare}`}
+						url={presentationUrl}
 						title={
 							object.title
 								? `${process.env.NEXT_PUBLIC_WEBSITE_NAME} - ` + object.title
@@ -121,7 +179,7 @@ const ExportModal = ({
 						<LinkedinIcon size={iconSize} />
 					</LinkedinShareButton>
 					<TelegramShareButton
-						url={`${process.env.NEXT_PUBLIC_WEBSITE_URL}${linkToShare}`}
+						url={presentationUrl}
 						title={
 							object.title
 								? `${process.env.NEXT_PUBLIC_WEBSITE_NAME} - ` + object.title

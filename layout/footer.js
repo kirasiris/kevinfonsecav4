@@ -56,16 +56,14 @@ const Footer = ({
 								.map((p, index) => (
 									<li key={index} className="nav-item mb-2">
 										{p.target === "_self" ? (
-											<>
-												<Link
-													href={{
-														pathname: decodeURI(`${canonical}${p.url}`),
-														query: {},
-													}}
-												>
-													{p.title}
-												</Link>
-											</>
+											<Link
+												href={{
+													pathname: decodeURI(`${canonical}${p.url}`),
+													query: {},
+												}}
+											>
+												{p.title}
+											</Link>
 										) : (
 											<a
 												href={p.url}

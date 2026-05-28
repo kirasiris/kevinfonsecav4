@@ -99,16 +99,15 @@ const ExportModal = ({
 						</button>
 					</div>
 					<hr />
-					<div className="position-relative">
-						<pre
-							className="bg-dark text-light p-3 rounded mb-2"
-							style={{ fontSize: "13px", overflowX: "auto" }}
-						>
-							<code>{embedCode}</code>
-						</pre>
+					<div className="input-group">
+						<input
+							readOnly
+							disabled
+							value={embedCode}
+							className="form-control text-bg-dark"
+						/>
 						<button
-							className={`btn btn-sm ${copiedEmbed ? "btn-success" : "btn-outline-light"} position-absolute`}
-							style={{ top: "8px", right: "8px" }}
+							className={`btn btn-sm ${copiedEmbed ? "btn-success" : "btn-outline-secondary"}`}
 							onClick={() => copyToClipboard(embedCode, "embed")}
 						>
 							{copiedEmbed ? "Copied!" : "Copy"}

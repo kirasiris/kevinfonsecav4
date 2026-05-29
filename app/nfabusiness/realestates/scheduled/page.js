@@ -19,7 +19,7 @@ const NFARealEstatesScheduledIndex = async ({ params, searchParams }) => {
 	const limit = awtdSearchParams.limit || 10;
 	const sort = awtdSearchParams.sort || "-createdAt";
 
-	const realstates = await getRealEstates(
+	const realestates = await getRealEstates(
 		`?page=${page}&limit=${limit}&sort=${sort}`,
 	);
 
@@ -154,11 +154,11 @@ const NFARealEstatesScheduledIndex = async ({ params, searchParams }) => {
 			<div className="card rounded-0">
 				<List
 					allLink="/nfabusiness/realestates"
-					pageText="Real States"
+					pageText="Real Estates"
 					addLink="/nfabusiness/realestates/create"
 					searchOn="/nfabusiness/realestates"
 					searchedKeyword=""
-					objects={realstates}
+					objects={realestates}
 					searchParams={awtdSearchParams}
 					handleDraft={draftIt}
 					handlePublish={publishIt}

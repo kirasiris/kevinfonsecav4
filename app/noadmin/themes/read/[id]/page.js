@@ -49,9 +49,9 @@ async function getReadMe(repoName) {
 			} else {
 				// handle error
 				console.log("Error coming from setTokenOnServer file", err);
+				return (err.message = "VGhpcyBpcyBhIHByaXZhdGUgcmVwb3NpdG9yeQ==");
 			}
 		});
-
 	return response;
 }
 
@@ -75,7 +75,13 @@ const ReadTheme = async ({ params, searchParams }) => {
 
 	let readme = "";
 	if (theme.data.github_readme !== "#") {
+		// No readMe file
 		readme = readMEDecoder(readMeResponse.content || "Tm8gcmVhZE1FIGZpbGU=");
+	} else {
+		// This is a private repository
+		readme = readMEDecoder(
+			readMeResponse.content || "VGhpcyBpcyBhIHByaXZhdGUgcmVwb3NpdG9yeQ==",
+		);
 	}
 
 	return (
@@ -142,11 +148,18 @@ const ReadTheme = async ({ params, searchParams }) => {
 					/>
 					<section className="mb-5">
 						<ParseHtml text={theme.data.text} />
-						{theme.data.github_readme !== "#" && (
+						{theme.data.github_readme !== "#" ? (
 							<div className="card mb-4">
 								<div className="card-header">ReadMe.md</div>
 								<div className="card-body">
 									<ParseHtml text={readme} />
+								</div>
+							</div>
+						) : (
+							<div className="card mb-4">
+								<div className="card-header">ReadMe.md</div>
+								<div className="card-body">
+									{readme.replace(/<\/?[^>]+(>|$)/g, "")}
 								</div>
 							</div>
 						)}

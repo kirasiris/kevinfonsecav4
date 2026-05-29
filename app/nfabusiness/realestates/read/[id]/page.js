@@ -22,18 +22,18 @@ const ReadRealEstate = async ({ params, searchParams }) => {
 	const awtdSearchParams = await searchParams;
 	const token = await getAuthTokenOnServer();
 	const auth = await getUserOnServer();
-	const realstate = await getRealEstate(`/${awtdParams.id}`);
+	const realestate = await getRealEstate(`/${awtdParams.id}`);
 
 	return (
 		<div className="row">
 			<div className="col-lg-10">
-				<Gallery objects={realstate?.data?.files?.extras} />
+				<Gallery objects={realestate?.data?.files?.extras} />
 				<div className="card rounded-0 mb-3">
 					<div className="card-header">
-						{realstate?.data?.title || "Untitled"}
+						{realestate?.data?.title || "Untitled"}
 					</div>
 					<div className="card-body">
-						<ParseHtml text={realstate?.data?.text} />
+						<ParseHtml text={realestate?.data?.text} />
 					</div>
 				</div>
 				<div className="card rounded-0 mb-3">
@@ -42,23 +42,23 @@ const ReadRealEstate = async ({ params, searchParams }) => {
 						<div className="row">
 							<div className="col text-center">
 								<i aria-hidden className="fa-solid fa-bed fa-2x" />
-								<p className="mb-0">{realstate?.data?.bedrooms}</p>
+								<p className="mb-0">{realestate?.data?.bedrooms}</p>
 								<p className="mb-0">Bedrooms</p>
 							</div>
 							<div className="col text-center">
 								<i aria-hidden className="fa-solid fa-bath fa-2x" />
-								<p className="mb-0">{realstate?.data?.bathrooms}</p>
+								<p className="mb-0">{realestate?.data?.bathrooms}</p>
 								<p className="mb-0">Bathrooms</p>
 							</div>
 							<div className="col text-center">
 								<i aria-hidden className="fa-solid fa-bath fa-2x" />
-								<p className="mb-0">{realstate?.data?.squarefeet}</p>
+								<p className="mb-0">{realestate?.data?.squarefeet}</p>
 								<p className="mb-0">Sq Ft</p>
 							</div>
 							<div className="col text-center">
 								<i aria-hidden className="fa-solid fa-bath fa-2x" />
 								<p className="text-capitalize mb-0">
-									{realstate?.data?.buldingType}
+									{realestate?.data?.buldingType}
 								</p>
 								<p className="mb-0">Type</p>
 							</div>
@@ -74,12 +74,12 @@ const ReadRealEstate = async ({ params, searchParams }) => {
 								maxHeight: "calc(1.5rem * 5 + 1rem)", // roughly height for 5 items
 								flexDirection: "column",
 								alignContent:
-									realstate?.data?.amenities?.length > 10
+									realestate?.data?.amenities?.length > 10
 										? "space-between"
 										: "space-evenly",
 							}}
 						>
-							{realstate?.data?.amenities.map((ameniti, index) => (
+							{realestate?.data?.amenities.map((ameniti, index) => (
 								<li
 									key={index}
 									className="text-capitalize"
@@ -97,19 +97,19 @@ const ReadRealEstate = async ({ params, searchParams }) => {
 					id="file"
 					name="file"
 					multipleFiles={true}
-					object={realstate?.data}
+					object={realestate?.data}
 				/>
-				<Map object={realstate?.data} />
+				<Map object={realestate?.data} />
 			</div>
 			<div className="col-xl-2 col-lg-2 col-md-2 col-sm-12 col-xs-12 d-none d-sm-none d-md-none d-lg-block dm-xl-block">
 				<figure className="mb-3 bg-dark">
 					<Image
 						className="img-fluid p-3"
 						src={
-							realstate?.data?.files?.avatar?.location?.secure_location ||
+							realestate?.data?.files?.avatar?.location?.secure_location ||
 							`https://source.unsplash.com/random/1200x900`
 						}
-						alt={`${realstate?.data?.files?.avatar?.location?.filename}'s featured image`}
+						alt={`${realestate?.data?.files?.avatar?.location?.filename}'s featured image`}
 						width={415}
 						height={363}
 						priority
@@ -121,31 +121,33 @@ const ReadRealEstate = async ({ params, searchParams }) => {
 						<ul className="list-group list-unstyled">
 							<li className="d-flex justify-content-between list-group-item border-0 border-bottom rounded-0">
 								<span>P. ID</span>
-								<span>{realstate?.data?._id}</span>
+								<span>{realestate?.data?._id}</span>
 							</li>
 							<li className="d-flex justify-content-between list-group-item border-0 border-bottom rounded-0">
 								<span>Type</span>
 								<span className="text-capitalize">
-									{realstate?.data?.buldingType}
+									{realestate?.data?.buldingType}
 								</span>
 							</li>
 							<li className="d-flex justify-content-between list-group-item border-0 border-bottom rounded-0">
 								<span>Status</span>
 								<span className="text-capitalize">
-									{realstate?.data?.status}
+									{realestate?.data?.status}
 								</span>
 							</li>
 							<li className="d-flex justify-content-between list-group-item border-0 border-bottom rounded-0">
 								<span>Listed</span>
-								<span>{formatDateWithoutTime(realstate?.data?.createdAt)}</span>
+								<span>
+									{formatDateWithoutTime(realestate?.data?.createdAt)}
+								</span>
 							</li>
 							<li className="d-flex justify-content-between list-group-item border-0 rounded-0">
 								<span>R. S. Agent</span>
-								<span>{realstate?.data?.user?.name}</span>
+								<span>{realestate?.data?.user?.name}</span>
 							</li>
 							<li className="d-flex justify-content-between list-group-item border-0 rounded-0">
 								<span>Managed by</span>
-								<span>{realstate?.data?.resourceId?.title}</span>
+								<span>{realestate?.data?.resourceId?.title}</span>
 							</li>
 						</ul>
 					</div>

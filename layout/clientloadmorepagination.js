@@ -1,5 +1,4 @@
 "use client";
-import _ from "lodash";
 
 const ClientLoadMorePagination = ({
 	limit,

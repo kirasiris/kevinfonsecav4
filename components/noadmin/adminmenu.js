@@ -182,6 +182,15 @@ const AdminMenu = ({ auth = {}, settings = {} }) => {
 					</Link>
 					<Link
 						href={{
+							pathname: `/noadmin/presentations`,
+							query: {},
+						}}
+						className={`nav-link d-flex align-items-center gap-2 ${isActive(`/noadmin/presentations`)}`}
+					>
+						Presentations
+					</Link>
+					<Link
+						href={{
 							pathname: `/noadmin/qrcodes`,
 							query: {},
 						}}

@@ -22,7 +22,7 @@ const NFARealEstatesSearchIndex = async ({ params, searchParams }) => {
 	const keywordQuery =
 		keyword !== "" && keyword !== undefined ? `&keyword=${keyword}` : "";
 
-	const realstates = await getRealEstates(
+	const realestates = await getRealEstates(
 		`?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 	);
 
@@ -157,11 +157,11 @@ const NFARealEstatesSearchIndex = async ({ params, searchParams }) => {
 			<div className="card rounded-0">
 				<List
 					allLink="/nfabusiness/realestates"
-					pageText="Real States"
+					pageText="Real Estates"
 					addLink="/nfabusiness/realestates/create"
 					searchOn="/nfabusiness/realestates"
 					searchedKeyword={keyword}
-					objects={realstates}
+					objects={realestates}
 					searchParams={awtdSearchParams}
 					handleDraft={draftIt}
 					handlePublish={publishIt}

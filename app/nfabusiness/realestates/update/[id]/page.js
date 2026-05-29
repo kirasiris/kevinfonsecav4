@@ -7,7 +7,7 @@ import {
 import OnboardingLink from "@/components/nfabusiness/onboardinglink";
 import UpdateRealEstateForm from "@/forms/nfabusiness/realestates/updaterealestateform";
 
-async function getRealState(params) {
+async function getRealEstate(params) {
 	const res = await fetchurl(`/global/realestates${params}`, "GET", "no-cache");
 	if (!res.success) notFound();
 	return res;
@@ -19,12 +19,12 @@ const UpdateRealEstate = async ({ params, searchParams }) => {
 	const token = await getAuthTokenOnServer();
 	const auth = await getUserOnServer();
 
-	const realstate = await getRealState(`/${awtdParams.id}`);
+	const realestate = await getRealEstate(`/${awtdParams.id}`);
 
 	// Redirect if not charges enabled
 	!auth?.userStripeChargesEnabled && <OnboardingLink />;
 
-	return <UpdateRealEstateForm token={token} auth={auth} object={realstate} />;
+	return <UpdateRealEstateForm token={token} auth={auth} object={realestate} />;
 };
 
 export default UpdateRealEstate;

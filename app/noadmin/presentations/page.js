@@ -23,68 +23,6 @@ const AdminPresentationsIndex = async ({ params, searchParams }) => {
 		`?page=${page}&limit=${limit}&sort=${sort}`,
 	);
 
-	const draftIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/presentations/${id}/draftit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/presentations?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const publishIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/presentations/${id}/publishit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/presentations?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const trashIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/presentations/${id}/trashit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/presentations?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const scheduleIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/presentations/${id}/scheduleit`,
-			"PUT",
-			"no-cache",
-		);
-		revalidatePath(
-			`/noadmin/presentations?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const featureIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/presentations/${id}/featureit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/presentations?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const unfeatureIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/presentations/${id}/unfeatureit`,
-			"PUT",
-			"no-cache",
-		);
-		revalidatePath(
-			`/noadmin/presentations?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
 	const handleDelete = async (id) => {
 		"use server";
 		// const rawFormData = {}
@@ -93,15 +31,6 @@ const AdminPresentationsIndex = async ({ params, searchParams }) => {
 			"DELETE",
 			"no-cache",
 		);
-		revalidatePath(
-			`/noadmin/presentations?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const handleTrashAll = async () => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/presentations/deleteall`, "PUT", "no-cache");
 		revalidatePath(
 			`/noadmin/presentations?page=${page}&limit=${limit}&sort=${sort}`,
 		);
@@ -140,14 +69,14 @@ const AdminPresentationsIndex = async ({ params, searchParams }) => {
 					searchedKeyword=""
 					objects={presentations}
 					searchParams={awtdSearchParams}
-					handleDraft={draftIt}
-					handlePublish={publishIt}
-					handleTrash={trashIt}
-					handleSchedule={scheduleIt}
-					handleFeature={featureIt}
-					handleUnfeature={unfeatureIt}
+					handleDraft={undefined}
+					handlePublish={undefined}
+					handleTrash={undefined}
+					handleSchedule={undefined}
+					handleFeature={undefined}
+					handleUnfeature={undefined}
 					handleDelete={handleDelete}
-					handleTrashAllFunction={handleTrashAll}
+					handleTrashAllFunction={undefined}
 					handleDeleteAllFunction={handleDeleteAll}
 				/>
 			</div>

@@ -27,11 +27,7 @@ const AdminFilesIndex = async ({ params, searchParams }) => {
 	const handleDelete = async (id, publicId) => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/files/${id}/permanently?force=true`,
-			"DELETE",
-			"no-cache",
-		);
+		await fetchurl(`/noadmin/files/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(`/noadmin/files?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 

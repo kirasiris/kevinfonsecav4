@@ -85,11 +85,11 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 					<div className="card-header">Random Quote</div>
 					<div className="card-body">
 						{quotes.data?.map((quote, index) => (
-							<figure key={quote._id} className="m-0">
-								<blockquote className="blockquote">
+							<figure key={quote._id}>
+								<blockquote className="blockquote m-0">
 									<p>{quote.text.toUpperCase()}</p>
 								</blockquote>
-								<figcaption className="blockquote-footer">
+								<figcaption className="blockquote-footer m-0">
 									<a
 										href={quote.authorUrl || "#"}
 										target="_blank"

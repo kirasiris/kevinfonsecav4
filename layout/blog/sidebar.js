@@ -85,7 +85,7 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 					<div className="card-header">Random Quote</div>
 					<div className="card-body">
 						{quotes.data?.map((quote, index) => (
-							<figure key={quote._id}>
+							<figure key={quote._id} className="m-0">
 								<blockquote className="blockquote m-0">
 									<p>{quote.text.toUpperCase()}</p>
 								</blockquote>

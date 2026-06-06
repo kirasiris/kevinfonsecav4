@@ -1,14 +1,11 @@
 import { revalidatePath } from "next/cache";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import {
-	fetchurl,
-	getAuthTokenOnServer,
-	getUserOnServer,
-} from "@/helpers/setTokenOnServer";
+import { fetchurl, getAuthTokenOnServer } from "@/helpers/setTokenOnServer";
 import ParseHtml from "@/layout/parseHtml";
 import ChapterList from "@/components/noadmin/animes/chapterlist";
 import UseDropzone from "@/components/noadmin/animes/chapterdropzone";
+import { getGlobalData } from "@/helpers/globalData";
 
 async function getAnime(params) {
 	const res = await fetchurl(`/global/playlists${params}`, "GET", "no-cache");
@@ -25,7 +22,8 @@ const ReadAnime = async ({ params, searchParams }) => {
 	const awtdParams = await params;
 	const awtdSearchParams = await searchParams;
 	const token = await getAuthTokenOnServer();
-	const auth = await getUserOnServer();
+
+	const { auth } = await getGlobalData();
 
 	const page = awtdSearchParams.page || 1;
 	const limit = awtdSearchParams.limit || 10;

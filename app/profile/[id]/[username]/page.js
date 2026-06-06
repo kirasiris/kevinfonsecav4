@@ -1,11 +1,7 @@
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import {
-	fetchurl,
-	getAuthTokenOnServer,
-	getUserOnServer,
-} from "@/helpers/setTokenOnServer";
+import { fetchurl, getAuthTokenOnServer } from "@/helpers/setTokenOnServer";
 import Loading from "@/app/profile/loading";
 import List from "@/components/profile/list";
 import Sidebar from "@/components/profile/sidebar";
@@ -39,10 +35,9 @@ const ProfileRead = async ({ params, searchParams }) => {
 	const decrypt =
 		awtdSearchParams.decrypt === "true" ? "&decrypt=true" : "&decrypt=true";
 
-	const { settings } = await getGlobalData();
+	const { auth, settings } = await getGlobalData();
 
 	const token = await getAuthTokenOnServer();
-	const auth = await getUserOnServer();
 
 	const profile = await getProfile(`/${awtdParams.id}`);
 

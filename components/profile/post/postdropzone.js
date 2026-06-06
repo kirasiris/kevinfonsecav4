@@ -29,15 +29,7 @@ const UseDropzone = ({
 			previews.files.forEach((file) => URL.revokeObjectURL(file.preview));
 	}, []);
 
-	return (auth?.userId !== "" &&
-		auth?.userId !== undefined &&
-		auth?.userId !== null) ||
-		(auth?.username !== "" &&
-			auth?.username !== undefined &&
-			auth?.username !== null) ||
-		(auth?.email !== "" &&
-			auth?.email !== undefined &&
-			auth?.email !== null) ? (
+	return (
 		<div className="mt-3 mb-3">
 			<UseProgress percentage={uploadPercentage} />
 			<Dropzone
@@ -59,9 +51,9 @@ const UseDropzone = ({
 						try {
 							const res = await new Promise((resolve, reject) => {
 								const formData = new FormData();
-								formData.append("userId", auth?.userId);
-								formData.append("username", auth?.username);
-								formData.append("userEmail", auth?.email);
+								formData.append("userId", auth?.data?._id);
+								formData.append("username", auth?.data?.username);
+								formData.append("userEmail", auth?.data?.email);
 								formData.append("onModel", onModel);
 								formData.append("resourceId", object?._id);
 								formData.append("file", file);
@@ -219,10 +211,6 @@ const UseDropzone = ({
 					</div>
 				)}
 			</Dropzone>
-		</div>
-	) : (
-		<div className="alert alert-warning">
-			Sorry you can not use the uploader
 		</div>
 	);
 };

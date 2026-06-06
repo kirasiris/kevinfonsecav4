@@ -1,11 +1,8 @@
 import { revalidatePath } from "next/cache";
-import {
-	fetchurl,
-	getAuthTokenOnServer,
-	getUserOnServer,
-} from "@/helpers/setTokenOnServer";
+import { fetchurl, getAuthTokenOnServer } from "@/helpers/setTokenOnServer";
 import AdminStatusesMenu from "@/components/noadmin/adminstatusesmenu";
 import List from "@/components/noadmin/files/list";
+import { getGlobalData } from "@/helpers/globalData";
 
 async function getFiles(params) {
 	const res = await fetchurl(`/global/files${params}`, "GET", "no-cache");
@@ -20,7 +17,7 @@ const AdminFilesIndex = async ({ params, searchParams }) => {
 	const sort = awtdSearchParams.sort || "-createdAt";
 
 	const token = await getAuthTokenOnServer();
-	const auth = await getUserOnServer();
+	const { auth } = await getGlobalData();
 
 	const files = await getFiles(`?page=${page}&limit=${limit}&sort=${sort}`);
 
@@ -70,7 +67,6 @@ const AdminFilesIndex = async ({ params, searchParams }) => {
 					onModel="Blog"
 					allLink="/noadmin/files"
 					pageText="Files"
-					addLink="/noadmin/files/create"
 					searchOn="/noadmin/files"
 					objects={files}
 					searchParams={awtdSearchParams}

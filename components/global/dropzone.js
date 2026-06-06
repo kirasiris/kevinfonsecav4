@@ -17,20 +17,11 @@ const UseDropzone = ({
 }) => {
 	const router = useRouter();
 	const [uploadPercentage, setUploadPercentage] = useState(0);
-	const [btnText, setBtnText] = useState("Submit");
 
 	console.log("Auth in @/components/global/dropzone file", auth);
 	console.log("Token in @/components/global/dropzone file", token);
 
-	return (auth?.userId !== "" &&
-		auth?.userId !== undefined &&
-		auth?.userId !== null) ||
-		(auth?.username !== "" &&
-			auth?.username !== undefined &&
-			auth?.username !== null) ||
-		(auth?.email !== "" &&
-			auth?.email !== undefined &&
-			auth?.email !== null) ? (
+	return (
 		<>
 			<UseProgress percentage={uploadPercentage} />
 			<Dropzone
@@ -40,12 +31,12 @@ const UseDropzone = ({
 						try {
 							await new Promise((resolve, reject) => {
 								const formData = new FormData();
-								formData.append("userId", auth?.userId);
-								formData.append("username", auth?.username);
-								formData.append("userEmail", auth?.email);
+								formData.append("userId", auth?.data?._id);
+								formData.append("username", auth?.data?.username);
+								formData.append("userEmail", auth?.data?.email);
 								formData.append("onModel", onModel);
 								formData.append("file", acceptedFiles[i]);
-								formData.append("album", "all");
+								formData.append("album", "settings");
 
 								const xhr = new XMLHttpRequest();
 
@@ -132,10 +123,6 @@ const UseDropzone = ({
 				)}
 			</Dropzone>
 		</>
-	) : (
-		<div className="alert alert-warning">
-			Sorry you can not use the uploader
-		</div>
 	);
 };
 

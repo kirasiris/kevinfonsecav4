@@ -16,7 +16,6 @@ const List = ({
 	onModel = "Blog",
 	allLink = "",
 	pageText = "",
-	addLink = "",
 	searchOn = "",
 	objects = [],
 	searchParams = {},

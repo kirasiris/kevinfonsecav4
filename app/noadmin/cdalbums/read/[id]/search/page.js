@@ -1,14 +1,11 @@
 import { revalidatePath } from "next/cache";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import {
-	fetchurl,
-	getAuthTokenOnServer,
-	getUserOnServer,
-} from "@/helpers/setTokenOnServer";
+import { fetchurl, getAuthTokenOnServer } from "@/helpers/setTokenOnServer";
 import ParseHtml from "@/layout/parseHtml";
 import SongList from "@/components/noadmin/cdalbums/songlist";
 import UseDropzone from "@/components/noadmin/cdalbums/songdropzone";
+import { getGlobalData } from "@/helpers/globalData";
 
 async function getCDAlbum(params) {
 	const res = await fetchurl(`/global/playlists${params}`, "GET", "no-cache");
@@ -26,7 +23,9 @@ const AdminCDAlbumReadIndex = async ({ params, searchParams }) => {
 	const awtdSearchParams = await searchParams;
 	const keyword = awtdSearchParams.keyword || "";
 	const token = await getAuthTokenOnServer();
-	const auth = await getUserOnServer();
+
+	const { auth } = await getGlobalData();
+
 	const page = awtdSearchParams.page || 1;
 	const limit = awtdSearchParams.limit || 10;
 	const sort = awtdSearchParams.sort || "-createdAt";

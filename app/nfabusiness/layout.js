@@ -17,7 +17,7 @@ export default async function AdminLayout({ children }) {
 	// Redirec if not founder
 	auth?.data?.isOnline &&
 		!auth?.data?.role?.includes("founder") &&
-		redirect(`/dashboard`);
+		redirect(`/`);
 
 	return (
 		<Suspense fallback={<Loading />}>

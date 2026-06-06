@@ -17,7 +17,7 @@ const PostNew = ({
 	const router = useRouter();
 
 	const [postData, setPostData] = useState({
-		postedto: auth?.userId !== params.id ? params.id : undefined,
+		postedto: auth?.data?._id !== params.id ? params.id : undefined,
 		privacy: "public",
 		title: "",
 		text: "",
@@ -32,7 +32,7 @@ const PostNew = ({
 
 	const resetForm = () => {
 		setPostData({
-			postedto: auth?.userId !== params.id ? params.id : undefined,
+			postedto: auth?.data?._id !== params.id ? params.id : undefined,
 			privacy: "public",
 			title: "",
 			text: "",
@@ -61,7 +61,7 @@ const PostNew = ({
 		router.push(`${revalidateUrl}&new=${randomId}`, { scroll: false });
 	};
 
-	return auth?.userId !== undefined ? (
+	return auth?.data?._id !== undefined ? (
 		<form onSubmit={addPost}>
 			<div className="card">
 				<div className="card-header">

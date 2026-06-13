@@ -25,7 +25,7 @@ const BlogSearchIndex = async ({ params, searchParams }) => {
 	const keyword = awtdSearchParams.keyword || "";
 	const page = awtdSearchParams.page || 1;
 	const limit = awtdSearchParams.limit || 10;
-	const sort = awtdSearchParams.page || "-createdAt";
+	const sort = awtdSearchParams.sort || "-createdAt";
 	const keywordQuery =
 		keyword !== "" && keyword !== undefined ? `&keyword=${keyword}` : "";
 	const postType = awtdSearchParams.postType || "blog";

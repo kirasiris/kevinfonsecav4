@@ -18,7 +18,7 @@ const CreateEmail = async ({ params, searchParams }) => {
 	return (
 		<>
 			<Head
-				title={`${settings?.data?.title} - Accoun Emails`}
+				title={`${settings?.data?.title} - Account Emails`}
 				description={"Manage your emails"}
 				favicon={settings?.data?.favicon}
 				postImage=""

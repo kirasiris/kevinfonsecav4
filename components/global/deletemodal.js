@@ -12,9 +12,10 @@ const DeleteModal = ({
 	classStr = ``,
 	action = () => {},
 	action2 = () => {},
-	setObjects = () => {},
 	objects = [],
+	setObjects = () => {},
 	setTotalResults = () => {},
+	displayText = true,
 }) => {
 	const [confirmDeleteModal, setConfirmDeleteModal] = useState(false);
 	const [, setError] = useState(false);
@@ -54,8 +55,11 @@ const DeleteModal = ({
 				as={as}
 				className={classStr}
 			>
-				{/* <i className={`fas fa-trash-alt mr-1`} aria-hidden /> */}
-				Delete
+				{displayText ? (
+					"Delete"
+				) : (
+					<i className={`fas fa-trash-alt`} aria-hidden />
+				)}
 			</Button>
 			<Modal
 				show={confirmDeleteModal}

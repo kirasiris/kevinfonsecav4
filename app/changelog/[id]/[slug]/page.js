@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import Header from "@/layout/header";
 import Loading from "@/app/changelog/loading";
 import ParseHtml from "@/layout/parseHtml";
-import { fetchurl, getUserOnServer } from "@/helpers/setTokenOnServer";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 import AuthorBox from "@/components/global/authorbox";
 import NewsletterForm from "@/components/global/newsletter";
 import ExportModal from "@/components/global/exportmodal";
@@ -23,7 +23,6 @@ const ChangelogRead = async ({ params }) => {
 
 	const { settings } = await getGlobalData();
 
-	const auth = await getUserOnServer();
 	const getChangelogsData = getChangelog(`/${awtdParams.id}`);
 
 	const [changelog] = await Promise.all([getChangelogsData]);

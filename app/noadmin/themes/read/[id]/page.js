@@ -3,13 +3,10 @@ import Image from "next/image";
 import showdown from "showdown";
 import base64 from "base-64";
 import ParseHtml from "@/layout/parseHtml";
-import {
-	fetchurl,
-	getAuthTokenOnServer,
-	getUserOnServer,
-} from "@/helpers/setTokenOnServer";
+import { fetchurl, getAuthTokenOnServer } from "@/helpers/setTokenOnServer";
 import UseDropzone from "@/components/noadmin/themes/themedropzone";
 import Link from "next/link";
+import { getGlobalData } from "@/helpers/globalData";
 
 async function getTheme(params) {
 	const res = await fetchurl(`/global/themes${params}`, "GET", "no-cache");
@@ -60,7 +57,7 @@ const ReadTheme = async ({ params, searchParams }) => {
 	const awtdSearchParams = await searchParams;
 
 	const token = await getAuthTokenOnServer();
-	const auth = await getUserOnServer();
+	const { auth } = await getGlobalData();
 
 	const theme = await getTheme(`/${awtdParams.id}`);
 

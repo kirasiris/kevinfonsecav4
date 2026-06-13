@@ -108,6 +108,7 @@ const List = ({
 											<ExportModal
 												linkToShare={linkToShare}
 												object={object?.data}
+												iconSize="45"
 											/>
 										</div>
 										<div className="float-end">

@@ -150,7 +150,11 @@ const AdminCardHeaderMenu = ({
 						<TrashAllModal action={handleTrashAllFunction} />
 					)}
 					{handleDeleteAllFunction !== "" && (
-						<DeleteAllModal action={handleDeleteAllFunction} />
+						<DeleteAllModal
+							action={handleDeleteAllFunction}
+							classList="btn-danger"
+							text="Delete all permanently"
+						/>
 					)}
 				</div>
 			</div>

@@ -13,14 +13,15 @@ async function getProfiles(params) {
 const ProfileIndex = async ({ params, searchParams }) => {
 	const awtdParams = await params;
 	const awtdSearchParams = await searchParams;
-	const limit = awtdSearchParams.limit || 10;
 	const page = awtdSearchParams.page || 1;
+	const limit = awtdSearchParams.limit || 10;
+	const sort = awtdSearchParams.sort || "-createdAt";
 	const decrypt = awtdSearchParams.decrypt === "true" ? "&decrypt=true" : "";
 
 	const { settings } = await getGlobalData();
 
 	const getProfilesData = getProfiles(
-		`?page=${page}&limit=${limit}&sort=-createdAt&isEmailConfirmed=true${decrypt}`,
+		`?page=${page}&limit=${limit}&sort=${sort}&isEmailConfirmed=true${decrypt}`,
 	);
 
 	const [profiles] = await Promise.all([getProfilesData]);

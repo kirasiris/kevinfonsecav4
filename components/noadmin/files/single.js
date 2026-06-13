@@ -2,8 +2,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { FaFilePdf, FaFileVideo, FaFileAudio } from "react-icons/fa";
-import DeleteModal from "@/components/global/deletemodal";
 import { DropdownButton } from "react-bootstrap";
+import DeleteModal from "@/components/global/deletemodal";
 
 const Single = ({
 	object = {},
@@ -76,12 +76,18 @@ const Single = ({
 						</Link>
 					</DropdownButton>
 					<DeleteModal
-						id={object._id ? object._id : object._id}
+						id={object._id}
 						sId={object?.location?.public_id}
+						location=""
+						as="button"
+						size="sm"
+						classStr={``}
 						action={handleDelete}
+						action2={() => {}}
 						objects={objects}
 						setObjects={setObjects}
 						setTotalResults={setTotalResults}
+						displayText={true}
 					/>
 				</div>
 				<p>{object.album}</p>
@@ -144,11 +150,18 @@ const Single = ({
 						</Link>
 					</DropdownButton>
 					<DeleteModal
-						id={object._id ? object._id : object._id}
+						id={object._id}
+						sId={null}
+						location=""
+						as="button"
+						size="sm"
+						classStr={``}
 						action={handleDelete}
+						action2={() => {}}
 						objects={objects}
 						setObjects={setObjects}
 						setTotalResults={setTotalResults}
+						displayText={true}
 					/>
 				</div>
 				<p>{object.album}</p>
@@ -211,11 +224,18 @@ const Single = ({
 						</Link>
 					</DropdownButton>
 					<DeleteModal
-						id={object._id ? object._id : object._id}
+						id={object._id}
+						sId={null}
+						location=""
+						as="button"
+						size="sm"
+						classStr={``}
 						action={handleDelete}
+						action2={() => {}}
 						objects={objects}
 						setObjects={setObjects}
 						setTotalResults={setTotalResults}
+						displayText={true}
 					/>
 				</div>
 				<p>{object.album}</p>
@@ -278,11 +298,18 @@ const Single = ({
 						</Link>
 					</DropdownButton>
 					<DeleteModal
-						id={object._id ? object._id : object._id}
+						id={object._id}
+						sId={null}
+						location=""
+						as="button"
+						size="sm"
+						classStr={``}
 						action={handleDelete}
+						action2={() => {}}
 						objects={objects}
 						setObjects={setObjects}
 						setTotalResults={setTotalResults}
+						displayText={true}
 					/>
 				</div>
 				<p>{object.album}</p>

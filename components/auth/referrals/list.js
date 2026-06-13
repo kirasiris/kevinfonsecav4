@@ -1,7 +1,7 @@
 "use client";
-import NothingFoundAlert from "@/layout/nothingfoundalert";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { toast } from "react-toastify";
+import NothingFoundAlert from "@/layout/nothingfoundalert";
 
 const List = ({ auth = {}, objects = [] }) => {
 	// Build initials as a fallback when there's no avatar
@@ -14,6 +14,27 @@ const List = ({ auth = {}, objects = [] }) => {
 			.join("")
 			.toUpperCase();
 
+	const [copiedUrl, setCopiedUrl] = useState(false);
+
+	const timeoutRef = useRef(null);
+
+	useEffect(() => {
+		return () => {
+			if (timeoutRef.current) {
+				clearTimeout(timeoutRef.current);
+			}
+		};
+	}, []);
+
+	const copyToClipboard = useCallback((text) => {
+		navigator.clipboard.writeText(text);
+		if (timeoutRef.current) clearTimeout(timeoutRef.current);
+		setCopiedUrl(true);
+		timeoutRef.current = setTimeout(() => setCopiedUrl(false), 2000);
+	}, []);
+
+	const referralsUrl = `${process.env.NEXT_PUBLIC_WEBSITE_URL}/auth/register?referral=${auth?.data?.referralLinks?.myReferralCode}`;
+
 	return (
 		<div className="card">
 			<div className="card-header">Referral&nbsp;Program</div>
@@ -25,7 +46,7 @@ const List = ({ auth = {}, objects = [] }) => {
 					<input
 						id="referralcode"
 						name="referralcode"
-						defaultValue={`${process.env.NEXT_PUBLIC_WEBSITE_URL}/auth/register?referral=${auth?.data?.referralLinks?.myReferralCode}`}
+						defaultValue={referralsUrl}
 						type="text"
 						className="form-control"
 						disabled
@@ -33,15 +54,10 @@ const List = ({ auth = {}, objects = [] }) => {
 					/>
 					<button
 						type="button"
-						className="btn btn-outline-secondary"
-						onClick={() => {
-							navigator.clipboard.writeText(
-								`${process.env.NEXT_PUBLIC_WEBSITE_URL}/auth/register?referral=${auth?.data?.referralLinks?.myReferralCode}`,
-							);
-							toast.success("Referral link copied to clipboard!", "bottom");
-						}}
+						className={`btn ${copiedUrl ? "btn-success" : "btn-outline-secondary"}`}
+						onClick={() => copyToClipboard(referralsUrl)}
 					>
-						Copy
+						{copiedUrl ? "Copied!" : "Copy"}
 					</button>
 				</div>
 				<hr />

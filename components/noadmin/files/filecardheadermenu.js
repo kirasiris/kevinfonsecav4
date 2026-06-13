@@ -68,10 +68,18 @@ const AdminCardHeaderMenu = ({
 			<div className="float-end my-1">
 				<div className="btn-group">
 					{handleDeleteAllFunction !== "" && (
-						<DeleteAllModal action={handleDeleteAllFunction} />
+						<DeleteAllModal
+							action={handleDeleteAllFunction}
+							classList="btn-danger"
+							text="Delete all permanently"
+						/>
 					)}
 					{handleDeleteAllUnusedPermanently !== "" && (
-						<DeleteAllModal action={handleDeleteAllUnusedPermanently} />
+						<DeleteAllModal
+							action={handleDeleteAllUnusedPermanently}
+							classList="btn-dark"
+							text="Delete all unused permanently"
+						/>
 					)}
 				</div>
 			</div>

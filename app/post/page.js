@@ -15,7 +15,7 @@ const PostIndex = async ({ params, searchParams }) => {
 	const awtdSearchParams = await searchParams;
 	const page = awtdSearchParams.page || 1;
 	const limit = awtdSearchParams.limit || 10;
-	const sort = "-createdAt";
+	const sort = awtdSearchParams.sort || "-createdAt";
 	const decrypt =
 		awtdSearchParams.decrypt === "true" ? "&decrypt=true" : "&decrypt=true";
 

@@ -34,7 +34,6 @@ const QuizRead = async ({ params, searchParams }) => {
 	const page = awtdSearchParams.page || 1;
 	const limit = awtdSearchParams.limit || 15;
 	const sort = awtdSearchParams.sort || "-createdAt";
-	const decrypt = awtdSearchParams.decrypt === "true" ? "&decrypt=true" : "";
 
 	const { settings } = await getGlobalData();
 

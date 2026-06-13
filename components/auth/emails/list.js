@@ -67,11 +67,17 @@ const List = ({
 						</button>
 						<DeleteModal
 							id={object?._id}
-							action={handleRemoveEmail}
+							sId={null}
+							location=""
+							as="button"
+							size="sm"
 							classStr="btn btn-danger btn-sm"
+							action={handleRemoveEmail}
+							action2={() => {}}
 							objects={newobjects}
 							setObjects={setNewObjects}
 							setTotalResults={setTotalResults}
+							displayText={false}
 						/>
 					</div>
 				))}

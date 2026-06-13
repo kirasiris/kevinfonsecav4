@@ -2,7 +2,11 @@
 import { useState } from "react";
 import Modal from "react-bootstrap/Modal";
 
-const DeleteAllModal = ({ action = () => {} }) => {
+const DeleteAllModal = ({
+	action = () => {},
+	classList = "btn-danger",
+	text = "Delete all permanently",
+}) => {
 	const [confirmDeleteAllModal, setConfirmDeleteAllModal] = useState(false);
 
 	const deleteObject = async (e) => {
@@ -19,12 +23,11 @@ const DeleteAllModal = ({ action = () => {} }) => {
 	return (
 		<>
 			<button
-				className="btn btn-danger btn-sm"
+				className={`btn ${classList} btn-sm`}
 				type="button"
 				onClick={() => setConfirmDeleteAllModal(!confirmDeleteAllModal)}
 			>
-				{/* <i className={`fas fa-trash-alt mr-1`} aria-hidden /> */}
-				Delete all permanently
+				{text}
 			</button>
 			<Modal
 				show={confirmDeleteAllModal}

@@ -18,15 +18,7 @@ const UseDropzone = ({
 	const router = useRouter();
 	const [uploadPercentage, setUploadPercentage] = useState(0);
 
-	return (auth?.userId !== "" &&
-		auth?.userId !== undefined &&
-		auth?.userId !== null) ||
-		(auth?.username !== "" &&
-			auth?.username !== undefined &&
-			auth?.username !== null) ||
-		(auth?.email !== "" &&
-			auth?.email !== undefined &&
-			auth?.email !== null) ? (
+	return (
 		<>
 			<UseProgress percentage={uploadPercentage} />
 			<Dropzone
@@ -37,9 +29,9 @@ const UseDropzone = ({
 						try {
 							const res = await new Promise((resolve, reject) => {
 								const formData = new FormData();
-								formData.append("userId", auth?.userId);
-								formData.append("username", auth?.username);
-								formData.append("userEmail", auth?.email);
+								formData.append("userId", auth?.data?._id);
+								formData.append("username", auth?.data?.username);
+								formData.append("userEmail", auth?.data?.email);
 								formData.append("onModel", "Product");
 								formData.append("resourceId", object?._id);
 								formData.append("file", acceptedFiles[i]);
@@ -141,10 +133,6 @@ const UseDropzone = ({
 				)}
 			</Dropzone>
 		</>
-	) : (
-		<div className="alert alert-warning">
-			Sorry you can not use the uploader
-		</div>
 	);
 };
 

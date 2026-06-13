@@ -25,9 +25,9 @@ async function getPosts(params) {
 const ProfileMapIndex = async ({ params, searchParams }) => {
 	const awtdParams = await params;
 	const awtdSearchParams = await searchParams;
-	const limit = awtdSearchParams.limit || 50;
 	const page = awtdSearchParams.page || 1;
-	const sort = "-createdAt";
+	const limit = awtdSearchParams.limit || 50;
+	const sort = awtdSearchParams.sort || "-createdAt";
 	const decrypt = awtdSearchParams.decrypt === "true" ? "&decrypt=true" : "";
 
 	const { settings } = await getGlobalData();

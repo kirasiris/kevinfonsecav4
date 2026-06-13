@@ -2,7 +2,9 @@
 import { useState } from "react";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
+import { toast } from "react-toastify";
 import { fetchurl } from "@/helpers/setTokenOnServer";
+import MyTextArea from "./myfinaltextarea";
 
 const ReportModal = ({
 	resourceId = null,
@@ -10,40 +12,66 @@ const ReportModal = ({
 	onModel = `Blog`,
 }) => {
 	const [reportModal, setReportModal] = useState(false);
+	const [btnText, setBtnText] = useState("Submit");
 
-	const [reportData, setReportData] = useState({
-		title: ``,
-		text: ``,
-		postType: postType,
-		onModel: onModel,
-		website: "beFree",
-	});
+	// const [reportData, setReportData] = useState({
+	// 	title: ``,
+	// 	text: ``,
+	// 	postType: postType,
+	// 	onModel: onModel,
+	// 	website: "beFree",
+	// });
 
-	const { title, text } = reportData;
+	// const { title, text } = reportData;
 
-	const resetForm = () => {
-		setReportData({
-			title: ``,
-			text: ``,
-			postType: postType,
-			onModel: onModel,
-			website: "beFree",
-		});
+	const resetForm = (e) => {
+		e.target.closest("form").reset();
+		// setReportData({
+		// 	title: ``,
+		// 	text: ``,
+		// 	postType: postType,
+		// 	onModel: onModel,
+		// 	website: "beFree",
+		// });
 	};
 
 	const sendReport = async (e) => {
 		e.preventDefault();
-		await fetchurl(
+		const form = e.target;
+		const formData = new FormData(form);
+
+		const rawFormData = {
+			title: formData.get("title"),
+			text: formData.get("text"),
+			postType: postType,
+			onModel: onModel,
+			website: process.env.NEXT_PUBLIC_WEBSITE_NAME,
+		};
+
+		const res = await fetchurl(
 			`/global/reports/${resourceId}`,
 			"POST",
 			"no-cache",
-			reportData,
+			rawFormData,
 			undefined,
 			false,
 			false,
 		);
+
+		if (res.status === "error") {
+			toast.error(res.message);
+			setBtnText("Submit");
+			return;
+		}
+
+		if (res.status === "fail") {
+			toast.error(res.message);
+			setBtnText("Submit");
+			return;
+		}
+		setBtnText("Submit");
 		setReportModal(false);
-		resetForm();
+		// resetForm();
 	};
 
 	return (
@@ -74,20 +102,23 @@ const ReportModal = ({
 						<input
 							id="title"
 							name="title"
-							value={title}
-							onChange={(e) => {
-								setReportData({
-									...reportData,
-									title: e.target.value,
-								});
-							}}
+							defaultValue=""
+							type="text"
+							// value={title}
+							// onChange={(e) => {
+							// 	setReportData({
+							// 		...reportData,
+							// 		title: e.target.value,
+							// 	});
+							// }}
 							className="form-control mb-3"
+							required
 							placeholder="I hate this article!"
 						/>
 						<label htmlFor="text" className="form-label">
 							Text
 						</label>
-						<Form.Control
+						{/* <Form.Control
 							as={`textarea`}
 							rows={`3`}
 							placeholder={`Text`}
@@ -103,6 +134,18 @@ const ReportModal = ({
 								});
 							}}
 							required
+						/> */}
+						<MyTextArea
+							auth={undefined}
+							token={undefined}
+							id="text"
+							name="text"
+							defaultValue=""
+							onModel="Blog"
+							advancedTextEditor={false}
+							customPlaceholder="Text"
+							charactersLimit={1}
+							isRequired={true}
 						/>
 					</Modal.Body>
 					<Modal.Footer>
@@ -113,7 +156,7 @@ const ReportModal = ({
 							Close
 						</button>
 						<button className="btn btn-secondary btn-sm" type="submit">
-							Submit
+							{btnText}
 						</button>
 					</Modal.Footer>
 				</Form>

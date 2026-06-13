@@ -21,7 +21,7 @@ const AdminFilesIndex = async ({ params, searchParams }) => {
 
 	const files = await getFiles(`?page=${page}&limit=${limit}&sort=${sort}`);
 
-	const handleDelete = async (id, publicId) => {
+	const handleDelete = async (id) => {
 		"use server";
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/files/${id}/permanently`, "DELETE", "no-cache");

@@ -16,7 +16,7 @@ const ProfileSearchIndex = async ({ params, searchParams }) => {
 	const keyword = awtdSearchParams.keyword || "";
 	const page = awtdSearchParams.page || 1;
 	const limit = awtdSearchParams.limit || 10;
-	const sort = awtdSearchParams.page || "-createdAt";
+	const sort = awtdSearchParams.sort || "-createdAt";
 	const keywordQuery =
 		keyword !== "" && keyword !== undefined ? `&keyword=${keyword}` : "";
 	const decrypt = awtdSearchParams.decrypt === "true" ? "&decrypt=true" : "";
@@ -24,7 +24,7 @@ const ProfileSearchIndex = async ({ params, searchParams }) => {
 	const { settings } = await getGlobalData();
 
 	const getProfilesData = getProfiles(
-		`?page=${page}&limit=${limit}&sort=-createdAt&isEmailConfirmed=true${keywordQuery}${decrypt}`,
+		`?page=${page}&limit=${limit}&sort=${sort}&isEmailConfirmed=true${keywordQuery}${decrypt}`,
 	);
 
 	const [profiles] = await Promise.all([getProfilesData]);

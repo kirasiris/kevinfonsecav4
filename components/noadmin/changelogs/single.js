@@ -34,12 +34,18 @@ const Single = ({
 							Read&nbsp;more
 						</Link>
 						<DeleteModal
-							id={object._id ? object._id : object._id}
+							id={object._id}
+							sId={null}
+							location=""
+							as="button"
+							size="sm"
+							classStr=""
 							action={handleDelete}
-							// classStr={}
+							action2={() => {}}
 							objects={objects}
 							setObjects={setObjects}
 							setTotalResults={setTotalResults}
+							displayText={true}
 						/>
 					</div>
 					<hr />

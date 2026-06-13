@@ -1,11 +1,11 @@
 "use client";
 import { Suspense } from "react";
 import Accordion from "react-bootstrap/Accordion";
+import Link from "next/link";
 import Loading from "@/app/changelog/loading";
 import ParseHtml from "@/layout/parseHtml";
-import Link from "next/link";
 
-const Single = ({ object = {}, imageWidth = "415", imageHeight = "207" }) => {
+const Single = ({ object = {} }) => {
 	return (
 		<Suspense fallback={<Loading />}>
 			<article className={`${object?._id}`}>

@@ -1,15 +1,12 @@
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { formatDateWithoutTime } from "befree-utilities";
-import {
-	fetchurl,
-	getAuthTokenOnServer,
-	getUserOnServer,
-} from "@/helpers/setTokenOnServer";
+import { fetchurl, getAuthTokenOnServer } from "@/helpers/setTokenOnServer";
 import ParseHtml from "@/layout/parseHtml";
 import Map from "@/components/global/map";
 import UseDropzone from "@/components/nfabusiness/realestates/filedropzone";
 import Gallery from "@/components/nfabusiness/realestates/gallery";
+import { getGlobalData } from "@/helpers/globalData";
 
 async function getRealEstate(params) {
 	const res = await fetchurl(`/global/realestates${params}`, "GET", "no-cache");
@@ -21,7 +18,7 @@ const ReadRealEstate = async ({ params, searchParams }) => {
 	const awtdParams = await params;
 	const awtdSearchParams = await searchParams;
 	const token = await getAuthTokenOnServer();
-	const auth = await getUserOnServer();
+	const { auth } = await getGlobalData();
 	const realestate = await getRealEstate(`/${awtdParams.id}`);
 
 	return (

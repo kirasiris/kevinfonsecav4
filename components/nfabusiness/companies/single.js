@@ -125,11 +125,17 @@ const Single = ({
 							<hr />
 							<DeleteModal
 								id={object._id ? object._id : object._id}
-								action={handleDelete}
+								sId={null}
+								location=""
+								as="button"
+								size="sm"
 								classStr={`dropdown-item`}
+								action={handleDelete}
+								action2={() => {}}
 								objects={objects}
 								setObjects={setObjects}
 								setTotalResults={setTotalResults}
+								displayText={true}
 							/>
 						</DropdownButton>
 					</span>

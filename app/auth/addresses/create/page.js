@@ -6,9 +6,9 @@ import Loading from "@/app/blog/loading";
 import Head from "@/app/head";
 import { getGlobalData } from "@/helpers/globalData";
 import ErrorPage from "@/layout/errorpage";
-import CreateEmailForm from "@/forms/auth/createemailform";
+import CreateAddressForm from "@/forms/auth/createaddressform";
 
-const CreateEmail = async ({ params, searchParams }) => {
+const CreateAddress = async ({ params, searchParams }) => {
 	const { auth, settings } = await getGlobalData();
 
 	// Redirect if user is not logged in
@@ -18,8 +18,8 @@ const CreateEmail = async ({ params, searchParams }) => {
 	return (
 		<>
 			<Head
-				title={`${settings?.data?.title} - Account Emails`}
-				description={"Manage your emails"}
+				title={`${settings?.data?.title} - Account Addresses`}
+				description={"Manage your addresses"}
 				favicon={settings?.data?.favicon}
 				postImage=""
 				imageWidth=""
@@ -29,7 +29,7 @@ const CreateEmail = async ({ params, searchParams }) => {
 				card="summary"
 				robots=""
 				category=""
-				url={`/auth/emails/create`}
+				url={`/auth/addresses/create`}
 				author=""
 				createdAt=""
 				updatedAt=""
@@ -43,9 +43,9 @@ const CreateEmail = async ({ params, searchParams }) => {
 							<Sidebar />
 							<Globalcontent>
 								<div className="card">
-									<div className="card-header">Add&nbsp;Email</div>
+									<div className="card-header">Add&nbsp;an&nbsp;Address</div>
 									<div className="card-body">
-										<CreateEmailForm auth={auth} />
+										<CreateAddressForm />
 									</div>
 								</div>
 							</Globalcontent>
@@ -59,4 +59,4 @@ const CreateEmail = async ({ params, searchParams }) => {
 	);
 };
 
-export default CreateEmail;
+export default CreateAddress;

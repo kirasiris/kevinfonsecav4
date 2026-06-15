@@ -4,26 +4,25 @@ import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 
-const CreateEmailForm = ({}) => {
+const AddAddressForm = ({}) => {
 	const router = useRouter();
 
 	const [btnText, setBtnText] = useState("Submit");
 
-	const addEmail = async (e) => {
+	const addAddress = async (e) => {
 		e.preventDefault();
-		setBtnText(`Processing`);
+		setBtnText(`Processing...`);
 
 		const form = e.target;
 		const formData = new FormData(form);
 
 		const rawFormData = {
-			email: formData.get("email"),
-			website: process.env.NEXT_PUBLIC_WEBSITE_NAME,
+			address: formData.get("address"),
 		};
 
 		const res = await fetchurl(
-			`/auth/emails/add`,
-			"PUT",
+			`/protected/addresses`,
+			"POST",
 			"no-cache",
 			rawFormData,
 			undefined,
@@ -36,33 +35,32 @@ const CreateEmailForm = ({}) => {
 			setBtnText("Submit");
 			return;
 		}
-
 		if (res.status === "fail") {
 			toast.error(res.message);
 			setBtnText("Submit");
 			return;
 		}
-
-		toast.success("Account has been updated");
-		router.push(`/auth/editsecurity`);
+		toast.success("Address has been added");
+		router.push(`/auth/addresses`);
 	};
 
-	const resetForm = (e) => {
+	const resetForm = () => {
 		e.target.closest("form").reset();
 	};
 
 	return (
-		<form onSubmit={addEmail}>
-			<label htmlFor="email" className="form-label">
-				Email
+		<form onSubmit={addAddress}>
+			<label htmlFor="address" className="form-label">
+				Address
 			</label>
 			<input
-				id="email"
-				name="email"
+				id="address"
+				name="address"
 				defaultValue=""
-				type="email"
+				type="text"
 				className="form-control mb-3"
-				placeholder="john.doe@demo.com"
+				required
+				placeholder="4442 Jackson Blvd, Columbia, SC 29209"
 			/>
 			<button type="submit" className="btn btn-secondary btn-sm float-start">
 				{btnText}
@@ -78,4 +76,4 @@ const CreateEmailForm = ({}) => {
 	);
 };
 
-export default CreateEmailForm;
+export default AddAddressForm;

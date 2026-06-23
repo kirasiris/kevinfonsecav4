@@ -850,6 +850,9 @@ body.dark-mode blockquote {
 }
 
 body.dark-mode .dropzone,
+body.dark-mode .admin-multimedia-manager,
+body.dark-mode .admin-multimedia-manager-audio-file,
+body.dark-mode .admin-multimedia-manager-doc-file,
 body.dark-mode .user-timeline-nothing-found,
 body.dark-mode .admin-sidebar,
 body.dark-mode .admin-header,

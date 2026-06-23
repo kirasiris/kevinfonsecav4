@@ -164,6 +164,16 @@ a.blog-relative-time-status__link {
 }
 
 /* ---------------------------------------------------
+  MULTIMEDIA MANAGER
+----------------------------------------------------- */
+.admin-multimedia-manager,
+.admin-multimedia-manager-audio-file,
+.admin-multimedia-manager-doc-file {
+	background-color: #f8f8f8;
+	border: 1px solid #dee2e6;
+}
+
+/* ---------------------------------------------------
   FOOTER
 ----------------------------------------------------- */
 footer {

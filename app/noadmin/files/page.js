@@ -1,8 +1,8 @@
 import { revalidatePath } from "next/cache";
 import { fetchurl, getAuthTokenOnServer } from "@/helpers/setTokenOnServer";
 import AdminStatusesMenu from "@/components/noadmin/adminstatusesmenu";
-import List from "@/components/noadmin/files/list";
 import { getGlobalData } from "@/helpers/globalData";
+import FilesWorkSpace from "@/components/noadmin/files/filesworkspace";
 
 async function getFiles(params) {
 	const res = await fetchurl(`/global/files${params}`, "GET", "no-cache");
@@ -20,13 +20,6 @@ const AdminFilesIndex = async ({ params, searchParams }) => {
 	const { auth } = await getGlobalData();
 
 	const files = await getFiles(`?page=${page}&limit=${limit}&sort=${sort}`);
-
-	const handleDelete = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/files/${id}/permanently`, "DELETE", "no-cache");
-		revalidatePath(`/noadmin/files?page=${page}&limit=${limit}&sort=${sort}`);
-	};
 
 	const handleDeleteAllPermanently = async () => {
 		"use server";
@@ -57,24 +50,18 @@ const AdminFilesIndex = async ({ params, searchParams }) => {
 				categoriesLink="/noadmin/files/audios"
 				categoryType=""
 			/>
-			<div className="card rounded-0">
-				<List
-					auth={auth}
-					token={token}
-					id="single"
-					name="single"
-					multipleFiles={true}
-					onModel="Blog"
-					allLink="/noadmin/files"
-					pageText="Files"
-					searchOn="/noadmin/files"
-					objects={files}
-					searchParams={awtdSearchParams}
-					handleDelete={handleDelete}
-					handleDeleteAllFunction={handleDeleteAllPermanently}
-					handleDeleteAllUnusedPermanently={handleDeleteAllUnusedPermanently}
-				/>
-			</div>
+			<FilesWorkSpace
+				auth={auth}
+				token={token}
+				onModel="Blog"
+				allLink="/noadmin/files"
+				pageText="Files"
+				searchOn="/noadmin/files"
+				objects={files}
+				searchParams={awtdSearchParams}
+				handleDeleteAllFunction={handleDeleteAllPermanently}
+				handleDeleteAllUnusedPermanently={handleDeleteAllUnusedPermanently}
+			/>
 		</>
 	);
 };

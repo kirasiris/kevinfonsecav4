@@ -14,25 +14,8 @@ const ReportModal = ({
 	const [reportModal, setReportModal] = useState(false);
 	const [btnText, setBtnText] = useState("Submit");
 
-	// const [reportData, setReportData] = useState({
-	// 	title: ``,
-	// 	text: ``,
-	// 	postType: postType,
-	// 	onModel: onModel,
-	// 	website: "beFree",
-	// });
-
-	// const { title, text } = reportData;
-
 	const resetForm = (e) => {
 		e.target.closest("form").reset();
-		// setReportData({
-		// 	title: ``,
-		// 	text: ``,
-		// 	postType: postType,
-		// 	onModel: onModel,
-		// 	website: "beFree",
-		// });
 	};
 
 	const sendReport = async (e) => {
@@ -71,7 +54,7 @@ const ReportModal = ({
 		}
 		setBtnText("Submit");
 		setReportModal(false);
-		// resetForm();
+		resetForm();
 	};
 
 	return (

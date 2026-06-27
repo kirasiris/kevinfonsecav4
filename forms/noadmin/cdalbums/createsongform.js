@@ -22,7 +22,6 @@ const CreateSongForm = ({ token = {}, auth = {}, params = {} }) => {
 			title: formData.get("title"),
 			sub_title: formData.get("sub_title"),
 			text: formData.get("text"),
-			featured: formData.get("featured"),
 			commented: formData.get("commented"),
 			embedding: formData.get("embedding"),
 			category: formData.get("category"),
@@ -174,7 +173,7 @@ const CreateSongForm = ({ token = {}, auth = {}, params = {} }) => {
 					status="draft"
 					fullWidth={false}
 					password=""
-					featured={true}
+					featured={false}
 					commented={true}
 					embedding={true}
 					category={undefined}

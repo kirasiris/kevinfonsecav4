@@ -80,7 +80,7 @@ const seedFromObjects = (objects, pageHint, seenSet) => {
 	return result;
 };
 
-const List = ({ objects = [], searchParams = {}, deleteObject = () => {} }) => {
+const List = ({ objects = [], searchParams = {} }) => {
 	const initialPage = useMemo(() => {
 		const fromSearch = Number(searchParams?.page);
 		if (Number.isFinite(fromSearch) && fromSearch > 0) {
@@ -90,7 +90,7 @@ const List = ({ objects = [], searchParams = {}, deleteObject = () => {} }) => {
 		if (Number.isFinite(fromPayload) && fromPayload > 0) {
 			return fromPayload;
 		}
-		return 1;
+		return 1; // Default page
 	}, [searchParams?.page, objects?.pagination?.current]);
 
 	const limit = useMemo(() => {
@@ -102,7 +102,7 @@ const List = ({ objects = [], searchParams = {}, deleteObject = () => {} }) => {
 		if (Number.isFinite(fromPayload) && fromPayload > 0) {
 			return fromPayload;
 		}
-		return 32;
+		return 32; // Default limit
 	}, [searchParams?.limit, objects?.pagination?.next?.limit]);
 
 	const sort = searchParams?.sort || "-createdAt";
@@ -127,6 +127,7 @@ const List = ({ objects = [], searchParams = {}, deleteObject = () => {} }) => {
 		...objects,
 		countAll: typeof objects?.countAll === "number" ? objects.countAll : null,
 	});
+
 	const [hasMore, setHasMore] = useState(() => {
 		if (objects?.pagination?.next?.page) {
 			return true;
@@ -135,9 +136,11 @@ const List = ({ objects = [], searchParams = {}, deleteObject = () => {} }) => {
 		if (Number.isFinite(total)) {
 			return initialPage < total;
 		}
+
 		// No SSR payload — assume there's more and let the first fetch tell us.
 		return !objects;
 	});
+
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState(false);
 	const [deletingKey, setDeletingKey] = useState(null);
@@ -263,31 +266,30 @@ const List = ({ objects = [], searchParams = {}, deleteObject = () => {} }) => {
 		});
 	}, [uploadBridge, prependNew]);
 
-	const handleDelete = useCallback(
-		async (item) => {
-			if (!item?._id) return;
-			setDeletingKey(item.__key);
-			const res = await fetchurl(
-				`/noadmin/files/${item?._id}/permanently`,
-				"DELETE",
-				"no-cache",
-			);
-			if (res.status === "error") {
-				toast.error(res.message);
-				return;
-			}
-			if (res.status === "fail") {
-				toast.error(res.message);
-				return;
-			}
-			toast.success("File deleted");
-			setNewObjects((prev) => prev.filter((f) => f.__key !== item.__key));
-			seenKeysRef.current.delete(item.__key);
-			setTotalResults((t) => (typeof t === "number" ? Math.max(0, t - 1) : t));
-			setDeletingKey(null);
-		},
-		[deleteObject],
-	);
+	const handleDelete = useCallback(async (item) => {
+		if (!item?._id) {
+			return;
+		}
+		setDeletingKey(item.__key);
+		const res = await fetchurl(
+			`/noadmin/files/${item?._id}/permanently`,
+			"DELETE",
+			"no-cache",
+		);
+		if (res.status === "error") {
+			toast.error(res.message);
+			return;
+		}
+		if (res.status === "fail") {
+			toast.error(res.message);
+			return;
+		}
+		toast.success("File deleted");
+		setNewObjects((prev) => prev.filter((f) => f.__key !== item.__key));
+		seenKeysRef.current.delete(item.__key);
+		setTotalResults((t) => (typeof t === "number" ? Math.max(0, t - 1) : t));
+		setDeletingKey(null);
+	}, []);
 
 	const handleRetry = useCallback(() => {
 		setError(false);

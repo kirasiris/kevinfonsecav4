@@ -327,7 +327,9 @@ const UseDropzone = ({ auth = {}, token = null, onModel = "Blog" }) => {
 
 	const setupAudioVisualization = (stream) => {
 		const AudioCtx = window.AudioContext || window.webkitAudioContext;
-		if (!AudioCtx) return;
+		if (!AudioCtx) {
+			return;
+		}
 
 		const audioContext = new AudioCtx();
 		audioContextRef.current = audioContext;
@@ -341,8 +343,12 @@ const UseDropzone = ({ auth = {}, token = null, onModel = "Blog" }) => {
 	};
 
 	useEffect(() => {
-		if (recordingType !== "audio" || showCamera) return;
-		if (!waveformRef.current || !analyserRef.current) return;
+		if (recordingType !== "audio" || showCamera) {
+			return;
+		}
+		if (!waveformRef.current || !analyserRef.current) {
+			return;
+		}
 
 		const analyser = analyserRef.current;
 		const bufferLength = analyser.frequencyBinCount;
@@ -358,7 +364,9 @@ const UseDropzone = ({ auth = {}, token = null, onModel = "Blog" }) => {
 		container.appendChild(canvas);
 
 		const ctx = canvas.getContext("2d");
-		if (!ctx) return;
+		if (!ctx) {
+			return;
+		}
 
 		const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
 		gradient.addColorStop(0, "#dc3545");
@@ -368,7 +376,6 @@ const UseDropzone = ({ auth = {}, token = null, onModel = "Blog" }) => {
 			animationFrameRef.current = requestAnimationFrame(draw);
 			analyser.getByteFrequencyData(dataArray);
 
-			// ctx.fillStyle = "#f8f9fa";
 			ctx.fillStyle = "#6c757d";
 			ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -389,7 +396,9 @@ const UseDropzone = ({ auth = {}, token = null, onModel = "Blog" }) => {
 				cancelAnimationFrame(animationFrameRef.current);
 				animationFrameRef.current = null;
 			}
-			if (container) container.innerHTML = "";
+			if (container) {
+				container.innerHTML = "";
+			}
 		};
 	}, [recordingType, showCamera]);
 
@@ -403,7 +412,9 @@ const UseDropzone = ({ auth = {}, token = null, onModel = "Blog" }) => {
 			audioContextRef.current = null;
 		}
 		analyserRef.current = null;
-		if (waveformRef.current) waveformRef.current.innerHTML = "";
+		if (waveformRef.current) {
+			waveformRef.current.innerHTML = "";
+		}
 	};
 
 	useEffect(() => {
@@ -412,6 +423,7 @@ const UseDropzone = ({ auth = {}, token = null, onModel = "Blog" }) => {
 		}
 	}, [showCamera]);
 
+	/* ------------------------- Unmount cleanup ---------------------------- */
 	useEffect(() => {
 		// Snapshot the refs at effect-setup time so the cleanup function doesn't
 		// close over the refs after they may have been re-assigned.
@@ -431,17 +443,23 @@ const UseDropzone = ({ auth = {}, token = null, onModel = "Blog" }) => {
 	}, []);
 
 	const takePhoto = () => {
-		if (!videoPreviewRef.current || !streamRef.current) return;
+		if (!videoPreviewRef.current || !streamRef.current) {
+			return;
+		}
 		const video = videoPreviewRef.current;
 		const canvas = document.createElement("canvas");
 		canvas.width = video.videoWidth;
 		canvas.height = video.videoHeight;
 		const ctx = canvas.getContext("2d");
-		if (!ctx) return;
+		if (!ctx) {
+			return;
+		}
 
 		ctx.drawImage(video, 0, 0);
 		canvas.toBlob((blob) => {
-			if (!blob) return;
+			if (!blob) {
+				return;
+			}
 			addAndUploadFile({
 				id: generateId(),
 				blob,
@@ -454,7 +472,9 @@ const UseDropzone = ({ auth = {}, token = null, onModel = "Blog" }) => {
 	};
 
 	const startRecording = () => {
-		if (!streamRef.current) return;
+		if (!streamRef.current) {
+			return;
+		}
 
 		chunksRef.current = [];
 		const mediaRecorder = new MediaRecorder(streamRef.current);
@@ -607,7 +627,6 @@ const UseDropzone = ({ auth = {}, token = null, onModel = "Blog" }) => {
 						Multimedia Manager
 					</h4>
 				</div>
-
 				<div className="card-body">
 					<div className="row g-3 mb-4">
 						<div className="col-12 col-md-6 col-lg-3">
@@ -784,7 +803,7 @@ const UseDropzone = ({ auth = {}, token = null, onModel = "Blog" }) => {
 											</div>
 											{!file.uploading && (
 												<button
-													className="btn btn-sm btn-outline-danger"
+													className="btn btn-outline-danger btn-sm"
 													onClick={() => removeFile(file.id)}
 													title="Remove file"
 												>

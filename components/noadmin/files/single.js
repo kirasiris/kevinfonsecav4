@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { DropdownButton } from "react-bootstrap";
+import DropdownButton from "react-bootstrap/DropdownButton";
 import { formatFileSize } from "@/helpers/formatFileSize";
 
 const FileIcon = ({ type }) => {

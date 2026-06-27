@@ -93,9 +93,7 @@ export default async function AdminLayout({ children }) {
 					</div>
 				</div>
 				<div className="flex-grow-1 min-vh-100">
-					<main>
-						<section className="p-1">{children}</section>
-					</main>
+					<section className="p-1">{children}</section>
 				</div>
 			</div>
 		</Suspense>

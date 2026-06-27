@@ -1,11 +1,9 @@
-import { revalidatePath } from "next/cache";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { fetchurl, getAuthTokenOnServer } from "@/helpers/setTokenOnServer";
 import ParseHtml from "@/layout/parseHtml";
-import SongList from "@/components/noadmin/cdalbums/songlist";
-import UseDropzone from "@/components/noadmin/cdalbums/songdropzone";
 import { getGlobalData } from "@/helpers/globalData";
+import AlbumMediaManager from "@/components/noadmin/cdalbums/albummediamanager";
 
 async function getCDAlbum(params) {
 	const res = await fetchurl(`/global/playlists${params}`, "GET", "no-cache");
@@ -21,76 +19,23 @@ async function getSongs(params) {
 const ReadCDAlbum = async ({ params, searchParams }) => {
 	const awtdParams = await params;
 	const awtdSearchParams = await searchParams;
-	const token = await getAuthTokenOnServer();
 
+	const token = await getAuthTokenOnServer();
 	const { auth } = await getGlobalData();
 
 	const page = awtdSearchParams.page || 1;
 	const limit = awtdSearchParams.limit || 10;
-	const sort = awtdSearchParams.sort || "-createdAt";
+	const sort = awtdSearchParams.sort || "orderingNumber";
 
 	const cdalbum = await getCDAlbum(`/${awtdParams.id}`);
 	const songs = await getSongs(
 		`?resourceId=${cdalbum?.data?._id}&page=${page}&limit=${limit}&sort=${sort}`,
 	);
 
-	const draftIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/songs/${id}/draftit`, "PUT", "no-cache");
-		revalidatePath(`/noadmin/cdalbums/read/${awtdParams.id}`);
-	};
-
-	const publishIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/songs/${id}/publishit`, "PUT", "no-cache");
-		revalidatePath(`/noadmin/cdalbums/read/${awtdParams.id}`);
-	};
-
-	const trashIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/songs/${id}/trashit`, "PUT", "no-cache");
-		revalidatePath(`/noadmin/cdalbums/read/${awtdParams.id}`);
-	};
-
-	const scheduleIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/songs/${id}/scheduleit`, "PUT", "no-cache");
-		revalidatePath(`/noadmin/cdalbums/read/${awtdParams.id}`);
-	};
-
-	const handleDelete = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/songs/${id}/permanently`, "DELETE", "no-cache");
-		revalidatePath(`/noadmin/cdalbums/read/${awtdParams.id}`);
-	};
-
-	const handleTrashAll = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/songs/deleteall`, "PUT", "no-cache");
-		revalidatePath(`/noadmin/cdalbums/read/${awtdParams.id}`);
-	};
-
-	const handleDeleteAll = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/songs/deleteall/permanently`,
-			"DELETE",
-			"no-cache",
-		);
-		revalidatePath(`/noadmin/cdalbums/read/${awtdParams.id}`);
-	};
-
 	return (
 		<div className="row">
 			<div className="col-lg-10">
-				<div className="card rounded-0 mb-3">
+				<div className="card rounded-0 mb-1">
 					<div className="card-header">
 						{cdalbum?.data?.title || "Untitled"}
 					</div>
@@ -98,32 +43,13 @@ const ReadCDAlbum = async ({ params, searchParams }) => {
 						<ParseHtml text={cdalbum?.data?.text} />
 					</div>
 				</div>
-				<UseDropzone
+				<AlbumMediaManager
 					auth={auth}
 					token={token}
-					id={"file"}
-					name={"file"}
-					multipleFiles={true}
 					object={cdalbum?.data}
+					objects={songs}
+					searchParams={awtdSearchParams}
 				/>
-				<div className="card rounded-0">
-					<SongList
-						allLink={`/noadmin/cdalbums/read/${cdalbum?.data?._id}`}
-						pageText="Songs"
-						addLink={`/noadmin/cdalbums/song/${cdalbum?.data?._id}/create`}
-						searchOn={`/noadmin/cdalbums/read/${cdalbum?.data?._id}`}
-						object={cdalbum?.data}
-						objects={songs}
-						searchParams={awtdSearchParams}
-						handleDraft={draftIt}
-						handlePublish={publishIt}
-						handleTrash={trashIt}
-						handleSchedule={scheduleIt}
-						handleDelete={handleDelete}
-						handleTrashAllFunction={handleTrashAll}
-						handleDeleteAllFunction={handleDeleteAll}
-					/>
-				</div>
 			</div>
 			<div className="col-xl-2 col-lg-2 col-md-2 col-sm-12 col-xs-12 d-none d-sm-none d-md-none d-lg-block dm-xl-block">
 				<figure className="mb-3 bg-dark">

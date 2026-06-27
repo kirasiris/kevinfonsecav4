@@ -22,7 +22,6 @@ const UpdateSongForm = ({ token = {}, auth = {}, object = {} }) => {
 			title: formData.get("title"),
 			sub_title: formData.get("sub_title"),
 			text: formData.get("text"),
-			featured: formData.get("featured"),
 			commented: formData.get("commented"),
 			embedding: formData.get("embedding"),
 			category: formData.get("category"),
@@ -172,7 +171,7 @@ const UpdateSongForm = ({ token = {}, auth = {}, object = {} }) => {
 					status={object?.data?.status}
 					fullWidth={false}
 					password=""
-					featured={object?.data?.featured.toString()}
+					featured={false}
 					commented={object?.data?.commented.toString()}
 					embedding={object?.data?.commented.toString()}
 					category={undefined}

@@ -3,9 +3,9 @@ import { useState, useRef, useCallback, useEffect, useMemo } from "react";
 import { toast } from "react-toastify";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import { formatFileSize } from "@/helpers/formatFileSize";
-import Single from "./songsingle";
+import Single from "./chaptersingle";
 
-// This is for the retrieval of songs
+// This is for the retrieval of videos
 const FILE_TYPE_MAP = {
 	image: {
 		label: "Image",
@@ -77,7 +77,7 @@ const seedFromObjects = (objects, pageHint, seenSet) => {
 	return result;
 };
 
-// This is to upload songs to server
+// This is to upload videos to server
 const generateId = () => Math.random().toString(36).slice(2, 9);
 
 const getFileType = (mimeType = "") => {
@@ -104,7 +104,7 @@ const uploadFileToServer = (
 		formData.append("onModel", "Playlist");
 		formData.append("resourceId", object?._id);
 		formData.append("file", blob, filename);
-		formData.append("album", "albums");
+		formData.append("album", "tv-shows");
 
 		xhr.upload.addEventListener("progress", (event) => {
 			if (event.lengthComputable) {
@@ -117,20 +117,19 @@ const uploadFileToServer = (
 				const parsed = JSON.parse(xhr.responseText);
 
 				await fetchurl(
-					`/noadmin/songs`,
+					`/noadmin/videos`,
 					"POST",
 					"no-cache",
 					{
 						resourceId: object?._id,
 						duration: "0:0",
 						status: "draft",
-						averageRating: 5,
+						averageRating: 10,
 						onModel: "Playlist",
 						title: parsed?.data?.title,
-						sub_title: parsed?.data?.title,
 						text: "No description",
 						files: {
-							audio_url: parsed?.data?._id,
+							video_url: parsed?.data?._id,
 						},
 						embedding: false,
 						commented: false,
@@ -173,7 +172,7 @@ const uploadFileToServer = (
 	return { res, xhr };
 };
 
-const AlbumMediaManager = ({
+const ChaptersMediaManager = ({
 	auth = {},
 	token = {},
 	object = {},
@@ -207,7 +206,7 @@ const AlbumMediaManager = ({
 	const sort = searchParams?.sort || "orderingNumber";
 	const prependNew = !sort || sort.startsWith("-");
 
-	// This is for the retrieval of songs
+	// This is for the retrieval of videos
 	const seenKeysRef = useRef(null);
 	if (seenKeysRef.current === null) {
 		seenKeysRef.current = new Set();
@@ -255,7 +254,7 @@ const AlbumMediaManager = ({
 			setError(false);
 
 			const res = await fetchurl(
-				`/global/songs?resourceId=${object?._id}&page=${pageToLoad}&limit=${limit}&sort=${sort}`,
+				`/global/videos?resourceId=${object?._id}&page=${pageToLoad}&limit=${limit}&sort=${sort}`,
 				"GET",
 				"no-cache",
 				{},
@@ -265,7 +264,7 @@ const AlbumMediaManager = ({
 			);
 			if (!res.success) {
 				setError(true);
-				toast.error("Failed to retrieve songs");
+				toast.error("Failed to retrieve videos");
 			}
 
 			const rawList = Array.isArray(res?.data) ? res.data : [];
@@ -339,7 +338,7 @@ const AlbumMediaManager = ({
 		}
 		setDraftingKey(item.__key);
 		const res = await fetchurl(
-			`/noadmin/songs/${item?._id}/draftit`,
+			`/noadmin/videos/${item?._id}/draftit`,
 			"PUT",
 			"no-cache",
 			{},
@@ -357,7 +356,7 @@ const AlbumMediaManager = ({
 			setDraftingKey(null);
 			return;
 		}
-		toast.success("Song drafted");
+		toast.success("Video drafted");
 		// Reflect the new status in local state so the badge updates immediately.
 		setNewObjects((prev) =>
 			prev.map((f) => (f.__key === item.__key ? { ...f, status: "draft" } : f)),
@@ -371,7 +370,7 @@ const AlbumMediaManager = ({
 		}
 		setPublishingKey(item.__key);
 		const res = await fetchurl(
-			`/noadmin/songs/${item?._id}/publishit`,
+			`/noadmin/videos/${item?._id}/publishit`,
 			"PUT",
 			"no-cache",
 			{},
@@ -389,7 +388,7 @@ const AlbumMediaManager = ({
 			setPublishingKey(null);
 			return;
 		}
-		toast.success("Song published");
+		toast.success("Video published");
 		// Reflect the new status in local state so the badge updates immediately.
 		setNewObjects((prev) =>
 			prev.map((f) =>
@@ -405,7 +404,7 @@ const AlbumMediaManager = ({
 		}
 		setTrashingKey(item.__key);
 		const res = await fetchurl(
-			`/noadmin/songs/${item?._id}/trashit`,
+			`/noadmin/videos/${item?._id}/trashit`,
 			"PUT",
 			"no-cache",
 			{},
@@ -423,7 +422,7 @@ const AlbumMediaManager = ({
 			setTrashingKey(null);
 			return;
 		}
-		toast.success("Song trashed");
+		toast.success("Video trashed");
 		// Reflect the new status in local state so the badge updates immediately.
 		setNewObjects((prev) =>
 			prev.map((f) => (f.__key === item.__key ? { ...f, status: "trash" } : f)),
@@ -437,7 +436,7 @@ const AlbumMediaManager = ({
 		}
 		setSchedulingKey(item.__key);
 		const res = await fetchurl(
-			`/noadmin/songs/${item?._id}/scheduleit`,
+			`/noadmin/videos/${item?._id}/scheduleit`,
 			"PUT",
 			"no-cache",
 			{},
@@ -455,7 +454,7 @@ const AlbumMediaManager = ({
 			setSchedulingKey(null);
 			return;
 		}
-		toast.success("Song scheduled");
+		toast.success("Video scheduled");
 		// Reflect the new status in local state so the badge updates immediately.
 		setNewObjects((prev) =>
 			prev.map((f) =>
@@ -471,7 +470,7 @@ const AlbumMediaManager = ({
 		}
 		setDeletingKey(item.__key);
 		const res = await fetchurl(
-			`/noadmin/songs/${item?._id}/permanently`,
+			`/noadmin/videos/${item?._id}/permanently`,
 			"DELETE",
 			"no-cache",
 			{},
@@ -489,7 +488,7 @@ const AlbumMediaManager = ({
 			setDeletingKey(null);
 			return;
 		}
-		toast.success("Song trashed");
+		toast.success("Video trashed");
 		setNewObjects((prev) => prev.filter((f) => f.__key !== item.__key));
 		seenKeysRef.current.delete(item.__key);
 		setTotalResults((t) => (typeof t === "number" ? Math.max(0, t - 1) : t));
@@ -498,7 +497,7 @@ const AlbumMediaManager = ({
 
 	const handleTrashAll = async () => {
 		const res = await fetchurl(
-			`/noadmin/songs/deleteall`,
+			`/noadmin/videos/deleteall`,
 			"PUT",
 			"no-cache",
 			{},
@@ -516,15 +515,17 @@ const AlbumMediaManager = ({
 		}
 		// Move every object to trash in local state so the badges update.
 		setNewObjects((prev) => prev.map((f) => ({ ...f, status: "trash" })));
-		toast.success("All songs trashed");
+		toast.success("All videos trashed");
 	};
 
 	const handleDeleteAll = async () => {
 		await fetchurl(
-			`/noadmin/songs/deleteall/permanently`,
+			`/noadmin/videos/deleteall/permanently`,
 			"DELETE",
 			"no-cache",
-			{},
+			{
+				onModel: "Playlist",
+			},
 			undefined,
 			false,
 			false,
@@ -532,7 +533,7 @@ const AlbumMediaManager = ({
 		setNewObjects([]);
 		seenKeysRef.current.clear();
 		setTotalResults((t) => (typeof t === "number" ? 0 : { ...t, countAll: 0 }));
-		toast.success("All songs deleted");
+		toast.success("All videos deleted");
 	};
 
 	const handleRetry = useCallback(() => {
@@ -545,10 +546,10 @@ const AlbumMediaManager = ({
 			newobjects.map((file) => ({
 				key: file.__key,
 				raw: file,
-				filename: file?.files.audio_url.location?.filename || "unknown",
-				url: file?.files.audio_url.location?.secure_location || "",
-				size: file?.files.audio_url.size,
-				info: classifyFile(file?.files.audio_url),
+				filename: file?.files?.video_url?.location?.filename || "unknown",
+				url: file?.files?.video_url?.location?.secure_location || "",
+				size: file?.files?.video_url?.size,
+				info: classifyFile(file?.files?.video_url),
 			})),
 		[newobjects],
 	);
@@ -1102,7 +1103,7 @@ const AlbumMediaManager = ({
 			orderingNumber: idx + 1,
 		}));
 		const res = await fetchurl(
-			`/noadmin/songs/${object?._id}/updateorder`,
+			`/noadmin/videos/${object?._id}/updateorder`,
 			"PUT",
 			"no-cache",
 			{ order: order },
@@ -1127,13 +1128,13 @@ const AlbumMediaManager = ({
 	const getMediaIcon = ({ type }) => {
 		switch (type) {
 			case "audio":
-				return <i className="fa-solid fa-file-audio fa-xl" />;
+				return <i aria-hidden className="fa-solid fa-file-audio fa-xl" />;
 			case "video":
-				return <i className="fa-solid fa-file-video fa-xl" />;
+				return <i aria-hidden className="fa-solid fa-file-video fa-xl" />;
 			case "image":
-				return <i className="fa-solid fa-file-image fa-xl" />;
+				return <i aria-hidden className="fa-solid fa-file-image fa-xl" />;
 			default:
-				return <i className="fa-solid fa-file-pdf fa-xl" />;
+				return <i aria-hidden className="fa-solid fa-file-pdf fa-xl" />;
 		}
 	};
 
@@ -1157,7 +1158,7 @@ const AlbumMediaManager = ({
 	}, [keyword]);
 
 	const searchData = async (e) => {
-		e.preventDefault;
+		e.preventDefault();
 		// filter object based on keyword entered
 	};
 
@@ -1217,7 +1218,7 @@ const AlbumMediaManager = ({
 					<div className="card-header">
 						<h4 className="mb-0 d-flex align-items-center gap-2">
 							<i aria-hidden className="fa-solid fa-upload" />
-							Songs Manager
+							Chapters Manager
 						</h4>
 					</div>
 					<div className="card-body">
@@ -1227,7 +1228,7 @@ const AlbumMediaManager = ({
 									type="file"
 									ref={fileInputRef}
 									onChange={handleFileUpload}
-									accept="audio/*"
+									accept="video/*"
 									multiple
 									className="d-none"
 									id="fileInput"
@@ -1241,16 +1242,16 @@ const AlbumMediaManager = ({
 								</button>
 							</div>
 
-							{/* <div className="col-12 col-md-4">
-							<button
-								className="btn btn-success w-100 d-flex align-items-center justify-content-center gap-2"
-								onClick={() => requestPermission("video")}
-								disabled={showCamera || recordingType === "audio"}
-							>
-								<i aria-hidden className="fa-solid fa-camera" />
-								Open Camera
-							</button>
-						</div> */}
+							<div className="col-12 col-md-4">
+								<button
+									className="btn btn-success w-100 d-flex align-items-center justify-content-center gap-2"
+									onClick={() => requestPermission("video")}
+									disabled={showCamera || recordingType === "audio"}
+								>
+									<i aria-hidden className="fa-solid fa-camera" />
+									Open Camera
+								</button>
+							</div>
 
 							<div className="col-12 col-md-4">
 								<button
@@ -1323,14 +1324,14 @@ const AlbumMediaManager = ({
 
 									<div className="d-flex flex-wrap justify-content-center gap-2">
 										{/* {showCamera && (
-												<button
-													className="btn btn-info btn-sm"
-													onClick={takePhoto}
-												>
-													<i aria-hidden className="fa-solid fa-camera me-1" />
-													Take Photo
-												</button>
-											)} */}
+                                                <button
+                                                    className="btn btn-info btn-sm"
+                                                    onClick={takePhoto}
+                                                >
+                                                    <i aria-hidden className="fa-solid fa-camera me-1" />
+                                                    Take Photo
+                                                </button>
+                                            )} */}
 										{!isRecording ? (
 											<button
 												className="btn btn-danger btn-sm"
@@ -1541,6 +1542,13 @@ const AlbumMediaManager = ({
 			{items.length > 0 && (
 				<>
 					<div className="card rounded-0 mb-1">
+						<div className="card-body">
+							<small className="text-muted">
+								Drag the cards to reorder, then save your changes.
+							</small>
+						</div>
+					</div>
+					<div className="card rounded-0">
 						<div className="card-header">
 							<div className="float-start">
 								<form
@@ -1609,92 +1617,87 @@ const AlbumMediaManager = ({
 								</div>
 							</div>
 						</div>
-						<div className="card-body">
-							<small className="text-muted">
-								Drag the cards to reorder, then save your changes.
-							</small>
-						</div>
-					</div>
-					{saveError && (
-						<div
-							className="alert alert-danger alert-dismissible rounded-0 mb-1"
-							role="alert"
-						>
-							{saveError}
-							<button
-								type="button"
-								className="btn-close"
-								data-bs-dismiss="alert"
-								aria-label="Close"
-							></button>
-						</div>
-					)}
-					{success && (
-						<div
-							className="alert alert-success alert-dismissible rounded-0 mb-1"
-							role="alert"
-						>
-							{success}
-							<button
-								type="button"
-								className="btn-close"
-								data-bs-dismiss="alert"
-								aria-label="Close"
-							></button>
-						</div>
-					)}
-					{debouncedKeyword && displayedItems.length === 0 && (
-						<div
-							className="alert alert-info alert-dismissible rounded-0 mb-0"
-							role="alert"
-						>
-							No objects match &quot;{debouncedKeyword}&quot;.
-							<button
-								type="button"
-								className="btn-close"
-								data-bs-dismiss="alert"
-								aria-label="Close"
-							></button>
-						</div>
-					)}
-					<div className="row g-3">
-						{displayedItems.map((item, index) => {
-							const isDeleting =
-								trashingKey === item.key ||
-								draftingKey === item.key ||
-								publishingKey === item.key ||
-								schedulingKey === item.key ||
-								deletingKey === item.key;
-							return (
-								<Single
-									key={item.key}
-									index={index}
-									object={item}
-									handleDraft={handleDraftIt}
-									handlePublish={handlePublishIt}
-									handleTrash={handleTrashIt}
-									handleSchedule={handleScheduleIt}
-									handleDelete={handleDeleteIt}
-									isDeleting={isDeleting}
-									dragProps={{
-										draggable: true,
-										onDragStart: (e) => handleItemDragStart(e, index),
-										onDragOver: (e) => handleItemDragOver(e, index),
-										onDragLeave: handleItemDragLeave,
-										onDrop: (e) => handleItemDrop(e, index),
-										onDragEnd: handleItemDragEnd,
-										style: { cursor: "grab" },
-										className: `${
-											itemDraggedIndex === index ? "opacity-50" : ""
-										} ${
-											itemDragOverIndex === index
-												? "border border-primary border-2 rounded"
-												: ""
-										}`,
-									}}
-								/>
-							);
-						})}
+						{saveError && (
+							<div
+								className="alert alert-danger alert-dismissible rounded-0 mb-0"
+								role="alert"
+							>
+								{saveError}
+								<button
+									type="button"
+									className="btn-close"
+									data-bs-dismiss="alert"
+									aria-label="Close"
+								></button>
+							</div>
+						)}
+						{success && (
+							<div
+								className="alert alert-success alert-dismissible rounded-0 mb-0"
+								role="alert"
+							>
+								{success}
+								<button
+									type="button"
+									className="btn-close"
+									data-bs-dismiss="alert"
+									aria-label="Close"
+								></button>
+							</div>
+						)}
+						{debouncedKeyword && displayedItems.length === 0 && (
+							<div
+								className="alert alert-info alert-dismissible rounded-0 mb-0"
+								role="alert"
+							>
+								No objects match &quot;{debouncedKeyword}&quot;.
+								<button
+									type="button"
+									className="btn-close"
+									data-bs-dismiss="alert"
+									aria-label="Close"
+								></button>
+							</div>
+						)}
+						<ul className="list-group list-group-flush">
+							{displayedItems.map((item, index) => {
+								const isDeleting =
+									trashingKey === item.key ||
+									draftingKey === item.key ||
+									publishingKey === item.key ||
+									schedulingKey === item.key ||
+									deletingKey === item.key;
+								return (
+									<Single
+										key={item.key}
+										index={index}
+										object={item}
+										handleDraft={handleDraftIt}
+										handlePublish={handlePublishIt}
+										handleTrash={handleTrashIt}
+										handleSchedule={handleScheduleIt}
+										handleDelete={handleDeleteIt}
+										isDeleting={isDeleting}
+										dragProps={{
+											draggable: true,
+											onDragStart: (e) => handleItemDragStart(e, index),
+											onDragOver: (e) => handleItemDragOver(e, index),
+											onDragLeave: handleItemDragLeave,
+											onDrop: (e) => handleItemDrop(e, index),
+											onDragEnd: handleItemDragEnd,
+											style: { cursor: "grab" },
+											className: `${
+												itemDraggedIndex === index ? "opacity-50" : ""
+											} ${
+												itemDragOverIndex === index
+													? "border border-primary border-2 rounded"
+													: ""
+											}`,
+										}}
+									/>
+								);
+							})}
+						</ul>
 					</div>
 				</>
 			)}
@@ -1744,4 +1747,4 @@ const AlbumMediaManager = ({
 	);
 };
 
-export default AlbumMediaManager;
+export default ChaptersMediaManager;

@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { fetchurl, getAuthTokenOnServer } from "@/helpers/setTokenOnServer";
 import ParseHtml from "@/layout/parseHtml";
 import { getGlobalData } from "@/helpers/globalData";
-import AlbumMediaManager from "@/components/noadmin/cdalbums/albummediamanager";
+import SongsMediaManager from "@/components/noadmin/cdalbums/songsmediamanager";
 
 async function getCDAlbum(params) {
 	const res = await fetchurl(`/global/playlists${params}`, "GET", "no-cache");
@@ -43,7 +43,7 @@ const ReadCDAlbum = async ({ params, searchParams }) => {
 						<ParseHtml text={cdalbum?.data?.text} />
 					</div>
 				</div>
-				<AlbumMediaManager
+				<SongsMediaManager
 					auth={auth}
 					token={token}
 					object={cdalbum?.data}

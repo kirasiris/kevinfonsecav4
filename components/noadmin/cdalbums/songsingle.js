@@ -6,13 +6,13 @@ import { formatFileSize } from "@/helpers/formatFileSize";
 const FileIcon = ({ type }) => {
 	switch (type) {
 		case "audio":
-			return <i className="fa-solid fa-file-audio fa-xl" />;
+			return <i aria-hidden className="fa-solid fa-file-audio fa-xl" />;
 		case "video":
-			return <i className="fa-solid fa-file-video fa-xl" />;
+			return <i aria-hidden className="fa-solid fa-file-video fa-xl" />;
 		case "image":
-			return <i className="fa-solid fa-file-image fa-xl" />;
+			return <i aria-hidden className="fa-solid fa-file-image fa-xl" />;
 		default:
-			return <i className="fa-solid fa-file-pdf fa-xl" />;
+			return <i aria-hidden className="fa-solid fa-file-pdf fa-xl" />;
 	}
 };
 
@@ -95,7 +95,7 @@ const Single = ({
 				<div className="card-footer py-2">
 					<Link
 						href={{
-							pathname: `/noadmin/files/update/${object._id}`,
+							pathname: `/noadmin/cdalbums/song/${object.key}/update`,
 						}}
 						className="mb-1 small fw-medium"
 					>
@@ -132,7 +132,7 @@ const Single = ({
 								<hr />
 								<button
 									type="button"
-									className="dropdown-item"
+									className="dropdown-item btn btn-sm"
 									disabled={isDeleting}
 									onClick={() => {
 										handleDraft(object?.raw);
@@ -142,7 +142,7 @@ const Single = ({
 								</button>
 								<button
 									type="button"
-									className="dropdown-item"
+									className="dropdown-item btn btn-sm"
 									disabled={isDeleting}
 									onClick={() => {
 										handlePublish(object?.raw);
@@ -152,7 +152,7 @@ const Single = ({
 								</button>
 								<button
 									type="button"
-									className="dropdown-item"
+									className="dropdown-item btn btn-sm"
 									disabled={isDeleting}
 									onClick={() => {
 										handleTrash(object?.raw);
@@ -162,7 +162,7 @@ const Single = ({
 								</button>
 								<button
 									type="button"
-									className="dropdown-item"
+									className="dropdown-item btn btn-sm"
 									disabled={isDeleting}
 									onClick={() => {
 										handleSchedule(object?.raw);

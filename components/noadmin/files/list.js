@@ -275,13 +275,19 @@ const List = ({ objects = [], searchParams = {} }) => {
 			`/noadmin/files/${item?._id}/permanently`,
 			"DELETE",
 			"no-cache",
+			{},
+			undefined,
+			false,
+			false,
 		);
 		if (res.status === "error") {
 			toast.error(res.message);
+			setDeletingKey(null);
 			return;
 		}
 		if (res.status === "fail") {
 			toast.error(res.message);
+			setDeletingKey(null);
 			return;
 		}
 		toast.success("File deleted");

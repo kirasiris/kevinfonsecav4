@@ -26,11 +26,17 @@ const Single = ({
 	handleTrash = () => {},
 	handleSchedule = () => {},
 	handleDelete = () => {},
+	isDrafting = false,
+	isPublishing = false,
+	isTrashing = false,
+	isScheduling = false,
 	isDeleting = false,
 	dragProps = {},
 }) => {
-	console.log("Video", object);
 	const { className = "", ...restDragProps } = dragProps;
+
+	const isBusy =
+		isDrafting || isPublishing || isTrashing || isScheduling || isDeleting;
 
 	return (
 		<li
@@ -81,87 +87,105 @@ const Single = ({
 						{object?.raw?.language.toUpperCase()}
 					</span>
 					<div className="blog-actions-ellipsis-menu">
-						<span className="ellipsis-menu">
-							<DropdownButton title="Options" variant="secondary">
-								<Link
-									href={{
-										pathname: `/noadmin/animes/chapter/${object.key}/read`,
-										query: {
-											isAdmin: true,
-										},
-									}}
-									className="dropdown-item btn btn-link"
+						<DropdownButton title="Options" variant="secondary">
+							<Link
+								href={{
+									pathname: `/noadmin/animes/chapter/${object.key}/read`,
+									query: {
+										isAdmin: true,
+									},
+								}}
+								className="dropdown-item btn btn-link"
+							>
+								View&nbsp;It
+							</Link>
+							{object.url && (
+								<a
+									href={object.url}
+									target="_blank"
+									rel="noopener noreferrer"
+									className="dropdown-item"
 								>
-									View&nbsp;It
-								</Link>
-								<button
-									type="button"
-									className="dropdown-item btn btn-sm"
-									disabled={isDeleting}
-									onClick={() => handleDraft(object.raw)}
-								>
-									{isDeleting ? "..." : "Draft It"}
-								</button>
-								<button
-									type="button"
-									className="dropdown-item btn btn-sm"
-									disabled={isDeleting}
-									onClick={() => handlePublish(object.raw)}
-								>
-									{isDeleting ? "..." : "Publish It"}
-								</button>
-								<button
-									type="button"
-									className="dropdown-item btn btn-sm"
-									disabled={isDeleting}
-									onClick={() => handleTrash(object.raw)}
-								>
-									{isDeleting ? "..." : "Trash It"}
-								</button>
-								<button
-									type="button"
-									className="dropdown-item btn btn-sm"
-									disabled={isDeleting}
-									onClick={() => handleSchedule(object.raw)}
-								>
-									{isDeleting ? "..." : "Schedule It"}
-								</button>
-								<hr />
-								<Link
-									href={{
-										pathname: `/noadmin/comments/create`,
-										query: {
-											resourceId: object.raw._id,
-											onModel: `Video`,
-										},
-									}}
-									className="dropdown-item btn btn-link"
-								>
-									Add&nbsp;Comment
-								</Link>
-								<Link
-									href={{
-										pathname: `/noadmin/reports/create`,
-										query: {
-											resourceId: object.raw._id,
-											onModel: `Video`,
-										},
-									}}
-									className="dropdown-item btn btn-link"
-								>
-									Add&nbsp;Report
-								</Link>
-								<hr />
-								<button
-									type="button"
-									className="dropdown-item btn-danger btn-sm"
-									disabled={isDeleting}
-									onClick={() => handleDelete(object.raw)}
-								>
-									{isDeleting ? "..." : "Delete it"}
-								</button>
-							</DropdownButton>
-						</span>
+									Open
+								</a>
+							)}
+							<Link
+								href={{
+									pathname: `/noadmin/animes/chapter/${object.key}/update`,
+									query: {},
+								}}
+								className="dropdown-item"
+							>
+								Update
+							</Link>
+							<hr />
+							<button
+								type="button"
+								className="dropdown-item btn btn-sm"
+								disabled={isBusy}
+								onClick={() => handleDraft(object.raw)}
+							>
+								{isDrafting ? "..." : "Draft It"}
+							</button>
+							<button
+								type="button"
+								className="dropdown-item btn btn-sm"
+								disabled={isBusy}
+								onClick={() => handlePublish(object.raw)}
+							>
+								{isPublishing ? "..." : "Publish It"}
+							</button>
+							<button
+								type="button"
+								className="dropdown-item btn btn-sm"
+								disabled={isBusy}
+								onClick={() => handleTrash(object.raw)}
+							>
+								{isTrashing ? "..." : "Trash It"}
+							</button>
+							<button
+								type="button"
+								className="dropdown-item btn btn-sm"
+								disabled={isBusy}
+								onClick={() => handleSchedule(object.raw)}
+							>
+								{isScheduling ? "..." : "Schedule It"}
+							</button>
+							<hr />
+							<Link
+								href={{
+									pathname: `/noadmin/comments/create`,
+									query: {
+										resourceId: object.raw._id,
+										onModel: `Video`,
+									},
+								}}
+								className="dropdown-item btn btn-link"
+							>
+								Add&nbsp;Comment
+							</Link>
+							<Link
+								href={{
+									pathname: `/noadmin/reports/create`,
+									query: {
+										resourceId: object.raw._id,
+										onModel: `Video`,
+									},
+								}}
+								className="dropdown-item btn btn-link"
+							>
+								Add&nbsp;Report
+							</Link>
+							<hr />
+							<button
+								type="button"
+								className="dropdown-item btn-danger btn-sm"
+								disabled={isBusy}
+								onClick={() => handleDelete(object.raw)}
+							>
+								{isDeleting ? "..." : "Delete it"}
+							</button>
+						</DropdownButton>
 					</div>
 				</div>
 			</div>

@@ -2,8 +2,6 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { fetchurl, getAuthTokenOnServer } from "@/helpers/setTokenOnServer";
 import ParseHtml from "@/layout/parseHtml";
-import ChapterList from "@/components/noadmin/animes/chapterlist";
-import UseDropzone from "@/components/noadmin/animes/chapterdropzone";
 import { getGlobalData } from "@/helpers/globalData";
 import ChaptersMediaManager from "@/components/noadmin/animes/chaptersmediamanager";
 

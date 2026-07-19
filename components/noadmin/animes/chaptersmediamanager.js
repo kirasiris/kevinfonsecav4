@@ -128,6 +128,7 @@ const uploadFileToServer = (
 						onModel: "Playlist",
 						title: parsed?.data?.title,
 						text: "No description",
+						language: "english",
 						files: {
 							video_url: parsed?.data?._id,
 						},
@@ -241,6 +242,8 @@ const ChaptersMediaManager = ({
 	const [trashingKey, setTrashingKey] = useState(null);
 	const [schedulingKey, setSchedulingKey] = useState(null);
 	const [deletingKey, setDeletingKey] = useState(null);
+	const [trashingAll, setTrashingAll] = useState(false);
+	const [deletingAll, setDeletingAll] = useState(false);
 
 	const sentinelRef = useRef(null);
 
@@ -496,29 +499,36 @@ const ChaptersMediaManager = ({
 	}, []);
 
 	const handleTrashAll = async () => {
+		setTrashingAll(true);
 		const res = await fetchurl(
 			`/noadmin/videos/deleteall`,
 			"PUT",
 			"no-cache",
-			{},
+			{
+				onModel: "Playlist",
+			},
 			undefined,
 			false,
 			false,
 		);
 		if (res.status === "error") {
 			toast.error(res.message);
+			setTrashingAll(false);
 			return;
 		}
 		if (res.status === "fail") {
 			toast.error(res.message);
+			setTrashingAll(false);
 			return;
 		}
 		// Move every object to trash in local state so the badges update.
 		setNewObjects((prev) => prev.map((f) => ({ ...f, status: "trash" })));
 		toast.success("All videos trashed");
+		setTrashingAll(false);
 	};
 
 	const handleDeleteAll = async () => {
+		setDeletingAll(true);
 		await fetchurl(
 			`/noadmin/videos/deleteall/permanently`,
 			"DELETE",
@@ -534,6 +544,7 @@ const ChaptersMediaManager = ({
 		seenKeysRef.current.clear();
 		setTotalResults((t) => (typeof t === "number" ? 0 : { ...t, countAll: 0 }));
 		toast.success("All videos deleted");
+		setDeletingAll(false);
 	};
 
 	const handleRetry = useCallback(() => {
@@ -594,20 +605,27 @@ const ChaptersMediaManager = ({
 
 	const pauseAllMedia = (exceptId) => {
 		mediaElementsRef.current.forEach((element, id) => {
-			if (id !== exceptId && !element.paused) element.pause();
+			if (id !== exceptId && !element.paused) {
+				element.pause();
+			}
 		});
 	};
 
 	const registerMediaElement = (id, element) => {
-		if (element) mediaElementsRef.current.set(id, element);
-		else mediaElementsRef.current.delete(id);
+		if (element) {
+			mediaElementsRef.current.set(id, element);
+		} else {
+			mediaElementsRef.current.delete(id);
+		}
 	};
 
 	/* ---------------------- Insert uploaded file into list ---------------- */
 	const insertUploadedFile = useCallback(
 		(file) => {
 			const key = buildKey(file, "upload");
-			if (seenKeysRef.current.has(key)) return;
+			if (seenKeysRef.current.has(key)) {
+				return;
+			}
 			seenKeysRef.current.add(key);
 			const entry = { ...file, __key: key };
 			setNewObjects((prev) =>
@@ -645,31 +663,51 @@ const ChaptersMediaManager = ({
 				.then((response) => {
 					setFiles((prev) => {
 						const done = prev.find((f) => f.id === fileObj.id);
-						if (done) URL.revokeObjectURL(done.url);
+						if (done) {
+							URL.revokeObjectURL(done.url);
+						}
 						return prev.filter((f) => f.id !== fileObj.id);
 					});
 
 					const serverObj = response?.data || response || {};
 					const loc = serverObj.location || {};
+
+					const rawFormat =
+						typeof serverObj.format_type === "string"
+							? serverObj.format_type.toLowerCase()
+							: "";
+
+					const normalizedType = ["audio", "video", "image"].includes(rawFormat)
+						? rawFormat
+						: fileObj.type;
+
 					insertUploadedFile({
 						_id: serverObj._id,
 						title: serverObj.title || fileObj.title,
-						size:
-							typeof serverObj.size === "number"
-								? serverObj.size
-								: fileObj.size,
-						format_type: serverObj.format_type || fileObj.type,
 						createdAt: serverObj.createdAt || new Date().toISOString(),
-						location: {
-							filename: loc.filename || fileObj.name,
-							secure_location: loc.secure_location || fileObj.url,
-							public_id: loc.public_id,
+						files: {
+							video_url: {
+								_id: serverObj._id,
+								format_type: normalizedType,
+								size:
+									typeof serverObj.size === "number"
+										? serverObj.size
+										: fileObj.size,
+								location: {
+									filename: loc.filename || fileObj.name,
+									secure_location: loc.secure_location || fileObj.url,
+									public_id: loc.public_id,
+								},
+							},
 						},
+						language: "english",
 						album: serverObj.album || fileObj.album,
 					});
 				})
 				.catch((err) => {
-					if (err?.name === "AbortError") return;
+					if (err?.name === "AbortError") {
+						return;
+					}
 					setFiles((prev) =>
 						prev.map((f) =>
 							f.id === fileObj.id
@@ -721,7 +759,9 @@ const ChaptersMediaManager = ({
 
 		setFiles((prev) => {
 			const fileToRemove = prev.find((f) => f.id === id);
-			if (fileToRemove) URL.revokeObjectURL(fileToRemove.url);
+			if (fileToRemove) {
+				URL.revokeObjectURL(fileToRemove.url);
+			}
 			return prev.filter((f) => f.id !== id);
 		});
 	};
@@ -1125,7 +1165,7 @@ const ChaptersMediaManager = ({
 		setSaving(false);
 	};
 
-	const getMediaIcon = ({ type }) => {
+	const getMediaIcon = (type) => {
 		switch (type) {
 			case "audio":
 				return <i aria-hidden className="fa-solid fa-file-audio fa-xl" />;
@@ -1542,13 +1582,6 @@ const ChaptersMediaManager = ({
 			{items.length > 0 && (
 				<>
 					<div className="card rounded-0 mb-1">
-						<div className="card-body">
-							<small className="text-muted">
-								Drag the cards to reorder, then save your changes.
-							</small>
-						</div>
-					</div>
-					<div className="card rounded-0">
 						<div className="card-header">
 							<div className="float-start">
 								<form
@@ -1604,18 +1637,25 @@ const ChaptersMediaManager = ({
 										type="button"
 										className="btn btn-danger btn-sm"
 										onClick={handleTrashAll}
+										disabled={trashingAll}
 									>
-										Trash all
+										{trashingAll ? "..." : "Trash all"}
 									</button>
 									<button
 										type="button"
 										className="btn btn-dark btn-sm"
 										onClick={handleDeleteAll}
+										disabled={deletingAll}
 									>
-										Delete all permanently
+										{deletingAll ? "..." : "Delete all permanently"}
 									</button>
 								</div>
 							</div>
+						</div>
+						<div className="card-body">
+							<small className="text-muted">
+								Drag the cards to reorder, then save your changes.
+							</small>
 						</div>
 						{saveError && (
 							<div
@@ -1628,7 +1668,7 @@ const ChaptersMediaManager = ({
 									className="btn-close"
 									data-bs-dismiss="alert"
 									aria-label="Close"
-								></button>
+								/>
 							</div>
 						)}
 						{success && (
@@ -1642,7 +1682,7 @@ const ChaptersMediaManager = ({
 									className="btn-close"
 									data-bs-dismiss="alert"
 									aria-label="Close"
-								></button>
+								/>
 							</div>
 						)}
 						{debouncedKeyword && displayedItems.length === 0 && (
@@ -1656,17 +1696,11 @@ const ChaptersMediaManager = ({
 									className="btn-close"
 									data-bs-dismiss="alert"
 									aria-label="Close"
-								></button>
+								/>
 							</div>
 						)}
 						<ul className="list-group list-group-flush">
 							{displayedItems.map((item, index) => {
-								const isDeleting =
-									trashingKey === item.key ||
-									draftingKey === item.key ||
-									publishingKey === item.key ||
-									schedulingKey === item.key ||
-									deletingKey === item.key;
 								return (
 									<Single
 										key={item.key}
@@ -1677,7 +1711,11 @@ const ChaptersMediaManager = ({
 										handleTrash={handleTrashIt}
 										handleSchedule={handleScheduleIt}
 										handleDelete={handleDeleteIt}
-										isDeleting={isDeleting}
+										isDrafting={draftingKey === item.key}
+										isPublishing={publishingKey === item.key}
+										isTrashing={trashingKey === item.key}
+										isScheduling={schedulingKey === item.key}
+										isDeleting={deletingKey === item.key}
 										dragProps={{
 											draggable: true,
 											onDragStart: (e) => handleItemDragStart(e, index),

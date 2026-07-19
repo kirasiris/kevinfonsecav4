@@ -242,6 +242,8 @@ const SongsMediaManager = ({
 	const [trashingKey, setTrashingKey] = useState(null);
 	const [schedulingKey, setSchedulingKey] = useState(null);
 	const [deletingKey, setDeletingKey] = useState(null);
+	const [trashingAll, setTrashingAll] = useState(false);
+	const [deletingAll, setDeletingAll] = useState(false);
 
 	const sentinelRef = useRef(null);
 
@@ -497,34 +499,43 @@ const SongsMediaManager = ({
 	}, []);
 
 	const handleTrashAll = async () => {
+		setTrashingAll(true);
 		const res = await fetchurl(
 			`/noadmin/songs/deleteall`,
 			"PUT",
 			"no-cache",
-			{},
+			{
+				onModel: "Playlist",
+			},
 			undefined,
 			false,
 			false,
 		);
 		if (res.status === "error") {
 			toast.error(res.message);
+			setTrashingAll(false);
 			return;
 		}
 		if (res.status === "fail") {
 			toast.error(res.message);
+			setTrashingAll(false);
 			return;
 		}
 		// Move every object to trash in local state so the badges update.
 		setNewObjects((prev) => prev.map((f) => ({ ...f, status: "trash" })));
 		toast.success("All songs trashed");
+		setTrashingAll(false);
 	};
 
 	const handleDeleteAll = async () => {
+		setDeletingAll(true);
 		await fetchurl(
 			`/noadmin/songs/deleteall/permanently`,
 			"DELETE",
 			"no-cache",
-			{},
+			{
+				onModel: "Playlist",
+			},
 			undefined,
 			false,
 			false,
@@ -533,6 +544,7 @@ const SongsMediaManager = ({
 		seenKeysRef.current.clear();
 		setTotalResults((t) => (typeof t === "number" ? 0 : { ...t, countAll: 0 }));
 		toast.success("All songs deleted");
+		setDeletingAll(false);
 	};
 
 	const handleRetry = useCallback(() => {
@@ -545,9 +557,9 @@ const SongsMediaManager = ({
 			newobjects.map((file) => ({
 				key: file.__key,
 				raw: file,
-				filename: file?.files?.audio_url.location?.filename || "unknown",
-				url: file?.files?.audio_url.location?.secure_location || "",
-				size: file?.files?.audio_url.size,
+				filename: file?.files?.audio_url?.location?.filename || "unknown",
+				url: file?.files?.audio_url?.location?.secure_location || "",
+				size: file?.files?.audio_url?.size,
 				info: classifyFile(file?.files?.audio_url),
 			})),
 		[newobjects],
@@ -593,20 +605,27 @@ const SongsMediaManager = ({
 
 	const pauseAllMedia = (exceptId) => {
 		mediaElementsRef.current.forEach((element, id) => {
-			if (id !== exceptId && !element.paused) element.pause();
+			if (id !== exceptId && !element.paused) {
+				element.pause();
+			}
 		});
 	};
 
 	const registerMediaElement = (id, element) => {
-		if (element) mediaElementsRef.current.set(id, element);
-		else mediaElementsRef.current.delete(id);
+		if (element) {
+			mediaElementsRef.current.set(id, element);
+		} else {
+			mediaElementsRef.current.delete(id);
+		}
 	};
 
 	/* ---------------------- Insert uploaded file into list ---------------- */
 	const insertUploadedFile = useCallback(
 		(file) => {
 			const key = buildKey(file, "upload");
-			if (seenKeysRef.current.has(key)) return;
+			if (seenKeysRef.current.has(key)) {
+				return;
+			}
 			seenKeysRef.current.add(key);
 			const entry = { ...file, __key: key };
 			setNewObjects((prev) =>
@@ -644,31 +663,50 @@ const SongsMediaManager = ({
 				.then((response) => {
 					setFiles((prev) => {
 						const done = prev.find((f) => f.id === fileObj.id);
-						if (done) URL.revokeObjectURL(done.url);
+						if (done) {
+							URL.revokeObjectURL(done.url);
+						}
 						return prev.filter((f) => f.id !== fileObj.id);
 					});
 
 					const serverObj = response?.data || response || {};
 					const loc = serverObj.location || {};
+
+					const rawFormat =
+						typeof serverObj.format_type === "string"
+							? serverObj.format_type.toLowerCase()
+							: "";
+
+					const normalizedType = ["audio", "video", "image"].includes(rawFormat)
+						? rawFormat
+						: fileObj.type;
+
 					insertUploadedFile({
 						_id: serverObj._id,
 						title: serverObj.title || fileObj.title,
-						size:
-							typeof serverObj.size === "number"
-								? serverObj.size
-								: fileObj.size,
-						format_type: serverObj.format_type || fileObj.type,
 						createdAt: serverObj.createdAt || new Date().toISOString(),
-						location: {
-							filename: loc.filename || fileObj.name,
-							secure_location: loc.secure_location || fileObj.url,
-							public_id: loc.public_id,
+						files: {
+							audio_url: {
+								_id: serverObj._id,
+								format_type: normalizedType,
+								size:
+									typeof serverObj.size === "number"
+										? serverObj.size
+										: fileObj.size,
+								location: {
+									filename: loc.filename || fileObj.name,
+									secure_location: loc.secure_location || fileObj.url,
+									public_id: loc.public_id,
+								},
+							},
 						},
 						album: serverObj.album || fileObj.album,
 					});
 				})
 				.catch((err) => {
-					if (err?.name === "AbortError") return;
+					if (err?.name === "AbortError") {
+						return;
+					}
 					setFiles((prev) =>
 						prev.map((f) =>
 							f.id === fileObj.id
@@ -720,7 +758,9 @@ const SongsMediaManager = ({
 
 		setFiles((prev) => {
 			const fileToRemove = prev.find((f) => f.id === id);
-			if (fileToRemove) URL.revokeObjectURL(fileToRemove.url);
+			if (fileToRemove) {
+				URL.revokeObjectURL(fileToRemove.url);
+			}
 			return prev.filter((f) => f.id !== id);
 		});
 	};
@@ -1124,7 +1164,7 @@ const SongsMediaManager = ({
 		setSaving(false);
 	};
 
-	const getMediaIcon = ({ type }) => {
+	const getMediaIcon = (type) => {
 		switch (type) {
 			case "audio":
 				return <i aria-hidden className="fa-solid fa-file-audio fa-xl" />;
@@ -1241,16 +1281,16 @@ const SongsMediaManager = ({
 								</button>
 							</div>
 
-							{/* <div className="col-12 col-md-4">
-							<button
-								className="btn btn-success w-100 d-flex align-items-center justify-content-center gap-2"
-								onClick={() => requestPermission("video")}
-								disabled={showCamera || recordingType === "audio"}
-							>
-								<i aria-hidden className="fa-solid fa-camera" />
-								Open Camera
-							</button>
-						</div> */}
+							<div className="col-12 col-md-4">
+								<button
+									className="btn btn-success w-100 d-flex align-items-center justify-content-center gap-2"
+									onClick={() => requestPermission("video")}
+									disabled={showCamera || recordingType === "audio"}
+								>
+									<i aria-hidden className="fa-solid fa-camera" />
+									Open Camera
+								</button>
+							</div>
 
 							<div className="col-12 col-md-4">
 								<button
@@ -1596,15 +1636,17 @@ const SongsMediaManager = ({
 										type="button"
 										className="btn btn-danger btn-sm"
 										onClick={handleTrashAll}
+										disabled={trashingAll}
 									>
-										Trash all
+										{trashingAll ? "..." : "Trash all"}
 									</button>
 									<button
 										type="button"
 										className="btn btn-dark btn-sm"
 										onClick={handleDeleteAll}
+										disabled={deletingAll}
 									>
-										Delete all permanently
+										{deletingAll ? "..." : "Delete all permanently"}
 									</button>
 								</div>
 							</div>
@@ -1626,7 +1668,7 @@ const SongsMediaManager = ({
 								className="btn-close"
 								data-bs-dismiss="alert"
 								aria-label="Close"
-							></button>
+							/>
 						</div>
 					)}
 					{success && (
@@ -1640,7 +1682,7 @@ const SongsMediaManager = ({
 								className="btn-close"
 								data-bs-dismiss="alert"
 								aria-label="Close"
-							></button>
+							/>
 						</div>
 					)}
 					{debouncedKeyword && displayedItems.length === 0 && (
@@ -1654,17 +1696,11 @@ const SongsMediaManager = ({
 								className="btn-close"
 								data-bs-dismiss="alert"
 								aria-label="Close"
-							></button>
+							/>
 						</div>
 					)}
 					<div className="row g-3">
 						{displayedItems.map((item, index) => {
-							const isDeleting =
-								trashingKey === item.key ||
-								draftingKey === item.key ||
-								publishingKey === item.key ||
-								schedulingKey === item.key ||
-								deletingKey === item.key;
 							return (
 								<Single
 									key={item.key}
@@ -1675,7 +1711,11 @@ const SongsMediaManager = ({
 									handleTrash={handleTrashIt}
 									handleSchedule={handleScheduleIt}
 									handleDelete={handleDeleteIt}
-									isDeleting={isDeleting}
+									isDrafting={draftingKey === item.key}
+									isPublishing={publishingKey === item.key}
+									isTrashing={trashingKey === item.key}
+									isScheduling={schedulingKey === item.key}
+									isDeleting={deletingKey === item.key}
 									dragProps={{
 										draggable: true,
 										onDragStart: (e) => handleItemDragStart(e, index),

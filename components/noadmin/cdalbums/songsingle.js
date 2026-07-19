@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import DropdownButton from "react-bootstrap/DropdownButton";
+import { formatDateWithoutTime } from "befree-utilities";
 import { formatFileSize } from "@/helpers/formatFileSize";
 
 const FileIcon = ({ type }) => {
@@ -24,10 +25,18 @@ const Single = ({
 	handleTrash = () => {},
 	handleSchedule = () => {},
 	handleDelete = () => {},
+	isDrafting = false,
+	isPublishing = false,
+	isTrashing = false,
+	isScheduling = false,
 	isDeleting = false,
 	dragProps = {},
 }) => {
 	const { className = "", ...restDragProps } = dragProps;
+
+	const isBusy =
+		isDrafting || isPublishing || isTrashing || isScheduling || isDeleting;
+
 	return (
 		<div
 			className={`col-12 col-sm-6 col-md-4 col-lg-3 ${className}`}
@@ -37,11 +46,16 @@ const Single = ({
 				<div className="card-header d-flex justify-content-between align-items-center py-2">
 					<div className="d-flex align-items-center gap-2">
 						<span className="badge bg-secondary">{index + 1}</span>
-						<span className={object.info.textClass}>
-							<FileIcon type={object.raw.files.audio_url.format_type} />
-						</span>
+						{object.raw.files?.audio_url?.format_type && (
+							<span className={object.info.textClass}>
+								<FileIcon type={object.raw.files.audio_url.format_type} />
+							</span>
+						)}
 					</div>
 					<div className="d-flex align-items-center gap-2">
+						<span className="badge bg-dark">
+							{formatDateWithoutTime(object.raw.createdAt)}
+						</span>
 						<span className={`badge bg-dark`}>{object.raw.status}</span>
 						<span className={`badge ${object.info.className}`}>
 							{object.info.label}
@@ -102,7 +116,9 @@ const Single = ({
 						{object.raw.title}
 					</Link>
 					<div className="d-flex justify-content-between align-items-center gap-2">
-						<small>{formatFileSize(object.raw.files.audio_url.size)}</small>
+						{object.raw.files?.audio_url?.size && (
+							<small>{formatFileSize(object.raw.files.audio_url.size)}</small>
+						)}
 						<div className="d-flex gap-1">
 							<DropdownButton
 								title="..."
@@ -110,6 +126,15 @@ const Single = ({
 								size="sm"
 								className="py-0"
 							>
+								<Link
+									href={{
+										pathname: `/noadmin/cdalbums/song/${object.key}/read`,
+										query: { isAdmin: true },
+									}}
+									className="dropdown-item btn btn-link"
+								>
+									View&nbsp;It
+								</Link>
 								{object.url && (
 									<a
 										href={object.url}
@@ -133,42 +158,34 @@ const Single = ({
 								<button
 									type="button"
 									className="dropdown-item btn btn-sm"
-									disabled={isDeleting}
-									onClick={() => {
-										handleDraft(object?.raw);
-									}}
+									disabled={isBusy}
+									onClick={() => handleDraft(object.raw)}
 								>
-									{isDeleting ? "..." : "Draft It"}
+									{isDrafting ? "..." : "Draft It"}
 								</button>
 								<button
 									type="button"
 									className="dropdown-item btn btn-sm"
-									disabled={isDeleting}
-									onClick={() => {
-										handlePublish(object?.raw);
-									}}
+									disabled={isBusy}
+									onClick={() => handlePublish(object.raw)}
 								>
-									{isDeleting ? "..." : "Publish It"}
+									{isPublishing ? "..." : "Publish It"}
 								</button>
 								<button
 									type="button"
 									className="dropdown-item btn btn-sm"
-									disabled={isDeleting}
-									onClick={() => {
-										handleTrash(object?.raw);
-									}}
+									disabled={isBusy}
+									onClick={() => handleTrash(object.raw)}
 								>
-									{isDeleting ? "..." : "Trash It"}
+									{isTrashing ? "..." : "Trash It"}
 								</button>
 								<button
 									type="button"
 									className="dropdown-item btn btn-sm"
-									disabled={isDeleting}
-									onClick={() => {
-										handleSchedule(object?.raw);
-									}}
+									disabled={isBusy}
+									onClick={() => handleSchedule(object.raw)}
 								>
-									{isDeleting ? "..." : "Schedule It"}
+									{isScheduling ? "..." : "Schedule It"}
 								</button>
 								<hr />
 								<Link
@@ -198,8 +215,8 @@ const Single = ({
 							</DropdownButton>
 							<button
 								type="button"
-								className="btn btn-danger btn-sm py-0"
-								disabled={isDeleting}
+								className="btn btn-danger btn-sm"
+								disabled={isBusy}
 								onClick={() => {
 									handleDelete(object?.raw);
 								}}

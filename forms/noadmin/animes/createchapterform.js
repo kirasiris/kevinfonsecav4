@@ -41,6 +41,7 @@ const CreateChapterForm = ({ token = {}, auth = {}, params = {} }) => {
 				maru: formData.get("maru"),
 				netu: formData.get("netu"),
 				stape: formData.get("stape"),
+				cloudinary: formData.get("cloudinary"),
 			},
 			downloads: {
 				mega: formData.get("mega_download"),
@@ -359,6 +360,17 @@ const CreateChapterForm = ({ token = {}, auth = {}, params = {} }) => {
 							defaultValue="#"
 							type="text"
 							className="form-control mb-3"
+							placeholder=""
+						/>
+						<label htmlFor="cloudinary" className="form-label">
+							Cloudinary
+						</label>
+						<input
+							id="cloudinary"
+							name="cloudinary"
+							defaultValue="#"
+							type="text"
+							className="form-control"
 							placeholder=""
 						/>
 					</div>

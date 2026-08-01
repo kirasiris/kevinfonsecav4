@@ -41,6 +41,7 @@ const UpdateChapterForm = ({ token = {}, auth = {}, object = {} }) => {
 				maru: formData.get("maru"),
 				netu: formData.get("netu"),
 				stape: formData.get("stape"),
+				cloudinary: formData.get("cloudinary"),
 			},
 			downloads: {
 				mega: formData.get("mega_download"),
@@ -357,6 +358,17 @@ const UpdateChapterForm = ({ token = {}, auth = {}, object = {} }) => {
 							defaultValue={object?.data?.players?.stape}
 							type="text"
 							className="form-control mb-3"
+							placeholder=""
+						/>
+						<label htmlFor="cloudinary" className="form-label">
+							Cloudinary
+						</label>
+						<input
+							id="cloudinary"
+							name="cloudinary"
+							defaultValue={object?.data?.players?.cloudinary}
+							type="text"
+							className="form-control"
 							placeholder=""
 						/>
 					</div>

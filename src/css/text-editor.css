@@ -1,5 +1,3 @@
-/* Minimal supplemental styles. Everything visual leans on Bootstrap utilities/components. */
-
 .editor-surface {
 	min-height: 60vh;
 	outline: none;

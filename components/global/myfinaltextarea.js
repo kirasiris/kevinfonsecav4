@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { Nav, Tab } from "react-bootstrap";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import { unfurlUrl } from "@/helpers/unfurl";
 
@@ -1793,1065 +1792,1039 @@ const MyTextArea = ({
 	});
 
 	return advancedTextEditor ? (
-		<Tab.Container defaultActiveKey="htmlcontent">
-			<Nav variant="pills" className="nav-justified mb-3">
-				<Nav.Item>
-					<Nav.Link eventKey="htmlcontent">HTML</Nav.Link>
-				</Nav.Item>
-				<Nav.Item>
-					<Nav.Link eventKey="jsoncontent">JSON Content</Nav.Link>
-				</Nav.Item>
-			</Nav>
-			<Tab.Content>
-				<Tab.Pane eventKey="htmlcontent">
-					<div className="card shadow-sm">
-						{/* Toolbar */}
-						<div className="card-header bg-body p-2">
-							<div
-								className="d-flex flex-wrap align-items-center gap-1"
-								role="toolbar"
-								aria-label="Formatting toolbar"
+		<>
+			<div className="card shadow-sm">
+				{/* Toolbar */}
+				<div className="card-header bg-body p-2">
+					<div
+						className="d-flex flex-wrap align-items-center gap-1"
+						role="toolbar"
+						aria-label="Formatting toolbar"
+					>
+						<div
+							className="btn-group btn-group-sm"
+							role="group"
+							aria-label="History"
+						>
+							<button
+								type="button"
+								className="btn btn-outline-secondary btn-sm"
+								onClick={() => exec("undo")}
+								title="Undo (Ctrl+Z)"
 							>
-								<div
-									className="btn-group btn-group-sm"
-									role="group"
-									aria-label="History"
-								>
-									<button
-										type="button"
-										className="btn btn-outline-secondary btn-sm"
-										onClick={() => exec("undo")}
-										title="Undo (Ctrl+Z)"
-									>
-										<i className="fa-solid fa-rotate-left" />
-										<span className="visually-hidden">Undo</span>
-									</button>
-									<button
-										type="button"
-										className="btn btn-outline-secondary btn-sm"
-										onClick={() => exec("redo")}
-										title="Redo (Ctrl+Y)"
-									>
-										<i className="fa-solid fa-rotate-right" />
-										<span className="visually-hidden">Redo</span>
-									</button>
-								</div>
-								<span className="vr mx-1"></span>
-								<select
-									className="form-select form-select-sm w-auto"
-									title="Paragraph format"
-									aria-label="Paragraph format"
-									defaultValue="p"
-									onChange={(e) => exec("formatBlock", e.target.value)}
-								>
-									<option value="p">Paragraph</option>
-									<option value="h1">Heading 1</option>
-									<option value="h2">Heading 2</option>
-									<option value="h3">Heading 3</option>
-									<option value="h4">Heading 4</option>
-									<option value="h5">Heading 5</option>
-									<option value="h6">Heading 6</option>
-									<option value="blockquote">Quote</option>
-									<option value="pre">Code block</option>
-								</select>
-								<span className="vr mx-1"></span>
-								<div
-									className="btn-group btn-group-sm"
-									role="group"
-									aria-label="Text style"
-								>
-									<button
-										type="button"
-										className={tbtn("bold")}
-										aria-pressed={!!activeFormats.bold}
-										onClick={() => exec("bold")}
-										title="Bold"
-									>
-										<i className="fa-solid fa-bold" />
-									</button>
-									<button
-										type="button"
-										className={tbtn("italic")}
-										aria-pressed={!!activeFormats.italic}
-										onClick={() => exec("italic")}
-										title="Italic"
-									>
-										<i className="fa-solid fa-italic" />
-									</button>
-									<button
-										type="button"
-										className={tbtn("underline")}
-										aria-pressed={!!activeFormats.underline}
-										onClick={() => exec("underline")}
-										title="Underline"
-									>
-										<i className="fa-solid fa-underline" />
-									</button>
-									<button
-										type="button"
-										className={tbtn("strikeThrough")}
-										aria-pressed={!!activeFormats.strikeThrough}
-										onClick={() => exec("strikeThrough")}
-										title="Strikethrough"
-									>
-										<i className="fa-solid fa-strikethrough" />
-									</button>
-									<button
-										type="button"
-										className={tbtn("inlineCode")}
-										aria-pressed={!!activeFormats.inlineCode}
-										onClick={toggleInlineCode}
-										title="Inline code"
-									>
-										<i className="fa-solid fa-code" />
-										<span className="visually-hidden">Inline code</span>
-									</button>
-								</div>
-								<span className="vr mx-1"></span>
-								<div
-									className="btn-group btn-group-sm"
-									role="group"
-									aria-label="Lists"
-								>
-									<button
-										type="button"
-										className={tbtn("insertUnorderedList")}
-										aria-pressed={!!activeFormats.insertUnorderedList}
-										onClick={() => exec("insertUnorderedList")}
-										title="Bulleted list"
-									>
-										<i className="fa-solid fa-list-ul" />
-									</button>
-									<button
-										type="button"
-										className={tbtn("insertOrderedList")}
-										aria-pressed={!!activeFormats.insertOrderedList}
-										onClick={() => exec("insertOrderedList")}
-										title="Numbered list"
-									>
-										<i className="fa-solid fa-list-ol" />
-									</button>
-								</div>
-								<span className="vr mx-1"></span>
-								<div
-									className="btn-group btn-group-sm"
-									role="group"
-									aria-label="Alignment"
-								>
-									<button
-										type="button"
-										className={tbtn("justifyLeft")}
-										aria-pressed={!!activeFormats.justifyLeft}
-										onClick={() => exec("justifyLeft")}
-										title="Align left"
-									>
-										<i className="fa-solid fa-align-left" />
-									</button>
-									<button
-										type="button"
-										className={tbtn("justifyCenter")}
-										aria-pressed={!!activeFormats.justifyCenter}
-										onClick={() => exec("justifyCenter")}
-										title="Align center"
-									>
-										<i className="fa-solid fa-align-center" />
-									</button>
-									<button
-										type="button"
-										className={tbtn("justifyRight")}
-										aria-pressed={!!activeFormats.justifyRight}
-										onClick={() => exec("justifyRight")}
-										title="Align right"
-									>
-										<i className="fa-solid fa-align-right" />
-									</button>
-								</div>
-								<span className="vr mx-1"></span>
-								<button
-									type="button"
-									className="btn btn-outline-secondary btn-sm"
-									onClick={openLinkModal}
-									title="Insert link"
-								>
-									<i className="fa-solid fa-link" />
-									<span className="visually-hidden">Insert link</span>
-								</button>
-								<button
-									type="button"
-									className="btn btn-outline-secondary btn-sm "
-									onClick={() => exec("removeFormat")}
-									title="Clear formatting"
-								>
-									<i className="fa-solid fa-eraser" />
-									<span className="visually-hidden">Clear formatting</span>
-								</button>
-								<span className="vr mx-1"></span>
-								<button
-									type="button"
-									className="btn btn-primary btn-sm"
-									onClick={() => {
-										saveSelection();
-										fileInputRef.current && fileInputRef.current.click();
-									}}
-									title="Upload from device"
-								>
-									<i className="fa-solid fa-upload me-1" />
-									Upload
-								</button>
-								<button
-									type="button"
-									className="btn btn-outline-primary btn-sm"
-									onClick={openFileManager}
-									title="Insert from file manager"
-								>
-									<i className="fa-solid fa-folder-open me-1" />
-									Files
-								</button>
-								<button
-									type="button"
-									className="btn btn-outline-primary btn-sm"
-									onClick={openUsers}
-									title="Embed a user"
-								>
-									<i className="fa-solid fa-users me-1" />
-									Users
-								</button>
-								<button
-									type="button"
-									className="btn btn-outline-primary btn-sm"
-									onClick={openSnippet}
-									title="Insert a live code snippet"
-								>
-									<i className="fa-solid fa-code me-1" />
-									Snippet
-								</button>
-								<input
-									ref={fileInputRef}
-									type="file"
-									className="d-none"
-									multiple
-									onChange={onPickFiles}
-								/>
-							</div>
+								<i className="fa-solid fa-rotate-left" />
+								<span className="visually-hidden">Undo</span>
+							</button>
+							<button
+								type="button"
+								className="btn btn-outline-secondary btn-sm"
+								onClick={() => exec("redo")}
+								title="Redo (Ctrl+Y)"
+							>
+								<i className="fa-solid fa-rotate-right" />
+								<span className="visually-hidden">Redo</span>
+							</button>
 						</div>
+						<span className="vr mx-1"></span>
+						<select
+							className="form-select form-select-sm w-auto"
+							title="Paragraph format"
+							aria-label="Paragraph format"
+							defaultValue="p"
+							onChange={(e) => exec("formatBlock", e.target.value)}
+						>
+							<option value="p">Paragraph</option>
+							<option value="h1">Heading 1</option>
+							<option value="h2">Heading 2</option>
+							<option value="h3">Heading 3</option>
+							<option value="h4">Heading 4</option>
+							<option value="h5">Heading 5</option>
+							<option value="h6">Heading 6</option>
+							<option value="blockquote">Quote</option>
+							<option value="pre">Code block</option>
+						</select>
+						<span className="vr mx-1"></span>
+						<div
+							className="btn-group btn-group-sm"
+							role="group"
+							aria-label="Text style"
+						>
+							<button
+								type="button"
+								className={tbtn("bold")}
+								aria-pressed={!!activeFormats.bold}
+								onClick={() => exec("bold")}
+								title="Bold"
+							>
+								<i className="fa-solid fa-bold" />
+							</button>
+							<button
+								type="button"
+								className={tbtn("italic")}
+								aria-pressed={!!activeFormats.italic}
+								onClick={() => exec("italic")}
+								title="Italic"
+							>
+								<i className="fa-solid fa-italic" />
+							</button>
+							<button
+								type="button"
+								className={tbtn("underline")}
+								aria-pressed={!!activeFormats.underline}
+								onClick={() => exec("underline")}
+								title="Underline"
+							>
+								<i className="fa-solid fa-underline" />
+							</button>
+							<button
+								type="button"
+								className={tbtn("strikeThrough")}
+								aria-pressed={!!activeFormats.strikeThrough}
+								onClick={() => exec("strikeThrough")}
+								title="Strikethrough"
+							>
+								<i className="fa-solid fa-strikethrough" />
+							</button>
+							<button
+								type="button"
+								className={tbtn("inlineCode")}
+								aria-pressed={!!activeFormats.inlineCode}
+								onClick={toggleInlineCode}
+								title="Inline code"
+							>
+								<i className="fa-solid fa-code" />
+								<span className="visually-hidden">Inline code</span>
+							</button>
+						</div>
+						<span className="vr mx-1"></span>
+						<div
+							className="btn-group btn-group-sm"
+							role="group"
+							aria-label="Lists"
+						>
+							<button
+								type="button"
+								className={tbtn("insertUnorderedList")}
+								aria-pressed={!!activeFormats.insertUnorderedList}
+								onClick={() => exec("insertUnorderedList")}
+								title="Bulleted list"
+							>
+								<i className="fa-solid fa-list-ul" />
+							</button>
+							<button
+								type="button"
+								className={tbtn("insertOrderedList")}
+								aria-pressed={!!activeFormats.insertOrderedList}
+								onClick={() => exec("insertOrderedList")}
+								title="Numbered list"
+							>
+								<i className="fa-solid fa-list-ol" />
+							</button>
+						</div>
+						<span className="vr mx-1"></span>
+						<div
+							className="btn-group btn-group-sm"
+							role="group"
+							aria-label="Alignment"
+						>
+							<button
+								type="button"
+								className={tbtn("justifyLeft")}
+								aria-pressed={!!activeFormats.justifyLeft}
+								onClick={() => exec("justifyLeft")}
+								title="Align left"
+							>
+								<i className="fa-solid fa-align-left" />
+							</button>
+							<button
+								type="button"
+								className={tbtn("justifyCenter")}
+								aria-pressed={!!activeFormats.justifyCenter}
+								onClick={() => exec("justifyCenter")}
+								title="Align center"
+							>
+								<i className="fa-solid fa-align-center" />
+							</button>
+							<button
+								type="button"
+								className={tbtn("justifyRight")}
+								aria-pressed={!!activeFormats.justifyRight}
+								onClick={() => exec("justifyRight")}
+								title="Align right"
+							>
+								<i className="fa-solid fa-align-right" />
+							</button>
+						</div>
+						<span className="vr mx-1"></span>
+						<button
+							type="button"
+							className="btn btn-outline-secondary btn-sm"
+							onClick={openLinkModal}
+							title="Insert link"
+						>
+							<i className="fa-solid fa-link" />
+							<span className="visually-hidden">Insert link</span>
+						</button>
+						<button
+							type="button"
+							className="btn btn-outline-secondary btn-sm "
+							onClick={() => exec("removeFormat")}
+							title="Clear formatting"
+						>
+							<i className="fa-solid fa-eraser" />
+							<span className="visually-hidden">Clear formatting</span>
+						</button>
+						<span className="vr mx-1"></span>
+						<button
+							type="button"
+							className="btn btn-primary btn-sm"
+							onClick={() => {
+								saveSelection();
+								fileInputRef.current && fileInputRef.current.click();
+							}}
+							title="Upload from device"
+						>
+							<i className="fa-solid fa-upload me-1" />
+							Upload
+						</button>
+						<button
+							type="button"
+							className="btn btn-outline-primary btn-sm"
+							onClick={openFileManager}
+							title="Insert from file manager"
+						>
+							<i className="fa-solid fa-folder-open me-1" />
+							Files
+						</button>
+						<button
+							type="button"
+							className="btn btn-outline-primary btn-sm"
+							onClick={openUsers}
+							title="Embed a user"
+						>
+							<i className="fa-solid fa-users me-1" />
+							Users
+						</button>
+						<button
+							type="button"
+							className="btn btn-outline-primary btn-sm"
+							onClick={openSnippet}
+							title="Insert a live code snippet"
+						>
+							<i className="fa-solid fa-code me-1" />
+							Snippet
+						</button>
+						<input
+							ref={fileInputRef}
+							type="file"
+							className="d-none"
+							multiple
+							onChange={onPickFiles}
+						/>
+					</div>
+				</div>
 
-						{/* Editor surface */}
-						<div className="card-body p-0 position-relative" ref={wrapperRef}>
-							<div
-								ref={editorRef}
-								id={id}
-								className="editor-surface p-4"
-								contentEditable
-								suppressContentEditableWarning
-								role="textbox"
-								aria-multiline="true"
-								aria-label="Rich text editor"
-								aria-required={isRequired || undefined}
-								spellCheck
-								onKeyDown={handleKeyDown}
-								onKeyUp={(e) => {
-									// Wrap/unwrap hashtags as the user types. The token under the
-									// caret is skipped, so this is safe to run on every keyup.
-									if (!e.nativeEvent.isComposing) {
-										highlightHashtags();
-										// Navigation keys are handled by keydown; anything else may
-										// have changed the "@query" token under the caret.
-										if (
-											![
-												"ArrowDown",
-												"ArrowUp",
-												"Enter",
-												"Tab",
-												"Escape",
-											].includes(e.key)
-										)
-											detectMention();
-									}
-									saveSelection();
-								}}
-								onMouseUp={() => {
-									// Clicking away from a half-typed tag completes it.
-									highlightHashtags();
+				{/* Editor surface */}
+				<div className="card-body p-0 position-relative" ref={wrapperRef}>
+					<div
+						ref={editorRef}
+						id={id}
+						className="editor-surface p-4"
+						contentEditable
+						suppressContentEditableWarning
+						role="textbox"
+						aria-multiline="true"
+						aria-label="Rich text editor"
+						aria-required={isRequired || undefined}
+						spellCheck
+						onKeyDown={handleKeyDown}
+						onKeyUp={(e) => {
+							// Wrap/unwrap hashtags as the user types. The token under the
+							// caret is skipped, so this is safe to run on every keyup.
+							if (!e.nativeEvent.isComposing) {
+								highlightHashtags();
+								// Navigation keys are handled by keydown; anything else may
+								// have changed the "@query" token under the caret.
+								if (
+									!["ArrowDown", "ArrowUp", "Enter", "Tab", "Escape"].includes(
+										e.key,
+									)
+								)
 									detectMention();
-									saveSelection();
-								}}
-								onPaste={handlePaste}
-							/>
+							}
+							saveSelection();
+						}}
+						onMouseUp={() => {
+							// Clicking away from a half-typed tag completes it.
+							highlightHashtags();
+							detectMention();
+							saveSelection();
+						}}
+						onPaste={handlePaste}
+					/>
 
-							{/* Hidden form field: mirrors the editor HTML so a plain
+					{/* Hidden form field: mirrors the editor HTML so a plain
               `new FormData(form)` submit picks it up under `name`.
               Kept focusable (not display:none) so native `required`
               validation can still fire; focusing it forwards to the editor. */}
-							{name && (
-								<>
-									<textarea
-										ref={hiddenFieldRef}
-										name={name}
-										defaultValue={startingHtml}
-										required={isRequired}
-										maxLength={charactersLimit}
-										aria-hidden="true"
-										tabIndex={-1}
-										className="position-absolute opacity-0 pe-none"
-										style={{ height: 1, width: 1, bottom: 0, left: 0 }}
-										onFocus={() =>
-											editorRef.current && editorRef.current.focus()
-										}
-										onChange={() => {}}
-									/>
-									{/* JSON arrays kept in sync, so FormData also carries the
+					{name && (
+						<>
+							<textarea
+								ref={hiddenFieldRef}
+								name={name}
+								defaultValue={startingHtml}
+								required={isRequired}
+								maxLength={charactersLimit}
+								aria-hidden="true"
+								tabIndex={-1}
+								className="position-absolute opacity-0 pe-none"
+								style={{ height: 1, width: 1, bottom: 0, left: 0 }}
+								onFocus={() => editorRef.current && editorRef.current.focus()}
+								onChange={() => {}}
+							/>
+							{/* JSON arrays kept in sync, so FormData also carries the
                   embedded users and the hashtags as separate fields. */}
-									<input
-										type="hidden"
-										name={name + "_users"}
-										value={entityJson.users}
-										readOnly
-									/>
-									<input
-										type="hidden"
-										name={name + "_hashtags"}
-										value={entityJson.hashtags}
-										readOnly
-									/>
-								</>
+							<input
+								type="hidden"
+								name={name + "_users"}
+								value={entityJson.users}
+								readOnly
+							/>
+							<input
+								type="hidden"
+								name={name + "_hashtags"}
+								value={entityJson.hashtags}
+								readOnly
+							/>
+						</>
+					)}
+					{/* @mention autocomplete dropdown */}
+					{mention && (
+						<div
+							className="dropdown-menu show shadow block-menu mention-menu"
+							style={{ top: mention.top, left: Math.max(8, mention.left) }}
+							role="listbox"
+							aria-label="Mention a user"
+						>
+							{userState.loading && (
+								<div className="dropdown-item-text small text-body-secondary">
+									<span
+										className="spinner-border spinner-border-sm me-2"
+										aria-hidden="true"
+									></span>
+									Loading users…
+								</div>
 							)}
-							{/* @mention autocomplete dropdown */}
-							{mention && (
-								<div
-									className="dropdown-menu show shadow block-menu mention-menu"
-									style={{ top: mention.top, left: Math.max(8, mention.left) }}
-									role="listbox"
-									aria-label="Mention a user"
-								>
-									{userState.loading && (
-										<div className="dropdown-item-text small text-body-secondary">
-											<span
-												className="spinner-border spinner-border-sm me-2"
-												aria-hidden="true"
-											></span>
-											Loading users…
-										</div>
-									)}
-									{!userState.loading && userState.error && (
-										<div className="dropdown-item-text small text-danger">
-											{userState.error}
-										</div>
-									)}
-									{!userState.loading &&
-										!userState.error &&
-										mentionMatches.length === 0 && (
-											<div className="dropdown-item-text small text-body-secondary">
-												{'No users match "@' + mention.query + '"'}
-											</div>
+							{!userState.loading && userState.error && (
+								<div className="dropdown-item-text small text-danger">
+									{userState.error}
+								</div>
+							)}
+							{!userState.loading &&
+								!userState.error &&
+								mentionMatches.length === 0 && (
+									<div className="dropdown-item-text small text-body-secondary">
+										{'No users match "@' + mention.query + '"'}
+									</div>
+								)}
+							{mentionMatches.map((u, i) => {
+								const avatar = userAvatarOf(u);
+								return (
+									<button
+										key={u._id || i}
+										type="button"
+										role="option"
+										aria-selected={i === mentionIndex}
+										className={
+											"dropdown-item" + (i === mentionIndex ? " active" : "")
+										}
+										onMouseDown={(ev) => ev.preventDefault()}
+										onMouseEnter={() => setMentionIndex(i)}
+										onClick={() => applyMention(u)}
+									>
+										{avatar ? (
+											<img
+												src={avatar || "/placeholder.svg"}
+												alt=""
+												width="24"
+												height="24"
+												className="rounded-circle"
+												crossOrigin="anonymous"
+											/>
+										) : (
+											<i className="fa-solid fa-user-circle fs-5" />
 										)}
-									{mentionMatches.map((u, i) => {
-										const avatar = userAvatarOf(u);
-										return (
-											<button
-												key={u._id || i}
-												type="button"
-												role="option"
-												aria-selected={i === mentionIndex}
+										<span className="text-truncate">
+											{u.name || u.username}
+										</span>
+										{u.username && (
+											<small
 												className={
-													"dropdown-item" +
-													(i === mentionIndex ? " active" : "")
+													"ms-auto " +
+													(i === mentionIndex ? "" : "text-body-secondary")
 												}
-												onMouseDown={(ev) => ev.preventDefault()}
-												onMouseEnter={() => setMentionIndex(i)}
-												onClick={() => applyMention(u)}
 											>
-												{avatar ? (
+												@{u.username}
+											</small>
+										)}
+									</button>
+								);
+							})}
+						</div>
+					)}
+					{/* Block-type menu (appears after pressing Enter twice) */}
+					{blockMenu && (
+						<div
+							className="dropdown-menu show shadow block-menu"
+							style={{
+								top: blockMenu.top,
+								left: Math.max(8, blockMenu.left),
+							}}
+							role="menu"
+						>
+							<h6 className="dropdown-header">Turn new line into...</h6>
+							{BLOCK_MENU_ITEMS.map((item) => (
+								<button
+									key={item.tag}
+									type="button"
+									className="dropdown-item"
+									role="menuitem"
+									onMouseDown={(e) => e.preventDefault()}
+									onClick={() => applyBlockChoice(item.tag)}
+								>
+									<i className={"fa-solid " + item.icon} />
+									<span>{item.label}</span>
+									{item.hint && (
+										<span className="badge text-bg-secondary ms-auto">
+											{item.hint}
+										</span>
+									)}
+								</button>
+							))}
+						</div>
+					)}
+				</div>
+				<div className="card-footer bg-body d-flex justify-content-between align-items-center flex-wrap gap-2">
+					<small className="text-body-secondary">{status}</small>
+					<div className="d-flex gap-2">
+						<button
+							type="button"
+							className="btn btn-outline-secondary btn-sm"
+							onClick={clearEditor}
+						>
+							Clear
+						</button>
+						<button
+							type="button"
+							className="btn btn-outline-secondary btn-sm"
+							onClick={openPreview}
+						>
+							<i className="fa-solid fa-eye me-1" />
+							Preview HTML
+						</button>
+					</div>
+				</div>
+			</div>
+			{/* Upload toasts: live per-file progress + result message */}
+			{(toast || uploads.length > 0) && (
+				<div className="toast-container position-fixed bottom-0 end-0 p-3">
+					{uploads.map((u) => (
+						<div
+							key={u.id}
+							className="toast align-items-center border-0 show text-bg-primary mb-2"
+							role="status"
+							aria-live="polite"
+							aria-atomic="true"
+						>
+							<div className="d-flex">
+								<div className="toast-body w-100">
+									<div className="d-flex justify-content-between align-items-center gap-3 mb-1">
+										<span
+											className="text-truncate"
+											style={{ maxWidth: "12rem" }}
+										>
+											<i className="fa-solid fa-upload me-1" />
+											{u.name}
+										</span>
+										<span className="fw-bold">{u.progress}%</span>
+									</div>
+									<div
+										className="progress"
+										style={{ height: "4px" }}
+										role="progressbar"
+										aria-label={"Uploading " + u.name}
+										aria-valuenow={u.progress}
+										aria-valuemin={0}
+										aria-valuemax={100}
+									>
+										<div
+											className="progress-bar bg-light"
+											style={{ width: u.progress + "%" }}
+										></div>
+									</div>
+								</div>
+								<button
+									type="button"
+									className="btn-close btn-close-white me-2 m-auto"
+									aria-label={"Cancel upload of " + u.name}
+									onClick={() => cancelUpload(u.id)}
+								></button>
+							</div>
+						</div>
+					))}
+					{toast && (
+						<div
+							className={
+								"toast align-items-center border-0 show text-bg-" + toast.kind
+							}
+							role="alert"
+							aria-live="assertive"
+							aria-atomic="true"
+						>
+							<div className="d-flex">
+								<div className="toast-body">{toast.msg}</div>
+								<button
+									type="button"
+									className="btn-close btn-close-white me-2 m-auto"
+									aria-label="Close"
+									onClick={() => setToast(null)}
+								></button>
+							</div>
+						</div>
+					)}
+				</div>
+			)}
+			{/* File Manager modal */}
+			{showFiles && (
+				<BootstrapModal
+					title="File Manager"
+					icon="folder-open"
+					size="modal-xl"
+					onClose={() => setShowFiles(false)}
+				>
+					<div className="modal-body">
+						<div className="input-group input-group-sm mb-3">
+							<span className="input-group-text">
+								<i className="fa-solid fa-magnifying-glass" />
+							</span>
+							<input
+								type="text"
+								className="form-control"
+								placeholder="Filter loaded files by name..."
+								value={fileSearch}
+								onChange={(e) => setFileSearch(e.target.value)}
+							/>
+						</div>
+						{fileState.loading && <ModalSpinner label="Loading files..." />}
+						{fileState.error && (
+							<div className="alert alert-danger" role="alert">
+								{fileState.error}
+							</div>
+						)}
+						{!fileState.loading && !fileState.error && (
+							<div className="row g-3">
+								{visibleFiles.length === 0 && (
+									<div className="col-12 text-center text-body-secondary py-4">
+										No matching files on this page.
+									</div>
+								)}
+								{visibleFiles.map((item, i) => {
+									const url = fileUrlOf(item);
+									const name = fileNameOf(item);
+									const kind = guessKind(url);
+									const selectedIdx = fileSelection.findIndex(
+										(f) => f.url === url,
+									);
+									const isSelected = selectedIdx !== -1;
+									return (
+										<div
+											className="col-6 col-md-4 col-lg-3"
+											key={item._id || i}
+										>
+											<div
+												className={
+													"card file-card h-100 shadow-sm position-relative" +
+													(isSelected ? " border-primary border-2" : "")
+												}
+												role="checkbox"
+												aria-checked={isSelected}
+												aria-label={"Select " + name}
+												tabIndex={0}
+												onClick={() => toggleFileSelection(item)}
+												onKeyDown={(e) => {
+													if (e.key === "Enter" || e.key === " ") {
+														e.preventDefault();
+														toggleFileSelection(item);
+													}
+												}}
+											>
+												{isSelected && (
+													<span className="badge text-bg-primary position-absolute top-0 end-0 m-2 z-1">
+														<i className="fa-solid fa-check me-1" />
+														{selectedIdx + 1}
+													</span>
+												)}
+												{kind === "image" ? (
 													<img
-														src={avatar || "/placeholder.svg"}
-														alt=""
-														width="24"
-														height="24"
-														className="rounded-circle"
+														src={url || "/placeholder.svg"}
+														alt={name}
+														className="file-thumb"
+														loading="lazy"
 														crossOrigin="anonymous"
 													/>
 												) : (
-													<i className="fa-solid fa-user-circle fs-5" />
+													<div className="file-thumb d-flex align-items-center justify-content-center bg-body-tertiary">
+														<i
+															className={
+																"fa fs-1 text-body-secondary " +
+																(kind === "video"
+																	? "fa-film"
+																	: kind === "audio"
+																		? "fa-music"
+																		: "fa-file")
+															}
+														/>
+													</div>
 												)}
-												<span className="text-truncate">
-													{u.name || u.username}
-												</span>
-												{u.username && (
-													<small
-														className={
-															"ms-auto " +
-															(i === mentionIndex ? "" : "text-body-secondary")
-														}
-													>
-														@{u.username}
-													</small>
-												)}
-											</button>
-										);
-									})}
-								</div>
-							)}
-							{/* Block-type menu (appears after pressing Enter twice) */}
-							{blockMenu && (
-								<div
-									className="dropdown-menu show shadow block-menu"
-									style={{
-										top: blockMenu.top,
-										left: Math.max(8, blockMenu.left),
-									}}
-									role="menu"
-								>
-									<h6 className="dropdown-header">Turn new line into...</h6>
-									{BLOCK_MENU_ITEMS.map((item) => (
+												<div className="card-body p-2">
+													<p className="small text-truncate mb-0" title={name}>
+														{name}
+													</p>
+												</div>
+											</div>
+										</div>
+									);
+								})}
+							</div>
+						)}
+					</div>
+					<div className="modal-footer justify-content-between">
+						<Pagination
+							page={fileState.page}
+							totalPages={fileState.totalPages}
+							onPage={loadFiles}
+							label="File pages"
+						/>
+						<div className="d-flex align-items-center gap-2">
+							{fileSelection.length > 1 &&
+								fileSelection.every((f) => f.kind === "image") && (
+									<select
+										className="form-select form-select-sm w-auto"
+										aria-label="Image layout"
+										value={imageLayout}
+										onChange={(e) => setImageLayout(e.target.value)}
+									>
+										<option value="stacked">One below the other</option>
+										<option value="gallery">Gallery grid</option>
+										<option value="carousel">Carousel</option>
+									</select>
+								)}
+							<button
+								type="button"
+								className="btn btn-primary btn-sm"
+								disabled={fileSelection.length === 0}
+								onClick={insertSelectedFiles}
+							>
+								Insert
+								{fileSelection.length > 0
+									? " (" + fileSelection.length + ")"
+									: ""}
+							</button>
+							<button
+								type="button"
+								className="btn btn-secondary btn-sm"
+								onClick={() => setShowFiles(false)}
+							>
+								Close
+							</button>
+						</div>
+					</div>
+				</BootstrapModal>
+			)}
+			{/* Users modal */}
+			{showUsers && (
+				<BootstrapModal
+					title="Embed a User"
+					icon="users"
+					size="modal-lg"
+					onClose={() => setShowUsers(false)}
+				>
+					<div className="modal-body">
+						<div className="input-group input-group-sm mb-3">
+							<span className="input-group-text">
+								<i className="fa-solid fa-magnifying-glass" />
+							</span>
+							<input
+								type="text"
+								className="form-control"
+								placeholder="Filter loaded users by name or username..."
+								value={userSearch}
+								onChange={(e) => setUserSearch(e.target.value)}
+							/>
+						</div>
+
+						{userState.loading && <ModalSpinner label="Loading users..." />}
+						{userState.error && (
+							<div className="alert alert-danger" role="alert">
+								{userState.error}
+							</div>
+						)}
+
+						{!userState.loading && !userState.error && (
+							<div className="list-group">
+								{visibleUsers.length === 0 && (
+									<div className="text-center text-body-secondary py-4">
+										No matching users on this page.
+									</div>
+								)}
+								{visibleUsers.map((user, i) => {
+									const name = user.name || user.username || "Unknown";
+									const username = user.username || "";
+									const avatar = userAvatarOf(user);
+									return (
 										<button
-											key={item.tag}
+											key={user._id || i}
 											type="button"
-											className="dropdown-item"
-											role="menuitem"
-											onMouseDown={(e) => e.preventDefault()}
-											onClick={() => applyBlockChoice(item.tag)}
+											className="list-group-item list-group-item-action d-flex align-items-center"
+											onClick={() => {
+												embedUser(user);
+												setShowUsers(false);
+												setStatus("Embedded @" + (username || name));
+											}}
 										>
-											<i className={"fa-solid " + item.icon} />
-											<span>{item.label}</span>
-											{item.hint && (
-												<span className="badge text-bg-secondary ms-auto">
-													{item.hint}
+											{avatar ? (
+												<img
+													src={avatar || "/placeholder.svg"}
+													alt=""
+													className="rounded-circle me-3"
+													width={40}
+													height={40}
+													style={{ objectFit: "cover" }}
+													crossOrigin="anonymous"
+												/>
+											) : (
+												<span
+													className="d-inline-flex align-items-center justify-content-center rounded-circle bg-secondary-subtle me-3"
+													style={{ width: 40, height: 40 }}
+												>
+													<i className="fa-solid fa-user" />
 												</span>
 											)}
+											<span className="text-start">
+												<span className="d-block fw-semibold">{name}</span>
+												{username && (
+													<small className="text-body-secondary">
+														@{username}
+													</small>
+												)}
+											</span>
 										</button>
-									))}
-								</div>
-							)}
+									);
+								})}
+							</div>
+						)}
+					</div>
+					<div className="modal-footer justify-content-between">
+						<Pagination
+							page={userState.page}
+							totalPages={userState.totalPages}
+							onPage={loadUsers}
+							label="User pages"
+						/>
+						<button
+							type="button"
+							className="btn btn-secondary btn-sm"
+							onClick={() => setShowUsers(false)}
+						>
+							Close
+						</button>
+					</div>
+				</BootstrapModal>
+			)}
+			{/* Link modal */}
+			{showLink && (
+				<BootstrapModal
+					title="Insert Link"
+					icon="link"
+					onClose={() => setShowLink(false)}
+				>
+					<div className="modal-body">
+						<div className="mb-3">
+							<label htmlFor="linkTextInput" className="form-label">
+								Text
+							</label>
+							<input
+								id="linkTextInput"
+								type="text"
+								className="form-control"
+								placeholder="Link text"
+								value={linkText}
+								onChange={(e) => setLinkText(e.target.value)}
+							/>
 						</div>
-						<div className="card-footer bg-body d-flex justify-content-between align-items-center flex-wrap gap-2">
-							<small className="text-body-secondary">{status}</small>
-							<div className="d-flex gap-2">
-								<button
-									type="button"
-									className="btn btn-outline-secondary btn-sm"
-									onClick={clearEditor}
+						<div className="mb-3">
+							<label htmlFor="linkUrlInput" className="form-label">
+								URL
+							</label>
+							<input
+								id="linkUrlInput"
+								type="url"
+								className="form-control"
+								placeholder="https://example.com"
+								value={linkUrl}
+								onChange={(e) => setLinkUrl(e.target.value)}
+							/>
+						</div>
+						<div className="mb-3">
+							<label htmlFor="linkTargetSelect" className="form-label">
+								Open in
+							</label>
+							<select
+								id="linkTargetSelect"
+								className="form-select"
+								value={linkTarget}
+								onChange={(e) => setLinkTarget(e.target.value)}
+							>
+								<option value="_blank">New tab (_blank)</option>
+								<option value="_self">Same tab (_self)</option>
+								<option value="_parent">Parent frame (_parent)</option>
+								<option value="_top">Top frame (_top)</option>
+							</select>
+						</div>
+					</div>
+					<div className="modal-footer">
+						<button
+							type="button"
+							className="btn btn-secondary btn-sm"
+							onClick={() => setShowLink(false)}
+						>
+							Cancel
+						</button>
+						<button
+							type="button"
+							className="btn btn-primary btn-sm"
+							onClick={insertLink}
+						>
+							Insert
+						</button>
+					</div>
+				</BootstrapModal>
+			)}
+			{/* Preview modal */}
+			{showPreview && (
+				<BootstrapModal
+					title="HTML Output"
+					icon="code"
+					size="modal-lg"
+					onClose={() => setShowPreview(false)}
+				>
+					<div className="modal-body">
+						<pre className="bg-body-tertiary p-3 rounded border preview-code">
+							<code>{previewHtml}</code>
+						</pre>
+					</div>
+					<div className="modal-footer">
+						<button
+							type="button"
+							className="btn btn-outline-secondary btn-sm"
+							onClick={copyHtml}
+						>
+							<i className="fa-solid fa-clipboard me-1" />
+							Copy
+						</button>
+						<button
+							type="button"
+							className="btn btn-secondary btn-sm"
+							onClick={() => setShowPreview(false)}
+						>
+							Close
+						</button>
+					</div>
+				</BootstrapModal>
+			)}
+			{/* Code Snippet modal */}
+			{showSnippet && (
+				<BootstrapModal
+					title="Insert Code Snippet"
+					icon="bi-braces"
+					size="modal-lg"
+					onClose={() => setShowSnippet(false)}
+				>
+					<div className="modal-body">
+						<p className="small text-body-secondary mb-3">
+							The snippet renders inside a sandboxed iframe: its HTML, CSS and
+							JavaScript only affect the iframe content, never the rest of the
+							page.
+						</p>
+						<div className="mb-3">
+							<label
+								htmlFor="snippet-html"
+								className="form-label small fw-semibold"
+							>
+								HTML
+							</label>
+							<textarea
+								id="snippet-html"
+								className="form-control font-monospace"
+								rows={4}
+								spellCheck={false}
+								placeholder="<h1>Hello world</h1>"
+								value={snippet.html}
+								onChange={(e) =>
+									setSnippet((s) => ({ ...s, html: e.target.value }))
+								}
+							/>
+						</div>
+						<div className="mb-3">
+							<label
+								htmlFor="snippet-css"
+								className="form-label small fw-semibold"
+							>
+								CSS
+							</label>
+							<textarea
+								id="snippet-css"
+								className="form-control font-monospace"
+								rows={4}
+								spellCheck={false}
+								placeholder={"h1 { color: rebeccapurple; }"}
+								value={snippet.css}
+								onChange={(e) =>
+									setSnippet((s) => ({ ...s, css: e.target.value }))
+								}
+							/>
+						</div>
+						<div className="mb-3">
+							<label
+								htmlFor="snippet-js"
+								className="form-label small fw-semibold"
+							>
+								JavaScript
+							</label>
+							<textarea
+								id="snippet-js"
+								className="form-control font-monospace"
+								rows={4}
+								spellCheck={false}
+								placeholder={
+									'document.querySelector("h1").textContent = "Hi from JS"'
+								}
+								value={snippet.js}
+								onChange={(e) =>
+									setSnippet((s) => ({ ...s, js: e.target.value }))
+								}
+							/>
+						</div>
+
+						<hr className="my-3" />
+						<p className="small fw-semibold mb-2">
+							<i className="fa-solid fa-globe me-1" />
+							External resources
+							<span className="ms-1 fw-normal text-body-secondary">
+								(optional)
+							</span>
+						</p>
+						<div className="mb-3">
+							<label
+								htmlFor="snippet-head"
+								className="form-label small fw-semibold"
+							>
+								{"Extra <head> content"}
+							</label>
+							<textarea
+								id="snippet-head"
+								className="form-control font-monospace"
+								rows={3}
+								spellCheck={false}
+								placeholder={
+									'<meta name="viewport" content="width=device-width, initial-scale=1">\n<link rel="preconnect" href="https://fonts.googleapis.com">'
+								}
+								value={snippet.head}
+								onChange={(e) =>
+									setSnippet((s) => ({ ...s, head: e.target.value }))
+								}
+							/>
+							<div className="form-text">
+								Raw HTML placed inside the iframe&apos;s {"<head>"} (meta tags,
+								fonts, inline styles...).
+							</div>
+						</div>
+						<div className="row g-3 mb-0">
+							<div className="col-12 col-md-6">
+								<label
+									htmlFor="snippet-css-urls"
+									className="form-label small fw-semibold"
 								>
-									Clear
-								</button>
-								<button
-									type="button"
-									className="btn btn-outline-secondary btn-sm"
-									onClick={openPreview}
+									External stylesheets
+								</label>
+								<textarea
+									id="snippet-css-urls"
+									className="form-control font-monospace"
+									rows={3}
+									spellCheck={false}
+									placeholder={
+										"https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+									}
+									value={snippet.cssUrls}
+									onChange={(e) =>
+										setSnippet((s) => ({ ...s, cssUrls: e.target.value }))
+									}
+								/>
+								<div className="form-text">
+									One URL per line, added as {'<link rel="stylesheet">'}.
+								</div>
+							</div>
+							<div className="col-12 col-md-6">
+								<label
+									htmlFor="snippet-js-urls"
+									className="form-label small fw-semibold"
 								>
-									<i className="fa-solid fa-eye me-1" />
-									Preview HTML
-								</button>
+									External scripts
+								</label>
+								<textarea
+									id="snippet-js-urls"
+									className="form-control font-monospace"
+									rows={3}
+									spellCheck={false}
+									placeholder={"https://cdn.jsdelivr.net/npm/chart.js"}
+									value={snippet.jsUrls}
+									onChange={(e) =>
+										setSnippet((s) => ({ ...s, jsUrls: e.target.value }))
+									}
+								/>
+								<div className="form-text">
+									One URL per line, loaded before your JavaScript runs.
+								</div>
 							</div>
 						</div>
 					</div>
-					{/* Upload toasts: live per-file progress + result message */}
-					{(toast || uploads.length > 0) && (
-						<div className="toast-container position-fixed bottom-0 end-0 p-3">
-							{uploads.map((u) => (
-								<div
-									key={u.id}
-									className="toast align-items-center border-0 show text-bg-primary mb-2"
-									role="status"
-									aria-live="polite"
-									aria-atomic="true"
-								>
-									<div className="d-flex">
-										<div className="toast-body w-100">
-											<div className="d-flex justify-content-between align-items-center gap-3 mb-1">
-												<span
-													className="text-truncate"
-													style={{ maxWidth: "12rem" }}
-												>
-													<i className="fa-solid fa-upload me-1" />
-													{u.name}
-												</span>
-												<span className="fw-bold">{u.progress}%</span>
-											</div>
-											<div
-												className="progress"
-												style={{ height: "4px" }}
-												role="progressbar"
-												aria-label={"Uploading " + u.name}
-												aria-valuenow={u.progress}
-												aria-valuemin={0}
-												aria-valuemax={100}
-											>
-												<div
-													className="progress-bar bg-light"
-													style={{ width: u.progress + "%" }}
-												></div>
-											</div>
-										</div>
-										<button
-											type="button"
-											className="btn-close btn-close-white me-2 m-auto"
-											aria-label={"Cancel upload of " + u.name}
-											onClick={() => cancelUpload(u.id)}
-										></button>
-									</div>
-								</div>
-							))}
-							{toast && (
-								<div
-									className={
-										"toast align-items-center border-0 show text-bg-" +
-										toast.kind
-									}
-									role="alert"
-									aria-live="assertive"
-									aria-atomic="true"
-								>
-									<div className="d-flex">
-										<div className="toast-body">{toast.msg}</div>
-										<button
-											type="button"
-											className="btn-close btn-close-white me-2 m-auto"
-											aria-label="Close"
-											onClick={() => setToast(null)}
-										></button>
-									</div>
-								</div>
-							)}
-						</div>
-					)}
-					{/* File Manager modal */}
-					{showFiles && (
-						<BootstrapModal
-							title="File Manager"
-							icon="folder-open"
-							size="modal-xl"
-							onClose={() => setShowFiles(false)}
+					<div className="modal-footer">
+						<button
+							type="button"
+							className="btn btn-secondary btn-sm"
+							onClick={() => setShowSnippet(false)}
 						>
-							<div className="modal-body">
-								<div className="input-group input-group-sm mb-3">
-									<span className="input-group-text">
-										<i className="fa-solid fa-magnifying-glass" />
-									</span>
-									<input
-										type="text"
-										className="form-control"
-										placeholder="Filter loaded files by name..."
-										value={fileSearch}
-										onChange={(e) => setFileSearch(e.target.value)}
-									/>
-								</div>
-								{fileState.loading && <ModalSpinner label="Loading files..." />}
-								{fileState.error && (
-									<div className="alert alert-danger" role="alert">
-										{fileState.error}
-									</div>
-								)}
-								{!fileState.loading && !fileState.error && (
-									<div className="row g-3">
-										{visibleFiles.length === 0 && (
-											<div className="col-12 text-center text-body-secondary py-4">
-												No matching files on this page.
-											</div>
-										)}
-										{visibleFiles.map((item, i) => {
-											const url = fileUrlOf(item);
-											const name = fileNameOf(item);
-											const kind = guessKind(url);
-											const selectedIdx = fileSelection.findIndex(
-												(f) => f.url === url,
-											);
-											const isSelected = selectedIdx !== -1;
-											return (
-												<div
-													className="col-6 col-md-4 col-lg-3"
-													key={item._id || i}
-												>
-													<div
-														className={
-															"card file-card h-100 shadow-sm position-relative" +
-															(isSelected ? " border-primary border-2" : "")
-														}
-														role="checkbox"
-														aria-checked={isSelected}
-														aria-label={"Select " + name}
-														tabIndex={0}
-														onClick={() => toggleFileSelection(item)}
-														onKeyDown={(e) => {
-															if (e.key === "Enter" || e.key === " ") {
-																e.preventDefault();
-																toggleFileSelection(item);
-															}
-														}}
-													>
-														{isSelected && (
-															<span className="badge text-bg-primary position-absolute top-0 end-0 m-2 z-1">
-																<i className="fa-solid fa-check me-1" />
-																{selectedIdx + 1}
-															</span>
-														)}
-														{kind === "image" ? (
-															<img
-																src={url || "/placeholder.svg"}
-																alt={name}
-																className="file-thumb"
-																loading="lazy"
-																crossOrigin="anonymous"
-															/>
-														) : (
-															<div className="file-thumb d-flex align-items-center justify-content-center bg-body-tertiary">
-																<i
-																	className={
-																		"fa fs-1 text-body-secondary " +
-																		(kind === "video"
-																			? "fa-film"
-																			: kind === "audio"
-																				? "fa-music"
-																				: "fa-file")
-																	}
-																/>
-															</div>
-														)}
-														<div className="card-body p-2">
-															<p
-																className="small text-truncate mb-0"
-																title={name}
-															>
-																{name}
-															</p>
-														</div>
-													</div>
-												</div>
-											);
-										})}
-									</div>
-								)}
-							</div>
-							<div className="modal-footer justify-content-between">
-								<Pagination
-									page={fileState.page}
-									totalPages={fileState.totalPages}
-									onPage={loadFiles}
-									label="File pages"
-								/>
-								<div className="d-flex align-items-center gap-2">
-									{fileSelection.length > 1 &&
-										fileSelection.every((f) => f.kind === "image") && (
-											<select
-												className="form-select form-select-sm w-auto"
-												aria-label="Image layout"
-												value={imageLayout}
-												onChange={(e) => setImageLayout(e.target.value)}
-											>
-												<option value="stacked">One below the other</option>
-												<option value="gallery">Gallery grid</option>
-												<option value="carousel">Carousel</option>
-											</select>
-										)}
-									<button
-										type="button"
-										className="btn btn-primary btn-sm"
-										disabled={fileSelection.length === 0}
-										onClick={insertSelectedFiles}
-									>
-										Insert
-										{fileSelection.length > 0
-											? " (" + fileSelection.length + ")"
-											: ""}
-									</button>
-									<button
-										type="button"
-										className="btn btn-secondary btn-sm"
-										onClick={() => setShowFiles(false)}
-									>
-										Close
-									</button>
-								</div>
-							</div>
-						</BootstrapModal>
-					)}
-					{/* Users modal */}
-					{showUsers && (
-						<BootstrapModal
-							title="Embed a User"
-							icon="users"
-							size="modal-lg"
-							onClose={() => setShowUsers(false)}
+							Cancel
+						</button>
+						<button
+							type="button"
+							className="btn btn-primary btn-sm"
+							disabled={
+								!snippet.html.trim() &&
+								!snippet.css.trim() &&
+								!snippet.js.trim() &&
+								!snippet.cssUrls.trim() &&
+								!snippet.jsUrls.trim()
+							}
+							onClick={insertSnippet}
 						>
-							<div className="modal-body">
-								<div className="input-group input-group-sm mb-3">
-									<span className="input-group-text">
-										<i className="fa-solid fa-magnifying-glass" />
-									</span>
-									<input
-										type="text"
-										className="form-control"
-										placeholder="Filter loaded users by name or username..."
-										value={userSearch}
-										onChange={(e) => setUserSearch(e.target.value)}
-									/>
-								</div>
-
-								{userState.loading && <ModalSpinner label="Loading users..." />}
-								{userState.error && (
-									<div className="alert alert-danger" role="alert">
-										{userState.error}
-									</div>
-								)}
-
-								{!userState.loading && !userState.error && (
-									<div className="list-group">
-										{visibleUsers.length === 0 && (
-											<div className="text-center text-body-secondary py-4">
-												No matching users on this page.
-											</div>
-										)}
-										{visibleUsers.map((user, i) => {
-											const name = user.name || user.username || "Unknown";
-											const username = user.username || "";
-											const avatar = userAvatarOf(user);
-											return (
-												<button
-													key={user._id || i}
-													type="button"
-													className="list-group-item list-group-item-action d-flex align-items-center"
-													onClick={() => {
-														embedUser(user);
-														setShowUsers(false);
-														setStatus("Embedded @" + (username || name));
-													}}
-												>
-													{avatar ? (
-														<img
-															src={avatar || "/placeholder.svg"}
-															alt=""
-															className="rounded-circle me-3"
-															width={40}
-															height={40}
-															style={{ objectFit: "cover" }}
-															crossOrigin="anonymous"
-														/>
-													) : (
-														<span
-															className="d-inline-flex align-items-center justify-content-center rounded-circle bg-secondary-subtle me-3"
-															style={{ width: 40, height: 40 }}
-														>
-															<i className="fa-solid fa-user" />
-														</span>
-													)}
-													<span className="text-start">
-														<span className="d-block fw-semibold">{name}</span>
-														{username && (
-															<small className="text-body-secondary">
-																@{username}
-															</small>
-														)}
-													</span>
-												</button>
-											);
-										})}
-									</div>
-								)}
-							</div>
-							<div className="modal-footer justify-content-between">
-								<Pagination
-									page={userState.page}
-									totalPages={userState.totalPages}
-									onPage={loadUsers}
-									label="User pages"
-								/>
-								<button
-									type="button"
-									className="btn btn-secondary btn-sm"
-									onClick={() => setShowUsers(false)}
-								>
-									Close
-								</button>
-							</div>
-						</BootstrapModal>
-					)}
-					{/* Link modal */}
-					{showLink && (
-						<BootstrapModal
-							title="Insert Link"
-							icon="link"
-							onClose={() => setShowLink(false)}
-						>
-							<div className="modal-body">
-								<div className="mb-3">
-									<label htmlFor="linkTextInput" className="form-label">
-										Text
-									</label>
-									<input
-										id="linkTextInput"
-										type="text"
-										className="form-control"
-										placeholder="Link text"
-										value={linkText}
-										onChange={(e) => setLinkText(e.target.value)}
-									/>
-								</div>
-								<div className="mb-3">
-									<label htmlFor="linkUrlInput" className="form-label">
-										URL
-									</label>
-									<input
-										id="linkUrlInput"
-										type="url"
-										className="form-control"
-										placeholder="https://example.com"
-										value={linkUrl}
-										onChange={(e) => setLinkUrl(e.target.value)}
-									/>
-								</div>
-								<div className="mb-3">
-									<label htmlFor="linkTargetSelect" className="form-label">
-										Open in
-									</label>
-									<select
-										id="linkTargetSelect"
-										className="form-select"
-										value={linkTarget}
-										onChange={(e) => setLinkTarget(e.target.value)}
-									>
-										<option value="_blank">New tab (_blank)</option>
-										<option value="_self">Same tab (_self)</option>
-										<option value="_parent">Parent frame (_parent)</option>
-										<option value="_top">Top frame (_top)</option>
-									</select>
-								</div>
-							</div>
-							<div className="modal-footer">
-								<button
-									type="button"
-									className="btn btn-secondary btn-sm"
-									onClick={() => setShowLink(false)}
-								>
-									Cancel
-								</button>
-								<button
-									type="button"
-									className="btn btn-primary btn-sm"
-									onClick={insertLink}
-								>
-									Insert
-								</button>
-							</div>
-						</BootstrapModal>
-					)}
-					{/* Preview modal */}
-					{showPreview && (
-						<BootstrapModal
-							title="HTML Output"
-							icon="code"
-							size="modal-lg"
-							onClose={() => setShowPreview(false)}
-						>
-							<div className="modal-body">
-								<pre className="bg-body-tertiary p-3 rounded border preview-code">
-									<code>{previewHtml}</code>
-								</pre>
-							</div>
-							<div className="modal-footer">
-								<button
-									type="button"
-									className="btn btn-outline-secondary btn-sm"
-									onClick={copyHtml}
-								>
-									<i className="fa-solid fa-clipboard me-1" />
-									Copy
-								</button>
-								<button
-									type="button"
-									className="btn btn-secondary btn-sm"
-									onClick={() => setShowPreview(false)}
-								>
-									Close
-								</button>
-							</div>
-						</BootstrapModal>
-					)}
-					{/* Code Snippet modal */}
-					{showSnippet && (
-						<BootstrapModal
-							title="Insert Code Snippet"
-							icon="bi-braces"
-							size="modal-lg"
-							onClose={() => setShowSnippet(false)}
-						>
-							<div className="modal-body">
-								<p className="small text-body-secondary mb-3">
-									The snippet renders inside a sandboxed iframe: its HTML, CSS
-									and JavaScript only affect the iframe content, never the rest
-									of the page.
-								</p>
-								<div className="mb-3">
-									<label
-										htmlFor="snippet-html"
-										className="form-label small fw-semibold"
-									>
-										HTML
-									</label>
-									<textarea
-										id="snippet-html"
-										className="form-control font-monospace"
-										rows={4}
-										spellCheck={false}
-										placeholder="<h1>Hello world</h1>"
-										value={snippet.html}
-										onChange={(e) =>
-											setSnippet((s) => ({ ...s, html: e.target.value }))
-										}
-									/>
-								</div>
-								<div className="mb-3">
-									<label
-										htmlFor="snippet-css"
-										className="form-label small fw-semibold"
-									>
-										CSS
-									</label>
-									<textarea
-										id="snippet-css"
-										className="form-control font-monospace"
-										rows={4}
-										spellCheck={false}
-										placeholder={"h1 { color: rebeccapurple; }"}
-										value={snippet.css}
-										onChange={(e) =>
-											setSnippet((s) => ({ ...s, css: e.target.value }))
-										}
-									/>
-								</div>
-								<div className="mb-3">
-									<label
-										htmlFor="snippet-js"
-										className="form-label small fw-semibold"
-									>
-										JavaScript
-									</label>
-									<textarea
-										id="snippet-js"
-										className="form-control font-monospace"
-										rows={4}
-										spellCheck={false}
-										placeholder={
-											'document.querySelector("h1").textContent = "Hi from JS"'
-										}
-										value={snippet.js}
-										onChange={(e) =>
-											setSnippet((s) => ({ ...s, js: e.target.value }))
-										}
-									/>
-								</div>
-
-								<hr className="my-3" />
-								<p className="small fw-semibold mb-2">
-									<i className="fa-solid fa-globe me-1" />
-									External resources
-									<span className="ms-1 fw-normal text-body-secondary">
-										(optional)
-									</span>
-								</p>
-								<div className="mb-3">
-									<label
-										htmlFor="snippet-head"
-										className="form-label small fw-semibold"
-									>
-										{"Extra <head> content"}
-									</label>
-									<textarea
-										id="snippet-head"
-										className="form-control font-monospace"
-										rows={3}
-										spellCheck={false}
-										placeholder={
-											'<meta name="viewport" content="width=device-width, initial-scale=1">\n<link rel="preconnect" href="https://fonts.googleapis.com">'
-										}
-										value={snippet.head}
-										onChange={(e) =>
-											setSnippet((s) => ({ ...s, head: e.target.value }))
-										}
-									/>
-									<div className="form-text">
-										Raw HTML placed inside the iframe&apos;s {"<head>"} (meta
-										tags, fonts, inline styles...).
-									</div>
-								</div>
-								<div className="row g-3 mb-0">
-									<div className="col-12 col-md-6">
-										<label
-											htmlFor="snippet-css-urls"
-											className="form-label small fw-semibold"
-										>
-											External stylesheets
-										</label>
-										<textarea
-											id="snippet-css-urls"
-											className="form-control font-monospace"
-											rows={3}
-											spellCheck={false}
-											placeholder={
-												"https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
-											}
-											value={snippet.cssUrls}
-											onChange={(e) =>
-												setSnippet((s) => ({ ...s, cssUrls: e.target.value }))
-											}
-										/>
-										<div className="form-text">
-											One URL per line, added as {'<link rel="stylesheet">'}.
-										</div>
-									</div>
-									<div className="col-12 col-md-6">
-										<label
-											htmlFor="snippet-js-urls"
-											className="form-label small fw-semibold"
-										>
-											External scripts
-										</label>
-										<textarea
-											id="snippet-js-urls"
-											className="form-control font-monospace"
-											rows={3}
-											spellCheck={false}
-											placeholder={"https://cdn.jsdelivr.net/npm/chart.js"}
-											value={snippet.jsUrls}
-											onChange={(e) =>
-												setSnippet((s) => ({ ...s, jsUrls: e.target.value }))
-											}
-										/>
-										<div className="form-text">
-											One URL per line, loaded before your JavaScript runs.
-										</div>
-									</div>
-								</div>
-							</div>
-							<div className="modal-footer">
-								<button
-									type="button"
-									className="btn btn-secondary btn-sm"
-									onClick={() => setShowSnippet(false)}
-								>
-									Cancel
-								</button>
-								<button
-									type="button"
-									className="btn btn-primary btn-sm"
-									disabled={
-										!snippet.html.trim() &&
-										!snippet.css.trim() &&
-										!snippet.js.trim() &&
-										!snippet.cssUrls.trim() &&
-										!snippet.jsUrls.trim()
-									}
-									onClick={insertSnippet}
-								>
-									<i className="bi bi-braces me-1" />
-									Insert snippet
-								</button>
-							</div>
-						</BootstrapModal>
-					)}
-				</Tab.Pane>
-				<Tab.Pane eventKey="jsoncontent">
-					{/* <pre>{JSON.stringify({ html }, null, 4)}</pre> */}
-				</Tab.Pane>
-			</Tab.Content>
-		</Tab.Container>
+							<i className="bi bi-braces me-1" />
+							Insert snippet
+						</button>
+					</div>
+				</BootstrapModal>
+			)}
+		</>
 	) : (
 		<textarea
 			id={id}

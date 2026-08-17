@@ -35,8 +35,6 @@ const CreateBlogForm = ({ token = {}, auth = {}, objects = [] }) => {
 			postType: "blog",
 		};
 
-		console.log("rawFormData", rawFormData);
-
 		const res = await fetchurl(
 			`/noadmin/blogs`,
 			"POST",
@@ -58,7 +56,7 @@ const CreateBlogForm = ({ token = {}, auth = {}, objects = [] }) => {
 			return;
 		}
 		toast.success(`Blog created`);
-		// router.push(`/noadmin/blogs`);
+		router.push(`/noadmin/blogs`);
 	};
 
 	return (
@@ -117,8 +115,7 @@ const CreateBlogForm = ({ token = {}, auth = {}, objects = [] }) => {
 					multiple_categories={false}
 				/>
 				<br />
-				{/* <FormButtons /> */}
-				<button type="submit">Submit</button>
+				<FormButtons />
 			</div>
 		</form>
 	);

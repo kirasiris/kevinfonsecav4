@@ -137,15 +137,16 @@ export const fetchurl = async (
 	}
 
 	if (multipart) {
-		const data = new FormData();
-		myHeaders.set(
-			"Content-Type",
-			`multipart/form-data; boundary=${data._boundary}`,
-		);
+		// When bodyData  is FormData, send it directly and let fetch generate
+		// the multipart boundary itself (a manual Content-Type would break it).
+		if (bodyData instanceof FormData) {
+			requestBody = bodyData;
+		}
+		myHeaders.delete("Content-Type");
 	}
 
 	// If no signal is provided, create a new AbortController signal
-	if (signal !== undefined && signal !== null && signal !== ``) {
+	if (!signal || typeof signal.aborted !== "boolean") {
 		const controller = new AbortController();
 		signal = controller.signal;
 	}

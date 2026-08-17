@@ -1,6 +1,7 @@
 import "@/src/css/bootstrap.css";
 import "@/src/css/global.css";
 import "@/src/css/app.css";
+import "@/src/css/text-editor.css";
 import Menu from "@/layout/menu";
 import Footer from "@/layout/footer";
 import { getGlobalData } from "@/helpers/globalData";

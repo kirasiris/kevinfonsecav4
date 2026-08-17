@@ -11,6 +11,7 @@ const CreateBlogForm = ({ token = {}, auth = {}, objects = [] }) => {
 	const router = useRouter();
 
 	const [, setBtnText] = useState(`Submit`);
+	const [draft, setDraft] = useState({ html: "", users: [], hashtags: [] });
 
 	const addBlog = async (e) => {
 		e.preventDefault();
@@ -21,6 +22,8 @@ const CreateBlogForm = ({ token = {}, auth = {}, objects = [] }) => {
 		const rawFormData = {
 			title: formData.get("title"),
 			text: formData.get("text"),
+			mentions: JSON.parse(formData.get("text_users") || "[]"),
+			// hashtags: JSON.parse(formData.get("text_hashtags") || "[]"),
 			featured: formData.get("featured"),
 			embedding: formData.get("embedding"),
 			category: formData.get("category"),
@@ -31,6 +34,8 @@ const CreateBlogForm = ({ token = {}, auth = {}, objects = [] }) => {
 			files: { avatar: formData.get("file") || undefined },
 			postType: "blog",
 		};
+
+		console.log("rawFormData", rawFormData);
 
 		const res = await fetchurl(
 			`/noadmin/blogs`,
@@ -53,7 +58,7 @@ const CreateBlogForm = ({ token = {}, auth = {}, objects = [] }) => {
 			return;
 		}
 		toast.success(`Blog created`);
-		router.push(`/noadmin/blogs`);
+		// router.push(`/noadmin/blogs`);
 	};
 
 	return (
@@ -79,12 +84,21 @@ const CreateBlogForm = ({ token = {}, auth = {}, objects = [] }) => {
 					id="text"
 					name="text"
 					defaultValue="No description..."
+					onChange={setDraft}
 					onModel="Blog"
 					advancedTextEditor={true}
 					customPlaceholder="No description"
 					charactersLimit={99999}
 					isRequired={true}
 				/>
+				<p className="form-text mt-1 mb-3">
+					{draft.html.replace(/<[^>]*>/g, "").length} characters
+					{draft.users.length > 0 &&
+						" · mentions: " +
+							draft.users.map((u) => "@" + u.username).join(", ")}
+					{draft.hashtags.length > 0 &&
+						" · tags: " + draft.hashtags.map((t) => "#" + t).join(", ")}
+				</p>
 			</div>
 			<div className="col-lg-3">
 				<AdminSidebar
@@ -103,7 +117,8 @@ const CreateBlogForm = ({ token = {}, auth = {}, objects = [] }) => {
 					multiple_categories={false}
 				/>
 				<br />
-				<FormButtons />
+				{/* <FormButtons /> */}
+				<button type="submit">Submit</button>
 			</div>
 		</form>
 	);

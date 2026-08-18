@@ -16,7 +16,7 @@ const UpdateBlogForm = ({
 	const router = useRouter();
 
 	const [, setBtnText] = useState(`Submit`);
-	const [draft, setDraft] = useState({ html: "", users: [], hashtags: [] });
+	const [draft, setDraft] = useState({ html: null, users: [], hashtags: [] });
 
 	const upgradeBlog = async (e) => {
 		e.preventDefault();
@@ -86,6 +86,7 @@ const UpdateBlogForm = ({
 					id="text"
 					name="text"
 					defaultValue={object?.data?.text}
+					value={draft.html ?? undefined}
 					onChange={setDraft}
 					onModel="Blog"
 					advancedTextEditor={true}
@@ -94,7 +95,7 @@ const UpdateBlogForm = ({
 					isRequired={true}
 				/>
 				<p className="form-text mt-1 mb-3">
-					{draft.html.replace(/<[^>]*>/g, "").length} characters
+					{/* {draft.html.replace(/<[^>]*>/g, "").length} characters */}
 					{draft.users.length > 0 &&
 						" · mentions: " +
 							draft.users.map((u) => "@" + u.username).join(", ")}

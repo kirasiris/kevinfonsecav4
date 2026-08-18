@@ -68,7 +68,7 @@ const extractUploadUrl = (data) => {
 const uploadFileToServer = (
 	file,
 	filename,
-	onProgress,
+	{ onProgress, onUploaded },
 	auth = {},
 	token = {},
 	onModel = "Blog",
@@ -86,6 +86,13 @@ const uploadFileToServer = (
 		xhr.upload.addEventListener("progress", (event) => {
 			if (event.lengthComputable) {
 				onProgress(Math.round((event.loaded * 100) / event.total));
+			}
+		});
+
+		xhr.upload.addEventListener("load", () => {
+			onProgress(100);
+			if (onUploaded) {
+				onUploaded();
 			}
 		});
 
@@ -215,8 +222,15 @@ const MyTextArea = ({
 
 	// In-flight device uploads: [{ id, name, progress }] — each renders a toast
 	// with a live percentage.
-	const [uploads, setUploads] = useState([]);
-	const uploadXhrsRef = useRef(new Map());
+	// // const [uploads, setUploads] = useState([]);
+	// // const uploadXhrsRef = useRef(new Map());
+	const uploadsRef = useRef(new Map());
+
+	const lastEmittedHtmlRef = useRef(null);
+
+	const [tableBar, setTableBar] = useState(null);
+	const activeTableRef = useRef(null);
+	const [tableModal, setTableModal] = useState(null);
 
 	const [showLink, setShowLink] = useState(false);
 	const [linkText, setLinkText] = useState("");
@@ -270,11 +284,14 @@ const MyTextArea = ({
 		jsUrls: "",
 	});
 
-	// Abort any in-flight uploads when the editor unmounts.
+	// Abort any in-flight uploads and release their blob URLs when the editor unmounts.
 	useEffect(() => {
-		const xhrs = uploadXhrsRef.current;
+		const xhrs = uploadsRef.current;
 		return () => {
-			xhrs.forEach((xhr) => xhr.abort());
+			xhrs.forEach((u) => {
+				u.xhr.abort();
+				URL.revokeObjectURL(u.blobUrl);
+			});
 			xhrs.clear();
 		};
 	}, []);
@@ -309,7 +326,23 @@ const MyTextArea = ({
 		// A MutationObserver catches EVERY content change regardless of source:
 		// typing, execCommand, undo/redo, node insertion from the file manager...
 		// This is what keeps the hidden form field and onChange in sync.
-		const observer = new MutationObserver(() => syncContent());
+		// const observer = new MutationObserver(() => syncContent());
+		const insideUploadPlaceholder = (node) => {
+			let el = node.nodeType === 1 ? node : node.parentElement;
+			while (el) {
+				if (el.hasAttribute && el.hasAttribute("data-upload-id")) {
+					return true;
+				}
+				el = el.parentElement;
+			}
+			return false;
+		};
+		const observer = new MutationObserver((records) => {
+			if (records.every((r) => insideUploadPlaceholder(r.target))) {
+				return;
+			}
+			syncContent();
+		});
 		observer.observe(editor, {
 			subtree: true,
 			childList: true,
@@ -321,6 +354,7 @@ const MyTextArea = ({
 			if (document.activeElement === editor) {
 				saveSelection();
 				updateActiveFormats();
+				detectTable();
 			}
 		}
 		document.addEventListener("selectionchange", onSelectionChange);
@@ -342,6 +376,12 @@ const MyTextArea = ({
 		if (document.activeElement === editor) {
 			return;
 		}
+		if (value === lastEmittedHtmlRef.current) {
+			return;
+		}
+		if (uploadsRef.current.size > 0) {
+			return;
+		}
 		if (editor.innerHTML !== value) {
 			editor.innerHTML = value || "<p><br></p>";
 			highlightHashtags();
@@ -361,8 +401,16 @@ const MyTextArea = ({
 		const hasContent =
 			editor.textContent.trim() !== "" ||
 			!!editor.querySelector("img, video, audio, iframe");
-		const html = hasContent ? editor.innerHTML : "";
+		let html = hasContent ? editor.innerHTML : "";
+		if (html && editor.querySelector("[data-upload-id]")) {
+			const clone = editor.cloneNode(true);
+			clone
+				.querySelectorAll("[data-upload-id]")
+				.forEach((node) => node.remove());
+			html = clone.innerHTML;
+		}
 		const { users, hashtags } = extractEntities(editor);
+		lastEmittedHtmlRef.current = html;
 		if (hiddenFieldRef.current && hiddenFieldRef.current.value !== html) {
 			hiddenFieldRef.current.value = html;
 		}
@@ -923,7 +971,9 @@ const MyTextArea = ({
 		restoreSelection();
 		const editor = editorRef.current;
 		const sel = window.getSelection();
-		if (!editor || !sel || sel.rangeCount === 0) return;
+		if (!editor || !sel || sel.rangeCount === 0) {
+			return;
+		}
 
 		const codeEl = findInlineCodeAncestor();
 		if (codeEl) {
@@ -935,7 +985,9 @@ const MyTextArea = ({
 			while (codeEl.firstChild) {
 				const child = codeEl.firstChild;
 				parent.insertBefore(child, codeEl);
-				if (!first) first = child;
+				if (!first) {
+					first = child;
+				}
 				last = child;
 			}
 			parent.removeChild(codeEl);
@@ -979,19 +1031,29 @@ const MyTextArea = ({
 	const currentBlock = () => {
 		const editor = editorRef.current;
 		const sel = window.getSelection();
-		if (!sel || sel.rangeCount === 0) return null;
+		if (!sel || sel.rangeCount === 0) {
+			return null;
+		}
 		let node = sel.anchorNode;
-		if (!node || !editor.contains(node)) return null;
+		if (!node || !editor.contains(node)) {
+			return null;
+		}
 		// When the caret sits directly on the editor element, resolve to the
 		// child block at the caret offset.
 		if (node === editor) {
 			const idx = Math.min(sel.anchorOffset, editor.childNodes.length - 1);
 			node = editor.childNodes[idx] || null;
-			if (!node) return null;
+			if (!node) {
+				return null;
+			}
 		}
-		if (node.nodeType === 3) node = node.parentNode;
+		if (node.nodeType === 3) {
+			node = node.parentNode;
+		}
 		while (node && node !== editor) {
-			if (BLOCK_TAGS.indexOf(node.tagName) !== -1) return node;
+			if (BLOCK_TAGS.indexOf(node.tagName) !== -1) {
+				return node;
+			}
 			node = node.parentNode;
 		}
 		return null;
@@ -1005,9 +1067,13 @@ const MyTextArea = ({
 	};
 
 	const isEmptyBlock = (el) => {
-		if (!el) return false;
+		if (!el) {
+			return false;
+		}
 		const text = (el.textContent || "").replace(/\u00A0/g, " ").trim();
-		if (text) return false;
+		if (text) {
+			return false;
+		}
 		// Blocks containing media or chips are not empty
 		return !el.querySelector("img,video,audio,iframe,.user-chip,figure");
 	};
@@ -1024,7 +1090,9 @@ const MyTextArea = ({
 
 	const showBlockMenuAt = (el) => {
 		const wrapper = wrapperRef.current;
-		if (!wrapper) return;
+		if (!wrapper) {
+			return;
+		}
 		const rect = el.getBoundingClientRect();
 		const wrapRect = wrapper.getBoundingClientRect();
 		setBlockMenu({
@@ -1049,7 +1117,9 @@ const MyTextArea = ({
 				return;
 			}
 			if ((e.key === "Enter" || e.key === "Tab") && mentionMatches.length) {
-				if (e.nativeEvent.isComposing || e.keyCode === 229) return;
+				if (e.nativeEvent.isComposing || e.keyCode === 229) {
+					return;
+				}
 				e.preventDefault();
 				applyMention(mentionMatches[mentionIndex] || mentionMatches[0]);
 				return;
@@ -1059,6 +1129,11 @@ const MyTextArea = ({
 				setMention(null);
 				return;
 			}
+		}
+
+		// Tab moves between table cells instead of leaving the editor
+		if (e.key === "Tab" && handleTableTab(e)) {
+			return;
 		}
 
 		// Any key other than Enter dismisses the block menu.
@@ -1183,108 +1258,250 @@ const MyTextArea = ({
 		files.forEach(uploadOne);
 	};
 
-	const uploadOne = async (file) => {
+	const uploadOne = (file) => {
 		const uploadId = generateUploadId();
+		const blobUrl = URL.createObjectURL(file);
+		const figure = buildUploadPlaceholder(file, blobUrl, uploadId);
 
-		// Add this file to the visible upload list at 0%.
-		setUploads((prev) => [
-			...prev,
-			{ id: uploadId, name: file.name, progress: 0 },
-		]);
+		insertBlockAtCursor(figure);
 
-		setStatus("Uploading " + file.name + "...");
+		// Keep the file the user just picked on screen, so its percentage is
+		// visible even when it landed below the fold of a long document.
+		figure.scrollIntoView({ block: "nearest", behavior: "smooth" });
+		setStatus(`Uploading ${file.name}...`);
 
 		const { res, xhr } = uploadFileToServer(
 			file,
 			file.name,
-			(progress) => {
-				setUploads((prev) =>
-					prev.map((u) => (u.id === uploadId ? { ...u, progress } : u)),
-				);
+			{
+				onProgress: (progress) => paintUploadProgress(uploadId, progress),
+				onUploaded: () => paintUploadFinishing(uploadId),
 			},
 			auth,
 			token,
 			onModel,
 		);
 
-		uploadXhrsRef.current.set(uploadId, xhr);
+		uploadsRef.current.set(uploadId, { xhr, blobUrl, figure });
 
 		res
 			.then((data) => {
-				const url = extractUploadUrl(data);
+				const url = data && data.demo ? blobUrl : extractUploadUrl(data);
+				// const url = extractUploadUrl(data);
 				if (!url)
 					throw new Error(
 						(data && data.message) ||
 							"Upload succeeded but no URL was returned.",
 					);
-				embedByUrl(url, file.name, file.type);
-				setToast({ kind: "success", msg: "Uploaded " + file.name });
-				setStatus("Uploaded " + file.name);
-				setTimeout(() => setToast(null), 2500);
+				finishUpload(uploadId, url, file, !(data && data.demo));
+
+				setStatus(`Uploaded ${file.name}`);
 			})
 			.catch((err) => {
 				if (err?.name === "AbortError") {
 					setStatus("Upload cancelled");
 					return;
 				}
-				setToast({ kind: "danger", msg: "Error: " + err.message });
-				setStatus("Upload error");
-			})
-			.finally(() => {
-				uploadXhrsRef.current.delete(uploadId);
-				setUploads((prev) => prev.filter((u) => u.id !== uploadId));
+				// failUpload(uploadId, err.message);
+				setStatus(`Upload error ${err.message}`);
 			});
-
-		// setToast({ kind: "primary", msg: "Uploading " + file.name + "..." });
-
-		// const form = new FormData();
-
-		// form.append("userId", auth?.userId);
-		// form.append("username", auth?.username);
-		// form.append("userEmail", auth?.email);
-		// form.append("onModel", onModel);
-		// form.append("file", file, file.name);
-		// form.append("album", "posts");
-
-		// try {
-		// 	// fetchurl(url, method, cache, bodyData, signal, multipart, isRemote)
-		// 	const data = await fetchurl(
-		// 		`${process.env.NEXT_PUBLIC_FILE_UPLOADER_URL}/uploads/uploadobject`,
-		// 		"PUT",
-		// 		"no-cache",
-		// 		form,
-		// 		null,
-		// 		true,
-		// 		true,
-		// 	);
-		// 	const url = extractUploadUrl(data);
-		// 	if (!url)
-		// 		throw new Error(
-		// 			(data && data.message) || "Upload succeeded but no URL was returned.",
-		// 		);
-		// 	embedByUrl(url, file.name, file.type);
-		// 	setToast({ kind: "success", msg: "Uploaded " + file.name });
-		// 	setStatus("Uploaded " + file.name);
-		// 	setTimeout(() => setToast(null), 2500);
-		// } catch (err) {
-		// 	setToast({ kind: "danger", msg: "Error: " + err.message });
-		// 	setStatus("Upload error");
-		// }
 	};
+
+	// The placeholder: the real media rendered from the blob URL, sitting under a
+	// translucent overlay that shows the percentage for THIS file only.
+	const buildUploadPlaceholder = (file, blobUrl, uploadId) => {
+		const kind = guessKind(file.name, file.type);
+
+		const figure = document.createElement("figure");
+		figure.className = "my-2 upload-figure";
+		figure.setAttribute("data-upload-id", uploadId);
+		figure.setAttribute("data-upload-kind", kind);
+		// Atomic while uploading: clicks hit the cancel button, not a text caret.
+		figure.setAttribute("contenteditable", "false");
+
+		const media = document.createElement("div");
+		media.className = "upload-media";
+		if (kind === "image") {
+			const img = document.createElement("img");
+			img.src = blobUrl;
+			img.alt = file.name || "Uploading image";
+			img.className = "img-fluid rounded w-100";
+			media.appendChild(img);
+		} else if (kind === "video") {
+			const video = document.createElement("video");
+			video.src = blobUrl;
+			video.muted = true;
+			video.playsInline = true;
+			video.className = "w-100 rounded";
+			media.appendChild(video);
+		} else {
+			// Audio and generic files have no useful still frame: show a name card.
+			const card = document.createElement("div");
+			card.className =
+				"upload-file-card d-flex align-items-center gap-2 rounded border p-3";
+			card.innerHTML =
+				'<i class="fa-solid ' +
+				(kind === "audio" ? "fa-music" : "fa-paperclip") +
+				' fs-4"></i><span class="text-truncate">' +
+				escapeHtml(file.name) +
+				"</span>";
+			media.appendChild(card);
+		}
+		figure.appendChild(media);
+
+		const overlay = document.createElement("div");
+		overlay.className = "upload-overlay";
+		overlay.setAttribute("role", "progressbar");
+		overlay.setAttribute("aria-label", "Uploading " + file.name);
+		overlay.setAttribute("aria-valuemin", "0");
+		overlay.setAttribute("aria-valuemax", "100");
+		overlay.setAttribute("aria-valuenow", "0");
+		overlay.innerHTML =
+			'<div class="upload-overlay-inner">' +
+			'<p class="upload-percent">0%</p>' +
+			'<div class="upload-bar"><span class="upload-bar-fill"></span></div>' +
+			'<p class="upload-name text-truncate">' +
+			escapeHtml(file.name) +
+			"</p>" +
+			"</div>";
+
+		const cancel = document.createElement("button");
+		cancel.type = "button";
+		cancel.className = "btn btn-sm btn-light upload-cancel";
+		cancel.innerHTML =
+			'<i class="fa-solid fa-xmark"></i><span class="visually-hidden">Cancel upload</span>';
+		cancel.title = "Cancel upload";
+		// Plain DOM listener: this node lives inside the contentEditable surface,
+		// so React never owns it.
+		cancel.addEventListener("click", (e) => {
+			e.preventDefault();
+			cancelUpload(uploadId);
+		});
+		overlay.appendChild(cancel);
+
+		figure.appendChild(overlay);
+		return figure;
+	};
+
+	const uploadFigure = (uploadId) => {
+		const editor = editorRef.current;
+		if (!editor) {
+			return null;
+		}
+		return editor.querySelector('[data-upload-id="' + uploadId + '"]');
+	};
+
+	const paintUploadProgress = (uploadId, progress) => {
+		const figure = uploadFigure(uploadId);
+		if (!figure) {
+			return;
+		}
+		const overlay = figure.querySelector(".upload-overlay");
+		const percent = figure.querySelector(".upload-percent");
+		const fill = figure.querySelector(".upload-bar-fill");
+		if (percent) {
+			percent.textContent = progress + "%";
+		}
+		if (fill) {
+			fill.style.width = progress + "%";
+		}
+		if (overlay) {
+			overlay.setAttribute("aria-valuenow", String(progress));
+		}
+	};
+
+	const paintUploadFinishing = (uploadId) => {
+		const figure = uploadFigure(uploadId);
+		if (!figure) {
+			return;
+		}
+		figure.setAttribute("data-upload-state", "finishing");
+		const percent = figure.querySelector(".upload-percent");
+		if (percent) {
+			percent.textContent = "Finishing…";
+		}
+	};
+
+	// Swap the temporary blob for the stored file and drop the overlay, leaving
+	// exactly the same markup a File Manager insertion produces.
+	const finishUpload = (uploadId, url, file, revoke) => {
+		const entry = uploadsRef.current.get(uploadId);
+		const figure = uploadFigure(uploadId);
+		uploadsRef.current.delete(uploadId);
+		if (!figure) {
+			if (revoke && entry) {
+				URL.revokeObjectURL(entry.blobUrl);
+			}
+			return;
+		}
+		const { node, block } = buildEmbedNode(url, file.name, file.type);
+		if (block) {
+			figure.replaceWith(node);
+		} else {
+			const p = document.createElement("p");
+			p.appendChild(node);
+			figure.replaceWith(p);
+		}
+		// Only safe once the final src no longer points at the blob.
+		if (revoke && entry) {
+			URL.revokeObjectURL(entry.blobUrl);
+		}
+		syncContent();
+	};
+
+	// Keep the preview on screen and turn the overlay into an error state with a
+	// retry, so a failed file is never silently lost.
+	// const failUpload = (uploadId, message) => {
+	// 	const figure = uploadFigure(uploadId);
+	// 	uploadsRef.current.delete(uploadId);
+	// 	if (!figure) {
+	// 		return;
+	// 	}
+	// 	figure.setAttribute("data-upload-state", "error");
+	// 	const overlay = figure.querySelector(".upload-overlay");
+	// 	if (!overlay) {
+	// 		return;
+	// 	}
+	// 	overlay.removeAttribute("role");
+	// 	overlay.innerHTML =
+	// 		'<div class="upload-overlay-inner">' +
+	// 		'<p class="upload-percent"><i class="fa-solid fa-triangle-exclamation"></i></p>' +
+	// 		'<p class="upload-name">' +
+	// 		escapeHtml(message || "Upload failed") +
+	// 		"</p>" +
+	// 		"</div>";
+	// 	const remove = document.createElement("button");
+	// 	remove.type = "button";
+	// 	remove.className = "btn btn-sm btn-light upload-cancel";
+	// 	remove.innerHTML =
+	// 		'<i class="fa-solid fa-trash"></i><span class="visually-hidden">Remove failed upload</span>';
+	// 	remove.title = "Remove";
+	// 	remove.addEventListener("click", (e) => {
+	// 		e.preventDefault();
+	// 		cancelUpload(uploadId);
+	// 	});
+	// 	overlay.appendChild(remove);
+	// };
 
 	// Cancel an in-flight upload from its toast's close button.
 	const cancelUpload = (uploadId) => {
-		const xhr = uploadXhrsRef.current.get(uploadId);
-		if (xhr) {
-			xhr.abort();
-			uploadXhrsRef.current.delete(uploadId);
+		const entry = uploadsRef.current.get(uploadId);
+		if (entry) {
+			entry.xhr.abort();
+			URL.revokeObjectURL(entry.blobUrl);
+			uploadsRef.current.delete(uploadId);
 		}
-		setUploads((prev) => prev.filter((u) => u.id !== uploadId));
+
+		const figure = uploadFigure(uploadId);
+		if (figure) {
+			figure.remove();
+		}
+		syncContent();
+		// setUploads((prev) => prev.filter((u) => u.id !== uploadId));
 	};
 
 	// ---- Embedding ----------------------------------------------------------------
-
-	const embedByUrl = (url, name, mime) => {
+	const buildEmbedNode = (url, name, mime) => {
 		const kind = guessKind(url, mime);
 		let node;
 		if (kind === "image") {
@@ -1316,7 +1533,15 @@ const MyTextArea = ({
 			const fig = document.createElement("figure");
 			fig.className = "my-2";
 			fig.appendChild(node);
-			insertBlockAtCursor(fig);
+			return { node: fig, block: true };
+		}
+		return { node, block: false };
+	};
+
+	const embedByUrl = (url, name, mime) => {
+		const { node, block } = buildEmbedNode(url, name, mime);
+		if (block) {
+			insertBlockAtCursor(node);
 		} else {
 			insertNodeAtCursor(node);
 		}
@@ -1607,7 +1832,9 @@ const MyTextArea = ({
 		});
 		setMentionIndex(0);
 		// Fetch the users from the DB the first time an @ is typed.
-		if (!userState.items.length && !userState.loading) loadUsers(1);
+		if (!userState.items.length && !userState.loading) {
+			loadUsers(1);
+		}
 	};
 
 	// Replaces the typed "@query" with the chosen user's chip.
@@ -1635,7 +1862,9 @@ const MyTextArea = ({
 		embedUser(user);
 		setMention(null);
 		setStatus("Mentioned @" + (user.username || user.name || "user"));
-		if (editorRef.current) editorRef.current.focus();
+		if (editorRef.current) {
+			editorRef.current.focus();
+		}
 	};
 
 	// ---- Live code snippets ---------------------------------------------------------
@@ -1748,6 +1977,311 @@ const MyTextArea = ({
 		insertBlockAtCursor(fig);
 		setShowSnippet(false);
 		setStatus("Code snippet inserted");
+	};
+
+	// ---- Tables ---------------------------------------------------------------------
+
+	const DEFAULT_TABLE_CLASS = "table table-bordered align-middle";
+
+	const newCell = (tag, text) => {
+		const cell = document.createElement(tag);
+		if (text) cell.textContent = text;
+		else cell.innerHTML = "<br>";
+		return cell;
+	};
+
+	// Walks up from the caret to the table / cell it sits in.
+	const closestInEditor = (tagNames) => {
+		const editor = editorRef.current;
+		const sel = window.getSelection();
+		if (!editor || !sel || sel.rangeCount === 0) return null;
+		let node = sel.anchorNode;
+		if (!node || !editor.contains(node)) return null;
+		if (node.nodeType === 3) node = node.parentNode;
+		while (node && node !== editor) {
+			if (tagNames.indexOf(node.tagName) !== -1) return node;
+			node = node.parentNode;
+		}
+		return null;
+	};
+
+	const currentTable = () => closestInEditor(["TABLE"]);
+	const currentCell = () => closestInEditor(["TD", "TH"]);
+
+	// Shows the floating table toolbar whenever the caret is inside a table.
+	const detectTable = () => {
+		const wrapper = wrapperRef.current;
+		const table = currentTable();
+		activeTableRef.current = table;
+		if (!table || !wrapper) {
+			setTableBar((prev) => (prev ? null : prev));
+			return;
+		}
+		const rect = table.getBoundingClientRect();
+		const wrapRect = wrapper.getBoundingClientRect();
+		const above = rect.top - wrapRect.top - 44;
+		setTableBar({
+			// Above the table normally, but moved below it when the table is flush
+			// with the top of the editor and the bar would cover the header row.
+			top: above < 4 ? rect.bottom - wrapRect.top + 6 : above,
+			left: Math.max(4, rect.left - wrapRect.left),
+		});
+	};
+
+	const tableWrapperOf = (table) => {
+		const parent = table.parentNode;
+		return parent &&
+			parent.classList &&
+			parent.classList.contains("editor-table")
+			? parent
+			: null;
+	};
+
+	const headerRowOf = (table) => (table.tHead ? table.tHead.rows[0] : null);
+	const bodyOf = (table) => {
+		if (table.tBodies[0]) return table.tBodies[0];
+		const body = document.createElement("tbody");
+		table.appendChild(body);
+		return body;
+	};
+
+	// Grows/shrinks an existing table to `rows` x `cols` and syncs the header row,
+	// keeping whatever the user already typed in the surviving cells.
+	const applyTableShape = (table, rows, cols, header) => {
+		if (header && !table.tHead) {
+			const thead = document.createElement("thead");
+			const tr = document.createElement("tr");
+			for (let c = 0; c < cols; c++) tr.appendChild(newCell("th"));
+			thead.appendChild(tr);
+			table.insertBefore(thead, table.firstChild);
+		} else if (!header && table.tHead) {
+			table.removeChild(table.tHead);
+		}
+
+		// Column count, every section.
+		Array.from(table.rows).forEach((row) => {
+			const isHeaderRow = table.tHead && row.parentNode === table.tHead;
+			while (row.cells.length > cols) row.deleteCell(-1);
+			while (row.cells.length < cols)
+				row.appendChild(newCell(isHeaderRow ? "th" : "td"));
+		});
+
+		// Body row count.
+		const body = bodyOf(table);
+		while (body.rows.length > rows) body.deleteRow(-1);
+		while (body.rows.length < rows) {
+			const tr = body.insertRow(-1);
+			for (let c = 0; c < cols; c++) tr.appendChild(newCell("td"));
+		}
+	};
+
+	const applyTableCaption = (table, text) => {
+		const caption = table.querySelector("caption");
+		if (text) {
+			if (caption) caption.textContent = text;
+			else {
+				const cap = document.createElement("caption");
+				cap.textContent = text;
+				table.insertBefore(cap, table.firstChild);
+			}
+		} else if (caption) {
+			caption.remove();
+		}
+	};
+
+	const openTableModal = () => {
+		saveSelection();
+		setTableModal({
+			mode: "insert",
+			rows: 3,
+			cols: 3,
+			className: DEFAULT_TABLE_CLASS,
+			header: true,
+			responsive: true,
+			caption: "",
+		});
+	};
+
+	// Reads the live table back into the dialog so rows, columns, classes and
+	// caption can all be changed after insertion.
+	const openTableEditor = () => {
+		const table = activeTableRef.current;
+		if (!table) return;
+		saveSelection();
+		const header = !!table.tHead;
+		const body = table.tBodies[0];
+		const firstRow = table.rows[0];
+		setTableModal({
+			mode: "edit",
+			rows: body ? body.rows.length : 0,
+			cols: firstRow ? firstRow.cells.length : 0,
+			className: table.className,
+			header,
+			responsive: !!tableWrapperOf(table),
+			caption: (table.querySelector("caption") || {}).textContent || "",
+		});
+	};
+
+	const applyTableModal = () => {
+		if (!tableModal) return;
+		const rows = Math.max(1, Math.min(50, Number(tableModal.rows) || 1));
+		const cols = Math.max(1, Math.min(20, Number(tableModal.cols) || 1));
+		const className = tableModal.className.trim() || DEFAULT_TABLE_CLASS;
+
+		if (tableModal.mode === "insert") {
+			const table = document.createElement("table");
+			table.className = className;
+			if (tableModal.header) {
+				const thead = document.createElement("thead");
+				const tr = document.createElement("tr");
+				for (let c = 0; c < cols; c++)
+					tr.appendChild(newCell("th", "Header " + (c + 1)));
+				thead.appendChild(tr);
+				table.appendChild(thead);
+			}
+			const body = document.createElement("tbody");
+			for (let r = 0; r < rows; r++) {
+				const tr = document.createElement("tr");
+				for (let c = 0; c < cols; c++) tr.appendChild(newCell("td"));
+				body.appendChild(tr);
+			}
+			table.appendChild(body);
+			applyTableCaption(table, tableModal.caption.trim());
+
+			let node = table;
+			if (tableModal.responsive) {
+				const wrap = document.createElement("div");
+				wrap.className = "table-responsive editor-table my-3";
+				wrap.appendChild(table);
+				node = wrap;
+			} else {
+				table.classList.add("editor-table");
+			}
+			insertBlockAtCursor(node);
+			const firstCell = table.querySelector("th,td");
+			if (firstCell) placeCaretIn(firstCell);
+			setStatus(rows + " x " + cols + " table inserted");
+		} else {
+			const table = activeTableRef.current;
+			if (table) {
+				table.className = className;
+				applyTableShape(table, rows, cols, tableModal.header);
+				applyTableCaption(table, tableModal.caption.trim());
+
+				const wrap = tableWrapperOf(table);
+				if (tableModal.responsive && !wrap) {
+					const div = document.createElement("div");
+					div.className = "table-responsive editor-table my-3";
+					table.replaceWith(div);
+					div.appendChild(table);
+					table.classList.remove("editor-table");
+				} else if (!tableModal.responsive && wrap) {
+					wrap.replaceWith(table);
+					table.classList.add("editor-table");
+				}
+				setStatus("Table updated");
+				detectTable();
+			}
+		}
+		setTableModal(null);
+		if (editorRef.current) editorRef.current.focus();
+	};
+
+	const tableAddRow = (below = true) => {
+		restoreSelection();
+		const table = currentTable();
+		const cell = currentCell();
+		if (!table || !cell) return;
+		const row = cell.parentNode;
+		const inHeader = !!table.tHead && row.parentNode === table.tHead;
+		// Never add a second row above the header row.
+		const index = inHeader || below ? row.rowIndex + 1 : row.rowIndex;
+		const cols = row.cells.length;
+		const tr = table.insertRow(Math.min(index, table.rows.length));
+		for (let c = 0; c < cols; c++) tr.appendChild(newCell("td"));
+		placeCaretIn(tr.cells[0]);
+		setStatus("Row added");
+	};
+
+	const tableDeleteRow = () => {
+		restoreSelection();
+		const table = currentTable();
+		const cell = currentCell();
+		if (!table || !cell) return;
+		const row = cell.parentNode;
+		if (table.rows.length <= 1) {
+			deleteTable();
+			return;
+		}
+		const fallback =
+			table.rows[row.rowIndex + 1] || table.rows[row.rowIndex - 1] || null;
+		row.parentNode.removeChild(row);
+		if (fallback && fallback.cells[0]) placeCaretIn(fallback.cells[0]);
+		detectTable();
+		setStatus("Row deleted");
+	};
+
+	const tableAddColumn = (after = true) => {
+		restoreSelection();
+		const table = currentTable();
+		const cell = currentCell();
+		if (!table || !cell) return;
+		const index = cell.cellIndex + (after ? 1 : 0);
+		Array.from(table.rows).forEach((row) => {
+			const isHeaderRow = !!table.tHead && row.parentNode === table.tHead;
+			row.insertBefore(
+				newCell(isHeaderRow ? "th" : "td"),
+				row.cells[index] || null,
+			);
+		});
+		const target = (headerRowOf(table) || table.rows[0]).cells[index];
+		if (target) placeCaretIn(target);
+		setStatus("Column added");
+	};
+
+	const tableDeleteColumn = () => {
+		restoreSelection();
+		const table = currentTable();
+		const cell = currentCell();
+		if (!table || !cell) return;
+		const index = cell.cellIndex;
+		const firstRow = table.rows[0];
+		if (!firstRow || firstRow.cells.length <= 1) {
+			deleteTable();
+			return;
+		}
+		Array.from(table.rows).forEach((row) => {
+			if (row.cells[index]) row.deleteCell(index);
+		});
+		detectTable();
+		setStatus("Column deleted");
+	};
+
+	const deleteTable = () => {
+		const table = activeTableRef.current || currentTable();
+		if (!table) return;
+		(tableWrapperOf(table) || table).remove();
+		activeTableRef.current = null;
+		setTableBar(null);
+		setStatus("Table deleted");
+		if (editorRef.current) editorRef.current.focus();
+	};
+
+	// Tab / Shift+Tab hops between cells; Tab in the last cell appends a row.
+	const handleTableTab = (e) => {
+		const table = currentTable();
+		const cell = currentCell();
+		if (!table || !cell) return false;
+		e.preventDefault();
+		const cells = Array.from(table.querySelectorAll("th,td"));
+		const next = cells[cells.indexOf(cell) + (e.shiftKey ? -1 : 1)];
+		if (next) {
+			placeCaretIn(next);
+		} else if (!e.shiftKey) {
+			saveSelection();
+			tableAddRow(true);
+		}
+		return true;
 	};
 
 	// ---- Footer actions -------------------------------------------------------------
@@ -1967,6 +2501,15 @@ const MyTextArea = ({
 						</button>
 						<button
 							type="button"
+							className="btn btn-outline-secondary btn-sm"
+							onClick={openTableModal}
+							title="Insert table"
+						>
+							<i className="fa-solid fa-table" />
+							<span className="visually-hidden">Insert table</span>
+						</button>
+						<button
+							type="button"
 							className="btn btn-outline-secondary btn-sm "
 							onClick={() => exec("removeFormat")}
 							title="Clear formatting"
@@ -2053,12 +2596,14 @@ const MyTextArea = ({
 									detectMention();
 							}
 							saveSelection();
+							detectTable();
 						}}
 						onMouseUp={() => {
 							// Clicking away from a half-typed tag completes it.
 							highlightHashtags();
 							detectMention();
 							saveSelection();
+							detectTable();
 						}}
 						onPaste={handlePaste}
 					/>
@@ -2203,6 +2748,94 @@ const MyTextArea = ({
 							))}
 						</div>
 					)}
+					{tableBar && (
+						<div
+							className="table-bar shadow-sm"
+							style={{ top: tableBar.top, left: tableBar.left }}
+							role="toolbar"
+							aria-label="Table actions"
+							onMouseDown={(e) => e.preventDefault()}
+						>
+							<div className="btn-group btn-group-sm" role="group">
+								<button
+									type="button"
+									className="btn btn-light"
+									onClick={() => tableAddRow(true)}
+									title="Insert row below"
+								>
+									<i className="fa-solid fa-arrow-down" />
+									<span className="visually-hidden">Insert row below</span>
+								</button>
+								<button
+									type="button"
+									className="btn btn-light"
+									onClick={() => tableAddRow(false)}
+									title="Insert row above"
+								>
+									<i className="fa-solid fa-arrow-up" />
+									<span className="visually-hidden">Insert row above</span>
+								</button>
+								<button
+									type="button"
+									className="btn btn-light"
+									onClick={tableDeleteRow}
+									title="Delete row"
+								>
+									<i className="fa-solid fa-delete-left" />
+									<span className="visually-hidden">Delete row</span>
+								</button>
+							</div>
+							<div className="btn-group btn-group-sm" role="group">
+								<button
+									type="button"
+									className="btn btn-light"
+									onClick={() => tableAddColumn(true)}
+									title="Insert column right"
+								>
+									<i className="fa-solid fa-arrow-right" />
+									<span className="visually-hidden">Insert column right</span>
+								</button>
+								<button
+									type="button"
+									className="btn btn-light"
+									onClick={() => tableAddColumn(false)}
+									title="Insert column left"
+								>
+									<i className="fa-solid fa-arrow-left" />
+									<span className="visually-hidden">Insert column left</span>
+								</button>
+								<button
+									type="button"
+									className="btn btn-light"
+									onClick={tableDeleteColumn}
+									title="Delete column"
+								>
+									<i className="fa-solid fa-table-columns" />
+									<span className="visually-hidden">Delete column</span>
+								</button>
+							</div>
+							<div className="btn-group btn-group-sm" role="group">
+								<button
+									type="button"
+									className="btn btn-light"
+									onClick={openTableEditor}
+									title="Table settings (class, rows, columns)"
+								>
+									<i className="fa-solid fa-sliders" />
+									<span className="visually-hidden">Table settings</span>
+								</button>
+								<button
+									type="button"
+									className="btn btn-light text-danger"
+									onClick={deleteTable}
+									title="Delete table"
+								>
+									<i className="fa-solid fa-trash" />
+									<span className="visually-hidden">Delete table</span>
+								</button>
+							</div>
+						</div>
+					)}
 				</div>
 				<div className="card-footer bg-body d-flex justify-content-between align-items-center flex-wrap gap-2">
 					<small className="text-body-secondary">{status}</small>
@@ -2226,72 +2859,26 @@ const MyTextArea = ({
 				</div>
 			</div>
 			{/* Upload toasts: live per-file progress + result message */}
-			{(toast || uploads.length > 0) && (
+			{toast && (
 				<div className="toast-container position-fixed bottom-0 end-0 p-3">
-					{uploads.map((u) => (
-						<div
-							key={u.id}
-							className="toast align-items-center border-0 show text-bg-primary mb-2"
-							role="status"
-							aria-live="polite"
-							aria-atomic="true"
-						>
-							<div className="d-flex">
-								<div className="toast-body w-100">
-									<div className="d-flex justify-content-between align-items-center gap-3 mb-1">
-										<span
-											className="text-truncate"
-											style={{ maxWidth: "12rem" }}
-										>
-											<i className="fa-solid fa-upload me-1" />
-											{u.name}
-										</span>
-										<span className="fw-bold">{u.progress}%</span>
-									</div>
-									<div
-										className="progress"
-										style={{ height: "4px" }}
-										role="progressbar"
-										aria-label={"Uploading " + u.name}
-										aria-valuenow={u.progress}
-										aria-valuemin={0}
-										aria-valuemax={100}
-									>
-										<div
-											className="progress-bar bg-light"
-											style={{ width: u.progress + "%" }}
-										></div>
-									</div>
-								</div>
-								<button
-									type="button"
-									className="btn-close btn-close-white me-2 m-auto"
-									aria-label={"Cancel upload of " + u.name}
-									onClick={() => cancelUpload(u.id)}
-								></button>
-							</div>
+					<div
+						className={
+							"toast align-items-center border-0 show text-bg-" + toast.kind
+						}
+						role="alert"
+						aria-live="assertive"
+						aria-atomic="true"
+					>
+						<div className="d-flex">
+							<div className="toast-body">{toast.msg}</div>
+							<button
+								type="button"
+								className="btn-close btn-close-white me-2 m-auto"
+								aria-label="Close"
+								onClick={() => setToast(null)}
+							></button>
 						</div>
-					))}
-					{toast && (
-						<div
-							className={
-								"toast align-items-center border-0 show text-bg-" + toast.kind
-							}
-							role="alert"
-							aria-live="assertive"
-							aria-atomic="true"
-						>
-							<div className="d-flex">
-								<div className="toast-body">{toast.msg}</div>
-								<button
-									type="button"
-									className="btn-close btn-close-white me-2 m-auto"
-									aria-label="Close"
-									onClick={() => setToast(null)}
-								></button>
-							</div>
-						</div>
-					)}
+					</div>
 				</div>
 			)}
 			{/* File Manager modal */}
@@ -2606,6 +3193,145 @@ const MyTextArea = ({
 							onClick={insertLink}
 						>
 							Insert
+						</button>
+					</div>
+				</BootstrapModal>
+			)}
+			{/* Table modal: same dialog for inserting and for editing an
+              existing table (rows, columns, class, caption, responsive wrap) */}
+			{tableModal && (
+				<BootstrapModal
+					title={
+						tableModal.mode === "insert" ? "Insert Table" : "Table Settings"
+					}
+					icon="table"
+					onClose={() => setTableModal(null)}
+				>
+					<div className="modal-body">
+						<div className="row g-3">
+							<div className="col-6">
+								<label htmlFor="tableRows" className="form-label">
+									Body rows
+								</label>
+								<input
+									id="tableRows"
+									type="number"
+									min={1}
+									max={50}
+									className="form-control"
+									value={tableModal.rows}
+									onChange={(e) =>
+										setTableModal((t) => ({ ...t, rows: e.target.value }))
+									}
+								/>
+							</div>
+							<div className="col-6">
+								<label htmlFor="tableCols" className="form-label">
+									Columns
+								</label>
+								<input
+									id="tableCols"
+									type="number"
+									min={1}
+									max={20}
+									className="form-control"
+									value={tableModal.cols}
+									onChange={(e) =>
+										setTableModal((t) => ({ ...t, cols: e.target.value }))
+									}
+								/>
+							</div>
+						</div>
+						<div className="mb-3 mt-3">
+							<label htmlFor="tableClass" className="form-label">
+								Table class
+							</label>
+							<input
+								id="tableClass"
+								type="text"
+								className="form-control font-monospace"
+								placeholder={DEFAULT_TABLE_CLASS}
+								value={tableModal.className}
+								onChange={(e) =>
+									setTableModal((t) => ({
+										...t,
+										className: e.target.value,
+									}))
+								}
+							/>
+							<div className="form-text">
+								Written straight to the {"<table>"} element — e.g.{" "}
+								<code>table table-striped table-hover table-sm</code>.
+							</div>
+						</div>
+						<div className="mb-3">
+							<label htmlFor="tableCaption" className="form-label">
+								Caption <span className="text-body-secondary">(optional)</span>
+							</label>
+							<input
+								id="tableCaption"
+								type="text"
+								className="form-control"
+								value={tableModal.caption}
+								onChange={(e) =>
+									setTableModal((t) => ({ ...t, caption: e.target.value }))
+								}
+							/>
+						</div>
+						<div className="form-check">
+							<input
+								id="tableHeader"
+								className="form-check-input"
+								type="checkbox"
+								checked={tableModal.header}
+								onChange={(e) =>
+									setTableModal((t) => ({ ...t, header: e.target.checked }))
+								}
+							/>
+							<label className="form-check-label" htmlFor="tableHeader">
+								Header row {"(<thead> with <th> cells)"}
+							</label>
+						</div>
+						<div className="form-check">
+							<input
+								id="tableResponsive"
+								className="form-check-input"
+								type="checkbox"
+								checked={tableModal.responsive}
+								onChange={(e) =>
+									setTableModal((t) => ({
+										...t,
+										responsive: e.target.checked,
+									}))
+								}
+							/>
+							<label className="form-check-label" htmlFor="tableResponsive">
+								Wrap in <code>.table-responsive</code> (scrolls on small
+								screens)
+							</label>
+						</div>
+						{tableModal.mode === "edit" && (
+							<p className="small text-body-secondary mb-0 mt-3">
+								Lowering the counts removes cells from the end of the table,
+								content included.
+							</p>
+						)}
+					</div>
+					<div className="modal-footer">
+						<button
+							type="button"
+							className="btn btn-secondary btn-sm"
+							onClick={() => setTableModal(null)}
+						>
+							Cancel
+						</button>
+						<button
+							type="button"
+							className="btn btn-primary btn-sm"
+							onClick={applyTableModal}
+						>
+							<i className="fa-solid fa-table me-1" />
+							{tableModal.mode === "insert" ? "Insert table" : "Apply"}
 						</button>
 					</div>
 				</BootstrapModal>

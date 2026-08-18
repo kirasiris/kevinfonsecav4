@@ -170,3 +170,146 @@
 .editor-surface .code-snippet iframe {
 	display: block;
 }
+
+/* ---- Uploading files: blob preview under a translucent overlay ----------- */
+
+.editor-surface .upload-figure {
+	position: relative;
+	display: block;
+	overflow: hidden;
+	border-radius: var(--bs-border-radius);
+	/* Nothing in here is selectable while the upload runs. */
+	user-select: none;
+}
+
+/* The file itself is already visible (from its local blob URL), just muted
+   until the server confirms it. */
+.editor-surface .upload-figure .upload-media {
+	opacity: 0.45;
+	filter: saturate(0.6);
+	transition:
+		opacity 0.2s ease,
+		filter 0.2s ease;
+}
+
+.editor-surface .upload-figure .upload-media img,
+.editor-surface .upload-figure .upload-media video {
+	display: block;
+	max-height: 420px;
+	object-fit: cover;
+}
+
+.editor-surface .upload-figure .upload-file-card {
+	background: var(--bs-tertiary-bg);
+}
+
+.editor-surface .upload-overlay {
+	position: absolute;
+	inset: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	/* The "opacity background" over the embedded file. */
+	background: rgba(0, 0, 0, 0.55);
+	color: #fff;
+	text-align: center;
+	pointer-events: none;
+}
+
+.editor-surface .upload-overlay-inner {
+	max-width: min(20rem, 80%);
+	padding: 0.5rem 1rem;
+}
+
+.editor-surface .upload-percent {
+	margin: 0;
+	font-size: clamp(1.5rem, 6vw, 2.5rem);
+	font-weight: 700;
+	line-height: 1.1;
+	font-variant-numeric: tabular-nums;
+	letter-spacing: -0.02em;
+}
+
+.editor-surface .upload-bar {
+	display: block;
+	height: 4px;
+	margin: 0.6rem 0 0.4rem;
+	border-radius: 999px;
+	background: rgba(255, 255, 255, 0.3);
+	overflow: hidden;
+}
+
+.editor-surface .upload-bar-fill {
+	display: block;
+	height: 100%;
+	width: 0;
+	border-radius: inherit;
+	background: #fff;
+	transition: width 0.15s linear;
+}
+
+.editor-surface .upload-name {
+	margin: 0;
+	font-size: 0.8125rem;
+	opacity: 0.85;
+}
+
+/* Only the cancel / remove button is clickable through the overlay. */
+.editor-surface .upload-cancel {
+	position: absolute;
+	top: 0.5rem;
+	right: 0.5rem;
+	pointer-events: auto;
+	--bs-btn-padding-x: 0.4rem;
+	--bs-btn-padding-y: 0.15rem;
+}
+
+.editor-surface .upload-figure[data-upload-state="finishing"] .upload-percent {
+	font-size: 1.125rem;
+	font-weight: 600;
+}
+
+.editor-surface .upload-figure[data-upload-state="error"] .upload-overlay {
+	background: rgba(var(--bs-danger-rgb), 0.75);
+}
+
+/* ---- Tables -------------------------------------------------------------- */
+
+.editor-surface table {
+	width: 100%;
+	margin-bottom: 0;
+}
+
+/* Empty cells still need to be clickable and visible. */
+.editor-surface table th,
+.editor-surface table td {
+	min-width: 3rem;
+	vertical-align: middle;
+}
+
+.editor-surface table th:focus-visible,
+.editor-surface table td:focus-visible {
+	outline: 2px solid var(--bs-primary);
+	outline-offset: -2px;
+}
+
+.editor-surface .editor-table {
+	position: relative;
+}
+
+.editor-surface table caption {
+	caption-side: bottom;
+	font-size: 0.8125rem;
+}
+
+/* Floating toolbar shown while the caret is inside a table. */
+.table-bar {
+	position: absolute;
+	z-index: 1050;
+	display: flex;
+	gap: 0.25rem;
+	padding: 0.25rem;
+	border: 1px solid var(--bs-border-color);
+	border-radius: var(--bs-border-radius);
+	background: var(--bs-body-bg);
+}

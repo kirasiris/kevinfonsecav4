@@ -171,6 +171,15 @@
 	display: block;
 }
 
+/* Inline SVG icons inserted into the editable content (user chips, file
+   links, upload cards). Plain <svg>, never fa- <i> tags, so Font Awesome's
+   SVG+JS engine (kit script) can't rewrite them inside the contentEditable —
+   that post-insertion mutation is what froze the editor. */
+.editor-surface .editor-icon {
+	flex-shrink: 0;
+	vertical-align: -0.125em;
+}
+
 /* ---- Uploading files: blob preview under a translucent overlay ----------- */
 
 .editor-surface .upload-figure {

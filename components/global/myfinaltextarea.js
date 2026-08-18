@@ -15,35 +15,52 @@ const escapeHtml = (s) => {
 	});
 };
 
+const ICON_PATHS = {
+	// paperclip
+	paperclip:
+		"M18.5 6.5l-8.6 8.6a2 2 0 1 0 2.8 2.8l8.1-8.1a4 4 0 1 0-5.7-5.7l-8.1 8.1a6 6 0 1 0 8.5 8.5l7.6-7.6",
+	// circled user
+	user: "M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm0 2c-3.3 0-6 2.2-6 5v1h12v-1c0-2.8-2.7-5-6-5z",
+	// music note
+	music:
+		"M9 18V5l12-2v13M9 18a3 3 0 1 1-6 0 3 3 0 0 1 6 0zm12-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0z",
+	// x mark
+	xmark: "M6 6l12 12M18 6L6 18",
+	// warning triangle
+	warning: "M12 3L2 21h20L12 3zm0 7v5m0 3v.01",
+	// trash can
+	trash: "M4 7h16M9 7V4h6v3m-8 0l1 13h8l1-13",
+};
+
+// `filled` icons use the path as a fill shape; the rest render as strokes.
+const iconSvg = (name, filled = name === "user") => {
+	const p = ICON_PATHS[name] || ICON_PATHS.paperclip;
+	return (
+		'<svg class="editor-icon" viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true" focusable="false" ' +
+		(filled
+			? 'fill="currentColor"'
+			: 'fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"') +
+		'><path d="' +
+		p +
+		'"/></svg>'
+	);
+};
+
 const guessKind = (url, mime) => {
 	const u = (url || "").toLowerCase();
 	if (mime) {
-		if (mime.indexOf("image") === 0) {
-			return "image";
-		}
-		if (mime.indexOf("video") === 0) {
-			return "video";
-		}
-		if (mime.indexOf("audio") === 0) {
-			return "audio";
-		}
+		if (mime.indexOf("image") === 0) return "image";
+		if (mime.indexOf("video") === 0) return "video";
+		if (mime.indexOf("audio") === 0) return "audio";
 	}
-	if (/\.(png|jpe?g|gif|webp|svg|bmp)(\?|$)/.test(u)) {
-		return "image";
-	}
-	if (/\.(mp4|webm|ogg|mov)(\?|$)/.test(u)) {
-		return "video";
-	}
-	if (/\.(mp3|wav|m4a|aac|flac)(\?|$)/.test(u)) {
-		return "audio";
-	}
+	if (/\.(png|jpe?g|gif|webp|svg|bmp)(\?|$)/.test(u)) return "image";
+	if (/\.(mp4|webm|ogg|mov)(\?|$)/.test(u)) return "video";
+	if (/\.(mp3|wav|m4a|aac|flac)(\?|$)/.test(u)) return "audio";
 	return "file";
 };
 
 const extractUploadUrl = (data) => {
-	if (!data || typeof data !== "object") {
-		return null;
-	}
+	if (!data || typeof data !== "object") return null;
 	const candidates = [
 		data.url,
 		data.secure_url,
@@ -61,10 +78,6 @@ const extractUploadUrl = (data) => {
 	return null;
 };
 
-// XHR-based upload with per-file progress reporting.
-// Ported from chaptersmediamanager.js (uploadFileToServer), minus the
-// Playlist-specific /noadmin/videos POST — this editor only needs the
-// uploaded file's URL back so it can embed it.
 const uploadFileToServer = (
 	file,
 	filename,
@@ -91,9 +104,7 @@ const uploadFileToServer = (
 
 		xhr.upload.addEventListener("load", () => {
 			onProgress(100);
-			if (onUploaded) {
-				onUploaded();
-			}
+			if (onUploaded) onUploaded();
 		});
 
 		xhr.addEventListener("load", () => {
@@ -209,27 +220,21 @@ const MyTextArea = ({
 	const onChangeRef = useRef(onChange);
 	onChangeRef.current = onChange;
 
-	// JSON copies of the extracted entities, rendered into controlled hidden
-	// inputs (a hidden input's value attribute IS its value, so React would
-	// reset an uncontrolled one on every re-render).
 	const [entityJson, setEntityJson] = useState({ users: "[]", hashtags: "[]" });
 
 	const startingHtml = initialContent ?? defaultValue ?? "<p><br></p>";
 
 	const [status, setStatus] = useState("Ready");
 
-	const [toast, setToast] = useState(null); // { kind: 'primary'|'success'|'danger', msg }
-
-	// In-flight device uploads: [{ id, name, progress }] — each renders a toast
-	// with a live percentage.
-	// // const [uploads, setUploads] = useState([]);
-	// // const uploadXhrsRef = useRef(new Map());
 	const uploadsRef = useRef(new Map());
 
 	const lastEmittedHtmlRef = useRef(null);
 
-	const [tableBar, setTableBar] = useState(null);
+	// ---- Tables ---------------------------------------------------------------
+
+	const [tableBar, setTableBar] = useState(null); // { top, left }
 	const activeTableRef = useRef(null);
+
 	const [tableModal, setTableModal] = useState(null);
 
 	const [showLink, setShowLink] = useState(false);
@@ -284,15 +289,15 @@ const MyTextArea = ({
 		jsUrls: "",
 	});
 
-	// Abort any in-flight uploads and release their blob URLs when the editor unmounts.
+	// Abort in-flight uploads and release their blob URLs on unmount.
 	useEffect(() => {
-		const xhrs = uploadsRef.current;
+		const uploads = uploadsRef.current;
 		return () => {
-			xhrs.forEach((u) => {
+			uploads.forEach((u) => {
 				u.xhr.abort();
 				URL.revokeObjectURL(u.blobUrl);
 			});
-			xhrs.clear();
+			uploads.clear();
 		};
 	}, []);
 
@@ -300,13 +305,8 @@ const MyTextArea = ({
 
 	useEffect(() => {
 		const editor = editorRef.current;
-		if (!editor) {
-			return;
-		}
+		if (!editor) return;
 
-		// Set the initial content ONCE, imperatively. React must never manage the
-		// children of a contentEditable element: re-renders would wipe out
-		// everything the user typed (and any nodes we inserted).
 		if (!editor.innerHTML.trim()) {
 			editor.innerHTML = startingHtml;
 		}
@@ -323,24 +323,34 @@ const MyTextArea = ({
 		// right inside the editor. Loaded dynamically because it's browser-only.
 		import("bootstrap/dist/js/bootstrap.bundle.min.js").catch(() => {});
 
-		// A MutationObserver catches EVERY content change regardless of source:
-		// typing, execCommand, undo/redo, node insertion from the file manager...
-		// This is what keeps the hidden form field and onChange in sync.
-		// const observer = new MutationObserver(() => syncContent());
 		const insideUploadPlaceholder = (node) => {
 			let el = node.nodeType === 1 ? node : node.parentElement;
 			while (el) {
-				if (el.hasAttribute && el.hasAttribute("data-upload-id")) {
-					return true;
-				}
+				if (el.hasAttribute && el.hasAttribute("data-upload-id")) return true;
 				el = el.parentElement;
 			}
 			return false;
 		};
-		const observer = new MutationObserver((records) => {
-			if (records.every((r) => insideUploadPlaceholder(r.target))) {
-				return;
+
+		const isFaIconNode = (n) =>
+			n.nodeType === 1 &&
+			((n.classList && n.classList.contains("svg-inline--fa")) ||
+				(n.tagName === "I" && /(^|\s)fa-/.test(n.className || "")));
+		const isIgnorableRecord = (r) => {
+			if (insideUploadPlaceholder(r.target)) return true;
+			if (r.type === "attributes")
+				return (
+					(r.attributeName || "").indexOf("data-fa-") === 0 ||
+					isFaIconNode(r.target)
+				);
+			if (r.type === "childList") {
+				const nodes = [...r.addedNodes, ...r.removedNodes];
+				return nodes.length > 0 && nodes.every(isFaIconNode);
 			}
+			return false;
+		};
+		const observer = new MutationObserver((records) => {
+			if (records.every(isIgnorableRecord)) return;
 			syncContent();
 		});
 		observer.observe(editor, {
@@ -364,24 +374,14 @@ const MyTextArea = ({
 		};
 	}, []);
 
-	// DB-driven updates: replace the editor content when the `value` prop
-	// changes to something different from what the editor currently holds.
-	// Skipped while the user is typing in it, so a slow refetch can't stomp
-	// on their in-progress edits.
 	useEffect(() => {
 		const editor = editorRef.current;
-		if (!editor || typeof value !== "string") {
-			return;
-		}
-		if (document.activeElement === editor) {
-			return;
-		}
-		if (value === lastEmittedHtmlRef.current) {
-			return;
-		}
-		if (uploadsRef.current.size > 0) {
-			return;
-		}
+		if (!editor || typeof value !== "string") return;
+		if (document.activeElement === editor) return;
+
+		if (value === lastEmittedHtmlRef.current) return;
+
+		if (uploadsRef.current.size > 0) return;
 		if (editor.innerHTML !== value) {
 			editor.innerHTML = value || "<p><br></p>";
 			highlightHashtags();
@@ -389,18 +389,14 @@ const MyTextArea = ({
 		}
 	}, [value]);
 
-	// Push the current HTML into the hidden form fields and notify onChange
-	// with the three objects: { html, users, hashtags }.
 	const syncContent = () => {
 		const editor = editorRef.current;
-		if (!editor) {
-			return;
-		}
-		// Treat "no text and no embedded media" as empty so `required` works:
-		// an untouched editor still contains markup like <p><br></p>.
+		if (!editor) return;
+
 		const hasContent =
 			editor.textContent.trim() !== "" ||
 			!!editor.querySelector("img, video, audio, iframe");
+
 		let html = hasContent ? editor.innerHTML : "";
 		if (html && editor.querySelector("[data-upload-id]")) {
 			const clone = editor.cloneNode(true);
@@ -410,6 +406,7 @@ const MyTextArea = ({
 			html = clone.innerHTML;
 		}
 		const { users, hashtags } = extractEntities(editor);
+
 		lastEmittedHtmlRef.current = html;
 		if (hiddenFieldRef.current && hiddenFieldRef.current.value !== html) {
 			hiddenFieldRef.current.value = html;
@@ -421,13 +418,9 @@ const MyTextArea = ({
 				? prev
 				: { users: usersJson, hashtags: hashtagsJson },
 		);
-		if (onChangeRef.current) {
-			onChangeRef.current({ html, users, hashtags });
-		}
+		if (onChangeRef.current) onChangeRef.current({ html, users, hashtags });
 	};
 
-	// Pulls the embedded users (from their chips) and the hashtags out of the
-	// editor content, deduplicated, so they can be stored separately in the DB.
 	const extractEntities = (editor) => {
 		const users = [];
 		const seenUsers = new Set();
@@ -435,9 +428,7 @@ const MyTextArea = ({
 			const id = chip.getAttribute("data-user-id") || "";
 			const username = (chip.textContent || "").trim().replace(/^@/, "");
 			const key = id || username;
-			if (!key || seenUsers.has(key)) {
-				return;
-			}
+			if (!key || seenUsers.has(key)) return;
 			seenUsers.add(key);
 			users.push({ id, username });
 		});
@@ -446,19 +437,17 @@ const MyTextArea = ({
 		const seenTags = new Set();
 		const addTag = (tag) => {
 			const key = tag.toLowerCase();
-			if (!key || seenTags.has(key)) {
-				return;
-			}
+			if (!key || seenTags.has(key)) return;
 			seenTags.add(key);
 			hashtags.push(tag);
 		};
-		// Styled hashtag spans first (keeps their original casing/order)...
+
 		editor.querySelectorAll("span.hashtag").forEach((sp) => {
 			addTag(
 				sp.getAttribute("data-hashtag") || sp.textContent.replace(/^#/, ""),
 			);
 		});
-		// ...then a text scan to catch any not-yet-wrapped one (e.g. mid-typing).
+
 		const re = /(^|[^\p{L}\p{N}_#])#([\p{L}\p{N}_]+)/gu;
 		let m;
 		while ((m = re.exec(editor.textContent))) addTag(m[2]);
@@ -470,14 +459,9 @@ const MyTextArea = ({
 
 	const HASHTAG_RE = /^#[\p{L}\p{N}_]+$/u;
 
-	// Wraps completed #hashtags in <span class="hashtag"> and unwraps spans the
-	// user has broken (deleted the #, added invalid chars...). The token the
-	// caret is currently inside is left alone so typing is never interrupted.
 	const highlightHashtags = () => {
 		const editor = editorRef.current;
-		if (!editor) {
-			return;
-		}
+		if (!editor) return;
 		const sel = window.getSelection();
 		const caretNode = sel && sel.rangeCount > 0 ? sel.anchorNode : null;
 		const caretOffset = sel && sel.rangeCount > 0 ? sel.anchorOffset : 0;
@@ -611,37 +595,23 @@ const MyTextArea = ({
 		setActiveFormats((prev) => {
 			// Avoid a re-render when nothing changed (selectionchange fires often).
 			for (const key of Object.keys(next)) {
-				if (prev[key] !== next[key]) {
-					return next;
-				}
+				if (prev[key] !== next[key]) return next;
 			}
 			return prev;
 		});
 	};
 
-	// Returns the <code> element the caret/selection sits in, unless it belongs
-	// to a <pre> code block (that one is handled by the paragraph-format select).
 	const findInlineCodeAncestor = () => {
 		const editor = editorRef.current;
 		const sel = window.getSelection();
-		if (!editor || !sel || sel.rangeCount === 0) {
-			return null;
-		}
+		if (!editor || !sel || sel.rangeCount === 0) return null;
 		let node = sel.anchorNode;
-		if (!node || !editor.contains(node)) {
-			return null;
-		}
-		if (node.nodeType === 3) {
-			node = node.parentNode;
-		}
+		if (!node || !editor.contains(node)) return null;
+		if (node.nodeType === 3) node = node.parentNode;
 		let codeEl = null;
 		while (node && node !== editor) {
-			if (node.tagName === "PRE") {
-				return null;
-			}
-			if (node.tagName === "CODE" && !codeEl) {
-				codeEl = node;
-			}
+			if (node.tagName === "PRE") return null;
+			if (node.tagName === "CODE" && !codeEl) codeEl = node;
 			node = node.parentNode;
 		}
 		return codeEl;
@@ -662,9 +632,7 @@ const MyTextArea = ({
 
 	const restoreSelection = () => {
 		const editor = editorRef.current;
-		if (!editor) {
-			return;
-		}
+		if (!editor) return;
 		editor.focus();
 		if (savedRangeRef.current) {
 			const sel = window.getSelection();
@@ -691,16 +659,9 @@ const MyTextArea = ({
 		saveSelection();
 	};
 
-	// Inserts a BLOCK-level node (figure, gallery row, carousel, embed card...)
-	// as a direct child of the editor, never inside a paragraph. Splits the
-	// block the caret is in when needed and always leaves the caret in a
-	// paragraph right below, so subsequent typing goes on a new line instead
-	// of wrapping beside/behind the inserted block.
 	const insertBlockAtCursor = (node) => {
 		const editor = editorRef.current;
-		if (!editor) {
-			return;
-		}
+		if (!editor) return;
 		restoreSelection();
 		const sel = window.getSelection();
 
@@ -805,12 +766,8 @@ const MyTextArea = ({
 	// nothing but a single http(s) URL.
 	const extractLoneUrl = (text) => {
 		const t = (text || "").trim();
-		if (!t || /\s/.test(t)) {
-			return null;
-		}
-		if (!/^https?:\/\/[^\s]+$/i.test(t)) {
-			return null;
-		}
+		if (!t || /\s/.test(t)) return null;
+		if (!/^https?:\/\/[^\s]+$/i.test(t)) return null;
 		try {
 			new URL(t);
 			return t;
@@ -822,9 +779,7 @@ const MyTextArea = ({
 	const handlePaste = (e) => {
 		const text = e.clipboardData && e.clipboardData.getData("text/plain");
 		const url = extractLoneUrl(text);
-		if (!url) {
-			return;
-		} // normal paste: let the browser handle it
+		if (!url) return; // normal paste: let the browser handle it
 
 		e.preventDefault();
 
@@ -838,14 +793,10 @@ const MyTextArea = ({
 			'<span class="spinner-border spinner-border-sm" aria-hidden="true"></span><span class="small">Embedding ' +
 			escapeHtml(url) +
 			"…</span>";
-		// Block-level insert: the placeholder (and whatever replaces it) must be
-		// a direct editor child, never nested inside a paragraph. This also
-		// leaves a caret-ready paragraph right below it.
+
 		insertBlockAtCursor(placeholder);
 		setStatus("Unfurling link…");
 
-		// Plain links are inline, so give them a paragraph of their own when
-		// they replace the block placeholder.
 		const linkParagraph = (u) => {
 			const p = document.createElement("p");
 			p.appendChild(buildPlainLink(u));
@@ -971,9 +922,7 @@ const MyTextArea = ({
 		restoreSelection();
 		const editor = editorRef.current;
 		const sel = window.getSelection();
-		if (!editor || !sel || sel.rangeCount === 0) {
-			return;
-		}
+		if (!editor || !sel || sel.rangeCount === 0) return;
 
 		const codeEl = findInlineCodeAncestor();
 		if (codeEl) {
@@ -985,9 +934,7 @@ const MyTextArea = ({
 			while (codeEl.firstChild) {
 				const child = codeEl.firstChild;
 				parent.insertBefore(child, codeEl);
-				if (!first) {
-					first = child;
-				}
+				if (!first) first = child;
 				last = child;
 			}
 			parent.removeChild(codeEl);
@@ -1031,29 +978,19 @@ const MyTextArea = ({
 	const currentBlock = () => {
 		const editor = editorRef.current;
 		const sel = window.getSelection();
-		if (!sel || sel.rangeCount === 0) {
-			return null;
-		}
+		if (!sel || sel.rangeCount === 0) return null;
 		let node = sel.anchorNode;
-		if (!node || !editor.contains(node)) {
-			return null;
-		}
+		if (!node || !editor.contains(node)) return null;
 		// When the caret sits directly on the editor element, resolve to the
 		// child block at the caret offset.
 		if (node === editor) {
 			const idx = Math.min(sel.anchorOffset, editor.childNodes.length - 1);
 			node = editor.childNodes[idx] || null;
-			if (!node) {
-				return null;
-			}
+			if (!node) return null;
 		}
-		if (node.nodeType === 3) {
-			node = node.parentNode;
-		}
+		if (node.nodeType === 3) node = node.parentNode;
 		while (node && node !== editor) {
-			if (BLOCK_TAGS.indexOf(node.tagName) !== -1) {
-				return node;
-			}
+			if (BLOCK_TAGS.indexOf(node.tagName) !== -1) return node;
 			node = node.parentNode;
 		}
 		return null;
@@ -1067,13 +1004,9 @@ const MyTextArea = ({
 	};
 
 	const isEmptyBlock = (el) => {
-		if (!el) {
-			return false;
-		}
+		if (!el) return false;
 		const text = (el.textContent || "").replace(/\u00A0/g, " ").trim();
-		if (text) {
-			return false;
-		}
+		if (text) return false;
 		// Blocks containing media or chips are not empty
 		return !el.querySelector("img,video,audio,iframe,.user-chip,figure");
 	};
@@ -1090,9 +1023,7 @@ const MyTextArea = ({
 
 	const showBlockMenuAt = (el) => {
 		const wrapper = wrapperRef.current;
-		if (!wrapper) {
-			return;
-		}
+		if (!wrapper) return;
 		const rect = el.getBoundingClientRect();
 		const wrapRect = wrapper.getBoundingClientRect();
 		setBlockMenu({
@@ -1117,9 +1048,7 @@ const MyTextArea = ({
 				return;
 			}
 			if ((e.key === "Enter" || e.key === "Tab") && mentionMatches.length) {
-				if (e.nativeEvent.isComposing || e.keyCode === 229) {
-					return;
-				}
+				if (e.nativeEvent.isComposing || e.keyCode === 229) return;
 				e.preventDefault();
 				applyMention(mentionMatches[mentionIndex] || mentionMatches[0]);
 				return;
@@ -1131,43 +1060,23 @@ const MyTextArea = ({
 			}
 		}
 
-		// Tab moves between table cells instead of leaving the editor
-		if (e.key === "Tab" && handleTableTab(e)) {
-			return;
-		}
+		// Tab moves between table cells instead of leaving the editor.
+		if (e.key === "Tab" && handleTableTab(e)) return;
 
 		// Any key other than Enter dismisses the block menu.
-		if (blockMenu && e.key !== "Enter") {
-			setBlockMenu(null);
-		}
+		if (blockMenu && e.key !== "Enter") setBlockMenu(null);
 
-		if (e.key !== "Enter") {
-			return;
-		}
+		if (e.key !== "Enter") return;
 		// Respect CJK IME composition.
-		if (e.nativeEvent.isComposing || e.keyCode === 229) {
-			return;
-		}
-		if (e.shiftKey) {
-			return;
-		} // Shift+Enter = soft line break, browser default
+		if (e.nativeEvent.isComposing || e.keyCode === 229) return;
+		if (e.shiftKey) return; // Shift+Enter = soft line break, browser default
 
 		const block = currentBlock();
-		if (!block) {
-			return;
-		}
-		// Let the browser handle list items natively (Enter on an empty <li>
-		// already exits the list into a paragraph).
-		if (block.tagName === "LI") {
-			return;
-		}
+		if (!block) return;
 
-		// First Enter creates a new (empty) block of the same type — browser
-		// default. The SECOND Enter lands here with an empty block: break out
-		// into a fresh paragraph (the default) and offer the block-type menu.
-		if (!isEmptyBlock(block)) {
-			return;
-		}
+		if (block.tagName === "LI") return;
+
+		if (!isEmptyBlock(block)) return;
 
 		e.preventDefault();
 
@@ -1187,9 +1096,7 @@ const MyTextArea = ({
 			// Empty block nested inside blockquote/pre wrapper: exit the wrapper.
 			top.after(p);
 			block.remove();
-			if (isEmptyBlock(top) && !top.textContent.trim()) {
-				top.remove();
-			}
+			if (isEmptyBlock(top) && !top.textContent.trim()) top.remove();
 		}
 
 		newBlockRef.current = p;
@@ -1203,9 +1110,7 @@ const MyTextArea = ({
 	const applyBlockChoice = (tag) => {
 		const p = newBlockRef.current;
 		setBlockMenu(null);
-		if (!p || !editorRef.current || !editorRef.current.contains(p)) {
-			return;
-		}
+		if (!p || !editorRef.current || !editorRef.current.contains(p)) return;
 		placeCaretIn(p);
 		if (tag === "p") {
 			// already a paragraph — the default
@@ -1233,9 +1138,7 @@ const MyTextArea = ({
 
 	const insertLink = () => {
 		const url = linkUrl.trim();
-		if (!url) {
-			return;
-		}
+		if (!url) return;
 		const text = linkText.trim() || url;
 		const a = document.createElement("a");
 		a.href = url;
@@ -1265,10 +1168,8 @@ const MyTextArea = ({
 
 		insertBlockAtCursor(figure);
 
-		// Keep the file the user just picked on screen, so its percentage is
-		// visible even when it landed below the fold of a long document.
 		figure.scrollIntoView({ block: "nearest", behavior: "smooth" });
-		setStatus(`Uploading ${file.name}...`);
+		setStatus("Uploading " + file.name + "…");
 
 		const { res, xhr } = uploadFileToServer(
 			file,
@@ -1287,28 +1188,25 @@ const MyTextArea = ({
 		res
 			.then((data) => {
 				const url = data && data.demo ? blobUrl : extractUploadUrl(data);
-				// const url = extractUploadUrl(data);
 				if (!url)
 					throw new Error(
 						(data && data.message) ||
 							"Upload succeeded but no URL was returned.",
 					);
 				finishUpload(uploadId, url, file, !(data && data.demo));
-
-				setStatus(`Uploaded ${file.name}`);
+				setStatus("Uploaded " + file.name);
 			})
 			.catch((err) => {
 				if (err?.name === "AbortError") {
 					setStatus("Upload cancelled");
 					return;
 				}
-				// failUpload(uploadId, err.message);
-				setStatus(`Upload error ${err.message}`);
+
+				failUpload(uploadId, err.message);
+				setStatus("Upload error: " + err.message);
 			});
 	};
 
-	// The placeholder: the real media rendered from the blob URL, sitting under a
-	// translucent overlay that shows the percentage for THIS file only.
 	const buildUploadPlaceholder = (file, blobUrl, uploadId) => {
 		const kind = guessKind(file.name, file.type);
 
@@ -1340,9 +1238,9 @@ const MyTextArea = ({
 			card.className =
 				"upload-file-card d-flex align-items-center gap-2 rounded border p-3";
 			card.innerHTML =
-				'<i class="fa-solid ' +
-				(kind === "audio" ? "fa-music" : "fa-paperclip") +
-				' fs-4"></i><span class="text-truncate">' +
+				'<span class="fs-4 d-inline-flex">' +
+				iconSvg(kind === "audio" ? "music" : "paperclip") +
+				'</span><span class="text-truncate">' +
 				escapeHtml(file.name) +
 				"</span>";
 			media.appendChild(card);
@@ -1369,7 +1267,7 @@ const MyTextArea = ({
 		cancel.type = "button";
 		cancel.className = "btn btn-sm btn-light upload-cancel";
 		cancel.innerHTML =
-			'<i class="fa-solid fa-xmark"></i><span class="visually-hidden">Cancel upload</span>';
+			iconSvg("xmark") + '<span class="visually-hidden">Cancel upload</span>';
 		cancel.title = "Cancel upload";
 		// Plain DOM listener: this node lives inside the contentEditable surface,
 		// so React never owns it.
@@ -1385,41 +1283,27 @@ const MyTextArea = ({
 
 	const uploadFigure = (uploadId) => {
 		const editor = editorRef.current;
-		if (!editor) {
-			return null;
-		}
+		if (!editor) return null;
 		return editor.querySelector('[data-upload-id="' + uploadId + '"]');
 	};
 
 	const paintUploadProgress = (uploadId, progress) => {
 		const figure = uploadFigure(uploadId);
-		if (!figure) {
-			return;
-		}
+		if (!figure) return;
 		const overlay = figure.querySelector(".upload-overlay");
 		const percent = figure.querySelector(".upload-percent");
 		const fill = figure.querySelector(".upload-bar-fill");
-		if (percent) {
-			percent.textContent = progress + "%";
-		}
-		if (fill) {
-			fill.style.width = progress + "%";
-		}
-		if (overlay) {
-			overlay.setAttribute("aria-valuenow", String(progress));
-		}
+		if (percent) percent.textContent = progress + "%";
+		if (fill) fill.style.width = progress + "%";
+		if (overlay) overlay.setAttribute("aria-valuenow", String(progress));
 	};
 
 	const paintUploadFinishing = (uploadId) => {
 		const figure = uploadFigure(uploadId);
-		if (!figure) {
-			return;
-		}
+		if (!figure) return;
 		figure.setAttribute("data-upload-state", "finishing");
 		const percent = figure.querySelector(".upload-percent");
-		if (percent) {
-			percent.textContent = "Finishing…";
-		}
+		if (percent) percent.textContent = "Finishing…";
 	};
 
 	// Swap the temporary blob for the stored file and drop the overlay, leaving
@@ -1429,9 +1313,7 @@ const MyTextArea = ({
 		const figure = uploadFigure(uploadId);
 		uploadsRef.current.delete(uploadId);
 		if (!figure) {
-			if (revoke && entry) {
-				URL.revokeObjectURL(entry.blobUrl);
-			}
+			if (revoke && entry) URL.revokeObjectURL(entry.blobUrl);
 			return;
 		}
 		const { node, block } = buildEmbedNode(url, file.name, file.type);
@@ -1443,47 +1325,49 @@ const MyTextArea = ({
 			figure.replaceWith(p);
 		}
 		// Only safe once the final src no longer points at the blob.
-		if (revoke && entry) {
-			URL.revokeObjectURL(entry.blobUrl);
-		}
+		if (revoke && entry) URL.revokeObjectURL(entry.blobUrl);
 		syncContent();
 	};
 
 	// Keep the preview on screen and turn the overlay into an error state with a
 	// retry, so a failed file is never silently lost.
-	// const failUpload = (uploadId, message) => {
-	// 	const figure = uploadFigure(uploadId);
-	// 	uploadsRef.current.delete(uploadId);
-	// 	if (!figure) {
-	// 		return;
-	// 	}
-	// 	figure.setAttribute("data-upload-state", "error");
-	// 	const overlay = figure.querySelector(".upload-overlay");
-	// 	if (!overlay) {
-	// 		return;
-	// 	}
-	// 	overlay.removeAttribute("role");
-	// 	overlay.innerHTML =
-	// 		'<div class="upload-overlay-inner">' +
-	// 		'<p class="upload-percent"><i class="fa-solid fa-triangle-exclamation"></i></p>' +
-	// 		'<p class="upload-name">' +
-	// 		escapeHtml(message || "Upload failed") +
-	// 		"</p>" +
-	// 		"</div>";
-	// 	const remove = document.createElement("button");
-	// 	remove.type = "button";
-	// 	remove.className = "btn btn-sm btn-light upload-cancel";
-	// 	remove.innerHTML =
-	// 		'<i class="fa-solid fa-trash"></i><span class="visually-hidden">Remove failed upload</span>';
-	// 	remove.title = "Remove";
-	// 	remove.addEventListener("click", (e) => {
-	// 		e.preventDefault();
-	// 		cancelUpload(uploadId);
-	// 	});
-	// 	overlay.appendChild(remove);
-	// };
+	const failUpload = (uploadId, message) => {
+		const figure = uploadFigure(uploadId);
 
-	// Cancel an in-flight upload from its toast's close button.
+		if (!figure) {
+			const entry = uploadsRef.current.get(uploadId);
+			if (entry) URL.revokeObjectURL(entry.blobUrl);
+			uploadsRef.current.delete(uploadId);
+			return;
+		}
+		figure.setAttribute("data-upload-state", "error");
+		const overlay = figure.querySelector(".upload-overlay");
+		if (!overlay) return;
+		overlay.removeAttribute("role");
+		overlay.innerHTML =
+			'<div class="upload-overlay-inner">' +
+			'<p class="upload-percent">' +
+			iconSvg("warning") +
+			"</p>" +
+			'<p class="upload-name">' +
+			escapeHtml(message || "Upload failed") +
+			"</p>" +
+			"</div>";
+		const remove = document.createElement("button");
+		remove.type = "button";
+		remove.className = "btn btn-sm btn-light upload-cancel";
+		remove.innerHTML =
+			iconSvg("trash") +
+			'<span class="visually-hidden">Remove failed upload</span>';
+		remove.title = "Remove";
+		remove.addEventListener("click", (e) => {
+			e.preventDefault();
+			cancelUpload(uploadId);
+		});
+		overlay.appendChild(remove);
+	};
+
+	// Abort (if still running) and pull the placeholder back out of the content.
 	const cancelUpload = (uploadId) => {
 		const entry = uploadsRef.current.get(uploadId);
 		if (entry) {
@@ -1491,16 +1375,13 @@ const MyTextArea = ({
 			URL.revokeObjectURL(entry.blobUrl);
 			uploadsRef.current.delete(uploadId);
 		}
-
 		const figure = uploadFigure(uploadId);
-		if (figure) {
-			figure.remove();
-		}
+		if (figure) figure.remove();
 		syncContent();
-		// setUploads((prev) => prev.filter((u) => u.id !== uploadId));
 	};
 
 	// ---- Embedding ----------------------------------------------------------------
+
 	const buildEmbedNode = (url, name, mime) => {
 		const kind = guessKind(url, mime);
 		let node;
@@ -1526,8 +1407,9 @@ const MyTextArea = ({
 			node.rel = "noopener noreferrer";
 			node.className =
 				"d-inline-flex align-items-center gap-2 my-2 text-decoration-none";
-			node.innerHTML =
-				'<i class="fa-solid fa-paperclip"></i>' + escapeHtml(name || url);
+			// Inline SVG, NOT an fa- <i>: FA SVG+JS rewriting the icon inside the
+			// contentEditable is what froze PDF/file embeds.
+			node.innerHTML = iconSvg("paperclip") + escapeHtml(name || url);
 		}
 		if (kind === "image" || kind === "video" || kind === "audio") {
 			const fig = document.createElement("figure");
@@ -1540,42 +1422,31 @@ const MyTextArea = ({
 
 	const embedByUrl = (url, name, mime) => {
 		const { node, block } = buildEmbedNode(url, name, mime);
-		if (block) {
-			insertBlockAtCursor(node);
-		} else {
-			insertNodeAtCursor(node);
-		}
+		if (block) insertBlockAtCursor(node);
+		else insertNodeAtCursor(node);
 	};
 
 	// ---- Multi-file insertion ---------------------------------------------------
 
 	const toggleFileSelection = (item) => {
 		const url = fileUrlOf(item);
-		if (!url) {
-			return;
-		}
+		if (!url) return;
 		setFileSelection((prev) => {
 			const exists = prev.some((f) => f.url === url);
-			if (exists) {
-				return prev.filter((f) => f.url !== url);
-			}
+			if (exists) return prev.filter((f) => f.url !== url);
 			return [...prev, { url, name: fileNameOf(item), kind: guessKind(url) }];
 		});
 	};
 
 	const insertSelectedFiles = () => {
 		const files = fileSelection;
-		if (!files.length) {
-			return;
-		}
+		if (!files.length) return;
 		restoreSelection();
 
 		const allImages = files.every((f) => f.kind === "image");
 		if (files.length === 1 || !allImages || imageLayout === "stacked") {
 			// One below the other; non-images embed with their own element type.
-			for (const f of files) {
-				embedByUrl(f.url, f.name);
-			}
+			for (const f of files) embedByUrl(f.url, f.name);
 		} else if (imageLayout === "gallery") {
 			insertImageGallery(files);
 		} else if (imageLayout === "carousel") {
@@ -1633,7 +1504,7 @@ const MyTextArea = ({
 				'<div class="carousel-item' +
 				(i === 0 ? " active" : "") +
 				'"><img src="' +
-				f.url +
+				escapeHtml(f.url) +
 				'" class="d-block w-100" alt="' +
 				escapeHtml(f.name || "Slide " + (i + 1)) +
 				'" /></div>';
@@ -1670,7 +1541,9 @@ const MyTextArea = ({
 				escapeHtml(avatar) +
 				'" alt="" crossorigin="anonymous" />';
 		} else {
-			inner += '<i class="fa-solid fa-user-circle"></i>';
+			// Inline SVG, NOT an fa- <i>: FA SVG+JS rewriting the icon inside the
+			// contentEditable is what froze mentions of avatar-less users.
+			inner += iconSvg("user");
 		}
 		inner += "<span>@" + escapeHtml(username || name) + "</span>";
 		span.innerHTML = inner;
@@ -1685,9 +1558,7 @@ const MyTextArea = ({
 		setFileSelection([]);
 		setImageLayout("stacked");
 		setShowFiles(true);
-		if (!fileState.items.length) {
-			loadFiles(1);
-		}
+		if (!fileState.items.length) loadFiles(1);
 	};
 
 	const loadFiles = async (page) => {
@@ -1723,9 +1594,7 @@ const MyTextArea = ({
 	const openUsers = () => {
 		saveSelection();
 		setShowUsers(true);
-		if (!userState.items.length) {
-			loadUsers(1);
-		}
+		if (!userState.items.length) loadUsers(1);
 	};
 
 	const loadUsers = async (page) => {
@@ -1770,9 +1639,7 @@ const MyTextArea = ({
 		? userState.items
 				.filter((u) => {
 					const q = mention.query.toLowerCase();
-					if (!q) {
-						return true;
-					}
+					if (!q) return true;
 					return (
 						(u.username || "").toLowerCase().includes(q) ||
 						(u.name || "").toLowerCase().includes(q) ||
@@ -1832,9 +1699,7 @@ const MyTextArea = ({
 		});
 		setMentionIndex(0);
 		// Fetch the users from the DB the first time an @ is typed.
-		if (!userState.items.length && !userState.loading) {
-			loadUsers(1);
-		}
+		if (!userState.items.length && !userState.loading) loadUsers(1);
 	};
 
 	// Replaces the typed "@query" with the chosen user's chip.
@@ -1862,9 +1727,7 @@ const MyTextArea = ({
 		embedUser(user);
 		setMention(null);
 		setStatus("Mentioned @" + (user.username || user.name || "user"));
-		if (editorRef.current) {
-			editorRef.current.focus();
-		}
+		if (editorRef.current) editorRef.current.focus();
 	};
 
 	// ---- Live code snippets ---------------------------------------------------------
@@ -1888,9 +1751,7 @@ const MyTextArea = ({
 			.split(/\r?\n/)
 			.map((l) => l.trim())
 			.filter((l) => {
-				if (!/^https?:\/\//i.test(l)) {
-					return false;
-				}
+				if (!/^https?:\/\//i.test(l)) return false;
 				try {
 					new URL(l);
 					return true;
@@ -1901,10 +1762,6 @@ const MyTextArea = ({
 	};
 
 	const insertSnippet = () => {
-		// Compose a complete standalone document for the iframe. srcdoc +
-		// sandbox="allow-scripts" (WITHOUT allow-same-origin) gives it an opaque
-		// origin: its HTML/CSS/JS (and any external stylesheet/script it loads)
-		// render and run inside the iframe but can never reach the host page.
 		const safeJs = (snippet.js || "").replace(/<\/script/gi, "<\\/script");
 		const cssLinks = parseResourceUrls(snippet.cssUrls)
 			.map((u) => '<link rel="stylesheet" href="' + escapeHtml(u) + '">')
@@ -2287,9 +2144,7 @@ const MyTextArea = ({
 	// ---- Footer actions -------------------------------------------------------------
 
 	const clearEditor = () => {
-		if (editorRef.current) {
-			editorRef.current.innerHTML = "<p><br></p>";
-		}
+		if (editorRef.current) editorRef.current.innerHTML = "<p><br></p>";
 		savedRangeRef.current = null;
 		setBlockMenu(null);
 		setMention(null);
@@ -2313,9 +2168,7 @@ const MyTextArea = ({
 	const fq = fileSearch.trim().toLowerCase();
 	const visibleFiles = fileState.items.filter((item) => {
 		const url = fileUrlOf(item);
-		if (!url) {
-			return false;
-		}
+		if (!url) return false;
 		return !fq || fileNameOf(item).toLowerCase().indexOf(fq) !== -1;
 	});
 
@@ -2566,7 +2419,6 @@ const MyTextArea = ({
 						/>
 					</div>
 				</div>
-
 				{/* Editor surface */}
 				<div className="card-body p-0 position-relative" ref={wrapperRef}>
 					<div
@@ -2748,6 +2600,9 @@ const MyTextArea = ({
 							))}
 						</div>
 					)}
+					{/* Floating table toolbar: visible only while the caret sits
+                inside a table, so rows, columns and classes can be changed
+                after the table was inserted. */}
 					{tableBar && (
 						<div
 							className="table-bar shadow-sm"
@@ -2858,29 +2713,6 @@ const MyTextArea = ({
 					</div>
 				</div>
 			</div>
-			{/* Upload toasts: live per-file progress + result message */}
-			{toast && (
-				<div className="toast-container position-fixed bottom-0 end-0 p-3">
-					<div
-						className={
-							"toast align-items-center border-0 show text-bg-" + toast.kind
-						}
-						role="alert"
-						aria-live="assertive"
-						aria-atomic="true"
-					>
-						<div className="d-flex">
-							<div className="toast-body">{toast.msg}</div>
-							<button
-								type="button"
-								className="btn-close btn-close-white me-2 m-auto"
-								aria-label="Close"
-								onClick={() => setToast(null)}
-							></button>
-						</div>
-					</div>
-				</div>
-			)}
 			{/* File Manager modal */}
 			{showFiles && (
 				<BootstrapModal

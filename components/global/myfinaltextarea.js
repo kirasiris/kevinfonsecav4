@@ -2182,7 +2182,7 @@ const MyTextArea = ({
 		<>
 			<div className="card shadow-sm">
 				{/* Toolbar */}
-				<div className="card-header bg-body p-2">
+				<div className="card-header p-2">
 					<div
 						className="d-flex flex-wrap align-items-center gap-1"
 						role="toolbar"
@@ -2373,7 +2373,7 @@ const MyTextArea = ({
 						<span className="vr mx-1"></span>
 						<button
 							type="button"
-							className="btn btn-primary btn-sm"
+							className="btn btn-dark btn-sm"
 							onClick={() => {
 								saveSelection();
 								fileInputRef.current && fileInputRef.current.click();
@@ -2385,7 +2385,7 @@ const MyTextArea = ({
 						</button>
 						<button
 							type="button"
-							className="btn btn-outline-primary btn-sm"
+							className="btn btn-secondary btn-sm"
 							onClick={openFileManager}
 							title="Insert from file manager"
 						>
@@ -2394,7 +2394,7 @@ const MyTextArea = ({
 						</button>
 						<button
 							type="button"
-							className="btn btn-outline-primary btn-sm"
+							className="btn btn-secondary btn-sm"
 							onClick={openUsers}
 							title="Embed a user"
 						>
@@ -2403,7 +2403,7 @@ const MyTextArea = ({
 						</button>
 						<button
 							type="button"
-							className="btn btn-outline-primary btn-sm"
+							className="btn btn-secondary btn-sm"
 							onClick={openSnippet}
 							title="Insert a live code snippet"
 						>
@@ -2692,19 +2692,19 @@ const MyTextArea = ({
 						</div>
 					)}
 				</div>
-				<div className="card-footer bg-body d-flex justify-content-between align-items-center flex-wrap gap-2">
-					<small className="text-body-secondary">{status}</small>
+				<div className="card-footer d-flex justify-content-between align-items-center flex-wrap gap-2">
+					<small>{status}</small>
 					<div className="d-flex gap-2">
 						<button
 							type="button"
-							className="btn btn-outline-secondary btn-sm"
+							className="btn btn-secondary btn-sm"
 							onClick={clearEditor}
 						>
 							Clear
 						</button>
 						<button
 							type="button"
-							className="btn btn-outline-secondary btn-sm"
+							className="btn btn-secondary btn-sm"
 							onClick={openPreview}
 						>
 							<i className="fa-solid fa-eye me-1" />
@@ -3091,10 +3091,10 @@ const MyTextArea = ({
 									}))
 								}
 							/>
-							<div className="form-text">
+							<p className="form-text">
 								Written straight to the {"<table>"} element — e.g.{" "}
 								<code>table table-striped table-hover table-sm</code>.
-							</div>
+							</p>
 						</div>
 						<div className="mb-3">
 							<label htmlFor="tableCaption" className="form-label">
@@ -3209,7 +3209,7 @@ const MyTextArea = ({
 					onClose={() => setShowSnippet(false)}
 				>
 					<div className="modal-body">
-						<p className="small text-body-secondary mb-3">
+						<p className="small mb-3">
 							The snippet renders inside a sandboxed iframe: its HTML, CSS and
 							JavaScript only affect the iframe content, never the rest of the
 							page.
@@ -3278,9 +3278,7 @@ const MyTextArea = ({
 						<p className="small fw-semibold mb-2">
 							<i className="fa-solid fa-globe me-1" />
 							External resources
-							<span className="ms-1 fw-normal text-body-secondary">
-								(optional)
-							</span>
+							<span className="ms-1 fw-normal">(optional)</span>
 						</p>
 						<div className="mb-3">
 							<label

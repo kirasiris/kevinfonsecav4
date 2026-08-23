@@ -131,7 +131,7 @@ const AuthIndex = async ({ params, searchParams }) => {
 															AVATAR&nbsp;&&nbsp;COVER
 														</Link>
 													</li>
-													<li>
+													<li className="list-group-item p-0">
 														<Single object={auth.data} isSingle={false} />
 													</li>
 												</ul>

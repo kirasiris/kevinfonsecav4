@@ -11,6 +11,7 @@ const UpdateRealEstateForm = ({ token = {}, auth = {}, object = {} }) => {
 	const router = useRouter();
 
 	const [, setBtnText] = useState(`Submit`);
+	const [draft, setDraft] = useState({ html: null, users: [], hashtags: [] });
 
 	const upgradeRealState = async (e) => {
 		e.preventDefault();
@@ -21,6 +22,8 @@ const UpdateRealEstateForm = ({ token = {}, auth = {}, object = {} }) => {
 		const rawFormData = {
 			title: formData.get("title"),
 			text: formData.get("text"),
+			mentions: JSON.parse(formData.get("text_users") || "[]"),
+			// hashtags: JSON.parse(formData.get("text_hashtags") || "[]"),
 			price: formData.get("price"),
 			isFree: formData.get("isFree"),
 			active: formData.get("active"),
@@ -86,12 +89,22 @@ const UpdateRealEstateForm = ({ token = {}, auth = {}, object = {} }) => {
 					id="text"
 					name="text"
 					defaultValue={object?.data?.text}
+					value={draft.html ?? undefined}
+					onChange={setDraft}
 					onModel="Product"
 					advancedTextEditor={true}
 					customPlaceholder="No description"
 					charactersLimit={99999}
 					isRequired={true}
 				/>
+				<p className="form-text mt-1 mb-3">
+					{/* {draft.html.replace(/<[^>]*>/g, "").length} characters */}
+					{draft.users.length > 0 &&
+						" · mentions: " +
+							draft.users.map((u) => "@" + u.username).join(", ")}
+					{draft.hashtags.length > 0 &&
+						" · tags: " + draft.hashtags.map((t) => "#" + t).join(", ")}
+				</p>
 				<div className="row">
 					<div className="col">
 						<label htmlFor="price" className="form-label">

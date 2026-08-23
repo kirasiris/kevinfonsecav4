@@ -11,6 +11,7 @@ const CreateCDAlbumForm = ({ token = {}, auth = {}, objects = [] }) => {
 	const router = useRouter();
 
 	const [btnText, setBtnText] = useState(`Submit`);
+	const [draft, setDraft] = useState({ html: null, users: [], hashtags: [] });
 
 	const addCDAlbum = async (e) => {
 		e.preventDefault();
@@ -20,6 +21,8 @@ const CreateCDAlbumForm = ({ token = {}, auth = {}, objects = [] }) => {
 		const rawFormData = {
 			title: formData.get("title"),
 			text: formData.get("text"),
+			// mentions: JSON.parse(formData.get("text_users") || "[]"),
+			// hashtags: JSON.parse(formData.get("text_hashtags") || "[]"),
 			featured: formData.get("featured"),
 			category: formData.get("category"),
 			commented: formData.get("commented"),
@@ -80,12 +83,22 @@ const CreateCDAlbumForm = ({ token = {}, auth = {}, objects = [] }) => {
 					id="text"
 					name="text"
 					defaultValue=""
+					value={draft.html ?? undefined}
+					onChange={setDraft}
 					onModel="Playlist"
 					advancedTextEditor={true}
 					customPlaceholder="Type something..."
 					charactersLimit={99999}
 					isRequired={true}
 				/>
+				<p className="form-text mt-1 mb-3">
+					{/* {draft.html.replace(/<[^>]*>/g, "").length} characters */}
+					{draft.users.length > 0 &&
+						" · mentions: " +
+							draft.users.map((u) => "@" + u.username).join(", ")}
+					{draft.hashtags.length > 0 &&
+						" · tags: " + draft.hashtags.map((t) => "#" + t).join(", ")}
+				</p>
 			</div>
 			<div className="col-lg-3">
 				<AdminSidebar

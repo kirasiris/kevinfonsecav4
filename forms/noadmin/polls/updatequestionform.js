@@ -16,6 +16,7 @@ const UpdateQuestionForm = ({
 	const router = useRouter();
 
 	const [, setBtnText] = useState(`Submit`);
+	const [draft, setDraft] = useState({ html: null, users: [], hashtags: [] });
 
 	const upgradeQuestion = async (e) => {
 		e.preventDefault();
@@ -40,6 +41,8 @@ const UpdateQuestionForm = ({
 		const rawFormData = {
 			title: formData.get("title"),
 			text: formData.get("text"),
+			// mentions: JSON.parse(formData.get("text_users") || "[]"),
+			// hashtags: JSON.parse(formData.get("text_hashtags") || "[]"),
 			password: formData.get("password"),
 			status: formData.get("status"),
 			answers: options,
@@ -92,12 +95,22 @@ const UpdateQuestionForm = ({
 					id="text"
 					name="text"
 					defaultValue={object?.data?.text}
+					value={draft.html ?? undefined}
+					onChange={setDraft}
 					onModel="Question"
 					advancedTextEditor={false}
 					customPlaceholder="No description"
 					charactersLimit={99999}
 					isRequired={true}
 				/>
+				{/* <p className="form-text mt-1 mb-3">
+					{draft.html.replace(/<[^>]*>/g, "").length} characters
+					{draft.users.length > 0 &&
+						" · mentions: " +
+							draft.users.map((u) => "@" + u.username).join(", ")}
+					{draft.hashtags.length > 0 &&
+						" · tags: " + draft.hashtags.map((t) => "#" + t).join(", ")}
+				</p> */}
 				<div className="row">
 					<div className="col">
 						<label htmlFor="answersA" className="form-label">

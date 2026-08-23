@@ -65,7 +65,7 @@ const UpdateCover = async ({ params, searchParams }) => {
 						<div className="row">
 							<Sidebar />
 							<Globalcontent>
-								<div className="card">
+								<div className="card mb-3">
 									<div className="card-header">
 										<div className="float-start">
 											<p className="m-1">Edit&nbsp;Cover</p>

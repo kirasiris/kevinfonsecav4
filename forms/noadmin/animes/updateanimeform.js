@@ -16,6 +16,7 @@ const UpdateAnimeForm = ({
 	const router = useRouter();
 
 	const [, setBtnText] = useState(`Submit`);
+	const [draft, setDraft] = useState({ html: null, users: [], hashtags: [] });
 
 	const upgradeAnime = async (e) => {
 		e.preventDefault();
@@ -26,6 +27,8 @@ const UpdateAnimeForm = ({
 		const rawFormData = {
 			title: formData.get("title"),
 			text: formData.get("text"),
+			// mentions: JSON.parse(formData.get("text_users") || "[]"),
+			// hashtags: JSON.parse(formData.get("text_hashtags") || "[]"),
 			featured: formData.get("featured"),
 			category: formData.getAll("category"), // Needs to be getAll due to Model receiving array
 			commented: formData.get("commented"),
@@ -85,12 +88,22 @@ const UpdateAnimeForm = ({
 					id="text"
 					name="text"
 					defaultValue={object?.data?.text}
+					value={draft.html ?? undefined}
+					onChange={setDraft}
 					onModel="Playlist"
 					advancedTextEditor={true}
 					customPlaceholder="No description"
 					charactersLimit={99999}
 					isRequired={true}
 				/>
+				<p className="form-text mt-1 mb-3">
+					{/* {draft.html.replace(/<[^>]*>/g, "").length} characters */}
+					{draft.users.length > 0 &&
+						" · mentions: " +
+							draft.users.map((u) => "@" + u.username).join(", ")}
+					{draft.hashtags.length > 0 &&
+						" · tags: " + draft.hashtags.map((t) => "#" + t).join(", ")}
+				</p>
 				<div className="row">
 					<div className="col">
 						<label htmlFor="onairstatus" className="form-label">

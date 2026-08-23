@@ -11,6 +11,7 @@ const UpdatePageForm = ({ object = {}, params = {} }) => {
 	const router = useRouter();
 
 	const [, setBtnText] = useState(`Submit`);
+	const [draft, setDraft] = useState({ html: null, users: [], hashtags: [] });
 
 	const updatePage = async (e) => {
 		e.preventDefault();
@@ -22,6 +23,8 @@ const UpdatePageForm = ({ object = {}, params = {} }) => {
 			title: formData.get("title"),
 			url: formData.get("url"),
 			text: formData.get("text"),
+			mentions: JSON.parse(formData.get("text_users") || "[]"),
+			// hashtags: JSON.parse(formData.get("text_hashtags") || "[]"),
 			referrerpolicy: formData.get("referrerpolicy"),
 			rel: formData.get("rel"),
 			target: formData.get("target"),
@@ -89,12 +92,22 @@ const UpdatePageForm = ({ object = {}, params = {} }) => {
 					id="text"
 					name="text"
 					defaultValue={object?.data?.text}
+					value={draft.html ?? undefined}
+					onChange={setDraft}
 					onModel="Page"
 					advancedTextEditor={true}
 					customPlaceholder="No description"
 					charactersLimit={99999}
 					isRequired={true}
 				/>
+				<p className="form-text mt-1 mb-3">
+					{/* {draft.html.replace(/<[^>]*>/g, "").length} characters */}
+					{draft.users.length > 0 &&
+						" · mentions: " +
+							draft.users.map((u) => "@" + u.username).join(", ")}
+					{draft.hashtags.length > 0 &&
+						" · tags: " + draft.hashtags.map((t) => "#" + t).join(", ")}
+				</p>
 				<div className="row">
 					<div className="col">
 						<label htmlFor="referrerpolicy" className="form-label">

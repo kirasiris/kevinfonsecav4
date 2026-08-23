@@ -15,6 +15,7 @@ const CreateCommentForm = ({
 	const router = useRouter();
 
 	const [btnText, setBtnText] = useState(`Submit`);
+	const [draft, setDraft] = useState({ html: null, users: [], hashtags: [] });
 
 	const addComment = async (e) => {
 		e.preventDefault();
@@ -28,6 +29,8 @@ const CreateCommentForm = ({
 			website: formData.get("website"),
 			title: formData.get("title"),
 			text: formData.get("text"),
+			// mentions: JSON.parse(formData.get("text_users") || "[]"),
+			// hashtags: JSON.parse(formData.get("text_hashtags") || "[]"),
 			status: formData.get("status"),
 			resourceId: searchParams.resourceId,
 			parentId: searchParams.parentId || undefined,
@@ -82,12 +85,22 @@ const CreateCommentForm = ({
 					id="text"
 					name="text"
 					defaultValue=""
+					value={draft.html ?? undefined}
+					onChange={setDraft}
 					onModel="Comment"
 					advancedTextEditor={true}
 					customPlaceholder="Type something..."
 					charactersLimit={99999}
 					isRequired={true}
 				/>
+				<p className="form-text mt-1 mb-3">
+					{/* {draft.html.replace(/<[^>]*>/g, "").length} characters */}
+					{draft.users.length > 0 &&
+						" · mentions: " +
+							draft.users.map((u) => "@" + u.username).join(", ")}
+					{draft.hashtags.length > 0 &&
+						" · tags: " + draft.hashtags.map((t) => "#" + t).join(", ")}
+				</p>
 				<label htmlFor="user" className="form-label">
 					User ID
 				</label>

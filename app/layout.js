@@ -7,7 +7,7 @@ import Footer from "@/layout/footer";
 import { getGlobalData } from "@/helpers/globalData";
 import { BootstrapClient } from "@/helpers/bootstrapClient";
 
-export default async function RootLayout({ children }) {
+const RootLayout = async ({ children }) => {
 	const { auth, settings, menus } = await getGlobalData();
 
 	return (
@@ -30,4 +30,6 @@ export default async function RootLayout({ children }) {
 			</body>
 		</html>
 	);
-}
+};
+
+export default RootLayout;

@@ -15,6 +15,7 @@ const UpdateNewsletterEmailForm = ({
 	const router = useRouter();
 
 	const [, setBtnText] = useState(`Submit`);
+	const [draft, setDraft] = useState({ html: null, users: [], hashtags: [] });
 
 	const upgradeEmail = async (e) => {
 		e.preventDefault();
@@ -25,6 +26,8 @@ const UpdateNewsletterEmailForm = ({
 		const rawFormData = {
 			recipients: formData.getAll("recipients"),
 			text: formData.get("text"),
+			// mentions: JSON.parse(formData.get("text_users") || "[]"),
+			// hashtags: JSON.parse(formData.get("text_hashtags") || "[]"),
 			subject: formData.get("subject"),
 			status: formData.get("status"),
 		};
@@ -94,12 +97,22 @@ const UpdateNewsletterEmailForm = ({
 					id="text"
 					name="text"
 					defaultValue={object?.data?.text}
+					value={draft.html ?? undefined}
+					onChange={setDraft}
 					onModel="NewsletterEmail"
 					advancedTextEditor={false}
 					customPlaceholder="No description"
 					charactersLimit={99999}
 					isRequired={true}
 				/>
+				{/* <p className="form-text mt-1 mb-3">
+					{draft.html.replace(/<[^>]*>/g, "").length} characters
+					{draft.users.length > 0 &&
+						" · mentions: " +
+							draft.users.map((u) => "@" + u.username).join(", ")}
+					{draft.hashtags.length > 0 &&
+						" · tags: " + draft.hashtags.map((t) => "#" + t).join(", ")}
+				</p> */}
 			</div>
 			<div className="col-lg-3">
 				<label htmlFor="status" className="form-label">

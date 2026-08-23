@@ -11,6 +11,7 @@ const CreateEventForm = ({ token = {}, auth = {} }) => {
 	const router = useRouter();
 
 	const [, setBtnText] = useState(`Submit`);
+	const [draft, setDraft] = useState({ html: null, users: [], hashtags: [] });
 
 	const addEvent = async (e) => {
 		e.preventDefault();
@@ -21,6 +22,8 @@ const CreateEventForm = ({ token = {}, auth = {} }) => {
 		const rawFormData = {
 			title: formData.get("title"),
 			text: formData.get("text"),
+			// mentions: JSON.parse(formData.get("text_users") || "[]"),
+			// hashtags: JSON.parse(formData.get("text_hashtags") || "[]"),
 			fullCalendarDateFormat: formData.get("fullCalendarDateFormat"),
 			day: formData.get("day"),
 			time: formData.get("time"),
@@ -32,6 +35,11 @@ const CreateEventForm = ({ token = {}, auth = {} }) => {
 					name: process.env.NEXT_PUBLIC_WEBSITE_NAME,
 					email: process.env.NEXT_PUBLIC_WEBSITE_EMAIL,
 					phoneNumber: "682-375-9607",
+				},
+				{
+					name: "john doe",
+					email: "john.doe@demo.com",
+					phoneNumber: "012-345-6789",
 				},
 			],
 		};
@@ -83,12 +91,22 @@ const CreateEventForm = ({ token = {}, auth = {} }) => {
 					id="text"
 					name="text"
 					defaultValue="No description..."
+					value={draft.html ?? undefined}
+					onChange={setDraft}
 					onModel="Event"
 					advancedTextEditor={true}
 					customPlaceholder="No description"
 					charactersLimit={99999}
 					isRequired={true}
 				/>
+				<p className="form-text mt-1 mb-3">
+					{/* {draft.html.replace(/<[^>]*>/g, "").length} characters */}
+					{draft.users.length > 0 &&
+						" · mentions: " +
+							draft.users.map((u) => "@" + u.username).join(", ")}
+					{draft.hashtags.length > 0 &&
+						" · tags: " + draft.hashtags.map((t) => "#" + t).join(", ")}
+				</p>
 				<div className="row">
 					{/* fullCalendarDateFormat, recurrenceRule */}
 					<div className="col">

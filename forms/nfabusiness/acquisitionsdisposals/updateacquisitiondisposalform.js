@@ -14,6 +14,7 @@ const UpdateAcquisitionDisposalForm = ({
 	const router = useRouter();
 
 	const [, setBtnText] = useState("Submit");
+	const [draft, setDraft] = useState({ html: null, users: [], hashtags: [] });
 
 	const upgradeAcquisitionDisposal = async (e) => {
 		e.preventDefault();
@@ -37,6 +38,8 @@ const UpdateAcquisitionDisposalForm = ({
 				trackingNumber: formData.get("trackingNumber"),
 			},
 			text: formData.get("text"),
+			// mentions: JSON.parse(formData.get("text_users") || "[]"),
+			// hashtags: JSON.parse(formData.get("text_hashtags") || "[]"),
 			status: formData.get("status"),
 			orderingNumber: formData.get("orderingNumber"),
 		};
@@ -269,12 +272,22 @@ const UpdateAcquisitionDisposalForm = ({
 					id="text"
 					name="text"
 					defaultValue={object?.data?.text}
+					value={draft.html ?? undefined}
+					onChange={setDraft}
 					onModel="Weapon"
-					advancedTextEditor={false}
+					advancedTextEditor={true}
 					customPlaceholder="No description"
 					charactersLimit={99999}
 					isRequired={false}
 				/>
+				<p className="form-text mt-1 mb-3">
+					{/* {draft.html.replace(/<[^>]*>/g, "").length} characters */}
+					{draft.users.length > 0 &&
+						" · mentions: " +
+							draft.users.map((u) => "@" + u.username).join(", ")}
+					{draft.hashtags.length > 0 &&
+						" · tags: " + draft.hashtags.map((t) => "#" + t).join(", ")}
+				</p>
 				<div className="row mb-3">
 					<div className="col">
 						<label htmlFor="status" className="form-label">

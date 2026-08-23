@@ -13,6 +13,7 @@ const CreateProductForm = ({ token = {}, auth = {} }) => {
 	const [showCategories, setShowCategories] = useState(true);
 
 	const [, setBtnText] = useState("Submit");
+	const [draft, setDraft] = useState({ html: null, users: [], hashtags: [] });
 
 	const addProduct = async (e) => {
 		e.preventDefault();
@@ -23,6 +24,8 @@ const CreateProductForm = ({ token = {}, auth = {} }) => {
 		const rawFormData = {
 			title: formData.get("title"),
 			text: formData.get("text"),
+			mentions: JSON.parse(formData.get("text_users") || "[]"),
+			// hashtags: JSON.parse(formData.get("text_hashtags") || "[]"),
 			price: formData.get("price"),
 			isFree: formData.get("isFree"),
 			active: formData.get("active"),
@@ -53,18 +56,16 @@ const CreateProductForm = ({ token = {}, auth = {} }) => {
 			shippable: formData.get("shippable"),
 			shippingClass: formData.get("shippingClass"),
 			commented: formData.get("commented"),
+			postType: "product",
+			resourceId: auth?.companyId,
+			onModel: "Company",
 		};
 
 		const res = await fetchurl(
 			`/noadmin/stripe/products`,
 			"POST",
 			"no-cache",
-			{
-				...rawFormData,
-				postType: "product",
-				resourceId: auth?.companyId,
-				onModel: "Company",
-			},
+			rawFormData,
 			undefined,
 			false,
 			false,
@@ -108,12 +109,22 @@ const CreateProductForm = ({ token = {}, auth = {} }) => {
 					id="text"
 					name="text"
 					defaultValue="No description..."
+					value={draft.html ?? undefined}
+					onChange={setDraft}
 					onModel="Product"
 					advancedTextEditor={true}
 					customPlaceholder="No description"
 					charactersLimit={99999}
 					isRequired={true}
 				/>
+				<p className="form-text mt-1 mb-3">
+					{/* {draft.html.replace(/<[^>]*>/g, "").length} characters */}
+					{draft.users.length > 0 &&
+						" · mentions: " +
+							draft.users.map((u) => "@" + u.username).join(", ")}
+					{draft.hashtags.length > 0 &&
+						" · tags: " + draft.hashtags.map((t) => "#" + t).join(", ")}
+				</p>
 				<div className="row">
 					<div className="col">
 						<label htmlFor="price" className="form-label">

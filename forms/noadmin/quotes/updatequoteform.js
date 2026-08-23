@@ -10,6 +10,7 @@ const UpdateQuoteForm = ({ currentpage = "", object = {} }) => {
 	const router = useRouter();
 
 	const [btnText, setBtnText] = useState(`Submit`);
+	const [draft, setDraft] = useState({ html: null, users: [], hashtags: [] });
 
 	const upgradeQuote = async (e) => {
 		e.preventDefault();
@@ -18,6 +19,8 @@ const UpdateQuoteForm = ({ currentpage = "", object = {} }) => {
 		const formData = new FormData(form);
 		const rawFormData = {
 			text: formData.get("text"),
+			// mentions: JSON.parse(formData.get("text_users") || "[]"),
+			// hashtags: JSON.parse(formData.get("text_hashtags") || "[]"),
 			authorName: formData.get("authorName"),
 			authorUrl: formData.get("authorUrl"),
 			sourceWebsite: formData.get("sourceWebsite"),
@@ -61,12 +64,21 @@ const UpdateQuoteForm = ({ currentpage = "", object = {} }) => {
 				id="text"
 				name="text"
 				defaultValue={object?.data?.text}
+				value={draft.html ?? undefined}
+				onChange={setDraft}
 				onModel="Quote"
 				advancedTextEditor={false}
 				customPlaceholder="Type something..."
 				charactersLimit={99999}
 				isRequired={true}
 			/>
+			{/* <p className="form-text mt-1 mb-3">
+				{draft.html.replace(/<[^>]*>/g, "").length} characters
+				{draft.users.length > 0 &&
+					" · mentions: " + draft.users.map((u) => "@" + u.username).join(", ")}
+				{draft.hashtags.length > 0 &&
+					" · tags: " + draft.hashtags.map((t) => "#" + t).join(", ")}
+			</p> */}
 			<label htmlFor="authorName" className="form-label">
 				Author Name
 			</label>

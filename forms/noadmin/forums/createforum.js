@@ -11,6 +11,7 @@ const CreateForumForm = ({ token = {}, auth = {} }) => {
 	const router = useRouter();
 
 	const [, setBtnText] = useState(`Submit`);
+	const [draft, setDraft] = useState({ html: null, users: [], hashtags: [] });
 
 	const addForum = async (e) => {
 		e.preventDefault();
@@ -21,6 +22,8 @@ const CreateForumForm = ({ token = {}, auth = {} }) => {
 		const rawFormData = {
 			title: formData.get("title"),
 			text: formData.get("text"),
+			// mentions: JSON.parse(formData.get("text_users") || "[]"),
+			// hashtags: JSON.parse(formData.get("text_hashtags") || "[]"),
 			embedding: formData.get("embedding"),
 			category: formData.get("category"),
 			sub_category: formData.get("sub_category"),
@@ -75,12 +78,22 @@ const CreateForumForm = ({ token = {}, auth = {} }) => {
 					id="text"
 					name="text"
 					defaultValue="No description..."
+					value={draft.html ?? undefined}
+					onChange={setDraft}
 					onModel="Forum"
 					advancedTextEditor={true}
 					customPlaceholder="No description"
 					charactersLimit={99999}
 					isRequired={true}
 				/>
+				<p className="form-text mt-1 mb-3">
+					{/* {draft.html.replace(/<[^>]*>/g, "").length} characters */}
+					{draft.users.length > 0 &&
+						" · mentions: " +
+							draft.users.map((u) => "@" + u.username).join(", ")}
+					{draft.hashtags.length > 0 &&
+						" · tags: " + draft.hashtags.map((t) => "#" + t).join(", ")}
+				</p>
 				<div className="row">
 					<div className="col">
 						<label htmlFor="category" className="form-label">

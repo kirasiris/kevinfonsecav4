@@ -62,7 +62,7 @@ const Single = ({
 							<UrlToProfileContainer>
 								<h4 className="m-0">{object?.username || "Username"}</h4>
 							</UrlToProfileContainer>
-							<p className="text-muted m-0">{object?.name || "Name"}</p>
+							<p className="m-0">{object?.name || "Name"}</p>
 							<div className="py-1">
 								{object?.social?.facebook && (
 									<a
@@ -124,7 +124,7 @@ const Single = ({
 							}}
 						/>
 						<h4 className="m-0">{object?.username || "Username"}</h4>
-						<p className="text-muted m-0">{object?.name || "Name"}</p>
+						<p className="m-0">{object?.name || "Name"}</p>
 					</div>
 				</div>
 			)}

@@ -55,7 +55,7 @@ const UpdateUserPasswordForm = ({ object = {} }) => {
 	};
 
 	return (
-		<form onSubmit={upgradeUserPassword}>
+		<form key={object?.data?._id} onSubmit={upgradeUserPassword}>
 			<div className="row">
 				<div className="col">
 					<label htmlFor="newpassword" className="form-label">

@@ -11,7 +11,6 @@ const UpdatePageForm = ({ object = {}, params = {} }) => {
 	const router = useRouter();
 
 	const [, setBtnText] = useState(`Submit`);
-	const [draft, setDraft] = useState({ html: null, users: [], hashtags: [] });
 
 	const updatePage = async (e) => {
 		e.preventDefault();
@@ -59,7 +58,7 @@ const UpdatePageForm = ({ object = {}, params = {} }) => {
 	};
 
 	return (
-		<form className="row" onSubmit={updatePage}>
+		<form key={object?.data?._id} className="row" onSubmit={updatePage}>
 			<div className="col">
 				<label htmlFor="title" className="form-label">
 					Title
@@ -92,22 +91,12 @@ const UpdatePageForm = ({ object = {}, params = {} }) => {
 					id="text"
 					name="text"
 					defaultValue={object?.data?.text}
-					value={draft.html ?? undefined}
-					onChange={setDraft}
 					onModel="Page"
 					advancedTextEditor={true}
 					customPlaceholder="No description"
 					charactersLimit={99999}
 					isRequired={true}
 				/>
-				<p className="form-text mt-1 mb-3">
-					{/* {draft.html.replace(/<[^>]*>/g, "").length} characters */}
-					{draft.users.length > 0 &&
-						" · mentions: " +
-							draft.users.map((u) => "@" + u.username).join(", ")}
-					{draft.hashtags.length > 0 &&
-						" · tags: " + draft.hashtags.map((t) => "#" + t).join(", ")}
-				</p>
 				<div className="row">
 					<div className="col">
 						<label htmlFor="referrerpolicy" className="form-label">
@@ -117,7 +106,7 @@ const UpdatePageForm = ({ object = {}, params = {} }) => {
 							id="referrerpolicy"
 							name="referrerpolicy"
 							defaultValue={object?.data?.referrerpolicy}
-							className="form-control"
+							className="form-select"
 						>
 							<option value={`no-referrer`}>No Referrer</option>
 							<option value={`no-referrer-when-downgrade`}>
@@ -143,7 +132,7 @@ const UpdatePageForm = ({ object = {}, params = {} }) => {
 							id="rel"
 							name="rel"
 							defaultValue={object?.data?.rel}
-							className="form-control"
+							className="form-select"
 						>
 							<option value={`no-referrer`}>No Referrer</option>
 						</select>
@@ -156,7 +145,7 @@ const UpdatePageForm = ({ object = {}, params = {} }) => {
 							id="target"
 							name="target"
 							defaultValue={object?.data?.target}
-							className="form-control"
+							className="form-select"
 						>
 							<option value={`_self`}>Self</option>
 							<option value={`_blank`}>Blank</option>

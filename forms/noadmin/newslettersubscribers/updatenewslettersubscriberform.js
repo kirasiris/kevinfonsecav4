@@ -45,7 +45,7 @@ const UpdateNewsletterSubscriberForm = ({ object = {} }) => {
 	};
 
 	return (
-		<form className="row" onSubmit={upgradeEmail}>
+		<form key={object?.data?._id} className="row" onSubmit={upgradeEmail}>
 			<div className="col">
 				<label htmlFor="email" className="form-label">
 					Email

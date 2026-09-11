@@ -18,6 +18,7 @@ const Menu = ({
 	const isActive = (path = "") => {
 		return pathname === path ? "active" : "";
 	};
+
 	return (
 		<Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
 			<Container>
@@ -34,7 +35,7 @@ const Menu = ({
 					>
 						<Image
 							alt={title}
-							src={logo}
+							src={logo?.location?.secure_location}
 							width="150"
 							height="40"
 							className="d-inline-block align-text-top"
@@ -81,7 +82,7 @@ const Menu = ({
 													query: {},
 												}}
 												className={`nav-link ${isActive(
-													`${canonical}/noadmin`
+													`${canonical}/noadmin`,
 												)}`}
 												aria-current="page"
 											>
@@ -95,7 +96,7 @@ const Menu = ({
 													query: {},
 												}}
 												className={`nav-link ${isActive(
-													`${canonical}/nfabusiness`
+													`${canonical}/nfabusiness`,
 												)}`}
 												aria-current="page"
 											>
@@ -111,7 +112,7 @@ const Menu = ({
 											query: {},
 										}}
 										className={`nav-link ${isActive(
-											`${canonical}/auth/profile`
+											`${canonical}/auth/profile`,
 										)}`}
 										aria-current="page"
 									>
@@ -125,7 +126,7 @@ const Menu = ({
 											query: {},
 										}}
 										className={`nav-link ${isActive(
-											`${canonical}/profile/${auth?.data?._id}/${auth?.data?.username}`
+											`${canonical}/profile/${auth?.data?._id}/${auth?.data?.username}`,
 										)}`}
 										aria-current="page"
 									>
@@ -161,7 +162,7 @@ const Menu = ({
 										query: {},
 									}}
 									className={`nav-link ${isActive(
-										`${canonical}/auth/register`
+										`${canonical}/auth/register`,
 									)}`}
 								>
 									Register

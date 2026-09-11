@@ -20,7 +20,7 @@ const AdminMenu = ({ auth = {}, settings = {} }) => {
 					style={{
 						width: 32,
 						height: 32,
-						backgroundImage: `url(${settings?.data?.favicon || `https://picsum.photos/32/32?blur`})`,
+						backgroundImage: `url(${settings?.data?.favicon?.location?.secure_location || `https://picsum.photos/32/32?blur`})`,
 						backgroundSize: "cover",
 						backgroundPosition: "center",
 					}}

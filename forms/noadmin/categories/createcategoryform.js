@@ -10,7 +10,6 @@ const CreateCategoryForm = ({ currentpage = "", objects = [] }) => {
 	const router = useRouter();
 
 	const [btnText, setBtnText] = useState(`Submit`);
-	const [draft, setDraft] = useState({ html: null, users: [], hashtags: [] });
 
 	const createCategory = async (e) => {
 		e.preventDefault();
@@ -74,21 +73,12 @@ const CreateCategoryForm = ({ currentpage = "", objects = [] }) => {
 				id="text"
 				name="text"
 				defaultValue=""
-				value={draft.html ?? undefined}
-				onChange={setDraft}
 				onModel="Category"
 				advancedTextEditor={false}
 				customPlaceholder="Type something..."
 				charactersLimit={99999}
 				isRequired={true}
 			/>
-			{/* <p className="form-text mt-1 mb-3">
-				{draft.html.replace(/<[^>]*>/g, "").length} characters
-				{draft.users.length > 0 &&
-					" · mentions: " + draft.users.map((u) => "@" + u.username).join(", ")}
-				{draft.hashtags.length > 0 &&
-					" · tags: " + draft.hashtags.map((t) => "#" + t).join(", ")}
-			</p> */}
 			<label htmlFor="parentId" className="form-label">
 				Parent Category
 			</label>
@@ -96,7 +86,7 @@ const CreateCategoryForm = ({ currentpage = "", objects = [] }) => {
 				id="parentId"
 				name="parentId"
 				defaultValue=""
-				className="form-control mb-3"
+				className="form-select mb-3"
 			>
 				<option value="">Select category</option>
 				{objects?.data?.map((item) => (
@@ -112,7 +102,7 @@ const CreateCategoryForm = ({ currentpage = "", objects = [] }) => {
 				id="deletable"
 				name="deletable"
 				defaultValue={false}
-				className="form-control mb-3"
+				className="form-select mb-3"
 			>
 				<option value={true}>Yes</option>
 				<option value={false}>No</option>
@@ -124,7 +114,7 @@ const CreateCategoryForm = ({ currentpage = "", objects = [] }) => {
 				id="status"
 				name="status"
 				defaultValue="published"
-				className="form-control"
+				className="form-select"
 			>
 				<option value={`draft`}>Draft</option>
 				<option value={`published`}>Published</option>

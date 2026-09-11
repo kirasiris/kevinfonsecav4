@@ -10,7 +10,6 @@ const CreateNewsletterEmailForm = ({ token = {}, auth = {}, objects = [] }) => {
 	const router = useRouter();
 
 	const [, setBtnText] = useState(`Submit`);
-	const [draft, setDraft] = useState({ html: null, users: [], hashtags: [] });
 
 	const addEmail = async (e) => {
 		e.preventDefault();
@@ -61,7 +60,7 @@ const CreateNewsletterEmailForm = ({ token = {}, auth = {}, objects = [] }) => {
 					id="recipients"
 					name="recipients"
 					defaultValue={[]}
-					className="form-control"
+					className="form-select"
 					multiple
 				>
 					{objects?.data
@@ -92,22 +91,12 @@ const CreateNewsletterEmailForm = ({ token = {}, auth = {}, objects = [] }) => {
 					id="text"
 					name="text"
 					defaultValue="No description..."
-					value={draft.html ?? undefined}
-					onChange={setDraft}
 					onModel="NewsletterEmail"
 					advancedTextEditor={false}
 					customPlaceholder="No description"
 					charactersLimit={99999}
 					isRequired={true}
 				/>
-				{/* <p className="form-text mt-1 mb-3">
-					{draft.html.replace(/<[^>]*>/g, "").length} characters
-					{draft.users.length > 0 &&
-						" · mentions: " +
-							draft.users.map((u) => "@" + u.username).join(", ")}
-					{draft.hashtags.length > 0 &&
-						" · tags: " + draft.hashtags.map((t) => "#" + t).join(", ")}
-				</p> */}
 			</div>
 			<div className="col-lg-3">
 				<label htmlFor="status" className="form-label">
@@ -117,7 +106,7 @@ const CreateNewsletterEmailForm = ({ token = {}, auth = {}, objects = [] }) => {
 					id="status"
 					name="status"
 					defaultValue="draft"
-					className="form-control"
+					className="form-select"
 				>
 					<option value={`draft`}>Draft</option>
 					<option value={`published`}>Published</option>

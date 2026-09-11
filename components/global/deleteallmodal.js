@@ -37,12 +37,12 @@ const DeleteAllModal = ({
 				size={`sm`}
 			>
 				<Modal.Header closeButton>
-					<Modal.Title>Are you sure about this?</Modal.Title>
+					<div className="modal-title h4">Are you sure about this?</div>
 				</Modal.Header>
-				<Modal.Body>
+				<div className="modal-body">
 					You are about to delete everything from this collection!
-				</Modal.Body>
-				<Modal.Footer>
+				</div>
+				<div className="modal-footer">
 					<button
 						className="btn btn-secondary btn-sm"
 						onClick={() => setConfirmDeleteAllModal(!confirmDeleteAllModal)}
@@ -56,7 +56,7 @@ const DeleteAllModal = ({
 					>
 						Submit
 					</button>
-				</Modal.Footer>
+				</div>
 			</Modal>
 		</>
 	);

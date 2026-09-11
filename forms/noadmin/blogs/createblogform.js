@@ -11,7 +11,6 @@ const CreateBlogForm = ({ token = {}, auth = {}, objects = [] }) => {
 	const router = useRouter();
 
 	const [, setBtnText] = useState(`Submit`);
-	const [draft, setDraft] = useState({ html: null, users: [], hashtags: [] });
 
 	const addBlog = async (e) => {
 		e.preventDefault();
@@ -31,7 +30,10 @@ const CreateBlogForm = ({ token = {}, auth = {}, objects = [] }) => {
 			password: formData.get("password"),
 			status: formData.get("status"),
 			fullWidth: formData.get("fullWidth"),
-			files: { avatar: formData.get("file") || undefined },
+			files: {
+				avatar: formData.get("file") || undefined,
+				extras: JSON.parse(formData.get("text_files") || "[]"),
+			},
 			postType: "blog",
 		};
 
@@ -82,22 +84,12 @@ const CreateBlogForm = ({ token = {}, auth = {}, objects = [] }) => {
 					id="text"
 					name="text"
 					defaultValue="No description..."
-					value={draft.html ?? undefined}
-					onChange={setDraft}
 					onModel="Blog"
 					advancedTextEditor={true}
 					customPlaceholder="No description"
 					charactersLimit={99999}
 					isRequired={true}
 				/>
-				<p className="form-text mt-1 mb-3">
-					{/* {draft.html.replace(/<[^>]*>/g, "").length} characters */}
-					{draft.users.length > 0 &&
-						" · mentions: " +
-							draft.users.map((u) => "@" + u.username).join(", ")}
-					{draft.hashtags.length > 0 &&
-						" · tags: " + draft.hashtags.map((t) => "#" + t).join(", ")}
-				</p>
 			</div>
 			<div className="col-lg-3">
 				<AdminSidebar

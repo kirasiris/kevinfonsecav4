@@ -1,76 +1,52 @@
-import { revalidatePath } from "next/cache";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import AdminStatusesMenu from "@/components/noadmin/adminstatusesmenu";
-import List from "@/components/noadmin/events/list";
+import Scheduler from "@/components/noadmin/events/scheduler";
+import { serverClock } from "@/helpers/events/date-utils";
 
 async function getEvents(params) {
-	const res = await fetchurl(`/global/events${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/events${params}`, "GET", "no-store");
 	return res;
 }
+
+async function getAvailability({ from, to }) {
+	const params = new URLSearchParams({ from: from || "", to: to || "" });
+	const res = await fetchurl(
+		`/noadmin/events/availability?${params.toString()}`,
+	);
+	return res;
+}
+
+const initialWindow = (now) => {
+	const anchor = new Date(now.getFullYear(), now.getMonth(), 1);
+	anchor.setHours(0, 0, 0, 0);
+	anchor.setDate(anchor.getDate() - anchor.getDay() - 7);
+
+	const end = new Date(anchor);
+	end.setDate(end.getDate() + 49);
+
+	const iso = (d) =>
+		`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(
+			d.getDate(),
+		).padStart(2, "0")}`;
+
+	return { from: iso(anchor), to: iso(end) };
+};
 
 const AdminEventsIndex = async ({ params, searchParams }) => {
 	const awtdParams = await params;
 	const awtdSearchParams = await searchParams;
 	const page = awtdSearchParams.page || 1;
-	const limit = awtdSearchParams.limit || 10;
+	const limit = awtdSearchParams.limit || 200;
 	const sort = awtdSearchParams.sort || "-createdAt";
 
-	const events = await getEvents(
-		`?page=${page}&limit=${limit}&sort=${sort}&decrypt=true`
-	);
+	const now = new Date();
 
-	const draftIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/events/${id}/draftit`, "PUT", "no-cache");
-		revalidatePath(`/noadmin/events?page=${page}&limit=${limit}&sort=${sort}`);
-	};
+	const [events, availability] = await Promise.all([
+		getEvents(`?page=${page}&limit=${limit}&sort=${sort}&decrypt=true`),
+		getAvailability(initialWindow(now)),
+	]);
 
-	const publishIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/events/${id}/publishit`, "PUT", "no-cache");
-		revalidatePath(`/noadmin/events?page=${page}&limit=${limit}&sort=${sort}`);
-	};
-
-	const trashIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/events/${id}/trashit`, "PUT", "no-cache");
-		revalidatePath(`/noadmin/events?page=${page}&limit=${limit}&sort=${sort}`);
-	};
-
-	const scheduleIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/events/${id}/scheduleit`, "PUT", "no-cache");
-		revalidatePath(`/noadmin/events?page=${page}&limit=${limit}&sort=${sort}`);
-	};
-
-	const handleDelete = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/events/${id}/permanently`, "DELETE", "no-cache");
-		revalidatePath(`/noadmin/events?page=${page}&limit=${limit}&sort=${sort}`);
-	};
-
-	const handleTrashAll = async () => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/events/deleteall`, "PUT", "no-cache");
-		revalidatePath(`/noadmin/events?page=${page}&limit=${limit}&sort=${sort}`);
-	};
-
-	const handleDeleteAll = async () => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/events/deleteall/permanently`,
-			"DELETE",
-			"no-cache"
-		);
-		revalidatePath(`/noadmin/events?page=${page}&limit=${limit}&sort=${sort}`);
-	};
+	const clock = serverClock(now);
 
 	return (
 		<>
@@ -83,24 +59,12 @@ const AdminEventsIndex = async ({ params, searchParams }) => {
 				categoriesLink=""
 				categoryType=""
 			/>
-			<div className="card rounded-0">
-				<List
-					allLink="/noadmin/events"
-					pageText="Events"
-					addLink="/noadmin/events/create"
-					searchOn="/noadmin/events"
-					searchedKeyword=""
-					objects={events}
-					searchParams={awtdSearchParams}
-					handleDraft={draftIt}
-					handlePublish={publishIt}
-					handleTrash={trashIt}
-					handleSchedule={scheduleIt}
-					handleDelete={handleDelete}
-					handleTrashAllFunction={handleTrashAll}
-					handleDeleteAllFunction={handleDeleteAll}
-				/>
-			</div>
+			<Scheduler
+				objects={events}
+				loadError={events.success ? "" : events.message}
+				clock={clock}
+				initialAvailability={availability.success ? availability.data : null}
+			/>
 		</>
 	);
 };

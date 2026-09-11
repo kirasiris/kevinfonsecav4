@@ -43,8 +43,8 @@ const CourseIndex = async ({ params, searchParams }) => {
 			<Head
 				title={`${settings?.data?.title} - Courses`}
 				description={"Courses at your reach"}
-				favicon={settings?.data?.favicon}
-				postImage={settings.data.showcase_image}
+				favicon={settings?.data?.favicon?.location?.secure_location}
+				postImage={settings.data.showcase_image?.location?.secure_location}
 				imageWidth=""
 				imageHeight=""
 				videoWidth=""

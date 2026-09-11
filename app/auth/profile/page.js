@@ -22,8 +22,8 @@ const AuthIndex = async ({ params, searchParams }) => {
 			<Head
 				title={`${settings?.data?.title} - Account`}
 				description={"Your account"}
-				favicon={settings?.data?.favicon}
-				postImage=""
+				favicon={settings?.data?.favicon?.location?.secure_location}
+				postImage={settings.data.showcase_image?.location?.secure_location}
 				imageWidth=""
 				imageHeight=""
 				videoWidth=""

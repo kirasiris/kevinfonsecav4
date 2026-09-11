@@ -16,7 +16,6 @@ const CreateVideoForm = ({
 	const router = useRouter();
 
 	const [, setBtnText] = useState(`Submit`);
-	const [draft, setDraft] = useState({ html: null, users: [], hashtags: [] });
 
 	const addVideo = async (e) => {
 		e.preventDefault();
@@ -111,22 +110,12 @@ const CreateVideoForm = ({
 					id="text"
 					name="text"
 					defaultValue="No description..."
-					value={draft.html ?? undefined}
-					onChange={setDraft}
 					onModel="Video"
 					advancedTextEditor={false}
 					customPlaceholder="No description"
 					charactersLimit={99999}
 					isRequired={true}
 				/>
-				<p className="form-text mt-1 mb-3">
-					{/* {draft.html.replace(/<[^>]*>/g, "").length} characters */}
-					{draft.users.length > 0 &&
-						" · mentions: " +
-							draft.users.map((u) => "@" + u.username).join(", ")}
-					{draft.hashtags.length > 0 &&
-						" · tags: " + draft.hashtags.map((t) => "#" + t).join(", ")}
-				</p>
 				<label htmlFor="address" className="form-label">
 					Address
 				</label>
@@ -147,7 +136,7 @@ const CreateVideoForm = ({
 							id="language"
 							name="language"
 							defaultValue="english"
-							className="form-control mb-3"
+							className="form-select mb-3"
 						>
 							<option value="english">English</option>
 							<option value="mandarin">Mandarin</option>
@@ -169,7 +158,7 @@ const CreateVideoForm = ({
 							id="captionCert"
 							name="captionCert"
 							defaultValue="1"
-							className="form-control mb-3"
+							className="form-select mb-3"
 						>
 							<option value="0">None</option>
 							<option value="1">
@@ -218,7 +207,7 @@ const CreateVideoForm = ({
 							id="license"
 							name="license"
 							defaultValue="0"
-							className="form-control"
+							className="form-select"
 						>
 							<option value="0">Standard beFree license</option>
 							<option value="1">Creative Commons - Attribution</option>
@@ -234,7 +223,7 @@ const CreateVideoForm = ({
 							id="free_preview"
 							name="free_preview"
 							defaultValue={true}
-							className="form-control"
+							className="form-select"
 						>
 							<option value={true}>Yes</option>
 							<option value={false}>No</option>
@@ -261,7 +250,7 @@ const CreateVideoForm = ({
 							id="averageRating"
 							name="averageRating"
 							defaultValue={5}
-							className="form-control"
+							className="form-select"
 						>
 							<option value={1}>1</option>
 							<option value={2}>2</option>

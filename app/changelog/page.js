@@ -32,8 +32,8 @@ const ChangelogIndex = async ({ params, searchParams }) => {
 				description={
 					"Here you can see every change that is taking place with the development of this app!"
 				}
-				favicon={settings?.data?.favicon}
-				postImage={settings.data.showcase_image}
+				favicon={settings?.data?.favicon?.location?.secure_location}
+				postImage={settings.data.showcase_image?.location?.secure_location}
 				imageWidth=""
 				imageHeight=""
 				videoWidth=""

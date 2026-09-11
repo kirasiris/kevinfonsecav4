@@ -14,7 +14,6 @@ const UpdateCategoryForm = ({
 	const router = useRouter();
 
 	const [btnText, setBtnText] = useState(`Submit`);
-	const [draft, setDraft] = useState({ html: null, users: [], hashtags: [] });
 
 	const upgradeCategory = async (e) => {
 		e.preventDefault();
@@ -56,7 +55,7 @@ const UpdateCategoryForm = ({
 	};
 
 	return (
-		<form onSubmit={upgradeCategory}>
+		<form key={object?.data?._id} onSubmit={upgradeCategory}>
 			<label htmlFor="category-title" className="form-label">
 				Title
 			</label>
@@ -77,21 +76,12 @@ const UpdateCategoryForm = ({
 				id="text"
 				name="text"
 				defaultValue={object?.data?.text}
-				value={draft.html ?? undefined}
-				onChange={setDraft}
 				onModel="Category"
 				advancedTextEditor={false}
 				customPlaceholder="Type something..."
 				charactersLimit={99999}
 				isRequired={true}
 			/>
-			{/* <p className="form-text mt-1 mb-3">
-				{draft.html.replace(/<[^>]*>/g, "").length} characters
-				{draft.users.length > 0 &&
-					" · mentions: " + draft.users.map((u) => "@" + u.username).join(", ")}
-				{draft.hashtags.length > 0 &&
-					" · tags: " + draft.hashtags.map((t) => "#" + t).join(", ")}
-			</p> */}
 			<label htmlFor="parentId" className="form-label">
 				Parent Category
 			</label>
@@ -99,7 +89,7 @@ const UpdateCategoryForm = ({
 				id="parentId"
 				name="parentId"
 				defaultValue={object?.data?.parentId}
-				className="form-control mb-3"
+				className="form-select mb-3"
 			>
 				{object?.data?.parentId && (
 					<option value={object.data.parentId}>
@@ -125,7 +115,7 @@ const UpdateCategoryForm = ({
 				id="deletable"
 				name="deletable"
 				defaultValue={object?.data?.deletable}
-				className="form-control"
+				className="form-select"
 			>
 				<option value={true}>Yes</option>
 				<option value={false}>No</option>

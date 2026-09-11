@@ -11,7 +11,6 @@ const UpdateRealEstateForm = ({ token = {}, auth = {}, object = {} }) => {
 	const router = useRouter();
 
 	const [, setBtnText] = useState(`Submit`);
-	const [draft, setDraft] = useState({ html: null, users: [], hashtags: [] });
 
 	const upgradeRealState = async (e) => {
 		e.preventDefault();
@@ -67,7 +66,7 @@ const UpdateRealEstateForm = ({ token = {}, auth = {}, object = {} }) => {
 	};
 
 	return (
-		<form className="row" onSubmit={upgradeRealState}>
+		<form key={object?.data?._id} className="row" onSubmit={upgradeRealState}>
 			<div className="col">
 				<label htmlFor="title" className="form-label">
 					Title
@@ -89,22 +88,12 @@ const UpdateRealEstateForm = ({ token = {}, auth = {}, object = {} }) => {
 					id="text"
 					name="text"
 					defaultValue={object?.data?.text}
-					value={draft.html ?? undefined}
-					onChange={setDraft}
 					onModel="Product"
 					advancedTextEditor={true}
 					customPlaceholder="No description"
 					charactersLimit={99999}
 					isRequired={true}
 				/>
-				<p className="form-text mt-1 mb-3">
-					{/* {draft.html.replace(/<[^>]*>/g, "").length} characters */}
-					{draft.users.length > 0 &&
-						" · mentions: " +
-							draft.users.map((u) => "@" + u.username).join(", ")}
-					{draft.hashtags.length > 0 &&
-						" · tags: " + draft.hashtags.map((t) => "#" + t).join(", ")}
-				</p>
 				<div className="row">
 					<div className="col">
 						<label htmlFor="price" className="form-label">
@@ -147,7 +136,7 @@ const UpdateRealEstateForm = ({ token = {}, auth = {}, object = {} }) => {
 							id="isFree"
 							name="isFree"
 							defaultValue={object?.data?.isFree.toString()}
-							className="form-control mb-3"
+							className="form-select mb-3"
 						>
 							<option value={true}>Yes</option>
 							<option value={false}>No</option>
@@ -164,7 +153,7 @@ const UpdateRealEstateForm = ({ token = {}, auth = {}, object = {} }) => {
 							id="active"
 							name="active"
 							defaultValue={object?.data?.active.toString()}
-							className="form-control mb-3"
+							className="form-select mb-3"
 						>
 							<option value={true}>Yes</option>
 							<option value={false}>No</option>
@@ -206,7 +195,7 @@ const UpdateRealEstateForm = ({ token = {}, auth = {}, object = {} }) => {
 							id="inStock"
 							name="inStock"
 							defaultValue={object?.data?.inStock.toString()}
-							className="form-control mb-3"
+							className="form-select mb-3"
 						>
 							<option value={true}>Yes</option>
 							<option value={false}>No</option>
@@ -279,7 +268,7 @@ const UpdateRealEstateForm = ({ token = {}, auth = {}, object = {} }) => {
 							id="buldingType"
 							name="buldingType"
 							defaultValue={object?.data?.buldingType}
-							className="form-control mb-3"
+							className="form-select mb-3"
 						>
 							<option value={`apartment`}>Apartment</option>
 							<option value={`studio`}>Studio</option>

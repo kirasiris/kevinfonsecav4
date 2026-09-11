@@ -11,7 +11,6 @@ const CreateLessonForm = ({ token = {}, auth = {}, params = {} }) => {
 	const router = useRouter();
 
 	const [, setBtnText] = useState(`Submit`);
-	const [draft, setDraft] = useState({ html: null, users: [], hashtags: [] });
 
 	const addLesson = async (e) => {
 		e.preventDefault();
@@ -88,22 +87,12 @@ const CreateLessonForm = ({ token = {}, auth = {}, params = {} }) => {
 					id="text"
 					name="text"
 					defaultValue="No description..."
-					value={draft.html ?? undefined}
-					onChange={setDraft}
 					onModel="Lesson"
 					advancedTextEditor={true}
 					customPlaceholder="No description"
 					charactersLimit={99999}
 					isRequired={true}
 				/>
-				<p className="form-text mt-1 mb-3">
-					{/* {draft.html.replace(/<[^>]*>/g, "").length} characters */}
-					{draft.users.length > 0 &&
-						" · mentions: " +
-							draft.users.map((u) => "@" + u.username).join(", ")}
-					{draft.hashtags.length > 0 &&
-						" · tags: " + draft.hashtags.map((t) => "#" + t).join(", ")}
-				</p>
 				<div className="row">
 					<div className="col">
 						<label htmlFor="video_url" className="form-label">
@@ -128,7 +117,7 @@ const CreateLessonForm = ({ token = {}, auth = {}, params = {} }) => {
 							id="free_preview"
 							name="free_preview"
 							defaultValue={true}
-							className="form-control mb-3"
+							className="form-select mb-3"
 						>
 							<option value={true}>Yes</option>
 							<option value={false}>No</option>

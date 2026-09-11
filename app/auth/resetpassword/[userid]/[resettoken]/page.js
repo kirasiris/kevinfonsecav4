@@ -26,8 +26,8 @@ const ResetPassword = async ({ params, searchParams }) => {
 			<Head
 				title={`${settings?.data?.title} - Reset Password`}
 				description={"Reset your account password"}
-				favicon={settings?.data?.favicon}
-				postImage=""
+				favicon={settings?.data?.favicon?.location?.secure_location}
+				postImage={settings.data.showcase_image?.location?.secure_location}
 				imageWidth=""
 				imageHeight=""
 				videoWidth=""

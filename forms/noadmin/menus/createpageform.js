@@ -11,7 +11,6 @@ const CreatePageForm = ({ params = {} }) => {
 	const router = useRouter();
 
 	const [, setBtnText] = useState(`Submit`);
-	const [draft, setDraft] = useState({ html: null, users: [], hashtags: [] });
 
 	const addPage = async (e) => {
 		e.preventDefault();
@@ -93,22 +92,12 @@ const CreatePageForm = ({ params = {} }) => {
 					id="text"
 					name="text"
 					defaultValue="No description..."
-					value={draft.html ?? undefined}
-					onChange={setDraft}
 					onModel="Page"
 					advancedTextEditor={true}
 					customPlaceholder="No description"
 					charactersLimit={99999}
 					isRequired={true}
 				/>
-				<p className="form-text mt-1 mb-3">
-					{/* {draft.html.replace(/<[^>]*>/g, "").length} characters */}
-					{draft.users.length > 0 &&
-						" · mentions: " +
-							draft.users.map((u) => "@" + u.username).join(", ")}
-					{draft.hashtags.length > 0 &&
-						" · tags: " + draft.hashtags.map((t) => "#" + t).join(", ")}
-				</p>
 				<div className="row">
 					<div className="col">
 						<label htmlFor="referrerpolicy" className="form-label">
@@ -118,7 +107,7 @@ const CreatePageForm = ({ params = {} }) => {
 							id="referrerpolicy"
 							name="referrerpolicy"
 							defaultValue="strict-origin-when-cross-origin"
-							className="form-control"
+							className="form-select"
 						>
 							<option value={`no-referrer`}>No Referrer</option>
 							<option value={`no-referrer-when-downgrade`}>
@@ -144,7 +133,7 @@ const CreatePageForm = ({ params = {} }) => {
 							id="rel"
 							name="rel"
 							defaultValue="no-referrer"
-							className="form-control"
+							className="form-select"
 						>
 							<option value={`no-referrer`}>No Referrer</option>
 						</select>
@@ -157,7 +146,7 @@ const CreatePageForm = ({ params = {} }) => {
 							id="target"
 							name="target"
 							defaultValue="_blank"
-							className="form-control"
+							className="form-select"
 						>
 							<option value={`_self`}>Self</option>
 							<option value={`_blank`}>Blank</option>

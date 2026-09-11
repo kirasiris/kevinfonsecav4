@@ -14,7 +14,6 @@ const CreateWeaponForm = ({ token = "", auth = {} }) => {
 	});
 
 	const [, setBtnText] = useState("Submit");
-	const [draft, setDraft] = useState({ html: null, users: [], hashtags: [] });
 
 	const { files } = rawFiles;
 
@@ -124,7 +123,7 @@ const CreateWeaponForm = ({ token = "", auth = {} }) => {
 							id="type"
 							name="type"
 							defaultValue=""
-							className="form-control mb-3"
+							className="form-select mb-3"
 							required
 						>
 							<option value="none">Choose&nbsp;an&nbsp;option</option>
@@ -184,7 +183,7 @@ const CreateWeaponForm = ({ token = "", auth = {} }) => {
 							id="nfaClassification"
 							name="nfaClassification"
 							defaultValue=""
-							className="form-control mb-3"
+							className="form-select mb-3"
 							required
 						>
 							<option value="none">Choose&nbsp;an&nbsp;option</option>
@@ -245,22 +244,12 @@ const CreateWeaponForm = ({ token = "", auth = {} }) => {
 					id="text"
 					name="text"
 					defaultValue="No description..."
-					value={draft.html ?? undefined}
-					onChange={setDraft}
 					onModel="Weapon"
 					advancedTextEditor={false}
 					customPlaceholder="No description"
 					charactersLimit={99999}
 					isRequired={false}
 				/>
-				{/* <p className="form-text mt-1 mb-3">
-					{draft.html.replace(/<[^>]*>/g, "").length} characters
-					{draft.users.length > 0 &&
-						" · mentions: " +
-							draft.users.map((u) => "@" + u.username).join(", ")}
-					{draft.hashtags.length > 0 &&
-						" · tags: " + draft.hashtags.map((t) => "#" + t).join(", ")}
-				</p> */}
 				<FormButtons />
 			</div>
 		</form>

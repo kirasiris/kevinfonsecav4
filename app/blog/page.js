@@ -54,8 +54,8 @@ const BlogIndex = async ({ params, searchParams }) => {
 			<Head
 				title={`${settings?.data?.title} - Blog`}
 				description={"Learn everything about my programming and life journey"}
-				favicon={settings?.data?.favicon}
-				postImage={settings.data.showcase_image}
+				favicon={settings?.data?.favicon?.location?.secure_location}
+				postImage={settings.data.showcase_image?.location?.secure_location}
 				imageWidth=""
 				imageHeight=""
 				videoWidth=""

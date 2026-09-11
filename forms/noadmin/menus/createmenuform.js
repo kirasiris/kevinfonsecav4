@@ -11,7 +11,6 @@ const CreateMenuForm = ({}) => {
 	const router = useRouter();
 
 	const [, setBtnText] = useState(`Submit`);
-	const [draft, setDraft] = useState({ html: null, users: [], hashtags: [] });
 
 	const addMenu = async (e) => {
 		e.preventDefault();
@@ -75,22 +74,12 @@ const CreateMenuForm = ({}) => {
 					id="text"
 					name="text"
 					defaultValue="No description..."
-					value={draft.html ?? undefined}
-					onChange={setDraft}
 					onModel="Menu"
 					advancedTextEditor={false}
 					customPlaceholder="No description"
 					charactersLimit={99999}
 					isRequired={true}
 				/>
-				{/* <p className="form-text mt-1 mb-3">
-					{draft.html.replace(/<[^>]*>/g, "").length} characters
-					{draft.users.length > 0 &&
-						" · mentions: " +
-							draft.users.map((u) => "@" + u.username).join(", ")}
-					{draft.hashtags.length > 0 &&
-						" · tags: " + draft.hashtags.map((t) => "#" + t).join(", ")}
-				</p> */}
 				<label htmlFor="position" className="form-label">
 					Position
 				</label>
@@ -98,7 +87,7 @@ const CreateMenuForm = ({}) => {
 					id="position"
 					name="position"
 					defaultValue="top"
-					className="form-control"
+					className="form-select"
 					multiple
 				>
 					<option value={`top`}>Top</option>

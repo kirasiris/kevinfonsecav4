@@ -11,7 +11,6 @@ const CreateEventForm = ({ token = {}, auth = {} }) => {
 	const router = useRouter();
 
 	const [, setBtnText] = useState(`Submit`);
-	const [draft, setDraft] = useState({ html: null, users: [], hashtags: [] });
 
 	const addEvent = async (e) => {
 		e.preventDefault();
@@ -28,6 +27,7 @@ const CreateEventForm = ({ token = {}, auth = {} }) => {
 			day: formData.get("day"),
 			time: formData.get("time"),
 			priority: formData.get("priority"),
+			method: formData.get("method"),
 			recurrenceRule: formData.get("recurrenceRule"),
 			status: formData.get("status"),
 			attendees: [
@@ -91,22 +91,12 @@ const CreateEventForm = ({ token = {}, auth = {} }) => {
 					id="text"
 					name="text"
 					defaultValue="No description..."
-					value={draft.html ?? undefined}
-					onChange={setDraft}
 					onModel="Event"
 					advancedTextEditor={true}
 					customPlaceholder="No description"
 					charactersLimit={99999}
 					isRequired={true}
 				/>
-				<p className="form-text mt-1 mb-3">
-					{/* {draft.html.replace(/<[^>]*>/g, "").length} characters */}
-					{draft.users.length > 0 &&
-						" · mentions: " +
-							draft.users.map((u) => "@" + u.username).join(", ")}
-					{draft.hashtags.length > 0 &&
-						" · tags: " + draft.hashtags.map((t) => "#" + t).join(", ")}
-				</p>
 				<div className="row">
 					{/* fullCalendarDateFormat, recurrenceRule */}
 					<div className="col">
@@ -143,7 +133,7 @@ const CreateEventForm = ({ token = {}, auth = {} }) => {
 							id="priority"
 							name="priority"
 							defaultValue="low"
-							className="form-control mb-3"
+							className="form-select mb-3"
 						>
 							<option value="low">Low</option>
 							<option value="medium">Medium</option>
@@ -158,7 +148,7 @@ const CreateEventForm = ({ token = {}, auth = {} }) => {
 							id="method"
 							name="method"
 							defaultValue="phone"
-							className="form-control mb-3"
+							className="form-select mb-3"
 						>
 							<option value="phone">Phone</option>
 							<option value="video-interview">Video Interview</option>

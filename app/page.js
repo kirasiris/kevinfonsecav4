@@ -41,8 +41,8 @@ const HomeIndex = async ({ params, searchParams }) => {
 			<Head
 				title={settings?.data?.title}
 				description={settings?.data?.text}
-				favicon={settings?.data?.favicon}
-				postImage={settings?.data?.showcase_image}
+				favicon={settings?.data?.favicon?.location?.secure_location}
+				postImage={settings.data.showcase_image?.location?.secure_location}
 				imageWidth="800"
 				imageHeight="450"
 				videoWidth=""
@@ -70,7 +70,7 @@ const HomeIndex = async ({ params, searchParams }) => {
 							backgroundSize: "cover !important",
 							backgroundPosition: "50% 50%",
 							background: `linear-gradient(to bottom, rgba(0,0,0,0.7) 0%,rgba(0,0,0,0.7) 100%), url(${
-								settings?.data?.showcase_image ||
+								settings?.data?.showcase_image?.location?.secure_location ||
 								`https://befreebucket-for-outputs.s3.amazonaws.com/2023/02/map-image.png`
 							}) no-repeat center center`,
 						}}

@@ -62,7 +62,7 @@ const CourseCommentsIndex = async ({ params, searchParams }) => {
 			<Head
 				title={`${settings?.data?.title} - ${course.data.title}'s Comments`}
 				description={course.data.excerpt || course.data.text}
-				favicon={settings?.data?.favicon}
+				favicon={settings?.data?.favicon?.location?.secure_location}
 				postImage={course.data.files.avatar.location.secure_location}
 				imageWidth=""
 				imageHeight=""

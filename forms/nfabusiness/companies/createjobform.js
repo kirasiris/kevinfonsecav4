@@ -11,7 +11,6 @@ const CreateJobForm = ({ token = {}, auth = {}, params = {} }) => {
 	const router = useRouter();
 
 	const [, setBtnText] = useState(`Submit`);
-	const [draft, setDraft] = useState({ html: null, users: [], hashtags: [] });
 
 	const addJob = async (e) => {
 		e.preventDefault();
@@ -87,22 +86,12 @@ const CreateJobForm = ({ token = {}, auth = {}, params = {} }) => {
 					id="text"
 					name="text"
 					defaultValue="No description..."
-					value={draft.html ?? undefined}
-					onChange={setDraft}
 					onModel="Job"
 					advancedTextEditor={true}
 					customPlaceholder="No description"
 					charactersLimit={99999}
 					isRequired={true}
 				/>
-				<p className="form-text mt-1 mb-3">
-					{/* {draft.html.replace(/<[^>]*>/g, "").length} characters */}
-					{draft.users.length > 0 &&
-						" · mentions: " +
-							draft.users.map((u) => "@" + u.username).join(", ")}
-					{draft.hashtags.length > 0 &&
-						" · tags: " + draft.hashtags.map((t) => "#" + t).join(", ")}
-				</p>
 				<div className="row">
 					<div className="col">
 						<label htmlFor="positionFilled" className="form-label">
@@ -112,7 +101,7 @@ const CreateJobForm = ({ token = {}, auth = {}, params = {} }) => {
 							id="positionFilled"
 							name="positionFilled"
 							defaultValue={false}
-							className="form-control mb-3"
+							className="form-select mb-3"
 						>
 							<option value={true}>Yes</option>
 							<option value={false}>No</option>
@@ -137,7 +126,7 @@ const CreateJobForm = ({ token = {}, auth = {}, params = {} }) => {
 							id="experience_level"
 							name="experience_level"
 							defaultValue="entry"
-							className="form-control mb-3"
+							className="form-select mb-3"
 							multiple
 						>
 							<option value={"graduate"}>Graduate</option>
@@ -152,7 +141,7 @@ const CreateJobForm = ({ token = {}, auth = {}, params = {} }) => {
 							id="job_type"
 							name="job_type"
 							defaultValue="full-time"
-							className="form-control mb-3"
+							className="form-select mb-3"
 							multiple
 						>
 							<option value={"full-time"}>Full Time</option>
@@ -170,7 +159,7 @@ const CreateJobForm = ({ token = {}, auth = {}, params = {} }) => {
 							id="provides_training"
 							name="provides_training"
 							defaultValue={true}
-							className="form-control mb-3"
+							className="form-select mb-3"
 						>
 							<option value={true}>Yes</option>
 							<option value={false}>No</option>
@@ -182,7 +171,7 @@ const CreateJobForm = ({ token = {}, auth = {}, params = {} }) => {
 							id="security_clearance"
 							name="security_clearance"
 							defaultValue={false}
-							className="form-control mb-3"
+							className="form-select mb-3"
 						>
 							<option value={true}>Yes</option>
 							<option value={false}>No</option>
@@ -209,7 +198,7 @@ const CreateJobForm = ({ token = {}, auth = {}, params = {} }) => {
 							id="remote"
 							name="remote"
 							defaultValue="remote"
-							className="form-control mb-3"
+							className="form-select mb-3"
 							multiple
 						>
 							<option value={`hybrid`}>Hybrid</option>
@@ -225,7 +214,7 @@ const CreateJobForm = ({ token = {}, auth = {}, params = {} }) => {
 							id="shift_and_schedule"
 							name="shift_and_schedule"
 							defaultValue="monday-to-friday"
-							className="form-control mb-3"
+							className="form-select mb-3"
 							multiple
 						>
 							<option value={`hybrid`}>Hybrid</option>
@@ -251,7 +240,7 @@ const CreateJobForm = ({ token = {}, auth = {}, params = {} }) => {
 							id="encouraged_to_apply"
 							name="encouraged_to_apply"
 							defaultValue="fair-chance"
-							className="form-control mb-3"
+							className="form-select mb-3"
 						>
 							<option value={`fair-chance`}>Fair Chance</option>
 							<option value={`no-highschool-diploma`}>

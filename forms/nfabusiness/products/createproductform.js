@@ -13,7 +13,6 @@ const CreateProductForm = ({ token = {}, auth = {} }) => {
 	const [showCategories, setShowCategories] = useState(true);
 
 	const [, setBtnText] = useState("Submit");
-	const [draft, setDraft] = useState({ html: null, users: [], hashtags: [] });
 
 	const addProduct = async (e) => {
 		e.preventDefault();
@@ -109,22 +108,12 @@ const CreateProductForm = ({ token = {}, auth = {} }) => {
 					id="text"
 					name="text"
 					defaultValue="No description..."
-					value={draft.html ?? undefined}
-					onChange={setDraft}
 					onModel="Product"
 					advancedTextEditor={true}
 					customPlaceholder="No description"
 					charactersLimit={99999}
 					isRequired={true}
 				/>
-				<p className="form-text mt-1 mb-3">
-					{/* {draft.html.replace(/<[^>]*>/g, "").length} characters */}
-					{draft.users.length > 0 &&
-						" · mentions: " +
-							draft.users.map((u) => "@" + u.username).join(", ")}
-					{draft.hashtags.length > 0 &&
-						" · tags: " + draft.hashtags.map((t) => "#" + t).join(", ")}
-				</p>
 				<div className="row">
 					<div className="col">
 						<label htmlFor="price" className="form-label">
@@ -166,7 +155,7 @@ const CreateProductForm = ({ token = {}, auth = {} }) => {
 							id="isFree"
 							name="isFree"
 							defaultValue={true}
-							className="form-control mb-3"
+							className="form-select mb-3"
 						>
 							<option value={true}>Yes</option>
 							<option value={false}>No</option>
@@ -183,7 +172,7 @@ const CreateProductForm = ({ token = {}, auth = {} }) => {
 							id="active"
 							name="active"
 							defaultValue={true}
-							className="form-control mb-3"
+							className="form-select mb-3"
 						>
 							<option value={true}>Yes</option>
 							<option value={false}>No</option>
@@ -242,7 +231,7 @@ const CreateProductForm = ({ token = {}, auth = {} }) => {
 							id="category"
 							name="category"
 							defaultValue="all"
-							className="form-control mb-3"
+							className="form-select mb-3"
 							onChange={(e) => setShowCategories(e.target.value)}
 							required
 						>
@@ -260,7 +249,7 @@ const CreateProductForm = ({ token = {}, auth = {} }) => {
 								id="sub_category"
 								name="sub_category"
 								defaultValue="all"
-								className="form-control mb-3"
+								className="form-select mb-3"
 								multiple
 							>
 								<option value="all">All</option>
@@ -284,7 +273,7 @@ const CreateProductForm = ({ token = {}, auth = {} }) => {
 								id="sub_category"
 								name="sub_category"
 								defaultValue="all"
-								className="form-control mb-3"
+								className="form-select mb-3"
 								multiple
 							>
 								<option value="all">All</option>
@@ -382,7 +371,7 @@ const CreateProductForm = ({ token = {}, auth = {} }) => {
 							id="trackInventory"
 							name="trackInventory"
 							defaultValue={true}
-							className="form-control mb-3"
+							className="form-select mb-3"
 						>
 							<option value={true}>Yes</option>
 							<option value={false}>No</option>
@@ -396,7 +385,7 @@ const CreateProductForm = ({ token = {}, auth = {} }) => {
 							id="inStock"
 							name="inStock"
 							defaultValue={true}
-							className="form-control mb-3"
+							className="form-select mb-3"
 						>
 							<option value={true}>Yes</option>
 							<option value={false}>No</option>
@@ -466,7 +455,7 @@ const CreateProductForm = ({ token = {}, auth = {} }) => {
 							id="shippable"
 							name="shippable"
 							defaultValue={false}
-							className="form-control mb-3"
+							className="form-select mb-3"
 						>
 							<option value={true}>Yes</option>
 							<option value={false}>No</option>
@@ -480,7 +469,7 @@ const CreateProductForm = ({ token = {}, auth = {} }) => {
 							id="shippingClass"
 							name="shippingClass"
 							defaultValue="standard"
-							className="form-control mb-3"
+							className="form-select mb-3"
 							required
 						>
 							<option value={`standard`}>Standard</option>

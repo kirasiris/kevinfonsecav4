@@ -10,7 +10,6 @@ const UpdateReviewForm = ({ token = {}, auth = {}, object = {} }) => {
 	const router = useRouter();
 
 	const [btnText, setBtnText] = useState(`Submit`);
-	const [draft, setDraft] = useState({ html: null, users: [], hashtags: [] });
 
 	const upgradeReview = async (e) => {
 		e.preventDefault();
@@ -56,7 +55,7 @@ const UpdateReviewForm = ({ token = {}, auth = {}, object = {} }) => {
 	};
 
 	return (
-		<form className="row" onSubmit={upgradeReview}>
+		<form key={object?.data?._id} className="row" onSubmit={upgradeReview}>
 			<div className="col">
 				<label htmlFor="title" className="form-label">
 					Title
@@ -79,22 +78,12 @@ const UpdateReviewForm = ({ token = {}, auth = {}, object = {} }) => {
 					id="text"
 					name="text"
 					defaultValue={object?.data?.text}
-					value={draft.html ?? undefined}
-					onChange={setDraft}
 					onModel="Comment"
 					advancedTextEditor={true}
 					customPlaceholder="Type something..."
 					charactersLimit={99999}
 					isRequired={true}
 				/>
-				<p className="form-text mt-1 mb-3">
-					{/* {draft.html.replace(/<[^>]*>/g, "").length} characters */}
-					{draft.users.length > 0 &&
-						" · mentions: " +
-							draft.users.map((u) => "@" + u.username).join(", ")}
-					{draft.hashtags.length > 0 &&
-						" · tags: " + draft.hashtags.map((t) => "#" + t).join(", ")}
-				</p>
 				<label htmlFor="user" className="form-label">
 					User ID
 				</label>
@@ -154,7 +143,7 @@ const UpdateReviewForm = ({ token = {}, auth = {}, object = {} }) => {
 					id="status"
 					name="status"
 					defaultValue={object?.data?.status}
-					className="form-control"
+					className="form-select"
 				>
 					<option value={`draft`}>Draft</option>
 					<option value={`published`}>Published</option>

@@ -45,8 +45,8 @@ const CourseSearchIndex = async ({ params, searchParams }) => {
 			<Head
 				title={`${settings?.data?.title} - Search results of ${keyword}`}
 				description={"Search results..."}
-				favicon={settings?.data?.favicon}
-				postImage=""
+				favicon={settings?.data?.favicon?.location?.secure_location}
+				postImage={settings.data.showcase_image?.location?.secure_location}
 				imageWidth=""
 				imageHeight=""
 				videoWidth=""

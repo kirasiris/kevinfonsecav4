@@ -44,7 +44,7 @@ const ProfilePhotoRead = async ({ params, searchParams }) => {
 			<Head
 				title={`${settings?.data?.title} - ${profile.data.username}'s ${file.data.title} Photo`}
 				description={profile.data.bio}
-				favicon={settings?.data?.favicon}
+				favicon={settings?.data?.favicon?.location?.secure_location}
 				postImage={
 					profile.data?.files?.avatar?.location?.secure_location ||
 					`https://picsum.photos/416/416?blur`

@@ -39,8 +39,8 @@ const UpdateTwoFactorAuthentication = async ({ params, searchParams }) => {
 			<Head
 				title={`${settings?.data?.title} - Account 2FA`}
 				description={"Your account 2FA"}
-				favicon={settings?.data?.favicon}
-				postImage=""
+				favicon={settings?.data?.favicon?.location?.secure_location}
+				postImage={settings.data.showcase_image?.location?.secure_location}
 				imageWidth=""
 				imageHeight=""
 				videoWidth=""

@@ -98,7 +98,7 @@ const ContactForm = () => {
 				id="subject"
 				name="subject"
 				defaultValue=""
-				className="form-control mb-3"
+				className="form-select mb-3"
 				required
 			>
 				<option value="none">Choose an option</option>

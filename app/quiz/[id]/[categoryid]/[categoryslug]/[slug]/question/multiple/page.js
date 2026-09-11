@@ -45,7 +45,7 @@ const QuizMultiplePageRead = async ({ params, searchParams }) => {
 			<Head
 				title={`${settings?.data?.title} - ${quiz.data.title}`}
 				description={quiz.data.excerpt || quiz.data.text}
-				favicon={settings?.data?.favicon}
+				favicon={settings?.data?.favicon?.location?.secure_location}
 				postImage={quiz.data.files.avatar.location.secure_location}
 				imageWidth=""
 				imageHeight=""

@@ -70,10 +70,10 @@ const DeleteModal = ({
 				id={`deleteModal#${id}`}
 			>
 				<Modal.Header closeButton>
-					<Modal.Title>Are you sure?</Modal.Title>
+					<div className="modal-title h4">Are you sure?</div>
 				</Modal.Header>
-				<Modal.Body>{id}</Modal.Body>
-				<Modal.Footer>
+				<div className="modal-body">{id}</div>
+				<div className="modal-footer">
 					<button
 						className="btn btn-secondary btn-sm"
 						onClick={() => setConfirmDeleteModal(!confirmDeleteModal)}
@@ -87,7 +87,7 @@ const DeleteModal = ({
 					>
 						Submit
 					</button>
-				</Modal.Footer>
+				</div>
 			</Modal>
 		</>
 	);

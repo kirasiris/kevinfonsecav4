@@ -10,7 +10,6 @@ const CreateSecretForm = ({ token = {}, auth = {} }) => {
 	const router = useRouter();
 
 	const [, setBtnText] = useState(`Submit`);
-	const [draft, setDraft] = useState({ html: null, users: [], hashtags: [] });
 
 	const addSecret = async (e) => {
 		e.preventDefault();
@@ -80,22 +79,12 @@ const CreateSecretForm = ({ token = {}, auth = {} }) => {
 					id="text"
 					name="text"
 					defaultValue="No description..."
-					value={draft.html ?? undefined}
-					onChange={setDraft}
 					onModel="Secret"
 					advancedTextEditor={true}
 					customPlaceholder="No description"
 					charactersLimit={99999}
 					isRequired={true}
 				/>
-				{/* <p className="form-text mt-1 mb-3">
-					{draft.html.replace(/<[^>]*>/g, "").length} characters
-					{draft.users.length > 0 &&
-						" · mentions: " +
-							draft.users.map((u) => "@" + u.username).join(", ")}
-					{draft.hashtags.length > 0 &&
-						" · tags: " + draft.hashtags.map((t) => "#" + t).join(", ")}
-				</p> */}
 				<label htmlFor="password" className="form-label">
 					Password
 				</label>
@@ -131,7 +120,7 @@ const CreateSecretForm = ({ token = {}, auth = {} }) => {
 							id="sex"
 							name="sex"
 							defaultValue="non-binary"
-							className="form-control mb-3"
+							className="form-select mb-3"
 						>
 							<option value={`male`}>Male</option>
 							<option value={`female`}>Female</option>
@@ -146,7 +135,7 @@ const CreateSecretForm = ({ token = {}, auth = {} }) => {
 							id="state"
 							name="state"
 							defaultValue="TX"
-							className="form-control mb-3"
+							className="form-select mb-3"
 						>
 							<option value={`AL`}>Alabama</option>
 							<option value={`AK`}>Alaska</option>
@@ -219,7 +208,7 @@ const CreateSecretForm = ({ token = {}, auth = {} }) => {
 							id="nsfw"
 							name="nsfw"
 							defaultValue={false}
-							className="form-control mb-3"
+							className="form-select mb-3"
 						>
 							<option value={true}>Yes</option>
 							<option value={false}>No</option>
@@ -233,7 +222,7 @@ const CreateSecretForm = ({ token = {}, auth = {} }) => {
 							id="commented"
 							name="commented"
 							defaultValue={true}
-							className="form-control mb-3"
+							className="form-select mb-3"
 						>
 							<option value={true}>Yes</option>
 							<option value={false}>No</option>
@@ -247,7 +236,7 @@ const CreateSecretForm = ({ token = {}, auth = {} }) => {
 							id="deletable"
 							name="deletable"
 							defaultValue={false}
-							className="form-control mb-3"
+							className="form-select mb-3"
 						>
 							<option value={true}>Yes</option>
 							<option value={false}>No</option>

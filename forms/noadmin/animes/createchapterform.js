@@ -11,7 +11,6 @@ const CreateChapterForm = ({ token = {}, auth = {}, params = {} }) => {
 	const router = useRouter();
 
 	const [, setBtnText] = useState(`Submit`);
-	const [draft, setDraft] = useState({ html: null, users: [], hashtags: [] });
 
 	const addChapter = async (e) => {
 		e.preventDefault();
@@ -106,22 +105,12 @@ const CreateChapterForm = ({ token = {}, auth = {}, params = {} }) => {
 					id="text"
 					name="text"
 					defaultValue="No description..."
-					value={draft.html ?? undefined}
-					onChange={setDraft}
 					onModel="Video"
 					advancedTextEditor={true}
 					customPlaceholder="No description"
 					charactersLimit={99999}
 					isRequired={true}
 				/>
-				<p className="form-text mt-1 mb-3">
-					{/* {draft.html.replace(/<[^>]*>/g, "").length} characters */}
-					{draft.users.length > 0 &&
-						" · mentions: " +
-							draft.users.map((u) => "@" + u.username).join(", ")}
-					{draft.hashtags.length > 0 &&
-						" · tags: " + draft.hashtags.map((t) => "#" + t).join(", ")}
-				</p>
 				<label htmlFor="address" className="form-label">
 					Address
 				</label>
@@ -142,7 +131,7 @@ const CreateChapterForm = ({ token = {}, auth = {}, params = {} }) => {
 							id="language"
 							name="language"
 							defaultValue="english"
-							className="form-control mb-3"
+							className="form-select mb-3"
 						>
 							<option value="english">English</option>
 							<option value="mandarin">Mandarin</option>
@@ -164,7 +153,7 @@ const CreateChapterForm = ({ token = {}, auth = {}, params = {} }) => {
 							id="captionCert"
 							name="captionCert"
 							defaultValue="1"
-							className="form-control mb-3"
+							className="form-select mb-3"
 						>
 							<option value="0">None</option>
 							<option value="1">
@@ -213,7 +202,7 @@ const CreateChapterForm = ({ token = {}, auth = {}, params = {} }) => {
 							id="license"
 							name="license"
 							defaultValue="0"
-							className="form-control"
+							className="form-select"
 						>
 							<option value="0">Standard beFree license</option>
 							<option value="1">Creative Commons - Attribution</option>
@@ -229,7 +218,7 @@ const CreateChapterForm = ({ token = {}, auth = {}, params = {} }) => {
 							id="free_preview"
 							name="free_preview"
 							defaultValue={true}
-							className="form-control"
+							className="form-select"
 						>
 							<option value={true}>Yes</option>
 							<option value={false}>No</option>
@@ -256,7 +245,7 @@ const CreateChapterForm = ({ token = {}, auth = {}, params = {} }) => {
 							id="averageRating"
 							name="averageRating"
 							defaultValue={5}
-							className="form-control"
+							className="form-select"
 						>
 							<option value={1}>1</option>
 							<option value={2}>2</option>

@@ -90,7 +90,7 @@ const UpdateBasicsForm = ({ auth = {} }) => {
 				id="workstatus"
 				name="workstatus"
 				defaultValue={auth?.data?.workstatus}
-				className="form-control mb-3"
+				className="form-select mb-3"
 			>
 				<option value="nini">Nini</option>
 				<option value="student">Student</option>

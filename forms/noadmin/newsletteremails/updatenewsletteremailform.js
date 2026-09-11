@@ -15,7 +15,6 @@ const UpdateNewsletterEmailForm = ({
 	const router = useRouter();
 
 	const [, setBtnText] = useState(`Submit`);
-	const [draft, setDraft] = useState({ html: null, users: [], hashtags: [] });
 
 	const upgradeEmail = async (e) => {
 		e.preventDefault();
@@ -57,7 +56,7 @@ const UpdateNewsletterEmailForm = ({
 	};
 
 	return (
-		<form className="row" onSubmit={upgradeEmail}>
+		<form key={object?.data?._id} className="row" onSubmit={upgradeEmail}>
 			<div className="col">
 				<label htmlFor="recipients" className="form-label">
 					To
@@ -66,7 +65,7 @@ const UpdateNewsletterEmailForm = ({
 					id="recipients"
 					name="recipients"
 					defaultValue={object?.data?.users}
-					className="form-control"
+					className="form-select"
 					multiple
 				>
 					{objects?.data
@@ -97,22 +96,12 @@ const UpdateNewsletterEmailForm = ({
 					id="text"
 					name="text"
 					defaultValue={object?.data?.text}
-					value={draft.html ?? undefined}
-					onChange={setDraft}
 					onModel="NewsletterEmail"
 					advancedTextEditor={false}
 					customPlaceholder="No description"
 					charactersLimit={99999}
 					isRequired={true}
 				/>
-				{/* <p className="form-text mt-1 mb-3">
-					{draft.html.replace(/<[^>]*>/g, "").length} characters
-					{draft.users.length > 0 &&
-						" · mentions: " +
-							draft.users.map((u) => "@" + u.username).join(", ")}
-					{draft.hashtags.length > 0 &&
-						" · tags: " + draft.hashtags.map((t) => "#" + t).join(", ")}
-				</p> */}
 			</div>
 			<div className="col-lg-3">
 				<label htmlFor="status" className="form-label">
@@ -122,7 +111,7 @@ const UpdateNewsletterEmailForm = ({
 					id="status"
 					name="status"
 					defaultValue={object?.data?.status}
-					className="form-control"
+					className="form-select"
 				>
 					<option value={`draft`}>Draft</option>
 					<option value={`published`}>Published</option>

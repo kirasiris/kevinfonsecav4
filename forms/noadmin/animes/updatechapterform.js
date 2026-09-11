@@ -11,7 +11,6 @@ const UpdateChapterForm = ({ token = {}, auth = {}, object = {} }) => {
 	const router = useRouter();
 
 	const [, setBtnText] = useState(`Submit`);
-	const [draft, setDraft] = useState({ html: null, users: [], hashtags: [] });
 
 	const upgradeChapter = async (e) => {
 		e.preventDefault();
@@ -82,7 +81,7 @@ const UpdateChapterForm = ({ token = {}, auth = {}, object = {} }) => {
 	};
 
 	return (
-		<form className="row" onSubmit={upgradeChapter}>
+		<form key={object?.data?._id} className="row" onSubmit={upgradeChapter}>
 			<div className="col">
 				<label htmlFor="title" className="form-label">
 					Title
@@ -104,22 +103,12 @@ const UpdateChapterForm = ({ token = {}, auth = {}, object = {} }) => {
 					id="text"
 					name="text"
 					defaultValue={object?.data?.text}
-					value={draft.html ?? undefined}
-					onChange={setDraft}
 					onModel="Video"
 					advancedTextEditor={true}
 					customPlaceholder="No description"
 					charactersLimit={99999}
 					isRequired={true}
 				/>
-				<p className="form-text mt-1 mb-3">
-					{/* {draft.html.replace(/<[^>]*>/g, "").length} characters */}
-					{draft.users.length > 0 &&
-						" · mentions: " +
-							draft.users.map((u) => "@" + u.username).join(", ")}
-					{draft.hashtags.length > 0 &&
-						" · tags: " + draft.hashtags.map((t) => "#" + t).join(", ")}
-				</p>
 				<label htmlFor="address" className="form-label">
 					Address
 				</label>
@@ -140,7 +129,7 @@ const UpdateChapterForm = ({ token = {}, auth = {}, object = {} }) => {
 							id="language"
 							name="language"
 							defaultValue={object?.data?.language}
-							className="form-control mb-3"
+							className="form-select mb-3"
 						>
 							<option value="english">English</option>
 							<option value="mandarin">Mandarin</option>
@@ -162,7 +151,7 @@ const UpdateChapterForm = ({ token = {}, auth = {}, object = {} }) => {
 							id="captionCert"
 							name="captionCert"
 							defaultValue={object?.data?.captionCert}
-							className="form-control mb-3"
+							className="form-select mb-3"
 						>
 							<option value="0">None</option>
 							<option value="1">
@@ -211,7 +200,7 @@ const UpdateChapterForm = ({ token = {}, auth = {}, object = {} }) => {
 							id="license"
 							name="license"
 							defaultValue={object?.data?.license}
-							className="form-control"
+							className="form-select"
 						>
 							<option value="0">Standard beFree license</option>
 							<option value="1">Creative Commons - Attribution</option>
@@ -227,7 +216,7 @@ const UpdateChapterForm = ({ token = {}, auth = {}, object = {} }) => {
 							id="free_preview"
 							name="free_preview"
 							defaultValue={object?.data?.free_preview.toString()}
-							className="form-control"
+							className="form-select"
 						>
 							<option value={true}>Yes</option>
 							<option value={false}>No</option>
@@ -254,7 +243,7 @@ const UpdateChapterForm = ({ token = {}, auth = {}, object = {} }) => {
 							id="averageRating"
 							name="averageRating"
 							defaultValue={object?.data?.averageRating}
-							className="form-control"
+							className="form-select"
 						>
 							<option value={1}>1</option>
 							<option value={2}>2</option>

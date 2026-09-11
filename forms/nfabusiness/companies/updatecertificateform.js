@@ -15,7 +15,6 @@ const UpdateCertificateForm = ({
 	const router = useRouter();
 
 	const [, setBtnText] = useState(`Submit`);
-	const [draft, setDraft] = useState({ html: null, users: [], hashtags: [] });
 
 	const upgradeCertificate = async (e) => {
 		e.preventDefault();
@@ -61,7 +60,7 @@ const UpdateCertificateForm = ({
 	};
 
 	return (
-		<form onSubmit={upgradeCertificate}>
+		<form key={object?.data?._id} onSubmit={upgradeCertificate}>
 			<div className="row">
 				<div className="col">
 					<label htmlFor="name" className="form-label">
@@ -137,7 +136,7 @@ const UpdateCertificateForm = ({
 						id="current"
 						name="current"
 						defaultValue={object?.data?.current.toString()}
-						className="form-control mb-3"
+						className="form-select mb-3"
 					>
 						<option value={true}>Yes</option>
 						<option value={false}>No</option>
@@ -181,22 +180,12 @@ const UpdateCertificateForm = ({
 						id="text"
 						name="text"
 						defaultValue={object?.data?.text}
-						value={draft.html ?? undefined}
-						onChange={setDraft}
 						onModel="Job"
 						advancedTextEditor={true}
 						customPlaceholder="No description"
 						charactersLimit={99999}
 						isRequired={false}
 					/>
-					<p className="form-text mt-1 mb-3">
-						{/* {draft.html.replace(/<[^>]*>/g, "").length} characters */}
-						{draft.users.length > 0 &&
-							" · mentions: " +
-								draft.users.map((u) => "@" + u.username).join(", ")}
-						{draft.hashtags.length > 0 &&
-							" · tags: " + draft.hashtags.map((t) => "#" + t).join(", ")}
-					</p>
 				</div>
 			</div>
 			<FormButtons />

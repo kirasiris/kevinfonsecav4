@@ -91,7 +91,7 @@ const BlogRead = async ({ params, searchParams }) => {
 			<Head
 				title={`${settings?.data?.title} - ${blog.data.title}`}
 				description={blog.data.excerpt || blog.data.text}
-				favicon={settings?.data?.favicon}
+				favicon={settings?.data?.favicon?.location?.secure_location}
 				postImage={blog.data.files.avatar.location.secure_location}
 				imageWidth=""
 				imageHeight=""

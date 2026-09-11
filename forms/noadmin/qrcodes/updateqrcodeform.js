@@ -90,7 +90,7 @@ const UpdateQRCodeForm = ({ object = {} }) => {
 					imgheight={imageheight}
 				/>
 			</div>
-			<form onSubmit={upgradeQrCode}>
+			<form key={object?.data?._id} onSubmit={upgradeQrCode}>
 				<label htmlFor="title" className="form-label">
 					Title
 				</label>
@@ -166,7 +166,7 @@ const UpdateQRCodeForm = ({ object = {} }) => {
 							securitylevel: e.target.value,
 						});
 					}}
-					className="form-control mb-3"
+					className="form-select mb-3"
 				>
 					<option value="L">Low</option>
 					<option value="M">Medium</option>

@@ -10,7 +10,6 @@ const CreateReportForm = ({ token = {}, auth = {}, searchParams = {} }) => {
 	const router = useRouter();
 
 	const [btnText, setBtnText] = useState(`Submit`);
-	const [draft, setDraft] = useState({ html: null, users: [], hashtags: [] });
 
 	const addReport = async (e) => {
 		e.preventDefault();
@@ -75,22 +74,12 @@ const CreateReportForm = ({ token = {}, auth = {}, searchParams = {} }) => {
 					id="text"
 					name="text"
 					defaultValue=""
-					value={draft.html ?? undefined}
-					onChange={setDraft}
 					onModel="Report"
 					advancedTextEditor={false}
 					customPlaceholder="Type something..."
 					charactersLimit={99999}
 					isRequired={true}
 				/>
-				{/* <p className="form-text mt-1 mb-3">
-					{draft.html.replace(/<[^>]*>/g, "").length} characters
-					{draft.users.length > 0 &&
-						" · mentions: " +
-							draft.users.map((u) => "@" + u.username).join(", ")}
-					{draft.hashtags.length > 0 &&
-						" · tags: " + draft.hashtags.map((t) => "#" + t).join(", ")}
-				</p> */}
 				<label htmlFor="website" className="form-label">
 					Website
 				</label>

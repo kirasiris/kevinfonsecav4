@@ -16,7 +16,6 @@ const UpdateCDAlbumForm = ({
 	const router = useRouter();
 
 	const [btnText, setBtnText] = useState(`Submit`);
-	const [draft, setDraft] = useState({ html: null, users: [], hashtags: [] });
 
 	const upgradeCDAlbum = async (e) => {
 		e.preventDefault();
@@ -65,7 +64,7 @@ const UpdateCDAlbumForm = ({
 	};
 
 	return (
-		<form className="row" onSubmit={upgradeCDAlbum}>
+		<form key={object?.data?._id} className="row" onSubmit={upgradeCDAlbum}>
 			<div className="col">
 				<label htmlFor="category-title" className="form-label">
 					Title
@@ -88,22 +87,12 @@ const UpdateCDAlbumForm = ({
 					id="text"
 					name="text"
 					defaultValue={object?.data?.text}
-					value={draft.html ?? undefined}
-					onChange={setDraft}
 					onModel="Playlist"
 					advancedTextEditor={true}
 					customPlaceholder="Type something..."
 					charactersLimit={99999}
 					isRequired={true}
 				/>
-				<p className="form-text mt-1 mb-3">
-					{/* {draft.html.replace(/<[^>]*>/g, "").length} characters */}
-					{draft.users.length > 0 &&
-						" · mentions: " +
-							draft.users.map((u) => "@" + u.username).join(", ")}
-					{draft.hashtags.length > 0 &&
-						" · tags: " + draft.hashtags.map((t) => "#" + t).join(", ")}
-				</p>
 			</div>
 			<div className="col-lg-3">
 				<AdminSidebar

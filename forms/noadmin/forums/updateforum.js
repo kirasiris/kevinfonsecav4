@@ -11,7 +11,6 @@ const UpdateForumForm = ({ token = {}, auth = {}, object = {} }) => {
 	const router = useRouter();
 
 	const [, setBtnText] = useState(`Submit`);
-	const [draft, setDraft] = useState({ html: null, users: [], hashtags: [] });
 
 	const upgradeForum = async (e) => {
 		e.preventDefault();
@@ -56,7 +55,7 @@ const UpdateForumForm = ({ token = {}, auth = {}, object = {} }) => {
 	};
 
 	return (
-		<form className="row" onSubmit={upgradeForum}>
+		<form key={object?.data?._id} className="row" onSubmit={upgradeForum}>
 			<div className="col">
 				<label htmlFor="title" className="form-label">
 					Title
@@ -78,22 +77,12 @@ const UpdateForumForm = ({ token = {}, auth = {}, object = {} }) => {
 					id="text"
 					name="text"
 					defaultValue={object?.data?.text}
-					value={draft.html ?? undefined}
-					onChange={setDraft}
 					onModel="Forum"
 					advancedTextEditor={true}
 					customPlaceholder="No description"
 					charactersLimit={99999}
 					isRequired={true}
 				/>
-				<p className="form-text mt-1 mb-3">
-					{/* {draft.html.replace(/<[^>]*>/g, "").length} characters */}
-					{draft.users.length > 0 &&
-						" · mentions: " +
-							draft.users.map((u) => "@" + u.username).join(", ")}
-					{draft.hashtags.length > 0 &&
-						" · tags: " + draft.hashtags.map((t) => "#" + t).join(", ")}
-				</p>
 				<div className="row">
 					<div className="col">
 						<label htmlFor="category" className="form-label">
@@ -103,7 +92,7 @@ const UpdateForumForm = ({ token = {}, auth = {}, object = {} }) => {
 							id="category"
 							name="category"
 							defaultValue={object?.data?.category}
-							className="form-control"
+							className="form-select"
 						>
 							<option value={"development"}>Development</option>
 							<option value={"business"}>Business</option>
@@ -129,7 +118,7 @@ const UpdateForumForm = ({ token = {}, auth = {}, object = {} }) => {
 							id="sub_category"
 							name="sub_category"
 							defaultValue={object?.data?.sub_category}
-							className="form-control"
+							className="form-select"
 						>
 							<optgroup label="Development">
 								<option value={"web-development"}>Web Development</option>

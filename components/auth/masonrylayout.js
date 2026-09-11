@@ -21,7 +21,7 @@ const MasonryLayout = ({ setNewAvatar = () => {}, objects = [] }) => {
 					/>
 					<div className="position-absolute top-0 end-0 p-2 d-flex gap-1">
 						<button
-							className="btn btn-primary btn-sm"
+							className="btn btn-secondary btn-sm"
 							onClick={() => setNewAvatar(object._id)}
 						>
 							Set Avatar

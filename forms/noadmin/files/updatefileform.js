@@ -144,7 +144,7 @@ const UpdateFileForm = ({ token = {}, auth = {}, object = {} }) => {
 	};
 
 	return (
-		<form className="row" onSubmit={upgradeFile}>
+		<form key={object?.data?._id} className="row" onSubmit={upgradeFile}>
 			<div className="col">
 				{object?.data?.format_type === "image" && imgObj(object)}
 				{object?.data?.format_type === "application" && pdfObj(object)}
@@ -197,10 +197,12 @@ const UpdateFileForm = ({ token = {}, auth = {}, object = {} }) => {
 					token={token}
 					id="text"
 					name="text"
+					defaultValue={object?.data?.text}
 					onModel="File"
 					advancedTextEditor={false}
 					customPlaceholder="No description"
-					defaultValue={object?.data?.text}
+					charactersLimit={99999}
+					isRequired={false}
 				/>
 				<label htmlFor="album" className="form-label">
 					Album
@@ -209,7 +211,7 @@ const UpdateFileForm = ({ token = {}, auth = {}, object = {} }) => {
 					id="album"
 					name="album"
 					defaultValue={object?.data?.album}
-					className="form-control mb-3"
+					className="form-select mb-3"
 				>
 					<option value={`all`}>None</option>
 					<option value={`profile-avatars`}>Profile Avatars</option>

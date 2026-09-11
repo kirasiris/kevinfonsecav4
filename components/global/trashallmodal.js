@@ -33,10 +33,12 @@ const TrashAllModal = ({ action = () => {} }) => {
 				animation={true}
 			>
 				<Modal.Header closeButton>
-					<Modal.Title>Are you sure about this?</Modal.Title>
+					<div className="modal-title h4">Are you sure about this?</div>
 				</Modal.Header>
-				<Modal.Body>You are about to move everything to trash!</Modal.Body>
-				<Modal.Footer>
+				<div className="modal-body">
+					You are about to move everything to trash!
+				</div>
+				<div className="modal-footer">
 					<button
 						className="btn btn-secondary btn-sm"
 						onClick={() => setConfirmTrashAllModal(!confirmTrashAllModal)}
@@ -50,7 +52,7 @@ const TrashAllModal = ({ action = () => {} }) => {
 					>
 						Submit
 					</button>
-				</Modal.Footer>
+				</div>
 			</Modal>
 		</>
 	);

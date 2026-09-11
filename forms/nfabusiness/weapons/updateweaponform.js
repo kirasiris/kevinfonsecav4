@@ -14,7 +14,6 @@ const UpdateWeaponForm = ({ token = "", auth = {}, object = {} }) => {
 	});
 
 	const [, setBtnText] = useState("Submit");
-	const [draft, setDraft] = useState({ html: null, users: [], hashtags: [] });
 
 	const { files } = rawFiles;
 
@@ -85,7 +84,7 @@ const UpdateWeaponForm = ({ token = "", auth = {}, object = {} }) => {
 	};
 
 	return (
-		<form className="row" onSubmit={upgradeWeapon}>
+		<form key={object?.data?._id} className="row" onSubmit={upgradeWeapon}>
 			<div className="col">
 				<div className="row">
 					<div className="col">
@@ -124,7 +123,7 @@ const UpdateWeaponForm = ({ token = "", auth = {}, object = {} }) => {
 							id="type"
 							name="type"
 							defaultValue={object?.data?.type}
-							className="form-control mb-3"
+							className="form-select mb-3"
 							required
 						>
 							<option value="none">Choose an option</option>
@@ -176,7 +175,7 @@ const UpdateWeaponForm = ({ token = "", auth = {}, object = {} }) => {
 							id="nfaClassification"
 							name="nfaClassification"
 							defaultValue={object?.data?.nfaClassification}
-							className="form-control mb-3"
+							className="form-select mb-3"
 							required
 						>
 							<option value="none">Choose an option</option>
@@ -229,22 +228,12 @@ const UpdateWeaponForm = ({ token = "", auth = {}, object = {} }) => {
 					id="text"
 					name="text"
 					defaultValue="No description..."
-					value={draft.html ?? undefined}
-					onChange={setDraft}
 					onModel="Weapon"
 					advancedTextEditor={false}
 					customPlaceholder="No description"
 					charactersLimit={99999}
 					isRequired={false}
 				/>
-				{/* <p className="form-text mt-1 mb-3">
-					{draft.html.replace(/<[^>]*>/g, "").length} characters
-					{draft.users.length > 0 &&
-						" · mentions: " +
-							draft.users.map((u) => "@" + u.username).join(", ")}
-					{draft.hashtags.length > 0 &&
-						" · tags: " + draft.hashtags.map((t) => "#" + t).join(", ")}
-				</p> */}
 				<FormButtons />
 			</div>
 		</form>

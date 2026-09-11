@@ -169,7 +169,7 @@ const CreateQrCodeForm = ({ auth = {} }) => {
 							securitylevel: e.target.value,
 						});
 					}}
-					className="form-control mb-3"
+					className="form-select mb-3"
 				>
 					<option value="L">Low</option>
 					<option value="M">Medium</option>

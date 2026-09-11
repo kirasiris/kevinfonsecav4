@@ -10,7 +10,6 @@ const CreateUserForm = ({ auth = {}, objects = [] }) => {
 	const router = useRouter();
 
 	const [, setBtnText] = useState(`Submit`);
-	const [draft, setDraft] = useState({ html: null, users: [], hashtags: [] });
 
 	const [showPartner, setShowPartner] = useState("");
 
@@ -174,7 +173,7 @@ const CreateUserForm = ({ auth = {}, objects = [] }) => {
 					id="isEmailConfirmed"
 					name="isEmailConfirmed"
 					defaultValue={true}
-					className="form-control"
+					className="form-select"
 				>
 					<option value={true}>Yes</option>
 					<option value={false}>No</option>
@@ -189,7 +188,7 @@ const CreateUserForm = ({ auth = {}, objects = [] }) => {
 						id="role"
 						name="role"
 						defaultValue={["subscriber"]}
-						className="form-control"
+						className="form-select"
 						multiple
 					>
 						<option value={`founder`}>Founder</option>
@@ -229,7 +228,7 @@ const CreateUserForm = ({ auth = {}, objects = [] }) => {
 						id="gender"
 						name="gender"
 						defaultValue="non-binary"
-						className="form-control"
+						className="form-select"
 					>
 						<option value={`non-binary`}>Non binary</option>
 						<option value={`intersex`}>Intersex</option>
@@ -275,7 +274,7 @@ const CreateUserForm = ({ auth = {}, objects = [] }) => {
 						id="relationshipStatus"
 						name="relationshipStatus"
 						defaultValue="single"
-						className="form-control"
+						className="form-select"
 						onChange={(e) => setShowPartner(e.target.value === "taken")}
 					>
 						<option value={`single`}>Single</option>
@@ -294,7 +293,7 @@ const CreateUserForm = ({ auth = {}, objects = [] }) => {
 							id="inRelationshipWith"
 							name="inRelationshipWith"
 							defaultValue={undefined}
-							className="form-control"
+							className="form-select"
 						>
 							{objects.data
 								.filter((excludedUser) => excludedUser._id !== auth?.id)
@@ -329,7 +328,7 @@ const CreateUserForm = ({ auth = {}, objects = [] }) => {
 						id="workstatus"
 						name="workstatus"
 						defaultValue="nini"
-						className="form-control"
+						className="form-select"
 					>
 						<option value={`nini`}>Nini</option>
 						<option value={`student`}>Student</option>
@@ -349,22 +348,12 @@ const CreateUserForm = ({ auth = {}, objects = [] }) => {
 						id="text"
 						name="text"
 						defaultValue="No description..."
-						value={draft.html ?? undefined}
-						onChange={setDraft}
 						onModel="User"
 						advancedTextEditor={false}
 						customPlaceholder="No description"
 						charactersLimit={99999}
 						isRequired={true}
 					/>
-					{/* <p className="form-text mt-1 mb-3">
-						{draft.html.replace(/<[^>]*>/g, "").length} characters
-						{draft.users.length > 0 &&
-							" · mentions: " +
-								draft.users.map((u) => "@" + u.username).join(", ")}
-						{draft.hashtags.length > 0 &&
-							" · tags: " + draft.hashtags.map((t) => "#" + t).join(", ")}
-					</p> */}
 				</div>
 			</div>
 			<div className="row">

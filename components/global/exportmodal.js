@@ -84,11 +84,11 @@ const ExportModal = ({
 				animation={true}
 			>
 				<Modal.Header closeButton>
-					<Modal.Title>
+					<div className="modal-title h4">
 						Export&nbsp;-&nbsp;{object?.title || "Object"}
-					</Modal.Title>
+					</div>
 				</Modal.Header>
-				<Modal.Body>
+				<div className="modal-body">
 					<div className="input-group">
 						<Form.Control readOnly disabled value={presentationUrl} />
 						<button
@@ -187,7 +187,7 @@ const ExportModal = ({
 					>
 						<TelegramIcon size={iconSize} />
 					</TelegramShareButton>
-				</Modal.Body>
+				</div>
 			</Modal>
 		</>
 	);

@@ -24,8 +24,8 @@ const Recover = async ({ params, searchParams }) => {
 			<Head
 				title={`${settings?.data?.title} - Recover`}
 				description={"Recover account"}
-				favicon={settings?.data?.favicon}
-				postImage=""
+				favicon={settings?.data?.favicon?.location?.secure_location}
+				postImage={settings.data.showcase_image?.location?.secure_location}
 				imageWidth=""
 				imageHeight=""
 				videoWidth=""

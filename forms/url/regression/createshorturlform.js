@@ -10,7 +10,6 @@ const CreateShortUrlForm = ({ auth = {}, currentpage = "" }) => {
 	const router = useRouter();
 
 	const [btnText, setBtnText] = useState("Submit");
-	const [draft, setDraft] = useState({ html: null, users: [], hashtags: [] });
 
 	const addShortUrl = async (e) => {
 		e.preventDefault();
@@ -91,22 +90,12 @@ const CreateShortUrlForm = ({ auth = {}, currentpage = "" }) => {
 					id="text"
 					name="text"
 					defaultValue=""
-					value={draft.html ?? undefined}
-					onChange={setDraft}
 					onModel="ShortUrl"
 					advancedTextEditor={false}
 					customPlaceholder="Type something..."
 					charactersLimit={99999}
 					isRequired={true}
 				/>
-				{/* <p className="form-text mt-1 mb-3">
-					{draft.html.replace(/<[^>]*>/g, "").length} characters
-					{draft.users.length > 0 &&
-						" · mentions: " +
-							draft.users.map((u) => "@" + u.username).join(", ")}
-					{draft.hashtags.length > 0 &&
-						" · tags: " + draft.hashtags.map((t) => "#" + t).join(", ")}
-				</p> */}
 				<h2>User Information</h2>
 				<div className="row g-2">
 					<div className="col-md">

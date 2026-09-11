@@ -78,6 +78,28 @@ const extractUploadUrl = (data) => {
 	return null;
 };
 
+// Device uploads only land in `text_files` when the uploader hands back the
+// stored document's id, so every shape the endpoint may answer with is probed.
+const extractUploadFileId = (data) => {
+	if (!data || typeof data !== "object") return "";
+	const candidates = [
+		data._id,
+		data.id,
+		data.fileId,
+		data.data && data.data._id,
+		data.data && data.data.id,
+		data.file && data.file._id,
+		data.file && data.file.id,
+		data.data && data.data.file && data.data.file._id,
+	];
+	for (let i = 0; i < candidates.length; i++) {
+		const candidate = candidates[i];
+		if (typeof candidate === "string" && candidate) return candidate;
+		if (typeof candidate === "number") return String(candidate);
+	}
+	return "";
+};
+
 const uploadFileToServer = (
 	file,
 	filename,
@@ -160,6 +182,12 @@ const fileNameOf = (item) => {
 	return loc.filename || (item.resourceId && item.resourceId.title) || "file";
 };
 
+const fileIdOf = (item) => {
+	if (!item || typeof item !== "object") return "";
+	const id = item._id || item.id || (item.location && item.location._id) || "";
+	return id ? String(id) : "";
+};
+
 const userAvatarOf = (user) => {
 	try {
 		return user.files.avatar.location.secure_location || "";
@@ -167,6 +195,12 @@ const userAvatarOf = (user) => {
 		return "";
 	}
 };
+
+const profileHref = (id, username) =>
+	"/profile/" +
+	encodeURIComponent(String(id)) +
+	"/" +
+	encodeURIComponent(String(username || ""));
 
 const BLOCK_TAGS = [
 	"P",
@@ -196,19 +230,24 @@ const BLOCK_MENU_ITEMS = [
 	{ tag: "pre", label: "Code block", icon: "fa-code" },
 ];
 
+// `charactersLimit` falls back to this sentinel, which the footer reads as
+// "no practical limit" and renders as a running total instead of "used / allowed".
+const NO_CHARACTER_LIMIT = 99999;
+
+// Counts what the writer sees rather than the markup that carries it, so tags,
+// attributes and entities never inflate the number.
+const countCharacters = (node) => (node.textContent || "").length;
+
 const MyTextArea = ({
 	auth = {},
 	token = {},
 	id = "",
 	name = "",
-	initialContent,
 	defaultValue = "",
-	value,
-	onChange,
 	onModel = "Blog",
 	advancedTextEditor = true,
 	customPlaceholder = "Share something new. Now with #hashtags support, YAY!!!",
-	charactersLimit = 99999,
+	charactersLimit = NO_CHARACTER_LIMIT,
 	isRequired = false,
 }) => {
 	const editorRef = useRef(null);
@@ -217,18 +256,35 @@ const MyTextArea = ({
 	const savedRangeRef = useRef(null);
 	const newBlockRef = useRef(null);
 	const hiddenFieldRef = useRef(null);
-	const onChangeRef = useRef(onChange);
-	onChangeRef.current = onChange;
 
-	const [entityJson, setEntityJson] = useState({ users: "[]", hashtags: "[]" });
+	const [entityJson, setEntityJson] = useState({
+		users: "[]",
+		hashtags: "[]",
+		files: "[]",
+	});
 
-	const startingHtml = initialContent ?? defaultValue ?? "<p><br></p>";
+	// `||`, not `??`: the `defaultValue = ''` default turns an omitted prop into an
+	// empty string, which `??` would happily accept and leave the contenteditable
+	// with no block element for the caret to sit in.
+	const startingHtml = defaultValue || "<p><br></p>";
 
 	const [status, setStatus] = useState("Ready");
 
-	const uploadsRef = useRef(new Map());
+	// Plain-text length of the current content. The rich editor gets its real
+	// value from syncContent on mount; the plain textarea can measure its own
+	// starting value straight away.
+	const [charCount, setCharCount] = useState(() =>
+		advancedTextEditor ? 0 : (defaultValue || "").length,
+	);
+	const hasCharacterLimit =
+		charactersLimit > 0 && charactersLimit < NO_CHARACTER_LIMIT;
+	const overCharacterLimit = hasCharacterLimit && charCount > charactersLimit;
+	const characterCountLabel =
+		charCount +
+		(hasCharacterLimit ? " / " + charactersLimit : "") +
+		(charCount === 1 && !hasCharacterLimit ? " character" : " characters");
 
-	const lastEmittedHtmlRef = useRef(null);
+	const uploadsRef = useRef(new Map());
 
 	// ---- Tables ---------------------------------------------------------------
 
@@ -310,6 +366,7 @@ const MyTextArea = ({
 		if (!editor.innerHTML.trim()) {
 			editor.innerHTML = startingHtml;
 		}
+		upgradeUserChips();
 		highlightHashtags();
 		syncContent();
 
@@ -374,21 +431,6 @@ const MyTextArea = ({
 		};
 	}, []);
 
-	useEffect(() => {
-		const editor = editorRef.current;
-		if (!editor || typeof value !== "string") return;
-		if (document.activeElement === editor) return;
-
-		if (value === lastEmittedHtmlRef.current) return;
-
-		if (uploadsRef.current.size > 0) return;
-		if (editor.innerHTML !== value) {
-			editor.innerHTML = value || "<p><br></p>";
-			highlightHashtags();
-			syncContent();
-		}
-	}, [value]);
-
 	const syncContent = () => {
 		const editor = editorRef.current;
 		if (!editor) return;
@@ -397,28 +439,49 @@ const MyTextArea = ({
 			editor.textContent.trim() !== "" ||
 			!!editor.querySelector("img, video, audio, iframe");
 
-		let html = hasContent ? editor.innerHTML : "";
-		if (html && editor.querySelector("[data-upload-id]")) {
-			const clone = editor.cloneNode(true);
-			clone
+		// Placeholders for in-flight uploads are transient UI, so they are stripped
+		// from the submitted markup and from the character count alike.
+		let source = editor;
+		if (hasContent && editor.querySelector("[data-upload-id]")) {
+			source = editor.cloneNode(true);
+			source
 				.querySelectorAll("[data-upload-id]")
 				.forEach((node) => node.remove());
-			html = clone.innerHTML;
 		}
-		const { users, hashtags } = extractEntities(editor);
+		const html = hasContent ? source.innerHTML : "";
+		const { users, hashtags, files } = extractEntities(editor);
 
-		lastEmittedHtmlRef.current = html;
+		setCharCount(hasContent ? countCharacters(source) : 0);
+
 		if (hiddenFieldRef.current && hiddenFieldRef.current.value !== html) {
 			hiddenFieldRef.current.value = html;
 		}
 		const usersJson = JSON.stringify(users);
 		const hashtagsJson = JSON.stringify(hashtags);
+		const filesJson = JSON.stringify(files);
 		setEntityJson((prev) =>
-			prev.users === usersJson && prev.hashtags === hashtagsJson
+			prev.users === usersJson &&
+			prev.hashtags === hashtagsJson &&
+			prev.files === filesJson
 				? prev
-				: { users: usersJson, hashtags: hashtagsJson },
+				: { users: usersJson, hashtags: hashtagsJson, files: filesJson },
 		);
-		if (onChangeRef.current) onChangeRef.current({ html, users, hashtags });
+	};
+
+	// Every embedded file carries its id on the element itself, so the ids can be
+	// read straight back out of the markup — the same trick `.user-chip` uses.
+	const extractFiles = (editor) => {
+		const files = [];
+		const seenFiles = new Set();
+		editor.querySelectorAll("[data-file-id]").forEach((node) => {
+			// A placeholder for an upload still in flight is not embedded content.
+			if (node.closest("[data-upload-id]")) return;
+			const id = (node.getAttribute("data-file-id") || "").trim();
+			if (!id || seenFiles.has(id)) return;
+			seenFiles.add(id);
+			files.push(id);
+		});
+		return files;
 	};
 
 	const extractEntities = (editor) => {
@@ -426,12 +489,20 @@ const MyTextArea = ({
 		const seenUsers = new Set();
 		editor.querySelectorAll(".user-chip").forEach((chip) => {
 			const id = chip.getAttribute("data-user-id") || "";
-			const username = (chip.textContent || "").trim().replace(/^@/, "");
+			const username = (
+				chip.getAttribute("data-username") ||
+				chip.textContent ||
+				""
+			)
+				.trim()
+				.replace(/^@/, "");
 			const key = id || username;
 			if (!key || seenUsers.has(key)) return;
 			seenUsers.add(key);
 			users.push({ id, username });
 		});
+
+		const files = extractFiles(editor);
 
 		const hashtags = [];
 		const seenTags = new Set();
@@ -452,7 +523,7 @@ const MyTextArea = ({
 		let m;
 		while ((m = re.exec(editor.textContent))) addTag(m[2]);
 
-		return { users, hashtags };
+		return { users, hashtags, files };
 	};
 
 	// ---- Hashtag highlighting -----------------------------------------------
@@ -1193,7 +1264,9 @@ const MyTextArea = ({
 						(data && data.message) ||
 							"Upload succeeded but no URL was returned.",
 					);
-				finishUpload(uploadId, url, file, !(data && data.demo));
+				// A demo response never persisted anything, so it has no id to track.
+				const fileId = data && data.demo ? "" : extractUploadFileId(data);
+				finishUpload(uploadId, url, file, !(data && data.demo), fileId);
 				setStatus("Uploaded " + file.name);
 			})
 			.catch((err) => {
@@ -1308,7 +1381,7 @@ const MyTextArea = ({
 
 	// Swap the temporary blob for the stored file and drop the overlay, leaving
 	// exactly the same markup a File Manager insertion produces.
-	const finishUpload = (uploadId, url, file, revoke) => {
+	const finishUpload = (uploadId, url, file, revoke, fileId) => {
 		const entry = uploadsRef.current.get(uploadId);
 		const figure = uploadFigure(uploadId);
 		uploadsRef.current.delete(uploadId);
@@ -1316,7 +1389,7 @@ const MyTextArea = ({
 			if (revoke && entry) URL.revokeObjectURL(entry.blobUrl);
 			return;
 		}
-		const { node, block } = buildEmbedNode(url, file.name, file.type);
+		const { node, block } = buildEmbedNode(url, file.name, file.type, fileId);
 		if (block) {
 			figure.replaceWith(node);
 		} else {
@@ -1382,7 +1455,7 @@ const MyTextArea = ({
 
 	// ---- Embedding ----------------------------------------------------------------
 
-	const buildEmbedNode = (url, name, mime) => {
+	const buildEmbedNode = (url, name, mime, fileId) => {
 		const kind = guessKind(url, mime);
 		let node;
 		if (kind === "image") {
@@ -1411,6 +1484,9 @@ const MyTextArea = ({
 			// contentEditable is what froze PDF/file embeds.
 			node.innerHTML = iconSvg("paperclip") + escapeHtml(name || url);
 		}
+		// The id rides on the media element (never the <figure>), so an emptied
+		// wrapper left behind by an edit can't keep reporting a deleted file.
+		if (fileId) node.setAttribute("data-file-id", fileId);
 		if (kind === "image" || kind === "video" || kind === "audio") {
 			const fig = document.createElement("figure");
 			fig.className = "my-2";
@@ -1420,8 +1496,8 @@ const MyTextArea = ({
 		return { node, block: false };
 	};
 
-	const embedByUrl = (url, name, mime) => {
-		const { node, block } = buildEmbedNode(url, name, mime);
+	const embedByUrl = (url, name, mime, fileId) => {
+		const { node, block } = buildEmbedNode(url, name, mime, fileId);
 		if (block) insertBlockAtCursor(node);
 		else insertNodeAtCursor(node);
 	};
@@ -1434,7 +1510,15 @@ const MyTextArea = ({
 		setFileSelection((prev) => {
 			const exists = prev.some((f) => f.url === url);
 			if (exists) return prev.filter((f) => f.url !== url);
-			return [...prev, { url, name: fileNameOf(item), kind: guessKind(url) }];
+			return [
+				...prev,
+				{
+					id: fileIdOf(item),
+					url,
+					name: fileNameOf(item),
+					kind: guessKind(url),
+				},
+			];
 		});
 	};
 
@@ -1446,7 +1530,7 @@ const MyTextArea = ({
 		const allImages = files.every((f) => f.kind === "image");
 		if (files.length === 1 || !allImages || imageLayout === "stacked") {
 			// One below the other; non-images embed with their own element type.
-			for (const f of files) embedByUrl(f.url, f.name);
+			for (const f of files) embedByUrl(f.url, f.name, undefined, f.id);
 		} else if (imageLayout === "gallery") {
 			insertImageGallery(files);
 		} else if (imageLayout === "carousel") {
@@ -1471,6 +1555,7 @@ const MyTextArea = ({
 			img.src = f.url;
 			img.alt = f.name || "Gallery image";
 			img.className = "img-fluid rounded w-100 h-100 object-fit-cover";
+			if (f.id) img.setAttribute("data-file-id", f.id);
 			div.appendChild(img);
 			row.appendChild(div);
 		}
@@ -1507,7 +1592,9 @@ const MyTextArea = ({
 				escapeHtml(f.url) +
 				'" class="d-block w-100" alt="' +
 				escapeHtml(f.name || "Slide " + (i + 1)) +
-				'" /></div>';
+				'"' +
+				(f.id ? ' data-file-id="' + escapeHtml(f.id) + '"' : "") +
+				" /></div>";
 		});
 		indicators += "</div>";
 		inner += "</div>";
@@ -1526,14 +1613,26 @@ const MyTextArea = ({
 		insertBlockAtCursor(carousel);
 	};
 
+	// A mention is an <a> pointing at /profile/<id>/<username>. Users with no id
+	// have nowhere to point at, so those fall back to the original plain span.
 	const embedUser = (user) => {
 		const name = user.name || user.username || "Unknown";
 		const username = user.username || "";
+		const userId = user._id ? String(user._id) : "";
+		const handle = username || name;
 		const avatar = userAvatarOf(user);
-		const span = document.createElement("span");
-		span.className = "user-chip";
-		span.setAttribute("contenteditable", "false");
-		span.setAttribute("data-user-id", user._id || "");
+
+		const chip = document.createElement(userId ? "a" : "span");
+		chip.className = "user-chip text-decoration-none";
+		chip.setAttribute("contenteditable", "false");
+		chip.setAttribute("data-user-id", userId);
+		chip.setAttribute("data-username", handle);
+		if (userId) {
+			chip.setAttribute("href", profileHref(userId, handle));
+			chip.setAttribute("target", "_blank");
+			chip.setAttribute("rel", "noopener noreferrer");
+		}
+
 		let inner = "";
 		if (avatar) {
 			inner +=
@@ -1545,10 +1644,52 @@ const MyTextArea = ({
 			// contentEditable is what froze mentions of avatar-less users.
 			inner += iconSvg("user");
 		}
-		inner += "<span>@" + escapeHtml(username || name) + "</span>";
-		span.innerHTML = inner;
-		insertNodeAtCursor(span);
+		inner += "<span>@" + escapeHtml(handle) + "</span>";
+		chip.innerHTML = inner;
+		insertNodeAtCursor(chip);
 		insertNodeAtCursor(document.createTextNode("\u00A0"));
+	};
+
+	// Drafts saved before mentions were links still hold <span class="user-chip">.
+	// Rewriting them on load makes existing content clickable too.
+	const upgradeUserChips = () => {
+		const editor = editorRef.current;
+		if (!editor) return;
+		editor.querySelectorAll("span.user-chip").forEach((span) => {
+			const userId = (span.getAttribute("data-user-id") || "").trim();
+			if (!userId) return;
+			const handle = (
+				span.getAttribute("data-username") ||
+				span.textContent ||
+				""
+			)
+				.trim()
+				.replace(/^@/, "");
+			const a = document.createElement("a");
+			a.className = "user-chip text-decoration-none";
+			a.setAttribute("contenteditable", "false");
+			a.setAttribute("data-user-id", userId);
+			a.setAttribute("data-username", handle);
+			a.setAttribute("href", profileHref(userId, handle));
+			a.setAttribute("target", "_blank");
+			a.setAttribute("rel", "noopener noreferrer");
+			a.innerHTML = span.innerHTML;
+			span.replaceWith(a);
+		});
+	};
+
+	// A browser never follows a link inside a contentEditable host, so the click
+	// is forwarded by hand. New tab keeps the in-progress draft on screen.
+	const handleEditorClick = (e) => {
+		const target = e.target;
+		if (!target || typeof target.closest !== "function") return;
+		const chip = target.closest("a.user-chip");
+		if (!chip || !editorRef.current || !editorRef.current.contains(chip))
+			return;
+		const href = chip.getAttribute("href");
+		if (!href) return;
+		e.preventDefault();
+		window.open(href, "_blank", "noopener,noreferrer");
 	};
 
 	// ---- File manager -----------------------------------------------------------
@@ -1767,7 +1908,7 @@ const MyTextArea = ({
 			.map((u) => '<link rel="stylesheet" href="' + escapeHtml(u) + '">')
 			.join("");
 		const jsScripts = parseResourceUrls(snippet.jsUrls)
-			.map((u) => '<script src="' + escapeHtml(u) + '"><\/script>')
+			.map((u) => '<script src="' + escapeHtml(u) + '"></script>')
 			.join("");
 		const doc =
 			'<!doctype html><html><head><meta charset="utf-8">' +
@@ -1780,7 +1921,7 @@ const MyTextArea = ({
 			jsScripts +
 			"<script>" +
 			safeJs +
-			"<\/script></body></html>";
+			"</script></body></html>";
 
 		const fig = document.createElement("figure");
 		fig.className = "code-snippet my-3";
@@ -2180,7 +2321,7 @@ const MyTextArea = ({
 
 	return advancedTextEditor ? (
 		<>
-			<div className="card shadow-sm">
+			<div className="card shadow-sm mb-3">
 				{/* Toolbar */}
 				<div className="card-header p-2">
 					<div
@@ -2199,7 +2340,7 @@ const MyTextArea = ({
 								onClick={() => exec("undo")}
 								title="Undo (Ctrl+Z)"
 							>
-								<i className="fa-solid fa-rotate-left" />
+								<i className="fa-solid fa-rotate-left" aria-hidden={true} />
 								<span className="visually-hidden">Undo</span>
 							</button>
 							<button
@@ -2208,7 +2349,7 @@ const MyTextArea = ({
 								onClick={() => exec("redo")}
 								title="Redo (Ctrl+Y)"
 							>
-								<i className="fa-solid fa-rotate-right" />
+								<i className="fa-solid fa-rotate-right" aria-hidden={true} />
 								<span className="visually-hidden">Redo</span>
 							</button>
 						</div>
@@ -2243,7 +2384,7 @@ const MyTextArea = ({
 								onClick={() => exec("bold")}
 								title="Bold"
 							>
-								<i className="fa-solid fa-bold" />
+								<i className="fa-solid fa-bold" aria-hidden={true} />
 							</button>
 							<button
 								type="button"
@@ -2252,7 +2393,7 @@ const MyTextArea = ({
 								onClick={() => exec("italic")}
 								title="Italic"
 							>
-								<i className="fa-solid fa-italic" />
+								<i className="fa-solid fa-italic" aria-hidden={true} />
 							</button>
 							<button
 								type="button"
@@ -2261,7 +2402,7 @@ const MyTextArea = ({
 								onClick={() => exec("underline")}
 								title="Underline"
 							>
-								<i className="fa-solid fa-underline" />
+								<i className="fa-solid fa-underline" aria-hidden={true} />
 							</button>
 							<button
 								type="button"
@@ -2270,7 +2411,7 @@ const MyTextArea = ({
 								onClick={() => exec("strikeThrough")}
 								title="Strikethrough"
 							>
-								<i className="fa-solid fa-strikethrough" />
+								<i className="fa-solid fa-strikethrough" aria-hidden={true} />
 							</button>
 							<button
 								type="button"
@@ -2279,7 +2420,7 @@ const MyTextArea = ({
 								onClick={toggleInlineCode}
 								title="Inline code"
 							>
-								<i className="fa-solid fa-code" />
+								<i className="fa-solid fa-code" aria-hidden={true} />
 								<span className="visually-hidden">Inline code</span>
 							</button>
 						</div>
@@ -2296,7 +2437,7 @@ const MyTextArea = ({
 								onClick={() => exec("insertUnorderedList")}
 								title="Bulleted list"
 							>
-								<i className="fa-solid fa-list-ul" />
+								<i className="fa-solid fa-list-ul" aria-hidden={true} />
 							</button>
 							<button
 								type="button"
@@ -2305,7 +2446,7 @@ const MyTextArea = ({
 								onClick={() => exec("insertOrderedList")}
 								title="Numbered list"
 							>
-								<i className="fa-solid fa-list-ol" />
+								<i className="fa-solid fa-list-ol" aria-hidden={true} />
 							</button>
 						</div>
 						<span className="vr mx-1"></span>
@@ -2321,7 +2462,7 @@ const MyTextArea = ({
 								onClick={() => exec("justifyLeft")}
 								title="Align left"
 							>
-								<i className="fa-solid fa-align-left" />
+								<i className="fa-solid fa-align-left" aria-hidden={true} />
 							</button>
 							<button
 								type="button"
@@ -2330,7 +2471,7 @@ const MyTextArea = ({
 								onClick={() => exec("justifyCenter")}
 								title="Align center"
 							>
-								<i className="fa-solid fa-align-center" />
+								<i className="fa-solid fa-align-center" aria-hidden={true} />
 							</button>
 							<button
 								type="button"
@@ -2339,7 +2480,7 @@ const MyTextArea = ({
 								onClick={() => exec("justifyRight")}
 								title="Align right"
 							>
-								<i className="fa-solid fa-align-right" />
+								<i className="fa-solid fa-align-right" aria-hidden={true} />
 							</button>
 						</div>
 						<span className="vr mx-1"></span>
@@ -2349,7 +2490,7 @@ const MyTextArea = ({
 							onClick={openLinkModal}
 							title="Insert link"
 						>
-							<i className="fa-solid fa-link" />
+							<i className="fa-solid fa-link" aria-hidden={true} />
 							<span className="visually-hidden">Insert link</span>
 						</button>
 						<button
@@ -2358,7 +2499,7 @@ const MyTextArea = ({
 							onClick={openTableModal}
 							title="Insert table"
 						>
-							<i className="fa-solid fa-table" />
+							<i className="fa-solid fa-table" aria-hidden={true} />
 							<span className="visually-hidden">Insert table</span>
 						</button>
 						<button
@@ -2367,7 +2508,7 @@ const MyTextArea = ({
 							onClick={() => exec("removeFormat")}
 							title="Clear formatting"
 						>
-							<i className="fa-solid fa-eraser" />
+							<i className="fa-solid fa-eraser" aria-hidden={true} />
 							<span className="visually-hidden">Clear formatting</span>
 						</button>
 						<span className="vr mx-1"></span>
@@ -2380,7 +2521,7 @@ const MyTextArea = ({
 							}}
 							title="Upload from device"
 						>
-							<i className="fa-solid fa-upload me-1" />
+							<i className="fa-solid fa-upload me-1" aria-hidden={true} />
 							Upload
 						</button>
 						<button
@@ -2389,7 +2530,7 @@ const MyTextArea = ({
 							onClick={openFileManager}
 							title="Insert from file manager"
 						>
-							<i className="fa-solid fa-folder-open me-1" />
+							<i className="fa-solid fa-folder-open me-1" aria-hidden={true} />
 							Files
 						</button>
 						<button
@@ -2398,7 +2539,7 @@ const MyTextArea = ({
 							onClick={openUsers}
 							title="Embed a user"
 						>
-							<i className="fa-solid fa-users me-1" />
+							<i className="fa-solid fa-users me-1" aria-hidden={true} />
 							Users
 						</button>
 						<button
@@ -2407,7 +2548,7 @@ const MyTextArea = ({
 							onClick={openSnippet}
 							title="Insert a live code snippet"
 						>
-							<i className="fa-solid fa-code me-1" />
+							<i className="fa-solid fa-code me-1" aria-hidden={true} />
 							Snippet
 						</button>
 						<input
@@ -2432,6 +2573,7 @@ const MyTextArea = ({
 						aria-label="Rich text editor"
 						aria-required={isRequired || undefined}
 						spellCheck
+						onClick={handleEditorClick}
 						onKeyDown={handleKeyDown}
 						onKeyUp={(e) => {
 							// Wrap/unwrap hashtags as the user types. The token under the
@@ -2480,7 +2622,8 @@ const MyTextArea = ({
 								onChange={() => {}}
 							/>
 							{/* JSON arrays kept in sync, so FormData also carries the
-                  embedded users and the hashtags as separate fields. */}
+                  embedded users, the hashtags and the embedded file ids as
+                  separate fields. */}
 							<input
 								type="hidden"
 								name={name + "_users"}
@@ -2491,6 +2634,12 @@ const MyTextArea = ({
 								type="hidden"
 								name={name + "_hashtags"}
 								value={entityJson.hashtags}
+								readOnly
+							/>
+							<input
+								type="hidden"
+								name={name + "_files"}
+								value={entityJson.files}
 								readOnly
 							/>
 						</>
@@ -2549,7 +2698,10 @@ const MyTextArea = ({
 												crossOrigin="anonymous"
 											/>
 										) : (
-											<i className="fa-solid fa-user-circle fs-5" />
+											<i
+												className="fa-solid fa-user-circle fs-5"
+												aria-hidden={true}
+											/>
 										)}
 										<span className="text-truncate">
 											{u.name || u.username}
@@ -2589,7 +2741,7 @@ const MyTextArea = ({
 									onMouseDown={(e) => e.preventDefault()}
 									onClick={() => applyBlockChoice(item.tag)}
 								>
-									<i className={"fa-solid " + item.icon} />
+									<i className={"fa-solid " + item.icon} aria-hidden={true} />
 									<span>{item.label}</span>
 									{item.hint && (
 										<span className="badge text-bg-secondary ms-auto">
@@ -2618,7 +2770,7 @@ const MyTextArea = ({
 									onClick={() => tableAddRow(true)}
 									title="Insert row below"
 								>
-									<i className="fa-solid fa-arrow-down" />
+									<i className="fa-solid fa-arrow-down" aria-hidden={true} />
 									<span className="visually-hidden">Insert row below</span>
 								</button>
 								<button
@@ -2627,7 +2779,7 @@ const MyTextArea = ({
 									onClick={() => tableAddRow(false)}
 									title="Insert row above"
 								>
-									<i className="fa-solid fa-arrow-up" />
+									<i className="fa-solid fa-arrow-up" aria-hidden={true} />
 									<span className="visually-hidden">Insert row above</span>
 								</button>
 								<button
@@ -2636,7 +2788,7 @@ const MyTextArea = ({
 									onClick={tableDeleteRow}
 									title="Delete row"
 								>
-									<i className="fa-solid fa-delete-left" />
+									<i className="fa-solid fa-delete-left" aria-hidden={true} />
 									<span className="visually-hidden">Delete row</span>
 								</button>
 							</div>
@@ -2647,7 +2799,7 @@ const MyTextArea = ({
 									onClick={() => tableAddColumn(true)}
 									title="Insert column right"
 								>
-									<i className="fa-solid fa-arrow-right" />
+									<i className="fa-solid fa-arrow-right" aria-hidden={true} />
 									<span className="visually-hidden">Insert column right</span>
 								</button>
 								<button
@@ -2656,7 +2808,7 @@ const MyTextArea = ({
 									onClick={() => tableAddColumn(false)}
 									title="Insert column left"
 								>
-									<i className="fa-solid fa-arrow-left" />
+									<i className="fa-solid fa-arrow-left" aria-hidden={true} />
 									<span className="visually-hidden">Insert column left</span>
 								</button>
 								<button
@@ -2665,7 +2817,7 @@ const MyTextArea = ({
 									onClick={tableDeleteColumn}
 									title="Delete column"
 								>
-									<i className="fa-solid fa-table-columns" />
+									<i className="fa-solid fa-table-columns" aria-hidden={true} />
 									<span className="visually-hidden">Delete column</span>
 								</button>
 							</div>
@@ -2676,7 +2828,7 @@ const MyTextArea = ({
 									onClick={openTableEditor}
 									title="Table settings (class, rows, columns)"
 								>
-									<i className="fa-solid fa-sliders" />
+									<i className="fa-solid fa-sliders" aria-hidden={true} />
 									<span className="visually-hidden">Table settings</span>
 								</button>
 								<button
@@ -2685,7 +2837,7 @@ const MyTextArea = ({
 									onClick={deleteTable}
 									title="Delete table"
 								>
-									<i className="fa-solid fa-trash" />
+									<i className="fa-solid fa-trash" aria-hidden={true} />
 									<span className="visually-hidden">Delete table</span>
 								</button>
 							</div>
@@ -2693,7 +2845,25 @@ const MyTextArea = ({
 					)}
 				</div>
 				<div className="card-footer d-flex justify-content-between align-items-center flex-wrap gap-2">
-					<small>{status}</small>
+					<div className="d-flex align-items-center flex-wrap gap-2">
+						<small>{status}</small>
+						<div className="vr" />
+						<small
+							className={
+								overCharacterLimit
+									? "text-danger fw-semibold"
+									: "text-body-secondary"
+							}
+						>
+							{characterCountLabel}
+							{overCharacterLimit && (
+								<span className="visually-hidden">
+									{" "}
+									— over the allowed limit
+								</span>
+							)}
+						</small>
+					</div>
 					<div className="d-flex gap-2">
 						<button
 							type="button"
@@ -2707,7 +2877,7 @@ const MyTextArea = ({
 							className="btn btn-secondary btn-sm"
 							onClick={openPreview}
 						>
-							<i className="fa-solid fa-eye me-1" />
+							<i className="fa-solid fa-eye me-1" aria-hidden={true} />
 							Preview HTML
 						</button>
 					</div>
@@ -2724,7 +2894,10 @@ const MyTextArea = ({
 					<div className="modal-body">
 						<div className="input-group input-group-sm mb-3">
 							<span className="input-group-text">
-								<i className="fa-solid fa-magnifying-glass" />
+								<i
+									className="fa-solid fa-magnifying-glass"
+									aria-hidden={true}
+								/>
 							</span>
 							<input
 								type="text"
@@ -2779,7 +2952,10 @@ const MyTextArea = ({
 											>
 												{isSelected && (
 													<span className="badge text-bg-primary position-absolute top-0 end-0 m-2 z-1">
-														<i className="fa-solid fa-check me-1" />
+														<i
+															className="fa-solid fa-check me-1"
+															aria-hidden={true}
+														/>
 														{selectedIdx + 1}
 													</span>
 												)}
@@ -2871,7 +3047,10 @@ const MyTextArea = ({
 					<div className="modal-body">
 						<div className="input-group input-group-sm mb-3">
 							<span className="input-group-text">
-								<i className="fa-solid fa-magnifying-glass" />
+								<i
+									className="fa-solid fa-magnifying-glass"
+									aria-hidden={true}
+								/>
 							</span>
 							<input
 								type="text"
@@ -2926,7 +3105,7 @@ const MyTextArea = ({
 													className="d-inline-flex align-items-center justify-content-center rounded-circle bg-secondary-subtle me-3"
 													style={{ width: 40, height: 40 }}
 												>
-													<i className="fa-solid fa-user" />
+													<i className="fa-solid fa-user" aria-hidden={true} />
 												</span>
 											)}
 											<span className="text-start">
@@ -3162,7 +3341,7 @@ const MyTextArea = ({
 							className="btn btn-primary btn-sm"
 							onClick={applyTableModal}
 						>
-							<i className="fa-solid fa-table me-1" />
+							<i className="fa-solid fa-table me-1" aria-hidden={true} />
 							{tableModal.mode === "insert" ? "Insert table" : "Apply"}
 						</button>
 					</div>
@@ -3187,7 +3366,7 @@ const MyTextArea = ({
 							className="btn btn-outline-secondary btn-sm"
 							onClick={copyHtml}
 						>
-							<i className="fa-solid fa-clipboard me-1" />
+							<i className="fa-solid fa-clipboard me-1" aria-hidden={true} />
 							Copy
 						</button>
 						<button
@@ -3276,7 +3455,7 @@ const MyTextArea = ({
 
 						<hr className="my-3" />
 						<p className="small fw-semibold mb-2">
-							<i className="fa-solid fa-globe me-1" />
+							<i className="fa-solid fa-globe me-1" aria-hidden={true} />
 							External resources
 							<span className="ms-1 fw-normal">(optional)</span>
 						</p>
@@ -3374,7 +3553,7 @@ const MyTextArea = ({
 							}
 							onClick={insertSnippet}
 						>
-							<i className="bi bi-braces me-1" />
+							<i className="bi bi-braces me-1" aria-hidden={true} />
 							Insert snippet
 						</button>
 					</div>
@@ -3382,15 +3561,25 @@ const MyTextArea = ({
 			)}
 		</>
 	) : (
-		<textarea
-			id={id}
-			name={name}
-			defaultValue={defaultValue}
-			className="form-control mb-3"
-			required={isRequired}
-			placeholder={customPlaceholder}
-			rows="5"
-		/>
+		<div className="mb-3">
+			<textarea
+				id={id}
+				name={name}
+				defaultValue={defaultValue}
+				className="form-control"
+				required={isRequired}
+				placeholder={customPlaceholder}
+				rows="5"
+				onChange={(e) => setCharCount(e.target.value.length)}
+			/>
+			<div
+				className={
+					"form-text" + (overCharacterLimit ? " text-danger fw-semibold" : "")
+				}
+			>
+				{characterCountLabel}
+			</div>
+		</div>
 	);
 };
 
@@ -3422,7 +3611,10 @@ function BootstrapModal({ title, icon, size = "", onClose, children }) {
 					<div className="modal-content">
 						<div className="modal-header">
 							<h5 className="modal-title">
-								<i className={"fa-solid fa-" + icon + " me-2"} />
+								<i
+									className={"fa-solid fa-" + icon + " me-2"}
+									aria-hidden={true}
+								/>
 								{title}
 							</h5>
 							<button

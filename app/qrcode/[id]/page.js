@@ -39,8 +39,8 @@ const QRCodeGeneratorRead = async ({ params, searchParams }) => {
 			<Head
 				title={`${settings?.data?.title} - ${qrcode?.data?.title}`}
 				description={"Give it a try!"}
-				favicon={settings?.data?.favicon}
-				postImage={qrcode?.data?.logo?.url}
+				favicon={settings?.data?.favicon?.location?.secure_location}
+				postImage={settings.data.showcase_image?.location?.secure_location}
 				imageWidth=""
 				imageHeight=""
 				videoWidth=""

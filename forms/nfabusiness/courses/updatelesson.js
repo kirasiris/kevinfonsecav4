@@ -11,7 +11,6 @@ const UpdateLessonForm = ({ token = {}, auth = {}, object = {} }) => {
 	const router = useRouter();
 
 	const [, setBtnText] = useState(`Submit`);
-	const [draft, setDraft] = useState({ html: null, users: [], hashtags: [] });
 
 	const upgradeLesson = async (e) => {
 		e.preventDefault();
@@ -64,7 +63,7 @@ const UpdateLessonForm = ({ token = {}, auth = {}, object = {} }) => {
 	};
 
 	return (
-		<form className="row" onSubmit={upgradeLesson}>
+		<form key={object?.data?._id} className="row" onSubmit={upgradeLesson}>
 			<div className="col">
 				<label htmlFor="title" className="form-label">
 					Title
@@ -86,22 +85,12 @@ const UpdateLessonForm = ({ token = {}, auth = {}, object = {} }) => {
 					id="text"
 					name="text"
 					defaultValue={object?.data?.text}
-					value={draft.html ?? undefined}
-					onChange={setDraft}
 					onModel="Lesson"
 					advancedTextEditor={true}
 					customPlaceholder="No description"
 					charactersLimit={99999}
 					isRequired={true}
 				/>
-				<p className="form-text mt-1 mb-3">
-					{/* {draft.html.replace(/<[^>]*>/g, "").length} characters */}
-					{draft.users.length > 0 &&
-						" · mentions: " +
-							draft.users.map((u) => "@" + u.username).join(", ")}
-					{draft.hashtags.length > 0 &&
-						" · tags: " + draft.hashtags.map((t) => "#" + t).join(", ")}
-				</p>
 				<div className="row">
 					<div className="col">
 						<label htmlFor="video_url" className="form-label">
@@ -126,7 +115,7 @@ const UpdateLessonForm = ({ token = {}, auth = {}, object = {} }) => {
 							id="free_preview"
 							name="free_preview"
 							defaultValue={object?.data?.free_preview.toString()}
-							className="form-control mb-3"
+							className="form-select mb-3"
 						>
 							<option value={true}>Yes</option>
 							<option value={false}>No</option>

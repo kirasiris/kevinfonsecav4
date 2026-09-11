@@ -11,7 +11,6 @@ const UpdateSongForm = ({ token = {}, auth = {}, object = {} }) => {
 	const router = useRouter();
 
 	const [, setBtnText] = useState(`Submit`);
-	const [draft, setDraft] = useState({ html: null, users: [], hashtags: [] });
 
 	const upgradeSong = async (e) => {
 		e.preventDefault();
@@ -64,7 +63,7 @@ const UpdateSongForm = ({ token = {}, auth = {}, object = {} }) => {
 	};
 
 	return (
-		<form className="row" onSubmit={upgradeSong}>
+		<form key={object?.data?._id} className="row" onSubmit={upgradeSong}>
 			<div className="col">
 				<label htmlFor="blog-title" className="form-label">
 					Title
@@ -98,22 +97,12 @@ const UpdateSongForm = ({ token = {}, auth = {}, object = {} }) => {
 					id="text"
 					name="text"
 					defaultValue={object?.data?.text}
-					value={draft.html ?? undefined}
-					onChange={setDraft}
 					onModel="Song"
 					advancedTextEditor={true}
 					customPlaceholder="No description"
 					charactersLimit={99999}
 					isRequired={true}
 				/>
-				<p className="form-text mt-1 mb-3">
-					{/* {draft.html.replace(/<[^>]*>/g, "").length} characters */}
-					{draft.users.length > 0 &&
-						" · mentions: " +
-							draft.users.map((u) => "@" + u.username).join(", ")}
-					{draft.hashtags.length > 0 &&
-						" · tags: " + draft.hashtags.map((t) => "#" + t).join(", ")}
-				</p>
 				<div className="row">
 					<div className="col">
 						<label htmlFor="audio_url" className="form-label">
@@ -151,7 +140,7 @@ const UpdateSongForm = ({ token = {}, auth = {}, object = {} }) => {
 							id="averageRating"
 							name="averageRating"
 							defaultValue={object?.data?.averageRating}
-							className="form-control mb-3"
+							className="form-select mb-3"
 						>
 							<option value={1}>1</option>
 							<option value={2}>2</option>

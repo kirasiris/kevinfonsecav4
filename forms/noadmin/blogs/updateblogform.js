@@ -16,7 +16,6 @@ const UpdateBlogForm = ({
 	const router = useRouter();
 
 	const [, setBtnText] = useState(`Submit`);
-	const [draft, setDraft] = useState({ html: null, users: [], hashtags: [] });
 
 	const upgradeBlog = async (e) => {
 		e.preventDefault();
@@ -36,7 +35,10 @@ const UpdateBlogForm = ({
 			password: formData.get("password"),
 			status: formData.get("status"),
 			fullWidth: formData.get("fullWidth"),
-			files: { avatar: formData.get("file") || undefined },
+			files: {
+				avatar: formData.get("file") || undefined,
+				extras: JSON.parse(formData.get("text_files") || "[]"),
+			},
 		};
 
 		const res = await fetchurl(
@@ -64,7 +66,7 @@ const UpdateBlogForm = ({
 	};
 
 	return (
-		<form className="row" onSubmit={upgradeBlog}>
+		<form key={object?.data?._id} className="row" onSubmit={upgradeBlog}>
 			<div className="col">
 				<label htmlFor="blog-title" className="form-label">
 					Title
@@ -86,22 +88,12 @@ const UpdateBlogForm = ({
 					id="text"
 					name="text"
 					defaultValue={object?.data?.text}
-					value={draft.html ?? undefined}
-					onChange={setDraft}
 					onModel="Blog"
 					advancedTextEditor={true}
 					customPlaceholder="No description"
 					charactersLimit={99999}
 					isRequired={true}
 				/>
-				<p className="form-text mt-1 mb-3">
-					{/* {draft.html.replace(/<[^>]*>/g, "").length} characters */}
-					{draft.users.length > 0 &&
-						" · mentions: " +
-							draft.users.map((u) => "@" + u.username).join(", ")}
-					{draft.hashtags.length > 0 &&
-						" · tags: " + draft.hashtags.map((t) => "#" + t).join(", ")}
-				</p>
 			</div>
 			<div className="col-lg-3">
 				<AdminSidebar

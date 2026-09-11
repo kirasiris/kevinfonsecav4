@@ -14,7 +14,6 @@ const UpdateAcquisitionDisposalForm = ({
 	const router = useRouter();
 
 	const [, setBtnText] = useState("Submit");
-	const [draft, setDraft] = useState({ html: null, users: [], hashtags: [] });
 
 	const upgradeAcquisitionDisposal = async (e) => {
 		e.preventDefault();
@@ -68,7 +67,11 @@ const UpdateAcquisitionDisposalForm = ({
 	};
 
 	return (
-		<form className="row" onSubmit={upgradeAcquisitionDisposal}>
+		<form
+			key={object?.data?._id}
+			className="row"
+			onSubmit={upgradeAcquisitionDisposal}
+		>
 			<div className="col-lg-6">
 				<h6 className="display-6">Description</h6>
 				<label htmlFor="manufacturer" className="form-label">
@@ -102,7 +105,7 @@ const UpdateAcquisitionDisposalForm = ({
 					id="type"
 					name="type"
 					defaultValue={object?.data?.type}
-					className="form-control mb-3"
+					className="form-select mb-3"
 					required
 				>
 					<option value="none">Choose an option</option>
@@ -220,7 +223,7 @@ const UpdateAcquisitionDisposalForm = ({
 					id="trackingCompany"
 					name="trackingCompany"
 					defaultValue={object?.data?.delivery.trackingCompany}
-					className="form-control mb-3"
+					className="form-select mb-3"
 				>
 					<option value="none">None</option>
 					<option value="usps">USPS</option>
@@ -272,22 +275,12 @@ const UpdateAcquisitionDisposalForm = ({
 					id="text"
 					name="text"
 					defaultValue={object?.data?.text}
-					value={draft.html ?? undefined}
-					onChange={setDraft}
 					onModel="Weapon"
 					advancedTextEditor={true}
 					customPlaceholder="No description"
 					charactersLimit={99999}
 					isRequired={false}
 				/>
-				<p className="form-text mt-1 mb-3">
-					{/* {draft.html.replace(/<[^>]*>/g, "").length} characters */}
-					{draft.users.length > 0 &&
-						" · mentions: " +
-							draft.users.map((u) => "@" + u.username).join(", ")}
-					{draft.hashtags.length > 0 &&
-						" · tags: " + draft.hashtags.map((t) => "#" + t).join(", ")}
-				</p>
 				<div className="row mb-3">
 					<div className="col">
 						<label htmlFor="status" className="form-label">
@@ -297,7 +290,7 @@ const UpdateAcquisitionDisposalForm = ({
 							id="status"
 							name="status"
 							defaultValue={object?.data?.status}
-							className="form-control"
+							className="form-select"
 							required
 						>
 							<option value={`pending`}>Pending</option>

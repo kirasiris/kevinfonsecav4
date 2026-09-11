@@ -11,7 +11,6 @@ const UpdateMembershipForm = ({ token = {}, auth = {}, object = {} }) => {
 	const router = useRouter();
 
 	const [, setBtnText] = useState(`Submit`);
-	const [draft, setDraft] = useState({ html: null, users: [], hashtags: [] });
 
 	const upgradeMembership = async (e) => {
 		e.preventDefault();
@@ -66,7 +65,7 @@ const UpdateMembershipForm = ({ token = {}, auth = {}, object = {} }) => {
 	};
 
 	return (
-		<form className="row" onSubmit={upgradeMembership}>
+		<form key={object?.data?._id} className="row" onSubmit={upgradeMembership}>
 			<div className="col">
 				<label htmlFor="title" className="form-label">
 					Title
@@ -88,22 +87,12 @@ const UpdateMembershipForm = ({ token = {}, auth = {}, object = {} }) => {
 					id="text"
 					name="text"
 					defaultValue={object?.data?.text}
-					value={draft.html ?? undefined}
-					onChange={setDraft}
 					onModel="Membership"
 					advancedTextEditor={false}
 					customPlaceholder="No description"
 					charactersLimit={9999}
 					isRequired={true}
 				/>
-				{/* <p className="form-text mt-1 mb-3">
-					{draft.html.replace(/<[^>]*>/g, "").length} characters
-					{draft.users.length > 0 &&
-						" · mentions: " +
-							draft.users.map((u) => "@" + u.username).join(", ")}
-					{draft.hashtags.length > 0 &&
-						" · tags: " + draft.hashtags.map((t) => "#" + t).join(", ")}
-				</p> */}
 				<div className="row">
 					<div className="col">
 						<label htmlFor="isFree" className="form-label">
@@ -113,7 +102,7 @@ const UpdateMembershipForm = ({ token = {}, auth = {}, object = {} }) => {
 							id="isFree"
 							name="isFree"
 							defaultValue={object?.data?.isFree.toString()}
-							className="form-control mb-3"
+							className="form-select mb-3"
 						>
 							<option value={true}>Yes</option>
 							<option value={false}>No</option>
@@ -154,7 +143,7 @@ const UpdateMembershipForm = ({ token = {}, auth = {}, object = {} }) => {
 							id="interval"
 							name="interval"
 							defaultValue={object?.data?.recurring?.interval}
-							className="form-control mb-3"
+							className="form-select mb-3"
 						>
 							<option value={"day"}>Day</option>
 							<option value={"week"}>Week</option>
@@ -172,7 +161,7 @@ const UpdateMembershipForm = ({ token = {}, auth = {}, object = {} }) => {
 							id="tax_behavior"
 							name="tax_behavior"
 							defaultValue={object?.data?.tax_behavior}
-							className="form-control mb-3"
+							className="form-select mb-3"
 						>
 							<option value="exclusive">Exclusive</option>
 							<option value="inclusive">Inclusive</option>
@@ -187,7 +176,7 @@ const UpdateMembershipForm = ({ token = {}, auth = {}, object = {} }) => {
 							id="statement_descriptor"
 							name="statement_descriptor"
 							defaultValue={object?.data?.statement_descriptor}
-							className="form-control mb-3"
+							className="form-select mb-3"
 							placeholder="This is what will appear in the user's bank statement account"
 						>
 							<option value={"DAILY MEMBRSHP"}>
@@ -228,7 +217,7 @@ const UpdateMembershipForm = ({ token = {}, auth = {}, object = {} }) => {
 							id="active"
 							name="active"
 							defaultValue={object?.data?.active.toString()}
-							className="form-control mb-3"
+							className="form-select mb-3"
 						>
 							<option value={true}>Yes</option>
 							<option value={false}>No</option>
@@ -242,7 +231,7 @@ const UpdateMembershipForm = ({ token = {}, auth = {}, object = {} }) => {
 							id="custom_membership"
 							name="custom_membership"
 							defaultValue={object?.data?.custom_membership.toString()}
-							className="form-control mb-3"
+							className="form-select mb-3"
 						>
 							<option value={true}>Yes</option>
 							<option value={false}>No</option>
@@ -258,7 +247,7 @@ const UpdateMembershipForm = ({ token = {}, auth = {}, object = {} }) => {
 							id="project"
 							name="project"
 							defaultValue={object?.data?.project}
-							className="form-control mb-3"
+							className="form-select mb-3"
 						>
 							<option value={"all"}>All</option>
 							<option value={"personal"}>Personal</option>
@@ -275,7 +264,7 @@ const UpdateMembershipForm = ({ token = {}, auth = {}, object = {} }) => {
 							id="postType"
 							name="postType"
 							defaultValue={object?.data?.postType}
-							className="form-control mb-3"
+							className="form-select mb-3"
 						>
 							<option value={"regular"}>Regular</option>
 							<option value={"api-usage"}>API Usage</option>

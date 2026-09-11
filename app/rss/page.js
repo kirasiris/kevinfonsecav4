@@ -15,8 +15,8 @@ const RSSIndex = async ({ params, searchParams }) => {
 				description={
 					"You can easily exports my articles without having to use an API!"
 				}
-				favicon={settings?.data?.favicon}
-				postImage=""
+				favicon={settings?.data?.favicon?.location?.secure_location}
+				postImage={settings.data.showcase_image?.location?.secure_location}
 				imageWidth=""
 				imageHeight=""
 				videoWidth=""

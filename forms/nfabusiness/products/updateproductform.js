@@ -13,7 +13,6 @@ const UpdateProductForm = ({ object = {}, token = "", auth = {} }) => {
 	const [showCategories, setShowCategories] = useState(object?.data?.category);
 
 	const [, setBtnText] = useState("Submit");
-	const [draft, setDraft] = useState({ html: null, users: [], hashtags: [] });
 
 	const upgradeProduct = async (e) => {
 		e.preventDefault();
@@ -82,7 +81,7 @@ const UpdateProductForm = ({ object = {}, token = "", auth = {} }) => {
 	};
 
 	return (
-		<form className="row" onSubmit={upgradeProduct}>
+		<form key={object?.data?._id} className="row" onSubmit={upgradeProduct}>
 			<div className="col">
 				<label htmlFor="title" className="form-label">
 					Title
@@ -105,22 +104,12 @@ const UpdateProductForm = ({ object = {}, token = "", auth = {} }) => {
 					id="text"
 					name="text"
 					defaultValue={object?.data?.text}
-					value={draft.html ?? undefined}
-					onChange={setDraft}
 					onModel="Product"
 					advancedTextEditor={true}
 					customPlaceholder="No description"
 					charactersLimit={99999}
 					isRequired={true}
 				/>
-				<p className="form-text mt-1 mb-3">
-					{/* {draft.html.replace(/<[^>]*>/g, "").length} characters */}
-					{draft.users.length > 0 &&
-						" · mentions: " +
-							draft.users.map((u) => "@" + u.username).join(", ")}
-					{draft.hashtags.length > 0 &&
-						" · tags: " + draft.hashtags.map((t) => "#" + t).join(", ")}
-				</p>
 				<div className="row">
 					<div className="col">
 						<label htmlFor="price" className="form-label">
@@ -163,7 +152,7 @@ const UpdateProductForm = ({ object = {}, token = "", auth = {} }) => {
 							id="isFree"
 							name="isFree"
 							defaultValue={object?.data?.isFree.toString()}
-							className="form-control mb-3"
+							className="form-select mb-3"
 						>
 							<option value={true}>Yes</option>
 							<option value={false}>No</option>
@@ -180,7 +169,7 @@ const UpdateProductForm = ({ object = {}, token = "", auth = {} }) => {
 							id="active"
 							name="active"
 							defaultValue={object?.data?.active.toString()}
-							className="form-control mb-3"
+							className="form-select mb-3"
 						>
 							<option value={true}>Yes</option>
 							<option value={false}>No</option>
@@ -239,7 +228,7 @@ const UpdateProductForm = ({ object = {}, token = "", auth = {} }) => {
 							id="category"
 							name="category"
 							defaultValue={object?.data?.category}
-							className="form-control mb-3"
+							className="form-select mb-3"
 							onChange={(e) => setShowCategories(e.target.value)}
 							required
 						>
@@ -257,7 +246,7 @@ const UpdateProductForm = ({ object = {}, token = "", auth = {} }) => {
 								id="sub_category"
 								name="sub_category"
 								defaultValue={[object?.data?.sub_category]}
-								className="form-control mb-3"
+								className="form-select mb-3"
 								multiple
 							>
 								<option value="all">All</option>
@@ -281,7 +270,7 @@ const UpdateProductForm = ({ object = {}, token = "", auth = {} }) => {
 								id="sub_category"
 								name="sub_category"
 								defaultValue={[object?.data?.sub_category]}
-								className="form-control mb-3"
+								className="form-select mb-3"
 								multiple
 							>
 								<option value="all">All</option>
@@ -379,7 +368,7 @@ const UpdateProductForm = ({ object = {}, token = "", auth = {} }) => {
 							id="trackInventory"
 							name="trackInventory"
 							defaultValue={object?.data?.trackInventory.toString()}
-							className="form-control mb-3"
+							className="form-select mb-3"
 						>
 							<option value={true}>Yes</option>
 							<option value={false}>No</option>
@@ -393,7 +382,7 @@ const UpdateProductForm = ({ object = {}, token = "", auth = {} }) => {
 							id="inStock"
 							name="inStock"
 							defaultValue={object?.data?.inStock.toString()}
-							className="form-control mb-3"
+							className="form-select mb-3"
 						>
 							<option value={true}>Yes</option>
 							<option value={false}>No</option>
@@ -463,7 +452,7 @@ const UpdateProductForm = ({ object = {}, token = "", auth = {} }) => {
 							id="shippable"
 							name="shippable"
 							defaultValue={object?.data?.shippable.toString()}
-							className="form-control mb-3"
+							className="form-select mb-3"
 						>
 							<option value={true}>Yes</option>
 							<option value={false}>No</option>
@@ -477,7 +466,7 @@ const UpdateProductForm = ({ object = {}, token = "", auth = {} }) => {
 							id="shippingClass"
 							name="shippingClass"
 							defaultValue={object?.data?.shippingClass}
-							className="form-control mb-3"
+							className="form-select mb-3"
 							required
 						>
 							<option value={`standard`}>Standard</option>

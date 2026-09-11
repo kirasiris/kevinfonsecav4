@@ -11,7 +11,6 @@ const UpdateJobForm = ({ token = {}, auth = {}, object = {} }) => {
 	const router = useRouter();
 
 	const [, setBtnText] = useState(`Submit`);
-	const [draft, setDraft] = useState({ html: null, users: [], hashtags: [] });
 
 	const upgradeJob = async (e) => {
 		e.preventDefault();
@@ -64,7 +63,7 @@ const UpdateJobForm = ({ token = {}, auth = {}, object = {} }) => {
 	};
 
 	return (
-		<form className="row" onSubmit={upgradeJob}>
+		<form key={object?.data?._id} className="row" onSubmit={upgradeJob}>
 			<div className="col">
 				<label htmlFor="blog-title" className="form-label">
 					Title
@@ -86,22 +85,12 @@ const UpdateJobForm = ({ token = {}, auth = {}, object = {} }) => {
 					id="text"
 					name="text"
 					defaultValue={object?.data?.text}
-					value={draft.html ?? undefined}
-					onChange={setDraft}
 					onModel="Job"
 					advancedTextEditor={true}
 					customPlaceholder="No description"
 					charactersLimit={99999}
 					isRequired={true}
 				/>
-				<p className="form-text mt-1 mb-3">
-					{/* {draft.html.replace(/<[^>]*>/g, "").length} characters */}
-					{draft.users.length > 0 &&
-						" · mentions: " +
-							draft.users.map((u) => "@" + u.username).join(", ")}
-					{draft.hashtags.length > 0 &&
-						" · tags: " + draft.hashtags.map((t) => "#" + t).join(", ")}
-				</p>
 				<div className="row">
 					<div className="col">
 						<label htmlFor="positionFilled" className="form-label">
@@ -111,7 +100,7 @@ const UpdateJobForm = ({ token = {}, auth = {}, object = {} }) => {
 							id="positionFilled"
 							name="positionFilled"
 							defaultValue={object?.data?.positionFilled.toString()}
-							className="form-control mb-3"
+							className="form-select mb-3"
 						>
 							<option value={true}>Yes</option>
 							<option value={false}>No</option>
@@ -136,7 +125,7 @@ const UpdateJobForm = ({ token = {}, auth = {}, object = {} }) => {
 							id="experience_level"
 							name="experience_level"
 							defaultValue={object?.data?.experience_level}
-							className="form-control mb-3"
+							className="form-select mb-3"
 							multiple
 						>
 							<option value={"graduate"}>Graduate</option>
@@ -151,7 +140,7 @@ const UpdateJobForm = ({ token = {}, auth = {}, object = {} }) => {
 							id="job_type"
 							name="job_type"
 							defaultValue={object?.data?.job_type}
-							className="form-control mb-3"
+							className="form-select mb-3"
 							multiple
 						>
 							<option value={"full-time"}>Full Time</option>
@@ -169,7 +158,7 @@ const UpdateJobForm = ({ token = {}, auth = {}, object = {} }) => {
 							id="provides_training"
 							name="provides_training"
 							defaultValue={object?.data?.provides_training.toString()}
-							className="form-control mb-3"
+							className="form-select mb-3"
 						>
 							<option value={true}>Yes</option>
 							<option value={false}>No</option>
@@ -181,7 +170,7 @@ const UpdateJobForm = ({ token = {}, auth = {}, object = {} }) => {
 							id="security_clearance"
 							name="security_clearance"
 							defaultValue={object?.data?.security_clearance.toString()}
-							className="form-control mb-3"
+							className="form-select mb-3"
 						>
 							<option value={true}>Yes</option>
 							<option value={false}>No</option>
@@ -208,7 +197,7 @@ const UpdateJobForm = ({ token = {}, auth = {}, object = {} }) => {
 							id="remote"
 							name="remote"
 							defaultValue={object?.data?.remote}
-							className="form-control mb-3"
+							className="form-select mb-3"
 							multiple
 						>
 							<option value={`hybrid`}>Hybrid</option>
@@ -224,7 +213,7 @@ const UpdateJobForm = ({ token = {}, auth = {}, object = {} }) => {
 							id="shift_and_schedule"
 							name="shift_and_schedule"
 							defaultValue={object?.data?.shift_and_schedule}
-							className="form-control mb-3"
+							className="form-select mb-3"
 							multiple
 						>
 							<option value={`hybrid`}>Hybrid</option>
@@ -250,7 +239,7 @@ const UpdateJobForm = ({ token = {}, auth = {}, object = {} }) => {
 							id="encouraged_to_apply"
 							name="encouraged_to_apply"
 							defaultValue={object?.data?.encouraged_to_apply}
-							className="form-control mb-3"
+							className="form-select mb-3"
 						>
 							<option value={`fair-chance`}>Fair Chance</option>
 							<option value={`no-highschool-diploma`}>

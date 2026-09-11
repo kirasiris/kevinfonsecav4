@@ -93,7 +93,7 @@ const UpdateAboutForm = ({ auth = {}, profiles = [] }) => {
 				id="gender"
 				name="gender"
 				defaultValue={auth?.data?.gender}
-				className="form-control mb-3"
+				className="form-select mb-3"
 			>
 				<option value={`non-binary`}>Non&nbsp;binary</option>
 				<option value={`intersex`}>Intersex</option>
@@ -120,7 +120,7 @@ const UpdateAboutForm = ({ auth = {}, profiles = [] }) => {
 						id="relationshipStatus"
 						name="relationshipStatus"
 						defaultValue={auth?.data?.relationshipStatus}
-						className="form-control mb-3"
+						className="form-select mb-3"
 						onChange={(e) => setShowPartner(e.target.value === "taken")}
 					>
 						<option value="single">Single</option>
@@ -139,7 +139,7 @@ const UpdateAboutForm = ({ auth = {}, profiles = [] }) => {
 							id="inRelationshipWith"
 							name="inRelationshipWith"
 							defaultValue={auth?.data?.inRelationshipWith?._id}
-							className="form-control mb-3"
+							className="form-select mb-3"
 						>
 							{profiles.data
 								.filter((excludedUser) => excludedUser._id !== auth.data._id)

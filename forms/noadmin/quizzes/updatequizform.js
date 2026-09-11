@@ -16,7 +16,6 @@ const UpdateQuizForm = ({
 	const router = useRouter();
 
 	const [, setBtnText] = useState(`Submit`);
-	const [draft, setDraft] = useState({ html: null, users: [], hashtags: [] });
 
 	const upgradeQuiz = async (e) => {
 		e.preventDefault();
@@ -66,7 +65,7 @@ const UpdateQuizForm = ({
 	};
 
 	return (
-		<form className="row" onSubmit={upgradeQuiz}>
+		<form key={object?.data?._id} className="row" onSubmit={upgradeQuiz}>
 			<div className="col">
 				<label htmlFor="title" className="form-label">
 					Title
@@ -88,22 +87,12 @@ const UpdateQuizForm = ({
 					id="text"
 					name="text"
 					defaultValue={object?.data?.text}
-					value={draft.html ?? undefined}
-					onChange={setDraft}
 					onModel="Quiz"
 					advancedTextEditor={true}
 					customPlaceholder="No description"
 					charactersLimit={99999}
 					isRequired={true}
 				/>
-				{/* <p className="form-text mt-1 mb-3">
-					{draft.html.replace(/<[^>]*>/g, "").length} characters
-					{draft.users.length > 0 &&
-						" · mentions: " +
-							draft.users.map((u) => "@" + u.username).join(", ")}
-					{draft.hashtags.length > 0 &&
-						" · tags: " + draft.hashtags.map((t) => "#" + t).join(", ")}
-				</p> */}
 				<div className="row">
 					<div className="col">
 						<div className="col">
@@ -176,7 +165,7 @@ const UpdateQuizForm = ({
 							id="singlePage"
 							name="singlePage"
 							defaultValue={object?.data?.singlePage.toString()}
-							className="form-control"
+							className="form-select"
 						>
 							<option value={true}>Yes</option>
 							<option value={false}>No</option>

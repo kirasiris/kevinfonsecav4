@@ -10,7 +10,6 @@ const UpdateShortUrlForm = ({ object = {}, currentpage = "" }) => {
 	const router = useRouter();
 
 	const [btnText, setBtnText] = useState("Submit");
-	const [draft, setDraft] = useState({ html: null, users: [], hashtags: [] });
 
 	const upgradeShortUrl = async (e) => {
 		e.preventDefault();
@@ -52,7 +51,7 @@ const UpdateShortUrlForm = ({ object = {}, currentpage = "" }) => {
 
 	return (
 		<div className="d-grid gap-2 mb-4">
-			<form onSubmit={upgradeShortUrl}>
+			<form key={object?.data?._id} onSubmit={upgradeShortUrl}>
 				<label htmlFor="title" className="form-label">
 					Title
 				</label>
@@ -85,23 +84,13 @@ const UpdateShortUrlForm = ({ object = {}, currentpage = "" }) => {
 					token={undefined}
 					id="text"
 					name="text"
-					defaultValue={object?.dta?.text}
-					value={draft.html ?? undefined}
-					onChange={setDraft}
+					defaultValue={object?.data?.text}
 					onModel="ShortUrl"
 					advancedTextEditor={false}
 					customPlaceholder="Type something..."
 					charactersLimit={99999}
 					isRequired={true}
 				/>
-				{/* <p className="form-text mt-1 mb-3">
-					{draft.html.replace(/<[^>]*>/g, "").length} characters
-					{draft.users.length > 0 &&
-						" · mentions: " +
-							draft.users.map((u) => "@" + u.username).join(", ")}
-					{draft.hashtags.length > 0 &&
-						" · tags: " + draft.hashtags.map((t) => "#" + t).join(", ")}
-				</p> */}
 				<br />
 				<FormButtons />
 			</form>

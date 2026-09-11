@@ -11,7 +11,6 @@ const UpdateMenuForm = ({ object = {} }) => {
 	const router = useRouter();
 
 	const [, setBtnText] = useState(`Submit`);
-	const [draft, setDraft] = useState({ html: null, users: [], hashtags: [] });
 
 	const upgradeMenu = async (e) => {
 		e.preventDefault();
@@ -53,7 +52,7 @@ const UpdateMenuForm = ({ object = {} }) => {
 	};
 
 	return (
-		<form className="row" onSubmit={upgradeMenu}>
+		<form key={object?.data?._id} className="row" onSubmit={upgradeMenu}>
 			<div className="col">
 				<label htmlFor="title" className="form-label">
 					Title
@@ -75,22 +74,12 @@ const UpdateMenuForm = ({ object = {} }) => {
 					id="text"
 					name="text"
 					defaultValue={object?.data?.text}
-					value={draft.html ?? undefined}
-					onChange={setDraft}
 					onModel="Menu"
 					advancedTextEditor={false}
 					customPlaceholder="No description"
 					charactersLimit={99999}
 					isRequired={true}
 				/>
-				{/* <p className="form-text mt-1 mb-3">
-					{draft.html.replace(/<[^>]*>/g, "").length} characters
-					{draft.users.length > 0 &&
-						" · mentions: " +
-							draft.users.map((u) => "@" + u.username).join(", ")}
-					{draft.hashtags.length > 0 &&
-						" · tags: " + draft.hashtags.map((t) => "#" + t).join(", ")}
-				</p> */}
 				<label htmlFor="position" className="form-label">
 					Position
 				</label>
@@ -98,7 +87,7 @@ const UpdateMenuForm = ({ object = {} }) => {
 					id="position"
 					name="position"
 					defaultValue={object?.data?.position}
-					className="form-control"
+					className="form-select"
 					multiple
 				>
 					<option value={`top`}>Top</option>

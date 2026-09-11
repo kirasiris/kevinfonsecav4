@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
 import Modal from "react-bootstrap/Modal";
-import Form from "react-bootstrap/Form";
 import { toast } from "react-toastify";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import MyTextArea from "./myfinaltextarea";
@@ -74,11 +73,11 @@ const ReportModal = ({
 				backdrop={true}
 				animation={true}
 			>
-				<Form onSubmit={sendReport}>
+				<form onSubmit={sendReport}>
 					<Modal.Header closeButton>
-						<Modal.Title>Report!</Modal.Title>
+						<div className="modal-title h4">Report!</div>
 					</Modal.Header>
-					<Modal.Body>
+					<div className="modal-body">
 						<label htmlFor="title" className="form-label">
 							Title
 						</label>
@@ -87,13 +86,6 @@ const ReportModal = ({
 							name="title"
 							defaultValue=""
 							type="text"
-							// value={title}
-							// onChange={(e) => {
-							// 	setReportData({
-							// 		...reportData,
-							// 		title: e.target.value,
-							// 	});
-							// }}
 							className="form-control mb-3"
 							required
 							placeholder="I hate this article!"
@@ -101,23 +93,6 @@ const ReportModal = ({
 						<label htmlFor="text" className="form-label">
 							Text
 						</label>
-						{/* <Form.Control
-							as={`textarea`}
-							rows={`3`}
-							placeholder={`Text`}
-							aria-label={`Text`}
-							aria-describedby={`text-text`}
-							id={`text`}
-							name={`text`}
-							value={text}
-							onChange={(e) => {
-								setReportData({
-									...reportData,
-									text: e.target.value,
-								});
-							}}
-							required
-						/> */}
 						<MyTextArea
 							auth={undefined}
 							token={undefined}
@@ -130,8 +105,8 @@ const ReportModal = ({
 							charactersLimit={1}
 							isRequired={true}
 						/>
-					</Modal.Body>
-					<Modal.Footer>
+					</div>
+					<div className="modal-footer">
 						<button
 							className="btn btn-secondary btn-sm"
 							onClick={() => setReportModal(!reportModal)}
@@ -141,8 +116,8 @@ const ReportModal = ({
 						<button className="btn btn-secondary btn-sm" type="submit">
 							{btnText}
 						</button>
-					</Modal.Footer>
-				</Form>
+					</div>
+				</form>
 			</Modal>
 		</>
 	);

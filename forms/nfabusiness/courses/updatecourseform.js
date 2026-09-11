@@ -11,7 +11,6 @@ const UpdateCourseForm = ({ token = {}, auth = {}, object = {} }) => {
 	const router = useRouter();
 
 	const [, setBtnText] = useState(`Submit`);
-	const [draft, setDraft] = useState({ html: null, users: [], hashtags: [] });
 
 	const upgradeCourse = async (e) => {
 		e.preventDefault();
@@ -65,7 +64,7 @@ const UpdateCourseForm = ({ token = {}, auth = {}, object = {} }) => {
 	};
 
 	return (
-		<form className="row" onSubmit={upgradeCourse}>
+		<form key={object?.data?._id} className="row" onSubmit={upgradeCourse}>
 			<div className="col">
 				<label htmlFor="title" className="form-label">
 					Title
@@ -98,22 +97,12 @@ const UpdateCourseForm = ({ token = {}, auth = {}, object = {} }) => {
 					id="text"
 					name="text"
 					defaultValue={object?.data?.text}
-					value={draft.html ?? undefined}
-					onChange={setDraft}
 					onModel="Product"
 					advancedTextEditor={true}
 					customPlaceholder="No description"
 					charactersLimit={99999}
 					isRequired={true}
 				/>
-				<p className="form-text mt-1 mb-3">
-					{/* {draft.html.replace(/<[^>]*>/g, "").length} characters */}
-					{draft.users.length > 0 &&
-						" · mentions: " +
-							draft.users.map((u) => "@" + u.username).join(", ")}
-					{draft.hashtags.length > 0 &&
-						" · tags: " + draft.hashtags.map((t) => "#" + t).join(", ")}
-				</p>
 				<div className="row">
 					<div className="col">
 						<label htmlFor="category" className="form-label">
@@ -123,7 +112,7 @@ const UpdateCourseForm = ({ token = {}, auth = {}, object = {} }) => {
 							id="category"
 							name="category"
 							defaultValue={object?.data?.category}
-							className="form-control mb-3"
+							className="form-select mb-3"
 						>
 							<option value={"development"}>Development</option>
 							<option value={"business"}>Business</option>
@@ -149,7 +138,7 @@ const UpdateCourseForm = ({ token = {}, auth = {}, object = {} }) => {
 							id="sub_category"
 							name="sub_category"
 							defaultValue={object?.data?.sub_category}
-							className="form-control mb-3"
+							className="form-select mb-3"
 						>
 							<optgroup label="Development">
 								<option value={"web-development"}>Web Development</option>
@@ -310,7 +299,7 @@ const UpdateCourseForm = ({ token = {}, auth = {}, object = {} }) => {
 							id="isFree"
 							name="isFree"
 							defaultValue={object?.data?.isFree.toString()}
-							className="form-control mb-3"
+							className="form-select mb-3"
 						>
 							<option value={true}>Yes</option>
 							<option value={false}>No</option>
@@ -327,7 +316,7 @@ const UpdateCourseForm = ({ token = {}, auth = {}, object = {} }) => {
 							id="active"
 							name="active"
 							defaultValue={object?.data?.active.toString()}
-							className="form-control mb-3"
+							className="form-select mb-3"
 						>
 							<option value={true}>Yes</option>
 							<option value={false}>No</option>
@@ -356,7 +345,7 @@ const UpdateCourseForm = ({ token = {}, auth = {}, object = {} }) => {
 							id="language"
 							name="language"
 							defaultValue={object?.data?.language}
-							className="form-control mb-3"
+							className="form-select mb-3"
 						>
 							<option value={"english"}>English</option>
 							<option value={"mandarin"}>Mandarin</option>
@@ -378,7 +367,7 @@ const UpdateCourseForm = ({ token = {}, auth = {}, object = {} }) => {
 							id="difficulty"
 							name="difficulty"
 							defaultValue={object?.data?.difficulty}
-							className="form-control mb-3"
+							className="form-select mb-3"
 						>
 							<option value={"all-level"}>All level</option>
 							<option value={"beginner"}>Beginner</option>

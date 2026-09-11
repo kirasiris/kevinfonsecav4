@@ -11,7 +11,6 @@ const CreateMembershipForm = ({ token = {}, auth = {} }) => {
 	const router = useRouter();
 
 	const [, setBtnText] = useState(`Submit`);
-	const [draft, setDraft] = useState({ html: null, users: [], hashtags: [] });
 
 	const addMembership = async (e) => {
 		e.preventDefault();
@@ -88,22 +87,12 @@ const CreateMembershipForm = ({ token = {}, auth = {} }) => {
 					id="text"
 					name="text"
 					defaultValue="No description..."
-					value={draft.html ?? undefined}
-					onChange={setDraft}
 					onModel="Membership"
 					advancedTextEditor={false}
 					customPlaceholder="No description"
 					charactersLimit={9999}
 					isRequired={true}
 				/>
-				{/* <p className="form-text mt-1 mb-3">
-					{draft.html.replace(/<[^>]*>/g, "").length} characters
-					{draft.users.length > 0 &&
-						" · mentions: " +
-							draft.users.map((u) => "@" + u.username).join(", ")}
-					{draft.hashtags.length > 0 &&
-						" · tags: " + draft.hashtags.map((t) => "#" + t).join(", ")}
-				</p> */}
 				<div className="row">
 					<div className="col">
 						<label htmlFor="isFree" className="form-label">
@@ -113,7 +102,7 @@ const CreateMembershipForm = ({ token = {}, auth = {} }) => {
 							id="isFree"
 							name="isFree"
 							defaultValue={true}
-							className="form-control mb-3"
+							className="form-select mb-3"
 						>
 							<option value={true}>Yes</option>
 							<option value={false}>No</option>
@@ -154,7 +143,7 @@ const CreateMembershipForm = ({ token = {}, auth = {} }) => {
 							id="interval"
 							name="interval"
 							defaultValue="month"
-							className="form-control mb-3"
+							className="form-select mb-3"
 						>
 							<option value={"day"}>Day</option>
 							<option value={"week"}>Week</option>
@@ -172,7 +161,7 @@ const CreateMembershipForm = ({ token = {}, auth = {} }) => {
 							id="tax_behavior"
 							name="tax_behavior"
 							defaultValue="exclusive"
-							className="form-control mb-3"
+							className="form-select mb-3"
 						>
 							<option value="exclusive">Exclusive</option>
 							<option value="inclusive">Inclusive</option>
@@ -187,7 +176,7 @@ const CreateMembershipForm = ({ token = {}, auth = {} }) => {
 							id="statement_descriptor"
 							name="statement_descriptor"
 							defaultValue="MONTHLY MEMBRSHP"
-							className="form-control mb-3"
+							className="form-select mb-3"
 							placeholder="This is what will appear in the user's bank statement account"
 						>
 							<option value={"DAILY MEMBRSHP"}>
@@ -228,7 +217,7 @@ const CreateMembershipForm = ({ token = {}, auth = {} }) => {
 							id="active"
 							name="active"
 							defaultValue={false}
-							className="form-control mb-3"
+							className="form-select mb-3"
 						>
 							<option value={true}>Yes</option>
 							<option value={false}>No</option>
@@ -242,7 +231,7 @@ const CreateMembershipForm = ({ token = {}, auth = {} }) => {
 							id="custom_membership"
 							name="custom_membership"
 							defaultValue={false}
-							className="form-control mb-3"
+							className="form-select mb-3"
 						>
 							<option value={true}>Yes</option>
 							<option value={false}>No</option>
@@ -258,7 +247,7 @@ const CreateMembershipForm = ({ token = {}, auth = {} }) => {
 							id="project"
 							name="project"
 							defaultValue="all"
-							className="form-control mb-3"
+							className="form-select mb-3"
 						>
 							<option value={"all"}>All</option>
 							<option value={"personal"}>Personal</option>
@@ -275,7 +264,7 @@ const CreateMembershipForm = ({ token = {}, auth = {} }) => {
 							id="postType"
 							name="postType"
 							defaultValue="all"
-							className="form-control mb-3"
+							className="form-select mb-3"
 						>
 							<option value={"regular"}>Regular</option>
 							<option value={"api-usage"}>API Usage</option>

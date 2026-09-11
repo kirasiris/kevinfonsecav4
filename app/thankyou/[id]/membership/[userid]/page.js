@@ -42,8 +42,8 @@ const ThankYouRead = async ({ params, searchParams }) => {
 			<Head
 				title={`${settings?.data?.title} - Thank You`}
 				description={"Thank you for your purchase"}
-				favicon={settings?.data?.favicon}
-				postImage={settings.data.showcase_image}
+				favicon={settings?.data?.favicon?.location?.secure_location}
+				postImage={settings.data.showcase_image?.location?.secure_location}
 				imageWidth=""
 				imageHeight=""
 				videoWidth=""

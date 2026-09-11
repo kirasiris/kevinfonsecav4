@@ -1,14 +1,25 @@
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import { fetchurl } from "@/helpers/setTokenOnServer";
 import Sidebar from "@/layout/auth/sidebar";
 import Globalcontent from "@/layout/content";
 import Loading from "@/app/blog/loading";
 import ParseHtml from "@/layout/parseHtml";
 import Single from "@/components/profile/single";
+import ActivityChart from "@/components/auth/activitychart";
 import Head from "@/app/head";
 import { getGlobalData } from "@/helpers/globalData";
 import ErrorPage from "@/layout/errorpage";
+
+async function getActivities(params) {
+	const res = await fetchurl(
+		`/global/activities${params}&limit=1000`,
+		"GET",
+		"no-cache",
+	);
+	return res;
+}
 
 const AuthIndex = async ({ params, searchParams }) => {
 	const { auth, settings } = await getGlobalData();
@@ -16,6 +27,10 @@ const AuthIndex = async ({ params, searchParams }) => {
 	// Redirect if user is not logged in
 	(auth?.error?.statusCode === 401 || !auth?.data?.isOnline) &&
 		redirect(`/auth/login`);
+
+	const getActivitiesData = getActivities(`?user=${auth?.data?._id}`);
+
+	const [activities] = await Promise.all([getActivitiesData]);
 
 	return (
 		<>
@@ -196,6 +211,18 @@ const AuthIndex = async ({ params, searchParams }) => {
 												</ul>
 											</div>
 										</div>
+									</div>
+								</div>
+								<div className="card mb-4">
+									<div className="card-header">
+										{activities?.data.length} records loaded from{" "}
+										<code>/global/activities</code>
+									</div>
+									<div className="card-body">
+										<ActivityChart
+											data={activities?.data}
+											showTimeline={false}
+										/>
 									</div>
 								</div>
 							</Globalcontent>

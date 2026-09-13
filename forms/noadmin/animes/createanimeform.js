@@ -21,15 +21,18 @@ const CreateAnimeForm = ({ token = {}, auth = {}, objects = [] }) => {
 		const rawFormData = {
 			title: formData.get("title"),
 			text: formData.get("text"),
-			// mentions: JSON.parse(formData.get("text_users") || "[]"),
-			// hashtags: JSON.parse(formData.get("text_hashtags") || "[]"),
+			mentions: JSON.parse(formData.get("text_users") || "[]"),
+			hashtags: JSON.parse(formData.get("text_hashtags") || "[]"),
 			featured: formData.get("featured"),
 			category: formData.getAll("category"), // Needs to be getAll due to Model receiving array
 			commented: formData.get("commented"),
 			password: formData.get("password"),
 			onairstatus: formData.get("onairstatus"),
 			status: formData.get("status"),
-			files: { avatar: formData.get("file") || undefined },
+			files: {
+				avatar: formData.get("file") || undefined,
+				extras: JSON.parse(formData.get("text_files") || "[]"),
+			},
 			onairtype: "anime",
 			playlistType: "video",
 		};

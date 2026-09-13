@@ -22,7 +22,7 @@ const UpdateRealEstateForm = ({ token = {}, auth = {}, object = {} }) => {
 			title: formData.get("title"),
 			text: formData.get("text"),
 			mentions: JSON.parse(formData.get("text_users") || "[]"),
-			// hashtags: JSON.parse(formData.get("text_hashtags") || "[]"),
+			hashtags: JSON.parse(formData.get("text_hashtags") || "[]"),
 			price: formData.get("price"),
 			isFree: formData.get("isFree"),
 			active: formData.get("active"),

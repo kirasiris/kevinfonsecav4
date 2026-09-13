@@ -37,8 +37,8 @@ const UpdateAcquisitionDisposalForm = ({
 				trackingNumber: formData.get("trackingNumber"),
 			},
 			text: formData.get("text"),
-			// mentions: JSON.parse(formData.get("text_users") || "[]"),
-			// hashtags: JSON.parse(formData.get("text_hashtags") || "[]"),
+			mentions: JSON.parse(formData.get("text_users") || "[]"),
+			hashtags: JSON.parse(formData.get("text_hashtags") || "[]"),
 			status: formData.get("status"),
 			orderingNumber: formData.get("orderingNumber"),
 		};

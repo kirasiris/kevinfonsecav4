@@ -1,4 +1,8 @@
-import { fetchurl } from "@/helpers/setTokenOnServer";
+import {
+	fetchurl,
+	getAuthTokenOnServer,
+	getUserOnServer,
+} from "@/helpers/setTokenOnServer";
 import Header from "@/layout/header";
 import List from "@/components/comment/list";
 import ErrorPage from "@/layout/errorpage";
@@ -6,7 +10,11 @@ import Head from "@/app/head";
 import { getGlobalData } from "@/helpers/globalData";
 
 async function getComments(params) {
-	const res = await fetchurl(`/global/comments${params}`, "GET", "no-cache");
+	const res = await fetchurl(
+		`/global/comments${params}&decrypt=true`,
+		"GET",
+		"no-cache",
+	);
 	return res;
 }
 const CommentIndex = async ({ params, searchParams }) => {
@@ -17,6 +25,9 @@ const CommentIndex = async ({ params, searchParams }) => {
 	const decrypt = awtdSearchParams.decrypt === "true" ? "&decrypt=true" : "";
 
 	const { settings } = await getGlobalData();
+
+	const token = await getAuthTokenOnServer();
+	const auth = await getUserOnServer();
 
 	const getCommentsData = getComments(
 		`?page=${page}&limit=${limit}&sort=${sort}&status=published${decrypt}`,
@@ -49,7 +60,12 @@ const CommentIndex = async ({ params, searchParams }) => {
 						title="Welcome to my comments"
 						description="See what everyone is commenting!"
 					/>
-					<List objects={comments} searchParams={awtdSearchParams} />
+					<List
+						auth={auth}
+						token={token}
+						objects={comments}
+						searchParams={awtdSearchParams}
+					/>
 				</>
 			) : (
 				<ErrorPage />

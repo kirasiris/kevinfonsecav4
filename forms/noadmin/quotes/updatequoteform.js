@@ -18,8 +18,8 @@ const UpdateQuoteForm = ({ currentpage = "", object = {} }) => {
 		const formData = new FormData(form);
 		const rawFormData = {
 			text: formData.get("text"),
-			// mentions: JSON.parse(formData.get("text_users") || "[]"),
-			// hashtags: JSON.parse(formData.get("text_hashtags") || "[]"),
+			mentions: JSON.parse(formData.get("text_users") || "[]"),
+			hashtags: JSON.parse(formData.get("text_hashtags") || "[]"),
 			authorName: formData.get("authorName"),
 			authorUrl: formData.get("authorUrl"),
 			sourceWebsite: formData.get("sourceWebsite"),

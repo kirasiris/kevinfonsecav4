@@ -21,8 +21,8 @@ const UpdateShortUrlForm = ({ object = {}, currentpage = "" }) => {
 			title: formData.get("title"),
 			longUrl: formData.get("longUrl"),
 			text: formData.get("text"),
-			// mentions: JSON.parse(formData.get("text_users") || "[]"),
-			// hashtags: JSON.parse(formData.get("text_hashtags") || "[]"),
+			mentions: JSON.parse(formData.get("text_users") || "[]"),
+			hashtags: JSON.parse(formData.get("text_hashtags") || "[]"),
 		};
 
 		const res = await fetchurl(

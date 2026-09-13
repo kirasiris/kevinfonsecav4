@@ -3,7 +3,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Navbar from "react-bootstrap/Navbar";
-import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import { deleteAuthTokenOnServer } from "@/helpers/setTokenOnServer";
 
@@ -21,7 +20,7 @@ const Menu = ({
 
 	return (
 		<Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
-			<Container>
+			<div className="container">
 				<div className="navbar-header">
 					<Navbar.Toggle
 						aria-controls="responsive-navbar-nav"
@@ -171,7 +170,7 @@ const Menu = ({
 						)}
 					</Nav>
 				</Navbar.Collapse>
-			</Container>
+			</div>
 		</Navbar>
 	);
 };

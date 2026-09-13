@@ -27,7 +27,7 @@ const UpdateThemeForm = ({
 			title: formData.get("title"),
 			text: formData.get("text"),
 			mentions: JSON.parse(formData.get("text_users") || "[]"),
-			// hashtags: JSON.parse(formData.get("text_hashtags") || "[]"),
+			hashtags: JSON.parse(formData.get("text_hashtags") || "[]"),
 			featured: formData.get("featured"),
 			embedding: formData.get("embedding"),
 			category: formData.get("category"),
@@ -37,7 +37,10 @@ const UpdateThemeForm = ({
 			fullWidth: formData.get("fullWidth"),
 			preview_theme_url: formData.get("preview_theme_url"),
 			github_readme: formData.get("github_readme"),
-			files: { avatar: formData.get("file") || undefined },
+			files: {
+				avatar: formData.get("file") || undefined,
+				extras: JSON.parse(formData.get("text_files") || "[]"),
+			},
 		};
 
 		const res = await fetchurl(

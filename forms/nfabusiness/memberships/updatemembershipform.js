@@ -21,8 +21,8 @@ const UpdateMembershipForm = ({ token = {}, auth = {}, object = {} }) => {
 		const rawFormData = {
 			title: formData.get("title"),
 			text: formData.get("text"),
-			// mentions: JSON.parse(formData.get("text_users") || "[]"),
-			// hashtags: JSON.parse(formData.get("text_hashtags") || "[]"),
+			mentions: JSON.parse(formData.get("text_users") || "[]"),
+			hashtags: JSON.parse(formData.get("text_hashtags") || "[]"),
 			recurring: {
 				interval: formData.get("interval"),
 				interval_count: formData.get("interval_count"),

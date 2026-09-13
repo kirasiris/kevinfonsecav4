@@ -21,8 +21,8 @@ const CreateForumForm = ({ token = {}, auth = {} }) => {
 		const rawFormData = {
 			title: formData.get("title"),
 			text: formData.get("text"),
-			// mentions: JSON.parse(formData.get("text_users") || "[]"),
-			// hashtags: JSON.parse(formData.get("text_hashtags") || "[]"),
+			mentions: JSON.parse(formData.get("text_users") || "[]"),
+			hashtags: JSON.parse(formData.get("text_hashtags") || "[]"),
 			embedding: formData.get("embedding"),
 			category: formData.get("category"),
 			sub_category: formData.get("sub_category"),

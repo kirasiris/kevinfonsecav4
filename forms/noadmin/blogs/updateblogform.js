@@ -27,7 +27,7 @@ const UpdateBlogForm = ({
 			title: formData.get("title"),
 			text: formData.get("text"),
 			mentions: JSON.parse(formData.get("text_users") || "[]"),
-			// hashtags: JSON.parse(formData.get("text_hashtags") || "[]"),
+			hashtags: JSON.parse(formData.get("text_hashtags") || "[]"),
 			featured: formData.get("featured"),
 			embedding: formData.get("embedding"),
 			category: formData.get("category"),

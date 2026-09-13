@@ -21,8 +21,8 @@ const CreateChapterForm = ({ token = {}, auth = {}, params = {} }) => {
 		const rawFormData = {
 			title: formData.get("title"),
 			text: formData.get("text"),
-			// mentions: JSON.parse(formData.get("text_users") || "[]"),
-			// hashtags: JSON.parse(formData.get("text_hashtags") || "[]"),
+			mentions: JSON.parse(formData.get("text_users") || "[]"),
+			hashtags: JSON.parse(formData.get("text_hashtags") || "[]"),
 			commented: formData.get("commented"),
 			embedding: formData.get("embedding"),
 			status: formData.get("status"),
@@ -53,6 +53,7 @@ const CreateChapterForm = ({ token = {}, auth = {}, params = {} }) => {
 			files: {
 				avatar: formData.get("file") || undefined,
 				video_url: formData.get("video_url") || undefined,
+				extras: JSON.parse(formData.get("text_files") || "[]"),
 			},
 			resourceId: params.id,
 			onModel: "Playlist",

@@ -25,8 +25,8 @@ const UpdateNewsletterEmailForm = ({
 		const rawFormData = {
 			recipients: formData.getAll("recipients"),
 			text: formData.get("text"),
-			// mentions: JSON.parse(formData.get("text_users") || "[]"),
-			// hashtags: JSON.parse(formData.get("text_hashtags") || "[]"),
+			mentions: JSON.parse(formData.get("text_users") || "[]"),
+			hashtags: JSON.parse(formData.get("text_hashtags") || "[]"),
 			subject: formData.get("subject"),
 			status: formData.get("status"),
 		};

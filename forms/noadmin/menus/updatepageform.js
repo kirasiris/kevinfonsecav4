@@ -23,7 +23,7 @@ const UpdatePageForm = ({ object = {}, params = {} }) => {
 			url: formData.get("url"),
 			text: formData.get("text"),
 			mentions: JSON.parse(formData.get("text_users") || "[]"),
-			// hashtags: JSON.parse(formData.get("text_hashtags") || "[]"),
+			hashtags: JSON.parse(formData.get("text_hashtags") || "[]"),
 			referrerpolicy: formData.get("referrerpolicy"),
 			rel: formData.get("rel"),
 			target: formData.get("target"),

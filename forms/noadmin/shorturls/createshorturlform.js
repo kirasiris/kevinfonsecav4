@@ -21,8 +21,8 @@ const CreateShortUrlForm = ({ auth = {}, currentpage = "" }) => {
 			title: formData.get("title"),
 			longUrl: formData.get("longUrl"),
 			text: formData.get("text"),
-			// mentions: JSON.parse(formData.get("text_users") || "[]"),
-			// hashtags: JSON.parse(formData.get("text_hashtags") || "[]"),
+			mentions: JSON.parse(formData.get("text_users") || "[]"),
+			hashtags: JSON.parse(formData.get("text_hashtags") || "[]"),
 			user: auth?.userId,
 			website: process.env.NEXT_PUBLIC_WEBSITE_NAME,
 		};

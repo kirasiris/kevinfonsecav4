@@ -21,8 +21,8 @@ const CreateMovieForm = ({ token = {}, auth = {}, objects = [] }) => {
 		const rawFormData = {
 			title: formData.get("title"),
 			text: formData.get("text"),
-			// mentions: JSON.parse(formData.get("text_users") || "[]"),
-			// hashtags: JSON.parse(formData.get("text_hashtags") || "[]"),
+			mentions: JSON.parse(formData.get("text_users") || "[]"),
+			hashtags: JSON.parse(formData.get("text_hashtags") || "[]"),
 			featured: formData.get("featured"),
 			category: formData.getAll("category"), // Needs to be getAll due to Model receiving array
 			commented: formData.get("commented"),

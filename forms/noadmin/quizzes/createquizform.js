@@ -21,8 +21,8 @@ const CreateQuizForm = ({ token = {}, auth = {}, objects = [] }) => {
 		const rawFormData = {
 			title: formData.get("title"),
 			text: formData.get("text"),
-			// mentions: JSON.parse(formData.get("text_users") || "[]"),
-			// hashtags: JSON.parse(formData.get("text_hashtags") || "[]"),
+			mentions: JSON.parse(formData.get("text_users") || "[]"),
+			hashtags: JSON.parse(formData.get("text_hashtags") || "[]"),
 			duration: formData.get("duration"),
 			minimumScore: formData.get("minimumScore"),
 			maximumScore: formData.get("maximumScore"),
@@ -32,7 +32,10 @@ const CreateQuizForm = ({ token = {}, auth = {}, objects = [] }) => {
 			status: formData.get("status"),
 			attempts: formData.get("attempts"),
 			singlePage: formData.get("singlePage"),
-			files: { avatar: formData.get("file") || undefined },
+			files: {
+				avatar: formData.get("file") || undefined,
+				extras: JSON.parse(formData.get("text_files") || "[]"),
+			},
 		};
 
 		const res = await fetchurl(

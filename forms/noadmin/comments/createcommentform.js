@@ -18,6 +18,7 @@ const CreateCommentForm = ({
 
 	const addComment = async (e) => {
 		e.preventDefault();
+		console.log("searchParams", searchParams);
 		setBtnText("...");
 		const form = e.target;
 		const formData = new FormData(form);
@@ -28,8 +29,8 @@ const CreateCommentForm = ({
 			website: formData.get("website"),
 			title: formData.get("title"),
 			text: formData.get("text"),
-			// mentions: JSON.parse(formData.get("text_users") || "[]"),
-			// hashtags: JSON.parse(formData.get("text_hashtags") || "[]"),
+			mentions: JSON.parse(formData.get("text_users") || "[]"),
+			hashtags: JSON.parse(formData.get("text_hashtags") || "[]"),
 			status: formData.get("status"),
 			resourceId: searchParams.resourceId,
 			parentId: searchParams.parentId || undefined,

@@ -9,14 +9,17 @@ import ExportModal from "@/components/global/exportmodal";
 import AuthorBox from "@/components/global/authorbox";
 import ParseHtml from "@/layout/parseHtml";
 import ReportModal from "@/components/global/reportmodal";
-import { fetchurl, getUserOnServer } from "@/helpers/setTokenOnServer";
+import {
+	fetchurl,
+	getAuthTokenOnServer,
+	getUserOnServer,
+} from "@/helpers/setTokenOnServer";
 import Globalcontent from "@/layout/content";
 import ErrorPage from "@/layout/errorpage";
 import ArticleHeader from "@/components/global/articleheader";
 import NewsletterForm from "@/components/global/newsletter";
 import Head from "@/app/head";
 import CommentBox from "@/components/global/commentbox";
-import CommentForm from "@/components/global/commentform";
 import { getGlobalData } from "@/helpers/globalData";
 
 async function getBlog(params) {
@@ -46,6 +49,7 @@ const BlogRead = async ({ params, searchParams }) => {
 
 	const { settings } = await getGlobalData();
 
+	const token = await getAuthTokenOnServer();
 	const auth = await getUserOnServer();
 
 	const getBlogsData = getBlog(`/${awtdParams.id}`);
@@ -161,32 +165,31 @@ const BlogRead = async ({ params, searchParams }) => {
 												<div style={{ clear: "both" }} />
 												<AuthorBox author={blog?.data?.user} />
 												{blog?.data?.commented ? (
-													<>
-														<CommentForm
-															auth={auth}
-															resourceId={blog?.data?._id}
-															parentId={undefined}
-															returtopageurl={`/blog/${blog?.data?._id}/${blog?.data?.category?._id}/${blog?.data?.category?.slug}/${blog?.data?.slug}`}
-															onModel="Blog"
-															objects={comments}
-														/>
-														<CommentBox
-															auth={auth}
-															allLink={`/comment?resourceId=${blog?.data?._id}&page=1&limit=10&sort=-createdAt&status=published`}
-															pageText="Comments"
-															objects={comments}
-															searchParams={awtdSearchParams}
-															handleDraft={undefined}
-															handlePublish={undefined}
-															handleTrash={undefined}
-															handleSchedule={undefined}
-															handleDelete={handleDelete}
-															handleTrashAllFunction={undefined}
-															handleDeleteAllFunction={undefined}
-															displayPagination={false}
-															isChildCommment={false}
-														/>
-													</>
+													<CommentBox
+														resourceId={blog?.data?._id}
+														onModel="Blog"
+														postType="comment"
+														advancedTextEditor={false}
+														token={token}
+														auth={auth}
+														endpoint="/global/comments"
+														createEndpoint={`/global/comments/${blog?.data?._id}`}
+														isRemote={false}
+														comments={comments}
+														onCreate={null}
+														onPosted={null}
+														searchParams={awtdSearchParams}
+														heading="Comments"
+														emptyText="No comments yet."
+														pageSize={25}
+														siblings={1}
+														displayPagination={true}
+														displayComposer={true}
+														newestFirst={true}
+														profileBasePath={`/profile`}
+														decodeStoredEntities={true}
+														className=""
+													/>
 												) : (
 													<div className="alert alert-danger">
 														Comments are closed

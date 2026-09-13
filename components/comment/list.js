@@ -1,35 +1,43 @@
 "use client";
-import Single from "./single";
-import NumericPagination from "@/layout/numericpagination";
 import NothingFoundAlert from "@/layout/nothingfoundalert";
 import Globalcontent from "@/layout/content";
+import CommentBox from "../global/commentbox";
 
-const List = ({ objects = [], searchParams = {} }) => {
+const List = ({ auth = {}, token = {}, objects = [], searchParams = {} }) => {
 	return (
 		<section className="py-5">
 			<div className="container">
 				<div className="row">
-					<Globalcontent>
-						{/* Blog list */}
-						<div className="row">
-							{objects?.data?.length > 0 ? (
-								<>
-									{objects.data?.map((comment) => (
-										<Single key={comment._id} object={comment} />
-									))}
-									<NumericPagination
-										totalPages={
-											objects?.pagination?.totalpages ||
-											Math.ceil(objects?.data?.length / searchParams.limit)
-										}
-										searchParams={searchParams}
-										siblings={1}
-									/>
-								</>
-							) : (
-								<NothingFoundAlert />
-							)}
-						</div>
+					<Globalcontent containerClasses="col-lg-12">
+						{objects?.data?.length > 0 ? (
+							<CommentBox
+								resourceId={searchParams.resourceId}
+								onModel={searchParams.onModel}
+								postType="comment"
+								advancedTextEditor={false}
+								token={token}
+								auth={auth}
+								endpoint="/global/comments"
+								createEndpoint={`/global/comments/${searchParams.resourceId}`}
+								isRemote={false}
+								comments={objects}
+								onCreate={null}
+								onPosted={null}
+								searchParams={searchParams}
+								heading="Comments"
+								emptyText="No comments yet."
+								pageSize={25}
+								siblings={1}
+								displayPagination={true}
+								displayComposer={true}
+								newestFirst={true}
+								profileBasePath={`/profile`}
+								decodeStoredEntities={true}
+								className=""
+							/>
+						) : (
+							<NothingFoundAlert />
+						)}
 					</Globalcontent>
 				</div>
 			</div>

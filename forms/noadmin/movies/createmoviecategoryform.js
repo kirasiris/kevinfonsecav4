@@ -24,8 +24,8 @@ const CreateMovieCategoryForm = ({
 		const rawFormData = {
 			title: formData.get("title"),
 			text: formData.get("text"),
-			// mentions: JSON.parse(formData.get("text_users") || "[]"),
-			// hashtags: JSON.parse(formData.get("text_hashtags") || "[]"),
+			mentions: JSON.parse(formData.get("text_users") || "[]"),
+			hashtags: JSON.parse(formData.get("text_hashtags") || "[]"),
 			parentId: formData.get("parentId"),
 			deletable: formData.get("deletable"),
 			categoryType: "movie",

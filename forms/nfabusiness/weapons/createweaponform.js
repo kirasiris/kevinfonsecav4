@@ -55,8 +55,8 @@ const CreateWeaponForm = ({ token = "", auth = {} }) => {
 			serialNumber: formData.get("serialNumber"),
 			nfaClassification: formData.get("nfaClassification"),
 			text: formData.get("text"),
-			// mentions: JSON.parse(formData.get("text_users") || "[]"),
-			// hashtags: JSON.parse(formData.get("text_hashtags") || "[]"),
+			mentions: JSON.parse(formData.get("text_users") || "[]"),
+			hashtags: JSON.parse(formData.get("text_hashtags") || "[]"),
 			files: formData.getAll("files[]"),
 		};
 

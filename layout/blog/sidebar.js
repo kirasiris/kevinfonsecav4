@@ -9,6 +9,8 @@ import { fetchurl } from "@/helpers/setTokenOnServer";
 
 const Sidebar = ({ quotes = [], categories = [] }) => {
 	const router = useRouter();
+	const [quoteList, setQuoteList] = useState(quotes?.data);
+	const [quoteIsLoading, setQuoteIsLoading] = useState(false);
 	const [forecast, setForecast] = useState({});
 	const [, setError] = useState(false);
 	const [searchParams, setSearchParams] = useState({
@@ -46,6 +48,29 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 		fetchForecast();
 	}, []);
 
+	const generateNewQuote = async () => {
+		setQuoteIsLoading(true);
+		const res = await fetchurl(
+			`/global/quotes/random`,
+			"GET",
+			"no-cache",
+			undefined,
+			undefined,
+			false,
+			false,
+		);
+		if (res.status === "error") {
+			toast.error(res.message);
+			return;
+		}
+		if (res.status === "fail") {
+			toast.error(res.message);
+			return;
+		}
+		setQuoteIsLoading(false);
+		setQuoteList(res?.data);
+	};
+
 	return (
 		<Globalsidebar>
 			{/* Search box */}
@@ -80,12 +105,33 @@ const Sidebar = ({ quotes = [], categories = [] }) => {
 				</div>
 			</div>
 			{/* Random quote box */}
-			{quotes.data?.length > 0 && (
+			{quoteList?.length > 0 && (
 				<div className="card mb-4">
-					<div className="card-header">Random Quote</div>
-					<div className="card-body">
-						{quotes.data?.map((quote, index) => (
-							<figure key={quote._id} className="m-0">
+					<div className="card-header d-flex justify-content-between align-items-center">
+						<span>Random Quote</span>
+						<button
+							type="button"
+							className="btn btn-secondary btn-sm"
+							onClick={generateNewQuote}
+							disabled={quoteIsLoading}
+						>
+							{quoteIsLoading ? (
+								<i
+									className="fa-solid fa-rotate fa-spin align-middle"
+									aria-hidden
+								/>
+							) : (
+								<i className="fa-solid fa-rotate align-middle" aria-hidden />
+							)}
+						</button>
+					</div>
+					<div
+						className="card-body"
+						aria-busy={quoteIsLoading}
+						aria-live="polite"
+					>
+						{quoteList?.map((quote, index) => (
+							<figure key={quote._id} className={`m-0 ${index}`}>
 								<blockquote className="blockquote m-0">
 									<p>{quote.text.toUpperCase()}</p>
 								</blockquote>

@@ -102,7 +102,7 @@ const ReportModal = ({
 							onModel="Blog"
 							advancedTextEditor={false}
 							customPlaceholder="Text"
-							charactersLimit={1}
+							charactersLimit={99999}
 							isRequired={true}
 						/>
 					</div>

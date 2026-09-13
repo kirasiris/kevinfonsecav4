@@ -25,6 +25,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useId, useMemo, useRef, useState } from "react";
 import he from "he";
 import useSWR from "swr";
+
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import NumericPagination from "@/layout/numericpagination";
 import MyTextArea from "@/components/global/myfinaltextarea";
@@ -442,6 +443,11 @@ const Composer = ({
 	isSubmitting = false,
 	error = null,
 	advancedTextEditor = false,
+	/**
+	 * Contents of the card header. Only the root composer passes one — a reply
+	 * is already captioned by the comment it opens under.
+	 */
+	header = null,
 	onSubmit = () => {},
 	onCancel = null,
 }) => {
@@ -572,12 +578,23 @@ const Composer = ({
 		>
 			{replyingTo?.liftsTo && (
 				<p className="small mb-2">
-					<i className="bi bi-arrow-return-right me-1" aria-hidden="true" />
+					<i
+						className="fa-solid fa-arrow-turn-up align-middle me-1"
+						aria-hidden
+						style={{
+							transform: "rotate(90deg)",
+						}}
+					/>
 					{`Posts into ${replyingTo.liftsTo}'s thread — replies only nest one level`}
 				</p>
 			)}
 
 			<div className="card">
+				{header && (
+					<div className="card-header d-flex align-items-center gap-2 py-3">
+						{header}
+					</div>
+				)}
 				<div className="card-body">
 					{isAuthed && (
 						<div className="d-flex align-items-center gap-2 mb-3">
@@ -691,11 +708,12 @@ const Composer = ({
 						charactersLimit={MAX_TEXT}
 						isRequired
 					/>
+
 					{bodyTooLong && (
 						<div className="alert alert-danger py-2 px-3 small mb-0">
 							<i
-								className="bi bi-exclamation-triangle-fill me-2"
-								aria-hidden="true"
+								className="fa-solid fa-triangle-exclamation me-2"
+								aria-hidden
 							/>
 							{`${bodyMirror.length - MAX_TEXT} characters over the ${MAX_TEXT} limit`}
 						</div>
@@ -704,8 +722,8 @@ const Composer = ({
 					{error && (
 						<div className="alert alert-danger py-2 px-3 small mt-3 mb-0">
 							<i
-								className="bi bi-exclamation-triangle-fill me-2"
-								aria-hidden="true"
+								className="fa-solid fa-triangle-exclamation me-2"
+								aria-hidden
 							/>
 							{error}
 						</div>
@@ -767,7 +785,7 @@ const ReplyAction = ({
 	<div className={`create-child-comment-${comment._id}`}>
 		<button
 			type="button"
-			className="btn btn-link btn-sm"
+			className="btn btn-link btn-sm p-0"
 			onClick={onReply}
 			disabled={isPending}
 			aria-expanded={isReplying}
@@ -777,10 +795,9 @@ const ReplyAction = ({
 					: `Reply to ${comment.name}`
 			}
 		>
-			<i className="bi bi-reply me-1" aria-hidden="true" />
+			<i className="fa-solid fa-reply align-middle me-1" aria-hidden />
 			{isReplying ? `Replying to ${comment.name}` : "Reply"}
 		</button>
-
 		{replySlot}
 	</div>
 );
@@ -835,15 +852,17 @@ const Row = ({
 
 					{!isAuthor && comment.isRegistered && (
 						<span className="badge bg-primary-subtle text-primary-emphasis">
-							<i className="bi bi-patch-check me-1" aria-hidden="true" />
+							<i className="fa-solid fa-check me-1" aria-hidden />
 							registered
 						</span>
 					)}
+
 					{!isAuthor && !comment.isRegistered && (
 						<span className="badge bg-secondary-subtle text-secondary-emphasis">
 							guest
 						</span>
 					)}
+
 					{host && (
 						<a
 							className="small"
@@ -851,23 +870,25 @@ const Row = ({
 							target="_blank"
 							rel="nofollow ugc noopener noreferrer"
 						>
-							<i className="bi bi-link-45deg" aria-hidden="true" />
+							<i className="fa-solid fa-link align-middle" aria-hidden />
 							{host}
 							<span className="visually-hidden">
 								{` (${comment.name}'s website, opens in a new tab)`}
 							</span>
 						</a>
 					)}
+
 					<small className="text-body-secondary">
 						{isPending ? "posting…" : relativeTime(comment.createdAt)}
 					</small>
 				</div>
+
 				<div className="card-text mt-1">
 					{heading && <p className="fw-semibold mb-1">{heading}</p>}
 
 					{comment.locked ? (
-						<p className="fst-italic mb-0">
-							<i className="bi bi-lock me-1" aria-hidden="true" />
+						<p className="text-body-secondary fst-italic mb-0">
+							<i className="fa-solid fa-lock me-1" aria-hidden />
 							This comment is encrypted or password protected.
 						</p>
 					) : (
@@ -1306,14 +1327,33 @@ const CommentBox = ({
 	if (!resourceId) {
 		return (
 			<div className="alert alert-warning" role="alert">
-				<i
-					className="bi bi-exclamation-triangle-fill me-2"
-					aria-hidden="true"
-				/>
+				<i className="fa-solid fa-triangle-exclamation me-2" aria-hidden />
 				CommentBox needs a <code>resourceId</code> to load comments.
 			</div>
 		);
 	}
+
+	/*
+	 * Sits in the composer's card header, or stands alone when the composer is
+	 * hidden. `all` carries optimistic rows, so the number moves as soon as a
+	 * comment is posted instead of waiting for the refetch.
+	 */
+	const headingRow = (
+		<>
+			<i className="fa-solid fa-comment" aria-hidden />
+			<h2 className="h6 mb-0">{heading}</h2>
+			<span className="badge bg-secondary-subtle text-secondary-emphasis rounded-pill">
+				{/* The ellipsis is decorative; the visually-hidden copy is what gives
+            screen readers a countable noun instead of a bare digit. */}
+				<span aria-hidden="true">{isLoading ? "…" : all.length}</span>
+				<span className="visually-hidden">
+					{isLoading
+						? "Loading comments"
+						: `${all.length} ${all.length === 1 ? "comment" : "comments"}`}
+				</span>
+			</span>
+		</>
+	);
 
 	return (
 		<section className={`comment-box ${className}`.trim()} ref={listRef}>
@@ -1321,34 +1361,28 @@ const CommentBox = ({
 				{STYLES}
 			</style>
 
-			<h2 className="h6 d-flex align-items-center gap-2">
-				<i className="bi bi-chat-left-text text-primary" aria-hidden="true" />
-				{heading}
-				<span className="badge bg-secondary-subtle text-secondary-emphasis">
-					{isLoading ? "…" : all.length}
-				</span>
-			</h2>
-
-			{displayComposer && (
+			{displayComposer ? (
 				<div className="mb-4">
 					<Composer
 						auth={auth}
 						token={token}
 						onModel={onModel}
 						advancedTextEditor={advancedTextEditor}
+						header={headingRow}
 						isSubmitting={isSubmitting && replyingToId === null}
 						error={replyingToId === null ? submitError : null}
 						onSubmit={(values) => submit(null, values)}
 					/>
 				</div>
+			) : (
+				// Without the composer there is no card to hold the header, and the
+				// section would otherwise lose both its heading and its count.
+				<div className="d-flex align-items-center gap-2 mb-3">{headingRow}</div>
 			)}
 
 			{notice && (
 				<div className="alert alert-warning alert-dismissible d-flex align-items-start gap-2">
-					<i
-						className="bi bi-exclamation-triangle-fill mt-1"
-						aria-hidden="true"
-					/>
+					<i className="fa-solid fa-triangle-exclamation mt-1" aria-hidden />
 					<p className="mb-0">{notice}</p>
 					<button
 						type="button"
@@ -1367,17 +1401,14 @@ const CommentBox = ({
 								className="spinner-border spinner-border-sm text-primary"
 								aria-hidden="true"
 							/>
-							<span className="text-body-secondary">Loading comments…</span>
+							<span>Loading comments…</span>
 						</div>
 					</div>
 				)}
 
 				{error && (
 					<div className="alert alert-danger d-flex align-items-start gap-2">
-						<i
-							className="bi bi-exclamation-octagon-fill mt-1"
-							aria-hidden="true"
-						/>
+						<i className="fa-solid fa-octagon-exclamation mt-1" aria-hidden />
 						<div className="flex-grow-1">
 							<p className="mb-2">{error.message}</p>
 							<button
@@ -1394,10 +1425,7 @@ const CommentBox = ({
 				{!isLoading && !error && threads.length === 0 && (
 					<div className="card mb-3">
 						<div className="card-body text-center py-5">
-							<i
-								className="bi bi-chat-square-dots fs-3 text-body-secondary"
-								aria-hidden="true"
-							/>
+							<i className="fa-regular fa-comment-dots fs-3" aria-hidden />
 							<p className="mt-2 mb-0">{emptyText}</p>
 						</div>
 					</div>

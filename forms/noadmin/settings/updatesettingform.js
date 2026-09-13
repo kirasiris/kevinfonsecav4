@@ -286,7 +286,7 @@ const UpdateSettingForm = ({ token = {}, auth = {}, object = {} }) => {
 							onClick={() => resetField(field)}
 							title={"Undo " + FIELD_LABELS[field] + " change"}
 						>
-							<i className="fa-solid fa-rotate-left" />
+							<i className="fa-solid fa-xmark align-middle" />
 							<span className="visually-hidden">
 								{"Undo " + FIELD_LABELS[field] + " change"}
 							</span>

@@ -571,7 +571,7 @@ const Composer = ({
 			aria-label={replyingTo ? "Reply to comment" : "Leave a comment"}
 		>
 			{replyingTo?.liftsTo && (
-				<p className="small text-warning-emphasis mb-2">
+				<p className="small mb-2">
 					<i className="bi bi-arrow-return-right me-1" aria-hidden="true" />
 					{`Posts into ${replyingTo.liftsTo}'s thread — replies only nest one level`}
 				</p>
@@ -586,11 +586,9 @@ const Composer = ({
 								src={authorAvatarOf(auth)}
 								size={32}
 							/>
-							<span className="small text-body-secondary">
+							<span className="small">
 								Posting as{" "}
-								<span className="fw-semibold text-body">
-									{authorNameOf(auth)}
-								</span>
+								<span className="fw-semibold">{authorNameOf(auth)}</span>
 							</span>
 						</div>
 					)}
@@ -715,7 +713,7 @@ const Composer = ({
 				</div>
 
 				<div className="card-footer d-flex flex-wrap align-items-center justify-content-between gap-2">
-					<small className="text-body-secondary">
+					<small>
 						{isAuthed
 							? "Signed in — your profile is attached to this comment"
 							: "Posting as a guest — no account required"}
@@ -725,7 +723,7 @@ const Composer = ({
 						{onCancel && (
 							<button
 								type="button"
-								className="btn btn-sm btn-outline-secondary"
+								className="btn btn-dark btn-sm border border-1"
 								onClick={onCancel}
 								disabled={isSubmitting}
 							>
@@ -734,7 +732,7 @@ const Composer = ({
 						)}
 						<button
 							type="submit"
-							className="btn btn-sm btn-primary"
+							className="btn btn-secondary btn-sm"
 							disabled={!canSubmit}
 						>
 							{isSubmitting ? (
@@ -769,7 +767,7 @@ const ReplyAction = ({
 	<div className={`create-child-comment-${comment._id}`}>
 		<button
 			type="button"
-			className="btn btn-link btn-sm p-0"
+			className="btn btn-link btn-sm"
 			onClick={onReply}
 			disabled={isPending}
 			aria-expanded={isReplying}
@@ -841,13 +839,11 @@ const Row = ({
 							registered
 						</span>
 					)}
-
 					{!isAuthor && !comment.isRegistered && (
 						<span className="badge bg-secondary-subtle text-secondary-emphasis">
 							guest
 						</span>
 					)}
-
 					{host && (
 						<a
 							className="small"
@@ -862,17 +858,15 @@ const Row = ({
 							</span>
 						</a>
 					)}
-
 					<small className="text-body-secondary">
 						{isPending ? "posting…" : relativeTime(comment.createdAt)}
 					</small>
 				</div>
-
 				<div className="card-text mt-1">
 					{heading && <p className="fw-semibold mb-1">{heading}</p>}
 
 					{comment.locked ? (
-						<p className="text-body-secondary fst-italic mb-0">
+						<p className="fst-italic mb-0">
 							<i className="bi bi-lock me-1" aria-hidden="true" />
 							This comment is encrypted or password protected.
 						</p>
@@ -1404,7 +1398,7 @@ const CommentBox = ({
 								className="bi bi-chat-square-dots fs-3 text-body-secondary"
 								aria-hidden="true"
 							/>
-							<p className="text-body-secondary mt-2 mb-0">{emptyText}</p>
+							<p className="mt-2 mb-0">{emptyText}</p>
 						</div>
 					</div>
 				)}

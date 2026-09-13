@@ -236,7 +236,7 @@ const CreateSettingForm = ({ token = {}, auth = {} }) => {
 							className="btn btn-outline-secondary"
 							onClick={() => clearField(field)}
 						>
-							<i className="fa-solid fa-xmark" />
+							<i className="fa-solid fa-xmark align-middle" />
 							<span className="visually-hidden">
 								{"Clear " + FIELD_LABELS[field]}
 							</span>

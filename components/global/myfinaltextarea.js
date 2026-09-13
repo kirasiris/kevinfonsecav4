@@ -3573,9 +3573,11 @@ const MyTextArea = ({
 				onChange={(e) => setCharCount(e.target.value.length)}
 			/>
 			<div
-				className={
-					"form-text" + (overCharacterLimit ? " text-danger fw-semibold" : "")
-				}
+				className={overCharacterLimit ? " text-danger fw-semibold" : ""}
+				style={{
+					marginTop: ".25rem",
+					fontSize: ".875em",
+				}}
 			>
 				{characterCountLabel}
 			</div>

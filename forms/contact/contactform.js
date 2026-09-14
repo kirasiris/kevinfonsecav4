@@ -60,87 +60,92 @@ const ContactForm = () => {
 	};
 
 	return (
-		<form onSubmit={createContact}>
-			<div className="row">
-				<div className="col">
-					<label htmlFor="name" className="form-label">
-						Name
-					</label>
-					<input
-						id="name"
-						name="name"
-						defaultValue=""
-						type="text"
-						className="form-control mb-3"
-						required
-						placeholder="John Doe"
-					/>
+		<form className="card" onSubmit={createContact}>
+			<div className="card-header">Contact form</div>
+			<div className="card-body">
+				<div className="row">
+					<div className="col">
+						<label htmlFor="name" className="form-label">
+							Name
+						</label>
+						<input
+							id="name"
+							name="name"
+							defaultValue=""
+							type="text"
+							className="form-control mb-3"
+							required
+							placeholder="John Doe"
+						/>
+					</div>
+					<div className="col">
+						<label htmlFor="email" className="form-label">
+							Email
+						</label>
+						<input
+							id="email"
+							name="email"
+							defaultValue=""
+							type="email"
+							className="form-control mb-3"
+							required
+							placeholder="john@doe.com"
+						/>
+					</div>
 				</div>
-				<div className="col">
-					<label htmlFor="email" className="form-label">
-						Email
-					</label>
-					<input
-						id="email"
-						name="email"
-						defaultValue=""
-						type="email"
-						className="form-control mb-3"
-						required
-						placeholder="john@doe.com"
-					/>
-				</div>
+				<label htmlFor="subject" className="form-label">
+					Subject
+				</label>
+				<select
+					id="subject"
+					name="subject"
+					defaultValue=""
+					className="form-select mb-3"
+					required
+				>
+					<option value="none">Choose an option</option>
+					<option value="suggestion">Suggestion</option>
+					<option value="bug">Bug</option>
+					<option value="review">Review</option>
+					<option value="greetings">Greetings</option>
+				</select>
+				<label htmlFor="text" className="form-label">
+					Text
+				</label>
+				<textarea
+					id="text"
+					name="text"
+					defaultValue=""
+					className="form-control mb-3"
+					required
+					placeholder={`Here goes the message`}
+					rows={`3`}
+				/>
+				<label htmlFor="captcha" className="form-label">
+					Captcha: 3+2?
+				</label>
+				<input
+					id="captcha"
+					name="captcha"
+					defaultValue=""
+					type="number"
+					className="form-control"
+					required
+					placeholder="0"
+				/>
 			</div>
-			<label htmlFor="subject" className="form-label">
-				Subject
-			</label>
-			<select
-				id="subject"
-				name="subject"
-				defaultValue=""
-				className="form-select mb-3"
-				required
-			>
-				<option value="none">Choose an option</option>
-				<option value="suggestion">Suggestion</option>
-				<option value="bug">Bug</option>
-				<option value="review">Review</option>
-				<option value="greetings">Greetings</option>
-			</select>
-			<label htmlFor="text" className="form-label">
-				Text
-			</label>
-			<textarea
-				id="text"
-				name="text"
-				defaultValue=""
-				className="form-control mb-3"
-				required
-				placeholder={`Here goes the message`}
-				rows={`3`}
-			/>
-			<label htmlFor="captcha" className="form-label">
-				Captcha: 3+2?
-			</label>
-			<input
-				id="captcha"
-				name="captcha"
-				defaultValue=""
-				type="number"
-				className="form-control mb-3"
-				required
-				placeholder="0"
-			/>
-			<button type="submit" className="btn btn-secondary btn-sm float-start">
-				{btnText}
-			</button>
-			<button
-				type="reset"
-				onClick={resetForm}
-				className="btn btn-secondary btn-sm float-end"
-			>
-				Reset
-			</button>
+			<div className="card-footer">
+				<button type="submit" className="btn btn-secondary btn-sm float-start">
+					{btnText}
+				</button>
+				<button
+					type="reset"
+					onClick={resetForm}
+					className="btn btn-secondary btn-sm float-end"
+				>
+					Reset
+				</button>
+			</div>
 		</form>
 	);
 };

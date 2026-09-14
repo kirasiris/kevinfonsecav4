@@ -1,19 +1,26 @@
 "use client";
+import Image from "next/image";
 import Map from "@/components/global/map";
 import Globalsidebar from "../sidebar";
-import Image from "next/image";
 
-const Sidebar = ({ address = {} }) => {
+const Sidebar = ({ object = {} }) => {
 	return (
 		<Globalsidebar>
 			<Image
-				src={`https://i0.wp.com/befreebucket-for-outputs.s3.amazonaws.com/2021/10/KevinFonseca_Logo.png`}
+				src={object?.data?.logo?.location?.secure_location}
 				width={150}
 				height={40}
-				alt="beFree's Logo"
+				alt={`${object?.data?.title}'s logo`}
 			/>
-			<Map object={address} />
-			<p>{address.location.formattedAddress}</p>
+			<div className="card">
+				<div className="card-header">Address</div>
+				<div className="card-body">
+					<Map object={object?.data} />
+				</div>
+				<div className="card-footer px-1">
+					<p className="m-0">{object?.data?.address}</p>
+				</div>
+			</div>
 		</Globalsidebar>
 	);
 };

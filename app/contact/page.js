@@ -11,13 +11,6 @@ import { getGlobalData } from "@/helpers/globalData";
 const ContactIndex = async ({ params, searchParams }) => {
 	const { settings } = await getGlobalData();
 
-	const address = {
-		location: {
-			formattedAddress: "10153 Red Bluff Ln, Fort Worth, TX 76177",
-			coordinates: [-97.33096, 32.92332],
-		},
-	};
-
 	return (
 		<>
 			<Head
@@ -51,7 +44,7 @@ const ContactIndex = async ({ params, searchParams }) => {
 								<Globalcontent>
 									<ContactForm />
 								</Globalcontent>
-								<Sidebar address={address} />
+								<Sidebar object={settings} />
 							</div>
 						</div>
 					</section>

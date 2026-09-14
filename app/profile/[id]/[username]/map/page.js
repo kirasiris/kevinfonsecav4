@@ -4,7 +4,7 @@ import Link from "next/link";
 import { fetchurl, getUserOnServer } from "@/helpers/setTokenOnServer";
 import Loading from "@/app/profile/loading";
 import Jumbotron from "@/components/profile/jumbotron";
-import Map from "@/components/profile/map";
+import GlobeMap from "@/components/profile/globemap";
 import Sidebar from "@/components/profile/sidebar";
 import Globalcontent from "@/layout/content";
 import ErrorPage from "@/layout/errorpage";
@@ -88,7 +88,13 @@ const ProfileMapIndex = async ({ params, searchParams }) => {
 											posts
 										</div>
 										<div className="card-body p-0">
-											<Map objects={posts} />
+											<GlobeMap
+												objects={posts}
+												height="50vh"
+												id="globe"
+												spin={true}
+												clusterRadius={50}
+											/>
 										</div>
 										{auth?.userId !== undefined && (
 											<div className="card-footer">

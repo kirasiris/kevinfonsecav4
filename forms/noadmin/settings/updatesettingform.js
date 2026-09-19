@@ -299,7 +299,7 @@ const UpdateSettingForm = ({ token = {}, auth = {}, object = {} }) => {
 							onClick={() => clearField(field)}
 							title={"Clear " + FIELD_LABELS[field]}
 						>
-							<i className="fa-solid fa-xmark" />
+							<i className="fa-solid fa-xmark align-middle" />
 							<span className="visually-hidden">
 								{"Clear " + FIELD_LABELS[field]}
 							</span>

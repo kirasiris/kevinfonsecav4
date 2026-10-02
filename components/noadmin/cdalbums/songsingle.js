@@ -48,7 +48,7 @@ const Single = ({
 						<span className="badge bg-secondary">{index + 1}</span>
 						{object.raw.files?.audio_url?.format_type && (
 							<span className={object.info.textClass}>
-								<FileIcon type={object.raw.files.audio_url.format_type} />
+								<FileIcon type={object?.raw?.files?.audio_url?.format_type} />
 							</span>
 						)}
 					</div>
@@ -63,10 +63,11 @@ const Single = ({
 					</div>
 				</div>
 				<div className="card-body p-2">
-					{object.raw.files.audio_url.format_type === "image" && object.url ? (
+					{object?.raw?.files?.audio_url?.format_type === "image" &&
+					object?.url ? (
 						<img
 							src={object?.url || "/placeholder.svg"}
-							alt={object.filename}
+							alt={object?.filename}
 							loading="lazy"
 							className="img-fluid"
 							style={{
@@ -75,8 +76,8 @@ const Single = ({
 								objectFit: "fill",
 							}}
 						/>
-					) : object.raw.files.audio_url.format_type === "video" &&
-					  object.url ? (
+					) : object?.raw?.files?.audio_url?.format_type === "video" &&
+					  object?.url ? (
 						<video
 							src={object.url}
 							controls
@@ -84,14 +85,14 @@ const Single = ({
 							className="w-100"
 							style={{ height: "150px", objectFit: "fill" }}
 						/>
-					) : object.raw.files.audio_url.format_type === "audio" &&
-					  object.url ? (
+					) : object?.raw?.files?.audio_url?.format_type === "audio" &&
+					  object?.url ? (
 						<div
 							className="d-flex align-items-center p-1 admin-multimedia-manager-audio-file"
 							style={{ height: "150px" }}
 						>
 							<audio
-								src={object.url}
+								src={object?.url}
 								controls
 								preload="metadata"
 								className="w-100"
@@ -102,7 +103,7 @@ const Single = ({
 							className="d-flex align-items-center justify-content-center admin-multimedia-manager-doc-file"
 							style={{ height: "150px" }}
 						>
-							<FileIcon type={object.raw.files.audio_url.format_type} />
+							<FileIcon type={object?.raw?.files?.audio_url?.format_type} />
 						</div>
 					)}
 				</div>

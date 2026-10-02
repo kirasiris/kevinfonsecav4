@@ -9,11 +9,11 @@ import FormButtons from "@/components/global/formbuttons";
 const CreateForumForm = ({ params, searchParams }) => {
 	const router = useRouter();
 
-	const [, setBtnText] = useState(`Submit`);
+	const [btnText, setBtnText] = useState("Submit");
 
 	const addForum = async (e) => {
 		e.preventDefault();
-		setBtnText("...");
+		setBtnText(`Processing...`);
 		const form = e.target;
 		const formData = new FormData(form);
 
@@ -21,7 +21,7 @@ const CreateForumForm = ({ params, searchParams }) => {
 			title: formData.get("title"),
 			text: formData.get("text"),
 			mentions: JSON.parse(formData.get("text_users") || "[]"),
-			hashtags: JSON.parse(formData.get("text_hashtags") || "[]"),
+			tags: JSON.parse(formData.get("text_hashtags") || "[]"),
 			category: params.category,
 			sub_category: params.subcategory,
 			status: "published",
@@ -40,12 +40,12 @@ const CreateForumForm = ({ params, searchParams }) => {
 
 		if (res.status === "error") {
 			toast.error(res.message);
-			setBtnText("Submit");
+			setBtnText(btnText);
 			return;
 		}
 		if (res.status === "fail") {
 			toast.error(res.message);
-			setBtnText("Submit");
+			setBtnText(btnText);
 			return;
 		}
 		toast.success(`Forum created`);

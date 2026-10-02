@@ -40,7 +40,7 @@ const EMPTY_FIELD = { url: "", id: "", name: "" };
 const CreateSettingForm = ({ token = {}, auth = {} }) => {
 	const router = useRouter();
 
-	const [, setBtnText] = useState(`Submit`);
+	const [btnText, setBtnText] = useState(`Submit`);
 
 	const [files, setFiles] = useState({
 		showcase_image: EMPTY_FIELD,
@@ -135,7 +135,7 @@ const CreateSettingForm = ({ token = {}, auth = {} }) => {
 
 	const addSetting = async (e) => {
 		e.preventDefault();
-		setBtnText("...");
+		setBtnText(`Processing...`);
 		const form = e.target;
 		const formData = new FormData(form);
 
@@ -191,12 +191,12 @@ const CreateSettingForm = ({ token = {}, auth = {} }) => {
 
 		if (res.status === "error") {
 			toast.error(res.message);
-			setBtnText("Submit");
+			setBtnText(btnText);
 			return;
 		}
 		if (res.status === "fail") {
 			toast.error(res.message);
-			setBtnText("Submit");
+			setBtnText(btnText);
 			return;
 		}
 		toast.success(`Setting created`);

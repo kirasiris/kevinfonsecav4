@@ -32,12 +32,12 @@ const AddAddressForm = ({}) => {
 
 		if (res.status === "error") {
 			toast.error(res.message);
-			setBtnText("Submit");
+			setBtnText(btnText);
 			return;
 		}
 		if (res.status === "fail") {
 			toast.error(res.message);
-			setBtnText("Submit");
+			setBtnText(btnText);
 			return;
 		}
 		toast.success("Address has been added");

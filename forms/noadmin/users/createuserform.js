@@ -9,13 +9,13 @@ import FormButtons from "@/components/global/formbuttons";
 const CreateUserForm = ({ auth = {}, objects = [] }) => {
 	const router = useRouter();
 
-	const [, setBtnText] = useState(`Submit`);
+	const [btnText, setBtnText] = useState(`Submit`);
 
 	const [showPartner, setShowPartner] = useState("");
 
 	const addUser = async (e) => {
 		e.preventDefault();
-		setBtnText("...");
+		setBtnText(`Processing...`);
 		const form = e.target;
 		const formData = new FormData(form);
 
@@ -37,7 +37,7 @@ const CreateUserForm = ({ auth = {}, objects = [] }) => {
 			workstatus: formData.get("workstatus"),
 			text: formData.get("text"),
 			mentions: JSON.parse(formData.get("text_users") || "[]"),
-			hashtags: JSON.parse(formData.get("text_hashtags") || "[]"),
+			tags: JSON.parse(formData.get("text_hashtags") || "[]"),
 			website: formData.get("website"),
 			// files: { avatar: formData.get("file") || undefined },
 			social: {
@@ -55,7 +55,7 @@ const CreateUserForm = ({ auth = {}, objects = [] }) => {
 
 		if (rawFormData.password !== rawFormData.password2) {
 			toast.error(`Passwords do not match`);
-			setBtnText("Submit");
+			setBtnText(btnText);
 			return;
 		}
 
@@ -71,12 +71,12 @@ const CreateUserForm = ({ auth = {}, objects = [] }) => {
 
 		if (res.status === "error") {
 			toast.error(res.message);
-			setBtnText("Submit");
+			setBtnText(btnText);
 			return;
 		}
 		if (res.status === "fail") {
 			toast.error(res.message);
-			setBtnText("Submit");
+			setBtnText(btnText);
 			return;
 		}
 		toast.success(`User created`);

@@ -7,12 +7,31 @@ import MyTextArea from "@/components/global/myfinaltextarea";
 import AdminSidebar from "@/components/noadmin/myfinaladminsidebar";
 import FormButtons from "@/components/global/formbuttons";
 
+const toId = (value) => {
+	if (!value) {
+		return "";
+	}
+	if (typeof value === "string" || typeof value === "number") {
+		return String(value);
+	}
+	return String(value._id || value.id || "");
+};
+
+const toMention = (value) =>
+	typeof value === "string" || typeof value === "number"
+		? { id: String(value), username: "" }
+		: { id: toId(value), username: value?.username || "" };
+
 const UpdateProductForm = ({ object = {}, token = "", auth = {} }) => {
 	const router = useRouter();
 
 	const [showCategories, setShowCategories] = useState(object?.data?.category);
 
-	const [, setBtnText] = useState("Submit");
+	const [btnText, setBtnText] = useState("Submit");
+
+	const savedFiles = Array.isArray(object?.data?.files?.extras)
+		? object?.data?.files.extras
+		: [];
 
 	const upgradeProduct = async (e) => {
 		e.preventDefault();
@@ -20,11 +39,21 @@ const UpdateProductForm = ({ object = {}, token = "", auth = {} }) => {
 		const form = e.target;
 		const formData = new FormData(form);
 
+		const text = formData.get("text") || "";
+		const mentions = JSON.parse(formData.get("text_users") || "[]");
+		const tags = JSON.parse(formData.get("text_hashtags") || "[]");
+		const extras = JSON.parse(formData.get("text_files") || "[]");
+
+		const bodyUnchanged = text === (object?.data?.text || "");
+
 		const rawFormData = {
 			title: formData.get("title"),
 			text: formData.get("text"),
-			mentions: JSON.parse(formData.get("text_users") || "[]"),
-			hashtags: JSON.parse(formData.get("text_hashtags") || "[]"),
+			mentions:
+				bodyUnchanged && !mentions.length
+					? (object?.data?.mentions || []).map(toMention)
+					: mentions,
+			tags: bodyUnchanged && !tags.length ? object?.data?.tags || [] : tags,
 			price: formData.get("price"),
 			isFree: formData.get("isFree"),
 			active: formData.get("active"),
@@ -36,7 +65,13 @@ const UpdateProductForm = ({ object = {}, token = "", auth = {} }) => {
 			sub_category: formData.getAll("sub_category"),
 			brand: formData.get("brand"),
 			model: formData.get("model"),
-			files: { avatar: formData.get("file") || undefined },
+			files: {
+				avatar: formData.get("file") || undefined,
+				extras:
+					bodyUnchanged && !extras.length
+						? savedFiles.map(toId).filter(Boolean)
+						: extras,
+			},
 			variants: {},
 			specifications: {},
 			features: formData.get("features"),
@@ -68,12 +103,12 @@ const UpdateProductForm = ({ object = {}, token = "", auth = {} }) => {
 		);
 		if (res.status === "error") {
 			toast.error(res.message);
-			setBtnText("Submit");
+			setBtnText(btnText);
 			return;
 		}
 		if (res.status === "fail") {
 			toast.error(res.message);
-			setBtnText("Submit");
+			setBtnText(btnText);
 			return;
 		}
 		toast.success("Product updated");
@@ -104,6 +139,7 @@ const UpdateProductForm = ({ object = {}, token = "", auth = {} }) => {
 					id="text"
 					name="text"
 					defaultValue={object?.data?.text}
+					defaultFiles={savedFiles}
 					onModel="Product"
 					advancedTextEditor={true}
 					customPlaceholder="No description"

@@ -8,11 +8,11 @@ import { startRegistration } from "@simplewebauthn/browser";
 const UpdatePasskeyForm = ({ auth = {} }) => {
 	const router = useRouter();
 
-	const [, setBtnText] = useState("Submit");
+	const [btnText, setBtnText] = useState("Submit");
 
 	const activate = async (e) => {
 		e.preventDefault();
-		setBtnText(`Processing`);
+		setBtnText(`Processing...`);
 
 		// const form = e.target;
 		// const formData = new FormData(form);
@@ -28,12 +28,12 @@ const UpdatePasskeyForm = ({ auth = {} }) => {
 		);
 		if (res.status === "error") {
 			toast.error(res.message);
-			setBtnText("Submit");
+			setBtnText(btnText);
 			return;
 		}
 		if (res.status === "fail") {
 			toast.error(res.message);
-			setBtnText("Submit");
+			setBtnText(btnText);
 			return;
 		}
 
@@ -56,12 +56,12 @@ const UpdatePasskeyForm = ({ auth = {} }) => {
 
 		if (passkeyVerification.status === "error") {
 			toast.error(passkeyVerification.message);
-			setBtnText("Submit");
+			setBtnText(btnText);
 			return;
 		}
 		if (passkeyVerification.status === "fail") {
 			toast.error(passkeyVerification.message);
-			setBtnText("Submit");
+			setBtnText(btnText);
 			return;
 		}
 
@@ -90,12 +90,12 @@ const UpdatePasskeyForm = ({ auth = {} }) => {
 		);
 		if (res.status === "error") {
 			toast.error(res.message);
-			setBtnText("Submit");
+			setBtnText(btnText);
 			return;
 		}
 		if (res.status === "fail") {
 			toast.error(res.message);
-			setBtnText("Submit");
+			setBtnText(btnText);
 			return;
 		}
 

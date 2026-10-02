@@ -12,7 +12,7 @@ const CreateProductForm = ({ token = {}, auth = {} }) => {
 
 	const [showCategories, setShowCategories] = useState(true);
 
-	const [, setBtnText] = useState("Submit");
+	const [btnText, setBtnText] = useState("Submit");
 
 	const addProduct = async (e) => {
 		e.preventDefault();
@@ -24,7 +24,7 @@ const CreateProductForm = ({ token = {}, auth = {} }) => {
 			title: formData.get("title"),
 			text: formData.get("text"),
 			mentions: JSON.parse(formData.get("text_users") || "[]"),
-			hashtags: JSON.parse(formData.get("text_hashtags") || "[]"),
+			tags: JSON.parse(formData.get("text_hashtags") || "[]"),
 			price: formData.get("price"),
 			isFree: formData.get("isFree"),
 			active: formData.get("active"),
@@ -36,7 +36,10 @@ const CreateProductForm = ({ token = {}, auth = {} }) => {
 			sub_category: formData.getAll("sub_category"),
 			brand: formData.get("brand"),
 			model: formData.get("model"),
-			files: { avatar: formData.get("file") || undefined },
+			files: {
+				avatar: formData.get("file") || undefined,
+				extras: JSON.parse(formData.get("text_files") || "[]"),
+			},
 			variants: {},
 			specifications: {},
 			features: formData.get("features"),
@@ -72,12 +75,12 @@ const CreateProductForm = ({ token = {}, auth = {} }) => {
 
 		if (res.status === "error") {
 			toast.error(res.message);
-			setBtnText("Submit");
+			setBtnText(btnText);
 			return;
 		}
 		if (res.status === "fail") {
 			toast.error(res.message);
-			setBtnText("Submit");
+			setBtnText(btnText);
 			return;
 		}
 		toast.success("Product created");

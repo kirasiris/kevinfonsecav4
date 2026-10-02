@@ -6,6 +6,21 @@ import { fetchurl } from "@/helpers/setTokenOnServer";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
 
+const toId = (value) => {
+	if (!value) {
+		return "";
+	}
+	if (typeof value === "string" || typeof value === "number") {
+		return String(value);
+	}
+	return String(value._id || value.id || "");
+};
+
+const toMention = (value) =>
+	typeof value === "string" || typeof value === "number"
+		? { id: String(value), username: "" }
+		: { id: toId(value), username: value?.username || "" };
+
 const UpdateAcquisitionDisposalForm = ({
 	object = {},
 	token = "",
@@ -13,13 +28,24 @@ const UpdateAcquisitionDisposalForm = ({
 }) => {
 	const router = useRouter();
 
-	const [, setBtnText] = useState("Submit");
+	const [btnText, setBtnText] = useState("Submit");
+
+	const savedFiles = Array.isArray(object?.data?.files?.extras)
+		? object?.data?.files.extras
+		: [];
 
 	const upgradeAcquisitionDisposal = async (e) => {
 		e.preventDefault();
 		setBtnText(`Processing...`);
 		const form = e.target;
 		const formData = new FormData(form);
+
+		const text = formData.get("text") || "";
+		const mentions = JSON.parse(formData.get("text_users") || "[]");
+		const tags = JSON.parse(formData.get("text_hashtags") || "[]");
+		const extras = JSON.parse(formData.get("text_files") || "[]");
+
+		const bodyUnchanged = text === (object?.data?.text || "");
 
 		const rawFormData = {
 			manufacturer: formData.get("manufacturer"),
@@ -37,8 +63,11 @@ const UpdateAcquisitionDisposalForm = ({
 				trackingNumber: formData.get("trackingNumber"),
 			},
 			text: formData.get("text"),
-			mentions: JSON.parse(formData.get("text_users") || "[]"),
-			hashtags: JSON.parse(formData.get("text_hashtags") || "[]"),
+			mentions:
+				bodyUnchanged && !mentions.length
+					? (object?.data?.mentions || []).map(toMention)
+					: mentions,
+			tags: bodyUnchanged && !tags.length ? object?.data?.tags || [] : tags,
 			status: formData.get("status"),
 			orderingNumber: formData.get("orderingNumber"),
 		};
@@ -54,12 +83,12 @@ const UpdateAcquisitionDisposalForm = ({
 		);
 		if (res.status === "error") {
 			toast.error(res.message);
-			setBtnText("Submit");
+			setBtnText(btnText);
 			return;
 		}
 		if (res.status === "fail") {
 			toast.error(res.message);
-			setBtnText("Submit");
+			setBtnText(btnText);
 			return;
 		}
 		toast.success("Weapon acquistion and disposal updated");
@@ -275,8 +304,9 @@ const UpdateAcquisitionDisposalForm = ({
 					id="text"
 					name="text"
 					defaultValue={object?.data?.text}
+					defaultFiles={savedFiles}
 					onModel="Weapon"
-					advancedTextEditor={true}
+					advancedTextEditor={false}
 					customPlaceholder="No description"
 					charactersLimit={99999}
 					isRequired={false}

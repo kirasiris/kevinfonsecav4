@@ -18,10 +18,10 @@ const CreateCommentForm = ({
 
 	const addComment = async (e) => {
 		e.preventDefault();
-		console.log("searchParams", searchParams);
-		setBtnText("...");
+		setBtnText(`Processing...`);
 		const form = e.target;
 		const formData = new FormData(form);
+
 		const rawFormData = {
 			user: formData.get("user") || undefined,
 			name: formData.get("name"),
@@ -30,7 +30,7 @@ const CreateCommentForm = ({
 			title: formData.get("title"),
 			text: formData.get("text"),
 			mentions: JSON.parse(formData.get("text_users") || "[]"),
-			hashtags: JSON.parse(formData.get("text_hashtags") || "[]"),
+			tags: JSON.parse(formData.get("text_hashtags") || "[]"),
 			status: formData.get("status"),
 			resourceId: searchParams.resourceId,
 			parentId: searchParams.parentId || undefined,
@@ -49,12 +49,12 @@ const CreateCommentForm = ({
 
 		if (res.status === "error") {
 			toast.error(res.message);
-			setBtnText("Submit");
+			setBtnText(btnText);
 			return;
 		}
 		if (res.status === "fail") {
 			toast.error(res.message);
-			setBtnText("Submit");
+			setBtnText(btnText);
 			return;
 		}
 		setBtnText(btnText);

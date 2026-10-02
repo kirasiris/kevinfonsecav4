@@ -8,11 +8,11 @@ import FormButtons from "@/components/global/formbuttons";
 const CreateUserForm = ({ object = {} }) => {
 	const router = useRouter();
 
-	const [, setBtnText] = useState("Submit");
+	const [btnText, setBtnText] = useState("Submit");
 
 	const registerAccount = async (e) => {
 		e.preventDefault();
-		setBtnText(`Processing`);
+		setBtnText(`Processing...`);
 
 		const form = e.target;
 		const formData = new FormData(form);
@@ -27,7 +27,7 @@ const CreateUserForm = ({ object = {} }) => {
 
 		if (rawFormData.password !== rawFormData.password2) {
 			toast.error(`Passwords do not match`);
-			setBtnText("Submit");
+			setBtnText(btnText);
 			return;
 		}
 
@@ -45,15 +45,15 @@ const CreateUserForm = ({ object = {} }) => {
 		);
 		if (res.status === "error") {
 			toast.error(res.message);
-			setBtnText("Submit");
+			setBtnText(btnText);
 			return;
 		}
 		if (res.status === "fail") {
 			toast.error(res.message);
-			setBtnText("Submit");
+			setBtnText(btnText);
 			return;
 		}
-		setBtnText("Submit");
+		setBtnText(btnText);
 		toast.success("Account registered");
 		router.push(`/nfabusiness/acquisitionsdisposals/read/${object._id}`);
 	};

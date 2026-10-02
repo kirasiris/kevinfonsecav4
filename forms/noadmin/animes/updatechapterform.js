@@ -7,22 +7,51 @@ import AdminSidebar from "@/components/noadmin/myfinaladminsidebar";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
 
+const toId = (value) => {
+	if (!value) {
+		return "";
+	}
+	if (typeof value === "string" || typeof value === "number") {
+		return String(value);
+	}
+	return String(value._id || value.id || "");
+};
+
+const toMention = (value) =>
+	typeof value === "string" || typeof value === "number"
+		? { id: String(value), username: "" }
+		: { id: toId(value), username: value?.username || "" };
+
 const UpdateChapterForm = ({ token = {}, auth = {}, object = {} }) => {
 	const router = useRouter();
 
-	const [, setBtnText] = useState(`Submit`);
+	const [btnText, setBtnText] = useState(`Submit`);
+
+	const savedFiles = Array.isArray(object?.data?.files?.extras)
+		? object?.data?.files.extras
+		: [];
 
 	const upgradeChapter = async (e) => {
 		e.preventDefault();
-		setBtnText("...");
+		setBtnText(`Processing...`);
 		const form = e.target;
 		const formData = new FormData(form);
+
+		const text = formData.get("text") || "";
+		const mentions = JSON.parse(formData.get("text_users") || "[]");
+		const tags = JSON.parse(formData.get("text_hashtags") || "[]");
+		const extras = JSON.parse(formData.get("text_files") || "[]");
+
+		const bodyUnchanged = text === (object?.data?.text || "");
 
 		const rawFormData = {
 			title: formData.get("title"),
 			text: formData.get("text"),
-			mentions: JSON.parse(formData.get("text_users") || "[]"),
-			hashtags: JSON.parse(formData.get("text_hashtags") || "[]"),
+			mentions:
+				bodyUnchanged && !mentions.length
+					? (object?.data?.mentions || []).map(toMention)
+					: mentions,
+			tags: bodyUnchanged && !tags.length ? object?.data?.tags || [] : tags,
 			commented: formData.get("commented"),
 			embedding: formData.get("embedding"),
 			status: formData.get("status"),
@@ -53,7 +82,10 @@ const UpdateChapterForm = ({ token = {}, auth = {}, object = {} }) => {
 			files: {
 				avatar: formData.get("file") || undefined,
 				video_url: formData.get("video_url") || undefined,
-				extras: JSON.parse(formData.get("text_files") || "[]"),
+				extras:
+					bodyUnchanged && !extras.length
+						? savedFiles.map(toId).filter(Boolean)
+						: extras,
 			},
 		};
 
@@ -69,12 +101,12 @@ const UpdateChapterForm = ({ token = {}, auth = {}, object = {} }) => {
 
 		if (res.status === "error") {
 			toast.error(res.message);
-			setBtnText("Submit");
+			setBtnText(btnText);
 			return;
 		}
 		if (res.status === "fail") {
 			toast.error(res.message);
-			setBtnText("Submit");
+			setBtnText(btnText);
 			return;
 		}
 		toast.success(`Anime chapter updated`);
@@ -104,6 +136,7 @@ const UpdateChapterForm = ({ token = {}, auth = {}, object = {} }) => {
 					id="text"
 					name="text"
 					defaultValue={object?.data?.text}
+					defaultFiles={savedFiles}
 					onModel="Video"
 					advancedTextEditor={true}
 					customPlaceholder="No description"

@@ -9,7 +9,7 @@ import FormButtons from "@/components/global/formbuttons";
 const CreateAcquisitionDisposalForm = ({ token = "", auth = {} }) => {
 	const router = useRouter();
 
-	const [, setBtnText] = useState("Submit");
+	const [btnText, setBtnText] = useState("Submit");
 
 	const addAcquisitionDisposal = async (e) => {
 		e.preventDefault();
@@ -34,7 +34,7 @@ const CreateAcquisitionDisposalForm = ({ token = "", auth = {} }) => {
 			},
 			text: formData.get("text"),
 			mentions: JSON.parse(formData.get("text_users") || "[]"),
-			hashtags: JSON.parse(formData.get("text_hashtags") || "[]"),
+			tags: JSON.parse(formData.get("text_hashtags") || "[]"),
 			status: formData.get("status"),
 			orderingNumber: formData.get("orderingNumber"),
 		};
@@ -50,12 +50,12 @@ const CreateAcquisitionDisposalForm = ({ token = "", auth = {} }) => {
 		);
 		if (res.status === "error") {
 			toast.error(res.message);
-			setBtnText("Submit");
+			setBtnText(btnText);
 			return;
 		}
 		if (res.status === "fail") {
 			toast.error(res.message);
-			setBtnText("Submit");
+			setBtnText(btnText);
 			return;
 		}
 		toast.success("Weapon acquistion and disposal created");
@@ -268,7 +268,7 @@ const CreateAcquisitionDisposalForm = ({ token = "", auth = {} }) => {
 					name="text"
 					defaultValue="No description..."
 					onModel="Weapon"
-					advancedTextEditor={true}
+					advancedTextEditor={false}
 					customPlaceholder="No description"
 					charactersLimit={99999}
 					isRequired={false}

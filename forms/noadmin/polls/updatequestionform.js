@@ -7,6 +7,21 @@ import AdminSidebar from "@/components/noadmin/myfinaladminsidebar";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
 
+const toId = (value) => {
+	if (!value) {
+		return "";
+	}
+	if (typeof value === "string" || typeof value === "number") {
+		return String(value);
+	}
+	return String(value._id || value.id || "");
+};
+
+const toMention = (value) =>
+	typeof value === "string" || typeof value === "number"
+		? { id: String(value), username: "" }
+		: { id: toId(value), username: value?.username || "" };
+
 const UpdateQuestionForm = ({
 	token = {},
 	auth = {},
@@ -15,11 +30,11 @@ const UpdateQuestionForm = ({
 }) => {
 	const router = useRouter();
 
-	const [, setBtnText] = useState(`Submit`);
+	const [btnText, setBtnText] = useState(`Submit`);
 
 	const upgradeQuestion = async (e) => {
 		e.preventDefault();
-		setBtnText("...");
+		setBtnText(`Processing...`);
 		const form = e.target;
 		const formData = new FormData(form);
 
@@ -37,11 +52,20 @@ const UpdateQuestionForm = ({
 			}
 		});
 
+		const text = formData.get("text") || "";
+		const mentions = JSON.parse(formData.get("text_users") || "[]");
+		const tags = JSON.parse(formData.get("text_hashtags") || "[]");
+
+		const bodyUnchanged = text === (object?.data?.text || "");
+
 		const rawFormData = {
 			title: formData.get("title"),
 			text: formData.get("text"),
-			mentions: JSON.parse(formData.get("text_users") || "[]"),
-			hashtags: JSON.parse(formData.get("text_hashtags") || "[]"),
+			mentions:
+				bodyUnchanged && !mentions.length
+					? (object?.data?.mentions || []).map(toMention)
+					: mentions,
+			tags: bodyUnchanged && !tags.length ? object?.data?.tags || [] : tags,
 			password: formData.get("password"),
 			status: formData.get("status"),
 			answers: options,
@@ -59,12 +83,12 @@ const UpdateQuestionForm = ({
 
 		if (res.status === "error") {
 			toast.error(res.message);
-			setBtnText("Submit");
+			setBtnText(btnText);
 			return;
 		}
 		if (res.status === "fail") {
 			toast.error(res.message);
-			setBtnText("Submit");
+			setBtnText(btnText);
 			return;
 		}
 		toast.success(`Poll question updated`);

@@ -13,7 +13,7 @@ const CreateShortUrlForm = ({ auth = {}, currentpage = "" }) => {
 
 	const addShortUrl = async (e) => {
 		e.preventDefault();
-		setBtnText("...");
+		setBtnText(`Processing...`);
 		const form = e.target;
 		const formData = new FormData(form);
 
@@ -22,7 +22,7 @@ const CreateShortUrlForm = ({ auth = {}, currentpage = "" }) => {
 			longUrl: formData.get("longUrl"),
 			text: formData.get("text"),
 			mentions: JSON.parse(formData.get("text_users") || "[]"),
-			hashtags: JSON.parse(formData.get("text_hashtags") || "[]"),
+			tags: JSON.parse(formData.get("text_hashtags") || "[]"),
 			user: auth?.userId,
 			website: process.env.NEXT_PUBLIC_WEBSITE_NAME,
 		};
@@ -39,12 +39,12 @@ const CreateShortUrlForm = ({ auth = {}, currentpage = "" }) => {
 
 		if (res.status === "error") {
 			toast.error(res.message);
-			setBtnText("Submit");
+			setBtnText(btnText);
 			return;
 		}
 		if (res.status === "fail") {
 			toast.error(res.message);
-			setBtnText("Submit");
+			setBtnText(btnText);
 			return;
 		}
 		setBtnText(btnText);

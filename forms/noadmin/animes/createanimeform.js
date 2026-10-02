@@ -10,11 +10,11 @@ import FormButtons from "@/components/global/formbuttons";
 const CreateAnimeForm = ({ token = {}, auth = {}, objects = [] }) => {
 	const router = useRouter();
 
-	const [, setBtnText] = useState(`Submit`);
+	const [btnText, setBtnText] = useState(`Submit`);
 
 	const addAnime = async (e) => {
 		e.preventDefault();
-		setBtnText("...");
+		setBtnText(`Processing...`);
 		const form = e.target;
 		const formData = new FormData(form);
 
@@ -22,7 +22,7 @@ const CreateAnimeForm = ({ token = {}, auth = {}, objects = [] }) => {
 			title: formData.get("title"),
 			text: formData.get("text"),
 			mentions: JSON.parse(formData.get("text_users") || "[]"),
-			hashtags: JSON.parse(formData.get("text_hashtags") || "[]"),
+			tags: JSON.parse(formData.get("text_hashtags") || "[]"),
 			featured: formData.get("featured"),
 			category: formData.getAll("category"), // Needs to be getAll due to Model receiving array
 			commented: formData.get("commented"),
@@ -49,12 +49,12 @@ const CreateAnimeForm = ({ token = {}, auth = {}, objects = [] }) => {
 
 		if (res.status === "error") {
 			toast.error(res.message);
-			setBtnText("Submit");
+			setBtnText(btnText);
 			return;
 		}
 		if (res.status === "fail") {
 			toast.error(res.message);
-			setBtnText("Submit");
+			setBtnText(btnText);
 			return;
 		}
 		toast.success(`Anime created`);

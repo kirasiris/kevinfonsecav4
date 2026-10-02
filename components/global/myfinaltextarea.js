@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import { unfurlUrl } from "@/helpers/unfurl";
 
@@ -13,6 +13,40 @@ const escapeHtml = (s) => {
 			"'": "&#39;",
 		}[c];
 	});
+};
+
+// A mention renders as <a href="/profile/<id>/<username>">, so the id survives
+// even when the markup loses its data-* attributes on the way to the database.
+const PROFILE_HREF_RE = /\/profile\/([^/?#"']+)(?:\/([^/?#"']*))?/;
+
+const safeDecode = (s) => {
+	try {
+		return decodeURIComponent(s);
+	} catch (_) {
+		return s;
+	}
+};
+
+// Same file under http/https, with or without a query string or trailing slash.
+const normalizeFileUrl = (url) =>
+	String(url || "")
+		.trim()
+		.replace(/^https?:/i, "")
+		.split(/[?#]/)[0]
+		.replace(/\/+$/, "")
+		.toLowerCase();
+
+// Seeding paints content into the editor and fills the hidden fields, so it
+// runs before the browser paints. There is no DOM to seed while rendering on
+// the server, where useLayoutEffect would only warn.
+const useIsomorphicLayoutEffect =
+	typeof window !== "undefined" ? useLayoutEffect : useEffect;
+
+// The hidden fields are written straight to the DOM rather than through React
+// state: `new FormData(form)` reads the DOM, and a state update queued by the
+// last edit may not have been flushed by the time the submit handler runs.
+const writeField = (ref, value) => {
+	if (ref.current && ref.current.value !== value) ref.current.value = value;
 };
 
 const ICON_PATHS = {
@@ -244,6 +278,10 @@ const MyTextArea = ({
 	id = "",
 	name = "",
 	defaultValue = "",
+	// The files the record already has embedded. Only needed on an edit form:
+	// the API strips data-* attributes on write, so the ids are matched back to
+	// the surviving <img>/<a> URLs instead of being read off the markup.
+	defaultFiles = [],
 	onModel = "Blog",
 	advancedTextEditor = true,
 	customPlaceholder = "Share something new. Now with #hashtags support, YAY!!!",
@@ -257,16 +295,45 @@ const MyTextArea = ({
 	const newBlockRef = useRef(null);
 	const hiddenFieldRef = useRef(null);
 
-	const [entityJson, setEntityJson] = useState({
-		users: "[]",
-		hashtags: "[]",
-		files: "[]",
-	});
+	const usersFieldRef = useRef(null);
+	const hashtagsFieldRef = useRef(null);
+	const filesFieldRef = useRef(null);
+	// The markup the editor was last seeded with, and how it looked once chips
+	// and hashtags were normalised. Together they let a late-arriving
+	// `defaultValue` be applied without ever overwriting the writer's own edits.
+	const seededHtmlRef = useRef(null);
+	const normalizedHtmlRef = useRef(null);
 
 	// `||`, not `??`: the `defaultValue = ''` default turns an omitted prop into an
 	// empty string, which `??` would happily accept and leave the contenteditable
 	// with no block element for the caret to sit in.
 	const startingHtml = defaultValue || "<p><br></p>";
+
+	// Every URL a known file can appear under, pointing back at its id.
+	const fileIdByUrl = useMemo(() => {
+		const map = new Map();
+		const list = Array.isArray(defaultFiles) ? defaultFiles : [];
+		for (const item of list) {
+			if (!item || typeof item !== "object") continue;
+			const fileId = fileIdOf(item);
+			if (!fileId) continue;
+			const loc = item.location || {};
+			const urls = [
+				item.url,
+				item.src,
+				loc.secure_location,
+				loc.insecure_location,
+				loc.aws_location,
+			];
+			for (const url of urls) {
+				if (typeof url === "string" && url) {
+					map.set(normalizeFileUrl(url), fileId);
+				}
+			}
+		}
+		return map;
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [JSON.stringify(defaultFiles || [])]);
 
 	const [status, setStatus] = useState("Ready");
 
@@ -357,18 +424,42 @@ const MyTextArea = ({
 		};
 	}, []);
 
+	// ---- Seeding --------------------------------------------------------------
+
+	// Loads the saved draft into the editor and syncs the hidden fields from it.
+	// Keyed on the markup rather than running once, because `defaultValue` often
+	// lands a render late on an edit page whose record is still being fetched.
+	// Declared above the observer effect so the first sync already sees content.
+	useIsomorphicLayoutEffect(() => {
+		const editor = editorRef.current;
+		if (!editor) return;
+		if (seededHtmlRef.current === startingHtml) return;
+
+		const current = editor.innerHTML;
+		const untouched =
+			seededHtmlRef.current === null ||
+			!current.trim() ||
+			current === "<p><br></p>" ||
+			current === normalizedHtmlRef.current;
+		// A prop that arrives late must never overwrite work in progress.
+		if (!untouched) return;
+
+		if (current !== startingHtml) editor.innerHTML = startingHtml;
+		seededHtmlRef.current = startingHtml;
+		rehydrateStrippedIds();
+		upgradeUserChips();
+		highlightHashtags();
+		// Chip upgrades and hashtag wrapping rewrite the markup, so what counts as
+		// "still untouched" is the normalised result, not the raw prop.
+		normalizedHtmlRef.current = editor.innerHTML;
+		syncContent();
+	}, [startingHtml]);
+
 	// ---- Selection handling ---------------------------------------------------
 
 	useEffect(() => {
 		const editor = editorRef.current;
 		if (!editor) return;
-
-		if (!editor.innerHTML.trim()) {
-			editor.innerHTML = startingHtml;
-		}
-		upgradeUserChips();
-		highlightHashtags();
-		syncContent();
 
 		try {
 			document.execCommand("defaultParagraphSeparator", false, "p");
@@ -425,9 +516,36 @@ const MyTextArea = ({
 			}
 		}
 		document.addEventListener("selectionchange", onSelectionChange);
+
+		// `new FormData(form)` reads the DOM, so the hidden fields are refreshed
+		// one last time in the capture phase — before React's own onSubmit handler
+		// runs — and what gets posted always matches what is on screen.
+		const form = editor.closest("form");
+		const onFormSubmit = () => syncContent();
+		// A native reset restores the hidden fields but leaves the contenteditable
+		// alone, so the editor is put back to the saved draft by hand.
+		const onFormReset = () => {
+			requestAnimationFrame(() => {
+				editor.innerHTML = seededHtmlRef.current || startingHtml;
+				rehydrateStrippedIds();
+				upgradeUserChips();
+				highlightHashtags();
+				normalizedHtmlRef.current = editor.innerHTML;
+				syncContent();
+			});
+		};
+		if (form) {
+			form.addEventListener("submit", onFormSubmit, true);
+			form.addEventListener("reset", onFormReset);
+		}
+
 		return () => {
 			observer.disconnect();
 			document.removeEventListener("selectionchange", onSelectionChange);
+			if (form) {
+				form.removeEventListener("submit", onFormSubmit, true);
+				form.removeEventListener("reset", onFormReset);
+			}
 		};
 	}, []);
 
@@ -453,19 +571,10 @@ const MyTextArea = ({
 
 		setCharCount(hasContent ? countCharacters(source) : 0);
 
-		if (hiddenFieldRef.current && hiddenFieldRef.current.value !== html) {
-			hiddenFieldRef.current.value = html;
-		}
-		const usersJson = JSON.stringify(users);
-		const hashtagsJson = JSON.stringify(hashtags);
-		const filesJson = JSON.stringify(files);
-		setEntityJson((prev) =>
-			prev.users === usersJson &&
-			prev.hashtags === hashtagsJson &&
-			prev.files === filesJson
-				? prev
-				: { users: usersJson, hashtags: hashtagsJson, files: filesJson },
-		);
+		writeField(hiddenFieldRef, html);
+		writeField(usersFieldRef, JSON.stringify(users));
+		writeField(hashtagsFieldRef, JSON.stringify(hashtags));
+		writeField(filesFieldRef, JSON.stringify(files));
 	};
 
 	// Every embedded file carries its id on the element itself, so the ids can be
@@ -1650,6 +1759,48 @@ const MyTextArea = ({
 		insertNodeAtCursor(document.createTextNode("\u00A0"));
 	};
 
+	// The API sanitises on write and drops every data-* attribute, so a saved
+	// draft comes back without the ids the side-channel fields are built from.
+	// Both are recoverable: the mention id still sits in its /profile/<id>/<user>
+	// href, and an embed can be matched back to its file by URL. Putting them
+	// back on load is what keeps an untouched edit from posting empty arrays.
+	const rehydrateStrippedIds = () => {
+		const editor = editorRef.current;
+		if (!editor) return;
+
+		editor.querySelectorAll('a[href*="/profile/"]').forEach((link) => {
+			if ((link.getAttribute("data-user-id") || "").trim()) return;
+			// A mention always reads "@handle"; a profile link written by hand in
+			// the middle of a sentence is left as the plain link it is.
+			const isChip =
+				link.classList.contains("user-chip") ||
+				link.textContent.trim().startsWith("@");
+			if (!isChip) return;
+			const match = (link.getAttribute("href") || "").match(PROFILE_HREF_RE);
+			if (!match) return;
+			const userId = safeDecode(match[1] || "");
+			if (!userId) return;
+			const username =
+				safeDecode(match[2] || "") || link.textContent.trim().replace(/^@/, "");
+			link.setAttribute("data-user-id", userId);
+			link.setAttribute("data-username", username);
+			link.classList.add("user-chip");
+			link.setAttribute("contenteditable", "false");
+		});
+
+		if (!fileIdByUrl.size) return;
+		editor
+			.querySelectorAll(
+				"img[src], video[src], audio[src], source[src], a[href]",
+			)
+			.forEach((node) => {
+				if ((node.getAttribute("data-file-id") || "").trim()) return;
+				const url = node.getAttribute("src") || node.getAttribute("href") || "";
+				const fileId = fileIdByUrl.get(normalizeFileUrl(url));
+				if (fileId) node.setAttribute("data-file-id", fileId);
+			});
+	};
+
 	// Drafts saved before mentions were links still hold <span class="user-chip">.
 	// Rewriting them on load makes existing content clickable too.
 	const upgradeUserChips = () => {
@@ -2340,7 +2491,10 @@ const MyTextArea = ({
 								onClick={() => exec("undo")}
 								title="Undo (Ctrl+Z)"
 							>
-								<i className="fa-solid fa-rotate-left" aria-hidden={true} />
+								<i
+									className="fa-solid fa-rotate-left align-middle"
+									aria-hidden={true}
+								/>
 								<span className="visually-hidden">Undo</span>
 							</button>
 							<button
@@ -2349,7 +2503,10 @@ const MyTextArea = ({
 								onClick={() => exec("redo")}
 								title="Redo (Ctrl+Y)"
 							>
-								<i className="fa-solid fa-rotate-right" aria-hidden={true} />
+								<i
+									className="fa-solid fa-rotate-right align-middle"
+									aria-hidden={true}
+								/>
 								<span className="visually-hidden">Redo</span>
 							</button>
 						</div>
@@ -2384,7 +2541,10 @@ const MyTextArea = ({
 								onClick={() => exec("bold")}
 								title="Bold"
 							>
-								<i className="fa-solid fa-bold" aria-hidden={true} />
+								<i
+									className="fa-solid fa-bold align-middle"
+									aria-hidden={true}
+								/>
 							</button>
 							<button
 								type="button"
@@ -2393,7 +2553,10 @@ const MyTextArea = ({
 								onClick={() => exec("italic")}
 								title="Italic"
 							>
-								<i className="fa-solid fa-italic" aria-hidden={true} />
+								<i
+									className="fa-solid fa-italic align-middle"
+									aria-hidden={true}
+								/>
 							</button>
 							<button
 								type="button"
@@ -2402,7 +2565,10 @@ const MyTextArea = ({
 								onClick={() => exec("underline")}
 								title="Underline"
 							>
-								<i className="fa-solid fa-underline" aria-hidden={true} />
+								<i
+									className="fa-solid fa-underline align-middle"
+									aria-hidden={true}
+								/>
 							</button>
 							<button
 								type="button"
@@ -2411,7 +2577,10 @@ const MyTextArea = ({
 								onClick={() => exec("strikeThrough")}
 								title="Strikethrough"
 							>
-								<i className="fa-solid fa-strikethrough" aria-hidden={true} />
+								<i
+									className="fa-solid fa-strikethrough align-middle"
+									aria-hidden={true}
+								/>
 							</button>
 							<button
 								type="button"
@@ -2420,7 +2589,10 @@ const MyTextArea = ({
 								onClick={toggleInlineCode}
 								title="Inline code"
 							>
-								<i className="fa-solid fa-code" aria-hidden={true} />
+								<i
+									className="fa-solid fa-code align-middle"
+									aria-hidden={true}
+								/>
 								<span className="visually-hidden">Inline code</span>
 							</button>
 						</div>
@@ -2437,7 +2609,10 @@ const MyTextArea = ({
 								onClick={() => exec("insertUnorderedList")}
 								title="Bulleted list"
 							>
-								<i className="fa-solid fa-list-ul" aria-hidden={true} />
+								<i
+									className="fa-solid fa-list-ul align-middle"
+									aria-hidden={true}
+								/>
 							</button>
 							<button
 								type="button"
@@ -2446,7 +2621,10 @@ const MyTextArea = ({
 								onClick={() => exec("insertOrderedList")}
 								title="Numbered list"
 							>
-								<i className="fa-solid fa-list-ol" aria-hidden={true} />
+								<i
+									className="fa-solid fa-list-ol align-middle"
+									aria-hidden={true}
+								/>
 							</button>
 						</div>
 						<span className="vr mx-1"></span>
@@ -2462,7 +2640,10 @@ const MyTextArea = ({
 								onClick={() => exec("justifyLeft")}
 								title="Align left"
 							>
-								<i className="fa-solid fa-align-left" aria-hidden={true} />
+								<i
+									className="fa-solid fa-align-left align-middle"
+									aria-hidden={true}
+								/>
 							</button>
 							<button
 								type="button"
@@ -2471,7 +2652,10 @@ const MyTextArea = ({
 								onClick={() => exec("justifyCenter")}
 								title="Align center"
 							>
-								<i className="fa-solid fa-align-center" aria-hidden={true} />
+								<i
+									className="fa-solid fa-align-center align-middle"
+									aria-hidden={true}
+								/>
 							</button>
 							<button
 								type="button"
@@ -2480,7 +2664,10 @@ const MyTextArea = ({
 								onClick={() => exec("justifyRight")}
 								title="Align right"
 							>
-								<i className="fa-solid fa-align-right" aria-hidden={true} />
+								<i
+									className="fa-solid fa-align-right align-middle"
+									aria-hidden={true}
+								/>
 							</button>
 						</div>
 						<span className="vr mx-1"></span>
@@ -2490,7 +2677,7 @@ const MyTextArea = ({
 							onClick={openLinkModal}
 							title="Insert link"
 						>
-							<i className="fa-solid fa-link" aria-hidden={true} />
+							<i className="fa-solid fa-link align-middle" aria-hidden={true} />
 							<span className="visually-hidden">Insert link</span>
 						</button>
 						<button
@@ -2499,7 +2686,10 @@ const MyTextArea = ({
 							onClick={openTableModal}
 							title="Insert table"
 						>
-							<i className="fa-solid fa-table" aria-hidden={true} />
+							<i
+								className="fa-solid fa-table align-middle"
+								aria-hidden={true}
+							/>
 							<span className="visually-hidden">Insert table</span>
 						</button>
 						<button
@@ -2508,7 +2698,10 @@ const MyTextArea = ({
 							onClick={() => exec("removeFormat")}
 							title="Clear formatting"
 						>
-							<i className="fa-solid fa-eraser" aria-hidden={true} />
+							<i
+								className="fa-solid fa-eraser align-middle"
+								aria-hidden={true}
+							/>
 							<span className="visually-hidden">Clear formatting</span>
 						</button>
 						<span className="vr mx-1"></span>
@@ -2521,7 +2714,10 @@ const MyTextArea = ({
 							}}
 							title="Upload from device"
 						>
-							<i className="fa-solid fa-upload me-1" aria-hidden={true} />
+							<i
+								className="fa-solid fa-upload align-middle me-1"
+								aria-hidden={true}
+							/>
 							Upload
 						</button>
 						<button
@@ -2530,7 +2726,10 @@ const MyTextArea = ({
 							onClick={openFileManager}
 							title="Insert from file manager"
 						>
-							<i className="fa-solid fa-folder-open me-1" aria-hidden={true} />
+							<i
+								className="fa-solid fa-folder-open align-middle me-1"
+								aria-hidden={true}
+							/>
 							Files
 						</button>
 						<button
@@ -2539,7 +2738,10 @@ const MyTextArea = ({
 							onClick={openUsers}
 							title="Embed a user"
 						>
-							<i className="fa-solid fa-users me-1" aria-hidden={true} />
+							<i
+								className="fa-solid fa-users align-middle me-1"
+								aria-hidden={true}
+							/>
 							Users
 						</button>
 						<button
@@ -2548,7 +2750,10 @@ const MyTextArea = ({
 							onClick={openSnippet}
 							title="Insert a live code snippet"
 						>
-							<i className="fa-solid fa-code me-1" aria-hidden={true} />
+							<i
+								className="fa-solid fa-code align-middle me-1"
+								aria-hidden={true}
+							/>
 							Snippet
 						</button>
 						<input
@@ -2623,25 +2828,16 @@ const MyTextArea = ({
 							/>
 							{/* JSON arrays kept in sync, so FormData also carries the
                   embedded users, the hashtags and the embedded file ids as
-                  separate fields. */}
+                  separate fields. Seeded from `defaultValue` so an edit form
+                  submitted untouched still posts what the draft already had,
+                  then written straight to the DOM on every sync. */}
+							<input ref={usersFieldRef} type="hidden" name={name + "_users"} />
 							<input
-								type="hidden"
-								name={name + "_users"}
-								value={entityJson.users}
-								readOnly
-							/>
-							<input
+								ref={hashtagsFieldRef}
 								type="hidden"
 								name={name + "_hashtags"}
-								value={entityJson.hashtags}
-								readOnly
 							/>
-							<input
-								type="hidden"
-								name={name + "_files"}
-								value={entityJson.files}
-								readOnly
-							/>
+							<input ref={filesFieldRef} type="hidden" name={name + "_files"} />
 						</>
 					)}
 					{/* @mention autocomplete dropdown */}
@@ -2699,7 +2895,7 @@ const MyTextArea = ({
 											/>
 										) : (
 											<i
-												className="fa-solid fa-user-circle fs-5"
+												className="fa-solid fa-user-circle align-middle fs-5"
 												aria-hidden={true}
 											/>
 										)}
@@ -2741,7 +2937,10 @@ const MyTextArea = ({
 									onMouseDown={(e) => e.preventDefault()}
 									onClick={() => applyBlockChoice(item.tag)}
 								>
-									<i className={"fa-solid " + item.icon} aria-hidden={true} />
+									<i
+										className={"fa-solid align-middle " + item.icon}
+										aria-hidden={true}
+									/>
 									<span>{item.label}</span>
 									{item.hint && (
 										<span className="badge text-bg-secondary ms-auto">
@@ -2770,7 +2969,10 @@ const MyTextArea = ({
 									onClick={() => tableAddRow(true)}
 									title="Insert row below"
 								>
-									<i className="fa-solid fa-arrow-down" aria-hidden={true} />
+									<i
+										className="fa-solid fa-arrow-down align-middle"
+										aria-hidden={true}
+									/>
 									<span className="visually-hidden">Insert row below</span>
 								</button>
 								<button
@@ -2779,7 +2981,10 @@ const MyTextArea = ({
 									onClick={() => tableAddRow(false)}
 									title="Insert row above"
 								>
-									<i className="fa-solid fa-arrow-up" aria-hidden={true} />
+									<i
+										className="fa-solid fa-arrow-up align-middle"
+										aria-hidden={true}
+									/>
 									<span className="visually-hidden">Insert row above</span>
 								</button>
 								<button
@@ -2788,7 +2993,10 @@ const MyTextArea = ({
 									onClick={tableDeleteRow}
 									title="Delete row"
 								>
-									<i className="fa-solid fa-delete-left" aria-hidden={true} />
+									<i
+										className="fa-solid fa-delete-left align-middle"
+										aria-hidden={true}
+									/>
 									<span className="visually-hidden">Delete row</span>
 								</button>
 							</div>
@@ -2799,7 +3007,10 @@ const MyTextArea = ({
 									onClick={() => tableAddColumn(true)}
 									title="Insert column right"
 								>
-									<i className="fa-solid fa-arrow-right" aria-hidden={true} />
+									<i
+										className="fa-solid fa-arrow-right align-middle"
+										aria-hidden={true}
+									/>
 									<span className="visually-hidden">Insert column right</span>
 								</button>
 								<button
@@ -2808,7 +3019,10 @@ const MyTextArea = ({
 									onClick={() => tableAddColumn(false)}
 									title="Insert column left"
 								>
-									<i className="fa-solid fa-arrow-left" aria-hidden={true} />
+									<i
+										className="fa-solid fa-arrow-left align-middle"
+										aria-hidden={true}
+									/>
 									<span className="visually-hidden">Insert column left</span>
 								</button>
 								<button
@@ -2817,7 +3031,10 @@ const MyTextArea = ({
 									onClick={tableDeleteColumn}
 									title="Delete column"
 								>
-									<i className="fa-solid fa-table-columns" aria-hidden={true} />
+									<i
+										className="fa-solid fa-table-columns align-middle"
+										aria-hidden={true}
+									/>
 									<span className="visually-hidden">Delete column</span>
 								</button>
 							</div>
@@ -2828,7 +3045,10 @@ const MyTextArea = ({
 									onClick={openTableEditor}
 									title="Table settings (class, rows, columns)"
 								>
-									<i className="fa-solid fa-sliders" aria-hidden={true} />
+									<i
+										className="fa-solid fa-sliders align-middle"
+										aria-hidden={true}
+									/>
 									<span className="visually-hidden">Table settings</span>
 								</button>
 								<button
@@ -2837,7 +3057,10 @@ const MyTextArea = ({
 									onClick={deleteTable}
 									title="Delete table"
 								>
-									<i className="fa-solid fa-trash" aria-hidden={true} />
+									<i
+										className="fa-solid fa-trash align-middle"
+										aria-hidden={true}
+									/>
 									<span className="visually-hidden">Delete table</span>
 								</button>
 							</div>
@@ -2877,7 +3100,10 @@ const MyTextArea = ({
 							className="btn btn-secondary btn-sm"
 							onClick={openPreview}
 						>
-							<i className="fa-solid fa-eye me-1" aria-hidden={true} />
+							<i
+								className="fa-solid fa-eye align-middle me-1"
+								aria-hidden={true}
+							/>
 							Preview HTML
 						</button>
 					</div>
@@ -2895,7 +3121,7 @@ const MyTextArea = ({
 						<div className="input-group input-group-sm mb-3">
 							<span className="input-group-text">
 								<i
-									className="fa-solid fa-magnifying-glass"
+									className="fa-solid fa-magnifying-glass align-middle"
 									aria-hidden={true}
 								/>
 							</span>
@@ -2953,7 +3179,7 @@ const MyTextArea = ({
 												{isSelected && (
 													<span className="badge text-bg-primary position-absolute top-0 end-0 m-2 z-1">
 														<i
-															className="fa-solid fa-check me-1"
+															className="fa-solid fa-check align-middle me-1"
 															aria-hidden={true}
 														/>
 														{selectedIdx + 1}
@@ -3048,7 +3274,7 @@ const MyTextArea = ({
 						<div className="input-group input-group-sm mb-3">
 							<span className="input-group-text">
 								<i
-									className="fa-solid fa-magnifying-glass"
+									className="fa-solid fa-magnifying-glass align-middle"
 									aria-hidden={true}
 								/>
 							</span>
@@ -3105,7 +3331,10 @@ const MyTextArea = ({
 													className="d-inline-flex align-items-center justify-content-center rounded-circle bg-secondary-subtle me-3"
 													style={{ width: 40, height: 40 }}
 												>
-													<i className="fa-solid fa-user" aria-hidden={true} />
+													<i
+														className="fa-solid fa-user align-middle"
+														aria-hidden={true}
+													/>
 												</span>
 											)}
 											<span className="text-start">
@@ -3341,7 +3570,10 @@ const MyTextArea = ({
 							className="btn btn-primary btn-sm"
 							onClick={applyTableModal}
 						>
-							<i className="fa-solid fa-table me-1" aria-hidden={true} />
+							<i
+								className="fa-solid fa-table align-middle me-1"
+								aria-hidden={true}
+							/>
 							{tableModal.mode === "insert" ? "Insert table" : "Apply"}
 						</button>
 					</div>
@@ -3366,7 +3598,10 @@ const MyTextArea = ({
 							className="btn btn-outline-secondary btn-sm"
 							onClick={copyHtml}
 						>
-							<i className="fa-solid fa-clipboard me-1" aria-hidden={true} />
+							<i
+								className="fa-solid fa-clipboard align-middle me-1"
+								aria-hidden={true}
+							/>
 							Copy
 						</button>
 						<button
@@ -3455,7 +3690,10 @@ const MyTextArea = ({
 
 						<hr className="my-3" />
 						<p className="small fw-semibold mb-2">
-							<i className="fa-solid fa-globe me-1" aria-hidden={true} />
+							<i
+								className="fa-solid fa-globe align-middle me-1"
+								aria-hidden={true}
+							/>
 							External resources
 							<span className="ms-1 fw-normal">(optional)</span>
 						</p>
@@ -3614,7 +3852,7 @@ function BootstrapModal({ title, icon, size = "", onClose, children }) {
 						<div className="modal-header">
 							<h5 className="modal-title">
 								<i
-									className={"fa-solid fa-" + icon + " me-2"}
+									className={"fa-solid fa-" + icon + " align-middle me-2"}
 									aria-hidden={true}
 								/>
 								{title}

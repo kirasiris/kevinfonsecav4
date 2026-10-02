@@ -12,7 +12,7 @@ const RecoverForm = () => {
 
 	const recoverAccount = async (e) => {
 		e.preventDefault();
-		setBtnText(`Processing`);
+		setBtnText(`Processing...`);
 
 		const form = e.target;
 		const formData = new FormData(form);
@@ -34,15 +34,15 @@ const RecoverForm = () => {
 
 		if (res.status === "error") {
 			toast.error(res.message);
-			setBtnText("Submit");
+			setBtnText(btnText);
 			return;
 		}
 		if (res.status === "fail") {
 			toast.error(res.message);
-			setBtnText("Submit");
+			setBtnText(btnText);
 			return;
 		}
-		setBtnText("Submit");
+		setBtnText(btnText);
 		toast.success(
 			`An email has been sent to ${rawFormData.email} associated with this account`,
 			"bottom",

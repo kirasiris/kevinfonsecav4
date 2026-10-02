@@ -10,11 +10,11 @@ import FormButtons from "@/components/global/formbuttons";
 const CreateBlogForm = ({ token = {}, auth = {}, objects = [] }) => {
 	const router = useRouter();
 
-	const [, setBtnText] = useState(`Submit`);
+	const [btnText, setBtnText] = useState(`Submit`);
 
 	const addBlog = async (e) => {
 		e.preventDefault();
-		setBtnText("...");
+		setBtnText(`Processing...`);
 		const form = e.target;
 		const formData = new FormData(form);
 
@@ -22,7 +22,7 @@ const CreateBlogForm = ({ token = {}, auth = {}, objects = [] }) => {
 			title: formData.get("title"),
 			text: formData.get("text"),
 			mentions: JSON.parse(formData.get("text_users") || "[]"),
-			hashtags: JSON.parse(formData.get("text_hashtags") || "[]"),
+			tags: JSON.parse(formData.get("text_hashtags") || "[]"),
 			featured: formData.get("featured"),
 			embedding: formData.get("embedding"),
 			category: formData.get("category"),
@@ -49,12 +49,13 @@ const CreateBlogForm = ({ token = {}, auth = {}, objects = [] }) => {
 
 		if (res.status === "error") {
 			toast.error(res.message);
-			setBtnText("Submit");
+			setBtnText(btnText);
 			return;
 		}
+
 		if (res.status === "fail") {
 			toast.error(res.message);
-			setBtnText("Submit");
+			setBtnText(btnText);
 			return;
 		}
 		toast.success(`Blog created`);

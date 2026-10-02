@@ -9,11 +9,11 @@ import FormButtons from "@/components/global/formbuttons";
 const CreateSecretForm = ({ token = {}, auth = {} }) => {
 	const router = useRouter();
 
-	const [, setBtnText] = useState(`Submit`);
+	const [btnText, setBtnText] = useState(`Submit`);
 
 	const addSecret = async (e) => {
 		e.preventDefault();
-		setBtnText("...");
+		setBtnText(`Processing...`);
 		const form = e.target;
 		const formData = new FormData(form);
 
@@ -21,7 +21,7 @@ const CreateSecretForm = ({ token = {}, auth = {} }) => {
 			title: formData.get("title"),
 			text: formData.get("text"),
 			mentions: JSON.parse(formData.get("text_users") || "[]"),
-			hashtags: JSON.parse(formData.get("text_hashtags") || "[]"),
+			tags: JSON.parse(formData.get("text_hashtags") || "[]"),
 			password: formData.get("password"),
 			age: formData.get("age"),
 			sex: formData.get("sex"),
@@ -44,12 +44,12 @@ const CreateSecretForm = ({ token = {}, auth = {} }) => {
 
 		if (res.status === "error") {
 			toast.error(res.message);
-			setBtnText("Submit");
+			setBtnText(btnText);
 			return;
 		}
 		if (res.status === "fail") {
 			toast.error(res.message);
-			setBtnText("Submit");
+			setBtnText(btnText);
 			return;
 		}
 		toast.success(`Secret created`);
@@ -80,7 +80,7 @@ const CreateSecretForm = ({ token = {}, auth = {} }) => {
 					name="text"
 					defaultValue="No description..."
 					onModel="Secret"
-					advancedTextEditor={true}
+					advancedTextEditor={false}
 					customPlaceholder="No description"
 					charactersLimit={99999}
 					isRequired={true}

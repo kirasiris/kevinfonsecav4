@@ -13,7 +13,7 @@ const CreateWeaponForm = ({ token = "", auth = {} }) => {
 		files: [""],
 	});
 
-	const [, setBtnText] = useState("Submit");
+	const [btnText, setBtnText] = useState("Submit");
 
 	const { files } = rawFiles;
 
@@ -56,7 +56,7 @@ const CreateWeaponForm = ({ token = "", auth = {} }) => {
 			nfaClassification: formData.get("nfaClassification"),
 			text: formData.get("text"),
 			mentions: JSON.parse(formData.get("text_users") || "[]"),
-			hashtags: JSON.parse(formData.get("text_hashtags") || "[]"),
+			tags: JSON.parse(formData.get("text_hashtags") || "[]"),
 			files: formData.getAll("files[]"),
 		};
 
@@ -71,12 +71,12 @@ const CreateWeaponForm = ({ token = "", auth = {} }) => {
 		);
 		if (res.status === "error") {
 			toast.error(res.message);
-			setBtnText("Submit");
+			setBtnText(btnText);
 			return;
 		}
 		if (res.status === "fail") {
 			toast.error(res.message);
-			setBtnText("Submit");
+			setBtnText(btnText);
 			return;
 		}
 		toast.success("Weapon created");

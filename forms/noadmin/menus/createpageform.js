@@ -7,14 +7,14 @@ import AdminSidebar from "@/components/noadmin/myfinaladminsidebar";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
 
-const CreatePageForm = ({ params = {} }) => {
+const CreatePageForm = ({ token = {}, auth = {}, params = {} }) => {
 	const router = useRouter();
 
-	const [, setBtnText] = useState(`Submit`);
+	const [btnText, setBtnText] = useState(`Submit`);
 
 	const addPage = async (e) => {
 		e.preventDefault();
-		setBtnText("...");
+		setBtnText(`Processing...`);
 		const form = e.target;
 		const formData = new FormData(form);
 
@@ -23,11 +23,14 @@ const CreatePageForm = ({ params = {} }) => {
 			url: formData.get("url"),
 			text: formData.get("text"),
 			mentions: JSON.parse(formData.get("text_users") || "[]"),
-			hashtags: JSON.parse(formData.get("text_hashtags") || "[]"),
+			tags: JSON.parse(formData.get("text_hashtags") || "[]"),
 			referrerpolicy: formData.get("referrerpolicy"),
 			rel: formData.get("rel"),
 			target: formData.get("target"),
 			orderingNumber: formData.get("orderingNumber"),
+			files: {
+				extras: JSON.parse(formData.get("text_files") || "[]"),
+			},
 			commented: formData.get("commented"),
 			password: formData.get("password"),
 			status: formData.get("status"),
@@ -46,12 +49,12 @@ const CreatePageForm = ({ params = {} }) => {
 
 		if (res.status === "error") {
 			toast.error(res.message);
-			setBtnText("Submit");
+			setBtnText(btnText);
 			return;
 		}
 		if (res.status === "fail") {
 			toast.error(res.message);
-			setBtnText("Submit");
+			setBtnText(btnText);
 			return;
 		}
 		toast.success(`Menu page created`);
@@ -87,8 +90,8 @@ const CreatePageForm = ({ params = {} }) => {
 					Text
 				</label>
 				<MyTextArea
-					auth={undefined}
-					token={undefined}
+					auth={auth}
+					token={token}
 					id="text"
 					name="text"
 					defaultValue="No description..."
@@ -177,7 +180,7 @@ const CreatePageForm = ({ params = {} }) => {
 					displayCategoryField={false}
 					displayAvatar={false}
 					avatar={undefined}
-					avatarFormat={""}
+					avatarFormat={"image"}
 					status={"draft"}
 					fullWidth={false}
 					password={""}

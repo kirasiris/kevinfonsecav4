@@ -7,27 +7,67 @@ import AdminSidebar from "@/components/noadmin/myfinaladminsidebar";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
 
-const UpdatePageForm = ({ object = {}, params = {} }) => {
+const toId = (value) => {
+	if (!value) {
+		return "";
+	}
+	if (typeof value === "string" || typeof value === "number") {
+		return String(value);
+	}
+	return String(value._id || value.id || "");
+};
+
+const toMention = (value) =>
+	typeof value === "string" || typeof value === "number"
+		? { id: String(value), username: "" }
+		: { id: toId(value), username: value?.username || "" };
+
+const UpdatePageForm = ({
+	token = {},
+	auth = {},
+	object = {},
+	params = {},
+}) => {
 	const router = useRouter();
 
-	const [, setBtnText] = useState(`Submit`);
+	const [btnText, setBtnText] = useState(`Submit`);
+
+	const savedFiles = Array.isArray(object?.data?.files?.extras)
+		? object?.data?.files.extras
+		: [];
 
 	const updatePage = async (e) => {
 		e.preventDefault();
-		setBtnText("...");
+		setBtnText(`Processing...`);
 		const form = e.target;
 		const formData = new FormData(form);
+
+		const text = formData.get("text") || "";
+		const mentions = JSON.parse(formData.get("text_users") || "[]");
+		const tags = JSON.parse(formData.get("text_hashtags") || "[]");
+		const extras = JSON.parse(formData.get("text_files") || "[]");
+
+		const bodyUnchanged = text === (object?.data?.text || "");
 
 		const rawFormData = {
 			title: formData.get("title"),
 			url: formData.get("url"),
 			text: formData.get("text"),
-			mentions: JSON.parse(formData.get("text_users") || "[]"),
-			hashtags: JSON.parse(formData.get("text_hashtags") || "[]"),
+			mentions:
+				bodyUnchanged && !mentions.length
+					? (object?.data?.mentions || []).map(toMention)
+					: mentions,
+			tags: bodyUnchanged && !tags.length ? object?.data?.tags || [] : tags,
 			referrerpolicy: formData.get("referrerpolicy"),
 			rel: formData.get("rel"),
 			target: formData.get("target"),
 			orderingNumber: formData.get("orderingNumber"),
+			files: {
+				extras:
+					bodyUnchanged && !extras.length
+						? savedFiles.map(toId).filter(Boolean)
+						: extras,
+			},
 			commented: formData.get("commented"),
 			password: formData.get("password"),
 			status: formData.get("status"),
@@ -45,12 +85,12 @@ const UpdatePageForm = ({ object = {}, params = {} }) => {
 
 		if (res.status === "error") {
 			toast.error(res.message);
-			setBtnText("Submit");
+			setBtnText(btnText);
 			return;
 		}
 		if (res.status === "fail") {
 			toast.error(res.message);
-			setBtnText("Submit");
+			setBtnText(btnText);
 			return;
 		}
 		toast.success(`Menu page updated`);
@@ -86,11 +126,12 @@ const UpdatePageForm = ({ object = {}, params = {} }) => {
 					Text
 				</label>
 				<MyTextArea
-					auth={undefined}
-					token={undefined}
+					auth={auth}
+					token={token}
 					id="text"
 					name="text"
 					defaultValue={object?.data?.text}
+					defaultFiles={savedFiles}
 					onModel="Page"
 					advancedTextEditor={true}
 					customPlaceholder="No description"
@@ -176,7 +217,7 @@ const UpdatePageForm = ({ object = {}, params = {} }) => {
 					displayCategoryField={false}
 					displayAvatar={false}
 					avatar={undefined}
-					avatarFormat={""}
+					avatarFormat={"image"}
 					status={object?.data?.status}
 					fullWidth={false}
 					password={""}

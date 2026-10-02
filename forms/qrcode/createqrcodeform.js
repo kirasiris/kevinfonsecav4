@@ -29,11 +29,11 @@ const CreateQrCodeForm = ({ auth = {}, object = {} }) => {
 		imageheight,
 	} = qrcodeData;
 
-	const [btnText, setBtnText] = useState(`Submit`);
+	const [btnText, setBtnText] = useState("Submit");
 
 	const addQrCode = async (e) => {
 		e.preventDefault();
-		setBtnText("Processing...");
+		setBtnText(`Processing...`);
 		const form = e.target;
 		const formData = new FormData(form);
 
@@ -57,8 +57,6 @@ const CreateQrCodeForm = ({ auth = {}, object = {} }) => {
 			status: "published",
 		};
 
-		console.log("rawFormData", rawFormData);
-
 		const res = await fetchurl(
 			`/global/qrcodes`,
 			"POST",
@@ -71,13 +69,13 @@ const CreateQrCodeForm = ({ auth = {}, object = {} }) => {
 
 		if (res.status === "error") {
 			toast.error(res.message);
-			setBtnText("Submit");
+			setBtnText(btnText);
 			return;
 		}
 
 		if (res.status === "fail") {
 			toast.error(res.message);
-			setBtnText("Submit");
+			setBtnText(btnText);
 			return;
 		}
 		toast.success("QR Code created");

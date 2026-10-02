@@ -12,7 +12,7 @@ const RegisterForm = () => {
 
 	const registerAccount = async (e) => {
 		e.preventDefault();
-		setBtnText(`Processing`);
+		setBtnText(`Processing...`);
 
 		const form = e.target;
 		const formData = new FormData(form);
@@ -30,13 +30,13 @@ const RegisterForm = () => {
 
 		if (rawFormData.captcha !== "5") {
 			toast.error("There was an error, try again");
-			setBtnText("Submit");
+			setBtnText(btnText);
 			return;
 		}
 
 		if (rawFormData.password !== rawFormData.password2) {
 			toast.error(`Passwords do not match`);
-			setBtnText("Submit");
+			setBtnText(btnText);
 			return;
 		}
 
@@ -52,16 +52,16 @@ const RegisterForm = () => {
 
 		if (res.status === "error") {
 			toast.error(res.message);
-			setBtnText("Submit");
+			setBtnText(btnText);
 			return;
 		}
 
 		if (res.status === "fail") {
 			toast.error(res.message);
-			setBtnText("Submit");
+			setBtnText(btnText);
 			return;
 		}
-		setBtnText("Submit");
+		setBtnText(btnText);
 		toast.success("Account registered");
 		toast.success(
 			`An email has been sent to ${rawFormData.email}. Please verify account`,

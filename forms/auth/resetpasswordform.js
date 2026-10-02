@@ -13,7 +13,7 @@ const ResetPasswordForm = () => {
 
 	const resetPasswordAccount = async (e) => {
 		e.preventDefault();
-		setBtnText(`Processing`);
+		setBtnText(`Processing...`);
 
 		const form = e.target;
 		const formData = new FormData(form);
@@ -46,12 +46,12 @@ const ResetPasswordForm = () => {
 		);
 		if (res.status === "error") {
 			toast.error(res.message);
-			setBtnText("Submit");
+			setBtnText(btnText);
 			return;
 		}
 		if (res.status === "fail") {
 			toast.error(res.message);
-			setBtnText("Submit");
+			setBtnText(btnText);
 			return;
 		}
 		toast.success("Password has been updated");

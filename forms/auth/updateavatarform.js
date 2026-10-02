@@ -23,7 +23,7 @@ const UpdateAvatarForm = ({ auth = {} }) => {
 	const upgradeAvatar = async (e) => {
 		e.preventDefault();
 		const token = await getAuthTokenOnServer();
-		setBtnText(`Processing`);
+		setBtnText(`Processing...`);
 		try {
 			const res = await new Promise((resolve, reject) => {
 				const formData = new FormData();

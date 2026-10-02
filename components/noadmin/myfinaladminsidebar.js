@@ -18,6 +18,8 @@ const AdminSidebar = ({
 	categories = [],
 	multiple_categories = false,
 }) => {
+	console.log("categories", categories);
+
 	const [fileId, setFileId] = useState(avatar?.avatar?._id);
 	const [loading, setLoading] = useState("Paste file Id");
 	const [featuredFile, setFeaturedFile] = useState(
@@ -198,11 +200,11 @@ const AdminSidebar = ({
 						multiple={multiple_categories} // or use your `multiple_categories` variable
 					>
 						{categories
-							.filter((c) => !c.parentCategory) // top-level categories
+							?.filter((c) => !c.parentCategory) // top-level categories
 							.map((category) => (
 								<optgroup key={category._id} label={category.title}>
 									{categories
-										.filter(
+										?.filter(
 											(c) =>
 												c.parentCategory?._id === category._id ||
 												c._id === category._id, // also include top-level category itself as option

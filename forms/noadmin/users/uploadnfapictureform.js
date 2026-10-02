@@ -18,13 +18,13 @@ const UploadPictureForm = ({ object = {} }) => {
 		`https://static.vecteezy.com/system/resources/previews/005/337/799/original/icon-image-not-found-free-vector.jpg`;
 	const [uploadPercentage, setUploadPercentage] = useState(0);
 	const [cameraModal, setCameraModal] = useState(false);
-	const [btnText, setBtnText] = useState("Submit");
+	const [btnText, setBtnText] = useState(`Submit`);
 
 	const webcamRef = useRef(null);
 
 	const upgradeAvatar = async (e) => {
 		e.preventDefault();
-		setBtnText(`Processing`);
+		setBtnText(`Processing...`);
 		const token = await getAuthTokenOnServer();
 		const src = webcamRef.current.getScreenshot();
 		const blob = base64toBlob(src);

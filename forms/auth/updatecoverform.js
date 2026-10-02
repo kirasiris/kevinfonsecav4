@@ -22,7 +22,7 @@ const UpdateCoverForm = ({ auth = {} }) => {
 
 	const upgradeCover = async (e) => {
 		e.preventDefault();
-		setBtnText(`Processing`);
+		setBtnText(`Processing...`);
 		const token = await getAuthTokenOnServer();
 		try {
 			const res = await new Promise((resolve, reject) => {

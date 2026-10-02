@@ -10,11 +10,11 @@ import FormButtons from "@/components/global/formbuttons";
 const UpdateSongForm = ({ token = {}, auth = {}, object = {} }) => {
 	const router = useRouter();
 
-	const [, setBtnText] = useState(`Submit`);
+	const [btnText, setBtnText] = useState(`Submit`);
 
 	const upgradeSong = async (e) => {
 		e.preventDefault();
-		setBtnText("...");
+		setBtnText(`Processing...`);
 		const form = e.target;
 		const formData = new FormData(form);
 
@@ -23,7 +23,7 @@ const UpdateSongForm = ({ token = {}, auth = {}, object = {} }) => {
 			sub_title: formData.get("sub_title"),
 			text: formData.get("text"),
 			mentions: JSON.parse(formData.get("text_users") || "[]"),
-			hashtags: JSON.parse(formData.get("text_hashtags") || "[]"),
+			tags: JSON.parse(formData.get("text_hashtags") || "[]"),
 			commented: formData.get("commented"),
 			embedding: formData.get("embedding"),
 			category: formData.get("category"),
@@ -50,12 +50,12 @@ const UpdateSongForm = ({ token = {}, auth = {}, object = {} }) => {
 
 		if (res.status === "error") {
 			toast.error(res.message);
-			setBtnText("Submit");
+			setBtnText(btnText);
 			return;
 		}
 		if (res.status === "fail") {
 			toast.error(res.message);
-			setBtnText("Submit");
+			setBtnText(btnText);
 			return;
 		}
 		toast.success(`Song updated`);

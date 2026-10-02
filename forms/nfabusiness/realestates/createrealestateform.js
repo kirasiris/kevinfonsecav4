@@ -10,11 +10,11 @@ import FormButtons from "@/components/global/formbuttons";
 const CreateRealStateForm = ({ token = {}, auth = {} }) => {
 	const router = useRouter();
 
-	const [, setBtnText] = useState(`Submit`);
+	const [btnText, setBtnText] = useState("Submit");
 
 	const addRealState = async (e) => {
 		e.preventDefault();
-		setBtnText("...");
+		setBtnText(`Processing...`);
 		const form = e.target;
 		const formData = new FormData(form);
 
@@ -22,7 +22,7 @@ const CreateRealStateForm = ({ token = {}, auth = {} }) => {
 			title: formData.get("title"),
 			text: formData.get("text"),
 			mentions: JSON.parse(formData.get("text_users") || "[]"),
-			hashtags: JSON.parse(formData.get("text_hashtags") || "[]"),
+			tags: JSON.parse(formData.get("text_hashtags") || "[]"),
 			price: formData.get("price"),
 			isFree: formData.get("isFree"),
 			active: formData.get("active"),
@@ -38,7 +38,10 @@ const CreateRealStateForm = ({ token = {}, auth = {} }) => {
 			amenities: formData.getAll("amenities"),
 			status: formData.get("status"),
 			builtOnYear: formData.get("builtOnYear"),
-			files: { avatar: formData.get("file") || undefined },
+			files: {
+				avatar: formData.get("file") || undefined,
+				extras: JSON.parse(formData.get("text_files") || "[]"),
+			},
 			postType: "realestate",
 			resourceId: auth?.companyId,
 			onModel: "Company",
@@ -56,12 +59,12 @@ const CreateRealStateForm = ({ token = {}, auth = {} }) => {
 
 		if (res.status === "error") {
 			toast.error(res.message);
-			setBtnText("Submit");
+			setBtnText(btnText);
 			return;
 		}
 		if (res.status === "fail") {
 			toast.error(res.message);
-			setBtnText("Submit");
+			setBtnText(btnText);
 			return;
 		}
 		toast.success(`Real State created`);

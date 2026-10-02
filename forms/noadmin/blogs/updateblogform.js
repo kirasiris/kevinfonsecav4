@@ -7,6 +7,21 @@ import AdminSidebar from "@/components/noadmin/myfinaladminsidebar";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
 
+const toId = (value) => {
+	if (!value) {
+		return "";
+	}
+	if (typeof value === "string" || typeof value === "number") {
+		return String(value);
+	}
+	return String(value._id || value.id || "");
+};
+
+const toMention = (value) =>
+	typeof value === "string" || typeof value === "number"
+		? { id: String(value), username: "" }
+		: { id: toId(value), username: value?.username || "" };
+
 const UpdateBlogForm = ({
 	token = {},
 	auth = {},
@@ -15,19 +30,33 @@ const UpdateBlogForm = ({
 }) => {
 	const router = useRouter();
 
-	const [, setBtnText] = useState(`Submit`);
+	const [btnText, setBtnText] = useState(`Submit`);
+
+	const savedFiles = Array.isArray(object?.data?.files?.extras)
+		? object?.data?.files.extras
+		: [];
 
 	const upgradeBlog = async (e) => {
 		e.preventDefault();
-		setBtnText("...");
+		setBtnText(`Processing...`);
 		const form = e.target;
 		const formData = new FormData(form);
+
+		const text = formData.get("text") || "";
+		const mentions = JSON.parse(formData.get("text_users") || "[]");
+		const tags = JSON.parse(formData.get("text_hashtags") || "[]");
+		const extras = JSON.parse(formData.get("text_files") || "[]");
+
+		const bodyUnchanged = text === (object?.data?.text || "");
 
 		const rawFormData = {
 			title: formData.get("title"),
 			text: formData.get("text"),
-			mentions: JSON.parse(formData.get("text_users") || "[]"),
-			hashtags: JSON.parse(formData.get("text_hashtags") || "[]"),
+			mentions:
+				bodyUnchanged && !mentions.length
+					? (object?.data?.mentions || []).map(toMention)
+					: mentions,
+			tags: bodyUnchanged && !tags.length ? object?.data?.tags || [] : tags,
 			featured: formData.get("featured"),
 			embedding: formData.get("embedding"),
 			category: formData.get("category"),
@@ -37,7 +66,10 @@ const UpdateBlogForm = ({
 			fullWidth: formData.get("fullWidth"),
 			files: {
 				avatar: formData.get("file") || undefined,
-				extras: JSON.parse(formData.get("text_files") || "[]"),
+				extras:
+					bodyUnchanged && !extras.length
+						? savedFiles.map(toId).filter(Boolean)
+						: extras,
 			},
 		};
 
@@ -53,12 +85,12 @@ const UpdateBlogForm = ({
 
 		if (res.status === "error") {
 			toast.error(res.message);
-			setBtnText("Submit");
+			setBtnText(btnText);
 			return;
 		}
 		if (res.status === "fail") {
 			toast.error(res.message);
-			setBtnText("Submit");
+			setBtnText(btnText);
 			return;
 		}
 		toast.success(`Blog upgraded`);
@@ -88,6 +120,7 @@ const UpdateBlogForm = ({
 					id="text"
 					name="text"
 					defaultValue={object?.data?.text}
+					defaultFiles={savedFiles}
 					onModel="Blog"
 					advancedTextEditor={true}
 					customPlaceholder="No description"
@@ -108,7 +141,7 @@ const UpdateBlogForm = ({
 					commented={object?.data?.commented.toString()}
 					embedding={object?.data?.embedding.toString()}
 					category={object?.data?.category?._id || object?.data?.category}
-					categories={objects.data}
+					categories={objects?.data}
 					multiple_categories={false}
 				/>
 				<br />

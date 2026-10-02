@@ -59,7 +59,7 @@ const hydrateFields = (data) => ({
 const UpdateSettingForm = ({ token = {}, auth = {}, object = {} }) => {
 	const router = useRouter();
 
-	const [, setBtnText] = useState(`Submit`);
+	const [btnText, setBtnText] = useState(`Submit`);
 
 	const settingsId = object?.data?._id;
 
@@ -184,7 +184,7 @@ const UpdateSettingForm = ({ token = {}, auth = {}, object = {} }) => {
 			return;
 		}
 
-		setBtnText("...");
+		setBtnText(`Processing...`);
 		const form = e.target;
 		const formData = new FormData(form);
 
@@ -240,12 +240,12 @@ const UpdateSettingForm = ({ token = {}, auth = {}, object = {} }) => {
 
 		if (res.status === "error") {
 			toast.error(res.message);
-			setBtnText("Submit");
+			setBtnText(btnText);
 			return;
 		}
 		if (res.status === "fail") {
 			toast.error(res.message);
-			setBtnText("Submit");
+			setBtnText(btnText);
 			return;
 		}
 		toast.success(`Setting updated`);

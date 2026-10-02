@@ -11,7 +11,7 @@ const VerifyTwoFactorAuthenticationForm = ({ auth = {} }) => {
 
 	const verifyTFA = async (e) => {
 		e.preventDefault();
-		setBtnText(`Processing`);
+		setBtnText(`Processing...`);
 
 		const form = e.target;
 		const formData = new FormData(form);
@@ -23,6 +23,7 @@ const VerifyTwoFactorAuthenticationForm = ({ auth = {} }) => {
 
 		if (!rawFormData.token) {
 			toast.error("Token cannot be empty");
+			setBtnText(btnText);
 			return;
 		}
 
@@ -37,17 +38,17 @@ const VerifyTwoFactorAuthenticationForm = ({ auth = {} }) => {
 		);
 		if (res.status === "error") {
 			toast.error(res.message);
-			setBtnText("Submit");
+			setBtnText(btnText);
 			return;
 		}
 		if (res.status === "fail") {
 			toast.error(res.message);
-			setBtnText("Submit");
+			setBtnText(btnText);
 			return;
 		}
 		setDisplayText(true);
 		setDisplayToken(res?.data);
-		setBtnText("Submit");
+		setBtnText(btnText);
 		resetForm();
 	};
 

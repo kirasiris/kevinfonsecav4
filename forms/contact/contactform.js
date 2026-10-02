@@ -11,7 +11,7 @@ const ContactForm = () => {
 
 	const createContact = async (e) => {
 		e.preventDefault();
-		setBtnText(`Processing`);
+		setBtnText(`Processing...`);
 
 		const form = e.target;
 		const formData = new FormData(form);
@@ -26,7 +26,7 @@ const ContactForm = () => {
 
 		if (rawFormData.captcha !== "5") {
 			toast.error("There was an error, try again");
-			setBtnText("Submit");
+			setBtnText(btnText);
 			return;
 		}
 
@@ -41,15 +41,15 @@ const ContactForm = () => {
 		);
 		if (res.status === "error") {
 			toast.error(res.message);
-			setBtnText("Submit");
+			setBtnText(btnText);
 			return;
 		}
 		if (res.status === "fail") {
 			toast.error(res.message);
-			setBtnText("Submit");
+			setBtnText(btnText);
 			return;
 		}
-		setBtnText("Submit");
+		setBtnText(btnText);
 		toast.success("Email sent");
 		resetForm();
 		router.push(`/contact`);

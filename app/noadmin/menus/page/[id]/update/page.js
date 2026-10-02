@@ -1,5 +1,9 @@
 import { notFound } from "next/navigation";
-import { fetchurl } from "@/helpers/setTokenOnServer";
+import {
+	fetchurl,
+	getAuthTokenOnServer,
+	getUserOnServer,
+} from "@/helpers/setTokenOnServer";
 import UpdatePageForm from "@/forms/noadmin/menus/updatepageform";
 
 async function getPage(params) {
@@ -11,10 +15,19 @@ async function getPage(params) {
 const UpdatePage = async ({ params, searchParams }) => {
 	const awtdParams = await params;
 	const awtdSearchParams = await searchParams;
+	const token = await getAuthTokenOnServer();
+	const auth = getUserOnServer();
 
 	const page = await getPage(`/${awtdParams.id}`);
 
-	return <UpdatePageForm object={page} params={awtdParams} />;
+	return (
+		<UpdatePageForm
+			token={token}
+			auth={auth}
+			object={page}
+			params={awtdParams}
+		/>
+	);
 };
 
 export default UpdatePage;

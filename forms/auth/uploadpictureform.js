@@ -24,7 +24,7 @@ const UploadPictureForm = ({ auth = {} }) => {
 
 	const upgradeAvatar = async (e) => {
 		e.preventDefault();
-		setBtnText(`Processing`);
+		setBtnText(`Processing...`);
 		const token = await getAuthTokenOnServer();
 		const src = webcamRef.current.getScreenshot();
 		const blob = base64toBlob(src);

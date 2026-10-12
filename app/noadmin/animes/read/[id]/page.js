@@ -48,33 +48,6 @@ const ReadAnime = async ({ params, searchParams }) => {
 					objects={chapters}
 					searchParams={awtdSearchParams}
 				/>
-				{/* <UseDropzone
-					auth={auth}
-					token={token}
-					id={"file"}
-					name={"file"}
-					multipleFiles={true}
-					object={anime?.data}
-				/> */}
-				{/* <div className="card rounded-0">
-					<ChapterList
-						allLink={`/noadmin/animes/read/${anime?.data?._id}`}
-						pageText="Episodes"
-						addLink={`/noadmin/animes/chapter/${anime?.data?._id}/create`}
-						searchOn={`/noadmin/animes/read/${anime?.data?._id}`}
-						searchedKeyword=""
-						object={anime?.data}
-						objects={chapters}
-						searchParams={awtdSearchParams}
-						handleDraft={draftIt}
-						handlePublish={publishIt}
-						handleTrash={trashIt}
-						handleSchedule={scheduleIt}
-						handleDelete={handleDelete}
-						handleTrashAllFunction={handleTrashAll}
-						handleDeleteAllFunction={handleDeleteAll}
-					/>
-				</div> */}
 			</div>
 			<div className="col-xl-2 col-lg-2 col-md-2 col-sm-12 col-xs-12 d-none d-sm-none d-md-none d-lg-block dm-xl-block">
 				<figure className="mb-3 bg-dark">

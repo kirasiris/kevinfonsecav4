@@ -43,7 +43,12 @@ const List = ({
 							)}
 						</div>
 					</Globalcontent>
-					<Sidebar quotes={quotes} categories={categories} />
+					<Sidebar
+						quotes={quotes}
+						categories={categories}
+						categoryTypes={["blog"]}
+						includeSubcategories={false}
+					/>
 				</div>
 			</div>
 		</section>

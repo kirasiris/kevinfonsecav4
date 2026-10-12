@@ -211,9 +211,29 @@ const fileUrlOf = (item) => {
 	return loc.secure_location || loc.insecure_location || loc.aws_location || "";
 };
 
+// The API carries two names per file: `title` is what the user uploaded it
+// under ("Screaming Skull.jfif"), while `location.filename` is the mangled
+// storage name with the owner id and email baked in
+// ("screaming-skull-6665c4a6…-kuaf1998-gmail-com.jfif"). Only `title` is fit
+// to show a reader, so it wins; the storage name is the last-ditch fallback.
 const fileNameOf = (item) => {
 	const loc = item.location || {};
-	return loc.filename || (item.resourceId && item.resourceId.title) || "file";
+	return (
+		item.title ||
+		(item.resourceId && item.resourceId.title) ||
+		loc.filename ||
+		"file"
+	);
+};
+
+// Captions read as labels, not filenames, so drop a trailing extension —
+// "Screaming Skull.jfif" becomes "Screaming Skull". Titles without one
+// ("Crimson Desert") are left alone, and a name that is nothing but an
+// extension keeps its text rather than collapsing to an empty caption.
+const captionTextOf = (name) => {
+	const label = (name || "").trim();
+	const stripped = label.replace(/\.[A-Za-z0-9]{2,5}$/, "").trim();
+	return stripped || label;
 };
 
 const fileIdOf = (item) => {
@@ -263,6 +283,86 @@ const BLOCK_MENU_ITEMS = [
 	{ tag: "blockquote", label: "Quote", icon: "fa-quote-left" },
 	{ tag: "pre", label: "Code block", icon: "fa-code" },
 ];
+
+// Styling for the block handle, the drop indicator and the block being
+// dragged. Everything here targets chrome the component renders itself.
+const BLOCK_DND_CSS = `
+.editor-block-handle {
+  position: absolute;
+  left: 2px;
+  z-index: 5;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  width: 20px;
+}
+.editor-block-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 16px;
+  padding: 0;
+  font-size: 10px;
+  line-height: 1;
+  color: var(--bs-secondary-color, #6c757d);
+  background: var(--bs-body-bg, #fff);
+  border: 1px solid var(--bs-border-color, #dee2e6);
+  border-radius: 3px;
+  cursor: pointer;
+}
+.editor-block-btn:hover:not(:disabled),
+.editor-block-btn:focus-visible {
+  color: var(--bs-body-color, #212529);
+  border-color: var(--bs-secondary-color, #6c757d);
+}
+.editor-block-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+.editor-block-grip {
+  height: 22px;
+  font-size: 11px;
+  cursor: grab;
+  touch-action: none;
+}
+.editor-block-grip:active {
+  cursor: grabbing;
+}
+.editor-block-drop {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  height: 2px;
+  margin-top: -1px;
+  z-index: 6;
+  pointer-events: none;
+  background: var(--bs-primary, #0d6efd);
+  border-radius: 2px;
+}
+.editor-surface [data-block-dragging] {
+  opacity: 0.45;
+  outline: 2px dashed var(--bs-primary, #0d6efd);
+  outline-offset: 2px;
+}
+body.editor-block-dragging {
+  cursor: grabbing;
+  user-select: none;
+}
+.editor-surface .carousel-caption,
+.editor-surface .carousel-caption * {
+  z-index: 3;
+  user-select: none;
+}
+/* Image captions match the carousel's: labels, not editable text, so a
+   drag-select across the post never reaches into one. */
+.editor-surface .figure-caption,
+.editor-surface .figure-caption * {
+  user-select: none;
+}
+`;
 
 // `charactersLimit` falls back to this sentinel, which the footer reads as
 // "no practical limit" and renders as a running total instead of "used / allowed".
@@ -352,6 +452,31 @@ const MyTextArea = ({
 		(charCount === 1 && !hasCharacterLimit ? " character" : " characters");
 
 	const uploadsRef = useRef(new Map());
+	// Blob URLs handed to the content itself (demo uploads keep the local
+	// preview as their final src). They outlive their upload entry, so they are
+	// tracked separately and only released when the editor goes away.
+	const keptBlobsRef = useRef(new Set());
+
+	// Guards the state setters that run from a promise: a fetch, an unfurl or an
+	// upload can land long after the writer navigated away.
+	const isMountedRef = useRef(true);
+	const setStatusSafe = (message) => {
+		if (isMountedRef.current) setStatus(message);
+	};
+
+	// Animation frames still queued. Tracked so unmounting cannot leave a
+	// callback behind that writes to a detached editor or steals the page's
+	// selection a frame after this component is gone.
+	const pendingFramesRef = useRef(new Set());
+	const scheduleFrame = (fn) => {
+		const frames = pendingFramesRef.current;
+		const id = requestAnimationFrame(() => {
+			frames.delete(id);
+			fn();
+		});
+		frames.add(id);
+		return id;
+	};
 
 	// ---- Tables ---------------------------------------------------------------
 
@@ -397,6 +522,14 @@ const MyTextArea = ({
 
 	const [blockMenu, setBlockMenu] = useState(null); // { top, left }
 
+	// Block reordering (WordPress-style). The handle and the drop indicator are
+	// React nodes rendered next to the contentEditable, never inside it, so
+	// moving a block only ever relocates the element that is already there.
+	const [blockHandle, setBlockHandle] = useState(null); // { top, first, last }
+	const [blockDrop, setBlockDrop] = useState(null); // { top }
+	const hoveredBlockRef = useRef(null);
+	const blockDragRef = useRef(null);
+
 	// @mention autocomplete: { top, left, query } while the user types "@..."
 	const [mention, setMention] = useState(null);
 	const [mentionIndex, setMentionIndex] = useState(0);
@@ -412,15 +545,26 @@ const MyTextArea = ({
 		jsUrls: "",
 	});
 
-	// Abort in-flight uploads and release their blob URLs on unmount.
+	// Abort in-flight uploads, release their blob URLs, and drop any queued
+	// frame on unmount.
 	useEffect(() => {
+		isMountedRef.current = true;
 		const uploads = uploadsRef.current;
+		const kept = keptBlobsRef.current;
+		const frames = pendingFramesRef.current;
 		return () => {
+			isMountedRef.current = false;
 			uploads.forEach((u) => {
 				u.xhr.abort();
 				URL.revokeObjectURL(u.blobUrl);
 			});
 			uploads.clear();
+			// Blob previews still painted into the content are only safe to release
+			// now that the markup holding them is being torn down with us.
+			kept.forEach((url) => URL.revokeObjectURL(url));
+			kept.clear();
+			frames.forEach((id) => cancelAnimationFrame(id));
+			frames.clear();
 		};
 	}, []);
 
@@ -489,6 +633,8 @@ const MyTextArea = ({
 			if (r.type === "attributes")
 				return (
 					(r.attributeName || "").indexOf("data-fa-") === 0 ||
+					// The flag that styles the block being dragged is transient UI.
+					r.attributeName === "data-block-dragging" ||
 					isFaIconNode(r.target)
 				);
 			if (r.type === "childList") {
@@ -525,7 +671,13 @@ const MyTextArea = ({
 		// A native reset restores the hidden fields but leaves the contenteditable
 		// alone, so the editor is put back to the saved draft by hand.
 		const onFormReset = () => {
-			requestAnimationFrame(() => {
+			scheduleFrame(() => {
+				if (!editorRef.current) return;
+				// The blocks the handle and the saved caret pointed at are about to be
+				// thrown away, so neither may outlive the markup it referenced.
+				hoveredBlockRef.current = null;
+				setBlockHandle(null);
+				savedRangeRef.current = null;
 				editor.innerHTML = seededHtmlRef.current || startingHtml;
 				rehydrateStrippedIds();
 				upgradeUserChips();
@@ -560,11 +712,30 @@ const MyTextArea = ({
 		// Placeholders for in-flight uploads are transient UI, so they are stripped
 		// from the submitted markup and from the character count alike.
 		let source = editor;
-		if (hasContent && editor.querySelector("[data-upload-id]")) {
+		if (
+			hasContent &&
+			editor.querySelector(
+				"[data-upload-id], [data-block-dragging], .carousel-caption, .figure-caption",
+			)
+		) {
 			source = editor.cloneNode(true);
 			source
 				.querySelectorAll("[data-upload-id]")
 				.forEach((node) => node.remove());
+			// The drag flag is editor-only chrome and must never reach the database.
+			source
+				.querySelectorAll("[data-block-dragging]")
+				.forEach((node) => node.removeAttribute("data-block-dragging"));
+			// Captions are held inert by editor-only attributes; readers get plain
+			// markup, so the lock is cleaned off every kind of caption on save.
+			source
+				.querySelectorAll(
+					".carousel-caption, .carousel-caption [contenteditable], .figure-caption",
+				)
+				.forEach((node) => {
+					node.removeAttribute("contenteditable");
+					node.removeAttribute("data-placeholder");
+				});
 		}
 		const html = hasContent ? source.innerHTML : "";
 		const { users, hashtags, files } = extractEntities(editor);
@@ -628,9 +799,13 @@ const MyTextArea = ({
 			);
 		});
 
+		// Read the text once: `textContent` rebuilds the whole string on every
+		// access, so scanning against the getter re-flattened the document for
+		// each hashtag found.
+		const text = editor.textContent || "";
 		const re = /(^|[^\p{L}\p{N}_#])#([\p{L}\p{N}_]+)/gu;
 		let m;
-		while ((m = re.exec(editor.textContent))) addTag(m[2]);
+		while ((m = re.exec(text))) addTag(m[2]);
 
 		return { users, hashtags, files };
 	};
@@ -814,18 +989,35 @@ const MyTextArea = ({
 		const editor = editorRef.current;
 		if (!editor) return;
 		editor.focus();
-		if (savedRangeRef.current) {
-			const sel = window.getSelection();
-			sel.removeAllRanges();
-			sel.addRange(savedRangeRef.current);
+		const range = savedRangeRef.current;
+		if (!range) return;
+		// A saved Range keeps its nodes alive even after the markup around them
+		// was replaced (a form reset, a cleared editor, a re-seed). Re-applying a
+		// range that no longer points into the editor drops the caret outside the
+		// content, so a stale one is discarded instead.
+		if (!editor.contains(range.commonAncestorContainer)) {
+			savedRangeRef.current = null;
+			return;
 		}
+		const sel = window.getSelection();
+		if (!sel) return;
+		sel.removeAllRanges();
+		sel.addRange(range);
 	};
 
 	const insertNodeAtCursor = (node) => {
 		const editor = editorRef.current;
+		if (!editor) return;
 		restoreSelection();
 		const sel = window.getSelection();
-		if (!sel || sel.rangeCount === 0) {
+		// Without a caret of our own, appending is the only safe landing spot —
+		// inserting into a range that points somewhere else on the page would put
+		// the node outside the editor entirely.
+		if (
+			!sel ||
+			sel.rangeCount === 0 ||
+			!editor.contains(sel.getRangeAt(0).commonAncestorContainer)
+		) {
 			editor.appendChild(node);
 			return;
 		}
@@ -995,8 +1187,12 @@ const MyTextArea = ({
 				} else {
 					node = linkParagraph(data.url);
 				}
+				// The writer may have deleted the placeholder — or left the page —
+				// while the server was fetching. `replaceWith` on a detached node
+				// silently drops the embed, so the result is discarded explicitly.
+				if (!placeholder.isConnected) return;
 				placeholder.replaceWith(node);
-				setStatus(
+				setStatusSafe(
 					data.type === "embed"
 						? "WordPress post embedded"
 						: data.type === "card"
@@ -1005,8 +1201,9 @@ const MyTextArea = ({
 				);
 			})
 			.catch(() => {
+				if (!placeholder.isConnected) return;
 				placeholder.replaceWith(linkParagraph(url));
-				setStatus("Link added");
+				setStatusSafe("Link added");
 			});
 	};
 
@@ -1096,6 +1293,9 @@ const MyTextArea = ({
 		return activeFormats[cmd] ? base + " active" : base;
 	};
 
+	const inList =
+		!!activeFormats.insertUnorderedList || !!activeFormats.insertOrderedList;
+
 	// ---- Inline code -----------------------------------------------------------
 
 	const toggleInlineCode = () => {
@@ -1158,7 +1358,7 @@ const MyTextArea = ({
 	const currentBlock = () => {
 		const editor = editorRef.current;
 		const sel = window.getSelection();
-		if (!sel || sel.rangeCount === 0) return null;
+		if (!editor || !sel || sel.rangeCount === 0) return null;
 		let node = sel.anchorNode;
 		if (!node || !editor.contains(node)) return null;
 		// When the caret sits directly on the editor element, resolve to the
@@ -1212,6 +1412,227 @@ const MyTextArea = ({
 		});
 	};
 
+	// ---- Block reordering (drag the handle, or the arrow keys) ----------------
+
+	// Every direct child of the editor is a "block": a paragraph, a heading, a
+	// figure, a table wrapper, a carousel... Reordering is a single
+	// `insertBefore` of that very element, so no wrapper is ever introduced and
+	// the markup that gets saved keeps exactly the nodes the writer inserted.
+
+	const topLevelBlockFrom = (node) => {
+		const editor = editorRef.current;
+		if (!editor || !node) return null;
+		let el = node.nodeType === 1 ? node : node.parentElement;
+		if (!el || el === editor || !editor.contains(el)) return null;
+		while (el.parentElement && el.parentElement !== editor)
+			el = el.parentElement;
+		return el.parentElement === editor ? el : null;
+	};
+
+	const positionBlockHandle = (el) => {
+		const editor = editorRef.current;
+		const wrapper = wrapperRef.current;
+		if (!editor || !wrapper || !el || !editor.contains(el)) {
+			hoveredBlockRef.current = null;
+			setBlockHandle(null);
+			return;
+		}
+		const rect = el.getBoundingClientRect();
+		const wrapRect = wrapper.getBoundingClientRect();
+		hoveredBlockRef.current = el;
+		// Sit at the block's vertical midpoint; the handle itself is translated
+		// up by half its own height in CSS so it stays centred whatever its size.
+		setBlockHandle({
+			top: rect.top - wrapRect.top + rect.height / 2,
+			first: !el.previousElementSibling,
+			last: !el.nextElementSibling,
+		});
+	};
+
+	const hideBlockHandle = () => {
+		if (blockDragRef.current) return;
+		hoveredBlockRef.current = null;
+		setBlockHandle(null);
+	};
+
+	// Keyboard users never hover: the handle follows the block the caret is in.
+	const trackBlockHandleFromCaret = () => {
+		if (blockDragRef.current) return;
+		const sel = window.getSelection();
+		const el = topLevelBlockFrom(
+			sel && sel.rangeCount > 0 ? sel.anchorNode : null,
+		);
+		if (!el || el === hoveredBlockRef.current) return;
+		positionBlockHandle(el);
+	};
+
+	const onEditorMouseMove = (e) => {
+		// While dragging, the handle owns the pointer; the hover target is frozen.
+		if (blockDragRef.current) return;
+		const el = topLevelBlockFrom(e.target);
+		if (!el || el === hoveredBlockRef.current) return;
+		positionBlockHandle(el);
+	};
+
+	// Keyboard equivalent of the drag: one step up or down per press.
+	const moveHoveredBlock = (direction) => {
+		const editor = editorRef.current;
+		const el = hoveredBlockRef.current;
+		if (!editor || !el || !editor.contains(el)) return;
+		if (direction < 0) {
+			const prev = el.previousElementSibling;
+			if (!prev) return;
+			editor.insertBefore(el, prev);
+		} else {
+			const next = el.nextElementSibling;
+			if (!next) return;
+			editor.insertBefore(el, next.nextSibling);
+		}
+		syncContent();
+		positionBlockHandle(el);
+		el.scrollIntoView({ block: "nearest" });
+		setStatus(direction < 0 ? "Block moved up" : "Block moved down");
+	};
+
+	// Where the block would land if it were dropped at `clientY`: the sibling to
+	// insert it before (null = last position) and the indicator's offset.
+	const blockDropTargetFor = (clientY) => {
+		const editor = editorRef.current;
+		const wrapper = wrapperRef.current;
+		if (!editor || !wrapper) return { before: null, top: 0 };
+		const wrapRect = wrapper.getBoundingClientRect();
+		const dragged = blockDragRef.current && blockDragRef.current.el;
+		const blocks = Array.from(editor.children).filter((b) => b !== dragged);
+		for (const block of blocks) {
+			const rect = block.getBoundingClientRect();
+			if (clientY < rect.top + rect.height / 2) {
+				return { before: block, top: rect.top - wrapRect.top };
+			}
+		}
+		const last = blocks[blocks.length - 1];
+		const rect = (last || editor).getBoundingClientRect();
+		return {
+			before: null,
+			top: (last ? rect.bottom : rect.top) - wrapRect.top,
+		};
+	};
+
+	const startBlockDrag = (e) => {
+		const editor = editorRef.current;
+		const el = hoveredBlockRef.current;
+		// A second pointer going down mid-drag (a touch alongside a mouse) would
+		// overwrite `blockDragRef` and strand the first drag's window listeners
+		// with no `detach` left to call.
+		if (blockDragRef.current) return;
+		if (!editor || !el || !editor.contains(el)) return;
+		e.preventDefault();
+		const handle = e.currentTarget;
+		try {
+			handle.setPointerCapture(e.pointerId);
+		} catch (_) {
+			/* capture is best-effort; the window listeners below are the real path */
+		}
+		el.setAttribute("data-block-dragging", "true");
+		document.body.classList.add("editor-block-dragging");
+		const target = blockDropTargetFor(e.clientY);
+
+		// The drag is tracked on the window rather than the handle. Pointer
+		// capture can be refused, and a release outside the handle — or a lost
+		// pointer from an alt-tab or a context menu — would then never deliver
+		// pointerup, stranding `blockDragRef` and leaving the whole page
+		// unselectable under the grabbing cursor.
+		const onPointerMove = (ev) => onBlockDragMove(ev);
+		const onPointerUp = (ev) => {
+			if (ev.pointerId === e.pointerId) endBlockDrag(true);
+		};
+		const onPointerCancel = () => endBlockDrag(false);
+		const onKeyDown = (ev) => {
+			if (ev.key === "Escape") endBlockDrag(false);
+		};
+		const onWindowBlur = () => endBlockDrag(false);
+		window.addEventListener("pointermove", onPointerMove);
+		window.addEventListener("pointerup", onPointerUp);
+		window.addEventListener("pointercancel", onPointerCancel);
+		window.addEventListener("keydown", onKeyDown);
+		window.addEventListener("blur", onWindowBlur);
+
+		blockDragRef.current = {
+			el,
+			handle,
+			pointerId: e.pointerId,
+			before: target.before,
+			detach: () => {
+				window.removeEventListener("pointermove", onPointerMove);
+				window.removeEventListener("pointerup", onPointerUp);
+				window.removeEventListener("pointercancel", onPointerCancel);
+				window.removeEventListener("keydown", onKeyDown);
+				window.removeEventListener("blur", onWindowBlur);
+			},
+		};
+		setBlockDrop({ top: target.top });
+		setStatus("Drag to reorder — release to drop the block in place");
+	};
+
+	const onBlockDragMove = (e) => {
+		const drag = blockDragRef.current;
+		if (!drag) return;
+		e.preventDefault();
+		const target = blockDropTargetFor(e.clientY);
+		drag.before = target.before;
+		setBlockDrop((prev) =>
+			prev && Math.abs(prev.top - target.top) < 0.5
+				? prev
+				: { top: target.top },
+		);
+		// Keep the drop point reachable when the document runs past the viewport.
+		if (e.clientY < 72) window.scrollBy(0, -16);
+		else if (e.clientY > window.innerHeight - 72) window.scrollBy(0, 16);
+	};
+
+	const endBlockDrag = (commit) => {
+		const drag = blockDragRef.current;
+		if (!drag) return;
+		blockDragRef.current = null;
+		const { el, handle, pointerId, before, detach } = drag;
+		if (detach) detach();
+		try {
+			handle.releasePointerCapture(pointerId);
+		} catch (_) {
+			/* already released */
+		}
+		el.removeAttribute("data-block-dragging");
+		document.body.classList.remove("editor-block-dragging");
+		setBlockDrop(null);
+
+		const editor = editorRef.current;
+		const stillThere = editor && editor.contains(el);
+		// `before` is only a valid reference point while it is still a child of
+		// the editor; insertBefore throws if it was removed mid-drag.
+		const targetValid = !before || (editor && before.parentNode === editor);
+		const unchanged = before
+			? el.nextElementSibling === before
+			: !el.nextElementSibling;
+		if (commit && stillThere && targetValid && !unchanged) {
+			editor.insertBefore(el, before);
+			syncContent();
+			setStatus("Block moved");
+		} else {
+			setStatus(commit ? "Ready" : "Move cancelled");
+		}
+		positionBlockHandle(stillThere ? el : null);
+	};
+
+	// A drag that outlives the component would leave the page unselectable and
+	// its window listeners attached.
+	useEffect(() => {
+		const drag = blockDragRef;
+		return () => {
+			if (drag.current && drag.current.detach) drag.current.detach();
+			drag.current = null;
+			document.body.classList.remove("editor-block-dragging");
+		};
+	}, []);
+
 	const handleKeyDown = (e) => {
 		// @mention dropdown captures navigation keys while open.
 		if (mention) {
@@ -1240,7 +1661,10 @@ const MyTextArea = ({
 			}
 		}
 
-		// Tab moves between table cells instead of leaving the editor.
+		// Tab nests list items, or moves between table cells, instead of leaving
+		// the editor. Lists win when the caret is inside one, including a list
+		// that happens to live in a table cell.
+		if (e.key === "Tab" && handleListTab(e)) return;
 		if (e.key === "Tab" && handleTableTab(e)) return;
 
 		// Any key other than Enter dismisses the block menu.
@@ -1376,16 +1800,16 @@ const MyTextArea = ({
 				// A demo response never persisted anything, so it has no id to track.
 				const fileId = data && data.demo ? "" : extractUploadFileId(data);
 				finishUpload(uploadId, url, file, !(data && data.demo), fileId);
-				setStatus("Uploaded " + file.name);
+				setStatusSafe("Uploaded " + file.name);
 			})
 			.catch((err) => {
 				if (err?.name === "AbortError") {
-					setStatus("Upload cancelled");
+					setStatusSafe("Upload cancelled");
 					return;
 				}
 
 				failUpload(uploadId, err.message);
-				setStatus("Upload error: " + err.message);
+				setStatusSafe("Upload error: " + err.message);
 			});
 	};
 
@@ -1494,6 +1918,10 @@ const MyTextArea = ({
 		const entry = uploadsRef.current.get(uploadId);
 		const figure = uploadFigure(uploadId);
 		uploadsRef.current.delete(uploadId);
+		// A demo upload keeps the local blob as its permanent src, so it can never
+		// be revoked here. Hand it to the kept set instead of dropping it with the
+		// upload entry, or nothing is left holding it at unmount.
+		if (!revoke && entry) keptBlobsRef.current.add(entry.blobUrl);
 		if (!figure) {
 			if (revoke && entry) URL.revokeObjectURL(entry.blobUrl);
 			return;
@@ -1564,13 +1992,37 @@ const MyTextArea = ({
 
 	// ---- Embedding ----------------------------------------------------------------
 
+	// Captions are inert for the same reason slide captions are: they label the
+	// media rather than being body copy, so `contenteditable="false"` keeps them
+	// from being typed into, selected into, or half-deleted. Bootstrap's own
+	// `.figure-caption` does the styling, so the blog renders it unchanged, and
+	// the class is what the save/load pass matches on — the API strips `data-*`.
+	//
+	// The element is a <div>, not a <figcaption>: the API's sanitiser drops
+	// `figcaption` on write and keeps only its inner text, which would turn a
+	// caption into a stray line under the image that no longer re-locks on
+	// load. A classed <div> is the same shape the carousel captions already
+	// round-trip through, and `.figure-caption` still gives Bootstrap styling.
+	const buildFigureCaption = (text) => {
+		const label = captionTextOf(text);
+		// No name means no caption, rather than an empty bar under the image.
+		if (!label) return null;
+		const cap = document.createElement("div");
+		cap.className = "figure-caption mt-1";
+		cap.setAttribute("contenteditable", "false");
+		cap.textContent = label;
+		return cap;
+	};
+
 	const buildEmbedNode = (url, name, mime, fileId) => {
 		const kind = guessKind(url, mime);
 		let node;
 		if (kind === "image") {
 			node = document.createElement("img");
 			node.src = url;
-			node.alt = name || "Uploaded image";
+			// Screen readers get the same label a sighted reader sees, minus the
+			// file extension.
+			node.alt = captionTextOf(name) || "Uploaded image";
 			node.className = "img-fluid rounded my-2";
 		} else if (kind === "video") {
 			node = document.createElement("video");
@@ -1598,8 +2050,10 @@ const MyTextArea = ({
 		if (fileId) node.setAttribute("data-file-id", fileId);
 		if (kind === "image" || kind === "video" || kind === "audio") {
 			const fig = document.createElement("figure");
-			fig.className = "my-2";
+			fig.className = "figure d-block my-2";
 			fig.appendChild(node);
+			const cap = buildFigureCaption(name);
+			if (cap) fig.appendChild(cap);
 			return { node: fig, block: true };
 		}
 		return { node, block: false };
@@ -1658,15 +2112,29 @@ const MyTextArea = ({
 		row.className = "row g-2 my-2";
 		const col = files.length >= 3 ? "col-6 col-md-4" : "col-6";
 		for (const f of files) {
-			const div = document.createElement("div");
-			div.className = col;
+			// Each tile is a <figure> so the caption belongs to its image. `mb-0`
+			// leaves the row's own gutters in charge of the spacing.
+			const cell = document.createElement("figure");
+			cell.className = col + " figure d-block mb-0";
+
+			// A fixed ratio replaces the old `h-100` stretch: with a caption below
+			// it, stretching the image to the full column height would push the
+			// tile past the row. The ratio box keeps every image the same height
+			// whether or not its neighbour has a caption.
+			const frame = document.createElement("div");
+			frame.className = "ratio ratio-4x3";
+
 			const img = document.createElement("img");
 			img.src = f.url;
-			img.alt = f.name || "Gallery image";
+			img.alt = captionTextOf(f.name) || "Gallery image";
 			img.className = "img-fluid rounded w-100 h-100 object-fit-cover";
 			if (f.id) img.setAttribute("data-file-id", f.id);
-			div.appendChild(img);
-			row.appendChild(div);
+
+			frame.appendChild(img);
+			cell.appendChild(frame);
+			const cap = buildFigureCaption(f.name);
+			if (cap) cell.appendChild(cap);
+			row.appendChild(cell);
 		}
 		insertBlockAtCursor(row);
 	};
@@ -1694,6 +2162,18 @@ const MyTextArea = ({
 				' aria-label="Slide ' +
 				(i + 1) +
 				'"></button>';
+			// The whole caption is inert: `contenteditable="false"` on the wrapper
+			// covers its descendants too, so neither the box nor its text can be
+			// edited, selected into, or backspaced away. The label comes from the
+			// file name. Styled with Bootstrap utilities only, so it renders the
+			// same on the blog.
+			const caption =
+				// `mb-4` + `z-3` keep the caption clear of the indicators, which share
+				// the bottom of the slide and would otherwise swallow clicks on it.
+				'<div class="carousel-caption z-3 mb-4 bg-dark bg-opacity-50 rounded px-2 py-1" contenteditable="false">' +
+				'<p class="mb-0 small">' +
+				escapeHtml(captionTextOf(f.name)) +
+				"</p></div>";
 			inner +=
 				'<div class="carousel-item' +
 				(i === 0 ? " active" : "") +
@@ -1703,7 +2183,9 @@ const MyTextArea = ({
 				escapeHtml(f.name || "Slide " + (i + 1)) +
 				'"' +
 				(f.id ? ' data-file-id="' + escapeHtml(f.id) + '"' : "") +
-				" /></div>";
+				" />" +
+				caption +
+				"</div>";
 		});
 		indicators += "</div>";
 		inner += "</div>";
@@ -1788,6 +2270,19 @@ const MyTextArea = ({
 			link.setAttribute("contenteditable", "false");
 		});
 
+		// Re-lock captions on load. Matched by structure because the API strips
+		// data-* attributes. Any inner `contenteditable` is cleared as well, so
+		// posts saved while captions were editable become inert too.
+		editor
+			.querySelectorAll(".carousel-caption, .figure-caption")
+			.forEach((box) => {
+				box.setAttribute("contenteditable", "false");
+				box.querySelectorAll("[contenteditable]").forEach((node) => {
+					node.removeAttribute("contenteditable");
+					node.removeAttribute("data-placeholder");
+				});
+			});
+
 		if (!fileIdByUrl.size) return;
 		editor
 			.querySelectorAll(
@@ -1869,6 +2364,7 @@ const MyTextArea = ({
 			if (!json || !Array.isArray(json.data)) {
 				throw new Error((json && json.message) || "Failed to load files");
 			}
+			if (!isMountedRef.current) return;
 			setFileState({
 				items: json.data || [],
 				page: (json.pagination && json.pagination.current) || page,
@@ -1877,6 +2373,7 @@ const MyTextArea = ({
 				error: "",
 			});
 		} catch (err) {
+			if (!isMountedRef.current) return;
 			setFileState((s) => ({ ...s, loading: false, error: err.message }));
 		}
 	};
@@ -1908,6 +2405,7 @@ const MyTextArea = ({
 						"Failed to load users. Check your xAuthToken cookie.",
 				);
 			}
+			if (!isMountedRef.current) return;
 			setUserState({
 				items: json.data || [],
 				page: (json.pagination && json.pagination.current) || page,
@@ -1916,6 +2414,7 @@ const MyTextArea = ({
 				error: "",
 			});
 		} catch (err) {
+			if (!isMountedRef.current) return;
 			setUserState((s) => ({ ...s, loading: false, error: err.message }));
 		}
 	};
@@ -2169,12 +2668,17 @@ const MyTextArea = ({
 		const rect = table.getBoundingClientRect();
 		const wrapRect = wrapper.getBoundingClientRect();
 		const above = rect.top - wrapRect.top - 44;
-		setTableBar({
-			// Above the table normally, but moved below it when the table is flush
-			// with the top of the editor and the bar would cover the header row.
-			top: above < 4 ? rect.bottom - wrapRect.top + 6 : above,
-			left: Math.max(4, rect.left - wrapRect.left),
-		});
+		// Above the table normally, but moved below it when the table is flush
+		// with the top of the editor and the bar would cover the header row.
+		const top = above < 4 ? rect.bottom - wrapRect.top + 6 : above;
+		const left = Math.max(4, rect.left - wrapRect.left);
+		// selectionchange fires on every caret move, so only re-render when the
+		// bar actually needs to move.
+		setTableBar((prev) =>
+			prev && Math.abs(prev.top - top) < 0.5 && Math.abs(prev.left - left) < 0.5
+				? prev
+				: { top, left },
+		);
 	};
 
 	const tableWrapperOf = (table) => {
@@ -2416,6 +2920,146 @@ const MyTextArea = ({
 		if (editorRef.current) editorRef.current.focus();
 	};
 
+	// ---- List nesting ---------------------------------------------------------
+
+	// Nesting moves the <li> element itself between lists, so the writer's own
+	// markup is preserved — no wrapper divs, no re-created items, no lost caret.
+
+	const isListEl = (el) => !!el && (el.tagName === "UL" || el.tagName === "OL");
+
+	const currentListItem = () => {
+		const editor = editorRef.current;
+		const sel = window.getSelection();
+		const node = sel && sel.rangeCount > 0 ? sel.anchorNode : null;
+		const el = node && (node.nodeType === 1 ? node : node.parentElement);
+		if (!editor || !el || !editor.contains(el)) return null;
+		const li = el.closest("li");
+		return li && editor.contains(li) ? li : null;
+	};
+
+	// A trailing <ul>/<ol> inside an <li> is where its children live. Reuse it
+	// when there is one so repeated indents don't stack empty sibling lists.
+	const childListOf = (li, type) => {
+		const last = li.lastElementChild;
+		if (isListEl(last)) return last;
+		const list = document.createElement(type);
+		li.appendChild(list);
+		return list;
+	};
+
+	const indentListItem = (li) => {
+		const prev = li.previousElementSibling;
+		// The first item of a list has nothing to become a child of.
+		if (!prev || prev.tagName !== "LI") return false;
+		childListOf(prev, li.parentElement.tagName).appendChild(li);
+		return true;
+	};
+
+	const outdentListItem = (li) => {
+		const list = li.parentElement;
+		const parentLi = list && list.parentElement;
+		// Already at the top level of the list.
+		if (!isListEl(list) || !parentLi || parentLi.tagName !== "LI") return false;
+
+		// Items below the promoted one become its children, so their depth
+		// relative to the surrounding text does not change.
+		const following = [];
+		for (let n = li.nextElementSibling; n; n = n.nextElementSibling)
+			following.push(n);
+		if (following.length) {
+			const sub = childListOf(li, list.tagName);
+			following.forEach((item) => sub.appendChild(item));
+		}
+
+		parentLi.after(li);
+		if (!list.children.length) list.remove();
+		return true;
+	};
+
+	// Collapse the caret back onto a remembered position. Clamped because the
+	// node may have been normalised while the item moved.
+	const collapseCaretTo = (node, offset) => {
+		if (!node || !node.isConnected) return false;
+		const sel = window.getSelection();
+		if (!sel) return false;
+		const limit =
+			node.nodeType === 3 ? node.nodeValue.length : node.childNodes.length;
+		const range = document.createRange();
+		range.setStart(node, Math.min(offset, limit));
+		range.collapse(true);
+		sel.removeAllRanges();
+		sel.addRange(range);
+		return true;
+	};
+
+	// Tab / Shift+Tab inside a list, and the toolbar's indent buttons.
+	const nestListItem = (outdent) => {
+		const li = currentListItem();
+		if (!li) return false;
+		const sel = window.getSelection();
+		// Reparenting the <li> collapses a live Range to the list boundary, which
+		// leaves the caret sitting on the following line. The caret's text node
+		// travels with the item, so remember the spot as node + offset and put
+		// the caret back on it once the move is done.
+		const anchor =
+			sel && sel.rangeCount > 0
+				? {
+						node: sel.getRangeAt(0).startContainer,
+						offset: sel.getRangeAt(0).startOffset,
+					}
+				: null;
+
+		const moved = outdent ? outdentListItem(li) : indentListItem(li);
+
+		if (!moved) {
+			// Nothing changed, so leave the caret exactly where the writer put it.
+			setStatus(
+				outdent
+					? "Already at the top level of this list"
+					: "Nothing above to nest under — add an item first",
+			);
+			return true;
+		}
+
+		const restored =
+			anchor && li.contains(anchor.node)
+				? collapseCaretTo(anchor.node, anchor.offset)
+				: false;
+		if (!restored) placeCaretIn(li);
+
+		// Some engines only repaint the caret on the next frame and drop it to the
+		// line below in the meantime. Re-assert it then, but only if it actually
+		// drifted out of the item — never fight a caret the writer has moved.
+		if (anchor) {
+			scheduleFrame(() => {
+				const editor = editorRef.current;
+				// Only correct a caret that is still ours: if the editor went away or
+				// focus moved on, the selection now belongs to something else.
+				if (!editor || !li.isConnected || document.activeElement !== editor)
+					return;
+				const current = window.getSelection();
+				const node =
+					current && current.rangeCount > 0 ? current.anchorNode : null;
+				if (!node || !li.contains(node)) {
+					if (collapseCaretTo(anchor.node, anchor.offset)) saveSelection();
+				}
+			});
+		}
+
+		li.scrollIntoView({ block: "nearest" });
+		syncContent();
+		saveSelection();
+		setStatus(outdent ? "Item moved out one level" : "Item nested");
+		return true;
+	};
+
+	const handleListTab = (e) => {
+		if (!currentListItem()) return false;
+		e.preventDefault();
+		nestListItem(e.shiftKey);
+		return true;
+	};
+
 	// Tab / Shift+Tab hops between cells; Tab in the last cell appends a row.
 	const handleTableTab = (e) => {
 		const table = currentTable();
@@ -2436,10 +3080,21 @@ const MyTextArea = ({
 	// ---- Footer actions -------------------------------------------------------------
 
 	const clearEditor = () => {
+		// Wiping the content takes every upload placeholder with it, so the
+		// requests behind them have nowhere left to land: stop them and release
+		// their previews rather than letting them run to completion unseen.
+		uploadsRef.current.forEach((entry) => {
+			entry.xhr.abort();
+			URL.revokeObjectURL(entry.blobUrl);
+		});
+		uploadsRef.current.clear();
 		if (editorRef.current) editorRef.current.innerHTML = "<p><br></p>";
 		savedRangeRef.current = null;
 		setBlockMenu(null);
 		setMention(null);
+		hoveredBlockRef.current = null;
+		setBlockHandle(null);
+		setBlockDrop(null);
 		setStatus("Cleared");
 	};
 
@@ -2449,10 +3104,16 @@ const MyTextArea = ({
 	};
 
 	const copyHtml = () => {
+		if (!navigator.clipboard) {
+			setStatus("Clipboard is unavailable in this browser");
+			return;
+		}
 		navigator.clipboard
 			.writeText(previewHtml)
-			.then(() => setStatus("HTML copied to clipboard"))
-			.catch(() => setStatus("Could not copy — clipboard permission denied"));
+			.then(() => setStatusSafe("HTML copied to clipboard"))
+			.catch(() =>
+				setStatusSafe("Could not copy — clipboard permission denied"),
+			);
 	};
 
 	// ---- Derived lists ----------------------------------------------------------------
@@ -2472,6 +3133,10 @@ const MyTextArea = ({
 
 	return advancedTextEditor ? (
 		<>
+			{/* Chrome for the block handle. Scoped to the classes this component
+          renders, so it can ship with the component instead of the global
+          stylesheet. */}
+			<style>{BLOCK_DND_CSS}</style>
 			<div className="card shadow-sm mb-3">
 				{/* Toolbar */}
 				<div className="card-header p-2">
@@ -2626,6 +3291,36 @@ const MyTextArea = ({
 									aria-hidden={true}
 								/>
 							</button>
+							{/* Nesting only means something inside a list, so these follow
+                  the list state rather than a format toggle. */}
+							<button
+								type="button"
+								className="btn btn-outline-secondary btn-sm"
+								disabled={!inList}
+								onMouseDown={(e) => e.preventDefault()}
+								onClick={() => nestListItem(true)}
+								title="Move item out one level (Shift+Tab)"
+							>
+								<i
+									className="fa-solid fa-outdent align-middle"
+									aria-hidden={true}
+								/>
+								<span className="visually-hidden">Outdent list item</span>
+							</button>
+							<button
+								type="button"
+								className="btn btn-outline-secondary btn-sm"
+								disabled={!inList}
+								onMouseDown={(e) => e.preventDefault()}
+								onClick={() => nestListItem(false)}
+								title="Nest item under the one above (Tab)"
+							>
+								<i
+									className="fa-solid fa-indent align-middle"
+									aria-hidden={true}
+								/>
+								<span className="visually-hidden">Indent list item</span>
+							</button>
 						</div>
 						<span className="vr mx-1"></span>
 						<div
@@ -2766,7 +3461,11 @@ const MyTextArea = ({
 					</div>
 				</div>
 				{/* Editor surface */}
-				<div className="card-body p-0 position-relative" ref={wrapperRef}>
+				<div
+					className="card-body p-0 position-relative"
+					ref={wrapperRef}
+					onMouseLeave={hideBlockHandle}
+				>
 					<div
 						ref={editorRef}
 						id={id}
@@ -2779,6 +3478,7 @@ const MyTextArea = ({
 						aria-required={isRequired || undefined}
 						spellCheck
 						onClick={handleEditorClick}
+						onMouseMove={onEditorMouseMove}
 						onKeyDown={handleKeyDown}
 						onKeyUp={(e) => {
 							// Wrap/unwrap hashtags as the user types. The token under the
@@ -2796,6 +3496,7 @@ const MyTextArea = ({
 							}
 							saveSelection();
 							detectTable();
+							trackBlockHandleFromCaret();
 						}}
 						onMouseUp={() => {
 							// Clicking away from a half-typed tag completes it.
@@ -2839,6 +3540,69 @@ const MyTextArea = ({
 							/>
 							<input ref={filesFieldRef} type="hidden" name={name + "_files"} />
 						</>
+					)}
+					{/* Block handle: lives next to the contentEditable, never inside it,
+              so dragging a block only relocates the element already in the
+              content — no wrapper markup is added. */}
+					{blockHandle && (
+						<div
+							className="editor-block-handle"
+							style={{ top: blockHandle.top }}
+							role="group"
+							aria-label="Move block"
+						>
+							<button
+								type="button"
+								className="editor-block-btn"
+								title="Move block up"
+								disabled={blockHandle.first}
+								onMouseDown={(e) => e.preventDefault()}
+								onClick={() => moveHoveredBlock(-1)}
+							>
+								<i className="fa-solid fa-chevron-up" aria-hidden={true} />
+								<span className="visually-hidden">Move block up</span>
+							</button>
+							<button
+								type="button"
+								className="editor-block-btn editor-block-grip"
+								title="Drag to move this block"
+								aria-label="Drag to move this block, or use the arrow keys"
+								onMouseDown={(e) => e.preventDefault()}
+								onPointerDown={startBlockDrag}
+								onKeyDown={(e) => {
+									if (e.key === "ArrowUp") {
+										e.preventDefault();
+										moveHoveredBlock(-1);
+									} else if (e.key === "ArrowDown") {
+										e.preventDefault();
+										moveHoveredBlock(1);
+									} else if (e.key === "Escape") {
+										endBlockDrag(false);
+									}
+								}}
+							>
+								<i className="fa-solid fa-grip-vertical" aria-hidden={true} />
+							</button>
+							<button
+								type="button"
+								className="editor-block-btn"
+								title="Move block down"
+								disabled={blockHandle.last}
+								onMouseDown={(e) => e.preventDefault()}
+								onClick={() => moveHoveredBlock(1)}
+							>
+								<i className="fa-solid fa-chevron-down" aria-hidden={true} />
+								<span className="visually-hidden">Move block down</span>
+							</button>
+						</div>
+					)}
+					{/* Where the dragged block will land */}
+					{blockDrop && (
+						<div
+							className="editor-block-drop"
+							style={{ top: blockDrop.top }}
+							aria-hidden="true"
+						/>
 					)}
 					{/* @mention autocomplete dropdown */}
 					{mention && (
@@ -3826,9 +4590,15 @@ const MyTextArea = ({
 // ---- Small presentational helpers (Bootstrap markup, React state) -----------
 
 function BootstrapModal({ title, icon, size = "", onClose, children }) {
+	// Every caller passes an inline arrow, so depending on `onClose` directly
+	// would tear down and re-add the listener — and flicker `modal-open` off
+	// and on — on every parent render, which happens on each keystroke.
+	const onCloseRef = useRef(onClose);
+	onCloseRef.current = onClose;
+
 	useEffect(() => {
 		function onKey(e) {
-			if (e.key === "Escape") onClose();
+			if (e.key === "Escape") onCloseRef.current();
 		}
 		document.addEventListener("keydown", onKey);
 		document.body.classList.add("modal-open");
@@ -3836,7 +4606,7 @@ function BootstrapModal({ title, icon, size = "", onClose, children }) {
 			document.removeEventListener("keydown", onKey);
 			document.body.classList.remove("modal-open");
 		};
-	}, [onClose]);
+	}, []);
 
 	return (
 		<>
@@ -3884,23 +4654,78 @@ function ModalSpinner({ label }) {
 	);
 }
 
+// A library with hundreds of pages used to render one button per page, which
+// overflowed the modal footer and re-rendered the whole strip on every hop.
+// Only a window around the current page is drawn, with the first and last
+// always reachable and an ellipsis standing in for the gap.
 function Pagination({ page, totalPages, onPage, label }) {
-	const pages = [];
-	for (let p = 1; p <= totalPages; p++) pages.push(p);
+	const total = Math.max(1, Number(totalPages) || 1);
+	const current = Math.min(Math.max(1, Number(page) || 1), total);
+	// A single page needs no controls, but the footer is `justify-content-
+	// between`: without a first child the action buttons slide to the left.
+	if (total <= 1) return <span aria-hidden="true" />;
+
+	const span = 2;
+	const wanted = new Set([1, total]);
+	for (let p = current - span; p <= current + span; p++) {
+		if (p >= 1 && p <= total) wanted.add(p);
+	}
+	const shown = Array.from(wanted).sort((a, b) => a - b);
+
+	const items = [];
+	let previous = 0;
+	for (const p of shown) {
+		if (p - previous > 1) items.push({ gap: true, key: "gap-" + p });
+		items.push({ page: p, key: p });
+		previous = p;
+	}
+
 	return (
 		<nav aria-label={label}>
-			<ul className="pagination pagination-sm mb-0">
-				{pages.map((p) => (
-					<li key={p} className={"page-item" + (p === page ? " active" : "")}>
-						<button
-							type="button"
-							className="page-link"
-							onClick={() => onPage(p)}
+			<ul className="pagination pagination-sm mb-0 flex-wrap">
+				<li className={"page-item" + (current === 1 ? " disabled" : "")}>
+					<button
+						type="button"
+						className="page-link"
+						disabled={current === 1}
+						onClick={() => onPage(current - 1)}
+					>
+						<span aria-hidden="true">&lsaquo;</span>
+						<span className="visually-hidden">Previous page</span>
+					</button>
+				</li>
+				{items.map((item) =>
+					item.gap ? (
+						<li key={item.key} className="page-item disabled">
+							<span className="page-link">&hellip;</span>
+						</li>
+					) : (
+						<li
+							key={item.key}
+							className={"page-item" + (item.page === current ? " active" : "")}
 						>
-							{p}
-						</button>
-					</li>
-				))}
+							<button
+								type="button"
+								className="page-link"
+								aria-current={item.page === current ? "page" : undefined}
+								onClick={() => onPage(item.page)}
+							>
+								{item.page}
+							</button>
+						</li>
+					),
+				)}
+				<li className={"page-item" + (current === total ? " disabled" : "")}>
+					<button
+						type="button"
+						className="page-link"
+						disabled={current === total}
+						onClick={() => onPage(current + 1)}
+					>
+						<span aria-hidden="true">&rsaquo;</span>
+						<span className="visually-hidden">Next page</span>
+					</button>
+				</li>
 			</ul>
 		</nav>
 	);

@@ -6,21 +6,6 @@ import { fetchurl } from "@/helpers/setTokenOnServer";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
 
-const toId = (value) => {
-	if (!value) {
-		return "";
-	}
-	if (typeof value === "string" || typeof value === "number") {
-		return String(value);
-	}
-	return String(value._id || value.id || "");
-};
-
-const toMention = (value) =>
-	typeof value === "string" || typeof value === "number"
-		? { id: String(value), username: "" }
-		: { id: toId(value), username: value?.username || "" };
-
 const UpdateNewsletterEmailForm = ({
 	token = {},
 	auth = {},
@@ -37,20 +22,9 @@ const UpdateNewsletterEmailForm = ({
 		const form = e.target;
 		const formData = new FormData(form);
 
-		const text = formData.get("text") || "";
-		const mentions = JSON.parse(formData.get("text_users") || "[]");
-		const tags = JSON.parse(formData.get("text_hashtags") || "[]");
-
-		const bodyUnchanged = text === (object?.data?.text || "");
-
 		const rawFormData = {
 			recipients: formData.getAll("recipients"),
 			text: formData.get("text"),
-			mentions:
-				bodyUnchanged && !mentions.length
-					? (object?.data?.mentions || []).map(toMention)
-					: mentions,
-			tags: bodyUnchanged && !tags.length ? object?.data?.tags || [] : tags,
 			subject: formData.get("subject"),
 			status: formData.get("status"),
 		};

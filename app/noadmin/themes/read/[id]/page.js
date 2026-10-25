@@ -4,15 +4,15 @@ import showdown from "showdown";
 import base64 from "base-64";
 import ParseHtml from "@/layout/parseHtml";
 import { fetchurl, getAuthTokenOnServer } from "@/helpers/setTokenOnServer";
-import UseDropzone from "@/components/noadmin/themes/themedropzone";
-import Link from "next/link";
 import { getGlobalData } from "@/helpers/globalData";
+import ThemesMediaManager from "@/components/noadmin/themes/themesmediamanager";
 
 async function getTheme(params) {
 	const res = await fetchurl(`/global/themes${params}`, "GET", "no-cache");
 	if (!res.success) notFound();
 	return res;
 }
+
 async function getReadMe(repoName) {
 	const response = await fetch(
 		`https://api.github.com/repos/kirasiris/${repoName}/contents/README.md`,
@@ -102,47 +102,16 @@ const ReadTheme = async ({ params, searchParams }) => {
 								/>
 							</figure>
 						</div>
-						{theme?.data?.files?.extras.length > 0 && (
-							<div className="col">
-								<div className="card rounded-0">
-									<div className="card-header">Files</div>
-									<ul className="list-group list-group-flush">
-										{theme?.data?.files?.extras.map((file, index) => (
-											<li
-												key={file?._id}
-												className={`list-group-item ${file?._id}`}
-											>
-												<div className="float-start">
-													<Link
-														href={{
-															pathname: `/noadmin/files/update/${file?._id}`,
-															query: {},
-														}}
-													>
-														{file?.location?.filename}
-													</Link>
-													<div className="blog-item__meta">
-														<span className="badge bg-dark me-1">
-															{file?.location?.format_type}
-														</span>
-													</div>
-												</div>
-												<div className="float-end"></div>
-											</li>
-										))}
-									</ul>
-								</div>
-							</div>
-						)}
+						<div className="col">
+							<ThemesMediaManager
+								auth={auth}
+								token={token}
+								object={theme?.data}
+								objects={theme?.data?.files?.extras}
+								searchParams={awtdSearchParams}
+							/>
+						</div>
 					</div>
-					<UseDropzone
-						auth={auth}
-						token={token}
-						id="file"
-						name="file"
-						multipleFiles={true}
-						object={theme?.data}
-					/>
 					<section className="mb-5">
 						<ParseHtml text={theme.data.text} />
 						{theme.data.github_readme !== "#" ? (

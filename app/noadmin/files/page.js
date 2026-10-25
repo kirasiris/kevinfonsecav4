@@ -1,8 +1,7 @@
 import { revalidatePath } from "next/cache";
 import { fetchurl, getAuthTokenOnServer } from "@/helpers/setTokenOnServer";
-import AdminStatusesMenu from "@/components/noadmin/adminstatusesmenu";
 import { getGlobalData } from "@/helpers/globalData";
-import FilesWorkSpace from "@/components/noadmin/files/filesworkspace";
+import FilesManager from "@/components/noadmin/files/filesmanager";
 
 async function getFiles(params) {
 	const res = await fetchurl(`/global/files${params}`, "GET", "no-cache");
@@ -40,29 +39,22 @@ const AdminFilesIndex = async ({ params, searchParams }) => {
 	};
 
 	return (
-		<>
-			<AdminStatusesMenu
-				allLink="/noadmin/files"
-				publishedLink="/noadmin/files/images"
-				draftLink=""
-				scheduledLink="/noadmin/files/document"
-				trashedLink="/noadmin/files/videos"
-				categoriesLink="/noadmin/files/audios"
-				categoryType=""
-			/>
-			<FilesWorkSpace
-				auth={auth}
-				token={token}
-				onModel="Blog"
-				allLink="/noadmin/files"
-				pageText="Files"
-				searchOn="/noadmin/files"
-				objects={files}
-				searchParams={awtdSearchParams}
-				handleDeleteAllFunction={handleDeleteAllPermanently}
-				handleDeleteAllUnusedPermanently={handleDeleteAllUnusedPermanently}
-			/>
-		</>
+		<div className="row">
+			<div className="col-lg-12">
+				<FilesManager
+					auth={auth}
+					token={token}
+					onModel="Blog"
+					allLink="/noadmin/files"
+					pageText="Files"
+					searchOn="/noadmin/files"
+					objects={files}
+					searchParams={awtdSearchParams}
+					handleDeleteAllFunction={handleDeleteAllPermanently}
+					handleDeleteAllUnusedPermanently={handleDeleteAllUnusedPermanently}
+				/>
+			</div>
+		</div>
 	);
 };
 

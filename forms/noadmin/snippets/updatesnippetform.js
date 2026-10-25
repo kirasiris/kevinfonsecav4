@@ -8,21 +8,6 @@ import MyTextArea from "@/components/global/myfinaltextarea";
 import LiveCode from "@/components/noadmin/snippets/livecode";
 import FormButtons from "@/components/global/formbuttons";
 
-const toId = (value) => {
-	if (!value) {
-		return "";
-	}
-	if (typeof value === "string" || typeof value === "number") {
-		return String(value);
-	}
-	return String(value._id || value.id || "");
-};
-
-const toMention = (value) =>
-	typeof value === "string" || typeof value === "number"
-		? { id: String(value), username: "" }
-		: { id: toId(value), username: value?.username || "" };
-
 const UpdateSnippetForm = ({ object = {} }) => {
 	const router = useRouter();
 
@@ -35,7 +20,6 @@ const UpdateSnippetForm = ({ object = {} }) => {
 		const formData = new FormData(form);
 
 		const text = formData.get("text") || "";
-		const mentions = JSON.parse(formData.get("text_users") || "[]");
 		const tags = JSON.parse(formData.get("text_hashtags") || "[]");
 
 		const bodyUnchanged = text === (object?.data?.text || "");
@@ -43,10 +27,6 @@ const UpdateSnippetForm = ({ object = {} }) => {
 		const rawFormData = {
 			title: formData.get("title"),
 			text: formData.get("text"),
-			mentions:
-				bodyUnchanged && !mentions.length
-					? (object?.data?.mentions || []).map(toMention)
-					: mentions,
 			tags: bodyUnchanged && !tags.length ? object?.data?.tags || [] : tags,
 			html: formData.get("html"),
 			css: formData.get("css"),

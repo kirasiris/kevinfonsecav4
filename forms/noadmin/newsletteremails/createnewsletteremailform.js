@@ -20,8 +20,6 @@ const CreateNewsletterEmailForm = ({ token = {}, auth = {}, objects = [] }) => {
 		const rawFormData = {
 			recipients: formData.getAll("recipients"),
 			text: formData.get("text"),
-			mentions: JSON.parse(formData.get("text_users") || "[]"),
-			tags: JSON.parse(formData.get("text_hashtags") || "[]"),
 			subject: formData.get("subject"),
 			status: formData.get("status"),
 		};

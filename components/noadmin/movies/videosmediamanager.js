@@ -5,7 +5,10 @@ import { fetchurl } from "@/helpers/setTokenOnServer";
 import { formatFileSize } from "@/helpers/formatFileSize";
 import Single from "./videosingle";
 
-// This is for the retrieval of videos
+/* -------------------------------------------------------------------------- */
+/* List helpers                                                               */
+/* -------------------------------------------------------------------------- */
+
 const FILE_TYPE_MAP = {
 	image: {
 		label: "Image",
@@ -44,12 +47,11 @@ const classifyFile = (file) => {
 	if (FILE_TYPE_MAP[apiType]) {
 		return { type: apiType, ...FILE_TYPE_MAP[apiType] };
 	}
-
-	const filename = file?.location?.filename || "";
-	const ext = getExtension(filename);
+	const ext = getExtension(file?.location?.filename || "");
 	for (const key of Object.keys(FILE_TYPE_MAP)) {
-		if (FILE_TYPE_MAP[key].exts.includes(ext))
+		if (FILE_TYPE_MAP[key].exts.includes(ext)) {
 			return { type: key, ...FILE_TYPE_MAP[key] };
+		}
 	}
 	return {
 		type: "other",
@@ -62,7 +64,9 @@ const classifyFile = (file) => {
 const buildKey = (file, pageHint) =>
 	file?._id ||
 	file?.location?.public_id ||
-	`${file?.location?.filename || "file"}-${pageHint}-${Math.random().toString(36).slice(2)}`;
+	`${file?.location?.filename || "file"}-${pageHint}-${Math.random()
+		.toString(36)
+		.slice(2)}`;
 
 const seedFromObjects = (objects, pageHint, seenSet) => {
 	const rawList = Array.isArray(objects?.data) ? objects.data : [];
@@ -77,14 +81,56 @@ const seedFromObjects = (objects, pageHint, seenSet) => {
 	return result;
 };
 
-// This is to upload videos to server
+/* -------------------------------------------------------------------------- */
+/* Request helpers                                                            */
+/* -------------------------------------------------------------------------- */
+
+// fetchurl can reject (network drop, abort) or resolve to nothing; turn both
+// into the API's own error shape so every caller has a single path to check.
+const safeFetch = async (...args) => {
+	try {
+		const res = await fetchurl(...args);
+		return res || { status: "error", message: "No response from the server" };
+	} catch (err) {
+		return { status: "error", message: err?.message || "Network error" };
+	}
+};
+
+const isFailure = (res) =>
+	!res || res.status === "error" || res.status === "fail";
+
+// The API answers an empty list (or a page past the end) with a "fail", which
+// must be shown as "no files" rather than as an error.
+const isEmptyPage = (res) =>
+	res?.status === "fail" && /does not exist/i.test(res?.message || "");
+
+/* -------------------------------------------------------------------------- */
+/* Upload helpers                                                             */
+/* -------------------------------------------------------------------------- */
+
+const ACCEPTED_FILE_TYPES = "video/*";
+
+const isAcceptedFile = (file) => (file?.type || "").startsWith("video/");
+
 const generateId = () => Math.random().toString(36).slice(2, 9);
 
 const getFileType = (mimeType = "") => {
-	if (mimeType.startsWith("audio/")) return "audio";
-	if (mimeType.startsWith("video/")) return "video";
 	if (mimeType.startsWith("image/")) return "image";
+	if (mimeType.startsWith("audio/")) return "audio";
 	return "video";
+};
+
+const getMediaIcon = (type) => {
+	switch (type) {
+		case "audio":
+			return <i aria-hidden className="fa-solid fa-file-audio fa-xl" />;
+		case "video":
+			return <i aria-hidden className="fa-solid fa-file-video fa-xl" />;
+		case "image":
+			return <i aria-hidden className="fa-solid fa-file-image fa-xl" />;
+		default:
+			return <i aria-hidden className="fa-solid fa-file-pdf fa-xl" />;
+	}
 };
 
 const uploadFileToServer = (
@@ -113,41 +159,64 @@ const uploadFileToServer = (
 		});
 
 		xhr.addEventListener("load", async () => {
-			if (xhr.status >= 200 && xhr.status < 300) {
-				const parsed = JSON.parse(xhr.responseText);
-
-				await fetchurl(
-					`/noadmin/videos`,
-					"POST",
-					"no-cache",
-					{
-						resourceId: object?._id,
-						duration: "0:0",
-						status: "draft",
-						averageRating: 10,
-						onModel: "Playlist",
-						title: parsed?.data?.title,
-						text: "No description",
-						language: "english",
-						files: {
-							video_url: parsed?.data?._id,
-						},
-						embedding: false,
-						commented: false,
-					},
-					undefined,
-					false,
-					false,
-				);
-
-				resolve(parsed);
-			} else {
+			if (xhr.status < 200 || xhr.status >= 300) {
 				reject(
 					new Error(
 						`Upload failed with status ${xhr.status}: ${xhr.statusText}`,
 					),
 				);
+				return;
 			}
+			let parsed;
+			try {
+				parsed = JSON.parse(xhr.responseText);
+			} catch {
+				reject(
+					new Error("Upload finished but the server reply was not valid JSON"),
+				);
+				return;
+			}
+			if (parsed?.success === false) {
+				reject(new Error(parsed?.message || "Upload failed"));
+				return;
+			}
+
+			const record = await safeFetch(
+				`/noadmin/videos`,
+				"POST",
+				"no-cache",
+				{
+					resourceId: object?._id,
+					duration: "0:0",
+					status: "draft",
+					averageRating: 10,
+					onModel: "Playlist",
+					title: parsed?.data?.title,
+					text: "No description",
+					language: "english",
+					files: {
+						video_url: parsed?.data?._id,
+					},
+					embedding: false,
+					commented: false,
+				},
+				undefined,
+				false,
+				false,
+			);
+
+			// The file is already stored at this point; report the failure
+			// instead of listing an entry that has no record behind it.
+			if (isFailure(record)) {
+				reject(
+					new Error(
+						record?.message ||
+							"File uploaded, but its record could not be created",
+					),
+				);
+				return;
+			}
+			resolve({ file: parsed, record });
 		});
 
 		xhr.addEventListener("error", () =>
@@ -173,6 +242,10 @@ const uploadFileToServer = (
 	return { res, xhr };
 };
 
+/* -------------------------------------------------------------------------- */
+/* Component                                                                  */
+/* -------------------------------------------------------------------------- */
+
 const VideosMediaManager = ({
 	auth = {},
 	token = {},
@@ -180,6 +253,8 @@ const VideosMediaManager = ({
 	objects = [],
 	searchParams = {},
 }) => {
+	/* ------------------------------ Paging setup ---------------------------- */
+
 	const initialPage = useMemo(() => {
 		const fromSearch = Number(searchParams?.page);
 		if (Number.isFinite(fromSearch) && fromSearch > 0) {
@@ -189,7 +264,7 @@ const VideosMediaManager = ({
 		if (Number.isFinite(fromPayload) && fromPayload > 0) {
 			return fromPayload;
 		}
-		return 1; // Default page
+		return 1;
 	}, [searchParams?.page, objects?.pagination?.current]);
 
 	const limit = useMemo(() => {
@@ -201,28 +276,34 @@ const VideosMediaManager = ({
 		if (Number.isFinite(fromPayload) && fromPayload > 0) {
 			return fromPayload;
 		}
-		return 32; // Default limit
+		return 32;
 	}, [searchParams?.limit, objects?.pagination?.next?.limit]);
 
 	const sort = searchParams?.sort || "orderingNumber";
 	const prependNew = !sort || sort.startsWith("-");
+	const hasSsrPayload = Array.isArray(objects?.data);
 
-	// This is for the retrieval of videos
+	/* ------------------------------- List state ----------------------------- */
+
 	const seenKeysRef = useRef(null);
 	if (seenKeysRef.current === null) {
 		seenKeysRef.current = new Set();
 	}
-	const isFetchingRef = useRef(false);
+	const activeRequestRef = useRef(null);
+	const isMountedRef = useRef(false);
+	const sentinelRef = useRef(null);
 
 	const [newobjects, setNewObjects] = useState(() =>
 		seedFromObjects(objects, initialPage, seenKeysRef.current),
 	);
-	const [lastLoadedPage, setLastLoadedPage] = useState(initialPage);
-	const [totalResults, setTotalResults] = useState({
-		...objects,
-		countAll: typeof objects?.countAll === "number" ? objects.countAll : null,
-	});
-
+	// Without a payload nothing is loaded yet, so the first fetch (and its
+	// Retry) must request initialPage itself.
+	const [lastLoadedPage, setLastLoadedPage] = useState(
+		hasSsrPayload ? initialPage : initialPage - 1,
+	);
+	const [countAll, setCountAll] = useState(
+		typeof objects?.countAll === "number" ? objects.countAll : null,
+	);
 	const [hasMore, setHasMore] = useState(() => {
 		if (objects?.pagination?.next?.page) {
 			return true;
@@ -231,12 +312,10 @@ const VideosMediaManager = ({
 		if (Number.isFinite(total)) {
 			return initialPage < total;
 		}
-
-		// No SSR payload — assume there's more and let the first fetch tell us.
-		return !objects;
+		return !hasSsrPayload;
 	});
-	const [loading, setLoading] = useState(false);
-	const [error, setError] = useState(false);
+	const [loading, setLoading] = useState(!hasSsrPayload);
+	const [error, setError] = useState(null);
 	const [draftingKey, setDraftingKey] = useState(null);
 	const [publishingKey, setPublishingKey] = useState(null);
 	const [trashingKey, setTrashingKey] = useState(null);
@@ -245,76 +324,192 @@ const VideosMediaManager = ({
 	const [trashingAll, setTrashingAll] = useState(false);
 	const [deletingAll, setDeletingAll] = useState(false);
 
-	const sentinelRef = useRef(null);
+	/* ------------------------------ Upload state ---------------------------- */
 
-	const fetchPage = useCallback(
-		async (pageToLoad, signal) => {
-			if (isFetchingRef.current) {
-				return;
-			}
-			isFetchingRef.current = true;
-			setLoading(true);
-			setError(false);
+	const [files, setFiles] = useState([]);
+	const [isRecording, setIsRecording] = useState(false);
+	const [showCamera, setShowCamera] = useState(false);
+	const [showPermissionModal, setShowPermissionModal] = useState(false);
+	const [pendingMediaType, setPendingMediaType] = useState(null);
+	const [permissions, setPermissions] = useState({ video: false });
 
-			const res = await fetchurl(
-				`/global/videos?resourceId=${object?._id}&page=${pageToLoad}&limit=${limit}&sort=${sort}`,
-				"GET",
-				"no-cache",
-				{},
-				// Never pass an AbortSignal here: fetchurl is a Server Action, and the
-				// signal arrives on the server as an opaque reference it cannot read.
-				undefined,
-				false,
-				false,
-			);
-			if (!res.success) {
-				setError(true);
-				toast.error("Failed to retrieve videos");
-			}
+	const fileInputRef = useRef(null);
+	const videoPreviewRef = useRef(null);
+	const mediaRecorderRef = useRef(null);
+	const streamRef = useRef(null);
+	const chunksRef = useRef([]);
+	const mediaElementsRef = useRef(new Map());
+	const uploadsRef = useRef([]);
+	const uploadXhrsRef = useRef(new Map());
+	// Every object URL created here, so unmount can revoke them all — including
+	// ones created in the same tick as the unmount, before uploadsRef caught up.
+	const objectUrlsRef = useRef(new Set());
+	// Object URLs the saved list is displaying (the server sent no location).
+	// Removing the tray card must not revoke these.
+	const keptUrlsRef = useRef(new Set());
+	const startingMediaRef = useRef(false);
 
-			const rawList = Array.isArray(res?.data) ? res.data : [];
-			const fresh = [];
-			for (const file of rawList) {
-				const key = buildKey(file, pageToLoad);
-				if (!seenKeysRef.current.has(key)) {
-					seenKeysRef.current.add(key);
-					fresh.push({ ...file, __key: key });
-				}
-			}
+	const pendingUploads = files.filter((f) => !f.uploadError);
+	const hasStoredVideo = newobjects.length > 0;
+	const uploadBlockedMessage = hasStoredVideo
+		? "Only one video is allowed. Permanently delete the stored video before uploading a new one."
+		: pendingUploads.length > 0
+			? "A video is already being uploaded. Wait for it to finish, or remove it, before adding another."
+			: "";
+	// Kept in a ref so callbacks created earlier (e.g. MediaRecorder.onstop)
+	// still check the latest state rather than the one from their render.
+	const uploadBlockedRef = useRef(uploadBlockedMessage);
+	uploadBlockedRef.current = uploadBlockedMessage;
 
-			if (fresh.length > 0) {
-				setNewObjects((prev) => [...prev, ...fresh]);
-			}
-			if (typeof res?.countAll === "number") {
-				setTotalResults({ countAll: res.countAll });
-			}
-
-			const nextPage = res?.pagination?.next?.page;
-			const totalPages = Number(res?.pagination?.totalpages);
-
-			if (nextPage) {
-				setHasMore(true);
-			} else if (Number.isFinite(totalPages)) {
-				setHasMore(pageToLoad < totalPages);
-			} else {
-				setHasMore(rawList.length >= limit);
-			}
-
-			setLastLoadedPage(pageToLoad);
-			isFetchingRef.current = false;
-			setLoading(false);
-		},
-		[limit, sort],
-	);
+	/* -------------------------------- Lifecycle ----------------------------- */
 
 	useEffect(() => {
-		if (objects) {
+		uploadsRef.current = files;
+	}, [files]);
+
+	useEffect(() => {
+		// Strict Mode runs this cleanup on its fake unmount, so the flag has to
+		// be set back to true on every setup.
+		isMountedRef.current = true;
+		const activeRequest = activeRequestRef;
+		const recorder = mediaRecorderRef;
+		const stream = streamRef;
+		const xhrs = uploadXhrsRef;
+		const objectUrls = objectUrlsRef;
+		const keptUrls = keptUrlsRef;
+		const mediaElements = mediaElementsRef;
+		return () => {
+			isMountedRef.current = false;
+			activeRequest.current?.abort();
+			activeRequest.current = null;
+			// Detach first: stopping a live recorder fires onstop, which would
+			// otherwise start a new upload after the component is gone.
+			const rec = recorder.current;
+			if (rec) {
+				rec.ondataavailable = null;
+				rec.onstop = null;
+				if (rec.state !== "inactive") rec.stop();
+			}
+			recorder.current = null;
+			stream.current?.getTracks().forEach((track) => track.stop());
+			stream.current = null;
+			xhrs.current.forEach((xhr) => xhr.abort());
+			xhrs.current.clear();
+			objectUrls.current.forEach((url) => URL.revokeObjectURL(url));
+			objectUrls.current.clear();
+			keptUrls.current.clear();
+			mediaElements.current.clear();
+		};
+	}, []);
+
+	/* ------------------------------- Object URLs ---------------------------- */
+
+	const createObjectUrl = useCallback((blob) => {
+		const url = URL.createObjectURL(blob);
+		objectUrlsRef.current.add(url);
+		return url;
+	}, []);
+
+	const revokeObjectUrl = useCallback((url) => {
+		if (!url || keptUrlsRef.current.has(url)) {
 			return;
 		}
-		const controller = new AbortController();
-		fetchPage(initialPage, controller.signal);
-		return () => controller.abort();
-	}, [objects, initialPage, fetchPage]);
+		URL.revokeObjectURL(url);
+		objectUrlsRef.current.delete(url);
+	}, []);
+
+	/* ---------------------------- List data loading ------------------------- */
+
+	const fetchPage = useCallback(
+		async (pageToLoad) => {
+			if (activeRequestRef.current) {
+				return;
+			}
+			const controller = new AbortController();
+			activeRequestRef.current = controller;
+			setLoading(true);
+			setError(null);
+
+			try {
+				const res = await safeFetch(
+					`/global/videos?resourceId=${object?._id}&page=${pageToLoad}&limit=${limit}&sort=${sort}`,
+					"GET",
+					"no-cache",
+					{},
+					// Never pass an AbortSignal here: fetchurl is a Server Action, and the
+					// signal arrives on the server as an opaque reference it cannot read.
+					undefined,
+					false,
+					false,
+				);
+				if (controller.signal.aborted) {
+					return;
+				}
+				if (isEmptyPage(res)) {
+					setHasMore(false);
+					setLastLoadedPage(pageToLoad);
+					return;
+				}
+				if (!res?.success) {
+					// lastLoadedPage is left alone so Retry requests this same page.
+					const message = res?.message || "Failed to retrieve videos";
+					setError(message);
+					toast.error(message);
+					return;
+				}
+
+				const rawList = Array.isArray(res?.data) ? res.data : [];
+				const fresh = [];
+				for (const file of rawList) {
+					const key = buildKey(file, pageToLoad);
+					if (!seenKeysRef.current.has(key)) {
+						seenKeysRef.current.add(key);
+						fresh.push({ ...file, __key: key });
+					}
+				}
+				if (fresh.length > 0) {
+					setNewObjects((prev) => [...prev, ...fresh]);
+				}
+				if (typeof res?.countAll === "number") {
+					setCountAll(res.countAll);
+				}
+
+				const nextPage = res?.pagination?.next?.page;
+				const totalPages = Number(res?.pagination?.totalpages);
+				if (nextPage) {
+					setHasMore(true);
+				} else if (Number.isFinite(totalPages)) {
+					setHasMore(pageToLoad < totalPages);
+				} else {
+					setHasMore(rawList.length >= limit);
+				}
+
+				setLastLoadedPage(pageToLoad);
+			} finally {
+				if (activeRequestRef.current === controller) {
+					activeRequestRef.current = null;
+					setLoading(false);
+				}
+			}
+		},
+		[object?._id, limit, sort],
+	);
+
+	// Clearing the ref here (not in fetchPage's finally, which runs later) lets
+	// a Strict Mode remount start its own fetch instead of being skipped.
+	const abortActiveFetch = useCallback(() => {
+		activeRequestRef.current?.abort();
+		activeRequestRef.current = null;
+		setLoading(false);
+	}, []);
+
+	useEffect(() => {
+		if (hasSsrPayload) {
+			return;
+		}
+		fetchPage(initialPage);
+		return abortActiveFetch;
+	}, [hasSsrPayload, initialPage, fetchPage, abortActiveFetch]);
 
 	useEffect(() => {
 		if (!hasMore || error) {
@@ -326,8 +521,7 @@ const VideosMediaManager = ({
 		}
 		const observer = new IntersectionObserver(
 			(entries) => {
-				const entry = entries[0];
-				if (entry.isIntersecting && !isFetchingRef.current && hasMore) {
+				if (entries[0]?.isIntersecting && !activeRequestRef.current) {
 					fetchPage(lastLoadedPage + 1);
 				}
 			},
@@ -337,13 +531,20 @@ const VideosMediaManager = ({
 		return () => observer.disconnect();
 	}, [lastLoadedPage, hasMore, error, fetchPage]);
 
+	const handleRetry = useCallback(() => {
+		setError(null);
+		fetchPage(lastLoadedPage + 1);
+	}, [fetchPage, lastLoadedPage]);
+
+	/* ------------------------------- Row actions ---------------------------- */
+
 	const handleDraftIt = useCallback(async (item) => {
 		if (!item?._id) {
 			return;
 		}
 		setDraftingKey(item.__key);
-		const res = await fetchurl(
-			`/noadmin/videos/${item?._id}/draftit`,
+		const res = await safeFetch(
+			`/noadmin/videos/${item._id}/draftit`,
 			"PUT",
 			"no-cache",
 			{},
@@ -351,18 +552,15 @@ const VideosMediaManager = ({
 			false,
 			false,
 		);
-		if (res.status === "error") {
-			toast.error(res.message);
-			setDraftingKey(null);
+		if (!isMountedRef.current) {
 			return;
 		}
-		if (res.status === "fail") {
-			toast.error(res.message);
+		if (isFailure(res)) {
+			toast.error(res?.message || "Could not draft the video");
 			setDraftingKey(null);
 			return;
 		}
 		toast.success("Video drafted");
-		// Reflect the new status in local state so the badge updates immediately.
 		setNewObjects((prev) =>
 			prev.map((f) => (f.__key === item.__key ? { ...f, status: "draft" } : f)),
 		);
@@ -374,8 +572,8 @@ const VideosMediaManager = ({
 			return;
 		}
 		setPublishingKey(item.__key);
-		const res = await fetchurl(
-			`/noadmin/videos/${item?._id}/publishit`,
+		const res = await safeFetch(
+			`/noadmin/videos/${item._id}/publishit`,
 			"PUT",
 			"no-cache",
 			{},
@@ -383,18 +581,15 @@ const VideosMediaManager = ({
 			false,
 			false,
 		);
-		if (res.status === "error") {
-			toast.error(res.message);
-			setPublishingKey(null);
+		if (!isMountedRef.current) {
 			return;
 		}
-		if (res.status === "fail") {
-			toast.error(res.message);
+		if (isFailure(res)) {
+			toast.error(res?.message || "Could not publish the video");
 			setPublishingKey(null);
 			return;
 		}
 		toast.success("Video published");
-		// Reflect the new status in local state so the badge updates immediately.
 		setNewObjects((prev) =>
 			prev.map((f) =>
 				f.__key === item.__key ? { ...f, status: "published" } : f,
@@ -408,8 +603,8 @@ const VideosMediaManager = ({
 			return;
 		}
 		setTrashingKey(item.__key);
-		const res = await fetchurl(
-			`/noadmin/videos/${item?._id}/trashit`,
+		const res = await safeFetch(
+			`/noadmin/videos/${item._id}/trashit`,
 			"PUT",
 			"no-cache",
 			{},
@@ -417,18 +612,15 @@ const VideosMediaManager = ({
 			false,
 			false,
 		);
-		if (res.status === "error") {
-			toast.error(res.message);
-			setTrashingKey(null);
+		if (!isMountedRef.current) {
 			return;
 		}
-		if (res.status === "fail") {
-			toast.error(res.message);
+		if (isFailure(res)) {
+			toast.error(res?.message || "Could not trash the video");
 			setTrashingKey(null);
 			return;
 		}
 		toast.success("Video trashed");
-		// Reflect the new status in local state so the badge updates immediately.
 		setNewObjects((prev) =>
 			prev.map((f) => (f.__key === item.__key ? { ...f, status: "trash" } : f)),
 		);
@@ -440,8 +632,8 @@ const VideosMediaManager = ({
 			return;
 		}
 		setSchedulingKey(item.__key);
-		const res = await fetchurl(
-			`/noadmin/videos/${item?._id}/scheduleit`,
+		const res = await safeFetch(
+			`/noadmin/videos/${item._id}/scheduleit`,
 			"PUT",
 			"no-cache",
 			{},
@@ -449,18 +641,15 @@ const VideosMediaManager = ({
 			false,
 			false,
 		);
-		if (res.status === "error") {
-			toast.error(res.message);
-			setSchedulingKey(null);
+		if (!isMountedRef.current) {
 			return;
 		}
-		if (res.status === "fail") {
-			toast.error(res.message);
+		if (isFailure(res)) {
+			toast.error(res?.message || "Could not schedule the video");
 			setSchedulingKey(null);
 			return;
 		}
 		toast.success("Video scheduled");
-		// Reflect the new status in local state so the badge updates immediately.
 		setNewObjects((prev) =>
 			prev.map((f) =>
 				f.__key === item.__key ? { ...f, status: "scheduled" } : f,
@@ -474,8 +663,8 @@ const VideosMediaManager = ({
 			return;
 		}
 		setDeletingKey(item.__key);
-		const res = await fetchurl(
-			`/noadmin/videos/${item?._id}/permanently`,
+		const res = await safeFetch(
+			`/noadmin/videos/${item._id}/permanently`,
 			"DELETE",
 			"no-cache",
 			{},
@@ -483,51 +672,47 @@ const VideosMediaManager = ({
 			false,
 			false,
 		);
-		if (res.status === "error") {
-			toast.error(res.message);
-			setDeletingKey(null);
+		if (!isMountedRef.current) {
 			return;
 		}
-		if (res.status === "fail") {
-			toast.error(res.message);
+		if (isFailure(res)) {
+			toast.error(res?.message || "Could not delete the video");
 			setDeletingKey(null);
 			return;
 		}
 		toast.success("Video deleted");
 		setNewObjects((prev) => prev.filter((f) => f.__key !== item.__key));
 		seenKeysRef.current.delete(item.__key);
-		setTotalResults((t) =>
-			typeof t?.countAll === "number"
-				? { ...t, countAll: Math.max(0, t.countAll - 1) }
-				: t,
+		setCountAll((prev) =>
+			typeof prev === "number" ? Math.max(0, prev - 1) : prev,
 		);
 		setDeletingKey(null);
 	}, []);
 
+	/* ------------------------------ Bulk actions ---------------------------- */
+
 	const handleTrashAll = async () => {
 		setTrashingAll(true);
-		const res = await fetchurl(
+		const res = await safeFetch(
 			`/noadmin/videos/deleteall`,
 			"PUT",
 			"no-cache",
 			{
 				onModel: "Playlist",
+				resourceId: object?._id,
 			},
 			undefined,
 			false,
 			false,
 		);
-		if (res.status === "error") {
-			toast.error(res.message);
+		if (!isMountedRef.current) {
+			return;
+		}
+		if (isFailure(res)) {
+			toast.error(res?.message || "Could not trash all videos");
 			setTrashingAll(false);
 			return;
 		}
-		if (res.status === "fail") {
-			toast.error(res.message);
-			setTrashingAll(false);
-			return;
-		}
-		// Move every object to trash in local state so the badges update.
 		setNewObjects((prev) => prev.map((f) => ({ ...f, status: "trash" })));
 		toast.success("All videos trashed");
 		setTrashingAll(false);
@@ -535,28 +720,34 @@ const VideosMediaManager = ({
 
 	const handleDeleteAll = async () => {
 		setDeletingAll(true);
-		await fetchurl(
+		const res = await safeFetch(
 			`/noadmin/videos/deleteall/permanently`,
 			"DELETE",
 			"no-cache",
 			{
 				onModel: "Playlist",
+				resourceId: object?._id,
 			},
 			undefined,
 			false,
 			false,
 		);
+		if (!isMountedRef.current) {
+			return;
+		}
+		if (isFailure(res)) {
+			toast.error(res?.message || "Could not delete all videos");
+			setDeletingAll(false);
+			return;
+		}
 		setNewObjects([]);
 		seenKeysRef.current.clear();
-		setTotalResults((t) => (typeof t === "number" ? 0 : { ...t, countAll: 0 }));
+		setCountAll(0);
 		toast.success("All videos deleted");
 		setDeletingAll(false);
 	};
 
-	const handleRetry = useCallback(() => {
-		setError(null);
-		fetchPage(lastLoadedPage + 1);
-	}, [fetchPage, lastLoadedPage]);
+	/* ------------------------------- Derived list --------------------------- */
 
 	const items = useMemo(
 		() =>
@@ -571,54 +762,7 @@ const VideosMediaManager = ({
 		[newobjects],
 	);
 
-	// This is for song manager
-	const [files, setFiles] = useState([]);
-	const [isRecording, setIsRecording] = useState(false);
-	const [recordingType, setRecordingType] = useState(null);
-	const [showCamera, setShowCamera] = useState(false);
-	const [showPermissionModal, setShowPermissionModal] = useState(false);
-	const [pendingMediaType, setPendingMediaType] = useState(null);
-	const [permissions, setPermissions] = useState({
-		video: false,
-		audio: false,
-	});
-	const fileInputRef = useRef(null);
-	const videoPreviewRef = useRef(null);
-	const mediaRecorderRef = useRef(null);
-	const streamRef = useRef(null);
-	const chunksRef = useRef([]);
-	const mediaElementsRef = useRef(new Map());
-	const waveformRef = useRef(null);
-	const audioContextRef = useRef(null);
-	const analyserRef = useRef(null);
-	const animationFrameRef = useRef(null);
-	const uploadsRef = useRef([]);
-	const uploadXhrsRef = useRef(new Map());
-
-	useEffect(() => {
-		uploadsRef.current = files;
-	}, [files]);
-
-	const pendingUploads = files.filter((f) => !f.uploadError);
-	const hasStoredVideo = newobjects.length > 0;
-	const uploadBlockedMessage = hasStoredVideo
-		? "Only one video is allowed. Permanently delete the stored video before uploading a new one."
-		: pendingUploads.length > 0
-			? "A video is already being uploaded. Wait for it to finish, or remove it, before adding another."
-			: "";
-
-	// Kept in a ref so callbacks created earlier (e.g. MediaRecorder.onstop)
-	// still check the latest state rather than the one from their render.
-	const uploadBlockedRef = useRef(uploadBlockedMessage);
-	uploadBlockedRef.current = uploadBlockedMessage;
-
-	const ensureCanUpload = () => {
-		if (uploadBlockedRef.current) {
-			toast.error(uploadBlockedRef.current);
-			return false;
-		}
-		return true;
-	};
+	/* ------------------------------ Media elements -------------------------- */
 
 	const pauseAllMedia = (exceptId) => {
 		mediaElementsRef.current.forEach((element, id) => {
@@ -636,7 +780,16 @@ const VideosMediaManager = ({
 		}
 	};
 
-	/* ---------------------- Insert uploaded file into list ---------------- */
+	/* -------------------------------- Uploading ----------------------------- */
+
+	const ensureCanUpload = () => {
+		if (uploadBlockedRef.current) {
+			toast.error(uploadBlockedRef.current);
+			return false;
+		}
+		return true;
+	};
+
 	const insertUploadedFile = useCallback(
 		(file) => {
 			const key = buildKey(file, "upload");
@@ -648,20 +801,19 @@ const VideosMediaManager = ({
 			setNewObjects((prev) =>
 				prependNew ? [entry, ...prev] : [...prev, entry],
 			);
-			setTotalResults((t) =>
-				typeof t?.countAll === "number"
-					? { ...t, countAll: t.countAll + 1 }
-					: t,
-			);
+			setCountAll((prev) => (typeof prev === "number" ? prev + 1 : prev));
 		},
 		[prependNew],
 	);
 
-	/* ----------------------------- Uploading ------------------------------ */
 	const addAndUploadFile = useCallback(
-		async (fileObj) => {
+		(fileObj) => {
+			if (!isMountedRef.current) {
+				revokeObjectUrl(fileObj.url);
+				return;
+			}
 			if (uploadBlockedRef.current) {
-				URL.revokeObjectURL(fileObj.url);
+				revokeObjectUrl(fileObj.url);
 				toast.error(uploadBlockedRef.current);
 				return;
 			}
@@ -670,17 +822,19 @@ const VideosMediaManager = ({
 				"A video is already being uploaded. Wait for it to finish, or remove it, before adding another.";
 
 			// A failed attempt is replaced by the new one, so only one card remains.
-			setFiles((prev) => {
-				prev.forEach((f) => URL.revokeObjectURL(f.url));
-				return [
-					{ ...fileObj, uploading: true, progress: 0, uploadError: null },
-				];
+			uploadsRef.current.forEach((f) => {
+				mediaElementsRef.current.delete(f.id);
+				revokeObjectUrl(f.url);
 			});
+			setFiles([
+				{ ...fileObj, uploading: true, progress: 0, uploadError: null },
+			]);
 
 			const { res, xhr } = uploadFileToServer(
 				fileObj.blob,
 				fileObj.name,
 				(progress) => {
+					if (!isMountedRef.current) return;
 					setFiles((prev) =>
 						prev.map((f) => (f.id === fileObj.id ? { ...f, progress } : f)),
 					);
@@ -693,30 +847,37 @@ const VideosMediaManager = ({
 			uploadXhrsRef.current.set(fileObj.id, xhr);
 
 			res
-				.then((response) => {
-					setFiles((prev) => {
-						const done = prev.find((f) => f.id === fileObj.id);
-						if (done) {
-							URL.revokeObjectURL(done.url);
-						}
-						return prev.filter((f) => f.id !== fileObj.id);
-					});
-
-					const serverObj = response?.data || response || {};
+				.then(({ file: uploaded, record }) => {
+					if (!isMountedRef.current) {
+						return;
+					}
+					const serverObj = uploaded?.data || uploaded || {};
 					const loc = serverObj.location || {};
+					const recordData = record?.data || {};
+					// With no remote URL the list keeps showing the local preview, so
+					// that URL has to outlive the tray card.
+					if (loc.secure_location) {
+						revokeObjectUrl(fileObj.url);
+					} else {
+						keptUrlsRef.current.add(fileObj.url);
+					}
+					mediaElementsRef.current.delete(fileObj.id);
+					setFiles((prev) => prev.filter((f) => f.id !== fileObj.id));
 
 					const rawFormat =
 						typeof serverObj.format_type === "string"
 							? serverObj.format_type.toLowerCase()
 							: "";
-
 					const normalizedType = ["audio", "video", "image"].includes(rawFormat)
 						? rawFormat
 						: fileObj.type;
 
 					insertUploadedFile({
-						_id: serverObj._id,
-						title: serverObj.title || fileObj.title,
+						// The record's id, not the file's: the row actions call
+						// /noadmin/videos/:id, which expects the record.
+						_id: recordData._id,
+						status: recordData.status || "draft",
+						title: recordData.title || serverObj.title || fileObj.name,
 						createdAt: serverObj.createdAt || new Date().toISOString(),
 						files: {
 							video_url: {
@@ -734,11 +895,11 @@ const VideosMediaManager = ({
 							},
 						},
 						language: "english",
-						album: serverObj.album || fileObj.album,
+						album: serverObj.album,
 					});
 				})
 				.catch((err) => {
-					if (err?.name === "AbortError") {
+					if (err?.name === "AbortError" || !isMountedRef.current) {
 						return;
 					}
 					setFiles((prev) =>
@@ -757,27 +918,33 @@ const VideosMediaManager = ({
 					uploadXhrsRef.current.delete(fileObj.id);
 				});
 		},
-		[insertUploadedFile],
+		[insertUploadedFile, revokeObjectUrl, auth, token, object],
 	);
 
 	const handleFileUpload = (e) => {
-		const file = e.target.files?.[0];
+		// Copied before the input is reset, which empties its FileList.
+		const selected = Array.from(e.target.files || []);
 		if (fileInputRef.current) {
 			fileInputRef.current.value = "";
 		}
+		const file = selected[0];
 		if (!file || !ensureCanUpload()) {
 			return;
 		}
-		if (e.target.files.length > 1) {
+		if (!isAcceptedFile(file)) {
+			toast.error("Only video files can be uploaded here.");
+			return;
+		}
+		if (selected.length > 1) {
 			toast.info(
 				"Only one video can be uploaded. Using the first one selected.",
 			);
 		}
-		const blob = new Blob([file], { type: file.type });
+		// A File already is a Blob, so it is uploaded as-is.
 		addAndUploadFile({
 			id: generateId(),
-			blob,
-			url: URL.createObjectURL(blob),
+			blob: file,
+			url: createObjectUrl(file),
 			name: file.name,
 			type: getFileType(file.type),
 			size: file.size,
@@ -797,27 +964,22 @@ const VideosMediaManager = ({
 			xhr.abort();
 			uploadXhrsRef.current.delete(id);
 		}
-		// Drop any associated media element reference.
 		mediaElementsRef.current.delete(id);
-
-		setFiles((prev) => {
-			const fileToRemove = prev.find((f) => f.id === id);
-			if (fileToRemove) {
-				URL.revokeObjectURL(fileToRemove.url);
-			}
-			return prev.filter((f) => f.id !== id);
-		});
+		// Revoked outside the state updater: updaters must stay pure (Strict Mode
+		// runs them twice).
+		const fileToRemove = uploadsRef.current.find((f) => f.id === id);
+		if (fileToRemove) {
+			revokeObjectUrl(fileToRemove.url);
+		}
+		setFiles((prev) => prev.filter((f) => f.id !== id));
 	};
 
+	/* ------------------------------- Permissions ---------------------------- */
+
 	const grantAndStart = async (type) => {
-		const ok = await startCamera(type);
+		const ok = await startMediaStream(type);
 		if (ok) {
-			// Camera implies audio too (constraints include audio: true)
-			setPermissions((prev) =>
-				type === "video"
-					? { video: true, audio: true }
-					: { ...prev, audio: true },
-			);
+			setPermissions((prev) => ({ ...prev, [type]: true }));
 		}
 		return ok;
 	};
@@ -826,20 +988,17 @@ const VideosMediaManager = ({
 		if (!ensureCanUpload()) {
 			return;
 		}
-		// Skip the modal if we've already been granted permission this session.
+		// Skip the modal if permission was already granted this session.
 		if (permissions[type]) {
-			startCamera(type);
+			startMediaStream(type);
 			return;
 		}
-		// The in-memory `permissions` flag resets on reload/remount, but the
-		// browser persists the actual grant. Query the Permissions API so we
-		// don't re-prompt for access the user already approved.
+		// The in-memory flag resets on remount, but the browser persists the
+		// grant. Query the Permissions API so an approved user isn't re-prompted.
 		try {
 			if (navigator.permissions?.query) {
-				const names =
-					type === "video" ? ["camera", "microphone"] : ["microphone"];
 				const states = await Promise.all(
-					names.map((name) =>
+					["camera", "microphone"].map((name) =>
 						navigator.permissions
 							.query({ name })
 							.then((status) => status.state)
@@ -854,6 +1013,9 @@ const VideosMediaManager = ({
 		} catch {
 			// Permissions API unsupported for these names — fall back to the modal.
 		}
+		if (!isMountedRef.current) {
+			return;
+		}
 		setPendingMediaType(type);
 		setShowPermissionModal(true);
 	};
@@ -861,6 +1023,7 @@ const VideosMediaManager = ({
 	const handlePermissionGranted = async () => {
 		const type = pendingMediaType;
 		setShowPermissionModal(false);
+		setPendingMediaType(null);
 		if (!type) {
 			return;
 		}
@@ -872,157 +1035,60 @@ const VideosMediaManager = ({
 		setPendingMediaType(null);
 	};
 
-	const startCamera = async (type) => {
+	/* --------------------------------- Capture ------------------------------ */
+
+	const startMediaStream = async (type) => {
+		// Two quick clicks would otherwise open two streams, and the first one
+		// would keep the camera light on with nothing left to stop it.
+		if (startingMediaRef.current || streamRef.current) {
+			return false;
+		}
+		startingMediaRef.current = true;
 		try {
-			const constraints =
-				type === "video" ? { video: true, audio: true } : { audio: true };
-			const stream = await navigator.mediaDevices.getUserMedia(constraints);
-			streamRef.current = stream;
-			if (type === "video") {
-				setShowCamera(true);
-				setRecordingType(type);
-			} else {
-				setRecordingType(type);
-				setupAudioVisualization(stream);
+			const stream = await navigator.mediaDevices.getUserMedia({
+				video: true,
+				audio: true,
+			});
+			// The user may have left the page while the browser prompt was open.
+			if (!isMountedRef.current) {
+				stream.getTracks().forEach((track) => track.stop());
+				return false;
 			}
+			streamRef.current = stream;
+			setShowCamera(true);
 			return true;
 		} catch (err) {
 			console.error("Error accessing media devices:", err);
 			toast.error(
-				"Could not access camera/microphone. Please check your browser permission settings.",
+				"Could not access the camera. Please check your browser permission settings.",
 			);
-			// If the browser denied us, clear the cached permission flag.
-			setPermissions((prev) =>
-				type === "video"
-					? { video: false, audio: false }
-					: { ...prev, audio: false },
-			);
+			setPermissions((prev) => ({ ...prev, [type]: false }));
 			return false;
+		} finally {
+			startingMediaRef.current = false;
 		}
-	};
-
-	const setupAudioVisualization = (stream) => {
-		const AudioCtx = window.AudioContext || window.webkitAudioContext;
-		if (!AudioCtx) {
-			return;
-		}
-
-		const audioContext = new AudioCtx();
-		audioContextRef.current = audioContext;
-
-		const analyser = audioContext.createAnalyser();
-		analyser.fftSize = 256;
-		analyserRef.current = analyser;
-
-		const source = audioContext.createMediaStreamSource(stream);
-		source.connect(analyser);
 	};
 
 	useEffect(() => {
-		if (recordingType !== "audio" || showCamera) {
-			return;
+		const preview = videoPreviewRef.current;
+		if (showCamera && streamRef.current && preview) {
+			preview.srcObject = streamRef.current;
 		}
-		if (!waveformRef.current || !analyserRef.current) {
-			return;
-		}
-
-		const analyser = analyserRef.current;
-		const bufferLength = analyser.frequencyBinCount;
-		const dataArray = new Uint8Array(bufferLength);
-
-		const container = waveformRef.current;
-		const canvas = document.createElement("canvas");
-		canvas.width = container.offsetWidth || 500;
-		canvas.height = 80;
-		canvas.style.width = "100%";
-		canvas.style.height = "80px";
-		container.innerHTML = "";
-		container.appendChild(canvas);
-
-		const ctx = canvas.getContext("2d");
-		if (!ctx) {
-			return;
-		}
-
-		const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-		gradient.addColorStop(0, "#dc3545");
-		gradient.addColorStop(1, "#ffc107");
-
-		const draw = () => {
-			animationFrameRef.current = requestAnimationFrame(draw);
-			analyser.getByteFrequencyData(dataArray);
-
-			ctx.fillStyle = "#6c757d";
-			ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-			const barWidth = (canvas.width / bufferLength) * 2.5;
-			let x = 0;
-			for (let i = 0; i < bufferLength; i++) {
-				const barHeight = (dataArray[i] / 255) * canvas.height;
-				ctx.fillStyle = gradient;
-				ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
-				x += barWidth + 1;
-			}
-		};
-
-		draw();
-
 		return () => {
-			if (animationFrameRef.current) {
-				cancelAnimationFrame(animationFrameRef.current);
-				animationFrameRef.current = null;
-			}
-			if (container) {
-				container.innerHTML = "";
-			}
+			if (preview) preview.srcObject = null;
 		};
-	}, [recordingType, showCamera]);
-
-	const stopAudioVisualization = () => {
-		if (animationFrameRef.current) {
-			cancelAnimationFrame(animationFrameRef.current);
-			animationFrameRef.current = null;
-		}
-		if (audioContextRef.current) {
-			audioContextRef.current.close().catch(() => {});
-			audioContextRef.current = null;
-		}
-		analyserRef.current = null;
-		if (waveformRef.current) {
-			waveformRef.current.innerHTML = "";
-		}
-	};
-
-	useEffect(() => {
-		if (showCamera && streamRef.current && videoPreviewRef.current) {
-			videoPreviewRef.current.srcObject = streamRef.current;
-		}
 	}, [showCamera]);
 
-	/* ------------------------- Unmount cleanup ---------------------------- */
-	useEffect(() => {
-		// Snapshot the refs at effect-setup time so the cleanup function doesn't
-		// close over the refs after they may have been re-assigned.
-		const animFrame = animationFrameRef;
-		const audioCtx = audioContextRef;
-		const stream = streamRef;
-		const uploadsSnap = uploadsRef;
-		const uploadsXhr = uploadXhrsRef;
-		return () => {
-			if (animFrame.current) cancelAnimationFrame(animFrame.current);
-			if (audioCtx.current) audioCtx.current.close().catch(() => {});
-			if (stream.current) stream.current.getTracks().forEach((t) => t.stop());
-			uploadsSnap.current.forEach((f) => URL.revokeObjectURL(f.url));
-			uploadsXhr.current.forEach((xhr) => xhr.abort());
-			uploadsXhr.current.clear();
-		};
-	}, []);
-
 	const takePhoto = () => {
-		if (!videoPreviewRef.current || !streamRef.current) {
+		const video = videoPreviewRef.current;
+		if (!video || !streamRef.current) {
 			return;
 		}
-		const video = videoPreviewRef.current;
+		// Before the first frame arrives the size is 0x0 and toBlob gives null.
+		if (!video.videoWidth || !video.videoHeight) {
+			toast.info("The camera is still starting. Try again in a moment.");
+			return;
+		}
 		const canvas = document.createElement("canvas");
 		canvas.width = video.videoWidth;
 		canvas.height = video.videoHeight;
@@ -1030,16 +1096,15 @@ const VideosMediaManager = ({
 		if (!ctx) {
 			return;
 		}
-
 		ctx.drawImage(video, 0, 0);
 		canvas.toBlob((blob) => {
-			if (!blob) {
+			if (!blob || !isMountedRef.current) {
 				return;
 			}
 			addAndUploadFile({
 				id: generateId(),
 				blob,
-				url: URL.createObjectURL(blob),
+				url: createObjectUrl(blob),
 				name: `photo_${Date.now()}.png`,
 				type: "image",
 				size: blob.size,
@@ -1048,26 +1113,49 @@ const VideosMediaManager = ({
 	};
 
 	const startRecording = () => {
-		if (!streamRef.current || !ensureCanUpload()) {
+		if (!streamRef.current || mediaRecorderRef.current || !ensureCanUpload()) {
 			return;
 		}
-		chunksRef.current = [];
-		const mediaRecorder = new MediaRecorder(streamRef.current);
+		let mediaRecorder;
+		try {
+			mediaRecorder = new MediaRecorder(streamRef.current);
+		} catch (err) {
+			console.error("Could not start MediaRecorder:", err);
+			toast.error("Recording is not supported in this browser.");
+			return;
+		}
+		// Captured per recording, so a late onstop can't mix up chunks.
+		const chunks = [];
+		chunksRef.current = chunks;
 		mediaRecorderRef.current = mediaRecorder;
 
 		mediaRecorder.ondataavailable = (e) => {
-			if (e.data.size > 0) chunksRef.current.push(e.data);
+			if (e.data.size > 0) chunks.push(e.data);
 		};
 
 		mediaRecorder.onstop = () => {
-			const mimeType = recordingType === "video" ? "video/webm" : "audio/webm";
-			const blob = new Blob(chunksRef.current, { type: mimeType });
+			if (mediaRecorderRef.current === mediaRecorder) {
+				mediaRecorderRef.current = null;
+			}
+			chunksRef.current = [];
+			if (!isMountedRef.current) {
+				return;
+			}
+			setIsRecording(false);
+			// Use the format the browser actually produced (Safari records mp4).
+			const mimeType = mediaRecorder.mimeType || "video/webm";
+			const blob = new Blob(chunks, { type: mimeType });
+			chunks.length = 0;
+			if (blob.size === 0) {
+				return;
+			}
+			const ext = mimeType.includes("mp4") ? "mp4" : "webm";
 			addAndUploadFile({
 				id: generateId(),
 				blob,
-				url: URL.createObjectURL(blob),
-				name: `${recordingType}_${Date.now()}.webm`,
-				type: recordingType || "video",
+				url: createObjectUrl(blob),
+				name: `video_${Date.now()}.${ext}`,
+				type: "video",
 				size: blob.size,
 			});
 		};
@@ -1077,47 +1165,25 @@ const VideosMediaManager = ({
 	};
 
 	const stopRecording = () => {
-		if (mediaRecorderRef.current && isRecording) {
-			mediaRecorderRef.current.stop();
-			setIsRecording(false);
+		const rec = mediaRecorderRef.current;
+		if (rec && rec.state !== "inactive") {
+			rec.stop();
 		}
-	};
-
-	const closeCamera = () => {
-		if (streamRef.current) {
-			streamRef.current.getTracks().forEach((track) => track.stop());
-			streamRef.current = null;
-		}
-		if (videoPreviewRef.current) videoPreviewRef.current.srcObject = null;
-		stopAudioVisualization();
-		setShowCamera(false);
-		setRecordingType(null);
 		setIsRecording(false);
 	};
 
-	const getMediaIcon = (type) => {
-		switch (type) {
-			case "audio":
-				return <i aria-hidden className="fa-solid fa-file-audio fa-xl" />;
-			case "video":
-				return <i aria-hidden className="fa-solid fa-file-video fa-xl" />;
-			case "image":
-				return <i aria-hidden className="fa-solid fa-file-image fa-xl" />;
-			default:
-				return <i aria-hidden className="fa-solid fa-file-pdf fa-xl" />;
-		}
+	const closeMediaStream = () => {
+		// Stop the recorder before its tracks so the final chunk is flushed and
+		// the recording is still saved.
+		stopRecording();
+		streamRef.current?.getTracks().forEach((track) => track.stop());
+		streamRef.current = null;
+		setShowCamera(false);
 	};
 
-	const permissionLabel =
-		pendingMediaType === "video" ? "camera and microphone" : "microphone";
-	const totalSize = files.reduce((acc, f) => acc + (f.size || 0), 0);
+	/* --------------------------------- Search ------------------------------- */
 
-	const [searchString, setSearchString] = useState({
-		keyword: "",
-	});
-
-	const { keyword } = searchString;
-
+	const [keyword, setKeyword] = useState("");
 	const [debouncedKeyword, setDebouncedKeyword] = useState("");
 
 	useEffect(() => {
@@ -1127,18 +1193,32 @@ const VideosMediaManager = ({
 		return () => clearTimeout(timer);
 	}, [keyword]);
 
-	const searchData = async (e) => {
+	const searchData = (e) => {
 		e.preventDefault();
-		// filter object based on keyword entered
+		setDebouncedKeyword(keyword.trim());
 	};
 
-	const displayedItems = debouncedKeyword
-		? items.filter((item) =>
-				(item?.raw?.title || "")
-					.toLowerCase()
-					.includes(debouncedKeyword.toLowerCase()),
-			)
-		: items;
+	const displayedItems = useMemo(() => {
+		if (!debouncedKeyword) {
+			return items;
+		}
+		const needle = debouncedKeyword.toLowerCase();
+		return items.filter((item) =>
+			(item?.raw?.title || "").toLowerCase().includes(needle),
+		);
+	}, [items, debouncedKeyword]);
+
+	/* --------------------------------- Render ------------------------------- */
+
+	const permissionLabel = "camera and microphone";
+	const totalSize = files.reduce((acc, f) => acc + (f.size || 0), 0);
+	const countBadge = (
+		<span className="badge bg-light text-dark">
+			{items.length}
+			{countAll != null ? ` / ${countAll}` : ""} file
+			{items.length !== 1 ? "s" : ""}
+		</span>
+	);
 
 	return (
 		<>
@@ -1148,12 +1228,17 @@ const VideosMediaManager = ({
 					<div
 						className="modal show d-block"
 						tabIndex="-1"
+						role="dialog"
+						aria-modal="true"
+						aria-labelledby="permission-modal-title"
 						style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
 					>
 						<div className="modal-dialog modal-dialog-centered">
 							<div className="modal-content">
 								<div className="modal-header">
-									<h5 className="modal-title">Permission Required</h5>
+									<h5 className="modal-title" id="permission-modal-title">
+										Permission Required
+									</h5>
 								</div>
 								<div className="modal-body">
 									<p>
@@ -1188,7 +1273,7 @@ const VideosMediaManager = ({
 					<div className="card-header">
 						<h4 className="mb-0 d-flex align-items-center gap-2">
 							<i aria-hidden className="fa-solid fa-upload" />
-							Chapters Manager
+							Video Manager
 						</h4>
 					</div>
 					<div className="card-body">
@@ -1198,7 +1283,7 @@ const VideosMediaManager = ({
 									type="file"
 									ref={fileInputRef}
 									onChange={handleFileUpload}
-									accept="video/*"
+									accept={ACCEPTED_FILE_TYPES}
 									className="d-none"
 									id="fileInput"
 								/>
@@ -1218,25 +1303,16 @@ const VideosMediaManager = ({
 
 							<div className="col-12 col-md-4">
 								<button
+									type="button"
 									className="btn btn-success w-100 d-flex align-items-center justify-content-center gap-2"
 									onClick={() => requestPermission("video")}
-									disabled={showCamera || recordingType === "audio"}
+									disabled={showCamera}
 								>
 									<i aria-hidden className="fa-solid fa-camera" />
 									Open Camera
 								</button>
 							</div>
 
-							<div className="col-12 col-md-4">
-								<button
-									className="btn btn-warning w-100 d-flex align-items-center justify-content-center gap-2"
-									onClick={() => requestPermission("audio")}
-									disabled={showCamera || recordingType === "audio"}
-								>
-									<i aria-hidden className="fa-solid fa-microphone" />
-									Open Microphone
-								</button>
-							</div>
 							<div className="col-12 col-md-4">
 								<div className="bg-light rounded p-2 text-center">
 									<small className="text-muted">
@@ -1259,53 +1335,19 @@ const VideosMediaManager = ({
 						)}
 
 						{/* Live capture panel */}
-						{(showCamera || recordingType === "audio") && (
+						{showCamera && (
 							<div className="card mb-3 border-2 border-primary">
 								<div className="card-body">
-									{showCamera && (
-										<div className="text-center mb-3">
-											<video
-												ref={videoPreviewRef}
-												autoPlay
-												playsInline
-												muted
-												className="rounded"
-												style={{ maxWidth: "100%", maxHeight: "300px" }}
-											/>
-										</div>
-									)}
-
-									{recordingType === "audio" && !showCamera && (
-										<div className="text-center py-4">
-											<div
-												className={`d-inline-flex align-items-center justify-content-center rounded-circle mb-3 ${isRecording ? "bg-danger" : "bg-secondary"}`}
-												style={{ width: "80px", height: "80px" }}
-											>
-												<i
-													aria-hidden
-													className="fa-solid fa-microphone fa-3x text-white"
-												/>
-											</div>
-											<div
-												ref={waveformRef}
-												className="mb-3 mx-auto rounded border border-secondary"
-												style={{
-													maxWidth: "500px",
-													height: "80px",
-													backgroundColor: "#f8f9fa",
-												}}
-											/>
-											<p className="mt-2 mb-0">
-												{isRecording ? (
-													<span className="text-danger fw-bold">
-														Recording...
-													</span>
-												) : (
-													<span>Microphone ready</span>
-												)}
-											</p>
-										</div>
-									)}
+									<div className="text-center mb-3">
+										<video
+											ref={videoPreviewRef}
+											autoPlay
+											playsInline
+											muted
+											className="rounded"
+											style={{ maxWidth: "100%", maxHeight: "300px" }}
+										/>
+									</div>
 
 									<div className="d-flex flex-wrap justify-content-center gap-2">
 										{/* {showCamera && (
@@ -1319,6 +1361,7 @@ const VideosMediaManager = ({
                                             )} */}
 										{!isRecording ? (
 											<button
+												type="button"
 												className="btn btn-danger btn-sm"
 												onClick={startRecording}
 											>
@@ -1330,6 +1373,7 @@ const VideosMediaManager = ({
 											</button>
 										) : (
 											<button
+												type="button"
 												className="btn btn-dark btn-sm"
 												onClick={stopRecording}
 											>
@@ -1341,8 +1385,9 @@ const VideosMediaManager = ({
 											</button>
 										)}
 										<button
+											type="button"
 											className="btn btn-secondary btn-sm"
-											onClick={closeCamera}
+											onClick={closeMediaStream}
 										>
 											<i
 												aria-hidden
@@ -1380,16 +1425,22 @@ const VideosMediaManager = ({
 														{index + 1}
 													</span>
 													<span
-														className={`text-${file.type === "audio" ? "warning" : file.type === "video" ? "success" : "info"}`}
+														className={
+															file.type === "video"
+																? "text-success"
+																: "text-info"
+														}
 													>
 														{getMediaIcon(file.type)}
 													</span>
 												</div>
 												{!file.uploading && (
 													<button
+														type="button"
 														className="btn btn-sm btn-outline-danger"
 														onClick={() => removeFile(file.id)}
 														title="Remove file"
+														aria-label={`Remove ${file.name}`}
 													>
 														<i
 															aria-hidden
@@ -1431,21 +1482,6 @@ const VideosMediaManager = ({
 															}}
 															onPlay={() => pauseAllMedia(file.id)}
 														/>
-													)}
-													{file.type === "audio" && (
-														<div
-															className="d-flex align-items-center p-1 admin-multimedia-manager-audio-file"
-															style={{ height: "150px" }}
-														>
-															<audio
-																ref={(el) => registerMediaElement(file.id, el)}
-																src={file.url}
-																controls
-																preload="metadata"
-																className="w-100"
-																onPlay={() => pauseAllMedia(file.id)}
-															/>
-														</div>
 													)}
 												</div>
 												{file.uploading && (
@@ -1496,13 +1532,14 @@ const VideosMediaManager = ({
 									(trashing it is not enough)
 								</li>
 								<li>Upload a video file using the upload button</li>
-								<li>Use the camera or microphone to record one instead</li>
+								<li>Use the camera to record one instead</li>
 								<li>Click the trash icon to cancel an upload</li>
 							</ul>
 						</div>
 					</div>
 				</div>
 			</div>
+
 			{/* GET API ENDPOINT ERRORS */}
 			{error && (
 				<div
@@ -1529,88 +1566,88 @@ const VideosMediaManager = ({
 			)}
 
 			{items.length > 0 && (
-				<>
-					<div className="card rounded-0 mb-1">
-						<div className="card-header">
-							<div className="float-start">
-								<form
-									onSubmit={searchData}
-									className="d-none d-md-block d-lg-block d-xl-block d-xxl-block"
-								>
-									<input
-										id="keyword"
-										name="keyword"
-										value={keyword}
-										onChange={(e) => {
-											setSearchString({
-												...searchString,
-												keyword: e.target.value,
-											});
-										}}
-										type="text"
-										className="form-control"
-										placeholder="Search title of object (EXACT MATCH)"
-									/>
-								</form>
-							</div>
-							<div className="float-end my-1">
-								<div className="btn-group">
-									<button
-										type="button"
-										className="btn btn-danger btn-sm"
-										onClick={handleTrashAll}
-										disabled={trashingAll}
-									>
-										{trashingAll ? "..." : "Trash all"}
-									</button>
-									<button
-										type="button"
-										className="btn btn-dark btn-sm"
-										onClick={handleDeleteAll}
-										disabled={deletingAll}
-									>
-										{deletingAll ? "..." : "Delete all permanently"}
-									</button>
-								</div>
-							</div>
-						</div>
-						{debouncedKeyword && displayedItems.length === 0 && (
-							<div
-								className="alert alert-info alert-dismissible rounded-0 mb-0"
-								role="alert"
+				<div className="card rounded-0 mb-1">
+					<div className="card-header">
+						<div className="float-start">
+							<form
+								onSubmit={searchData}
+								className="d-none d-md-block"
+								role="search"
 							>
-								No objects match &quot;{debouncedKeyword}&quot;.
+								<label htmlFor="keyword" className="visually-hidden">
+									Search by title
+								</label>
+								<input
+									id="keyword"
+									name="keyword"
+									value={keyword}
+									onChange={(e) => setKeyword(e.target.value)}
+									type="search"
+									className="form-control"
+									placeholder="Search by title"
+								/>
+							</form>
+						</div>
+						<div className="float-end my-1">
+							<div className="btn-group">
 								<button
 									type="button"
-									className="btn-close"
-									data-bs-dismiss="alert"
-									aria-label="Close"
-								/>
+									className="btn btn-danger btn-sm"
+									onClick={handleTrashAll}
+									disabled={trashingAll}
+								>
+									{trashingAll ? "..." : "Trash all"}
+								</button>
+								<button
+									type="button"
+									className="btn btn-dark btn-sm"
+									onClick={handleDeleteAll}
+									disabled={deletingAll}
+								>
+									{deletingAll ? "..." : "Delete all permanently"}
+								</button>
 							</div>
-						)}
-						<ul className="list-group list-group-flush">
-							{displayedItems.map((item, index) => {
-								return (
-									<Single
-										key={item.key}
-										index={index}
-										object={item}
-										handleDraft={handleDraftIt}
-										handlePublish={handlePublishIt}
-										handleTrash={handleTrashIt}
-										handleSchedule={handleScheduleIt}
-										handleDelete={handleDeleteIt}
-										isDrafting={draftingKey === item.key}
-										isPublishing={publishingKey === item.key}
-										isTrashing={trashingKey === item.key}
-										isScheduling={schedulingKey === item.key}
-										isDeleting={deletingKey === item.key}
-									/>
-								);
-							})}
-						</ul>
+						</div>
 					</div>
-				</>
+					{/* Dismissed through state: Bootstrap's data-bs-dismiss would remove
+              nodes React still owns. */}
+					{debouncedKeyword && displayedItems.length === 0 && (
+						<div
+							className="alert alert-info alert-dismissible rounded-0 mb-0"
+							role="alert"
+						>
+							No objects match &quot;{debouncedKeyword}&quot;.
+							<button
+								type="button"
+								className="btn-close"
+								aria-label="Clear search"
+								onClick={() => {
+									setKeyword("");
+									setDebouncedKeyword("");
+								}}
+							/>
+						</div>
+					)}
+					<ul className="list-group list-group-flush">
+						{displayedItems.map((item, index) => (
+							<Single
+								key={item.key}
+								index={index}
+								object={item}
+								handleDraft={handleDraftIt}
+								handlePublish={handlePublishIt}
+								handleTrash={handleTrashIt}
+								handleSchedule={handleScheduleIt}
+								handleDelete={handleDeleteIt}
+								isDrafting={draftingKey === item.key}
+								isPublishing={publishingKey === item.key}
+								isTrashing={trashingKey === item.key}
+								isScheduling={schedulingKey === item.key}
+								isDeleting={deletingKey === item.key}
+							/>
+						))}
+					</ul>
+				</div>
 			)}
 
 			{/* Sentinel + status row */}
@@ -1625,32 +1662,14 @@ const VideosMediaManager = ({
 						</div>
 						<span>Loading more files...</span>
 						<br />
-						{!error && (
-							<span className="badge bg-light text-dark">
-								{items.length}
-								{totalResults.countAll != null
-									? ` / ${totalResults.countAll}`
-									: ""}{" "}
-								file
-								{items.length !== 1 ? "s" : ""}
-							</span>
-						)}
+						{!error && countBadge}
 					</div>
 				)}
 				{!loading && !hasMore && items.length > 0 && (
 					<>
 						<small className="text-muted">No more files to load.</small>
 						<br />
-						{!error && (
-							<span className="badge bg-light text-dark">
-								{items.length}
-								{totalResults.countAll != null
-									? ` / ${totalResults.countAll}`
-									: ""}{" "}
-								file
-								{items.length !== 1 ? "s" : ""}
-							</span>
-						)}
+						{!error && countBadge}
 					</>
 				)}
 			</div>

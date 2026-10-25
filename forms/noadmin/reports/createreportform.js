@@ -20,7 +20,6 @@ const CreateReportForm = ({ token = {}, auth = {}, searchParams = {} }) => {
 		const rawFormData = {
 			title: formData.get("title"),
 			text: formData.get("text"),
-			mentions: JSON.parse(formData.get("text_users") || "[]"),
 			tags: JSON.parse(formData.get("text_hashtags") || "[]"),
 			website: formData.get("website"),
 			resourceId: searchParams.resourceId,

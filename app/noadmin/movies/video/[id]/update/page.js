@@ -25,7 +25,7 @@ const UpdateVideo = async ({ params, searchParams }) => {
 			token={token}
 			auth={auth}
 			object={chapter}
-			params={awtdParams}
+			searchParams={awtdSearchParams}
 		/>
 	);
 };

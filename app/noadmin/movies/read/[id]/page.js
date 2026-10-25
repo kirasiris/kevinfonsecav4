@@ -1,9 +1,7 @@
-// import { revalidatePath } from "next/cache";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { fetchurl, getAuthTokenOnServer } from "@/helpers/setTokenOnServer";
 import ParseHtml from "@/layout/parseHtml";
-// import VideoList from "@/components/noadmin/movies/videolist";
 import VideosMediaManager from "@/components/noadmin/movies/videosmediamanager";
 import { getGlobalData } from "@/helpers/globalData";
 
@@ -34,59 +32,6 @@ const ReadMovie = async ({ params, searchParams }) => {
 		`?resourceId=${movie?.data?._id}&page=${page}&limit=${limit}&sort=${sort}`,
 	);
 
-	// const draftIt = async (id) => {
-	// 	"use server";
-	// 	// const rawFormData = {}
-	// 	await fetchurl(`/noadmin/videos/${id}/draftit`, "PUT", "no-cache");
-	// 	revalidatePath(`/noadmin/movies/read/${awtdParams.id}`);
-	// };
-
-	// const publishIt = async (id) => {
-	// 	"use server";
-	// 	// const rawFormData = {}
-	// 	await fetchurl(`/noadmin/videos/${id}/publishit`, "PUT", "no-cache");
-	// 	revalidatePath(`/noadmin/movies/read/${awtdParams.id}`);
-	// };
-
-	// const trashIt = async (id) => {
-	// 	"use server";
-	// 	// const rawFormData = {}
-	// 	await fetchurl(`/noadmin/videos/${id}/trashit`, "PUT", "no-cache");
-	// 	revalidatePath(`/noadmin/movies/read/${awtdParams.id}`);
-	// };
-
-	// const scheduleIt = async (id) => {
-	// 	"use server";
-	// 	// const rawFormData = {}
-	// 	await fetchurl(`/noadmin/videos/${id}/scheduleit`, "PUT", "no-cache");
-	// 	revalidatePath(`/noadmin/movies/read/${awtdParams.id}`);
-	// };
-
-	// const handleDelete = async (id) => {
-	// 	"use server";
-	// 	// const rawFormData = {}
-	// 	await fetchurl(`/noadmin/videos/${id}/permanently`, "DELETE", "no-cache");
-	// 	revalidatePath(`/noadmin/movies/read/${awtdParams.id}`);
-	// };
-
-	// const handleTrashAll = async (id) => {
-	// 	"use server";
-	// 	// const rawFormData = {}
-	// 	await fetchurl(`/noadmin/videos/deleteall`, "PUT", "no-cache");
-	// 	revalidatePath(`/noadmin/movies/read/${awtdParams.id}`);
-	// };
-
-	// const handleDeleteAll = async (id) => {
-	// 	"use server";
-	// 	// const rawFormData = {}
-	// 	await fetchurl(
-	// 		`/noadmin/videos/deleteall/permanently`,
-	// 		"DELETE",
-	// 		"no-cache",
-	// 	);
-	// 	revalidatePath(`/noadmin/movies/read/${awtdParams.id}`);
-	// };
-
 	return (
 		<div className="row">
 			<div className="col-lg-8">
@@ -103,23 +48,6 @@ const ReadMovie = async ({ params, searchParams }) => {
 					objects={videos}
 					searchParams={awtdSearchParams}
 				/>
-				{/* <div className="card rounded-0">
-					<VideoList
-						allLink={`/noadmin/movies/read/${movie?.data?._id}`}
-						pageText="Videos"
-						addLink={`/noadmin/movies/video/${movie?.data?._id}/create`}
-						searchOn={`/noadmin/movies/read/${movie?.data?._id}`}
-						objects={videos}
-						searchParams={awtdSearchParams}
-						handleDraft={draftIt}
-						handlePublish={publishIt}
-						handleTrash={trashIt}
-						handleSchedule={scheduleIt}
-						handleDelete={handleDelete}
-						handleTrashAllFunction={handleTrashAll}
-						handleDeleteAllFunction={handleDeleteAll}
-					/>
-				</div> */}
 			</div>
 			<div className="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-xs-12 d-none d-sm-none d-md-none d-lg-block dm-xl-block">
 				<figure className="mb-3 bg-dark">

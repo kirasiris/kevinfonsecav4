@@ -20,7 +20,14 @@ const UpdateChapter = async ({ params, searchParams }) => {
 
 	const chapter = await getChapter(`/${awtdParams.id}`);
 
-	return <UpdateChapterForm token={token} auth={auth} object={chapter} />;
+	return (
+		<UpdateChapterForm
+			token={token}
+			auth={auth}
+			object={chapter}
+			searchParams={awtdSearchParams}
+		/>
+	);
 };
 
 export default UpdateChapter;

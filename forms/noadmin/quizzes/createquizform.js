@@ -21,7 +21,6 @@ const CreateQuizForm = ({ token = {}, auth = {}, objects = [] }) => {
 		const rawFormData = {
 			title: formData.get("title"),
 			text: formData.get("text"),
-			mentions: JSON.parse(formData.get("text_users") || "[]"),
 			tags: JSON.parse(formData.get("text_hashtags") || "[]"),
 			duration: formData.get("duration"),
 			minimumScore: formData.get("minimumScore"),
@@ -34,7 +33,6 @@ const CreateQuizForm = ({ token = {}, auth = {}, objects = [] }) => {
 			singlePage: formData.get("singlePage"),
 			files: {
 				avatar: formData.get("file") || undefined,
-				extras: JSON.parse(formData.get("text_files") || "[]"),
 			},
 		};
 

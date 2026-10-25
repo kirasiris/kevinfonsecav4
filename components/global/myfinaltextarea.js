@@ -342,6 +342,10 @@ const BLOCK_DND_CSS = `
   background: var(--bs-primary, #0d6efd);
   border-radius: 2px;
 }
+.editor-surface a {
+  color: #0d6efd;
+  text-decoration: underline !important;
+}
 .editor-surface [data-block-dragging] {
   opacity: 0.45;
   outline: 2px dashed var(--bs-primary, #0d6efd);

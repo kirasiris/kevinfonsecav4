@@ -55,7 +55,6 @@ const UpdateWeaponForm = ({ token = "", auth = {}, object = {} }) => {
 			serialNumber: formData.get("serialNumber"),
 			nfaClassification: formData.get("nfaClassification"),
 			text: formData.get("text"),
-			mentions: JSON.parse(formData.get("text_users") || "[]"),
 			tags: JSON.parse(formData.get("text_hashtags") || "[]"),
 			files: formData.getAll("files[]"),
 		};

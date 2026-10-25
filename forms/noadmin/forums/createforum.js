@@ -21,8 +21,6 @@ const CreateForumForm = ({ token = {}, auth = {} }) => {
 		const rawFormData = {
 			title: formData.get("title"),
 			text: formData.get("text"),
-			mentions: JSON.parse(formData.get("text_users") || "[]"),
-			tags: JSON.parse(formData.get("text_hashtags") || "[]"),
 			embedding: formData.get("embedding"),
 			category: formData.get("category"),
 			sub_category: formData.get("sub_category"),
@@ -78,7 +76,7 @@ const CreateForumForm = ({ token = {}, auth = {} }) => {
 					name="text"
 					defaultValue="No description..."
 					onModel="Forum"
-					advancedTextEditor={true}
+					advancedTextEditor={false}
 					customPlaceholder="No description"
 					charactersLimit={99999}
 					isRequired={true}

@@ -21,7 +21,6 @@ const CreateMenuForm = ({}) => {
 		const rawFormData = {
 			title: formData.get("title"),
 			text: formData.get("text"),
-			mentions: JSON.parse(formData.get("text_users") || "[]"),
 			tags: JSON.parse(formData.get("text_hashtags") || "[]"),
 			position: formData.getAll("position"),
 			status: formData.get("status"),

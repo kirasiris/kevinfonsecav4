@@ -21,7 +21,6 @@ const CreateJobForm = ({ token = {}, auth = {}, params = {} }) => {
 		const rawFormData = {
 			title: formData.get("title"),
 			text: formData.get("text"),
-			mentions: JSON.parse(formData.get("text_users") || "[]"),
 			tags: JSON.parse(formData.get("text_hashtags") || "[]"),
 			positionFilled: formData.get("positionFilled"),
 			experience_level: formData.getAll("experience_level"),
@@ -125,7 +124,7 @@ const CreateJobForm = ({ token = {}, auth = {}, params = {} }) => {
 						<select
 							id="experience_level"
 							name="experience_level"
-							defaultValue="entry"
+							defaultValue={["entry"]}
 							className="form-select mb-3"
 							multiple
 						>
@@ -140,7 +139,7 @@ const CreateJobForm = ({ token = {}, auth = {}, params = {} }) => {
 						<select
 							id="job_type"
 							name="job_type"
-							defaultValue="full-time"
+							defaultValue={["full-time"]}
 							className="form-select mb-3"
 							multiple
 						>
@@ -197,7 +196,7 @@ const CreateJobForm = ({ token = {}, auth = {}, params = {} }) => {
 						<select
 							id="remote"
 							name="remote"
-							defaultValue="remote"
+							defaultValue={["remote"]}
 							className="form-select mb-3"
 							multiple
 						>
@@ -213,7 +212,7 @@ const CreateJobForm = ({ token = {}, auth = {}, params = {} }) => {
 						<select
 							id="shift_and_schedule"
 							name="shift_and_schedule"
-							defaultValue="monday-to-friday"
+							defaultValue={["monday-to-friday"]}
 							className="form-select mb-3"
 							multiple
 						>

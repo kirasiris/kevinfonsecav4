@@ -1,112 +1,9 @@
 "use client";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useState, useRef, useCallback, useEffect, useMemo } from "react";
 import { toast } from "react-toastify";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import { formatFileSize } from "@/helpers/formatFileSize";
 import Single from "./single";
-import AdminCardHeaderMenu from "./filecardheadermenu";
-
-/* -------------------------------------------------------------------------- */
-/* Upload helpers                                                             */
-/* -------------------------------------------------------------------------- */
-
-const generateId = () => Math.random().toString(36).slice(2, 9);
-
-const getFileType = (mimeType = "") => {
-	if (mimeType.startsWith("audio/")) return "audio";
-	if (mimeType.startsWith("video/")) return "video";
-	if (mimeType.startsWith("image/")) return "image";
-	return "video";
-};
-
-const getMediaIcon = (type) => {
-	switch (type) {
-		case "audio":
-			return <i aria-hidden={true} className="fa-solid fa-file-audio fa-xl" />;
-		case "video":
-			return <i aria-hidden={true} className="fa-solid fa-file-video fa-xl" />;
-		case "image":
-			return <i aria-hidden={true} className="fa-solid fa-file-image fa-xl" />;
-		default:
-			return <i aria-hidden={true} className="fa-solid fa-file-pdf fa-xl" />;
-	}
-};
-
-// Uploads a single file using XHR so we can track progress. Returns an object
-// containing both a Promise that resolves with the parsed response and the
-// underlying XHR instance — so callers can abort the upload mid-flight (for
-// example when the user removes the file before the upload finishes).
-const uploadFileToServer = (
-	blob,
-	filename,
-	onProgress,
-	auth = {},
-	token = {},
-	onModel = "Blog",
-) => {
-	const xhr = new XMLHttpRequest();
-	const promise = new Promise((resolve, reject) => {
-		const formData = new FormData();
-		formData.append("userId", auth?.data?._id);
-		formData.append("username", auth?.data?.username);
-		formData.append("userEmail", auth?.data?.email);
-		formData.append("onModel", onModel);
-		formData.append("file", blob, filename);
-		formData.append("album", "settings");
-
-		xhr.upload.addEventListener("progress", (event) => {
-			if (event.lengthComputable) {
-				onProgress(Math.round((event.loaded * 100) / event.total));
-			}
-		});
-
-		xhr.addEventListener("load", () => {
-			if (xhr.status >= 200 && xhr.status < 300) {
-				// A throw inside this listener would never reach the Promise, leaving
-				// the card stuck on "Uploading..." forever, so parse defensively.
-				let parsed;
-				try {
-					parsed = JSON.parse(xhr.responseText);
-				} catch {
-					reject(new Error("The server returned an invalid response"));
-					return;
-				}
-				if (parsed?.success === false) {
-					reject(new Error(parsed?.message || "Upload failed"));
-					return;
-				}
-				resolve(parsed);
-			} else {
-				reject(
-					new Error(
-						`Upload failed with status ${xhr.status}: ${xhr.statusText}`,
-					),
-				);
-			}
-		});
-
-		xhr.addEventListener("error", () =>
-			reject(new Error("Network error during upload")),
-		);
-		xhr.addEventListener("abort", () =>
-			reject(
-				Object.assign(new Error("Upload aborted"), { name: "AbortError" }),
-			),
-		);
-		xhr.addEventListener("timeout", () =>
-			reject(new Error("Upload timed out")),
-		);
-
-		xhr.open(
-			"PUT",
-			`${process.env.NEXT_PUBLIC_FILE_UPLOADER_URL}/uploads/uploadobject`,
-		);
-		xhr.setRequestHeader("Authorization", `Bearer ${token?.value}`);
-		xhr.send(formData);
-	});
-
-	return { promise, xhr };
-};
 
 /* -------------------------------------------------------------------------- */
 /* List helpers                                                               */
@@ -145,15 +42,12 @@ const getExtension = (filename = "") => {
 };
 
 const classifyFile = (file) => {
-	// Prefer the API-provided format_type (most reliable across all records).
 	const apiType =
 		typeof file?.format_type === "string" ? file.format_type.toLowerCase() : "";
 	if (FILE_TYPE_MAP[apiType]) {
 		return { type: apiType, ...FILE_TYPE_MAP[apiType] };
 	}
-	// Fallback: classify by the file extension parsed from the filename.
-	const filename = file?.location?.filename || "";
-	const ext = getExtension(filename);
+	const ext = getExtension(file?.location?.filename || "");
 	for (const key of Object.keys(FILE_TYPE_MAP)) {
 		if (FILE_TYPE_MAP[key].exts.includes(ext)) {
 			return { type: key, ...FILE_TYPE_MAP[key] };
@@ -174,8 +68,6 @@ const buildKey = (file, pageHint) =>
 		.toString(36)
 		.slice(2)}`;
 
-// Builds the deduplicated initial list and seeds the shared "seen" set in one
-// pass. Called from a useState initializer so it only runs once per mount.
 const seedFromObjects = (objects, pageHint, seenSet) => {
 	const rawList = Array.isArray(objects?.data) ? objects.data : [];
 	const result = [];
@@ -190,20 +82,142 @@ const seedFromObjects = (objects, pageHint, seenSet) => {
 };
 
 /* -------------------------------------------------------------------------- */
+/* Request helpers                                                            */
+/* -------------------------------------------------------------------------- */
+
+// fetchurl can reject (network drop, abort) or resolve to nothing; turn both
+// into the API's own error shape so every caller has a single path to check.
+const safeFetch = async (...args) => {
+	try {
+		const res = await fetchurl(...args);
+		return res || { status: "error", message: "No response from the server" };
+	} catch (err) {
+		return { status: "error", message: err?.message || "Network error" };
+	}
+};
+
+const isFailure = (res) =>
+	!res || res.status === "error" || res.status === "fail";
+
+// The API answers an empty list (or a page past the end) with a "fail", which
+// must be shown as "no files" rather than as an error.
+const isEmptyPage = (res) =>
+	res?.status === "fail" && /does not exist/i.test(res?.message || "");
+
+/* -------------------------------------------------------------------------- */
+/* Upload helpers                                                             */
+/* -------------------------------------------------------------------------- */
+
+const ACCEPTED_FILE_TYPES = "audio/*,video/*,image/*";
+
+const isAcceptedFile = (file) =>
+	/^(audio|video|image)\//.test(file?.type || "");
+
+const generateId = () => Math.random().toString(36).slice(2, 9);
+
+const getFileType = (mimeType = "") => {
+	if (mimeType.startsWith("image/")) return "image";
+	if (mimeType.startsWith("audio/")) return "audio";
+	return "video";
+};
+
+const getMediaIcon = (type) => {
+	switch (type) {
+		case "audio":
+			return <i aria-hidden className="fa-solid fa-file-audio fa-xl" />;
+		case "video":
+			return <i aria-hidden className="fa-solid fa-file-video fa-xl" />;
+		case "image":
+			return <i aria-hidden className="fa-solid fa-file-image fa-xl" />;
+		default:
+			return <i aria-hidden className="fa-solid fa-file-pdf fa-xl" />;
+	}
+};
+
+const uploadFileToServer = (
+	blob,
+	filename,
+	onProgress,
+	auth = {},
+	token = {},
+	onModel = "Blog",
+) => {
+	const xhr = new XMLHttpRequest();
+	const res = new Promise((resolve, reject) => {
+		const formData = new FormData();
+		formData.append("userId", auth?.data?._id);
+		formData.append("username", auth?.data?.username);
+		formData.append("userEmail", auth?.data?.email);
+		formData.append("onModel", onModel);
+		formData.append("file", blob, filename);
+		formData.append("album", "settings");
+
+		xhr.upload.addEventListener("progress", (event) => {
+			if (event.lengthComputable) {
+				onProgress(Math.round((event.loaded * 100) / event.total));
+			}
+		});
+
+		xhr.addEventListener("load", () => {
+			if (xhr.status < 200 || xhr.status >= 300) {
+				reject(
+					new Error(
+						`Upload failed with status ${xhr.status}: ${xhr.statusText}`,
+					),
+				);
+				return;
+			}
+			// A throw inside this listener would never reach the Promise, leaving
+			// the card stuck on "Uploading..." forever, so parse defensively.
+			let parsed;
+			try {
+				parsed = JSON.parse(xhr.responseText);
+			} catch {
+				reject(
+					new Error("Upload finished but the server reply was not valid JSON"),
+				);
+				return;
+			}
+			if (parsed?.success === false) {
+				reject(new Error(parsed?.message || "Upload failed"));
+				return;
+			}
+			resolve({ file: parsed });
+		});
+
+		xhr.addEventListener("error", () =>
+			reject(new Error("Network error during upload")),
+		);
+		xhr.addEventListener("abort", () =>
+			reject(
+				Object.assign(new Error("Upload aborted"), { name: "AbortError" }),
+			),
+		);
+		xhr.addEventListener("timeout", () =>
+			reject(new Error("Upload timed out")),
+		);
+
+		xhr.open(
+			"PUT",
+			`${process.env.NEXT_PUBLIC_FILE_UPLOADER_URL}/uploads/uploadobject`,
+		);
+		xhr.setRequestHeader("Authorization", `Bearer ${token?.value}`);
+		xhr.send(formData);
+	});
+
+	return { res, xhr };
+};
+
+/* -------------------------------------------------------------------------- */
 /* Component                                                                  */
 /* -------------------------------------------------------------------------- */
 
-const FilesWorkSpace = ({
+const FilesManager = ({
 	auth = {},
-	token = null,
+	token = {},
 	onModel = "Blog",
-	allLink = "",
-	pageText = "",
-	searchOn = "",
 	objects = [],
 	searchParams = {},
-	handleDeleteAllFunction = () => {},
-	handleDeleteAllUnusedPermanently = () => {},
 }) => {
 	/* ------------------------------ Paging setup ---------------------------- */
 
@@ -216,7 +230,7 @@ const FilesWorkSpace = ({
 		if (Number.isFinite(fromPayload) && fromPayload > 0) {
 			return fromPayload;
 		}
-		return 1; // Default page
+		return 1;
 	}, [searchParams?.page, objects?.pagination?.current]);
 
 	const limit = useMemo(() => {
@@ -228,37 +242,34 @@ const FilesWorkSpace = ({
 		if (Number.isFinite(fromPayload) && fromPayload > 0) {
 			return fromPayload;
 		}
-		return 32; // Default limit
+		return 32;
 	}, [searchParams?.limit, objects?.pagination?.next?.limit]);
 
 	const sort = searchParams?.sort || "-createdAt";
 	const prependNew = !sort || sort.startsWith("-");
-
 	// `objects` defaults to `[]`, which is truthy, so "did the server send a
 	// page?" must be decided by the presence of a `data` array instead.
-	const hasSeed = Array.isArray(objects?.data);
+	const hasSsrPayload = Array.isArray(objects?.data);
 
 	/* ------------------------------- List state ----------------------------- */
 
-	// The seen-set is a ref so it survives renders without state-driven churn.
-	// We initialize it lazily alongside the initial files state so the seed
-	// happens exactly once per mount and never during a render pass.
 	const seenKeysRef = useRef(null);
 	if (seenKeysRef.current === null) {
 		seenKeysRef.current = new Set();
 	}
-	const isFetchingRef = useRef(false);
-	const fetchControllerRef = useRef(null);
-	const isMountedRef = useRef(true);
+	const activeRequestRef = useRef(null);
+	const isMountedRef = useRef(false);
 	const sentinelRef = useRef(null);
+	// The ref (not state) blocks a double click before the re-render lands.
+	const deletingKeysRef = useRef(new Set());
 
 	const [newobjects, setNewObjects] = useState(() =>
 		seedFromObjects(objects, initialPage, seenKeysRef.current),
 	);
-	// Without a seed nothing is loaded yet, so the "last loaded" page is the one
-	// before `initialPage`; Retry then re-requests `initialPage` itself.
-	const [lastLoadedPage, setLastLoadedPage] = useState(() =>
-		hasSeed ? initialPage : initialPage - 1,
+	// Without a payload nothing is loaded yet, so the first fetch (and its
+	// Retry) must request initialPage itself.
+	const [lastLoadedPage, setLastLoadedPage] = useState(
+		hasSsrPayload ? initialPage : initialPage - 1,
 	);
 	const [countAll, setCountAll] = useState(
 		typeof objects?.countAll === "number" ? objects.countAll : null,
@@ -271,33 +282,33 @@ const FilesWorkSpace = ({
 		if (Number.isFinite(total)) {
 			return initialPage < total;
 		}
-
-		// No SSR payload — assume there's more and let the first fetch tell us.
-		return !hasSeed;
+		return !hasSsrPayload;
 	});
-	// Start in the loading state when there's no seed, so the "No files" notice
-	// doesn't flash before the first fetch begins.
-	const [loading, setLoading] = useState(!hasSeed);
-	const [error, setError] = useState("");
+	const [loading, setLoading] = useState(!hasSsrPayload);
+	const [error, setError] = useState(null);
 	// A Set, so deleting two files at once doesn't re-enable the first button
 	// when the second request finishes.
 	const [deletingKeys, setDeletingKeys] = useState(() => new Set());
+	const [deletingAll, setDeletingAll] = useState(false);
+	const [deletingUnused, setDeletingUnused] = useState(false);
+	// Both bulk deletes share one lock so they can never run at the same time.
+	const bulkBusyRef = useRef(false);
 
 	/* ------------------------------ Upload state ---------------------------- */
 
-	const [uploads, setUploads] = useState([]);
+	const [files, setFiles] = useState([]);
 	const [isRecording, setIsRecording] = useState(false);
 	const [recordingType, setRecordingType] = useState(null);
 	const [showCamera, setShowCamera] = useState(false);
-	const [draggedIndex, setDraggedIndex] = useState(null);
-	const [dragOverIndex, setDragOverIndex] = useState(null);
+	const [showMicrophone, setShowMicrophone] = useState(false);
 	const [showPermissionModal, setShowPermissionModal] = useState(false);
 	const [pendingMediaType, setPendingMediaType] = useState(null);
-	// Track which permissions have already been granted so we don't keep asking.
 	const [permissions, setPermissions] = useState({
 		video: false,
 		audio: false,
 	});
+	const [draggedIndex, setDraggedIndex] = useState(null);
+	const [dragOverIndex, setDragOverIndex] = useState(null);
 
 	const fileInputRef = useRef(null);
 	const videoPreviewRef = useRef(null);
@@ -310,59 +321,94 @@ const FilesWorkSpace = ({
 	const analyserRef = useRef(null);
 	const animationFrameRef = useRef(null);
 	const uploadsRef = useRef([]);
-	// Track in-flight XHRs by file id so removeUpload can abort them.
 	const uploadXhrsRef = useRef(new Map());
 	// Every object URL created here, so unmount can revoke them all — including
 	// ones created in the same tick as the unmount, before uploadsRef caught up.
 	const objectUrlsRef = useRef(new Set());
-	// Object URLs the saved-files list is displaying (used when the server
-	// response had no location). Removing the tray card must not revoke these.
+	// Object URLs the saved list is displaying (the server sent no location).
+	// Removing the tray card must not revoke these.
 	const keptUrlsRef = useRef(new Set());
 	const startingMediaRef = useRef(false);
 
-	useEffect(() => {
-		uploadsRef.current = uploads;
-	}, [uploads]);
+	/* -------------------------------- Lifecycle ----------------------------- */
 
-	const createObjectUrl = (blob) => {
+	useEffect(() => {
+		uploadsRef.current = files;
+	}, [files]);
+
+	useEffect(() => {
+		// Strict Mode runs this cleanup on its fake unmount, so the flag has to
+		// be set back to true on every setup.
+		isMountedRef.current = true;
+		const activeRequest = activeRequestRef;
+		const animFrame = animationFrameRef;
+		const audioCtx = audioContextRef;
+		const analyser = analyserRef;
+		const recorder = mediaRecorderRef;
+		const stream = streamRef;
+		const xhrs = uploadXhrsRef;
+		const objectUrls = objectUrlsRef;
+		const keptUrls = keptUrlsRef;
+		const mediaElements = mediaElementsRef;
+		return () => {
+			isMountedRef.current = false;
+			activeRequest.current?.abort();
+			activeRequest.current = null;
+			if (animFrame.current) cancelAnimationFrame(animFrame.current);
+			animFrame.current = null;
+			audioCtx.current?.close().catch(() => {});
+			audioCtx.current = null;
+			analyser.current = null;
+			// Detach first: stopping a live recorder fires onstop, which would
+			// otherwise start a new upload after the component is gone.
+			const rec = recorder.current;
+			if (rec) {
+				rec.ondataavailable = null;
+				rec.onstop = null;
+				if (rec.state !== "inactive") rec.stop();
+			}
+			recorder.current = null;
+			stream.current?.getTracks().forEach((track) => track.stop());
+			stream.current = null;
+			xhrs.current.forEach((xhr) => xhr.abort());
+			xhrs.current.clear();
+			objectUrls.current.forEach((url) => URL.revokeObjectURL(url));
+			objectUrls.current.clear();
+			keptUrls.current.clear();
+			mediaElements.current.clear();
+		};
+	}, []);
+
+	/* ------------------------------- Object URLs ---------------------------- */
+
+	const createObjectUrl = useCallback((blob) => {
 		const url = URL.createObjectURL(blob);
 		objectUrlsRef.current.add(url);
 		return url;
-	};
+	}, []);
 
-	const revokeObjectUrl = (url) => {
+	const revokeObjectUrl = useCallback((url) => {
 		if (!url || keptUrlsRef.current.has(url)) {
 			return;
 		}
 		URL.revokeObjectURL(url);
 		objectUrlsRef.current.delete(url);
-	};
-
-	/* --------------------------- List data loading -------------------------- */
-
-	// Aborting also releases the in-flight guard. Without that, React Strict
-	// Mode's mount → unmount → mount left the flag set by the aborted request,
-	// so the real mount's fetch returned early and nothing ever loaded.
-	const abortFetch = useCallback(() => {
-		fetchControllerRef.current?.abort();
-		fetchControllerRef.current = null;
-		isFetchingRef.current = false;
 	}, []);
+
+	/* ---------------------------- List data loading ------------------------- */
 
 	const fetchPage = useCallback(
 		async (pageToLoad) => {
-			if (isFetchingRef.current) {
+			if (activeRequestRef.current) {
 				return;
 			}
-			isFetchingRef.current = true;
 			const controller = new AbortController();
-			fetchControllerRef.current = controller;
+			activeRequestRef.current = controller;
 			setLoading(true);
-			setError("");
+			setError(null);
 
-			let res = null;
 			try {
-				res = await fetchurl(
+				const res = await safeFetch(
 					`/global/files?page=${pageToLoad}&limit=${limit}&sort=${sort}`,
 					"GET",
 					"no-cache",
@@ -373,75 +419,75 @@ const FilesWorkSpace = ({
 					false,
 					false,
 				);
-			} catch {
-				res = null;
-			}
+				if (controller.signal.aborted) {
+					return;
+				}
+				if (isEmptyPage(res)) {
+					setHasMore(false);
+					setLastLoadedPage(pageToLoad);
+					return;
+				}
+				if (!res?.success) {
+					// lastLoadedPage is left alone so Retry requests this same page.
+					const message = res?.message || "Failed to retrieve files";
+					setError(message);
+					toast.error(message);
+					return;
+				}
 
-			// Whoever aborted this request already reset the guard; a newer request
-			// may own it now, so touch nothing.
-			if (controller.signal.aborted) {
-				return;
-			}
-			fetchControllerRef.current = null;
-			isFetchingRef.current = false;
-			setLoading(false);
+				const rawList = Array.isArray(res?.data) ? res.data : [];
+				const fresh = [];
+				for (const file of rawList) {
+					const key = buildKey(file, pageToLoad);
+					if (!seenKeysRef.current.has(key)) {
+						seenKeysRef.current.add(key);
+						fresh.push({ ...file, __key: key });
+					}
+				}
+				if (fresh.length > 0) {
+					setNewObjects((prev) => [...prev, ...fresh]);
+				}
+				if (typeof res?.countAll === "number") {
+					setCountAll(res.countAll);
+				}
 
-			// Stop here on failure: advancing lastLoadedPage would make Retry skip
-			// the page that failed.
-			if (!res || !res.success) {
-				const message = res?.message || "Failed to retrieve files";
-				setError(message);
-				toast.error(message);
-				return;
-			}
+				const nextPage = res?.pagination?.next?.page;
+				const totalPages = Number(res?.pagination?.totalpages);
+				if (nextPage) {
+					setHasMore(true);
+				} else if (Number.isFinite(totalPages)) {
+					setHasMore(pageToLoad < totalPages);
+				} else {
+					setHasMore(rawList.length >= limit);
+				}
 
-			const rawList = Array.isArray(res?.data) ? res.data : [];
-			const fresh = [];
-			for (const file of rawList) {
-				const key = buildKey(file, pageToLoad);
-				if (!seenKeysRef.current.has(key)) {
-					seenKeysRef.current.add(key);
-					fresh.push({ ...file, __key: key });
+				setLastLoadedPage(pageToLoad);
+			} finally {
+				if (activeRequestRef.current === controller) {
+					activeRequestRef.current = null;
+					setLoading(false);
 				}
 			}
-
-			if (fresh.length > 0) {
-				setNewObjects((prev) => [...prev, ...fresh]);
-			}
-
-			if (typeof res?.countAll === "number") {
-				setCountAll(res.countAll);
-			}
-
-			// pagination.next is the canonical "is there more?" indicator.
-			// Fall back to totalpages, and only as a last resort guess from length.
-			const nextPage = res?.pagination?.next?.page;
-			const totalPages = Number(res?.pagination?.totalpages);
-			if (nextPage) {
-				setHasMore(true);
-			} else if (Number.isFinite(totalPages)) {
-				setHasMore(pageToLoad < totalPages);
-			} else {
-				setHasMore(rawList.length >= limit);
-			}
-
-			setLastLoadedPage(pageToLoad);
 		},
 		[limit, sort],
 	);
 
-	// Initial client-side fetch is only needed when SSR didn't supply a page.
+	// Clearing the ref here (not in fetchPage's finally, which runs later) lets
+	// a Strict Mode remount start its own fetch instead of being skipped.
+	const abortActiveFetch = useCallback(() => {
+		activeRequestRef.current?.abort();
+		activeRequestRef.current = null;
+		setLoading(false);
+	}, []);
+
 	useEffect(() => {
-		if (hasSeed) {
+		if (hasSsrPayload) {
 			return;
 		}
 		fetchPage(initialPage);
-		return abortFetch;
-	}, [hasSeed, initialPage, fetchPage, abortFetch]);
+		return abortActiveFetch;
+	}, [hasSsrPayload, initialPage, fetchPage, abortActiveFetch]);
 
-	// Infinite-scroll observer. Loads the page AFTER the last one we've shown.
-	// We deliberately exclude `loading` from the deps to avoid recreating the
-	// observer on every fetch — the `isFetchingRef` guard inside is enough.
 	useEffect(() => {
 		if (!hasMore || error) {
 			return;
@@ -450,48 +496,37 @@ const FilesWorkSpace = ({
 		if (!node) {
 			return;
 		}
-
 		const observer = new IntersectionObserver(
 			(entries) => {
-				const entry = entries[0];
-				if (entry.isIntersecting && !isFetchingRef.current && hasMore) {
+				if (entries[0]?.isIntersecting && !activeRequestRef.current) {
 					fetchPage(lastLoadedPage + 1);
 				}
 			},
 			{ rootMargin: "200px 0px" },
 		);
-
 		observer.observe(node);
-		return () => {
-			observer.disconnect();
-		};
+		return () => observer.disconnect();
 	}, [lastLoadedPage, hasMore, error, fetchPage]);
 
-	// Replaces the old UploadBridge context: the uploader and the list are the
-	// same component now, so a finished upload is just a local state update.
-	// Dedup via the shared seen-set so the same file arriving later from a
-	// paged fetch isn't inserted twice.
-	const addUploadedFile = useCallback(
-		(file) => {
-			const key = buildKey(file, "upload");
-			if (seenKeysRef.current.has(key)) {
-				return;
-			}
-			seenKeysRef.current.add(key);
-			const url = file?.location?.secure_location;
-			if (url && objectUrlsRef.current.has(url)) {
-				keptUrlsRef.current.add(url);
-			}
-			const entry = { ...file, __key: key };
-			setNewObjects((prev) =>
-				prependNew ? [entry, ...prev] : [...prev, entry],
-			);
-			setCountAll((prev) => (typeof prev === "number" ? prev + 1 : prev));
-		},
-		[prependNew],
-	);
+	const handleRetry = useCallback(() => {
+		setError(null);
+		fetchPage(lastLoadedPage + 1);
+	}, [fetchPage, lastLoadedPage]);
 
-	const deletingKeysRef = useRef(new Set());
+	// Rebuilds the list from the server after a bulk delete, instead of guessing
+	// which files are gone.
+	const reloadList = useCallback(() => {
+		abortActiveFetch();
+		seenKeysRef.current = new Set();
+		setNewObjects([]);
+		setCountAll(null);
+		setHasMore(true);
+		setError(null);
+		setLastLoadedPage(initialPage - 1);
+		fetchPage(initialPage);
+	}, [abortActiveFetch, fetchPage, initialPage]);
+
+	/* ------------------------------- Row actions ---------------------------- */
 
 	const setDeleting = (key, isDeleting) => {
 		if (isDeleting) deletingKeysRef.current.add(key);
@@ -499,30 +534,24 @@ const FilesWorkSpace = ({
 		setDeletingKeys(new Set(deletingKeysRef.current));
 	};
 
-	const handleDelete = useCallback(async (item) => {
-		// The ref (not state) blocks a double click before the re-render lands.
+	const handleDeleteIt = useCallback(async (item) => {
 		if (!item?._id || deletingKeysRef.current.has(item.__key)) {
 			return;
 		}
 		setDeleting(item.__key, true);
-		let res = null;
-		try {
-			res = await fetchurl(
-				`/noadmin/files/${item._id}/permanently`,
-				"DELETE",
-				"no-cache",
-				{},
-				undefined,
-				false,
-				false,
-			);
-		} catch (err) {
-			res = { status: "error", message: err?.message };
-		}
+		const res = await safeFetch(
+			`/noadmin/files/${item._id}/permanently`,
+			"DELETE",
+			"no-cache",
+			{},
+			undefined,
+			false,
+			false,
+		);
 		if (!isMountedRef.current) {
 			return;
 		}
-		if (!res || res.status === "error" || res.status === "fail") {
+		if (isFailure(res)) {
 			toast.error(res?.message || "Could not delete the file");
 			setDeleting(item.__key, false);
 			return;
@@ -536,9 +565,71 @@ const FilesWorkSpace = ({
 		setDeleting(item.__key, false);
 	}, []);
 
-	const handleRetry = useCallback(() => {
-		fetchPage(lastLoadedPage + 1);
-	}, [fetchPage, lastLoadedPage]);
+	/* ------------------------------ Bulk actions ---------------------------- */
+
+	const handleDeleteAll = async () => {
+		if (bulkBusyRef.current) {
+			return;
+		}
+		bulkBusyRef.current = true;
+		setDeletingAll(true);
+		const res = await safeFetch(
+			`/noadmin/files/deleteall`,
+			"DELETE",
+			"no-cache",
+			{},
+			undefined,
+			false,
+			false,
+		);
+		bulkBusyRef.current = false;
+		if (!isMountedRef.current) {
+			return;
+		}
+		setDeletingAll(false);
+		if (isFailure(res)) {
+			toast.error(res?.message || "Could not delete all files");
+			return;
+		}
+		// Stops a page that was in flight from re-adding deleted files.
+		abortActiveFetch();
+		setNewObjects([]);
+		seenKeysRef.current.clear();
+		setCountAll(0);
+		setHasMore(false);
+		toast.success("All files deleted");
+	};
+
+	const handleDeleteUnused = async () => {
+		if (bulkBusyRef.current) {
+			return;
+		}
+		bulkBusyRef.current = true;
+		setDeletingUnused(true);
+		const res = await safeFetch(
+			`/noadmin/files/deleteall/unused/permanently`,
+			"DELETE",
+			"no-cache",
+			{},
+			undefined,
+			false,
+			false,
+		);
+		bulkBusyRef.current = false;
+		if (!isMountedRef.current) {
+			return;
+		}
+		setDeletingUnused(false);
+		if (isFailure(res)) {
+			toast.error(res?.message || "Could not delete the unused files");
+			return;
+		}
+		toast.success("Unused files deleted");
+		// Only the server knows which files were unused, so the list is rebuilt.
+		reloadList();
+	};
+
+	/* ------------------------------- Derived list --------------------------- */
 
 	const items = useMemo(
 		() =>
@@ -553,36 +644,59 @@ const FilesWorkSpace = ({
 		[newobjects],
 	);
 
-	/* ------------------------------- Uploading ------------------------------ */
+	/* ------------------------------ Media elements -------------------------- */
 
 	const pauseAllMedia = (exceptId) => {
 		mediaElementsRef.current.forEach((element, id) => {
-			if (id !== exceptId && !element.paused) element.pause();
+			if (id !== exceptId && !element.paused) {
+				element.pause();
+			}
 		});
 	};
 
 	const registerMediaElement = (id, element) => {
-		if (element) mediaElementsRef.current.set(id, element);
-		else mediaElementsRef.current.delete(id);
+		if (element) {
+			mediaElementsRef.current.set(id, element);
+		} else {
+			mediaElementsRef.current.delete(id);
+		}
 	};
 
-	// Adds a new file to state in "uploading" mode and kicks off the upload.
+	/* -------------------------------- Uploading ----------------------------- */
+
+	const insertUploadedFile = useCallback(
+		(file) => {
+			const key = buildKey(file, "upload");
+			if (seenKeysRef.current.has(key)) {
+				return;
+			}
+			seenKeysRef.current.add(key);
+			const entry = { ...file, __key: key };
+			setNewObjects((prev) =>
+				prependNew ? [entry, ...prev] : [...prev, entry],
+			);
+			setCountAll((prev) => (typeof prev === "number" ? prev + 1 : prev));
+		},
+		[prependNew],
+	);
+
 	const addAndUploadFile = useCallback(
 		(fileObj) => {
 			if (!isMountedRef.current) {
 				revokeObjectUrl(fileObj.url);
 				return;
 			}
-			setUploads((prev) => [
+			setFiles((prev) => [
 				...prev,
 				{ ...fileObj, uploading: true, progress: 0, uploadError: null },
 			]);
 
-			const { promise, xhr } = uploadFileToServer(
+			const { res, xhr } = uploadFileToServer(
 				fileObj.blob,
 				fileObj.name,
 				(progress) => {
-					setUploads((prev) =>
+					if (!isMountedRef.current) return;
+					setFiles((prev) =>
 						prev.map((f) => (f.id === fileObj.id ? { ...f, progress } : f)),
 					);
 				},
@@ -593,12 +707,20 @@ const FilesWorkSpace = ({
 
 			uploadXhrsRef.current.set(fileObj.id, xhr);
 
-			promise
-				.then((response) => {
+			res
+				.then(({ file: uploaded }) => {
 					if (!isMountedRef.current) {
 						return;
 					}
-					setUploads((prev) =>
+					const serverObj = uploaded?.data || uploaded || {};
+					const loc = serverObj.location || {};
+					// With no remote URL the list shows the local preview, so that URL
+					// has to outlive the tray card.
+					if (!loc.secure_location) {
+						keptUrlsRef.current.add(fileObj.url);
+					}
+					// The finished card stays in the tray (marked done) until removed.
+					setFiles((prev) =>
 						prev.map((f) =>
 							f.id === fileObj.id
 								? { ...f, uploading: false, progress: 100 }
@@ -606,10 +728,9 @@ const FilesWorkSpace = ({
 						),
 					);
 
-					const serverObj = response?.data || response || {};
-					const loc = serverObj.location || {};
-					addUploadedFile({
+					insertUploadedFile({
 						_id: serverObj._id,
+						title: serverObj.title || fileObj.name,
 						size:
 							typeof serverObj.size === "number"
 								? serverObj.size
@@ -624,10 +745,10 @@ const FilesWorkSpace = ({
 					});
 				})
 				.catch((err) => {
-					// If the user aborted by removing the file, the row is already gone —
-					// there's nothing to update in state.
-					if (err?.name === "AbortError" || !isMountedRef.current) return;
-					setUploads((prev) =>
+					if (err?.name === "AbortError" || !isMountedRef.current) {
+						return;
+					}
+					setFiles((prev) =>
 						prev.map((f) =>
 							f.id === fileObj.id
 								? {
@@ -643,18 +764,21 @@ const FilesWorkSpace = ({
 					uploadXhrsRef.current.delete(fileObj.id);
 				});
 		},
-		[addUploadedFile, auth, token, onModel],
+		[insertUploadedFile, revokeObjectUrl, auth, token, onModel],
 	);
 
 	const handleFileUpload = (e) => {
-		const selectedFiles = e.target.files;
-		if (!selectedFiles) {
-			return;
+		// Copied before the input is reset, which empties its FileList.
+		const selected = Array.from(e.target.files || []);
+		if (fileInputRef.current) {
+			fileInputRef.current.value = "";
 		}
-
-		// A File already is a Blob; wrapping it in `new Blob([file])` only added
-		// a second object to keep alive.
-		Array.from(selectedFiles).forEach((file) => {
+		const accepted = selected.filter(isAcceptedFile);
+		if (accepted.length < selected.length) {
+			toast.error("Only audio, video, or image files can be uploaded here.");
+		}
+		// A File already is a Blob, so it is uploaded as-is.
+		accepted.forEach((file) => {
 			addAndUploadFile({
 				id: generateId(),
 				blob: file,
@@ -664,78 +788,34 @@ const FilesWorkSpace = ({
 				size: file.size,
 			});
 		});
-
-		if (fileInputRef.current) {
-			fileInputRef.current.value = "";
-		}
 	};
 
-	const removeUpload = (id) => {
-		// Abort the in-flight upload (if any) so we don't waste bandwidth.
+	const openFilePicker = () => {
+		fileInputRef.current?.click();
+	};
+
+	const removeFile = (id) => {
 		const xhr = uploadXhrsRef.current.get(id);
 		if (xhr) {
 			xhr.abort();
 			uploadXhrsRef.current.delete(id);
 		}
-		// Drop any associated media element reference.
 		mediaElementsRef.current.delete(id);
-
-		// Revoke outside the state updater: updaters must stay pure (Strict Mode
+		// Revoked outside the state updater: updaters must stay pure (Strict Mode
 		// runs them twice). URLs the saved list still shows are skipped.
 		const fileToRemove = uploadsRef.current.find((f) => f.id === id);
-		if (fileToRemove) revokeObjectUrl(fileToRemove.url);
-		setUploads((prev) => prev.filter((f) => f.id !== id));
+		if (fileToRemove) {
+			revokeObjectUrl(fileToRemove.url);
+		}
+		setFiles((prev) => prev.filter((f) => f.id !== id));
 	};
 
-	/* ------------------------- Camera / microphone -------------------------- */
-
-	const startCamera = async (type) => {
-		// A second click (or a double "Allow") used to open a second stream and
-		// overwrite streamRef, leaving the first camera/mic on with no way to stop it.
-		if (startingMediaRef.current || streamRef.current) {
-			return false;
-		}
-		startingMediaRef.current = true;
-		try {
-			const constraints =
-				type === "video" ? { video: true, audio: true } : { audio: true };
-			const stream = await navigator.mediaDevices.getUserMedia(constraints);
-			// The user may have left the page while the permission prompt was open.
-			if (!isMountedRef.current) {
-				stream.getTracks().forEach((track) => track.stop());
-				return false;
-			}
-			streamRef.current = stream;
-
-			if (type === "video") {
-				setShowCamera(true);
-				setRecordingType(type);
-			} else {
-				setRecordingType(type);
-				setupAudioVisualization(stream);
-			}
-			return true;
-		} catch (err) {
-			console.error("Error accessing media devices:", err);
-			toast.error(
-				"Could not access camera/microphone. Please check that you granted permission in your browser settings.",
-			);
-			// If the browser denied us, clear the cached permission flag.
-			setPermissions((prev) =>
-				type === "video"
-					? { video: false, audio: false }
-					: { ...prev, audio: false },
-			);
-			return false;
-		} finally {
-			startingMediaRef.current = false;
-		}
-	};
+	/* ------------------------------- Permissions ---------------------------- */
 
 	const grantAndStart = async (type) => {
-		const ok = await startCamera(type);
+		const ok = await startMediaStream(type);
 		if (ok) {
-			// Camera implies audio too (constraints include audio: true)
+			// The camera stream includes audio, so it grants the microphone too.
 			setPermissions((prev) =>
 				type === "video"
 					? { video: true, audio: true }
@@ -746,14 +826,13 @@ const FilesWorkSpace = ({
 	};
 
 	const requestPermission = async (type) => {
-		// Skip the modal if we've already been granted permission this session.
+		// Skip the modal if permission was already granted this session.
 		if (permissions[type]) {
-			startCamera(type);
+			startMediaStream(type);
 			return;
 		}
-		// The in-memory `permissions` flag resets on reload/remount, but the
-		// browser persists the actual grant. Query the Permissions API so we
-		// don't re-prompt for access the user already approved.
+		// The in-memory flag resets on remount, but the browser persists the
+		// grant. Query the Permissions API so an approved user isn't re-prompted.
 		try {
 			if (navigator.permissions?.query) {
 				const names =
@@ -772,7 +851,10 @@ const FilesWorkSpace = ({
 				}
 			}
 		} catch {
-			// Permissions API not supported for these names — fall back to the modal.
+			// Permissions API unsupported for these names — fall back to the modal.
+		}
+		if (!isMountedRef.current) {
+			return;
 		}
 		setPendingMediaType(type);
 		setShowPermissionModal(true);
@@ -793,16 +875,56 @@ const FilesWorkSpace = ({
 		setPendingMediaType(null);
 	};
 
+	/* --------------------------------- Capture ------------------------------ */
+
+	const startMediaStream = async (type) => {
+		// Two quick clicks would otherwise open two streams, and the first one
+		// would keep the camera/mic on with nothing left to stop it.
+		if (startingMediaRef.current || streamRef.current) {
+			return false;
+		}
+		startingMediaRef.current = true;
+		try {
+			const constraints =
+				type === "video" ? { video: true, audio: true } : { audio: true };
+			const stream = await navigator.mediaDevices.getUserMedia(constraints);
+			// The user may have left the page while the browser prompt was open.
+			if (!isMountedRef.current) {
+				stream.getTracks().forEach((track) => track.stop());
+				return false;
+			}
+			streamRef.current = stream;
+			setRecordingType(type);
+			if (type === "video") {
+				setShowCamera(true);
+			} else {
+				setupAudioVisualization(stream);
+				setShowMicrophone(true);
+			}
+			return true;
+		} catch (err) {
+			console.error("Error accessing media devices:", err);
+			toast.error(
+				"Could not access camera/microphone. Please check your browser permission settings.",
+			);
+			setPermissions((prev) =>
+				type === "video"
+					? { video: false, audio: false }
+					: { ...prev, audio: false },
+			);
+			return false;
+		} finally {
+			startingMediaRef.current = false;
+		}
+	};
+
 	const setupAudioVisualization = (stream) => {
 		const AudioCtx = window.AudioContext || window.webkitAudioContext;
 		if (!AudioCtx) {
 			return;
 		}
 		// Browsers cap the number of live AudioContexts; close any previous one.
-		if (audioContextRef.current) {
-			audioContextRef.current.close().catch(() => {});
-		}
-
+		audioContextRef.current?.close().catch(() => {});
 		const audioContext = new AudioCtx();
 		audioContextRef.current = audioContext;
 
@@ -815,10 +937,7 @@ const FilesWorkSpace = ({
 	};
 
 	useEffect(() => {
-		if (recordingType !== "audio" || showCamera) {
-			return;
-		}
-		if (!waveformRef.current || !analyserRef.current) {
+		if (!showMicrophone || !waveformRef.current || !analyserRef.current) {
 			return;
 		}
 
@@ -832,12 +951,11 @@ const FilesWorkSpace = ({
 		canvas.height = 80;
 		canvas.style.width = "100%";
 		canvas.style.height = "80px";
-		container.innerHTML = "";
-		container.appendChild(canvas);
+		container.replaceChildren(canvas);
 
 		const ctx = canvas.getContext("2d");
 		if (!ctx) {
-			return;
+			return () => container.replaceChildren();
 		}
 
 		const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
@@ -868,79 +986,35 @@ const FilesWorkSpace = ({
 				cancelAnimationFrame(animationFrameRef.current);
 				animationFrameRef.current = null;
 			}
-			if (container) {
-				container.innerHTML = "";
-			}
+			container.replaceChildren();
 		};
-	}, [recordingType, showCamera]);
+	}, [showMicrophone]);
 
 	const stopAudioVisualization = () => {
 		if (animationFrameRef.current) {
 			cancelAnimationFrame(animationFrameRef.current);
 			animationFrameRef.current = null;
 		}
-		if (audioContextRef.current) {
-			audioContextRef.current.close().catch(() => {});
-			audioContextRef.current = null;
-		}
+		audioContextRef.current?.close().catch(() => {});
+		audioContextRef.current = null;
 		analyserRef.current = null;
-		if (waveformRef.current) {
-			waveformRef.current.innerHTML = "";
-		}
 	};
 
 	useEffect(() => {
-		if (showCamera && streamRef.current && videoPreviewRef.current) {
-			videoPreviewRef.current.srcObject = streamRef.current;
+		const preview = videoPreviewRef.current;
+		if (showCamera && streamRef.current && preview) {
+			preview.srcObject = streamRef.current;
 		}
+		return () => {
+			if (preview) preview.srcObject = null;
+		};
 	}, [showCamera]);
 
-	/* ------------------------- Unmount cleanup ------------------------------ */
-	useEffect(() => {
-		// Strict Mode runs this cleanup once on its fake unmount, so the flag has
-		// to be set back to true on every setup.
-		isMountedRef.current = true;
-		// Snapshot the refs at effect-setup time so the cleanup function doesn't
-		// close over the refs after they may have been re-assigned.
-		const animFrame = animationFrameRef;
-		const audioCtx = audioContextRef;
-		const stream = streamRef;
-		const recorder = mediaRecorderRef;
-		const xhrs = uploadXhrsRef;
-		const objectUrls = objectUrlsRef;
-		const keptUrls = keptUrlsRef;
-		const mediaElements = mediaElementsRef;
-		return () => {
-			isMountedRef.current = false;
-			abortFetch();
-			if (animFrame.current) cancelAnimationFrame(animFrame.current);
-			animFrame.current = null;
-			if (audioCtx.current) audioCtx.current.close().catch(() => {});
-			audioCtx.current = null;
-			// Detach the recorder first: stopping its tracks fires `onstop`, which
-			// would otherwise start an upload after the component is gone.
-			if (recorder.current) {
-				recorder.current.ondataavailable = null;
-				recorder.current.onstop = null;
-				if (recorder.current.state !== "inactive") recorder.current.stop();
-				recorder.current = null;
-			}
-			if (stream.current) stream.current.getTracks().forEach((t) => t.stop());
-			stream.current = null;
-			xhrs.current.forEach((xhr) => xhr.abort());
-			xhrs.current.clear();
-			objectUrls.current.forEach((url) => URL.revokeObjectURL(url));
-			objectUrls.current.clear();
-			keptUrls.current.clear();
-			mediaElements.current.clear();
-		};
-	}, [abortFetch]);
-
 	const takePhoto = () => {
-		if (!videoPreviewRef.current || !streamRef.current) {
+		const video = videoPreviewRef.current;
+		if (!video || !streamRef.current) {
 			return;
 		}
-		const video = videoPreviewRef.current;
 		// Before the first frame arrives the size is 0x0 and toBlob gives null.
 		if (!video.videoWidth || !video.videoHeight) {
 			toast.info("The camera is still starting. Try again in a moment.");
@@ -953,7 +1027,6 @@ const FilesWorkSpace = ({
 		if (!ctx) {
 			return;
 		}
-
 		ctx.drawImage(video, 0, 0);
 		canvas.toBlob((blob) => {
 			if (!blob || !isMountedRef.current) {
@@ -974,20 +1047,17 @@ const FilesWorkSpace = ({
 		if (!streamRef.current || mediaRecorderRef.current) {
 			return;
 		}
-
 		let mediaRecorder;
 		try {
 			mediaRecorder = new MediaRecorder(streamRef.current);
 		} catch (err) {
-			console.error("MediaRecorder unavailable:", err);
+			console.error("Could not start MediaRecorder:", err);
 			toast.error("Recording is not supported in this browser.");
 			return;
 		}
-
-		// Captured per recording, so a late `onstop` can't mix up a previous
-		// recording's chunks or type.
+		// Captured per recording, so a late onstop can't mix up chunks or type.
+		const kind = recordingType || "video";
 		const chunks = [];
-		const type = recordingType || "video";
 		chunksRef.current = chunks;
 		mediaRecorderRef.current = mediaRecorder;
 
@@ -1000,22 +1070,32 @@ const FilesWorkSpace = ({
 				mediaRecorderRef.current = null;
 			}
 			chunksRef.current = [];
-			if (!isMountedRef.current || chunks.length === 0) {
+			if (!isMountedRef.current) {
 				return;
 			}
-			// Safari records mp4, not webm; use what the recorder actually produced.
+			setIsRecording(false);
+			// Use the format the browser actually produced (Safari records mp4).
 			const mimeType =
 				mediaRecorder.mimeType ||
-				chunks[0]?.type ||
-				(type === "video" ? "video/webm" : "audio/webm");
-			const extension = mimeType.includes("mp4") ? "mp4" : "webm";
+				(kind === "video" ? "video/webm" : "audio/webm");
 			const blob = new Blob(chunks, { type: mimeType });
+			chunks.length = 0;
+			if (blob.size === 0) {
+				return;
+			}
+			const ext = mimeType.includes("mp4")
+				? kind === "video"
+					? "mp4"
+					: "m4a"
+				: mimeType.includes("ogg")
+					? "ogg"
+					: "webm";
 			addAndUploadFile({
 				id: generateId(),
 				blob,
 				url: createObjectUrl(blob),
-				name: `${type}_${Date.now()}.${extension}`,
-				type,
+				name: `${kind}_${Date.now()}.${ext}`,
+				type: kind,
 				size: blob.size,
 			});
 		};
@@ -1025,37 +1105,33 @@ const FilesWorkSpace = ({
 	};
 
 	const stopRecording = () => {
-		const recorder = mediaRecorderRef.current;
-		if (recorder && recorder.state !== "inactive") {
-			recorder.stop();
+		const rec = mediaRecorderRef.current;
+		if (rec && rec.state !== "inactive") {
+			rec.stop();
 		}
 		setIsRecording(false);
 	};
 
-	const closeCamera = () => {
-		// Stop the recorder before its tracks, so the final chunk is flushed and
+	const closeMediaStream = () => {
+		// Stop the recorder before its tracks so the final chunk is flushed and
 		// the recording is still saved.
 		stopRecording();
-		if (streamRef.current) {
-			streamRef.current.getTracks().forEach((track) => track.stop());
-			streamRef.current = null;
-		}
-		if (videoPreviewRef.current) videoPreviewRef.current.srcObject = null;
+		streamRef.current?.getTracks().forEach((track) => track.stop());
+		streamRef.current = null;
 		stopAudioVisualization();
 		setShowCamera(false);
+		setShowMicrophone(false);
 		setRecordingType(null);
-		setIsRecording(false);
 	};
 
-	/* ---------------------------- Reorder tray ------------------------------ */
+	/* ----------------------------- Reorder uploads -------------------------- */
 
 	const handleDragStart = (e, index) => {
 		setDraggedIndex(index);
 		e.dataTransfer.effectAllowed = "move";
 	};
 
-	// dragover fires continuously while the mouse moves; only update state when
-	// the hovered index actually changes to avoid pointless re-renders.
+	// dragover fires continuously; only update state when the index changes.
 	const handleDragOver = useCallback((e, index) => {
 		e.preventDefault();
 		e.dataTransfer.dropEffect = "move";
@@ -1083,7 +1159,7 @@ const FilesWorkSpace = ({
 				setDragOverIndex(null);
 				return;
 			}
-			setUploads((prev) => {
+			setFiles((prev) => {
 				const next = [...prev];
 				const [moved] = next.splice(draggedIndex, 1);
 				next.splice(dropIndex, 0, moved);
@@ -1100,11 +1176,38 @@ const FilesWorkSpace = ({
 		setDragOverIndex(null);
 	};
 
-	/* -------------------------------- Render -------------------------------- */
+	/* --------------------------------- Search ------------------------------- */
+
+	const [keyword, setKeyword] = useState("");
+	const [debouncedKeyword, setDebouncedKeyword] = useState("");
+
+	useEffect(() => {
+		const timer = setTimeout(() => {
+			setDebouncedKeyword(keyword.trim());
+		}, 400);
+		return () => clearTimeout(timer);
+	}, [keyword]);
+
+	const searchData = (e) => {
+		e.preventDefault();
+		setDebouncedKeyword(keyword.trim());
+	};
+
+	const displayedItems = useMemo(() => {
+		if (!debouncedKeyword) {
+			return items;
+		}
+		const needle = debouncedKeyword.toLowerCase();
+		return items.filter((item) =>
+			(item?.raw?.title || item.filename || "").toLowerCase().includes(needle),
+		);
+	}, [items, debouncedKeyword]);
+
+	/* --------------------------------- Render ------------------------------- */
 
 	const permissionLabel =
 		pendingMediaType === "video" ? "camera and microphone" : "microphone";
-	const totalSize = uploads.reduce((acc, f) => acc + (f.size || 0), 0);
+	const totalSize = files.reduce((acc, f) => acc + (f.size || 0), 0);
 	const countBadge = (
 		<span className="badge bg-light text-dark">
 			{items.length}
@@ -1115,31 +1218,24 @@ const FilesWorkSpace = ({
 
 	return (
 		<>
-			<div className="card rounded-0 mb-1">
-				<AdminCardHeaderMenu
-					allLink={allLink}
-					pageText={pageText}
-					currentResults={items.length}
-					totalResults={countAll ?? objects?.countAll ?? 0}
-					searchOn={searchOn}
-					handleDeleteAllFunction={handleDeleteAllFunction}
-					handleDeleteAllUnusedPermanently={handleDeleteAllUnusedPermanently}
-					classList="border-bottom-0"
-				/>
-			</div>
 			<div className="container">
-				{/* ----------------------- Multimedia manager ---------------------- */}
+				{/* FILE UPLOADER */}
 				<div className="mb-1">
 					{showPermissionModal && (
 						<div
 							className="modal show d-block"
 							tabIndex="-1"
+							role="dialog"
+							aria-modal="true"
+							aria-labelledby="permission-modal-title"
 							style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
 						>
 							<div className="modal-dialog modal-dialog-centered">
 								<div className="modal-content">
 									<div className="modal-header">
-										<h5 className="modal-title">Permission Required</h5>
+										<h5 className="modal-title" id="permission-modal-title">
+											Permission Required
+										</h5>
 									</div>
 									<div className="modal-body">
 										<p>
@@ -1170,22 +1266,21 @@ const FilesWorkSpace = ({
 							</div>
 						</div>
 					)}
-
-					<div className="card rounded-0">
+					<div className="card rounded-0 mb-1">
 						<div className="card-header">
 							<h4 className="mb-0 d-flex align-items-center gap-2">
-								<i aria-hidden={true} className="fa-solid fa-upload" />
+								<i aria-hidden className="fa-solid fa-upload" />
 								Multimedia Manager
 							</h4>
 						</div>
 						<div className="card-body">
-							<div className="row g-3 mb-4">
+							<div className="row g-3 mb-3">
 								<div className="col-12 col-md-6 col-lg-3">
 									<input
 										type="file"
 										ref={fileInputRef}
 										onChange={handleFileUpload}
-										accept="audio/*,video/*,image/*"
+										accept={ACCEPTED_FILE_TYPES}
 										multiple
 										className="d-none"
 										id="fileInput"
@@ -1193,31 +1288,33 @@ const FilesWorkSpace = ({
 									<button
 										type="button"
 										className="btn btn-primary w-100 d-flex align-items-center justify-content-center gap-2"
-										onClick={() => fileInputRef.current?.click()}
+										onClick={openFilePicker}
 									>
-										<i aria-hidden={true} className="fa-solid fa-upload" />
+										<i aria-hidden className="fa-solid fa-upload" />
 										Upload Files
 									</button>
 								</div>
 
 								<div className="col-12 col-md-6 col-lg-3">
 									<button
+										type="button"
 										className="btn btn-success w-100 d-flex align-items-center justify-content-center gap-2"
 										onClick={() => requestPermission("video")}
-										disabled={showCamera || recordingType === "audio"}
+										disabled={showCamera || showMicrophone}
 									>
-										<i aria-hidden={true} className="fa-solid fa-camera" />
+										<i aria-hidden className="fa-solid fa-camera" />
 										Open Camera
 									</button>
 								</div>
 
 								<div className="col-12 col-md-6 col-lg-3">
 									<button
+										type="button"
 										className="btn btn-warning w-100 d-flex align-items-center justify-content-center gap-2"
 										onClick={() => requestPermission("audio")}
-										disabled={showCamera || recordingType === "audio"}
+										disabled={showCamera || showMicrophone}
 									>
-										<i aria-hidden={true} className="fa-solid fa-microphone" />
+										<i aria-hidden className="fa-solid fa-microphone" />
 										Open Microphone
 									</button>
 								</div>
@@ -1225,15 +1322,16 @@ const FilesWorkSpace = ({
 								<div className="col-12 col-md-6 col-lg-3">
 									<div className="bg-light rounded p-2 text-center">
 										<small className="text-muted">
-											{uploads.length} file{uploads.length !== 1 ? "s" : ""} •{" "}
+											{files.length} file{files.length !== 1 ? "s" : ""} •{" "}
 											{formatFileSize(totalSize)}
 										</small>
 									</div>
 								</div>
 							</div>
 
-							{(showCamera || recordingType === "audio") && (
-								<div className="card mb-4 border-2 border-primary">
+							{/* Live capture panel */}
+							{(showCamera || showMicrophone) && (
+								<div className="card mb-3 border-2 border-primary">
 									<div className="card-body">
 										{showCamera && (
 											<div className="text-center mb-3">
@@ -1248,7 +1346,7 @@ const FilesWorkSpace = ({
 											</div>
 										)}
 
-										{recordingType === "audio" && !showCamera && (
+										{showMicrophone && (
 											<div className="text-center py-4">
 												<div
 													className={`d-inline-flex align-items-center justify-content-center rounded-circle mb-3 ${
@@ -1261,9 +1359,9 @@ const FilesWorkSpace = ({
 														className="fa-solid fa-microphone fa-3x text-white"
 													/>
 												</div>
-
 												<div
 													ref={waveformRef}
+													aria-hidden
 													className="mb-3 mx-auto rounded border border-secondary"
 													style={{
 														maxWidth: "500px",
@@ -1271,8 +1369,7 @@ const FilesWorkSpace = ({
 														backgroundColor: "#f8f9fa",
 													}}
 												/>
-
-												<p className="mt-2 mb-0">
+												<p className="mt-2 mb-0" aria-live="polite">
 													{isRecording ? (
 														<span className="text-danger fw-bold">
 															Recording...
@@ -1287,46 +1384,49 @@ const FilesWorkSpace = ({
 										<div className="d-flex flex-wrap justify-content-center gap-2">
 											{showCamera && (
 												<button
+													type="button"
 													className="btn btn-info btn-sm"
 													onClick={takePhoto}
 												>
 													<i
-														aria-hidden={true}
+														aria-hidden
 														className="fa-solid fa-camera align-middle me-1"
 													/>
 													Take Photo
 												</button>
 											)}
-
 											{!isRecording ? (
 												<button
+													type="button"
 													className="btn btn-danger btn-sm"
 													onClick={startRecording}
 												>
 													<i
-														aria-hidden={true}
+														aria-hidden
 														className="fa-solid fa-play align-middle me-1"
 													/>
 													Start Recording
 												</button>
 											) : (
 												<button
+													type="button"
 													className="btn btn-dark btn-sm"
 													onClick={stopRecording}
 												>
 													<i
-														aria-hidden={true}
+														aria-hidden
 														className="fa-solid fa-stop align-middle me-1"
 													/>
 													Stop Recording
 												</button>
 											)}
 											<button
+												type="button"
 												className="btn btn-secondary btn-sm"
-												onClick={closeCamera}
+												onClick={closeMediaStream}
 											>
 												<i
-													aria-hidden={true}
+													aria-hidden
 													className="fa-solid fa-xmark align-middle me-1"
 												/>
 												Close
@@ -1336,7 +1436,7 @@ const FilesWorkSpace = ({
 								</div>
 							)}
 
-							{uploads.length === 0 ? (
+							{files.length === 0 ? (
 								<div className="text-center py-5 rounded admin-multimedia-manager">
 									<p className="mb-0">
 										No files yet. Upload or capture media to get started.
@@ -1345,7 +1445,7 @@ const FilesWorkSpace = ({
 								</div>
 							) : (
 								<div className="d-flex flex-nowrap gap-3 overflow-auto pb-3 scroll-thin">
-									{uploads.map((file, index) => (
+									{files.map((file, index) => (
 										<div
 											key={file.id}
 											className="flex-shrink-0"
@@ -1386,9 +1486,11 @@ const FilesWorkSpace = ({
 													</div>
 													{!file.uploading && (
 														<button
-															className="btn btn-outline-danger btn-sm"
-															onClick={() => removeUpload(file.id)}
+															type="button"
+															className="btn btn-sm btn-outline-danger"
+															onClick={() => removeFile(file.id)}
 															title="Remove file"
+															aria-label={`Remove ${file.name}`}
 														>
 															<i
 																aria-hidden
@@ -1504,7 +1606,7 @@ const FilesWorkSpace = ({
 					</div>
 				</div>
 
-				{/* --------------------------- Saved files ------------------------- */}
+				{/* GET API ENDPOINT ERRORS */}
 				{error && (
 					<div
 						className="alert alert-danger d-flex justify-content-between align-items-center"
@@ -1522,25 +1624,93 @@ const FilesWorkSpace = ({
 						</button>
 					</div>
 				)}
+
 				{!error && items.length === 0 && !loading && (
-					<div className="alert alert-info mb-0" role="alert">
+					<div className="alert alert-info rounded-0 mb-0" role="alert">
 						No files were returned from the API.
 					</div>
 				)}
+
 				{items.length > 0 && (
-					<div className="row g-3">
-						{items.map((item, index) => (
-							<Single
-								key={item.key}
-								index={index}
-								object={item}
-								handleDelete={handleDelete}
-								isDeleting={deletingKeys.has(item.key)}
-							/>
-						))}
-					</div>
+					<>
+						<div className="card rounded-0 mb-1">
+							<div className="card-header">
+								<div className="float-start">
+									<form
+										onSubmit={searchData}
+										className="d-none d-md-block"
+										role="search"
+									>
+										<label htmlFor="keyword" className="visually-hidden">
+											Search by title
+										</label>
+										<input
+											id="keyword"
+											name="keyword"
+											value={keyword}
+											onChange={(e) => setKeyword(e.target.value)}
+											type="search"
+											className="form-control"
+											placeholder="Search by title"
+										/>
+									</form>
+								</div>
+								<div className="float-end my-1">
+									<div className="btn-group">
+										<button
+											type="button"
+											className="btn btn-danger btn-sm"
+											onClick={handleDeleteUnused}
+											disabled={deletingUnused || deletingAll}
+										>
+											{deletingUnused ? "..." : "Delete all unused permanently"}
+										</button>
+										<button
+											type="button"
+											className="btn btn-dark btn-sm"
+											onClick={handleDeleteAll}
+											disabled={deletingAll || deletingUnused}
+										>
+											{deletingAll ? "..." : "Delete all permanently"}
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
+						{/* Dismissed through state: Bootstrap's data-bs-dismiss would remove
+                nodes React still owns. */}
+						{debouncedKeyword && displayedItems.length === 0 && (
+							<div
+								className="alert alert-info alert-dismissible rounded-0 mb-1"
+								role="alert"
+							>
+								No objects match &quot;{debouncedKeyword}&quot;.
+								<button
+									type="button"
+									className="btn-close"
+									aria-label="Clear search"
+									onClick={() => {
+										setKeyword("");
+										setDebouncedKeyword("");
+									}}
+								/>
+							</div>
+						)}
+						<div className="row g-3">
+							{displayedItems.map((item, index) => (
+								<Single
+									key={item.key}
+									index={index}
+									object={item}
+									handleDelete={handleDeleteIt}
+									isDeleting={deletingKeys.has(item.key)}
+								/>
+							))}
+						</div>
+					</>
 				)}
-				{/* Sentinel + status row used by the IntersectionObserver */}
+
+				{/* Sentinel + status row */}
 				<div ref={sentinelRef} className="text-center py-4">
 					{loading && (
 						<div className="d-inline-flex align-items-center gap-2 text-muted">
@@ -1550,14 +1720,14 @@ const FilesWorkSpace = ({
 							>
 								<span className="visually-hidden">Loading...</span>
 							</div>
-							<small>Loading more files...</small>
+							<span>Loading more files...</span>
 							<br />
 							{!error && countBadge}
 						</div>
 					)}
 					{!loading && !hasMore && items.length > 0 && (
 						<>
-							<small>No more files to load.</small>
+							<small className="text-muted">No more files to load.</small>
 							<br />
 							{!error && countBadge}
 						</>
@@ -1568,4 +1738,4 @@ const FilesWorkSpace = ({
 	);
 };
 
-export default FilesWorkSpace;
+export default FilesManager;

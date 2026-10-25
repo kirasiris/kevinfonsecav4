@@ -21,18 +21,52 @@ const toMention = (value) =>
 		? { id: String(value), username: "" }
 		: { id: toId(value), username: value?.username || "" };
 
+const resolveParent = (parentId, parent, list) => {
+	if (!parentId) {
+		return null;
+	}
+	if (typeof parentId === "object" && parentId.title) {
+		return { _id: toId(parentId), title: parentId.title };
+	}
+	const fromProp = parent?.data || parent;
+	if (fromProp && toId(fromProp) === parentId && fromProp.title) {
+		return { _id: parentId, title: fromProp.title };
+	}
+	const inList = list.find((item) => toId(item._id) === parentId);
+	if (inList) {
+		return { _id: parentId, title: inList.title };
+	}
+	const viaSibling = list.find(
+		(item) => toId(item.parentId) === parentId && item.parentId?.title,
+	);
+	if (viaSibling) {
+		return { _id: parentId, title: viaSibling.parentId.title };
+	}
+	return { _id: parentId, title: `Current parent (${parentId})` };
+};
+
 const UpdateCategoryForm = ({
 	currentpage = "",
 	object = {},
 	objects = [],
+	parent = null,
 }) => {
 	const router = useRouter();
 
 	const [btnText, setBtnText] = useState(`Submit`);
 
-	const savedFiles = Array.isArray(object?.data?.files?.extras)
-		? object?.data?.files.extras
-		: [];
+	const categoryId = toId(object?.data?._id);
+	const currentParentId = toId(object?.data?.parentId);
+	const categoryList = Array.isArray(objects?.data) ? objects.data : [];
+	const currentParent = resolveParent(
+		object?.data?.parentId ? currentParentId : "",
+		parent,
+		categoryList,
+	);
+	const parentOptions = categoryList.filter((item) => {
+		const id = toId(item._id);
+		return id !== categoryId && id !== currentParentId;
+	});
 
 	const upgradeCategory = async (e) => {
 		e.preventDefault();
@@ -59,7 +93,7 @@ const UpdateCategoryForm = ({
 		};
 
 		const res = await fetchurl(
-			`/noadmin/categories/${object?.data?._id}`,
+			`/noadmin/categories/${categoryId}`,
 			"PUT",
 			"no-cache",
 			rawFormData,
@@ -83,7 +117,7 @@ const UpdateCategoryForm = ({
 	};
 
 	return (
-		<form key={object?.data?._id} onSubmit={upgradeCategory}>
+		<form key={`${categoryId}-${currentParentId}`} onSubmit={upgradeCategory}>
 			<label htmlFor="category-title" className="form-label">
 				Title
 			</label>
@@ -116,25 +150,18 @@ const UpdateCategoryForm = ({
 			<select
 				id="parentId"
 				name="parentId"
-				defaultValue={object?.data?.parentId}
+				defaultValue={currentParentId}
 				className="form-select mb-3"
 			>
-				{object?.data?.parentId && (
-					<option value={object.data.parentId}>
-						{
-							objects?.data?.find((item) => item._id === object.data.parentId)
-								?.title
-						}
-					</option>
+				<option value="">Select category</option>
+				{currentParent && (
+					<option value={currentParent._id}>{currentParent.title}</option>
 				)}
-				<option>Select category</option>
-				{objects?.data
-					?.filter((item) => item._id !== object?.data?.parentId)
-					.map((item) => (
-						<option key={item._id} value={item._id}>
-							{item.title}
-						</option>
-					))}
+				{parentOptions.map((item) => (
+					<option key={toId(item._id)} value={toId(item._id)}>
+						{item.title}
+					</option>
+				))}
 			</select>
 			<label htmlFor="deletable" className="form-label">
 				Deletable
@@ -142,11 +169,11 @@ const UpdateCategoryForm = ({
 			<select
 				id="deletable"
 				name="deletable"
-				defaultValue={object?.data?.deletable}
+				defaultValue={String(object?.data?.deletable ?? false)}
 				className="form-select"
 			>
-				<option value={true}>Yes</option>
-				<option value={false}>No</option>
+				<option value="true">Yes</option>
+				<option value="false">No</option>
 			</select>
 			<br />
 			<FormButtons />

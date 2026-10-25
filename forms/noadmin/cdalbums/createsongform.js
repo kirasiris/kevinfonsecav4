@@ -681,7 +681,6 @@ const CreateSongForm = ({ token = {}, auth = {}, params = {} }) => {
 			title: formData.get("title"),
 			sub_title: formData.get("sub_title"),
 			text: formData.get("text"),
-			mentions: JSON.parse(formData.get("text_users") || "[]"),
 			tags: JSON.parse(formData.get("text_hashtags") || "[]"),
 			commented: formData.get("commented"),
 			embedding: formData.get("embedding"),

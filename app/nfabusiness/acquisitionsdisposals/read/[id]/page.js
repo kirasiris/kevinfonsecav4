@@ -2,9 +2,8 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import { fetchurl, getAuthTokenOnServer } from "@/helpers/setTokenOnServer";
 import ParseHtml from "@/layout/parseHtml";
-import FileList from "@/components/nfabusiness/acquisitionsdisposals/filelist";
-import UseDropzone from "@/components/nfabusiness/acquisitionsdisposals/filedropzone";
 import { getGlobalData } from "@/helpers/globalData";
+import AcquisitionDisposalsMediaManager from "@/components/nfabusiness/acquisitionsdisposals/acquisitiondisposalsmediamanager";
 
 async function getAcquisitionsDisposals(params) {
 	const res = await fetchurl(
@@ -243,22 +242,13 @@ const ReadAcquisitionDisposal = async ({ params, searchParams }) => {
 						Notes
 					</label>
 					<ParseHtml text={acquisitionsdisposal?.data?.text} />
-					<UseDropzone
+					<AcquisitionDisposalsMediaManager
 						auth={auth}
 						token={token}
-						id="file"
-						name="file"
-						multipleFiles={true}
 						object={acquisitionsdisposal?.data}
+						objects={acquisitionsdisposal?.data?.files?.extras}
+						searchParams={awtdSearchParams}
 					/>
-					<div className="card rounded-0">
-						<FileList
-							allLink={`/nfabusiness/acquisitionsdisposals/read/${acquisitionsdisposal?.data?._id}`}
-							pageText="Files"
-							objects={acquisitionsdisposal?.data?.files?.extras}
-							searchParams={awtdSearchParams}
-						/>
-					</div>
 				</div>
 			</div>
 		</article>

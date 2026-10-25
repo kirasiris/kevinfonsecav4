@@ -12,17 +12,49 @@ const UpdateJobForm = ({ token = {}, auth = {}, object = {} }) => {
 
 	const [btnText, setBtnText] = useState("Submit");
 
+	const rawExperienceLevels = object?.data?.experience_level;
+	const defaultExperienceLevels = Array.isArray(rawExperienceLevels)
+		? rawExperienceLevels
+		: typeof rawExperienceLevels === "string" && rawExperienceLevels.length > 0
+			? rawExperienceLevels.split(",").map((s) => s.trim())
+			: [];
+
+	const rawJobTypes = object?.data?.job_type;
+	const defaultJobTypes = Array.isArray(rawJobTypes)
+		? rawJobTypes
+		: typeof rawJobTypes === "string" && rawJobTypes.length > 0
+			? rawJobTypes.split(",").map((s) => s.trim())
+			: [];
+
+	const rawRemotes = object?.data?.remote;
+	const defaultRemotes = Array.isArray(rawRemotes)
+		? rawRemotes
+		: typeof rawRemotes === "string" && rawRemotes.length > 0
+			? rawRemotes.split(",").map((s) => s.trim())
+			: [];
+
+	const rawShifts = object?.data?.shift_and_schedule;
+	const defaultShifts = Array.isArray(rawShifts)
+		? rawShifts
+		: typeof rawShifts === "string" && rawShifts.length > 0
+			? rawShifts.split(",").map((s) => s.trim())
+			: [];
+
 	const upgradeJob = async (e) => {
 		e.preventDefault();
 		setBtnText(`Processing...`);
 		const form = e.target;
 		const formData = new FormData(form);
 
+		const text = formData.get("text") || "";
+		const tags = JSON.parse(formData.get("text_hashtags") || "[]");
+
+		const bodyUnchanged = text === (object?.data?.text || "");
+
 		const rawFormData = {
 			title: formData.get("title"),
 			text: formData.get("text"),
-			mentions: JSON.parse(formData.get("text_users") || "[]"),
-			tags: JSON.parse(formData.get("text_hashtags") || "[]"),
+			tags: bodyUnchanged && !tags.length ? object?.data?.tags || [] : tags,
 			positionFilled: formData.get("positionFilled"),
 			experience_level: formData.getAll("experience_level"),
 			job_type: formData.getAll("job_type"),
@@ -124,7 +156,7 @@ const UpdateJobForm = ({ token = {}, auth = {}, object = {} }) => {
 						<select
 							id="experience_level"
 							name="experience_level"
-							defaultValue={object?.data?.experience_level}
+							defaultValue={defaultExperienceLevels}
 							className="form-select mb-3"
 							multiple
 						>
@@ -139,7 +171,7 @@ const UpdateJobForm = ({ token = {}, auth = {}, object = {} }) => {
 						<select
 							id="job_type"
 							name="job_type"
-							defaultValue={object?.data?.job_type}
+							defaultValue={defaultJobTypes}
 							className="form-select mb-3"
 							multiple
 						>
@@ -196,7 +228,7 @@ const UpdateJobForm = ({ token = {}, auth = {}, object = {} }) => {
 						<select
 							id="remote"
 							name="remote"
-							defaultValue={object?.data?.remote}
+							defaultValue={defaultRemotes}
 							className="form-select mb-3"
 							multiple
 						>
@@ -212,7 +244,7 @@ const UpdateJobForm = ({ token = {}, auth = {}, object = {} }) => {
 						<select
 							id="shift_and_schedule"
 							name="shift_and_schedule"
-							defaultValue={object?.data?.shift_and_schedule}
+							defaultValue={defaultShifts}
 							className="form-select mb-3"
 							multiple
 						>

@@ -17,10 +17,12 @@ const UpdateCategory = async ({ params, searchParams }) => {
 	const page = awtdSearchParams.page || 1;
 	const limit = awtdSearchParams.limit || 10;
 	const sort = awtdSearchParams.sort || "-createdAt";
+
 	const category = await getCategories(`/${awtdParams.id}`);
+	const parentId = category?.data?.parentId;
 
 	const categories = await getCategories(
-		`?page=${page}&limit=${limit}&sort=${sort}`
+		`?page=${page}&limit=${limit}&sort=${sort}`,
 	);
 
 	const draftIt = async (id) => {
@@ -28,7 +30,7 @@ const UpdateCategory = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/categories/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/categories?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/categories?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -37,7 +39,7 @@ const UpdateCategory = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/categories/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/categories?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/categories?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -46,7 +48,7 @@ const UpdateCategory = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/categories/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/categories?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/categories?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -55,7 +57,7 @@ const UpdateCategory = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/categories/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/categories?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/categories?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -65,10 +67,10 @@ const UpdateCategory = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/categories/${id}/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/categories?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/categories?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -77,7 +79,7 @@ const UpdateCategory = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/categories/deleteall`, "PUT", "no-cache", {});
 		revalidatePath(
-			`/noadmin/categories?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/categories?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -88,10 +90,10 @@ const UpdateCategory = async ({ params, searchParams }) => {
 			`/noadmin/categories/deleteall/permanently`,
 			"DELETE",
 			"no-cache",
-			{}
+			{},
 		);
 		revalidatePath(
-			`/noadmin/categories?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/categories?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -112,6 +114,7 @@ const UpdateCategory = async ({ params, searchParams }) => {
 						currentpage={`/noadmin/categories?page=${page}&limit=${limit}&sort=${sort}`}
 						object={category}
 						objects={categories}
+						parent={parentId ? category?.data : null}
 					/>
 				</div>
 				<div className="col-lg-10">

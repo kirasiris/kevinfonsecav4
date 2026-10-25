@@ -663,30 +663,11 @@ function Pagination({ page, totalPages, onPage, label, disabled = false }) {
 	);
 }
 
-const toId = (value) => {
-	if (!value) {
-		return "";
-	}
-	if (typeof value === "string" || typeof value === "number") {
-		return String(value);
-	}
-	return String(value._id || value.id || "");
-};
-
-const toMention = (value) =>
-	typeof value === "string" || typeof value === "number"
-		? { id: String(value), username: "" }
-		: { id: toId(value), username: value?.username || "" };
-
 const UpdateChapterForm = ({ token = {}, auth = {}, object = {} }) => {
 	const router = useRouter();
 	const submittingRef = useRef(false);
 
 	const [btnText, setBtnText] = useState(`Submit`);
-
-	const savedFiles = Array.isArray(object?.data?.files?.extras)
-		? object?.data?.files.extras
-		: [];
 
 	const upgradeChapter = async (e) => {
 		e.preventDefault();
@@ -697,19 +678,13 @@ const UpdateChapterForm = ({ token = {}, auth = {}, object = {} }) => {
 		const formData = new FormData(form);
 
 		const text = formData.get("text") || "";
-		const mentions = JSON.parse(formData.get("text_users") || "[]");
 		const tags = JSON.parse(formData.get("text_hashtags") || "[]");
-		const extras = JSON.parse(formData.get("text_files") || "[]");
 
 		const bodyUnchanged = text === (object?.data?.text || "");
 
 		const rawFormData = {
 			title: formData.get("title"),
 			text: formData.get("text"),
-			mentions:
-				bodyUnchanged && !mentions.length
-					? (object?.data?.mentions || []).map(toMention)
-					: mentions,
 			tags: bodyUnchanged && !tags.length ? object?.data?.tags || [] : tags,
 			commented: formData.get("commented"),
 			embedding: formData.get("embedding"),
@@ -741,10 +716,6 @@ const UpdateChapterForm = ({ token = {}, auth = {}, object = {} }) => {
 			files: {
 				avatar: formData.get("file") || undefined,
 				video_url: formData.get("video_url") || undefined,
-				extras:
-					bodyUnchanged && !extras.length
-						? savedFiles.map(toId).filter(Boolean)
-						: extras,
 			},
 		};
 
@@ -794,7 +765,7 @@ const UpdateChapterForm = ({ token = {}, auth = {}, object = {} }) => {
 					id="text"
 					name="text"
 					defaultValue={object?.data?.text}
-					defaultFiles={savedFiles}
+					defaultFiles={[]}
 					onModel="Video"
 					advancedTextEditor={true}
 					customPlaceholder="No description"

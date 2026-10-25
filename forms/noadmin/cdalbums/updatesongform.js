@@ -677,12 +677,16 @@ const UpdateSongForm = ({ token = {}, auth = {}, object = {} }) => {
 		const form = e.target;
 		const formData = new FormData(form);
 
+		const text = formData.get("text") || "";
+		const tags = JSON.parse(formData.get("text_hashtags") || "[]");
+
+		const bodyUnchanged = text === (object?.data?.text || "");
+
 		const rawFormData = {
 			title: formData.get("title"),
 			sub_title: formData.get("sub_title"),
 			text: formData.get("text"),
-			mentions: JSON.parse(formData.get("text_users") || "[]"),
-			tags: JSON.parse(formData.get("text_hashtags") || "[]"),
+			tags: bodyUnchanged && !tags.length ? object?.data?.tags || [] : tags,
 			commented: formData.get("commented"),
 			embedding: formData.get("embedding"),
 			category: formData.get("category"),

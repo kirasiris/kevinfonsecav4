@@ -849,6 +849,10 @@ body.dark-mode blockquote {
 	border-left: 5px solid #00ff00 !important;
 }
 
+body.dark-mode .editor-surface blockquote p {
+	color: #0f0;
+}
+
 body.dark-mode .dropzone,
 body.dark-mode .admin-multimedia-manager,
 body.dark-mode .admin-multimedia-manager-audio-file,

@@ -71,6 +71,7 @@ const UpdateBlogForm = ({
 						? savedFiles.map(toId).filter(Boolean)
 						: extras,
 			},
+			project: formData.get("project"),
 		};
 
 		const res = await fetchurl(
@@ -127,6 +128,27 @@ const UpdateBlogForm = ({
 					charactersLimit={99999}
 					isRequired={true}
 				/>
+				<label htmlFor="project" className="form-label">
+					Project
+				</label>
+				<select
+					id="project"
+					name="project"
+					defaultValue={object?.data?.project}
+					className="form-select"
+				>
+					<option value={`all`}>All</option>
+					<option value={`personal`}>Personal</option>
+					<option value={`armedcodellc`}>Armed Code, LLC</option>
+					<option value={`armedcodellc-entertainment`}>
+						Armed Code, LLC - Entertainment
+					</option>
+					<option value={`armedcodellc-smartpresentation`}>
+						Armed Code, LLC - Smart Presentation
+					</option>
+					<option value={`anonymous-secrets-app`}>Anonymous Secrets App</option>
+					<option value={`play-it-now-app`}>Play It Now App</option>
+				</select>
 			</div>
 			<div className="col-lg-3">
 				<AdminSidebar

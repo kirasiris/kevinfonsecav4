@@ -3840,11 +3840,7 @@ const MyTextArea = ({
 						<small>{status}</small>
 						<div className="vr" />
 						<small
-							className={
-								overCharacterLimit
-									? "text-danger fw-semibold"
-									: "text-body-secondary"
-							}
+							className={overCharacterLimit ? "text-danger fw-semibold" : ""}
 						>
 							{characterCountLabel}
 							{overCharacterLimit && (

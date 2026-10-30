@@ -26,24 +26,19 @@ const Menu = ({
 						aria-controls="responsive-navbar-nav"
 						className="me-1"
 					/>
-					<Link
-						href={canonical}
-						className={`navbar-brand`}
-						target="_blank"
-						style={{ verticalAlign: "middle" }}
-					>
+					<Link href={canonical} className={`navbar-brand`} target="_blank">
 						<Image
 							alt={title}
 							src={logo?.location?.secure_location}
 							width="150"
 							height="40"
-							className="d-inline-block align-text-top"
+							className="d-inline-block"
 						/>
 					</Link>
 				</div>
 				<Navbar.Collapse id="responsive-navbar-nav">
 					<Nav as="ul" className="me-auto">
-						<li className="nav-item mx-1">
+						<li className="nav-item">
 							<Link
 								href={canonical}
 								className={`nav-link ${isActive(canonical)}`}
@@ -52,7 +47,7 @@ const Menu = ({
 								Home
 							</Link>
 						</li>
-						<li className="nav-item mx-1">
+						<li className="nav-item">
 							<Link
 								href={{
 									pathname: `${canonical}/quiz`,

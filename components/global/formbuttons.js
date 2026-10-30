@@ -1,8 +1,9 @@
 "use client";
 import { useFormStatus } from "react-dom";
 
-const FormButtons = ({ classList = "float-start" }) => {
-	const { pending } = useFormStatus();
+const FormButtons = ({ classList = "float-start", pending: pendingProp }) => {
+	const formStatus = useFormStatus();
+	const pending = pendingProp ?? formStatus.pending;
 
 	const resetForm = (e) => {
 		e.target.closest("form").reset();

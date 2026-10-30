@@ -1,9 +1,10 @@
 "use client";
 import Link from "next/link";
 
-const DynamicCards = ({
+const DynamicCard = ({
 	title = ``,
 	text = ``,
+	subtext = ``,
 	bgcolor = ``,
 	txtcolor = ``,
 	myLink = "#!",
@@ -11,10 +12,13 @@ const DynamicCards = ({
 }) => {
 	return (
 		<div className="col-lg-3 mb-3">
-			<div className={`card ${bgcolor} ${txtcolor}`}>
+			<div className={`card h-100 ${bgcolor} ${txtcolor}`}>
 				<div className="card-header">{title}</div>
 				<div className="card-body">
 					<p className="display-1 m-0">{text}</p>
+					{subtext && (
+						<p className="small text-body-secondary mb-0">{subtext}</p>
+					)}
 				</div>
 				<div className="card-footer">
 					<Link
@@ -32,4 +36,4 @@ const DynamicCards = ({
 	);
 };
 
-export default DynamicCards;
+export default DynamicCard;

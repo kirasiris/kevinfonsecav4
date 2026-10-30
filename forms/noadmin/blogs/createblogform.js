@@ -59,6 +59,7 @@ const CreateBlogForm = ({ token = {}, auth = {}, objects = [] }) => {
 			setBtnText(btnText);
 			return;
 		}
+
 		toast.success(`Blog created`);
 		router.push(`/noadmin/blogs`);
 	};

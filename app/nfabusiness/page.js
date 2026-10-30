@@ -1,4 +1,4 @@
-import DynamicCards from "@/components/global/dynamiccards";
+import DynamicCards from "@/components/noadmin/dynamiccard";
 import Header from "@/layout/header";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 
@@ -6,7 +6,7 @@ async function getAcquisitionsDisposals(params) {
 	const res = await fetchurl(
 		`/global/weaponacquisitionsdisposals${params}`,
 		"GET",
-		"default"
+		"default",
 	);
 	return res;
 }
@@ -15,7 +15,7 @@ async function getReviews(params) {
 	const res = await fetchurl(
 		`/global/comments${params}&postType=review`,
 		"GET",
-		"default"
+		"default",
 	);
 	return res;
 }
@@ -24,7 +24,7 @@ async function getServiceEmails(params) {
 	const res = await fetchurl(
 		`/global/serviceemails${params}&status=pending`,
 		"GET",
-		"default"
+		"default",
 	);
 	return res;
 }

@@ -3,6 +3,7 @@ const Panel = ({
 	title = ``,
 	subtitle = ``,
 	colClasses = `col-lg-6`,
+	cardClasses = ``,
 	isEmpty = false,
 	children,
 }) => {
@@ -15,13 +16,17 @@ const Panel = ({
 						<small className="d-block text-body-secondary">{subtitle}</small>
 					)}
 				</div>
-				<div className="card-body">
+				{/* minmax(0, 1fr) stops long truncated text from widening the page. */}
+				<div
+					className={`card-body d-grid ${cardClasses}`}
+					style={{ gridTemplateColumns: "minmax(0, 1fr)" }}
+				>
 					{isEmpty ? (
 						<p className="text-body-secondary small text-center py-5 mb-0">
 							No data available yet.
 						</p>
 					) : (
-						children
+						<div>{children}</div>
 					)}
 				</div>
 			</div>

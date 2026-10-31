@@ -11,17 +11,14 @@ const RecentComments = ({ comments = [] }) => {
 							<p className="fw-medium small mb-0 text-truncate">
 								{comment.name}
 								{comment.title && (
-									<span className="text-body-secondary fw-normal">{` · ${comment.title}`}</span>
+									<span className="fw-normal">{` · ${comment.title}`}</span>
 								)}
 							</p>
-							<p
-								className="small text-body-secondary mb-0 text-truncate"
-								title={comment.target}
-							>
+							<p className="small mb-0 text-truncate" title={comment.target}>
 								on {comment.target}
 							</p>
 						</div>
-						<span className="small text-body-secondary text-nowrap">
+						<span className="small text-nowrap">
 							{formatDate(comment.createdAt)}
 						</span>
 					</div>

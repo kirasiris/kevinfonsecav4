@@ -29,6 +29,10 @@ const CreateQuickDraftBlogForm = ({ token = {}, auth = {} }) => {
 			password: "",
 			status: "draft",
 			fullWidth: false,
+			files: {
+				avatar: undefined,
+				extras: [],
+			},
 			project: "personal",
 			postType: "blog",
 		};

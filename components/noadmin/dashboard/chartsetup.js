@@ -39,13 +39,15 @@ export const legend = {
 
 const ChartFrame = ({ height = 300, ariaLabel = ``, children }) => {
 	return (
-		<div
-			className="position-relative w-100"
-			style={{ height }}
-			role="img"
-			aria-label={ariaLabel}
-		>
-			{children}
+		<div className="d-grid" style={{ gridTemplateColumns: "minmax(0, 1fr)" }}>
+			<div
+				className="position-relative w-100"
+				style={{ height }}
+				role="img"
+				aria-label={ariaLabel}
+			>
+				{children}
+			</div>
 		</div>
 	);
 };

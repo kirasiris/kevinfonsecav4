@@ -197,27 +197,6 @@ const AdminHome = async ({ params, searchParams }) => {
 					myQuery={listQuery}
 				/>
 				<DynamicCard
-					title="Songs"
-					text={getTotal(songs) || `0`}
-					subtext={publishedText(songs)}
-					myLink="/noadmin/songs"
-					myQuery={listQuery}
-				/>
-				<DynamicCard
-					title="Videos"
-					text={getTotal(videos) || `0`}
-					subtext={publishedText(videos)}
-					myLink="/noadmin/videos"
-					myQuery={listQuery}
-				/>
-				<DynamicCard
-					title="Playlists"
-					text={getTotal(playlists) || `0`}
-					subtext={publishedText(playlists)}
-					myLink="/noadmin/playlists"
-					myQuery={listQuery}
-				/>
-				<DynamicCard
 					title="Quotes"
 					text={getTotal(quotes) || `0`}
 					subtext={publishedText(quotes)}
@@ -358,6 +337,7 @@ const AdminHome = async ({ params, searchParams }) => {
 					title="Recent blogs"
 					subtitle="Latest six, including drafts"
 					colClasses="col-lg-5"
+					cardClasses=""
 					isEmpty={stats.recentBlogs.length === 0}
 				>
 					<RecentBlogs blogs={stats.recentBlogs} />

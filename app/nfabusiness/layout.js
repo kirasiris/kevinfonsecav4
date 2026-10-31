@@ -65,7 +65,7 @@ export default async function AdminLayout({ children }) {
 					</Link>
 				</div>
 			</div>
-			<div className="d-flex">
+			<div className="d-flex" style={{ minWidth: 0 }}>
 				{/* Desktop Sidebar - visible on lg and up */}
 				<aside className="nfabusiness-sidebar border-end d-none d-lg-flex flex-column">
 					<NFAMenu auth={auth} settings={settings} />

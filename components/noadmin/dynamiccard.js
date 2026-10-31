@@ -16,9 +16,7 @@ const DynamicCard = ({
 				<div className="card-header">{title}</div>
 				<div className="card-body">
 					<p className="display-1 m-0">{text}</p>
-					{subtext && (
-						<p className="small text-body-secondary mb-0">{subtext}</p>
-					)}
+					{subtext && <p className="small mb-0">{subtext}</p>}
 				</div>
 				<div className="card-footer">
 					<Link

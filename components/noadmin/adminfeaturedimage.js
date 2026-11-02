@@ -16,6 +16,7 @@ const AdminFeaturedImage = ({ avatar = "", avatarFormat = "image" }) => {
 						avatar?.location?.secure_location ||
 						"https://static.vecteezy.com/system/resources/previews/005/337/799/original/icon-image-not-found-free-vector.jpg"
 					}
+					className="img-fluid"
 					alt="xD"
 					width={`558`}
 					height={`558`}
@@ -38,6 +39,7 @@ const AdminFeaturedImage = ({ avatar = "", avatarFormat = "image" }) => {
 						avatar?.location?.secure_location ||
 						"https://static.vecteezy.com/system/resources/previews/005/337/799/original/icon-image-not-found-free-vector.jpg"
 					}
+					className="img-fluid"
 					alt="xD"
 					width={`558`}
 					height={`558`}

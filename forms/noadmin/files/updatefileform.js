@@ -3,7 +3,6 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import Image from "next/image";
-// import Plyr from "plyr";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
@@ -50,7 +49,6 @@ const UpdateFileForm = ({ token = {}, auth = {}, object = {} }) => {
 		toast.success(`File updated`);
 		router.push(`/noadmin/files`);
 	};
-
 	/*
 	 *
 	 * IMAGE OBJECT
@@ -62,8 +60,9 @@ const UpdateFileForm = ({ token = {}, auth = {}, object = {} }) => {
 				<Image
 					src={
 						file?.data?.location?.secure_location ||
-						`https://source.unsplash.com/random/188x188`
+						`https://static.vecteezy.com/system/resources/previews/005/337/799/original/icon-image-not-found-free-vector.jpg`
 					}
+					className="img-fluid"
 					alt={file?.data?.title || "No alt text"}
 					width={`1200`}
 					height={`900`}
@@ -74,7 +73,6 @@ const UpdateFileForm = ({ token = {}, auth = {}, object = {} }) => {
 			</figure>
 		);
 	};
-
 	/*
 	 *
 	 * PDF OBJECT
@@ -101,22 +99,9 @@ const UpdateFileForm = ({ token = {}, auth = {}, object = {} }) => {
 	 * VIDEO OBJECT
 	 *
 	 */
-	// const videoRef = useRef(null);
-
-	// useEffect(() => {
-	// 	const player = new Plyr(videoRef.current);
-	// 	return () => {
-	// 		player.destroy();
-	// 	};
-	// }, [fileId]);
-
 	const vidObj = (file = {}) => {
 		return (
-			<video
-				// ref={videoRef}
-				title={file?.data?.title}
-				controls
-			>
+			<video title={file?.data?.title} className="ratio" controls>
 				<source
 					src={file?.data?.location?.secure_location}
 					type={`${file?.data?.format_type}/${file?.data?.format}`}
@@ -124,7 +109,11 @@ const UpdateFileForm = ({ token = {}, auth = {}, object = {} }) => {
 			</video>
 		);
 	};
-
+	/*
+	 *
+	 * AUDIO OBJECT
+	 *
+	 */
 	const audObj = (file = {}) => {
 		return (
 			<audio
@@ -145,13 +134,13 @@ const UpdateFileForm = ({ token = {}, auth = {}, object = {} }) => {
 
 	return (
 		<form key={object?.data?._id} className="row" onSubmit={upgradeFile}>
-			<div className="col">
+			<div className="col-lg-6">
 				{object?.data?.format_type === "image" && imgObj(object)}
 				{object?.data?.format_type === "application" && pdfObj(object)}
 				{object?.data?.format_type === "video" && vidObj(object)}
 				{object?.data?.format_type === "audio" && audObj(object)}
 			</div>
-			<div className="col">
+			<div className="col-lg-6">
 				<label htmlFor="file-title" className="form-label">
 					Title
 				</label>

@@ -66,12 +66,29 @@ export const topEntries = (counts, limit, otherLabel = "Other") => {
 	return [...sorted.slice(0, limit), [otherLabel, rest]];
 };
 
-export const monthlySeries = (items, months) => {
-	const counts = countBy(
-		items,
-		(item) => item.createdAt && monthKey(item.createdAt),
-	);
+export const monthlySeries = (items, months, field = "createdAt") => {
+	const counts = countBy(items, (item) => item[field] && monthKey(item[field]));
 	return months.map((m) => counts.get(m.key) || 0);
+};
+
+// Event `day` values are inconsistent in the API ("2026-09-06", "2026-10-1",
+// "03/05/2025"), so normalise the known shapes to UTC before falling back.
+export const parseEventDate = (event) => {
+	const raw = event.fullCalendarDateFormat || event.day;
+	if (!raw) return null;
+	const ymd = /^(\d{4})-(\d{1,2})-(\d{1,2})$/.exec(raw);
+	if (ymd) return new Date(Date.UTC(+ymd[1], +ymd[2] - 1, +ymd[3]));
+	const mdy = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/.exec(raw);
+	if (mdy) return new Date(Date.UTC(+mdy[3], +mdy[1] - 1, +mdy[2]));
+	const d = new Date(raw);
+	return Number.isNaN(d.getTime()) ? null : d;
+};
+
+const STATUS_BUCKETS = ["Published", "Draft", "Trash"];
+
+const statusBucket = (item) => {
+	const status = capitalize(item.status || "");
+	return STATUS_BUCKETS.includes(status) ? status : "Other";
 };
 
 export const cumulativeSeries = (items, months) => {
@@ -130,6 +147,14 @@ export const buildDashboard = ({
 	files = [],
 	songs = [],
 	videos = [],
+	pages = [],
+	snippets = [],
+	quotes = [],
+	events = [],
+	secrets = [],
+	activities = [],
+	logs = [],
+	weapons = [],
 }) => {
 	const now = new Date();
 	const media = [...songs, ...videos];
@@ -291,7 +316,151 @@ export const buildDashboard = ({
 			createdAt: c.createdAt,
 		}));
 
+	const statusSources = [
+		["Blogs", blogs],
+		["Themes", themes],
+		["Pages", pages],
+		["Songs", songs],
+		["Videos", videos],
+		["Events", events],
+		["Snippets", snippets],
+		["Quotes", quotes],
+	].filter(([, items]) => items.length > 0);
+	const statusColors = {
+		Published: COLORS.success,
+		Draft: COLORS.silver,
+		Trash: COLORS.dark,
+		Other: COLORS.gray,
+	};
+	const statusCountsBySource = statusSources.map(([, items]) =>
+		countBy(items, statusBucket),
+	);
+	const contentStatus = {
+		labels: statusSources.map(([label]) => label),
+		series: [...STATUS_BUCKETS, "Other"]
+			.map((bucket) => ({
+				label: bucket,
+				data: statusCountsBySource.map((counts) => counts.get(bucket) || 0),
+				color: statusColors[bucket],
+			}))
+			.filter((s) => s.data.some((n) => n > 0)),
+	};
+
+	const activityModelEntries = topEntries(
+		countBy(activities, (a) => a.onModel || "Other"),
+		4,
+	);
+	const activityPalette = [
+		COLORS.primary,
+		COLORS.success,
+		COLORS.gray,
+		COLORS.silver,
+		COLORS.dark,
+	];
+	const activityByModel = {
+		labels: activityModelEntries.map(([label]) => label),
+		values: activityModelEntries.map(([, n]) => n),
+		colors: activityModelEntries.map(
+			(_, i) => activityPalette[i % activityPalette.length],
+		),
+	};
+
+	const recentActivity = newestFirst(activities)
+		.slice(0, 8)
+		.map((a) => ({
+			id: a._id,
+			text: a.text || "—",
+			model: a.onModel || "Other",
+			user: a.user?.username || a.user?.name || "System",
+			createdAt: a.createdAt,
+		}));
+
+	const topLogMessages = topEntries(
+		countBy(logs, (l) =>
+			(l.message || "Unknown").replace(/\b[a-f0-9]{24}\b/gi, "<id>"),
+		),
+		6,
+		"Everything else",
+	).map(([label, count]) => ({ id: label, title: label, count }));
+
+	const startOfToday = new Date(
+		Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()),
+	);
+	const datedEvents = events
+		.filter((e) => e.status !== "trash")
+		.map((e) => ({ event: e, date: parseEventDate(e) }))
+		.filter(({ date }) => date !== null);
+	const upcomingEvents = datedEvents
+		.filter(({ date }) => date >= startOfToday)
+		.sort((a, b) => a.date - b.date)
+		.slice(0, 5)
+		.map(({ event, date }) => ({
+			id: event._id,
+			title: event.title || "Untitled",
+			type: capitalize(event.postType || "event"),
+			priority: event.priority || "",
+			method: event.method || "",
+			time: event.allDay ? "All day" : event.time || "",
+			date: date.toISOString(),
+		}));
+
+	const topVideoEntries = [...videos]
+		.filter((v) => Number(v.views) > 0)
+		.sort((a, b) => Number(b.views) - Number(a.views))
+		.slice(0, 8);
+	const topVideos = {
+		labels: topVideoEntries.map((v) => v.title || "Untitled"),
+		series: [
+			{
+				label: "Views",
+				data: topVideoEntries.map((v) => Number(v.views)),
+				color: COLORS.primary,
+			},
+		],
+	};
+
+	const firstReceipt = earliestDate([
+		weapons.map((w) => ({ createdAt: w.receiptdate || w.createdAt })),
+	]);
+	const weaponMonths = firstReceipt ? monthsBetween(firstReceipt, now) : [];
+	const weaponFlow = {
+		labels: weaponMonths.map((m) => m.label),
+		series: [
+			{
+				label: "Received",
+				data: monthlySeries(weapons, weaponMonths, "receiptdate"),
+				color: COLORS.primary,
+			},
+			{
+				label: "Disposed",
+				data: monthlySeries(weapons, weaponMonths, "dispositiondate"),
+				color: COLORS.success,
+			},
+		],
+	};
+	const weaponsOnHand = weapons.filter(
+		(w) => w.status !== "disposed" && !w.dispositiondate,
+	).length;
+	const weaponTypes = countBy(weapons, (w) => capitalize(w.type || "other"));
+
 	return {
+		contentStatus,
+		activityByModel,
+		recentActivity,
+		topLogMessages,
+		upcomingEvents,
+		topVideos,
+		weaponFlow,
+		weaponsOnHand,
+		weaponTypes: [...weaponTypes.entries()]
+			.map(([type, n]) => `${n} ${type.toLowerCase()}${n === 1 ? "" : "s"}`)
+			.join(" · "),
+		totalVideoViews: videos.reduce((sum, v) => sum + (Number(v.views) || 0), 0),
+		publishedPages: pages.filter(isPublished).length,
+		upcomingEventCount: datedEvents.filter(({ date }) => date >= startOfToday)
+			.length,
+		nsfwSecrets: secrets.filter((s) => s.nsfw).length,
+		activitiesLast7Days: countSince(activities, 7, now),
 		activity,
 		growth,
 		blogStatus,

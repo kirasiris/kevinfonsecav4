@@ -2,6 +2,7 @@
 import Link from "next/link";
 
 const DynamicCard = ({
+	colClass = `col-lg-3`,
 	title = ``,
 	text = ``,
 	subtext = ``,
@@ -9,13 +10,14 @@ const DynamicCard = ({
 	txtcolor = ``,
 	myLink = "#!",
 	myQuery = {},
+	textClass = `display-1`,
 }) => {
 	return (
-		<div className="col-lg-3 mb-3">
+		<div className={`${colClass} mb-3`}>
 			<div className={`card h-100 ${bgcolor} ${txtcolor}`}>
 				<div className="card-header">{title}</div>
 				<div className="card-body">
-					<p className="display-1 m-0">{text}</p>
+					<p className={`${textClass} m-0`}>{text}</p>
 					{subtext && <p className="small mb-0">{subtext}</p>}
 				</div>
 				<div className="card-footer">

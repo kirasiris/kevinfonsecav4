@@ -59,20 +59,15 @@ async function getVideos(params) {
 	return res;
 }
 
-async function getPlaylists(params) {
-	const res = await fetchurl(`/global/playlists${params}`, "GET", "default");
-	return res;
-}
-
 async function getQuotes(params) {
 	const res = await fetchurl(`/global/quotes${params}`, "GET", "default");
 	return res;
 }
 
-async function getProducts(params) {
-	const res = await fetchurl(`/global/products${params}`, "GET", "default");
-	return res;
-}
+// async function getProducts(params) {
+// 	const res = await fetchurl(`/global/products${params}`, "GET", "default");
+// 	return res;
+// }
 
 const listQuery = {
 	page: 1,
@@ -90,9 +85,8 @@ const AdminHome = async ({ params, searchParams }) => {
 	const filesData = getFiles(`?${ALL}`);
 	const songsData = getSongs(`?${ALL}`);
 	const videosData = getVideos(`?${ALL}`);
-	const playlistsData = getPlaylists(`?${ALL}`);
 	const quotesData = getQuotes(`?${ALL}`);
-	const productsData = getProducts(`?${ALL}`);
+	// const productsData = getProducts(`?${ALL}`);
 
 	const [
 		blogs,
@@ -102,9 +96,8 @@ const AdminHome = async ({ params, searchParams }) => {
 		files,
 		songs,
 		videos,
-		playlists,
 		quotes,
-		products,
+		// products,
 	] = await Promise.all([
 		blogsData,
 		themesData,
@@ -113,9 +106,8 @@ const AdminHome = async ({ params, searchParams }) => {
 		filesData,
 		songsData,
 		videosData,
-		playlistsData,
 		quotesData,
-		productsData,
+		// productsData,
 	]);
 
 	const stats = buildDashboard({
@@ -203,7 +195,7 @@ const AdminHome = async ({ params, searchParams }) => {
 					myLink="/noadmin/quotes"
 					myQuery={listQuery}
 				/>
-				<DynamicCard
+				{/* <DynamicCard
 					title="Products"
 					text={getTotal(products) || `0`}
 					subtext={
@@ -213,7 +205,7 @@ const AdminHome = async ({ params, searchParams }) => {
 					}
 					myLink="/noadmin/products"
 					myQuery={listQuery}
-				/>
+				/> */}
 			</div>
 			<div className="row">
 				<div className="col-lg-8 mb-3">
@@ -331,7 +323,11 @@ const AdminHome = async ({ params, searchParams }) => {
 			</div>
 			<div className="row">
 				<Panel title="Quick draft" subtitle="" colClasses="col-lg-2">
-					<CreateQuickDraftBlogForm token={token} auth={auth} />
+					<CreateQuickDraftBlogForm
+						token={token}
+						auth={auth}
+						objects={categories}
+					/>
 				</Panel>
 				<Panel
 					title="Recent blogs"

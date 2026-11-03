@@ -6,9 +6,16 @@ import { fetchurl } from "@/helpers/setTokenOnServer";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
 
-const CreateQuickDraftBlogForm = ({ token = {}, auth = {} }) => {
+const CreateQuickDraftBlogForm = ({ token = {}, auth = {}, objects = [] }) => {
 	const router = useRouter();
 	const [isSubmitting, setIsSubmitting] = useState(false);
+
+	const blogCategories = objects.data.filter((c) => c.categoryType === "blog");
+	const defaultCategory = objects.data.filter(
+		(c) =>
+			c.categoryType === "blog" &&
+			(c.title === "Default" || c.slug === "default"),
+	);
 
 	const addBlog = async (e) => {
 		e.preventDefault();
@@ -24,7 +31,7 @@ const CreateQuickDraftBlogForm = ({ token = {}, auth = {} }) => {
 			tags: [],
 			featured: false,
 			embedding: false,
-			category: undefined,
+			category: formData.get("category"),
 			commented: false,
 			password: "",
 			status: "draft",
@@ -72,10 +79,11 @@ const CreateQuickDraftBlogForm = ({ token = {}, auth = {} }) => {
 			<input
 				id="blog-title"
 				name="title"
-				defaultValue="Untitled"
+				defaultValue=""
 				type="text"
 				className="form-control mb-3"
-				placeholder=""
+				placeholder="Untitled"
+				required
 			/>
 			<label htmlFor="text" className="form-label">
 				Text
@@ -85,13 +93,29 @@ const CreateQuickDraftBlogForm = ({ token = {}, auth = {} }) => {
 				token={token}
 				id="text"
 				name="text"
-				defaultValue="No description..."
+				defaultValue=""
 				onModel="Blog"
 				advancedTextEditor={false}
 				customPlaceholder="No description"
 				charactersLimit={99999}
 				isRequired={true}
 			/>
+			<label htmlFor="category" className="form-label">
+				Category
+			</label>
+			<select
+				id="category"
+				name="category"
+				defaultValue={defaultCategory[0]._id}
+				className="form-select mb-3"
+			>
+				<option value="">Select Category</option>
+				{blogCategories.map((item) => (
+					<option key={item._id} value={item._id}>
+						{item.title}
+					</option>
+				))}
+			</select>
 			<FormButtons pending={isSubmitting} />
 		</form>
 	);

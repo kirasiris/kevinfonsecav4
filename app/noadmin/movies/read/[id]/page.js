@@ -34,7 +34,7 @@ const ReadMovie = async ({ params, searchParams }) => {
 
 	return (
 		<div className="row">
-			<div className="col-lg-8">
+			<div className="col-lg-10">
 				<div className="card rounded-0 mb-3">
 					<div className="card-header">{movie?.data?.title || "Untitled"}</div>
 					<div className="card-body">
@@ -49,7 +49,7 @@ const ReadMovie = async ({ params, searchParams }) => {
 					searchParams={awtdSearchParams}
 				/>
 			</div>
-			<div className="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-xs-12 d-none d-sm-none d-md-none d-lg-block dm-xl-block">
+			<div className="col-xl-2 col-lg-2 col-md-2 col-sm-12 col-xs-12 d-none d-sm-none d-md-none d-lg-block dm-xl-block">
 				<figure className="mb-3 bg-dark">
 					<Image
 						className="img-fluid p-3"

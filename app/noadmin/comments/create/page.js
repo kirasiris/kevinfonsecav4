@@ -12,12 +12,14 @@ const CreateComment = async ({ params, searchParams }) => {
 	const auth = await getUserOnServer();
 
 	return (
-		<CreateCommentForm
-			token={token}
-			auth={auth}
-			params={awtdParams}
-			searchParams={awtdSearchParams}
-		/>
+		<div className="container-fluid px-0">
+			<CreateCommentForm
+				token={token}
+				auth={auth}
+				params={awtdParams}
+				searchParams={awtdSearchParams}
+			/>
+		</div>
 	);
 };
 

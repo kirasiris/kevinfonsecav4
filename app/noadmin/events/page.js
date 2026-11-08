@@ -49,7 +49,7 @@ const AdminEventsIndex = async ({ params, searchParams }) => {
 	const clock = serverClock(now);
 
 	return (
-		<>
+		<div className="container-fluid px-0">
 			<AdminStatusesMenu
 				allLink="/noadmin/events"
 				publishedLink="/noadmin/events/published"
@@ -65,7 +65,7 @@ const AdminEventsIndex = async ({ params, searchParams }) => {
 				clock={clock}
 				initialAvailability={availability.success ? availability.data : null}
 			/>
-		</>
+		</div>
 	);
 };
 

@@ -7,7 +7,7 @@ async function getBlogs(params) {
 	const res = await fetchurl(
 		`/global/blogs${params}&postType=blog&status=draft`,
 		"GET",
-		"no-cache"
+		"no-cache",
 	);
 	return res;
 }
@@ -26,7 +26,7 @@ const AdminBlogsDraftIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/blogs/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/blogs/draft?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/blogs/draft?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -35,7 +35,7 @@ const AdminBlogsDraftIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/blogs/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/blogs/draft?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/blogs/draft?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -44,7 +44,7 @@ const AdminBlogsDraftIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/blogs/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/blogs/draft?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/blogs/draft?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -53,7 +53,7 @@ const AdminBlogsDraftIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/blogs/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/blogs/draft?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/blogs/draft?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -62,7 +62,7 @@ const AdminBlogsDraftIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/blogs/${id}/featureit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/blogs/draft?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/blogs/draft?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -71,7 +71,7 @@ const AdminBlogsDraftIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/blogs/${id}/unfeatureit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/blogs/draft?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/blogs/draft?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -80,7 +80,7 @@ const AdminBlogsDraftIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/blogs/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`/noadmin/blogs/draft?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/blogs/draft?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -89,7 +89,7 @@ const AdminBlogsDraftIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/blogs/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/blogs/draft?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/blogs/draft?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -99,15 +99,15 @@ const AdminBlogsDraftIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/blogs/deleteall/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/blogs/draft?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/blogs/draft?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
 	return (
-		<>
+		<div className="container-fluid px-0">
 			<AdminStatusesMenu
 				allLink="/noadmin/blogs"
 				publishedLink="/noadmin/blogs/published"
@@ -137,7 +137,7 @@ const AdminBlogsDraftIndex = async ({ params, searchParams }) => {
 					handleDeleteAllFunction={handleDeleteAll}
 				/>
 			</div>
-		</>
+		</div>
 	);
 };
 

@@ -95,7 +95,7 @@ const AdminQRCodesGeneratorScheduledIndex = async ({
 	};
 
 	return (
-		<>
+		<div className="container-fluid px-0">
 			<AdminStatusesMenu
 				allLink="/noadmin/qrcodes"
 				publishedLink="/noadmin/qrcodes/published"
@@ -130,7 +130,7 @@ const AdminQRCodesGeneratorScheduledIndex = async ({
 					</div>
 				</div>
 			</div>
-		</>
+		</div>
 	);
 };
 

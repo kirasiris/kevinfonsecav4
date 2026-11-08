@@ -65,13 +65,13 @@ const AdminPollsIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/polls/deleteall/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(`?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	return (
-		<>
+		<div className="container-fluid px-0">
 			<AdminStatusesMenu
 				allLink="/noadmin/polls"
 				publishedLink="/noadmin/polls/published"
@@ -99,7 +99,7 @@ const AdminPollsIndex = async ({ params, searchParams }) => {
 					handleDeleteAllFunction={handleDeleteAll}
 				/>
 			</div>
-		</>
+		</div>
 	);
 };
 

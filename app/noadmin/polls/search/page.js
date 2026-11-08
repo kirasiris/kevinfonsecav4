@@ -90,7 +90,7 @@ const AdminPollsSearchIndex = async ({ params, searchParams }) => {
 	};
 
 	return (
-		<>
+		<div className="container-fluid px-0">
 			<AdminStatusesMenu
 				allLink="/noadmin/polls"
 				publishedLink="/noadmin/polls/published"
@@ -118,7 +118,7 @@ const AdminPollsSearchIndex = async ({ params, searchParams }) => {
 					handleDeleteAllFunction={handleDeleteAll}
 				/>
 			</div>
-		</>
+		</div>
 	);
 };
 

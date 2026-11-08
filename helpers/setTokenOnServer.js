@@ -24,7 +24,7 @@ export const getUserOnServer = async () => {
 export const setAuthTokenOnServer = async (token) => {
 	if (token) {
 		const myCookies = await cookies();
-		// One day equals to...
+
 		const daysInTime = 24 * 60 * 60 * 1000;
 		console.log("setAuthTokenOnServer function was a success", token);
 		myCookies.set("xAuthToken", token, {
@@ -44,7 +44,7 @@ export const setAuthTokenOnServer = async (token) => {
 export const setUserOnServer = async (object) => {
 	if (object) {
 		const myCookies = await cookies();
-		// One day equals to...
+
 		const daysInTime = 24 * 60 * 60 * 1000;
 		myCookies.set(
 			"userStripeChargesEnabled",
@@ -132,20 +132,16 @@ export const fetchurl = async (
 		bodyData !== null &&
 		!multipart
 	) {
-		// Check if bodyData is a plain object before stringifying
 		requestBody = JSON.stringify(bodyData);
 	}
 
 	if (multipart) {
-		// When bodyData  is FormData, send it directly and let fetch generate
-		// the multipart boundary itself (a manual Content-Type would break it).
 		if (bodyData instanceof FormData) {
 			requestBody = bodyData;
 		}
 		myHeaders.delete("Content-Type");
 	}
 
-	// If no signal is provided, create a new AbortController signal
 	if (!signal || typeof signal.aborted !== "boolean") {
 		const controller = new AbortController();
 		signal = controller.signal;
@@ -163,19 +159,16 @@ export const fetchurl = async (
 		},
 	)
 		.then(async (res) => {
-			// Might need to delete
 			if (res.status === 303) {
 				const redirectUrl = res.headers.get("Location");
 				return fetch(redirectUrl, { method, headers: myHeaders });
 			}
 			if (!res.ok) {
-				// check if there was JSON
 				const contentType = res.headers.get("Content-Type");
 				if (contentType && contentType.includes("application/json")) {
-					// return a rejected Promise that includes the JSON
 					return res.json().then((json) => Promise.reject(json));
 				}
-				// no JSON, just throw an error
+
 				throw new Error("Something went horribly wrong 💩");
 			}
 			return res.json();
@@ -185,7 +178,6 @@ export const fetchurl = async (
 			if (err.name === "AbortError") {
 				console.log("successfully aborted");
 			} else {
-				// handle error
 				console.log("Error coming from fetchurl file xD", err);
 			}
 			return err;

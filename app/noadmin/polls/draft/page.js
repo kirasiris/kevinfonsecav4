@@ -7,7 +7,7 @@ async function getPolls(params) {
 	const res = await fetchurl(
 		`/global/polls${params}&status=draft`,
 		"GET",
-		"no-cache"
+		"no-cache",
 	);
 	return res;
 }
@@ -26,7 +26,7 @@ const AdminPollsDraftIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/polls/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/polls/draft?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/polls/draft?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -35,7 +35,7 @@ const AdminPollsDraftIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/polls/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/polls/draft?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/polls/draft?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -44,7 +44,7 @@ const AdminPollsDraftIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/polls/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/polls/draft?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/polls/draft?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -53,7 +53,7 @@ const AdminPollsDraftIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/polls/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/polls/draft?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/polls/draft?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -62,7 +62,7 @@ const AdminPollsDraftIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/polls/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`/noadmin/polls/draft?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/polls/draft?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -71,7 +71,7 @@ const AdminPollsDraftIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/polls/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/polls/draft?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/polls/draft?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -81,15 +81,15 @@ const AdminPollsDraftIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/polls/deleteall/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/polls/draft?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/polls/draft?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
 	return (
-		<>
+		<div className="container-fluid px-0">
 			<AdminStatusesMenu
 				allLink="/noadmin/polls"
 				publishedLink="/noadmin/polls/published"
@@ -117,7 +117,7 @@ const AdminPollsDraftIndex = async ({ params, searchParams }) => {
 					handleDeleteAllFunction={handleDeleteAll}
 				/>
 			</div>
-		</>
+		</div>
 	);
 };
 

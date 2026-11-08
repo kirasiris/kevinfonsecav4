@@ -21,12 +21,14 @@ const UpdateVideo = async ({ params, searchParams }) => {
 	const chapter = await getMovieVideo(`/${awtdParams.id}`);
 
 	return (
-		<UpdateVideoForm
-			token={token}
-			auth={auth}
-			object={chapter}
-			searchParams={awtdSearchParams}
-		/>
+		<div className="container-fluid px-0">
+			<UpdateVideoForm
+				token={token}
+				auth={auth}
+				object={chapter}
+				searchParams={awtdSearchParams}
+			/>
+		</div>
 	);
 };
 

@@ -50,7 +50,7 @@ const NFAAcquisitionDisposalsIndex = async ({ params, searchParams }) => {
 	};
 
 	return (
-		<>
+		<div className="container-fluid px-0">
 			<NFAStatusesMenu
 				allLink="/nfabusiness/acquisitionsdisposals"
 				publishedLink=""
@@ -77,7 +77,7 @@ const NFAAcquisitionDisposalsIndex = async ({ params, searchParams }) => {
 					handlePublish={disposeIt}
 				/>
 			</div>
-		</>
+		</div>
 	);
 };
 

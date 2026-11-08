@@ -20,7 +20,11 @@ const UpdateSetting = async ({ params, searchParams }) => {
 
 	const setting = await getSetting(`/${awtdParams.id}`);
 
-	return <UpdateSettingForm token={token} auth={auth} object={setting} />;
+	return (
+		<div className="container-fluid px-0">
+			<UpdateSettingForm token={token} auth={auth} object={setting} />
+		</div>
+	);
 };
 
 export default UpdateSetting;

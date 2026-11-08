@@ -20,10 +20,11 @@ const UpdateJob = async ({ params, searchParams }) => {
 
 	const job = await getJob(`/${awtdParams.id}`);
 
-	// Redirect if not company
-	// !auth?.data?.hasCompany && redirect(`/noadmin/companies`);
-
-	return <UpdateJobForm token={token} auth={auth} object={job} />;
+	return (
+		<div className="container-fluid px-0">
+			<UpdateJobForm token={token} auth={auth} object={job} />
+		</div>
+	);
 };
 
 export default UpdateJob;

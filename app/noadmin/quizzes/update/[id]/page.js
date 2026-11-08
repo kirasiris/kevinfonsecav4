@@ -28,12 +28,14 @@ const UpdateQuiz = async ({ params, searchParams }) => {
 	const categories = await getCategories(`?categoryType=quiz`);
 
 	return (
-		<UpdateQuizForm
-			token={token}
-			auth={auth}
-			object={quiz}
-			objects={categories}
-		/>
+		<div className="container-fluid px-0">
+			<UpdateQuizForm
+				token={token}
+				auth={auth}
+				object={quiz}
+				objects={categories}
+			/>
+		</div>
 	);
 };
 

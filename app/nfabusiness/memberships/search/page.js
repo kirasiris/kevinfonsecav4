@@ -85,7 +85,7 @@ const NFAMembershipsSearchIndex = async ({ params, searchParams }) => {
 	};
 
 	return (
-		<>
+		<div className="container-fluid px-0">
 			<NFAStatusesMenu
 				allLink="/nfabusiness/memberships"
 				publishedLink="/nfabusiness/memberships/published"
@@ -119,7 +119,7 @@ const NFAMembershipsSearchIndex = async ({ params, searchParams }) => {
 					handleDisactivate={disactivateIt}
 				/>
 			</div>
-		</>
+		</div>
 	);
 };
 

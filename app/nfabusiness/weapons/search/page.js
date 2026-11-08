@@ -63,7 +63,7 @@ const NFAWeaponsSearchIndex = async ({ params, searchParams }) => {
 	};
 
 	return (
-		<>
+		<div className="container-fluid px-0">
 			<NFAStatusesMenu
 				allLink="/nfabusiness/weapons"
 				publishedLink="/nfabusiness/weapons/published"
@@ -97,7 +97,7 @@ const NFAWeaponsSearchIndex = async ({ params, searchParams }) => {
 					handleDeleteAllFunction={handleDeleteAll}
 				/>
 			</div>
-		</>
+		</div>
 	);
 };
 

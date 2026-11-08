@@ -24,7 +24,11 @@ const UpdateRealEstate = async ({ params, searchParams }) => {
 	// Redirect if not charges enabled
 	!auth?.userStripeChargesEnabled && <OnboardingLink />;
 
-	return <UpdateRealEstateForm token={token} auth={auth} object={realestate} />;
+	return (
+		<div className="container-fluid px-0">
+			<UpdateRealEstateForm token={token} auth={auth} object={realestate} />
+		</div>
+	);
 };
 
 export default UpdateRealEstate;

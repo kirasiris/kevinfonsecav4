@@ -10,7 +10,11 @@ const CreateSong = async ({ params, searchParams }) => {
 	const token = await getAuthTokenOnServer();
 	const auth = await getUserOnServer();
 
-	return <CreateSongForm token={token} auth={auth} params={awtdParams} />;
+	return (
+		<div className="container-fluid px-0">
+			<CreateSongForm token={token} auth={auth} params={awtdParams} />
+		</div>
+	);
 };
 
 export default CreateSong;

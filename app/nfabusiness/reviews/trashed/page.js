@@ -7,7 +7,7 @@ async function getReviews(params) {
 	const res = await fetchurl(
 		`/global/comments${params}&status=trash&postType=review`,
 		"GET",
-		"no-cache"
+		"no-cache",
 	);
 	return res;
 }
@@ -26,7 +26,7 @@ const NFAReviewsTrashedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/reviews/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
-			`/nfabusiness/reviews/trashed?page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/reviews/trashed?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -35,7 +35,7 @@ const NFAReviewsTrashedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/reviews/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
-			`/nfabusiness/reviews/trashed?page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/reviews/trashed?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -44,7 +44,7 @@ const NFAReviewsTrashedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/reviews/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
-			`/nfabusiness/reviews/trashed?page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/reviews/trashed?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -53,7 +53,7 @@ const NFAReviewsTrashedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/reviews/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
-			`/nfabusiness/reviews/trashed?page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/reviews/trashed?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -62,7 +62,7 @@ const NFAReviewsTrashedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/reviews/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`/nfabusiness/reviews/trashed?page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/reviews/trashed?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -71,7 +71,7 @@ const NFAReviewsTrashedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/reviews/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`/nfabusiness/reviews/trashed?page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/reviews/trashed?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -81,15 +81,15 @@ const NFAReviewsTrashedIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/reviews/deleteall/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/nfabusiness/reviews/trashed?page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/reviews/trashed?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
 	return (
-		<>
+		<div className="container-fluid px-0">
 			<NFAStatusesMenu
 				allLink="/nfabusiness/reviews"
 				publishedLink="/nfabusiness/reviews/published"
@@ -121,7 +121,7 @@ const NFAReviewsTrashedIndex = async ({ params, searchParams }) => {
 					handleDeleteAllFunction={handleDeleteAll}
 				/>
 			</div>
-		</>
+		</div>
 	);
 };
 

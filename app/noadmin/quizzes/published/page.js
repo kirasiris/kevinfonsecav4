@@ -7,7 +7,7 @@ async function getQuizzes(params) {
 	const res = await fetchurl(
 		`/global/quizzes${params}&status=published`,
 		"GET",
-		"no-cache"
+		"no-cache",
 	);
 	return res;
 }
@@ -26,7 +26,7 @@ const AdminQuizzesPublishedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/quizzes/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/quizzes/published?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/quizzes/published?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -35,7 +35,7 @@ const AdminQuizzesPublishedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/quizzes/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/quizzes/published?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/quizzes/published?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -44,7 +44,7 @@ const AdminQuizzesPublishedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/quizzes/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/quizzes/published?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/quizzes/published?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -53,7 +53,7 @@ const AdminQuizzesPublishedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/quizzes/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/quizzes/published?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/quizzes/published?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -62,7 +62,7 @@ const AdminQuizzesPublishedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/quizzes/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`/noadmin/quizzes/published?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/quizzes/published?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -71,7 +71,7 @@ const AdminQuizzesPublishedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/quizzes/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/quizzes/published?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/quizzes/published?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -81,15 +81,15 @@ const AdminQuizzesPublishedIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/quizzes/deleteall/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/quizzes/published?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/quizzes/published?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
 	return (
-		<>
+		<div className="container-fluid px-0">
 			<AdminStatusesMenu
 				allLink="/noadmin/quizzes"
 				publishedLink="/noadmin/quizzes/published"
@@ -117,7 +117,7 @@ const AdminQuizzesPublishedIndex = async ({ params, searchParams }) => {
 					handleDeleteAllFunction={handleDeleteAll}
 				/>
 			</div>
-		</>
+		</div>
 	);
 };
 

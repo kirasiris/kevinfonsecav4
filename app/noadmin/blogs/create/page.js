@@ -16,7 +16,11 @@ const CreateBlog = async ({ params, searchParams }) => {
 
 	const categories = await getCategories(`?categoryType=blog`);
 
-	return <CreateBlogForm token={token} auth={auth} objects={categories} />;
+	return (
+		<div className="container-fluid px-0">
+			<CreateBlogForm token={token} auth={auth} objects={categories} />
+		</div>
+	);
 };
 
 export default CreateBlog;

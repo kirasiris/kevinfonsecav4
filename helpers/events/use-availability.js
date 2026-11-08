@@ -3,6 +3,7 @@
 import { useCallback, useMemo, useRef, useState } from "react";
 
 import { addDays, dayToIso, isoToDay, startOfWeek, toDay } from "./date-utils";
+import { fetchurl } from "../setTokenOnServer";
 
 async function getAvailability({ from, to }) {
 	const params = new URLSearchParams({ from: from || "", to: to || "" });
@@ -12,23 +13,6 @@ async function getAvailability({ from, to }) {
 	return res;
 }
 
-/**
- * Server-computed occupancy for the visible window.
- *
- * The scheduler used to derive this itself by expanding recurrence in the
- * browser and scanning for all-day entries. That is now the API's job, so this
- * hook only caches the answer.
- *
- * It deliberately exposes the same two shapes the view components already
- * consume — a `Set` of "MM/DD/YYYY" keys and a `blockerFor(day, ignoreId)`
- * lookup — so nothing downstream of `viewProps` has to change.
- *
- * There is no `useEffect` fetch here on purpose: the window only ever changes
- * from a user action (prev / next / today / view switch), so `loadWindow` is
- * called from those handlers instead.
- */
-
-/** The window the calendar needs, matching the grid's own overscan. */
 export function windowFor(cursor, view) {
 	const anchor =
 		view === "week"
@@ -42,10 +26,6 @@ export function windowFor(cursor, view) {
 	};
 }
 
-/**
- * Translates the API payload into the browser's internal "MM/DD/YYYY" keys.
- * The API speaks canonical ISO days; date-utils speaks US days.
- */
 function fromPayload(payload) {
 	const data = (payload && payload.data) || payload || {};
 	const source = data.blockedDays || {};
@@ -76,7 +56,6 @@ export function useAvailability(initialAvailability) {
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState("");
 
-	// Guards against a slow response for an old window overwriting a newer one.
 	const requestIdRef = useRef(0);
 	const lastSignatureRef = useRef(
 		initialAvailability
@@ -92,14 +71,11 @@ export function useAvailability(initialAvailability) {
 
 		const result = await getAvailability({ from: fromIso, to: toIso });
 
-		// A newer window was requested while this was in flight.
 		if (requestIdRef.current !== requestId) return result;
 
 		setLoading(false);
 
 		if (!result.ok) {
-			// The previous snapshot is kept rather than cleared: showing every day as
-			// bookable after a failed lookup would be worse than showing stale state.
 			setError(result.message || "Could not load availability.");
 			return result;
 		}
@@ -109,10 +85,6 @@ export function useAvailability(initialAvailability) {
 		return result;
 	}, []);
 
-	/**
-	 * Loads a window if it is not already loaded. `dayKey` arguments are the
-	 * internal "MM/DD/YYYY" form used everywhere in the calendar.
-	 */
 	const loadWindow = useCallback(
 		(fromDayKey, toDayKey) => {
 			const fromIso = dayToIso(fromDayKey);
@@ -128,14 +100,12 @@ export function useAvailability(initialAvailability) {
 		[request],
 	);
 
-	/** Re-requests the current window, ignoring the cache. Call after a write. */
 	const refresh = useCallback(() => {
 		const [fromIso, toIso] = lastSignatureRef.current.split("|");
 		if (!fromIso || !toIso) return Promise.resolve({ ok: true });
 		return request(fromIso, toIso);
 	}, [request]);
 
-	/** Convenience for the navigation handlers. */
 	const loadFor = useCallback(
 		(cursor, view) => {
 			const next = windowFor(cursor, view);
@@ -144,15 +114,10 @@ export function useAvailability(initialAvailability) {
 		[loadWindow],
 	);
 
-	/**
-	 * The entry that makes `day` unavailable, or null when it is free.
-	 * Returns the blocker itself so callers can name it in the message.
-	 */
 	const blockerFor = useCallback(
 		(day, ignoreId) => {
 			const blocker = snapshot.blockers[day];
 			if (!blocker) return null;
-			// Skip the entry being edited or dragged, so it never blocks itself.
 			if (ignoreId && String(blocker.id) === String(ignoreId)) return null;
 			return blocker;
 		},

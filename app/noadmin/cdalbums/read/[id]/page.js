@@ -33,38 +33,40 @@ const ReadCDAlbum = async ({ params, searchParams }) => {
 	);
 
 	return (
-		<div className="row">
-			<div className="col-lg-10">
-				<div className="card rounded-0 mb-1">
-					<div className="card-header">
-						{cdalbum?.data?.title || "Untitled"}
+		<div className="container-fluid px-0">
+			<div className="row">
+				<div className="col-lg-10">
+					<div className="card rounded-0 mb-1">
+						<div className="card-header">
+							{cdalbum?.data?.title || "Untitled"}
+						</div>
+						<div className="card-body">
+							<ParseHtml text={cdalbum?.data?.text} />
+						</div>
 					</div>
-					<div className="card-body">
-						<ParseHtml text={cdalbum?.data?.text} />
-					</div>
-				</div>
-				<SongsMediaManager
-					auth={auth}
-					token={token}
-					object={cdalbum?.data}
-					objects={songs}
-					searchParams={awtdSearchParams}
-				/>
-			</div>
-			<div className="col-xl-2 col-lg-2 col-md-2 col-sm-12 col-xs-12 d-none d-sm-none d-md-none d-lg-block dm-xl-block">
-				<figure className="mb-3 bg-dark">
-					<Image
-						className="img-fluid p-3"
-						src={
-							cdalbum?.data?.files?.avatar?.location?.secure_location ||
-							`https://source.unsplash.com/random/260x370`
-						}
-						alt={`${cdalbum?.data?.files?.avatar?.location?.filename}'s featured image`}
-						width={440}
-						height={570}
-						priority
+					<SongsMediaManager
+						auth={auth}
+						token={token}
+						object={cdalbum?.data}
+						objects={songs}
+						searchParams={awtdSearchParams}
 					/>
-				</figure>
+				</div>
+				<div className="col-xl-2 col-lg-2 col-md-2 col-sm-12 col-xs-12 d-none d-sm-none d-md-none d-lg-block dm-xl-block">
+					<figure className="mb-3 bg-dark">
+						<Image
+							className="img-fluid p-3"
+							src={
+								cdalbum?.data?.files?.avatar?.location?.secure_location ||
+								`https://source.unsplash.com/random/260x370`
+							}
+							alt={`${cdalbum?.data?.files?.avatar?.location?.filename}'s featured image`}
+							width={440}
+							height={570}
+							priority
+						/>
+					</figure>
+				</div>
 			</div>
 		</div>
 	);

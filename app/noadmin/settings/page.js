@@ -16,7 +16,7 @@ const AdminSettingsIndex = async ({ params, searchParams }) => {
 	const sort = awtdSearchParams.sort || "-createdAt";
 
 	const settings = await getSettings(
-		`?page=${page}&limit=${limit}&sort=${sort}`
+		`?page=${page}&limit=${limit}&sort=${sort}`,
 	);
 
 	const handleDelete = async (id) => {
@@ -24,7 +24,7 @@ const AdminSettingsIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/settings/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`/noadmin/settings?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/settings?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -34,15 +34,15 @@ const AdminSettingsIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/settings/deleteall/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/settings?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/settings?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
 	return (
-		<>
+		<div className="container-fluid px-0">
 			<AdminStatusesMenu
 				allLink="/noadmin/settings"
 				publishedLink=""
@@ -69,7 +69,7 @@ const AdminSettingsIndex = async ({ params, searchParams }) => {
 					handleDeleteAllFunction={handleDeleteAll}
 				/>
 			</div>
-		</>
+		</div>
 	);
 };
 

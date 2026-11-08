@@ -21,12 +21,14 @@ const UpdateQuestion = async ({ params, searchParams }) => {
 	const question = await getQuestion(`/${awtdParams.id}`);
 
 	return (
-		<UpdateQuestionForm
-			token={token}
-			auth={auth}
-			object={question}
-			params={awtdParams}
-		/>
+		<div className="container-fluid px-0">
+			<UpdateQuestionForm
+				token={token}
+				auth={auth}
+				object={question}
+				params={awtdParams}
+			/>
+		</div>
 	);
 };
 

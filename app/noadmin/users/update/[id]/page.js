@@ -22,7 +22,11 @@ const UpdateUser = async ({ params, searchParams }) => {
 
 	const users = await getUsers(`?isEmailConfirmed=true`);
 
-	return <UpdateUserForm auth={auth} object={user} objects={users} />;
+	return (
+		<div className="container-fluid px-0">
+			<UpdateUserForm auth={auth} object={user} objects={users} />
+		</div>
+	);
 };
 
 export default UpdateUser;

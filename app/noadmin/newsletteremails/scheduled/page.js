@@ -7,7 +7,7 @@ async function getNewsletterEmails(params) {
 	const res = await fetchurl(
 		`/global/newsletteremails${params}&status=scheduled`,
 		"GET",
-		"no-cache"
+		"no-cache",
 	);
 	return res;
 }
@@ -23,7 +23,7 @@ const AdminNewsletterEmailsScheduledIndex = async ({
 	const sort = awtdSearchParams.sort || "-createdAt";
 
 	const newsletteremails = await getNewsletterEmails(
-		`?page=${page}&limit=${limit}&sort=${sort}`
+		`?page=${page}&limit=${limit}&sort=${sort}`,
 	);
 
 	const draftIt = async (id) => {
@@ -32,10 +32,10 @@ const AdminNewsletterEmailsScheduledIndex = async ({
 		await fetchurl(
 			`/noadmin/newsletteremails/${id}/draftit`,
 			"PUT",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/newsletteremails/scheduled?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/newsletteremails/scheduled?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -45,10 +45,10 @@ const AdminNewsletterEmailsScheduledIndex = async ({
 		await fetchurl(
 			`/noadmin/newsletteremails/${id}/publishit`,
 			"PUT",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/newsletteremails/scheduled?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/newsletteremails/scheduled?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -58,10 +58,10 @@ const AdminNewsletterEmailsScheduledIndex = async ({
 		await fetchurl(
 			`/noadmin/newsletteremails/${id}/trashit`,
 			"PUT",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/newsletteremails/scheduled?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/newsletteremails/scheduled?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -71,10 +71,10 @@ const AdminNewsletterEmailsScheduledIndex = async ({
 		await fetchurl(
 			`/noadmin/newsletteremails/${id}/scheduleit`,
 			"PUT",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/newsletteremails/scheduled?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/newsletteremails/scheduled?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -84,10 +84,10 @@ const AdminNewsletterEmailsScheduledIndex = async ({
 		await fetchurl(
 			`/noadmin/newsletteremails/${id}/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/newsletteremails/scheduled?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/newsletteremails/scheduled?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -96,7 +96,7 @@ const AdminNewsletterEmailsScheduledIndex = async ({
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/newsletteremails/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/newsletteremails/scheduled?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/newsletteremails/scheduled?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -106,15 +106,15 @@ const AdminNewsletterEmailsScheduledIndex = async ({
 		await fetchurl(
 			`/noadmin/newsletteremails/deleteall/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/newsletteremails/scheduled?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/newsletteremails/scheduled?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
 	return (
-		<>
+		<div className="container-fluid px-0">
 			<AdminStatusesMenu
 				allLink="/noadmin/newsletteremails"
 				publishedLink="/noadmin/newsletteremails/published"
@@ -142,7 +142,7 @@ const AdminNewsletterEmailsScheduledIndex = async ({
 					handleDeleteAllFunction={handleDeleteAll}
 				/>
 			</div>
-		</>
+		</div>
 	);
 };
 

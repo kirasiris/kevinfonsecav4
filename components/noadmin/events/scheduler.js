@@ -2786,120 +2786,115 @@ const Scheduler = ({
 
 	return (
 		<>
-			<div className="container-fluid px-3 px-lg-4 py-4">
-				<div className="row g-4">
-					<div className="col-xl-9">
-						<div className="card">
-							<div className="card-header d-flex flex-wrap align-items-center justify-content-between gap-2">
-								<div className="d-flex align-items-center gap-2">
-									<div className="btn-group btn-group-sm" role="group">
-										<button
-											type="button"
-											className="btn btn-outline-secondary"
-											onClick={() => step(-1)}
-											aria-label="Previous period"
-										>
-											<i
-												className="fa-solid fa-chevron-left"
-												aria-hidden="true"
-											/>
-										</button>
-										<button
-											type="button"
-											className="btn btn-outline-secondary"
-											onClick={() => goTo(fromDay(clock.today))}
-										>
-											Today
-										</button>
-										<button
-											type="button"
-											className="btn btn-outline-secondary"
-											onClick={() => step(1)}
-											aria-label="Next period"
-										>
-											<i
-												className="fa-solid fa-chevron-right"
-												aria-hidden="true"
-											/>
-										</button>
-									</div>
-									<h1 className="h5 mb-0 ms-2">
-										{view === "week" ? weekLabel(cursor) : monthLabel(cursor)}
-									</h1>
+			<div className="row g-4">
+				<div className="col-xl-9">
+					<div className="card">
+						<div className="card-header d-flex flex-wrap align-items-center justify-content-between gap-2">
+							<div className="d-flex align-items-center gap-2">
+								<div className="btn-group btn-group-sm" role="group">
+									<button
+										type="button"
+										className="btn btn-outline-secondary"
+										onClick={() => step(-1)}
+										aria-label="Previous period"
+									>
+										<i
+											className="fa-solid fa-chevron-left"
+											aria-hidden="true"
+										/>
+									</button>
+									<button
+										type="button"
+										className="btn btn-outline-secondary"
+										onClick={() => goTo(fromDay(clock.today))}
+									>
+										Today
+									</button>
+									<button
+										type="button"
+										className="btn btn-outline-secondary"
+										onClick={() => step(1)}
+										aria-label="Next period"
+									>
+										<i
+											className="fa-solid fa-chevron-right"
+											aria-hidden="true"
+										/>
+									</button>
 								</div>
-								{/* The view switcher and the two actions share a wrapper so
+								<h1 className="h5 mb-0 ms-2">
+									{view === "week" ? weekLabel(cursor) : monthLabel(cursor)}
+								</h1>
+							</div>
+							{/* The view switcher and the two actions share a wrapper so
                     they stay together on the right and wrap as one unit
                     against the period nav on a narrow header. */}
-								<div className="d-flex flex-wrap align-items-center gap-2">
-									<div className="btn-group btn-group-sm">
-										{VIEWS.map((item) => (
-											<button
-												key={item.key}
-												type="button"
-												className={`btn btn-${
-													view === item.key ? "secondary" : "outline-secondary"
-												}`}
-												onClick={() => changeView(item.key)}
-											>
-												{item.label}
-											</button>
-										))}
-									</div>
-									<button
-										type="button"
-										className="btn btn-outline-secondary btn-sm"
-										onClick={() => router.refresh()}
-										aria-label="Reload from API"
-									>
-										<i
-											className="fa-solid fa-arrows-rotate"
-											aria-hidden="true"
-										/>
-									</button>
-									<button
-										type="button"
-										className="btn btn-primary btn-sm"
-										onClick={() => openCreate()}
-									>
-										<i
-											className="fa-solid fa-calendar-plus me-1"
-											aria-hidden="true"
-										/>
-										New entry
-									</button>
+							<div className="d-flex flex-wrap align-items-center gap-2">
+								<div className="btn-group btn-group-sm">
+									{VIEWS.map((item) => (
+										<button
+											key={item.key}
+											type="button"
+											className={`btn btn-${
+												view === item.key ? "secondary" : "outline-secondary"
+											}`}
+											onClick={() => changeView(item.key)}
+										>
+											{item.label}
+										</button>
+									))}
 								</div>
-							</div>
-							<div className="card-body border-bottom py-2">
-								<FiltersBar
-									filters={filters}
-									setFilters={setFilters}
-									resetFilters={() => setFilters(DEFAULT_FILTERS)}
-								/>
-							</div>
-							<div className="card-body">
-								{view === "month" ? <MonthView {...viewProps} /> : null}
-								{view === "week" ? <WeekView {...viewProps} /> : null}
-								{view === "agenda" ? (
-									<AgendaView
-										cursor={cursor}
-										visibleEvents={occurrences}
-										onSelectEvent={setSelected}
+								<button
+									type="button"
+									className="btn btn-outline-secondary btn-sm"
+									onClick={() => router.refresh()}
+									aria-label="Reload from API"
+								>
+									<i className="fa-solid fa-arrows-rotate" aria-hidden="true" />
+								</button>
+								<button
+									type="button"
+									className="btn btn-primary btn-sm"
+									onClick={() => openCreate()}
+								>
+									<i
+										className="fa-solid fa-calendar-plus me-1"
+										aria-hidden="true"
 									/>
-								) : null}
-								<p className="text-body-secondary small mb-0 mt-2">
-									Double-click a day to book. Drag an appointment onto another
-									day to reschedule it.
-								</p>
+									New entry
+								</button>
 							</div>
 						</div>
+						<div className="card-body border-bottom py-2">
+							<FiltersBar
+								filters={filters}
+								setFilters={setFilters}
+								resetFilters={() => setFilters(DEFAULT_FILTERS)}
+							/>
+						</div>
+						<div className="card-body">
+							{view === "month" ? <MonthView {...viewProps} /> : null}
+							{view === "week" ? <WeekView {...viewProps} /> : null}
+							{view === "agenda" ? (
+								<AgendaView
+									cursor={cursor}
+									visibleEvents={occurrences}
+									onSelectEvent={setSelected}
+								/>
+							) : null}
+							<p className="text-body-secondary small mb-0 mt-2">
+								Double-click a day to book. Drag an appointment onto another day
+								to reschedule it.
+							</p>
+						</div>
 					</div>
-					<div className="col-xl-3">
-						<UpcomingPanel
-							visibleEvents={occurrences}
-							clock={clock}
-							onSelectEvent={setSelected}
-						/>
-					</div>
+				</div>
+				<div className="col-xl-3">
+					<UpcomingPanel
+						visibleEvents={occurrences}
+						clock={clock}
+						onSelectEvent={setSelected}
+					/>
 				</div>
 			</div>
 			<EventDetailModal

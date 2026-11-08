@@ -12,7 +12,11 @@ const CreateWeapon = async ({ params, searchParams }) => {
 	// Redirect if not charges enabled
 	!auth?.userStripeChargesEnabled && <OnboardingLink />;
 
-	return <CreateProductForm token={token} auth={auth} />;
+	return (
+		<div className="container-fluid px-0">
+			<CreateProductForm token={token} auth={auth} />
+		</div>
+	);
 };
 
 export default CreateWeapon;

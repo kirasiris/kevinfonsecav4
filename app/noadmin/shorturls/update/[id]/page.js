@@ -122,7 +122,7 @@ const UpdateShortUrl = async ({ params, searchParams }) => {
 	};
 
 	return (
-		<>
+		<div className="container-fluid px-0">
 			<AdminStatusesMenu
 				allLink="/noadmin/shorturls"
 				publishedLink="/noadmin/shorturls/published"
@@ -160,7 +160,7 @@ const UpdateShortUrl = async ({ params, searchParams }) => {
 					</div>
 				</div>
 			</div>
-		</>
+		</div>
 	);
 };
 

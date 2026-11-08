@@ -11,7 +11,11 @@ const CreatePage = async ({ params, searchParams }) => {
 	const token = await getAuthTokenOnServer();
 	const auth = await getUserOnServer();
 
-	return <CreatePageForm token={token} auth={auth} params={awtdParams} />;
+	return (
+		<div className="container-fluid px-0">
+			<CreatePageForm token={token} auth={auth} params={awtdParams} />
+		</div>
+	);
 };
 
 export default CreatePage;

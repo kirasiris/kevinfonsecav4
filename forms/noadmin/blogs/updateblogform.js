@@ -49,6 +49,9 @@ const UpdateBlogForm = ({
 
 		const bodyUnchanged = text === (object?.data?.text || "");
 
+		const status = formData.get("status");
+		const scheduledAtLocal = formData.get("scheduledAt");
+
 		const rawFormData = {
 			title: formData.get("title"),
 			text: formData.get("text"),
@@ -62,7 +65,10 @@ const UpdateBlogForm = ({
 			category: formData.get("category"),
 			commented: formData.get("commented"),
 			password: formData.get("password"),
-			status: formData.get("status"),
+			scheduledAt:
+				status === "scheduled" && scheduledAtLocal
+					? new Date(scheduledAtLocal).toISOString()
+					: null,
 			fullWidth: formData.get("fullWidth"),
 			files: {
 				avatar: formData.get("file") || undefined,
@@ -157,6 +163,7 @@ const UpdateBlogForm = ({
 					avatar={object?.data?.files}
 					avatarFormat={object?.data?.files?.avatar?.format_type}
 					status={object?.data?.status}
+					scheduledAt={object?.data?.scheduledAt}
 					fullWidth={object?.data?.fullWidth.toString()}
 					password=""
 					featured={object?.data?.featured.toString()}

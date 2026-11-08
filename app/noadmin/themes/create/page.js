@@ -16,7 +16,11 @@ const CreateTheme = async ({ params, searchParams }) => {
 
 	const categories = await getCategories(`?categoryType=theme`);
 
-	return <CreateThemeForm token={token} auth={auth} objects={categories} />;
+	return (
+		<div className="container-fluid px-0">
+			<CreateThemeForm token={token} auth={auth} objects={categories} />
+		</div>
+	);
 };
 
 export default CreateTheme;

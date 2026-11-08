@@ -9,7 +9,7 @@ async function getAcquisitionsDisposals(params) {
 	const res = await fetchurl(
 		`/global/weaponacquisitionsdisposals${params}`,
 		"GET",
-		"no-cache"
+		"no-cache",
 	);
 	return res;
 }
@@ -21,15 +21,17 @@ const UpdateAcquisitionDisposal = async ({ params, searchParams }) => {
 	const auth = await getUserOnServer();
 
 	const acquisitiondisposal = await getAcquisitionsDisposals(
-		`/${awtdParams.id}`
+		`/${awtdParams.id}`,
 	);
 
 	return (
-		<UpdateAcquisitionDisposalForm
-			object={acquisitiondisposal}
-			token={token}
-			auth={auth}
-		/>
+		<div className="container-fluid px-0">
+			<UpdateAcquisitionDisposalForm
+				object={acquisitiondisposal}
+				token={token}
+				auth={auth}
+			/>
+		</div>
 	);
 };
 

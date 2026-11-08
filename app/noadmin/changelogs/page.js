@@ -91,7 +91,7 @@ const AdminChangelogsIndex = async ({ params, searchParams }) => {
 	};
 
 	return (
-		<>
+		<div className="container-fluid px-0">
 			<AdminStatusesMenu
 				allLink="/noadmin/changelogs"
 				publishedLink="/noadmin/changelogs/published"
@@ -117,7 +117,7 @@ const AdminChangelogsIndex = async ({ params, searchParams }) => {
 					handleDeleteAllFunction={handleDeleteAll}
 				/>
 			</div>
-		</>
+		</div>
 	);
 };
 

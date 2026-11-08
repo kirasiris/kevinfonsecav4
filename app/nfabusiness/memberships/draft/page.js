@@ -7,7 +7,7 @@ async function getMembershipsPublished(params) {
 	const res = await fetchurl(
 		`/global/memberships${params}&status=published`,
 		"GET",
-		"no-cache"
+		"no-cache",
 	);
 	return res;
 }
@@ -21,7 +21,7 @@ const NFAMembershipsDraftIndex = async ({ params, searchParams }) => {
 
 	const auth = await getUserOnServer();
 	const memberships = await getMembershipsPublished(
-		`?page=${page}&limit=${limit}&sort=${sort}`
+		`?page=${page}&limit=${limit}&sort=${sort}`,
 	);
 
 	const activateIt = async (id) => {
@@ -30,10 +30,10 @@ const NFAMembershipsDraftIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/stripe/memberships/${id}/activateit`,
 			"PUT",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/nfabusiness/memberships/draft?page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/memberships/draft?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -43,10 +43,10 @@ const NFAMembershipsDraftIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/stripe/memberships/${id}/disactivateit`,
 			"PUT",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/nfabusiness/memberships/draft?page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/memberships/draft?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -56,10 +56,10 @@ const NFAMembershipsDraftIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/stripe/memberships/${id}/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/nfabusiness/memberships/draft?page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/memberships/draft?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -68,7 +68,7 @@ const NFAMembershipsDraftIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/stripe/memberships/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`/nfabusiness/memberships/draft?page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/memberships/draft?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -78,15 +78,15 @@ const NFAMembershipsDraftIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/stripe/memberships/deleteall/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/nfabusiness/memberships/draft?page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/memberships/draft?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
 	return (
-		<>
+		<div className="container-fluid px-0">
 			<NFAStatusesMenu
 				allLink="/nfabusiness/memberships"
 				publishedLink="/nfabusiness/memberships/published"
@@ -120,7 +120,7 @@ const NFAMembershipsDraftIndex = async ({ params, searchParams }) => {
 					handleDisactivate={disactivateIt}
 				/>
 			</div>
-		</>
+		</div>
 	);
 };
 

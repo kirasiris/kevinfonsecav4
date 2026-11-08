@@ -139,6 +139,60 @@ export const capitalize = (value) => {
 	return text.charAt(0).toUpperCase() + text.slice(1);
 };
 
+export const isOnHand = (w) => w.status !== "disposed" && !w.dispositiondate;
+
+export const summarizeTypes = (items, limit = 3) =>
+	[...countBy(items, (i) => (i.type || "other").toLowerCase()).entries()]
+		.sort((a, b) => b[1] - a[1])
+		.slice(0, limit)
+		.map(([type, n]) => `${n} ${type}${n === 1 ? "" : "s"}`)
+		.join(" · ");
+
+// Shared by the admin and NFA Business dashboards so both read the
+// weaponacquisitionsdisposals collection identically.
+export const buildTransferStats = (transfers, now = new Date()) => {
+	const firstReceipt = earliestDate([
+		transfers.map((t) => ({ createdAt: t.receiptdate || t.createdAt })),
+	]);
+	const months = firstReceipt ? monthsBetween(firstReceipt, now) : [];
+	const typePalette = [
+		COLORS.primary,
+		COLORS.success,
+		COLORS.gray,
+		COLORS.dark,
+	];
+	const typeEntries = [
+		...countBy(transfers, (t) => capitalize(t.type || "other")).entries(),
+	].sort((a, b) => b[1] - a[1]);
+	const onHand = transfers.filter(isOnHand).length;
+
+	return {
+		flow: {
+			labels: months.map((m) => m.label),
+			series: [
+				{
+					label: "Received",
+					data: monthlySeries(transfers, months, "receiptdate"),
+					color: COLORS.primary,
+				},
+				{
+					label: "Disposed",
+					data: monthlySeries(transfers, months, "dispositiondate"),
+					color: COLORS.success,
+				},
+			],
+		},
+		byType: {
+			labels: typeEntries.map(([label]) => label),
+			values: typeEntries.map(([, n]) => n),
+			colors: typeEntries.map((_, i) => typePalette[i % typePalette.length]),
+		},
+		onHand,
+		disposed: transfers.length - onHand,
+		typeSummary: summarizeTypes(transfers),
+	};
+};
+
 export const buildDashboard = ({
 	blogs = [],
 	themes = [],
@@ -419,29 +473,7 @@ export const buildDashboard = ({
 		],
 	};
 
-	const firstReceipt = earliestDate([
-		weapons.map((w) => ({ createdAt: w.receiptdate || w.createdAt })),
-	]);
-	const weaponMonths = firstReceipt ? monthsBetween(firstReceipt, now) : [];
-	const weaponFlow = {
-		labels: weaponMonths.map((m) => m.label),
-		series: [
-			{
-				label: "Received",
-				data: monthlySeries(weapons, weaponMonths, "receiptdate"),
-				color: COLORS.primary,
-			},
-			{
-				label: "Disposed",
-				data: monthlySeries(weapons, weaponMonths, "dispositiondate"),
-				color: COLORS.success,
-			},
-		],
-	};
-	const weaponsOnHand = weapons.filter(
-		(w) => w.status !== "disposed" && !w.dispositiondate,
-	).length;
-	const weaponTypes = countBy(weapons, (w) => capitalize(w.type || "other"));
+	const transferStats = buildTransferStats(weapons, now);
 
 	return {
 		contentStatus,
@@ -450,11 +482,12 @@ export const buildDashboard = ({
 		topLogMessages,
 		upcomingEvents,
 		topVideos,
-		weaponFlow,
-		weaponsOnHand,
-		weaponTypes: [...weaponTypes.entries()]
-			.map(([type, n]) => `${n} ${type.toLowerCase()}${n === 1 ? "" : "s"}`)
-			.join(" · "),
+		weaponFlow: transferStats.flow,
+		weaponsOnHand: transferStats.onHand,
+		weaponsDisposed: transferStats.disposed,
+		weaponTypes: transferStats.typeSummary,
+		blogsPublished: blogs.filter(isPublished).length,
+		blogsDrafts: blogs.filter((b) => b.status === "draft").length,
 		totalVideoViews: videos.reduce((sum, v) => sum + (Number(v.views) || 0), 0),
 		publishedPages: pages.filter(isPublished).length,
 		upcomingEventCount: datedEvents.filter(({ date }) => date >= startOfToday)

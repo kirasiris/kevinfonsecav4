@@ -13,7 +13,11 @@ const UpdateSnippet = async ({ params, searchParams }) => {
 	const awtdSearchParams = await searchParams;
 	const snippet = await getSnippet(`/${awtdParams.id}`);
 
-	return <UpdateSnippetForm object={snippet} />;
+	return (
+		<div className="container-fluid px-0">
+			<UpdateSnippetForm object={snippet} />
+		</div>
+	);
 };
 
 export default UpdateSnippet;

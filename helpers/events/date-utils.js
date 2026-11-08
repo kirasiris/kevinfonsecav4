@@ -1,7 +1,3 @@
-// Plain JavaScript date helpers.
-// The Mongoose model stores `day` as "MM/DD/YYYY" and `time` as "HH:mm" (24h),
-// so every helper here speaks those two formats.
-
 export const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 export const MONTHS = [
@@ -23,14 +19,12 @@ function pad(n) {
 	return String(n).padStart(2, "0");
 }
 
-/** Date -> "MM/DD/YYYY" */
 export function toDay(date) {
 	return `${pad(date.getMonth() + 1)}/${pad(
 		date.getDate(),
 	)}/${date.getFullYear()}`;
 }
 
-/** "MM/DD/YYYY" -> Date (local, midnight) */
 export function fromDay(day) {
 	const parts = String(day || "").split("/");
 	if (parts.length !== 3) return new Date();
@@ -40,7 +34,6 @@ export function fromDay(day) {
 	return new Date(year, month, date);
 }
 
-/** API format "YYYY-MM-DD" -> internal "MM/DD/YYYY" */
 export function isoToDay(iso) {
 	const parts = String(iso || "")
 		.slice(0, 10)
@@ -49,25 +42,15 @@ export function isoToDay(iso) {
 	return `${pad(Number(parts[1]))}/${pad(Number(parts[2]))}/${Number(parts[0])}`;
 }
 
-/** internal "MM/DD/YYYY" -> API format "YYYY-MM-DD" */
 export function dayToIso(day) {
 	const d = fromDay(day);
 	return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 }
 
-/**
- * Sortable, timezone-free stamp: "YYYY-MM-DDTHH:mm".
- * Comparing these as plain strings avoids building Date objects during render,
- * which is what made the server and the browser disagree.
- */
 export function dayTimeStamp(day, time) {
 	return `${dayToIso(day)}T${String(time || "00:00").slice(0, 5)}`;
 }
 
-/**
- * A snapshot of "now" that can be serialized from the server to the client.
- * `today` is the "MM/DD/YYYY" key and `stamp` is the sortable form above.
- */
 export function serverClock(date) {
 	const now = date || new Date();
 	const day = toDay(now);
@@ -77,18 +60,12 @@ export function serverClock(date) {
 	};
 }
 
-/** Inclusive whole-day difference between two "MM/DD/YYYY" values. */
 export function dayDiff(startDay, endDay) {
 	const start = fromDay(startDay).setHours(0, 0, 0, 0);
 	const end = fromDay(endDay).setHours(0, 0, 0, 0);
 	return Math.round((end - start) / 86400000);
 }
 
-/**
- * Every "MM/DD/YYYY" key from `startDay` to `endDay`, inclusive.
- * Returns just the start when the range is empty, backwards, or absurd, so
- * callers never have to guard against a runaway loop.
- */
 export function dayRange(startDay, endDay, maxDays = 366) {
 	if (!startDay) return [];
 	if (!endDay || endDay === startDay) return [startDay];
@@ -106,7 +83,6 @@ export function dayRange(startDay, endDay, maxDays = 366) {
 	return keys;
 }
 
-/** "MM/DD/YYYY" + "HH:mm" -> Date */
 export function toDateTime(day, time) {
 	const base = fromDay(day);
 	const [hours, minutes] = String(time || "00:00").split(":");
@@ -114,7 +90,6 @@ export function toDateTime(day, time) {
 	return base;
 }
 
-/** FullCalendar friendly ISO value: "YYYY-MM-DDTHH:mm:00" */
 export function toFullCalendarFormat(day, time) {
 	const d = fromDay(day);
 	return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${
@@ -122,7 +97,6 @@ export function toFullCalendarFormat(day, time) {
 	}:00`;
 }
 
-/** "18:30" -> "6:30 PM" */
 export function formatTime(time) {
 	const [rawHours, rawMinutes] = String(time || "00:00").split(":");
 	let hours = Number(rawHours) || 0;
@@ -142,17 +116,9 @@ export function addMonths(date, amount) {
 	return next;
 }
 
-/**
- * Like `addMonths`, but keeps the day-of-month instead of snapping to the 1st.
- *
- * `addMonths` deliberately returns the first of the month because it drives the
- * month-view cursor, where the day is irrelevant. Monthly recurrence needs the
- * opposite: "the 31st, every month". Short months are clamped to their last day
- * (Jan 31 -> Feb 28), which is what calendars do.
- */
 export function addMonthsKeepDay(date, amount) {
 	const target = new Date(date.getFullYear(), date.getMonth() + amount, 1);
-	// Day 0 of the following month is the last day of the target month.
+
 	const lastDay = new Date(
 		target.getFullYear(),
 		target.getMonth() + 1,
@@ -180,7 +146,6 @@ export function isToday(date) {
 	return isSameDay(date, new Date());
 }
 
-/** 42 cells (6 weeks) covering the month that `date` belongs to. */
 export function monthMatrix(date) {
 	const first = new Date(date.getFullYear(), date.getMonth(), 1);
 	const start = startOfWeek(first);

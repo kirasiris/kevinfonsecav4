@@ -21,12 +21,14 @@ const UpdatePage = async ({ params, searchParams }) => {
 	const page = await getPage(`/${awtdParams.id}`);
 
 	return (
-		<UpdatePageForm
-			token={token}
-			auth={auth}
-			object={page}
-			params={awtdParams}
-		/>
+		<div className="container-fluid px-0">
+			<UpdatePageForm
+				token={token}
+				auth={auth}
+				object={page}
+				params={awtdParams}
+			/>
+		</div>
 	);
 };
 

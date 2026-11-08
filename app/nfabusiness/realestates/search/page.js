@@ -140,7 +140,7 @@ const NFARealEstatesSearchIndex = async ({ params, searchParams }) => {
 	};
 
 	return (
-		<>
+		<div className="container-fluid px-0">
 			<NFAStatusesMenu
 				allLink="/nfabusiness/realestates"
 				publishedLink="/nfabusiness/realestates/published"
@@ -174,7 +174,7 @@ const NFARealEstatesSearchIndex = async ({ params, searchParams }) => {
 					handleDeleteAllFunction={handleDeleteAll}
 				/>
 			</div>
-		</>
+		</div>
 	);
 };
 

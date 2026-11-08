@@ -7,7 +7,7 @@ async function getWeapons(params) {
 	const res = await fetchurl(
 		`/noadmin/weapons${params}&status=draft`,
 		"GET",
-		"no-cache"
+		"no-cache",
 	);
 	return res;
 }
@@ -26,7 +26,7 @@ const NFAWeaponsDraftIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/weapons/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
-			`/nfabusiness/weapons/draft?page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/weapons/draft?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -35,7 +35,7 @@ const NFAWeaponsDraftIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/weapons/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
-			`/nfabusiness/weapons/draft?page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/weapons/draft?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -44,7 +44,7 @@ const NFAWeaponsDraftIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/weapons/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`/nfabusiness/weapons/draft?page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/weapons/draft?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -54,15 +54,15 @@ const NFAWeaponsDraftIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/weapons/deleteall/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/nfabusiness/weapons/draft?page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/weapons/draft?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
 	return (
-		<>
+		<div className="container-fluid px-0">
 			<NFAStatusesMenu
 				allLink="/nfabusiness/weapons"
 				publishedLink="/nfabusiness/weapons/published"
@@ -96,7 +96,7 @@ const NFAWeaponsDraftIndex = async ({ params, searchParams }) => {
 					handleDeleteAllFunction={handleDeleteAll}
 				/>
 			</div>
-		</>
+		</div>
 	);
 };
 

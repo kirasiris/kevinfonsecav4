@@ -11,12 +11,14 @@ const CreateVideo = async ({ params, searchParams }) => {
 	const auth = await getUserOnServer();
 
 	return (
-		<CreateVideoForm
-			token={token}
-			auth={auth}
-			params={awtdParams}
-			searchParams={awtdSearchParams}
-		/>
+		<div className="container-fluid px-0">
+			<CreateVideoForm
+				token={token}
+				auth={auth}
+				params={awtdParams}
+				searchParams={awtdSearchParams}
+			/>
+		</div>
 	);
 };
 

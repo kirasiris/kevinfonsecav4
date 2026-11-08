@@ -33,36 +33,40 @@ const ReadMovie = async ({ params, searchParams }) => {
 	);
 
 	return (
-		<div className="row">
-			<div className="col-lg-10">
-				<div className="card rounded-0 mb-3">
-					<div className="card-header">{movie?.data?.title || "Untitled"}</div>
-					<div className="card-body">
-						<ParseHtml text={movie?.data?.text} />
+		<div className="container-fluid px-0">
+			<div className="row">
+				<div className="col-lg-10">
+					<div className="card rounded-0 mb-3">
+						<div className="card-header">
+							{movie?.data?.title || "Untitled"}
+						</div>
+						<div className="card-body">
+							<ParseHtml text={movie?.data?.text} />
+						</div>
 					</div>
-				</div>
-				<VideosMediaManager
-					auth={auth}
-					token={token}
-					object={movie?.data}
-					objects={videos}
-					searchParams={awtdSearchParams}
-				/>
-			</div>
-			<div className="col-xl-2 col-lg-2 col-md-2 col-sm-12 col-xs-12 d-none d-sm-none d-md-none d-lg-block dm-xl-block">
-				<figure className="mb-3 bg-dark">
-					<Image
-						className="img-fluid p-3"
-						src={
-							movie?.data?.files?.avatar?.location?.secure_location ||
-							`https://source.unsplash.com/random/260x370`
-						}
-						alt={`${movie?.data?.files?.avatar?.location?.filename}'s featured image`}
-						width={440}
-						height={570}
-						priority
+					<VideosMediaManager
+						auth={auth}
+						token={token}
+						object={movie?.data}
+						objects={videos}
+						searchParams={awtdSearchParams}
 					/>
-				</figure>
+				</div>
+				<div className="col-xl-2 col-lg-2 col-md-2 col-sm-12 col-xs-12 d-none d-sm-none d-md-none d-lg-block dm-xl-block">
+					<figure className="mb-3 bg-dark">
+						<Image
+							className="img-fluid p-3"
+							src={
+								movie?.data?.files?.avatar?.location?.secure_location ||
+								`https://source.unsplash.com/random/260x370`
+							}
+							alt={`${movie?.data?.files?.avatar?.location?.filename}'s featured image`}
+							width={440}
+							height={570}
+							priority
+						/>
+					</figure>
+				</div>
 			</div>
 		</div>
 	);

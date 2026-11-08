@@ -21,12 +21,14 @@ const UpdateChapter = async ({ params, searchParams }) => {
 	const chapter = await getChapter(`/${awtdParams.id}`);
 
 	return (
-		<UpdateChapterForm
-			token={token}
-			auth={auth}
-			object={chapter}
-			searchParams={awtdSearchParams}
-		/>
+		<div className="container-fluid px-0">
+			<UpdateChapterForm
+				token={token}
+				auth={auth}
+				object={chapter}
+				searchParams={awtdSearchParams}
+			/>
+		</div>
 	);
 };
 

@@ -10,7 +10,11 @@ const CreateLesson = async ({ params, searchParams }) => {
 	const token = await getAuthTokenOnServer();
 	const auth = await getUserOnServer();
 
-	return <CreateLessonForm token={token} auth={auth} params={awtdParams} />;
+	return (
+		<div className="container-fluid px-0">
+			<CreateLessonForm token={token} auth={auth} params={awtdParams} />
+		</div>
+	);
 };
 
 export default CreateLesson;

@@ -65,13 +65,13 @@ const AdminMenusIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/menus/deleteall/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(`?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	return (
-		<>
+		<div className="container-fluid px-0">
 			<AdminStatusesMenu
 				allLink="/noadmin/menus"
 				publishedLink="/noadmin/menus/published"
@@ -99,7 +99,7 @@ const AdminMenusIndex = async ({ params, searchParams }) => {
 					handleDeleteAllFunction={handleDeleteAll}
 				/>
 			</div>
-		</>
+		</div>
 	);
 };
 

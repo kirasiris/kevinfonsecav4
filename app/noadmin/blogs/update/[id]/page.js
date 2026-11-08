@@ -28,12 +28,14 @@ const UpdateBlog = async ({ params, searchParams }) => {
 	const categories = await getCategories(`?categoryType=blog`);
 
 	return (
-		<UpdateBlogForm
-			token={token}
-			auth={auth}
-			object={blog}
-			objects={categories}
-		/>
+		<div className="container-fluid px-0">
+			<UpdateBlogForm
+				token={token}
+				auth={auth}
+				object={blog}
+				objects={categories}
+			/>
+		</div>
 	);
 };
 

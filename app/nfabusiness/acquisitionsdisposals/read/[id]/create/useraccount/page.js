@@ -20,7 +20,11 @@ const CreateUser = async ({ params, searchParams }) => {
 		`/${awtdParams.id}`,
 	);
 
-	return <CreateUserForm object={acquisitionsdisposal.data} />;
+	return (
+		<div className="container-fluid px-0">
+			<CreateUserForm object={acquisitionsdisposal.data} />
+		</div>
+	);
 };
 
 export default CreateUser;

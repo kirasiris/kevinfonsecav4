@@ -12,7 +12,11 @@ const CreateRealEstate = async ({ params, searchParams }) => {
 	// Redirect if not charges enabled
 	!auth?.userStripeChargesEnabled && <OnboardingLink />;
 
-	return <CreateRealEstateForm token={token} auth={auth} />;
+	return (
+		<div className="container-fluid px-0">
+			<CreateRealEstateForm token={token} auth={auth} />
+		</div>
+	);
 };
 
 export default CreateRealEstate;

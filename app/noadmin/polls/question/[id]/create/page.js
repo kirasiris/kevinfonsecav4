@@ -11,12 +11,14 @@ const CreateQuestion = async ({ params, searchParams }) => {
 	const auth = await getUserOnServer();
 
 	return (
-		<CreateQuestionForm
-			token={token}
-			auth={auth}
-			params={awtdParams}
-			searchParams={awtdSearchParams}
-		/>
+		<div className="container-fluid px-0">
+			<CreateQuestionForm
+				token={token}
+				auth={auth}
+				params={awtdParams}
+				searchParams={awtdSearchParams}
+			/>
+		</div>
 	);
 };
 

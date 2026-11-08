@@ -8,7 +8,11 @@ const CreateCompany = async ({ params, searchParams }) => {
 	const token = await getAuthTokenOnServer();
 	const auth = await getUserOnServer();
 
-	return <CreateCompanyForm token={token} auth={auth} />;
+	return (
+		<div className="container-fluid px-0">
+			<CreateCompanyForm token={token} auth={auth} />
+		</div>
+	);
 };
 
 export default CreateCompany;

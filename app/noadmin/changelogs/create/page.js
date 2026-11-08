@@ -8,7 +8,11 @@ const CreateChangelog = async ({ params, searchParams }) => {
 	const token = await getAuthTokenOnServer();
 	const auth = await getUserOnServer();
 
-	return <CreateChangelogForm token={token} auth={auth} />;
+	return (
+		<div className="container-fluid px-0">
+			<CreateChangelogForm token={token} auth={auth} />
+		</div>
+	);
 };
 
 export default CreateChangelog;

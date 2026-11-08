@@ -16,7 +16,11 @@ const CreateMovie = async ({ params, searchParams }) => {
 
 	const categories = await getCategories(`?categoryType=movie`);
 
-	return <CreateMovieForm token={token} auth={auth} objects={categories} />;
+	return (
+		<div className="container-fluid px-0">
+			<CreateMovieForm token={token} auth={auth} objects={categories} />
+		</div>
+	);
 };
 
 export default CreateMovie;

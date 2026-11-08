@@ -65,13 +65,13 @@ const AdminForumsIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/forums/deleteall/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(`/noadmin/forums?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	return (
-		<>
+		<div className="container-fluid px-0">
 			<AdminStatusesMenu
 				allLink="/noadmin/forums"
 				publishedLink="/noadmin/forums/published"
@@ -99,7 +99,7 @@ const AdminForumsIndex = async ({ params, searchParams }) => {
 					handleDeleteAllFunction={handleDeleteAll}
 				/>
 			</div>
-		</>
+		</div>
 	);
 };
 

@@ -29,71 +29,58 @@ import CreateQuickDraftBlogForm from "@/forms/noadmin/dashboard/quickdraftform";
 const ALL = `limit=500`;
 const COUNT_ONLY = `limit=1`;
 
-// fetchurl resolves with the error JSON on API failures, but a route that
-// doesn't exist yet (e.g. /global/qrcodes → Express HTML 404) can throw while
-// parsing, so one missing endpoint must not take down the whole dashboard.
-async function getGlobal(resource, params = "") {
-	try {
-		return await fetchurl(`/global/${resource}${params}`, "GET", "default");
-	} catch {
-		return { success: false };
-	}
-}
-
 const listQuery = {
 	page: 1,
 	limit: 10,
 };
 
-const loaded = (res, text) => (res?.success ? text : `Could not load`);
+async function getApi(path) {
+	try {
+		return await fetchurl(path, "GET", "default");
+	} catch {
+		return { success: false };
+	}
+}
+
+const getGlobal = (resource, params = "") =>
+	getApi(`/global/${resource}${params}`);
+
+const isEmptyList = (res) =>
+	res?.status === "fail" && /does not exist/i.test(res?.message || "");
+
+const loaded = (res, text) =>
+	res?.success || isEmptyList(res) ? text : `Could not load`;
 
 const AdminHome = async ({ params, searchParams }) => {
-	const token = await getAuthTokenOnServer();
-	const auth = await getUserOnServer();
-
 	const [
+		token,
+		auth,
 		blogs,
 		themes,
 		comments,
 		categories,
+		activeusers,
+		inactiveusers,
 		files,
-		songs,
-		videos,
-		pages,
-		snippets,
 		quotes,
 		events,
-		companies,
-		presentations,
-		secrets,
-		settings,
-		qrcodes,
-		weapons,
 		activities,
 		logs,
 		failLogs,
 		errorLogs,
 	] = await Promise.all([
-		getGlobal("blogs", `?postType=blog&${ALL}`),
-		getGlobal("themes", `?postType=theme&${ALL}`),
-		getGlobal("comments", `?${ALL}`),
+		getAuthTokenOnServer(),
+		getUserOnServer(),
+		getGlobal("blogs", `?${ALL}&postType=blog`),
+		getGlobal("themes", `?${ALL}&postType=theme`),
+		getGlobal("comments", `?${ALL}&postType=comment`),
 		getGlobal("categories", `?${ALL}`),
+		getGlobal("users", `?${ALL}&isEmailConfirmed=true`),
+		getGlobal("users", `?${ALL}&isEmailConfirmed=false`),
 		getGlobal("files", `?${ALL}`),
-		getGlobal("songs", `?${ALL}`),
-		getGlobal("videos", `?${ALL}`),
-		getGlobal("pages", `?${ALL}`),
-		getGlobal("snippets", `?${ALL}`),
 		getGlobal("quotes", `?${ALL}`),
-		getGlobal("events", `?${ALL}`),
-		getGlobal("companies", `?${ALL}`),
-		getGlobal("presentations", `?${ALL}`),
-		getGlobal("secrets", `?${ALL}`),
-		getGlobal("settings", `?${ALL}`),
-		getGlobal("qrcodes", `?${ALL}`),
-		getGlobal("weaponacquisitionsdisposals", `?${ALL}`),
+		getGlobal("events", `?${ALL}&postType=appointment&status=scheduled`),
 		getGlobal("activities", `?${ALL}`),
-		// Logs grow by tens of thousands; only pull the latest page for the
-		// breakdown and read the per-status totals from countAll.
 		getGlobal("logs", `?${ALL}`),
 		getGlobal("logs", `?status=fail&${COUNT_ONLY}`),
 		getGlobal("logs", `?status=error&${COUNT_ONLY}`),
@@ -104,23 +91,18 @@ const AdminHome = async ({ params, searchParams }) => {
 		themes: getItems(themes),
 		comments: getItems(comments),
 		categories: getItems(categories),
+		activeusers: getItems(activeusers),
+		inactiveusers: getItems(inactiveusers),
 		files: getItems(files),
-		songs: getItems(songs),
-		videos: getItems(videos),
-		pages: getItems(pages),
-		snippets: getItems(snippets),
 		quotes: getItems(quotes),
 		events: getItems(events),
-		secrets: getItems(secrets),
 		activities: getItems(activities),
 		logs: getItems(logs),
-		weapons: getItems(weapons),
 	});
 
 	const publishedText = (res) =>
 		loaded(res, `${getItems(res).filter(isPublished).length} published`);
 
-	const blogsPublished = getItems(blogs).filter(isPublished).length;
 	const activityTotal = stats.activity.series
 		.flatMap((s) => s.data)
 		.reduce((a, b) => a + b, 0);
@@ -132,12 +114,8 @@ const AdminHome = async ({ params, searchParams }) => {
 	};
 	const logStatusTotal = logStatus.values[0] + logStatus.values[1];
 
-	const settingsItems = getItems(settings);
-	const presentationItems = getItems(presentations);
-	const weaponItems = getItems(weapons);
-
 	return (
-		<>
+		<div className="container-fluid px-0">
 			<Header
 				title={`Welcome back!, Root`}
 				description="This is the place where you have the full control of your website. Feel free to play with it as you like!"
@@ -149,7 +127,7 @@ const AdminHome = async ({ params, searchParams }) => {
 					text={getTotal(blogs) || `0`}
 					subtext={loaded(
 						blogs,
-						`${blogsPublished} published · ${getTotal(blogs) - blogsPublished} drafts`,
+						`${stats.blogsPublished} published · ${stats.blogsDrafts} drafts`,
 					)}
 					myLink="/noadmin/blogs"
 					myQuery={listQuery}
@@ -184,6 +162,32 @@ const AdminHome = async ({ params, searchParams }) => {
 					myLink="/noadmin/categories"
 					myQuery={listQuery}
 				/>
+			</div>
+			<div className="row">
+				<DynamicCard
+					colClass="col-lg-4"
+					title="Active Users"
+					text={getTotal(activeusers) || `0`}
+					// subtext={loaded(users, `${formatBytes(stats.totalFileBytes)} stored`)}
+					myLink="/noadmin/users"
+					myQuery={listQuery}
+				/>
+				<DynamicCard
+					colClass="col-lg-4"
+					title="Inactive Users"
+					text={getTotal(inactiveusers) || `0`}
+					// subtext={loaded(users, `${formatBytes(stats.totalFileBytes)} stored`)}
+					myLink="/noadmin/users"
+					myQuery={listQuery}
+				/>
+				<DynamicCard
+					colClass="col-lg-4"
+					title="Appointments"
+					text={getTotal(events) || `0`}
+					subtext={loaded(events, `${stats.upcomingEventCount} upcoming`)}
+					myLink="/noadmin/events"
+					myQuery={listQuery}
+				/>
 				<DynamicCard
 					colClass="col-lg-12"
 					title="Files"
@@ -195,129 +199,7 @@ const AdminHome = async ({ params, searchParams }) => {
 			</div>
 			<div className="row">
 				<DynamicCard
-					colClass="col-6 col-md-4 col-xl-2"
-					textClass="display-5"
-					title="Songs"
-					text={getTotal(songs) || `0`}
-					subtext={publishedText(songs)}
-					myLink="/noadmin/songs"
-					myQuery={listQuery}
-				/>
-				<DynamicCard
-					colClass="col-6 col-md-4 col-xl-2"
-					textClass="display-5"
-					title="Videos"
-					text={getTotal(videos) || `0`}
-					subtext={loaded(
-						videos,
-						`${stats.totalVideoViews?.toLocaleString()} views`,
-					)}
-					myLink="/noadmin/videos"
-					myQuery={listQuery}
-				/>
-				<DynamicCard
-					colClass="col-6 col-md-4 col-xl-2"
-					textClass="display-5"
-					title="Pages"
-					text={getTotal(pages) || `0`}
-					subtext={loaded(pages, `${stats.publishedPages} published`)}
-					myLink="/noadmin/pages"
-					myQuery={listQuery}
-				/>
-				<DynamicCard
-					colClass="col-6 col-md-4 col-xl-2"
-					textClass="display-5"
-					title="Snippets"
-					text={getTotal(snippets) || `0`}
-					subtext={publishedText(snippets)}
-					myLink="/noadmin/snippets"
-					myQuery={listQuery}
-				/>
-				<DynamicCard
-					colClass="col-6 col-md-4 col-xl-2"
-					textClass="display-5"
-					title="Quotes"
-					text={getTotal(quotes) || `0`}
-					subtext={publishedText(quotes)}
-					myLink="/noadmin/quotes"
-					myQuery={listQuery}
-				/>
-				<DynamicCard
-					colClass="col-6 col-md-4 col-xl-2"
-					textClass="display-5"
-					title="Events"
-					text={getTotal(events) || `0`}
-					subtext={loaded(events, `${stats.upcomingEventCount} upcoming`)}
-					myLink="/noadmin/events"
-					myQuery={listQuery}
-				/>
-			</div>
-			<div className="row">
-				<DynamicCard
-					colClass="col-6 col-md-3"
-					textClass="display-6"
-					title="Companies"
-					text={getTotal(companies) || `0`}
-					subtext={publishedText(companies)}
-					myLink="/noadmin/companies"
-					myQuery={listQuery}
-				/>
-				<DynamicCard
-					colClass="col-6 col-md-3"
-					textClass="display-6"
-					title="Presentations"
-					text={getTotal(presentations) || `0`}
-					subtext={loaded(
-						presentations,
-						`${presentationItems.filter((p) => p.isPaid).length} paid · ${presentationItems.filter((p) => p.isPasswordProtected).length} protected`,
-					)}
-					myLink="/noadmin/presentations"
-					myQuery={listQuery}
-				/>
-				<DynamicCard
-					colClass="col-6 col-md-3"
-					textClass="display-6"
-					title="Secrets"
-					text={getTotal(secrets) || `0`}
-					subtext={loaded(secrets, `${stats.nsfwSecrets} flagged NSFW`)}
-					myLink="/noadmin/secrets"
-					myQuery={listQuery}
-				/>
-				<DynamicCard
-					colClass="col-6 col-md-3"
-					textClass="display-6"
-					title="Settings"
-					text={getTotal(settings) || `0`}
-					subtext={loaded(
-						settings,
-						`${settingsItems.filter((s) => s.maintenance).length} in maintenance`,
-					)}
-					myLink="/noadmin/settings"
-					myQuery={listQuery}
-				/>
-				<DynamicCard
-					colClass="col-6 col-md-3"
-					textClass="display-6"
-					title="QR codes"
-					text={getTotal(qrcodes) || `0`}
-					subtext={publishedText(qrcodes)}
-					myLink="/noadmin/qrcodes"
-					myQuery={listQuery}
-				/>
-				<DynamicCard
-					colClass="col-6 col-md-3"
-					textClass="display-6"
-					title="Acquisitions & dispositions"
-					text={getTotal(weapons) || `0`}
-					subtext={loaded(
-						weapons,
-						`${weaponItems.length - stats.weaponsOnHand} disposed · ${stats.weaponsOnHand} on hand`,
-					)}
-					myLink="/noadmin/weaponacquisitionsdisposals"
-					myQuery={listQuery}
-				/>
-				<DynamicCard
-					colClass="col-6 col-md-3"
+					colClass="col-6 col-md-6"
 					textClass="display-6"
 					title="Activities"
 					text={getTotal(activities) || `0`}
@@ -325,11 +207,11 @@ const AdminHome = async ({ params, searchParams }) => {
 						activities,
 						`${stats.activitiesLast7Days} in the last 7 days`,
 					)}
-					myLink="/noadmin/activities"
+					myLink="#!"
 					myQuery={listQuery}
 				/>
 				<DynamicCard
-					colClass="col-6 col-md-3"
+					colClass="col-6 col-md-6"
 					textClass="display-6"
 					title="Logs"
 					text={(getTotal(logs) || 0).toLocaleString()}
@@ -455,35 +337,6 @@ const AdminHome = async ({ params, searchParams }) => {
 			</div>
 			<div className="row">
 				<Panel
-					title="Top videos"
-					subtitle="Most viewed videos"
-					isEmpty={stats.topVideos.labels.length === 0}
-				>
-					<BarChart
-						labels={stats.topVideos.labels}
-						series={stats.topVideos.series}
-						horizontal
-						height={300}
-						ariaLabel={`Top videos by views: ${stats.topVideos.labels
-							.map((l, i) => `${l} ${stats.topVideos.series[0].data[i]}`)
-							.join(", ")}`}
-					/>
-				</Panel>
-				<Panel
-					title="Acquisitions & dispositions"
-					subtitle={stats.weaponTypes || "Received vs. disposed per month"}
-					isEmpty={stats.weaponFlow.labels.length === 0}
-				>
-					<BarChart
-						labels={stats.weaponFlow.labels}
-						series={stats.weaponFlow.series}
-						height={300}
-						ariaLabel="Bar chart of firearms received and disposed per month"
-					/>
-				</Panel>
-			</div>
-			<div className="row">
-				<Panel
 					title="Files by type"
 					subtitle="Uploads grouped by format"
 					colClasses="col-md-6 col-xl-4"
@@ -599,7 +452,7 @@ const AdminHome = async ({ params, searchParams }) => {
 					<RecentActivity items={stats.recentActivity} />
 				</Panel>
 			</div>
-		</>
+		</div>
 	);
 };
 

@@ -56,7 +56,7 @@ const AdminNewsletterSubscribersSearchIndex = async ({
 	};
 
 	return (
-		<>
+		<div className="container-fluid px-0">
 			<AdminStatusesMenu
 				allLink="/noadmin/newslettersubscribers"
 				publishedLink=""
@@ -84,7 +84,7 @@ const AdminNewsletterSubscribersSearchIndex = async ({
 					handleDeleteAllFunction={handleDeleteAll}
 				/>
 			</div>
-		</>
+		</div>
 	);
 };
 

@@ -90,7 +90,7 @@ const AdminForumsSearchIndex = async ({ params, searchParams }) => {
 	};
 
 	return (
-		<>
+		<div className="container-fluid px-0">
 			<AdminStatusesMenu
 				allLink="/noadmin/forums"
 				publishedLink="/noadmin/forums/published"
@@ -118,7 +118,7 @@ const AdminForumsSearchIndex = async ({ params, searchParams }) => {
 					handleDeleteAllFunction={handleDeleteAll}
 				/>
 			</div>
-		</>
+		</div>
 	);
 };
 

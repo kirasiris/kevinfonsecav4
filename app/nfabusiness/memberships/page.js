@@ -18,7 +18,7 @@ const NFAMembershipsIndex = async ({ params, searchParams }) => {
 
 	const auth = await getUserOnServer();
 	const memberships = await getMembershipsPublished(
-		`?page=${page}&limit=${limit}&sort=${sort}`
+		`?page=${page}&limit=${limit}&sort=${sort}`,
 	);
 
 	const activateIt = async (id) => {
@@ -27,10 +27,10 @@ const NFAMembershipsIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/stripe/memberships/${id}/activateit`,
 			"PUT",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/nfabusiness/memberships?page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/memberships?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -40,10 +40,10 @@ const NFAMembershipsIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/stripe/memberships/${id}/disactivateit`,
 			"PUT",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/nfabusiness/memberships?page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/memberships?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -53,10 +53,10 @@ const NFAMembershipsIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/stripe/memberships/${id}/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/nfabusiness/memberships?page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/memberships?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -65,7 +65,7 @@ const NFAMembershipsIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/stripe/memberships/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`/nfabusiness/memberships?page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/memberships?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -75,15 +75,15 @@ const NFAMembershipsIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/stripe/memberships/deleteall/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/nfabusiness/memberships?page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/memberships?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
 	return (
-		<>
+		<div className="container-fluid px-0">
 			<NFAStatusesMenu
 				allLink="/nfabusiness/memberships"
 				publishedLink="/nfabusiness/memberships/published"
@@ -117,7 +117,7 @@ const NFAMembershipsIndex = async ({ params, searchParams }) => {
 					handleDisactivate={disactivateIt}
 				/>
 			</div>
-		</>
+		</div>
 	);
 };
 

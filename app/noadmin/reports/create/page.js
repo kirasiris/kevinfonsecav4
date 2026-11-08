@@ -12,11 +12,13 @@ const CreateReport = async ({ params, searchParams }) => {
 	const auth = await getUserOnServer();
 
 	return (
-		<CreateReportForm
-			token={token}
-			auth={auth}
-			searchParams={awtdSearchParams}
-		/>
+		<div className="container-fluid px-0">
+			<CreateReportForm
+				token={token}
+				auth={auth}
+				searchParams={awtdSearchParams}
+			/>
+		</div>
 	);
 };
 

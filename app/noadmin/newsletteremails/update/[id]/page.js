@@ -10,7 +10,7 @@ async function getUsersSubscribed(params) {
 	const res = await fetchurl(
 		`/global/newslettersubscribers${params}`,
 		"GET",
-		"no-cache"
+		"no-cache",
 	);
 	return res;
 }
@@ -19,7 +19,7 @@ async function getNewsletterEmail(params) {
 	const res = await fetchurl(
 		`/global/newsletteremails${params}`,
 		"GET",
-		"no-cache"
+		"no-cache",
 	);
 	if (!res.success) notFound();
 	return res;
@@ -37,16 +37,18 @@ const UpdateEmail = async ({ params, searchParams }) => {
 	const newsletteremail = await getNewsletterEmail(`/${awtdParams.id}`);
 
 	const users = await getUsersSubscribed(
-		`?page=${page}&limit=${limit}&sort=${sort}`
+		`?page=${page}&limit=${limit}&sort=${sort}`,
 	);
 
 	return (
-		<UpdateNewsletterEmailForm
-			token={token}
-			auth={auth}
-			object={newsletteremail}
-			objects={users}
-		/>
+		<div className="container-fluid px-0">
+			<UpdateNewsletterEmailForm
+				token={token}
+				auth={auth}
+				object={newsletteremail}
+				objects={users}
+			/>
+		</div>
 	);
 };
 

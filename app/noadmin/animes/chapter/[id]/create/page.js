@@ -11,12 +11,14 @@ const CreateChapter = async ({ params, searchParams }) => {
 	const auth = await getUserOnServer();
 
 	return (
-		<CreateChapterForm
-			token={token}
-			auth={auth}
-			params={awtdParams}
-			searchParams={awtdSearchParams}
-		/>
+		<div className="container-fluid px-0">
+			<CreateChapterForm
+				token={token}
+				auth={auth}
+				params={awtdParams}
+				searchParams={awtdSearchParams}
+			/>
+		</div>
 	);
 };
 

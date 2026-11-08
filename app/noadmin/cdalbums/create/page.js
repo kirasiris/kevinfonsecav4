@@ -16,7 +16,11 @@ const CreateCDAlbum = async ({ params, searchParams }) => {
 
 	const categories = await getCategories(`?categoryType=album`);
 
-	return <CreateCDAlbumForm token={token} auth={auth} objects={categories} />;
+	return (
+		<div className="container-fluid px-0">
+			<CreateCDAlbumForm token={token} auth={auth} objects={categories} />
+		</div>
+	);
 };
 
 export default CreateCDAlbum;

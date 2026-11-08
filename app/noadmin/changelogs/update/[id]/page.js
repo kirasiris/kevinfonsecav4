@@ -21,7 +21,11 @@ const UpdateChangelog = async ({ params, searchParams }) => {
 
 	const changelog = await getChangelog(`/${awtdParams.id}`);
 
-	return <UpdateChangelogForm token={token} auth={auth} object={changelog} />;
+	return (
+		<div className="container-fluid px-0">
+			<UpdateChangelogForm token={token} auth={auth} object={changelog} />
+		</div>
+	);
 };
 
 export default UpdateChangelog;

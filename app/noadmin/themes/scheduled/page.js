@@ -7,7 +7,7 @@ async function getThemes(params) {
 	const res = await fetchurl(
 		`/global/themes${params}&postType=theme&status=scheduled`,
 		"GET",
-		"no-cache"
+		"no-cache",
 	);
 	return res;
 }
@@ -26,7 +26,7 @@ const AdminThemesScheduledIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/themes/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/themes/scheduled?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/themes/scheduled?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -35,7 +35,7 @@ const AdminThemesScheduledIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/themes/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/themes/scheduled?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/themes/scheduled?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -44,7 +44,7 @@ const AdminThemesScheduledIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/themes/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/themes/scheduled?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/themes/scheduled?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -53,7 +53,7 @@ const AdminThemesScheduledIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/themes/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/themes/scheduled?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/themes/scheduled?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -62,7 +62,7 @@ const AdminThemesScheduledIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/themes/${id}/featureit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/themes/scheduled?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/themes/scheduled?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -71,7 +71,7 @@ const AdminThemesScheduledIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/themes/${id}/unfeatureit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/themes/scheduled?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/themes/scheduled?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -80,7 +80,7 @@ const AdminThemesScheduledIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/themes/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`/noadmin/themes/scheduled?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/themes/scheduled?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -89,7 +89,7 @@ const AdminThemesScheduledIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/themes/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/themes/scheduled?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/themes/scheduled?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -99,15 +99,15 @@ const AdminThemesScheduledIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/themes/deleteall/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/themes/scheduled?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/themes/scheduled?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
 	return (
-		<>
+		<div className="container-fluid px-0">
 			<AdminStatusesMenu
 				allLink="/noadmin/themes"
 				publishedLink="/noadmin/themes/published"
@@ -137,7 +137,7 @@ const AdminThemesScheduledIndex = async ({ params, searchParams }) => {
 					handleDeleteAllFunction={handleDeleteAll}
 				/>
 			</div>
-		</>
+		</div>
 	);
 };
 

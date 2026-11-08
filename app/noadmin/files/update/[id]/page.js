@@ -20,7 +20,11 @@ const UpdateFile = async ({ params, searchParams }) => {
 
 	const file = await getFile(`/${awtdParams.id}`);
 
-	return <UpdateFileForm token={token} auth={auth} object={file} />;
+	return (
+		<div className="container-fluid px-0">
+			<UpdateFileForm token={token} auth={auth} object={file} />
+		</div>
+	);
 };
 
 export default UpdateFile;

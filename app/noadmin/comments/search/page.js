@@ -94,7 +94,7 @@ const AdminCommentsSearchIndex = async ({ params, searchParams }) => {
 	};
 
 	return (
-		<>
+		<div className="container-fluid px-0">
 			<AdminStatusesMenu
 				allLink="/noadmin/comments"
 				publishedLink="/noadmin/comments/published"
@@ -120,7 +120,7 @@ const AdminCommentsSearchIndex = async ({ params, searchParams }) => {
 					handleDeleteAllFunction={handleDeleteAll}
 				/>
 			</div>
-		</>
+		</div>
 	);
 };
 

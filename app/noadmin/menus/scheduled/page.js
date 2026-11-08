@@ -7,7 +7,7 @@ async function getMenus(params) {
 	const res = await fetchurl(
 		`/global/menus${params}&status=scheduled`,
 		"GET",
-		"no-cache"
+		"no-cache",
 	);
 	return res;
 }
@@ -26,7 +26,7 @@ const AdminMenusScheduledIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/menus/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/menus/scheduled?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/menus/scheduled?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -35,7 +35,7 @@ const AdminMenusScheduledIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/menus/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/menus/scheduled?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/menus/scheduled?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -44,7 +44,7 @@ const AdminMenusScheduledIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/menus/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/menus/scheduled?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/menus/scheduled?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -53,7 +53,7 @@ const AdminMenusScheduledIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/menus/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/menus/scheduled?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/menus/scheduled?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -62,7 +62,7 @@ const AdminMenusScheduledIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/menus/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`/noadmin/menus/scheduled?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/menus/scheduled?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -71,7 +71,7 @@ const AdminMenusScheduledIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/menus/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/menus/scheduled?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/menus/scheduled?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -81,15 +81,15 @@ const AdminMenusScheduledIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/menus/deleteall/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/menus/scheduled?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/menus/scheduled?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
 	return (
-		<>
+		<div className="container-fluid px-0">
 			<AdminStatusesMenu
 				allLink="/noadmin/menus"
 				publishedLink="/noadmin/menus/published"
@@ -117,7 +117,7 @@ const AdminMenusScheduledIndex = async ({ params, searchParams }) => {
 					handleDeleteAllFunction={handleDeleteAll}
 				/>
 			</div>
-		</>
+		</div>
 	);
 };
 

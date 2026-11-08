@@ -137,7 +137,7 @@ const NFARealEstatesArchivedIndex = async ({ params, searchParams }) => {
 	};
 
 	return (
-		<>
+		<div className="container-fluid px-0">
 			<NFAStatusesMenu
 				allLink="/nfabusiness/realestates"
 				publishedLink="/nfabusiness/realestates/published"
@@ -171,7 +171,7 @@ const NFARealEstatesArchivedIndex = async ({ params, searchParams }) => {
 					handleDeleteAllFunction={handleDeleteAll}
 				/>
 			</div>
-		</>
+		</div>
 	);
 };
 

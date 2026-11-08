@@ -83,13 +83,13 @@ const AdminQuotesIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/quotes/deleteall/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(`/noadmin/quotes?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	return (
-		<>
+		<div className="container-fluid px-0">
 			<AdminStatusesMenu
 				allLink="/noadmin/quotes"
 				publishedLink="/noadmin/quotes/published"
@@ -210,7 +210,7 @@ const AdminQuotesIndex = async ({ params, searchParams }) => {
 					</div>
 				</div>
 			</div>
-		</>
+		</div>
 	);
 };
 

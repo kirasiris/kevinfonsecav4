@@ -24,7 +24,11 @@ const UpdateProduct = async ({ params, searchParams }) => {
 	// Redirect if not charges enabled
 	!auth?.userStripeChargesEnabled && <OnboardingLink />;
 
-	return <UpdateProductForm token={token} auth={auth} object={weapon} />;
+	return (
+		<div className="container-fluid px-0">
+			<UpdateProductForm token={token} auth={auth} object={weapon} />
+		</div>
+	);
 };
 
 export default UpdateProduct;

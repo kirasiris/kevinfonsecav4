@@ -116,7 +116,7 @@ const AdminCDAlbumsSearchIndex = async ({ params, searchParams }) => {
 	};
 
 	return (
-		<>
+		<div className="container-fluid px-0">
 			<AdminStatusesMenu
 				allLink="/noadmin/cdalbums"
 				publishedLink="/noadmin/cdalbums/published"
@@ -146,7 +146,7 @@ const AdminCDAlbumsSearchIndex = async ({ params, searchParams }) => {
 					handleDeleteAllFunction={handleDeleteAll}
 				/>
 			</div>
-		</>
+		</div>
 	);
 };
 

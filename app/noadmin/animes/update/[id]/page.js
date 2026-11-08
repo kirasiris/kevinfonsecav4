@@ -27,12 +27,14 @@ const UpdateAnime = async ({ params, searchParams }) => {
 	const categories = await getCategories(`?categoryType=anime`);
 
 	return (
-		<UpdateAnimeForm
-			token={token}
-			auth={auth}
-			object={anime}
-			objects={categories}
-		/>
+		<div className="container-fluid px-0">
+			<UpdateAnimeForm
+				token={token}
+				auth={auth}
+				object={anime}
+				objects={categories}
+			/>
+		</div>
 	);
 };
 

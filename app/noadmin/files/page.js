@@ -39,20 +39,22 @@ const AdminFilesIndex = async ({ params, searchParams }) => {
 	};
 
 	return (
-		<div className="row">
-			<div className="col-lg-12">
-				<FilesManager
-					auth={auth}
-					token={token}
-					onModel="Blog"
-					allLink="/noadmin/files"
-					pageText="Files"
-					searchOn="/noadmin/files"
-					objects={files}
-					searchParams={awtdSearchParams}
-					handleDeleteAllFunction={handleDeleteAllPermanently}
-					handleDeleteAllUnusedPermanently={handleDeleteAllUnusedPermanently}
-				/>
+		<div className="container-fluid px-0">
+			<div className="row">
+				<div className="col-lg-12">
+					<FilesManager
+						auth={auth}
+						token={token}
+						onModel="Blog"
+						allLink="/noadmin/files"
+						pageText="Files"
+						searchOn="/noadmin/files"
+						objects={files}
+						searchParams={awtdSearchParams}
+						handleDeleteAllFunction={handleDeleteAllPermanently}
+						handleDeleteAllUnusedPermanently={handleDeleteAllUnusedPermanently}
+					/>
+				</div>
 			</div>
 		</div>
 	);

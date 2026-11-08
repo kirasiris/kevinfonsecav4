@@ -82,89 +82,93 @@ const AdminCompanyReadSearchIndex = async ({ params, searchParams }) => {
 	};
 
 	return (
-		<div className="row">
-			<div className="col-lg-10">
-				<div className="card rounded-0 mb-3">
-					<div className="card-header">
-						<div className="float-start">
-							<div className="d-flex align-items-center my-2">
-								{company?.data?.title || "Untitled"}
+		<div className="container-fluid px-0">
+			<div className="row">
+				<div className="col-lg-10">
+					<div className="card rounded-0 mb-3">
+						<div className="card-header">
+							<div className="float-start">
+								<div className="d-flex align-items-center my-2">
+									{company?.data?.title || "Untitled"}
+								</div>
 							</div>
 						</div>
-					</div>
-					<div className="card-body">
-						<ParseHtml text={company?.data?.text} />
-					</div>
-				</div>
-				<div className="card rounded-0 mb-3">
-					<JobList
-						allLink={`/nfabusiness/companies/read/${company?.data?._id}`}
-						pageText="Jobs"
-						addLink={`/nfabusiness/companies/job/${company?.data?._id}/create`}
-						searchOn={`/nfabusiness/companies/read/${company?.data?._id}`}
-						searchedKeyword={keyword}
-						objects={jobs}
-						searchParams={awtdSearchParams}
-						handleDraft={draftIt}
-						handlePublish={publishIt}
-						handleTrash={trashIt}
-						handleSchedule={scheduleIt}
-						handleDelete={handleDelete}
-						handleTrashAllFunction={handleTrashAll}
-						handleDeleteAllFunction={handleDeleteAll}
-					/>
-				</div>
-				<div className="card rounded-0 mb-3">
-					<div className="card-header">
-						<div className="float-start">
-							<div className="d-flex align-items-center my-2">Certificates</div>
+						<div className="card-body">
+							<ParseHtml text={company?.data?.text} />
 						</div>
-						<div className="float-end my-1">
-							<div className="btn-group">
-								<Link
-									href={{
-										pathname: `/nfabusiness/companies/certificate/${company?.data?._id}/create`,
-										query: {},
-									}}
-									className="btn btn-primary btn-sm"
-								>
-									Add License
-								</Link>
+					</div>
+					<div className="card rounded-0 mb-3">
+						<JobList
+							allLink={`/nfabusiness/companies/read/${company?.data?._id}`}
+							pageText="Jobs"
+							addLink={`/nfabusiness/companies/job/${company?.data?._id}/create`}
+							searchOn={`/nfabusiness/companies/read/${company?.data?._id}`}
+							searchedKeyword={keyword}
+							objects={jobs}
+							searchParams={awtdSearchParams}
+							handleDraft={draftIt}
+							handlePublish={publishIt}
+							handleTrash={trashIt}
+							handleSchedule={scheduleIt}
+							handleDelete={handleDelete}
+							handleTrashAllFunction={handleTrashAll}
+							handleDeleteAllFunction={handleDeleteAll}
+						/>
+					</div>
+					<div className="card rounded-0 mb-3">
+						<div className="card-header">
+							<div className="float-start">
+								<div className="d-flex align-items-center my-2">
+									Certificates
+								</div>
 							</div>
-						</div>
-					</div>
-					<ul className="list-group list-group-flush">
-						{company?.data?.certificates?.map((cert) => (
-							<li key={cert._id} className="list-group-item">
-								<div className="float-start">
+							<div className="float-end my-1">
+								<div className="btn-group">
 									<Link
 										href={{
-											pathname: `/nfabusiness/companies/certificate/${company?.data?._id}/update/${cert._id}`,
+											pathname: `/nfabusiness/companies/certificate/${company?.data?._id}/create`,
+											query: {},
 										}}
+										className="btn btn-primary btn-sm"
 									>
-										{cert.name}
+										Add License
 									</Link>
 								</div>
-							</li>
-						))}
-					</ul>
+							</div>
+						</div>
+						<ul className="list-group list-group-flush">
+							{company?.data?.certificates?.map((cert) => (
+								<li key={cert._id} className="list-group-item">
+									<div className="float-start">
+										<Link
+											href={{
+												pathname: `/nfabusiness/companies/certificate/${company?.data?._id}/update/${cert._id}`,
+											}}
+										>
+											{cert.name}
+										</Link>
+									</div>
+								</li>
+							))}
+						</ul>
+					</div>
+					<Map object={company?.data} />
 				</div>
-				<Map object={company?.data} />
-			</div>
-			<div className="col-xl-2 col-lg-2 col-md-2 col-sm-12 col-xs-12 d-none d-sm-none d-md-none d-lg-block dm-xl-block">
-				<figure className="mb-3 bg-dark">
-					<Image
-						className="img-fluid p-3"
-						src={
-							company?.data?.files?.avatar?.location?.secure_location ||
-							`https://source.unsplash.com/random/260x370`
-						}
-						alt={`${company?.data?.files?.avatar?.location?.filename}'s featured image`}
-						width={440}
-						height={570}
-						priority
-					/>
-				</figure>
+				<div className="col-xl-2 col-lg-2 col-md-2 col-sm-12 col-xs-12 d-none d-sm-none d-md-none d-lg-block dm-xl-block">
+					<figure className="mb-3 bg-dark">
+						<Image
+							className="img-fluid p-3"
+							src={
+								company?.data?.files?.avatar?.location?.secure_location ||
+								`https://source.unsplash.com/random/260x370`
+							}
+							alt={`${company?.data?.files?.avatar?.location?.filename}'s featured image`}
+							width={440}
+							height={570}
+							priority
+						/>
+					</figure>
+				</div>
 			</div>
 		</div>
 	);

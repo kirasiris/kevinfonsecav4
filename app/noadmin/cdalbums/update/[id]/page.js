@@ -28,12 +28,14 @@ const UpdateCDAlbum = async ({ params, searchParams }) => {
 	const categories = await getCategories(`?categoryType=album`);
 
 	return (
-		<UpdateCDAlbumForm
-			token={token}
-			auth={auth}
-			object={cdalbum}
-			objects={categories}
-		/>
+		<div className="container-fluid px-0">
+			<UpdateCDAlbumForm
+				token={token}
+				auth={auth}
+				object={cdalbum}
+				objects={categories}
+			/>
+		</div>
 	);
 };
 

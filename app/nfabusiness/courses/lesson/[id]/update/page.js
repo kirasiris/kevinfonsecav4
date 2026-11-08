@@ -20,7 +20,11 @@ const UpdateLesson = async ({ params, searchParams }) => {
 
 	const lesson = await getLesson(`/${awtdParams.id}`);
 
-	return <UpdateLessonForm token={token} auth={auth} object={lesson} />;
+	return (
+		<div className="container-fluid px-0">
+			<UpdateLessonForm token={token} auth={auth} object={lesson} />
+		</div>
+	);
 };
 
 export default UpdateLesson;

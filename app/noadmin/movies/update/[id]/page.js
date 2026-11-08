@@ -27,12 +27,14 @@ const UpdateMovie = async ({ params, searchParams }) => {
 	const categories = await getCategories(`?categoryType=movie`);
 
 	return (
-		<UpdateMovieForm
-			token={token}
-			auth={auth}
-			object={movie}
-			objects={categories}
-		/>
+		<div className="container-fluid px-0">
+			<UpdateMovieForm
+				token={token}
+				auth={auth}
+				object={movie}
+				objects={categories}
+			/>
+		</div>
 	);
 };
 

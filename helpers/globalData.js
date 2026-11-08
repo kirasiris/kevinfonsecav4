@@ -1,4 +1,3 @@
-// helpers/globalData.js
 import { fetchurl } from "@/helpers/setTokenOnServer";
 
 async function getAuthenticatedUser() {

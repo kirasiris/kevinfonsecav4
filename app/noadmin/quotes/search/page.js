@@ -110,7 +110,7 @@ const AdminQuotesSearchIndex = async ({ params, searchParams }) => {
 	};
 
 	return (
-		<>
+		<div className="container-fluid px-0">
 			<AdminStatusesMenu
 				allLink="/noadmin/quotes"
 				publishedLink="/noadmin/quotes/published"
@@ -231,7 +231,7 @@ const AdminQuotesSearchIndex = async ({ params, searchParams }) => {
 					</div>
 				</div>
 			</div>
-		</>
+		</div>
 	);
 };
 

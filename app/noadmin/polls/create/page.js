@@ -8,7 +8,11 @@ const CreatePoll = async ({ params, searchParams }) => {
 	const token = await getAuthTokenOnServer();
 	const auth = await getUserOnServer();
 
-	return <CreatePollForm token={token} auth={auth} />;
+	return (
+		<div className="container-fluid px-0">
+			<CreatePollForm token={token} auth={auth} />
+		</div>
+	);
 };
 
 export default CreatePoll;

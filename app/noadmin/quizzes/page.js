@@ -65,13 +65,13 @@ const AdminQuizzesIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/quizzes/deleteall/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(`?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	return (
-		<>
+		<div className="container-fluid px-0">
 			<AdminStatusesMenu
 				allLink="/noadmin/quizzes"
 				publishedLink="/noadmin/quizzes/published"
@@ -99,7 +99,7 @@ const AdminQuizzesIndex = async ({ params, searchParams }) => {
 					handleDeleteAllFunction={handleDeleteAll}
 				/>
 			</div>
-		</>
+		</div>
 	);
 };
 

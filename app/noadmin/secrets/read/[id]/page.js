@@ -14,13 +14,15 @@ const ReadSecret = async ({ params, searchParams }) => {
 	const secret = await getSecret(`/${awtdParams.id}`);
 
 	return (
-		<div className="row">
-			<div className="col-lg-12">
-				<article>
-					<section className="mb-5">
-						<ParseHtml text={secret?.data?.text} />
-					</section>
-				</article>
+		<div className="container-fluid px-0">
+			<div className="row">
+				<div className="col-lg-12">
+					<article>
+						<section className="mb-5">
+							<ParseHtml text={secret?.data?.text} />
+						</section>
+					</article>
+				</div>
 			</div>
 		</div>
 	);

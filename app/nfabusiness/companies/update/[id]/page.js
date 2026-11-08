@@ -20,7 +20,11 @@ const UpdateCompany = async ({ params, searchParams }) => {
 
 	const company = await getCompany(`/${awtdParams.id}`);
 
-	return <UpdateCompanyForm token={token} auth={auth} object={company} />;
+	return (
+		<div className="container-fluid px-0">
+			<UpdateCompanyForm token={token} auth={auth} object={company} />
+		</div>
+	);
 };
 
 export default UpdateCompany;

@@ -126,12 +126,21 @@ const isFailedResponse = (res) =>
 	res.status === "fail" ||
 	res.success === false;
 
+const toLocalInputValue = (date) => {
+	const d = new Date(date);
+	if (Number.isNaN(d.getTime())) return "";
+	return new Date(d.getTime() - d.getTimezoneOffset() * 60000)
+		.toISOString()
+		.slice(0, 16);
+};
+
 const AdminSidebar = ({
 	displayCategoryField = true,
 	displayAvatar = true,
 	avatar = "",
 	avatarFormat = "image",
 	status = "draft",
+	scheduledAt = null,
 	fullWidth = false,
 	password = "",
 	featured = false,
@@ -286,6 +295,32 @@ const AdminSidebar = ({
 
 	const featuredId = idOf(featuredFile);
 	const selectedId = idOf(fileSelection);
+
+	// Schedule blog logic
+	const [currentStatus, setCurrentStatus] = useState(status);
+	const selectRef = useRef(null);
+	const dateRef = useRef(null);
+
+	// Set the date after mount: computing local time during SSR would use the
+	// server's timezone and cause a hydration mismatch.
+	useEffect(() => {
+		const input = dateRef.current;
+		if (!input) return;
+		const value = scheduledAt ? toLocalInputValue(scheduledAt) : "";
+		input.defaultValue = value;
+		input.value = value;
+	}, [scheduledAt]);
+
+	// form.reset() restores the <select> but not React state, so keep them in sync.
+	useEffect(() => {
+		const form = selectRef.current?.form;
+		if (!form) return;
+		const onReset = () => setCurrentStatus(status);
+		form.addEventListener("reset", onReset);
+		return () => form.removeEventListener("reset", onReset);
+	}, [status]);
+
+	const isScheduled = currentStatus === "scheduled";
 
 	return (
 		<>
@@ -510,9 +545,11 @@ const AdminSidebar = ({
 				Status
 			</label>
 			<select
+				ref={selectRef}
 				id="status"
 				name="status"
 				defaultValue={status}
+				onChange={(e) => setCurrentStatus(e.target.value)}
 				className="form-control mb-3"
 			>
 				<option value={`draft`}>Draft</option>
@@ -521,6 +558,19 @@ const AdminSidebar = ({
 				<option value={`scheduled`}>Scheduled</option>
 				<option value={`archived`}>Archived - Stripe Objects</option>
 			</select>
+			<div hidden={!isScheduled}>
+				<label htmlFor="scheduledAt" className="form-label">
+					Publish on
+				</label>
+				<input
+					ref={dateRef}
+					id="scheduledAt"
+					name="scheduledAt"
+					type="datetime-local"
+					required={isScheduled}
+					className="form-control mb-3"
+				/>
+			</div>
 			{fullWidth && (
 				<>
 					<label htmlFor="fullWidth" className="form-label">

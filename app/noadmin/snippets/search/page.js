@@ -108,7 +108,7 @@ const AdminSnippetsSearchIndex = async ({ params, searchParams }) => {
 	};
 
 	return (
-		<>
+		<div className="container-fluid px-0">
 			<AdminStatusesMenu
 				allLink="/noadmin/snippets"
 				publishedLink="/noadmin/snippets/published"
@@ -138,7 +138,7 @@ const AdminSnippetsSearchIndex = async ({ params, searchParams }) => {
 					handleDeleteAllFunction={handleDeleteAll}
 				/>
 			</div>
-		</>
+		</div>
 	);
 };
 

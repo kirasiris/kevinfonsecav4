@@ -23,7 +23,11 @@ const UpdateForum = async ({ params, searchParams }) => {
 	// FILES
 	// CATEGORIES
 
-	return <UpdateForumForm token={token} auth={auth} object={forum} />;
+	return (
+		<div className="container-fluid px-0">
+			<UpdateForumForm token={token} auth={auth} object={forum} />
+		</div>
+	);
 };
 
 export default UpdateForum;

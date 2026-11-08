@@ -24,7 +24,7 @@ const ReadPoll = async ({ params, searchParams }) => {
 
 	const poll = await getPoll(`/${awtdParams.id}`);
 	const questions = await getQuestions(
-		`?resourceId=${poll?.data?._id}&page=${page}&limit=${limit}&sort=${sort}`
+		`?resourceId=${poll?.data?._id}&page=${page}&limit=${limit}&sort=${sort}`,
 	);
 
 	const draftIt = async (id) => {
@@ -61,7 +61,7 @@ const ReadPoll = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/questions/${id}/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(`/noadmin/polls/read/${awtdParams.id}`);
 	};
@@ -79,36 +79,38 @@ const ReadPoll = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/questions/deleteall/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(`/noadmin/polls/read/${awtdParams.id}`);
 	};
 
 	return (
-		<div className="row">
-			<div className="col-lg-12">
-				<div className="card rounded-0 mb-3">
-					<div className="card-header">{poll?.data?.title || "Untitled"}</div>
-					<div className="card-body">
-						<ParseHtml text={poll?.data?.text} />
+		<div className="container-fluid px-0">
+			<div className="row">
+				<div className="col-lg-12">
+					<div className="card rounded-0 mb-3">
+						<div className="card-header">{poll?.data?.title || "Untitled"}</div>
+						<div className="card-body">
+							<ParseHtml text={poll?.data?.text} />
+						</div>
 					</div>
-				</div>
-				<div className="card rounded-0">
-					<QuestionList
-						allLink={`/noadmin/polls/read/${poll?.data?._id}`}
-						pageText="Questions"
-						addLink={`/noadmin/polls/question/${poll?.data?._id}/create`}
-						searchOn={`/noadmin/polls/read/${poll?.data?._id}`}
-						objects={questions}
-						searchParams={awtdSearchParams}
-						handleDraft={draftIt}
-						handlePublish={publishIt}
-						handleTrash={trashIt}
-						handleSchedule={scheduleIt}
-						handleDelete={handleDelete}
-						handleTrashAllFunction={handleTrashAll}
-						handleDeleteAllFunction={handleDeleteAll}
-					/>
+					<div className="card rounded-0">
+						<QuestionList
+							allLink={`/noadmin/polls/read/${poll?.data?._id}`}
+							pageText="Questions"
+							addLink={`/noadmin/polls/question/${poll?.data?._id}/create`}
+							searchOn={`/noadmin/polls/read/${poll?.data?._id}`}
+							objects={questions}
+							searchParams={awtdSearchParams}
+							handleDraft={draftIt}
+							handlePublish={publishIt}
+							handleTrash={trashIt}
+							handleSchedule={scheduleIt}
+							handleDelete={handleDelete}
+							handleTrashAllFunction={handleTrashAll}
+							handleDeleteAllFunction={handleDeleteAll}
+						/>
+					</div>
 				</div>
 			</div>
 		</div>

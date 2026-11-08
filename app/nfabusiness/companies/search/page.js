@@ -94,7 +94,7 @@ const AdminCompaniesSearchIndex = async ({ params, searchParams }) => {
 	};
 
 	return (
-		<>
+		<div className="container-fluid px-0">
 			<NFAStatusesMenu
 				allLink="/nfabusiness/companies"
 				publishedLink="/nfabusiness/companies/published"
@@ -126,7 +126,7 @@ const AdminCompaniesSearchIndex = async ({ params, searchParams }) => {
 					handleDeleteAllFunction={handleDeleteAll}
 				/>
 			</div>
-		</>
+		</div>
 	);
 };
 

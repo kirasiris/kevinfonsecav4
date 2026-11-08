@@ -20,7 +20,11 @@ const UpdateComment = async ({ params, searchParams }) => {
 
 	const comment = await getComment(`/${awtdParams.id}`);
 
-	return <UpdateCommentForm token={token} auth={auth} object={comment} />;
+	return (
+		<div className="container-fluid px-0">
+			<UpdateCommentForm token={token} auth={auth} object={comment} />
+		</div>
+	);
 };
 
 export default UpdateComment;

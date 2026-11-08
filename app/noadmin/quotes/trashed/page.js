@@ -9,7 +9,7 @@ async function getQuotes(params) {
 	const res = await fetchurl(
 		`/global/quotes${params}&status=trashed`,
 		"GET",
-		"no-cache"
+		"no-cache",
 	);
 	return res;
 }
@@ -37,7 +37,7 @@ const AdminQuotesTrashedIndex = async ({ params, searchParams }) => {
 
 		await fetchurl(`/noadmin/quotes`, "POST", "no-cache", rawFormData);
 		revalidatePath(
-			`/noadmin/quotes/trashed?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/quotes/trashed?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -46,7 +46,7 @@ const AdminQuotesTrashedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/quotes/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/quotes/trashed?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/quotes/trashed?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -55,7 +55,7 @@ const AdminQuotesTrashedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/quotes/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/quotes/trashed?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/quotes/trashed?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -64,7 +64,7 @@ const AdminQuotesTrashedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/quotes/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/quotes/trashed?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/quotes/trashed?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -73,7 +73,7 @@ const AdminQuotesTrashedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/quotes/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/quotes/trashed?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/quotes/trashed?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -82,7 +82,7 @@ const AdminQuotesTrashedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/quotes/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`/noadmin/quotes/trashed?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/quotes/trashed?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -91,7 +91,7 @@ const AdminQuotesTrashedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/quotes/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/quotes/trashed?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/quotes/trashed?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -101,15 +101,15 @@ const AdminQuotesTrashedIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/quotes/deleteall/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/quotes/trashed?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/quotes/trashed?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
 	return (
-		<>
+		<div className="container-fluid px-0">
 			<AdminStatusesMenu
 				allLink="/noadmin/quotes"
 				publishedLink="/noadmin/quotes/published"
@@ -230,7 +230,7 @@ const AdminQuotesTrashedIndex = async ({ params, searchParams }) => {
 					</div>
 				</div>
 			</div>
-		</>
+		</div>
 	);
 };
 

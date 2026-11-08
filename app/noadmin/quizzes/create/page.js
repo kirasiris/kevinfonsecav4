@@ -16,7 +16,11 @@ const CreateQuiz = async ({ params, searchParams }) => {
 
 	const categories = await getCategories(`?categoryType=quiz`);
 
-	return <CreateQuizForm token={token} auth={auth} objects={categories} />;
+	return (
+		<div className="container-fluid px-0">
+			<CreateQuizForm token={token} auth={auth} objects={categories} />
+		</div>
+	);
 };
 
 export default CreateQuiz;

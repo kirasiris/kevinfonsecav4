@@ -16,7 +16,11 @@ const CreateUser = async ({ params, searchParams }) => {
 
 	const users = await getUsers(`?isEmailConfirmed=true`);
 
-	return <CreateUserForm auth={auth} objects={users} />;
+	return (
+		<div className="container-fluid px-0">
+			<CreateUserForm auth={auth} objects={users} />
+		</div>
+	);
 };
 
 export default CreateUser;

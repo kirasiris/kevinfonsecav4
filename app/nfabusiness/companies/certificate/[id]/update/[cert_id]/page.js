@@ -19,19 +19,18 @@ const UpdateCertificate = async ({ params, searchParams }) => {
 	const auth = await getUserOnServer();
 
 	const certificate = await getCertificate(
-		`/${awtdParams.id}/certificates/${awtdParams.cert_id}`
+		`/${awtdParams.id}/certificates/${awtdParams.cert_id}`,
 	);
 
-	// Redirect if not company
-	// !auth?.data?.hasCompany && redirect(`/noadmin/companies`);
-
 	return (
-		<UpdateCertificateForm
-			token={token}
-			auth={auth}
-			object={certificate}
-			params={awtdParams}
-		/>
+		<div className="container-fluid px-0">
+			<UpdateCertificateForm
+				token={token}
+				auth={auth}
+				object={certificate}
+				params={awtdParams}
+			/>
+		</div>
 	);
 };
 

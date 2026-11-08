@@ -11,7 +11,11 @@ const CreateForum = async ({ params, searchParams }) => {
 	// FILES
 	// CATEGORIES
 
-	return <CreateForumForm token={token} auth={auth} />;
+	return (
+		<div className="container-fluid px-0">
+			<CreateForumForm token={token} auth={auth} />
+		</div>
+	);
 };
 
 export default CreateForum;

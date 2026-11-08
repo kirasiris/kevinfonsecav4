@@ -14,7 +14,11 @@ const UpdateMenu = async ({ params, searchParams }) => {
 
 	const menu = await getMenu(`/${awtdParams.id}`);
 
-	return <UpdateMenuForm object={menu} />;
+	return (
+		<div className="container-fluid px-0">
+			<UpdateMenuForm object={menu} />
+		</div>
+	);
 };
 
 export default UpdateMenu;

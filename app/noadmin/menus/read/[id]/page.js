@@ -24,7 +24,7 @@ const ReadMenu = async ({ params, searchParams }) => {
 
 	const menu = await getMenu(`/${awtdParams.id}`);
 	const pages = await getPages(
-		`?resourceId=${menu?.data?._id}&page=${page}&limit=${limit}&sort=${sort}`
+		`?resourceId=${menu?.data?._id}&page=${page}&limit=${limit}&sort=${sort}`,
 	);
 
 	const draftIt = async (id) => {
@@ -75,36 +75,38 @@ const ReadMenu = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/pages/deleteall/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(`/noadmin/menus/read/${awtdParams.id}`);
 	};
 
 	return (
-		<div className="row">
-			<div className="col-lg-12">
-				<div className="card rounded-0 mb-3">
-					<div className="card-header">{menu?.data?.title || "Untitled"}</div>
-					<div className="card-body">
-						<ParseHtml text={menu?.data?.text} />
+		<div className="container-fluid px-0">
+			<div className="row">
+				<div className="col-lg-12">
+					<div className="card rounded-0 mb-3">
+						<div className="card-header">{menu?.data?.title || "Untitled"}</div>
+						<div className="card-body">
+							<ParseHtml text={menu?.data?.text} />
+						</div>
 					</div>
-				</div>
-				<div className="card rounded-0">
-					<PageList
-						allLink={`/noadmin/menus/read/${menu?.data?._id}`}
-						pageText="Pages"
-						addLink={`/noadmin/menus/page/${menu?.data?._id}/create`}
-						searchOn={`/noadmin/menus/read/${menu?.data?._id}`}
-						objects={pages}
-						searchParams={awtdSearchParams}
-						handleDraft={draftIt}
-						handlePublish={publishIt}
-						handleTrash={trashIt}
-						handleSchedule={scheduleIt}
-						handleDelete={handleDelete}
-						handleTrashAllFunction={handleTrashAll}
-						handleDeleteAllFunction={handleDeleteAll}
-					/>
+					<div className="card rounded-0">
+						<PageList
+							allLink={`/noadmin/menus/read/${menu?.data?._id}`}
+							pageText="Pages"
+							addLink={`/noadmin/menus/page/${menu?.data?._id}/create`}
+							searchOn={`/noadmin/menus/read/${menu?.data?._id}`}
+							objects={pages}
+							searchParams={awtdSearchParams}
+							handleDraft={draftIt}
+							handlePublish={publishIt}
+							handleTrash={trashIt}
+							handleSchedule={scheduleIt}
+							handleDelete={handleDelete}
+							handleTrashAllFunction={handleTrashAll}
+							handleDeleteAllFunction={handleDeleteAll}
+						/>
+					</div>
 				</div>
 			</div>
 		</div>

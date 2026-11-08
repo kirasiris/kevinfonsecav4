@@ -17,15 +17,17 @@ const ReadComment = async ({ params, searchParams }) => {
 
 	return (
 		<Suspense fallback={<Loading />}>
-			<div className="row">
-				<div className="col-lg-12">
-					<article>
-						<section className="mb-5">
-							<h1>{comment?.data?.title}</h1>
-							<ParseHtml text={comment?.data?.text} />
-							<pre>{JSON.stringify(comment?.data, null, 4)}</pre>
-						</section>
-					</article>
+			<div className="container-fluid px-0">
+				<div className="row">
+					<div className="col-lg-12">
+						<article>
+							<section className="mb-5">
+								<h1>{comment?.data?.title}</h1>
+								<ParseHtml text={comment?.data?.text} />
+								<pre>{JSON.stringify(comment?.data, null, 4)}</pre>
+							</section>
+						</article>
+					</div>
 				</div>
 			</div>
 		</Suspense>

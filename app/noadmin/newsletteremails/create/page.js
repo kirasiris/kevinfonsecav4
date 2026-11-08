@@ -9,7 +9,7 @@ async function getUsersSubscribed(params) {
 	const res = await fetchurl(
 		`/global/newslettersubscribers${params}`,
 		"GET",
-		"no-cache"
+		"no-cache",
 	);
 	return res;
 }
@@ -24,11 +24,13 @@ const CreateEmail = async ({ params, searchParams }) => {
 	const auth = await getUserOnServer();
 
 	const users = await getUsersSubscribed(
-		`?page=${page}&limit=${limit}&sort=${sort}`
+		`?page=${page}&limit=${limit}&sort=${sort}`,
 	);
 
 	return (
-		<CreateNewsletterEmailForm token={token} auth={auth} objects={users} />
+		<div className="container-fluid px-0">
+			<CreateNewsletterEmailForm token={token} auth={auth} objects={users} />
+		</div>
 	);
 };
 

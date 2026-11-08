@@ -15,7 +15,11 @@ const UpdateUserNFAProfilePicture = async ({ params, searchParams }) => {
 
 	const user = await getUser(`/${awtdParams.id}`);
 
-	return <UploadPictureForm object={user} />;
+	return (
+		<div className="container-fluid px-0">
+			<UploadPictureForm object={user} />
+		</div>
+	);
 };
 
 export default UpdateUserNFAProfilePicture;

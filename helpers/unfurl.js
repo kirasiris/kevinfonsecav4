@@ -1,14 +1,7 @@
 "use server";
 
-// Unfurls an external URL server-side (no CORS restrictions here):
-// 1. If the site exposes a WordPress oEmbed endpoint, we return an "embed"
-//    result: WordPress serves every post as an embeddable page at
-//    `<post-url>/embed/`, with WP's own custom styling inside the iframe.
-// 2. Otherwise we scrape OpenGraph/Twitter/meta tags and return a "card"
-//    result so the editor can render a clickable OpenGraph object.
-
 const FETCH_TIMEOUT_MS = 8000;
-const MAX_HTML_BYTES = 500 * 1024; // metadata lives in <head>; 500KB is plenty
+const MAX_HTML_BYTES = 500 * 1024;
 
 function absolutize(maybeRelative, baseUrl) {
 	if (!maybeRelative) return null;
@@ -31,7 +24,6 @@ function decodeEntities(s) {
 		.replace(/&nbsp;/g, " ");
 }
 
-// Reads content from a meta tag matching property/name, attribute order agnostic.
 function metaContent(html, key) {
 	const patterns = [
 		new RegExp(
@@ -62,7 +54,6 @@ async function fetchHtml(url) {
 			signal: controller.signal,
 			redirect: "follow",
 			headers: {
-				// Some sites gate OG tags behind a browser-looking UA.
 				"User-Agent":
 					"Mozilla/5.0 (compatible; RichTextEditorBot/1.0; +opengraph)",
 				Accept: "text/html,application/xhtml+xml",
@@ -102,7 +93,6 @@ export async function unfurlUrl(rawUrl) {
 		url = new URL(rawUrl);
 		if (url.protocol !== "http:" && url.protocol !== "https:")
 			throw new Error("bad protocol");
-		// SSRF guard: refuse private/loopback hosts.
 		const host = url.hostname;
 		if (
 			host === "localhost" ||
@@ -125,8 +115,6 @@ export async function unfurlUrl(rawUrl) {
 			return { ok: true, type: "link", url: url.href };
 		}
 
-		// ---- WordPress / oEmbed discovery ------------------------------------
-		// WordPress advertises: <link rel="alternate" type="application/json+oembed" href="...wp-json/oembed...">
 		const oembedMatch =
 			html.match(
 				/<link[^>]+type\s*=\s*["']application\/json\+oembed["'][^>]*href\s*=\s*["']([^"']+)["']/i,
@@ -138,8 +126,6 @@ export async function unfurlUrl(rawUrl) {
 		const isWordPress = oembedMatch && /wp-json[/%]/i.test(oembedMatch[1]);
 
 		if (isWordPress) {
-			// Every WordPress post is embeddable at <post-url>/embed/ with WP's
-			// own custom CSS styling inside the iframe.
 			const base = finalUrl.split(/[?#]/)[0];
 			const embedSrc = base.replace(/\/$/, "") + "/embed/";
 			return {
@@ -156,7 +142,6 @@ export async function unfurlUrl(rawUrl) {
 			};
 		}
 
-		// ---- OpenGraph / Twitter card fallback --------------------------------
 		const title =
 			metaContent(html, "og:title") ||
 			metaContent(html, "twitter:title") ||
@@ -202,7 +187,6 @@ export async function unfurlUrl(rawUrl) {
 			favicon,
 		};
 	} catch (_) {
-		// Network failure, timeout, non-HTML... degrade to a plain link.
 		return { ok: true, type: "link", url: url.href };
 	}
 }

@@ -28,12 +28,14 @@ const UpdateTheme = async ({ params, searchParams }) => {
 	const categories = await getCategories(`?categoryType=theme`);
 
 	return (
-		<UpdateThemeForm
-			token={token}
-			auth={auth}
-			object={theme}
-			objects={categories}
-		/>
+		<div className="container-fluid px-0">
+			<UpdateThemeForm
+				token={token}
+				auth={auth}
+				object={theme}
+				objects={categories}
+			/>
+		</div>
 	);
 };
 

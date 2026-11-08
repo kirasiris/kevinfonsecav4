@@ -16,7 +16,11 @@ const CreateAnime = async ({ params, searchParams }) => {
 
 	const categories = await getCategories(`?categoryType=anime`);
 
-	return <CreateAnimeForm token={token} auth={auth} objects={categories} />;
+	return (
+		<div className="container-fluid px-0">
+			<CreateAnimeForm token={token} auth={auth} objects={categories} />
+		</div>
+	);
 };
 
 export default CreateAnime;

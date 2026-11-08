@@ -19,13 +19,15 @@ const ReadContactEmail = async ({ params, searchParams }) => {
 	const email = await getContactEmails(`/${awtdParams.id}`);
 
 	return (
-		<div className="row">
-			<div className="col-lg-12">
-				<article>
-					<section className="mb-5">
-						<ParseHtml text={email?.data?.text} />
-					</section>
-				</article>
+		<div className="container-fluid px-0">
+			<div className="row">
+				<div className="col-lg-12">
+					<article>
+						<section className="mb-5">
+							<ParseHtml text={email?.data?.text} />
+						</section>
+					</article>
+				</div>
 			</div>
 		</div>
 	);

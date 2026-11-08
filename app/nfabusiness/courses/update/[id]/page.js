@@ -24,7 +24,11 @@ const UpdateCourse = async ({ params, searchParams }) => {
 	// Redirect if not charges enabled
 	!auth?.userStripeChargesEnabled && <OnboardingLink />;
 
-	return <UpdateCourseForm token={token} auth={auth} object={course} />;
+	return (
+		<div className="container-fluid px-0">
+			<UpdateCourseForm token={token} auth={auth} object={course} />
+		</div>
+	);
 };
 
 export default UpdateCourse;

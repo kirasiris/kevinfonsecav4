@@ -7,7 +7,7 @@ async function getSecrets(params) {
 	const res = await fetchurl(
 		`/global/secrets${params}&status=scheduled`,
 		"GET",
-		"no-cache"
+		"no-cache",
 	);
 	return res;
 }
@@ -26,7 +26,7 @@ const AdminSecretsScheduledIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/secrets/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/secrets/scheduled?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/secrets/scheduled?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -35,7 +35,7 @@ const AdminSecretsScheduledIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/secrets/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/secrets/scheduled?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/secrets/scheduled?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -44,7 +44,7 @@ const AdminSecretsScheduledIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/secrets/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/secrets/scheduled?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/secrets/scheduled?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -53,7 +53,7 @@ const AdminSecretsScheduledIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/secrets/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/secrets/scheduled?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/secrets/scheduled?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -62,7 +62,7 @@ const AdminSecretsScheduledIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/secrets/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`/noadmin/secrets/scheduled?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/secrets/scheduled?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -71,7 +71,7 @@ const AdminSecretsScheduledIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/secrets/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/secrets/scheduled?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/secrets/scheduled?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -81,15 +81,15 @@ const AdminSecretsScheduledIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/secrets/deleteall/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/secrets/scheduled?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/secrets/scheduled?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
 	return (
-		<>
+		<div className="container-fluid px-0">
 			<AdminStatusesMenu
 				allLink="/noadmin/secrets"
 				publishedLink="/noadmin/secrets/published"
@@ -117,7 +117,7 @@ const AdminSecretsScheduledIndex = async ({ params, searchParams }) => {
 					handleDeleteAllFunction={handleDeleteAll}
 				/>
 			</div>
-		</>
+		</div>
 	);
 };
 

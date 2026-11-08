@@ -12,12 +12,14 @@ const CreateReview = async ({ params, searchParams }) => {
 	const auth = await getUserOnServer();
 
 	return (
-		<CreateReviewForm
-			token={token}
-			auth={auth}
-			params={awtdParams}
-			searchParams={awtdSearchParams}
-		/>
+		<div className="container-fluid px-0">
+			<CreateReviewForm
+				token={token}
+				auth={auth}
+				params={awtdParams}
+				searchParams={awtdSearchParams}
+			/>
+		</div>
 	);
 };
 

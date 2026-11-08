@@ -82,55 +82,57 @@ const ReadTheme = async ({ params, searchParams }) => {
 	}
 
 	return (
-		<div className="row">
-			<div className="col-lg-12">
-				<article>
-					{/* HERE GOES THE FIGURE */}
-					<div className="row">
-						<div className="col">
-							<figure className="mb-4">
-								<Image
-									className="img-fluid"
-									src={
-										theme?.data?.files?.avatar?.location?.secure_location ||
-										`https://picsum.photos/1200/900?blur`
-									}
-									alt={`${theme?.data?.files?.avatar?.location?.fileName}'s featured image`}
-									width={1200}
-									height={900}
-									priority
+		<div className="container-fluid px-0">
+			<div className="row">
+				<div className="col-lg-12">
+					<article>
+						{/* HERE GOES THE FIGURE */}
+						<div className="row">
+							<div className="col">
+								<figure className="mb-4">
+									<Image
+										className="img-fluid"
+										src={
+											theme?.data?.files?.avatar?.location?.secure_location ||
+											`https://picsum.photos/1200/900?blur`
+										}
+										alt={`${theme?.data?.files?.avatar?.location?.fileName}'s featured image`}
+										width={1200}
+										height={900}
+										priority
+									/>
+								</figure>
+							</div>
+							<div className="col">
+								<ThemesMediaManager
+									auth={auth}
+									token={token}
+									object={theme?.data}
+									objects={theme?.data?.files?.extras}
+									searchParams={awtdSearchParams}
 								/>
-							</figure>
-						</div>
-						<div className="col">
-							<ThemesMediaManager
-								auth={auth}
-								token={token}
-								object={theme?.data}
-								objects={theme?.data?.files?.extras}
-								searchParams={awtdSearchParams}
-							/>
-						</div>
-					</div>
-					<section className="mb-5">
-						<ParseHtml text={theme.data.text} />
-						{theme.data.github_readme !== "#" ? (
-							<div className="card mb-4">
-								<div className="card-header">ReadMe.md</div>
-								<div className="card-body">
-									<ParseHtml text={readme} />
-								</div>
 							</div>
-						) : (
-							<div className="card mb-4">
-								<div className="card-header">ReadMe.md</div>
-								<div className="card-body">
-									{readme.replace(/<\/?[^>]+(>|$)/g, "")}
+						</div>
+						<section className="mb-5">
+							<ParseHtml text={theme.data.text} />
+							{theme.data.github_readme !== "#" ? (
+								<div className="card mb-4">
+									<div className="card-header">ReadMe.md</div>
+									<div className="card-body">
+										<ParseHtml text={readme} />
+									</div>
 								</div>
-							</div>
-						)}
-					</section>
-				</article>
+							) : (
+								<div className="card mb-4">
+									<div className="card-header">ReadMe.md</div>
+									<div className="card-body">
+										{readme.replace(/<\/?[^>]+(>|$)/g, "")}
+									</div>
+								</div>
+							)}
+						</section>
+					</article>
+				</div>
 			</div>
 		</div>
 	);

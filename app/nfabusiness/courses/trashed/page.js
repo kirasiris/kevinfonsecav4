@@ -128,7 +128,7 @@ const NFACoursesTrashedIndex = async ({ params, searchParams }) => {
 	};
 
 	return (
-		<>
+		<div className="container-fluid px-0">
 			<NFAStatusesMenu
 				allLink="/nfabusiness/courses"
 				publishedLink="/nfabusiness/courses/published"
@@ -163,7 +163,7 @@ const NFACoursesTrashedIndex = async ({ params, searchParams }) => {
 					handleDeleteAllFunction={handleDeleteAll}
 				/>
 			</div>
-		</>
+		</div>
 	);
 };
 

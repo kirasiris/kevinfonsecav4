@@ -112,14 +112,18 @@ const AdminAnimeCategoriesIndex = async ({ params, searchParams }) => {
 	const usageCountItAll = async () => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/noadmin/categories/allusagecount`, "PUT", "no-cache");
+		await fetchurl(
+			`/noadmin/maintenanceops/categories/allusagecount`,
+			"PUT",
+			"no-cache",
+		);
 		revalidatePath(
 			`/noadmin/animes/categories?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
 	return (
-		<>
+		<div className="container-fluid px-0">
 			<AdminStatusesMenu
 				allLink="/noadmin/animes"
 				publishedLink="/noadmin/animes/published"
@@ -161,7 +165,7 @@ const AdminAnimeCategoriesIndex = async ({ params, searchParams }) => {
 					</div>
 				</div>
 			</div>
-		</>
+		</div>
 	);
 };
 

@@ -62,7 +62,7 @@ const NFAServiceEmailsSearchIndex = async ({ params, searchParams }) => {
 	};
 
 	return (
-		<>
+		<div className="container-fluid px-0">
 			<NFAStatusesMenu
 				allLink="/nfabusiness/serviceemails"
 				publishedLink=""
@@ -90,7 +90,7 @@ const NFAServiceEmailsSearchIndex = async ({ params, searchParams }) => {
 					handleDeleteAllFunction={handleDeleteAll}
 				/>
 			</div>
-		</>
+		</div>
 	);
 };
 

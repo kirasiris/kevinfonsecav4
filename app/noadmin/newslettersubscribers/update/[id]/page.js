@@ -6,7 +6,7 @@ async function getNewsletterSubscriber(params) {
 	const res = await fetchurl(
 		`/global/newslettersubscribers${params}`,
 		"GET",
-		"no-cache"
+		"no-cache",
 	);
 	if (!res.success) notFound();
 	return res;
@@ -16,10 +16,14 @@ const UpdateNewsletterSubscriber = async ({ params, searchParams }) => {
 	const awtdParams = await params;
 	const awtdSearchParams = await searchParams;
 	const newslettersubscriber = await getNewsletterSubscriber(
-		`/${awtdParams.id}`
+		`/${awtdParams.id}`,
 	);
 
-	return <UpdateNewsletterSubscriberForm object={newslettersubscriber} />;
+	return (
+		<div className="container-fluid px-0">
+			<UpdateNewsletterSubscriberForm object={newslettersubscriber} />
+		</div>
+	);
 };
 
 export default UpdateNewsletterSubscriber;

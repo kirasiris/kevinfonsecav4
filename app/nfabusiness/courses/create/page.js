@@ -12,7 +12,11 @@ const CreateCourse = async ({ params, searchParams }) => {
 	// Redirect if not charges enabled
 	!auth?.userStripeChargesEnabled && <OnboardingLink />;
 
-	return <CreateCourseForm token={token} auth={auth} />;
+	return (
+		<div className="container-fluid px-0">
+			<CreateCourseForm token={token} auth={auth} />
+		</div>
+	);
 };
 
 export default CreateCourse;

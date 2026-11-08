@@ -114,7 +114,7 @@ const AdminNewsletterEmailsSearchIndex = async ({ params, searchParams }) => {
 	};
 
 	return (
-		<>
+		<div className="container-fluid px-0">
 			<AdminStatusesMenu
 				allLink="/noadmin/newsletteremails"
 				publishedLink="/noadmin/newsletteremails/published"
@@ -142,7 +142,7 @@ const AdminNewsletterEmailsSearchIndex = async ({ params, searchParams }) => {
 					handleDeleteAllFunction={handleDeleteAll}
 				/>
 			</div>
-		</>
+		</div>
 	);
 };
 

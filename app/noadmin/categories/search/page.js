@@ -106,7 +106,11 @@ const AdminCategoriesSearchIndex = async ({ params, searchParams }) => {
 	const usageCountItAll = async () => {
 		"use server";
 		// const rawFormData = {}
-		await fetchurl(`/noadmin/categories/allusagecount`, "PUT", "no-cache");
+		await fetchurl(
+			`/noadmin/maintenanceops/categories/allusagecount`,
+			"PUT",
+			"no-cache",
+		);
 		revalidatePath(
 			`/noadmin/categories/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 		);

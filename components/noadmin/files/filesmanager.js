@@ -1218,521 +1218,515 @@ const FilesManager = ({
 
 	return (
 		<>
-			<div className="container">
-				{/* FILE UPLOADER */}
-				<div className="mb-1">
-					{showPermissionModal && (
-						<div
-							className="modal show d-block"
-							tabIndex="-1"
-							role="dialog"
-							aria-modal="true"
-							aria-labelledby="permission-modal-title"
-							style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
-						>
-							<div className="modal-dialog modal-dialog-centered">
-								<div className="modal-content">
-									<div className="modal-header">
-										<h5 className="modal-title" id="permission-modal-title">
-											Permission Required
-										</h5>
-									</div>
-									<div className="modal-body">
-										<p>
-											This application would like to access your{" "}
-											<strong>{permissionLabel}</strong>.
-										</p>
-										<p className="text-muted mb-0">
-											Would you like to grant access?
-										</p>
-									</div>
-									<div className="modal-footer">
-										<button
-											type="button"
-											className="btn btn-secondary"
-											onClick={handlePermissionDenied}
-										>
-											Deny
-										</button>
-										<button
-											type="button"
-											className="btn btn-primary"
-											onClick={handlePermissionGranted}
-										>
-											Allow
-										</button>
-									</div>
+			{/* FILE UPLOADER */}
+			<div className="mb-1">
+				{showPermissionModal && (
+					<div
+						className="modal show d-block"
+						tabIndex="-1"
+						role="dialog"
+						aria-modal="true"
+						aria-labelledby="permission-modal-title"
+						style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+					>
+						<div className="modal-dialog modal-dialog-centered">
+							<div className="modal-content">
+								<div className="modal-header">
+									<h5 className="modal-title" id="permission-modal-title">
+										Permission Required
+									</h5>
+								</div>
+								<div className="modal-body">
+									<p>
+										This application would like to access your{" "}
+										<strong>{permissionLabel}</strong>.
+									</p>
+									<p className="text-muted mb-0">
+										Would you like to grant access?
+									</p>
+								</div>
+								<div className="modal-footer">
+									<button
+										type="button"
+										className="btn btn-secondary"
+										onClick={handlePermissionDenied}
+									>
+										Deny
+									</button>
+									<button
+										type="button"
+										className="btn btn-primary"
+										onClick={handlePermissionGranted}
+									>
+										Allow
+									</button>
 								</div>
 							</div>
 						</div>
-					)}
-					<div className="card rounded-0 mb-1">
-						<div className="card-header">
-							<h4 className="mb-0 d-flex align-items-center gap-2">
-								<i aria-hidden className="fa-solid fa-upload" />
-								Multimedia Manager
-							</h4>
-						</div>
-						<div className="card-body">
-							<div className="row g-3 mb-3">
-								<div className="col-12 col-md-6 col-lg-3">
-									<input
-										type="file"
-										ref={fileInputRef}
-										onChange={handleFileUpload}
-										accept={ACCEPTED_FILE_TYPES}
-										multiple
-										className="d-none"
-										id="fileInput"
-									/>
-									<button
-										type="button"
-										className="btn btn-primary w-100 d-flex align-items-center justify-content-center gap-2"
-										onClick={openFilePicker}
-									>
-										<i aria-hidden className="fa-solid fa-upload" />
-										Upload Files
-									</button>
-								</div>
-
-								<div className="col-12 col-md-6 col-lg-3">
-									<button
-										type="button"
-										className="btn btn-success w-100 d-flex align-items-center justify-content-center gap-2"
-										onClick={() => requestPermission("video")}
-										disabled={showCamera || showMicrophone}
-									>
-										<i aria-hidden className="fa-solid fa-camera" />
-										Open Camera
-									</button>
-								</div>
-
-								<div className="col-12 col-md-6 col-lg-3">
-									<button
-										type="button"
-										className="btn btn-warning w-100 d-flex align-items-center justify-content-center gap-2"
-										onClick={() => requestPermission("audio")}
-										disabled={showCamera || showMicrophone}
-									>
-										<i aria-hidden className="fa-solid fa-microphone" />
-										Open Microphone
-									</button>
-								</div>
-
-								<div className="col-12 col-md-6 col-lg-3">
-									<div className="bg-light rounded p-2 text-center">
-										<small className="text-muted">
-											{files.length} file{files.length !== 1 ? "s" : ""} •{" "}
-											{formatFileSize(totalSize)}
-										</small>
-									</div>
-								</div>
+					</div>
+				)}
+				<div className="card rounded-0 mb-1">
+					<div className="card-header">
+						<h4 className="mb-0 d-flex align-items-center gap-2">
+							<i aria-hidden className="fa-solid fa-upload" />
+							Multimedia Manager
+						</h4>
+					</div>
+					<div className="card-body">
+						<div className="row g-3 mb-3">
+							<div className="col-12 col-md-6 col-lg-3">
+								<input
+									type="file"
+									ref={fileInputRef}
+									onChange={handleFileUpload}
+									accept={ACCEPTED_FILE_TYPES}
+									multiple
+									className="d-none"
+									id="fileInput"
+								/>
+								<button
+									type="button"
+									className="btn btn-primary w-100 d-flex align-items-center justify-content-center gap-2"
+									onClick={openFilePicker}
+								>
+									<i aria-hidden className="fa-solid fa-upload" />
+									Upload Files
+								</button>
 							</div>
 
-							{/* Live capture panel */}
-							{(showCamera || showMicrophone) && (
-								<div className="card mb-3 border-2 border-primary">
-									<div className="card-body">
-										{showCamera && (
-											<div className="text-center mb-3">
-												<video
-													ref={videoPreviewRef}
-													autoPlay
-													playsInline
-													muted
-													className="rounded"
-													style={{ maxWidth: "100%", maxHeight: "300px" }}
-												/>
-											</div>
-										)}
+							<div className="col-12 col-md-6 col-lg-3">
+								<button
+									type="button"
+									className="btn btn-success w-100 d-flex align-items-center justify-content-center gap-2"
+									onClick={() => requestPermission("video")}
+									disabled={showCamera || showMicrophone}
+								>
+									<i aria-hidden className="fa-solid fa-camera" />
+									Open Camera
+								</button>
+							</div>
 
-										{showMicrophone && (
-											<div className="text-center py-4">
-												<div
-													className={`d-inline-flex align-items-center justify-content-center rounded-circle mb-3 ${
-														isRecording ? "bg-danger" : "bg-secondary"
-													}`}
-													style={{ width: "80px", height: "80px" }}
-												>
-													<i
-														aria-hidden
-														className="fa-solid fa-microphone fa-3x text-white"
-													/>
-												</div>
-												<div
-													ref={waveformRef}
-													aria-hidden
-													className="mb-3 mx-auto rounded border border-secondary"
-													style={{
-														maxWidth: "500px",
-														height: "80px",
-														backgroundColor: "#f8f9fa",
-													}}
-												/>
-												<p className="mt-2 mb-0" aria-live="polite">
-													{isRecording ? (
-														<span className="text-danger fw-bold">
-															Recording...
-														</span>
-													) : (
-														<span>Microphone ready</span>
-													)}
-												</p>
-											</div>
-										)}
+							<div className="col-12 col-md-6 col-lg-3">
+								<button
+									type="button"
+									className="btn btn-warning w-100 d-flex align-items-center justify-content-center gap-2"
+									onClick={() => requestPermission("audio")}
+									disabled={showCamera || showMicrophone}
+								>
+									<i aria-hidden className="fa-solid fa-microphone" />
+									Open Microphone
+								</button>
+							</div>
 
-										<div className="d-flex flex-wrap justify-content-center gap-2">
-											{showCamera && (
-												<button
-													type="button"
-													className="btn btn-info btn-sm"
-													onClick={takePhoto}
-												>
-													<i
-														aria-hidden
-														className="fa-solid fa-camera align-middle me-1"
-													/>
-													Take Photo
-												</button>
-											)}
-											{!isRecording ? (
-												<button
-													type="button"
-													className="btn btn-danger btn-sm"
-													onClick={startRecording}
-												>
-													<i
-														aria-hidden
-														className="fa-solid fa-play align-middle me-1"
-													/>
-													Start Recording
-												</button>
-											) : (
-												<button
-													type="button"
-													className="btn btn-dark btn-sm"
-													onClick={stopRecording}
-												>
-													<i
-														aria-hidden
-														className="fa-solid fa-stop align-middle me-1"
-													/>
-													Stop Recording
-												</button>
-											)}
-											<button
-												type="button"
-												className="btn btn-secondary btn-sm"
-												onClick={closeMediaStream}
+							<div className="col-12 col-md-6 col-lg-3">
+								<div className="bg-light rounded p-2 text-center">
+									<small className="text-muted">
+										{files.length} file{files.length !== 1 ? "s" : ""} •{" "}
+										{formatFileSize(totalSize)}
+									</small>
+								</div>
+							</div>
+						</div>
+
+						{/* Live capture panel */}
+						{(showCamera || showMicrophone) && (
+							<div className="card mb-3 border-2 border-primary">
+								<div className="card-body">
+									{showCamera && (
+										<div className="text-center mb-3">
+											<video
+												ref={videoPreviewRef}
+												autoPlay
+												playsInline
+												muted
+												className="rounded"
+												style={{ maxWidth: "100%", maxHeight: "300px" }}
+											/>
+										</div>
+									)}
+
+									{showMicrophone && (
+										<div className="text-center py-4">
+											<div
+												className={`d-inline-flex align-items-center justify-content-center rounded-circle mb-3 ${
+													isRecording ? "bg-danger" : "bg-secondary"
+												}`}
+												style={{ width: "80px", height: "80px" }}
 											>
 												<i
 													aria-hidden
-													className="fa-solid fa-xmark align-middle me-1"
+													className="fa-solid fa-microphone fa-3x text-white"
 												/>
-												Close
-											</button>
+											</div>
+											<div
+												ref={waveformRef}
+												aria-hidden
+												className="mb-3 mx-auto rounded border border-secondary"
+												style={{
+													maxWidth: "500px",
+													height: "80px",
+													backgroundColor: "#f8f9fa",
+												}}
+											/>
+											<p className="mt-2 mb-0" aria-live="polite">
+												{isRecording ? (
+													<span className="text-danger fw-bold">
+														Recording...
+													</span>
+												) : (
+													<span>Microphone ready</span>
+												)}
+											</p>
 										</div>
+									)}
+
+									<div className="d-flex flex-wrap justify-content-center gap-2">
+										{showCamera && (
+											<button
+												type="button"
+												className="btn btn-info btn-sm"
+												onClick={takePhoto}
+											>
+												<i
+													aria-hidden
+													className="fa-solid fa-camera align-middle me-1"
+												/>
+												Take Photo
+											</button>
+										)}
+										{!isRecording ? (
+											<button
+												type="button"
+												className="btn btn-danger btn-sm"
+												onClick={startRecording}
+											>
+												<i
+													aria-hidden
+													className="fa-solid fa-play align-middle me-1"
+												/>
+												Start Recording
+											</button>
+										) : (
+											<button
+												type="button"
+												className="btn btn-dark btn-sm"
+												onClick={stopRecording}
+											>
+												<i
+													aria-hidden
+													className="fa-solid fa-stop align-middle me-1"
+												/>
+												Stop Recording
+											</button>
+										)}
+										<button
+											type="button"
+											className="btn btn-secondary btn-sm"
+											onClick={closeMediaStream}
+										>
+											<i
+												aria-hidden
+												className="fa-solid fa-xmark align-middle me-1"
+											/>
+											Close
+										</button>
 									</div>
 								</div>
-							)}
+							</div>
+						)}
 
-							{files.length === 0 ? (
-								<div className="text-center py-5 rounded admin-multimedia-manager">
-									<p className="mb-0">
-										No files yet. Upload or capture media to get started.
-									</p>
-									<small>Drag files to reorder them</small>
-								</div>
-							) : (
-								<div className="d-flex flex-nowrap gap-3 overflow-auto pb-3 scroll-thin">
-									{files.map((file, index) => (
+						{files.length === 0 ? (
+							<div className="text-center py-5 rounded admin-multimedia-manager">
+								<p className="mb-0">
+									No files yet. Upload or capture media to get started.
+								</p>
+								<small>Drag files to reorder them</small>
+							</div>
+						) : (
+							<div className="d-flex flex-nowrap gap-3 overflow-auto pb-3 scroll-thin">
+								{files.map((file, index) => (
+									<div
+										key={file.id}
+										className="flex-shrink-0"
+										style={{ width: "280px" }}
+										draggable={!file.uploading}
+										onDragStart={(e) => handleDragStart(e, index)}
+										onDragOver={(e) => handleDragOver(e, index)}
+										onDragLeave={handleDragLeave}
+										onDrop={(e) => handleDrop(e, index)}
+										onDragEnd={handleDragEnd}
+									>
 										<div
-											key={file.id}
-											className="flex-shrink-0"
-											style={{ width: "280px" }}
-											draggable={!file.uploading}
-											onDragStart={(e) => handleDragStart(e, index)}
-											onDragOver={(e) => handleDragOver(e, index)}
-											onDragLeave={handleDragLeave}
-											onDrop={(e) => handleDrop(e, index)}
-											onDragEnd={handleDragEnd}
+											className={`card h-100 position-relative ${
+												draggedIndex === index ? "opacity-50" : ""
+											} ${
+												dragOverIndex === index ? "border-primary border-2" : ""
+											}`}
+											style={{ cursor: file.uploading ? "wait" : "grab" }}
 										>
-											<div
-												className={`card h-100 position-relative ${
-													draggedIndex === index ? "opacity-50" : ""
-												} ${
-													dragOverIndex === index
-														? "border-primary border-2"
-														: ""
-												}`}
-												style={{ cursor: file.uploading ? "wait" : "grab" }}
-											>
-												<div className="card-header d-flex justify-content-between align-items-center py-2">
-													<div className="d-flex align-items-center gap-2">
-														<span className="badge bg-secondary">
-															{index + 1}
-														</span>
-														<span
-															className={`text-${
-																file.type === "audio"
-																	? "warning"
-																	: file.type === "video"
-																		? "success"
-																		: "info"
-															}`}
-														>
-															{getMediaIcon(file.type)}
-														</span>
-													</div>
-													{!file.uploading && (
-														<button
-															type="button"
-															className="btn btn-sm btn-outline-danger"
-															onClick={() => removeFile(file.id)}
-															title="Remove file"
-															aria-label={`Remove ${file.name}`}
-														>
-															<i
-																aria-hidden
-																className="fa-regular fa-trash-can"
-															/>
-														</button>
-													)}
-												</div>
-												<div className="card-body p-2 position-relative">
-													<div
-														style={
-															file.uploading
-																? { filter: "blur(4px)", pointerEvents: "none" }
-																: null
-														}
+											<div className="card-header d-flex justify-content-between align-items-center py-2">
+												<div className="d-flex align-items-center gap-2">
+													<span className="badge bg-secondary">
+														{index + 1}
+													</span>
+													<span
+														className={`text-${
+															file.type === "audio"
+																? "warning"
+																: file.type === "video"
+																	? "success"
+																	: "info"
+														}`}
 													>
-														{file.type === "image" && (
-															<img
-																src={file.url || "/placeholder.svg"}
-																alt={file.name}
-																className="img-fluid rounded"
-																style={{
-																	maxHeight: "150px",
-																	width: "100%",
-																	objectFit: "fill",
-																}}
-															/>
-														)}
-														{file.type === "video" && (
-															<video
+														{getMediaIcon(file.type)}
+													</span>
+												</div>
+												{!file.uploading && (
+													<button
+														type="button"
+														className="btn btn-sm btn-outline-danger"
+														onClick={() => removeFile(file.id)}
+														title="Remove file"
+														aria-label={`Remove ${file.name}`}
+													>
+														<i
+															aria-hidden
+															className="fa-regular fa-trash-can"
+														/>
+													</button>
+												)}
+											</div>
+											<div className="card-body p-2 position-relative">
+												<div
+													style={
+														file.uploading
+															? { filter: "blur(4px)", pointerEvents: "none" }
+															: null
+													}
+												>
+													{file.type === "image" && (
+														<img
+															src={file.url || "/placeholder.svg"}
+															alt={file.name}
+															className="img-fluid rounded"
+															style={{
+																maxHeight: "150px",
+																width: "100%",
+																objectFit: "fill",
+															}}
+														/>
+													)}
+													{file.type === "video" && (
+														<video
+															ref={(el) => registerMediaElement(file.id, el)}
+															src={file.url}
+															controls
+															preload="metadata"
+															className="w-100 rounded"
+															style={{
+																maxHeight: "150px",
+																objectFit: "fill",
+															}}
+															onPlay={() => pauseAllMedia(file.id)}
+														/>
+													)}
+													{file.type === "audio" && (
+														<div
+															className="d-flex align-items-center p-1 admin-multimedia-manager-audio-file"
+															style={{ height: "150px" }}
+														>
+															<audio
 																ref={(el) => registerMediaElement(file.id, el)}
 																src={file.url}
 																controls
 																preload="metadata"
-																className="w-100 rounded"
-																style={{
-																	maxHeight: "150px",
-																	objectFit: "fill",
-																}}
+																className="w-100"
 																onPlay={() => pauseAllMedia(file.id)}
 															/>
-														)}
-														{file.type === "audio" && (
-															<div
-																className="d-flex align-items-center p-1 admin-multimedia-manager-audio-file"
-																style={{ height: "150px" }}
-															>
-																<audio
-																	ref={(el) =>
-																		registerMediaElement(file.id, el)
-																	}
-																	src={file.url}
-																	controls
-																	preload="metadata"
-																	className="w-100"
-																	onPlay={() => pauseAllMedia(file.id)}
-																/>
-															</div>
-														)}
-													</div>
-													{file.uploading && (
-														<div
-															className="position-absolute top-0 start-0 w-100 h-100 d-flex flex-column align-items-center justify-content-center"
-															style={{
-																backgroundColor: "rgba(255,255,255,0.55)",
-															}}
-														>
-															<span className="fw-bold fs-3 text-primary">
-																{file.progress}%
-															</span>
-															<small className="text-muted">Uploading...</small>
 														</div>
 													)}
 												</div>
-												<div className="card-footer py-2">
-													<p
-														className="mb-1 text-truncate small fw-medium"
-														title={file.name}
+												{file.uploading && (
+													<div
+														className="position-absolute top-0 start-0 w-100 h-100 d-flex flex-column align-items-center justify-content-center"
+														style={{
+															backgroundColor: "rgba(255,255,255,0.55)",
+														}}
 													>
-														{file.name}
-													</p>
-													<div className="d-flex justify-content-between align-items-center">
-														<small>{formatFileSize(file.size)}</small>
-														{file.uploadError && (
-															<small
-																className="text-danger"
-																title={file.uploadError}
-															>
-																Upload failed
-															</small>
-														)}
+														<span className="fw-bold fs-3 text-primary">
+															{file.progress}%
+														</span>
+														<small className="text-muted">Uploading...</small>
 													</div>
+												)}
+											</div>
+											<div className="card-footer py-2">
+												<p
+													className="mb-1 text-truncate small fw-medium"
+													title={file.name}
+												>
+													{file.name}
+												</p>
+												<div className="d-flex justify-content-between align-items-center">
+													<small>{formatFileSize(file.size)}</small>
+													{file.uploadError && (
+														<small
+															className="text-danger"
+															title={file.uploadError}
+														>
+															Upload failed
+														</small>
+													)}
 												</div>
 											</div>
 										</div>
-									))}
-								</div>
-							)}
-
-							<div className="mt-4 p-3 rounded admin-multimedia-manager">
-								<h6 className="fw-bold mb-2">Instructions</h6>
-								<ul className="mb-0 small">
-									<li>
-										Upload audio, video, or image files using the upload button
-									</li>
-									<li>Use the camera to take photos or record video</li>
-									<li>Use the microphone to record audio</li>
-									<li>Drag and drop cards to reorder your media files</li>
-									<li>Click the trash icon to remove individual files</li>
-								</ul>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				{/* GET API ENDPOINT ERRORS */}
-				{error && (
-					<div
-						className="alert alert-danger d-flex justify-content-between align-items-center"
-						role="alert"
-					>
-						<span>
-							<strong>Error:</strong> {error}
-						</span>
-						<button
-							type="button"
-							className="btn btn-outline-danger btn-sm"
-							onClick={handleRetry}
-						>
-							Retry
-						</button>
-					</div>
-				)}
-
-				{!error && items.length === 0 && !loading && (
-					<div className="alert alert-info rounded-0 mb-0" role="alert">
-						No files were returned from the API.
-					</div>
-				)}
-
-				{items.length > 0 && (
-					<>
-						<div className="card rounded-0 mb-1">
-							<div className="card-header">
-								<div className="float-start">
-									<form
-										onSubmit={searchData}
-										className="d-none d-md-block"
-										role="search"
-									>
-										<label htmlFor="keyword" className="visually-hidden">
-											Search by title
-										</label>
-										<input
-											id="keyword"
-											name="keyword"
-											value={keyword}
-											onChange={(e) => setKeyword(e.target.value)}
-											type="search"
-											className="form-control"
-											placeholder="Search by title"
-										/>
-									</form>
-								</div>
-								<div className="float-end my-1">
-									<div className="btn-group">
-										<button
-											type="button"
-											className="btn btn-danger btn-sm"
-											onClick={handleDeleteUnused}
-											disabled={deletingUnused || deletingAll}
-										>
-											{deletingUnused ? "..." : "Delete all unused permanently"}
-										</button>
-										<button
-											type="button"
-											className="btn btn-dark btn-sm"
-											onClick={handleDeleteAll}
-											disabled={deletingAll || deletingUnused}
-										>
-											{deletingAll ? "..." : "Delete all permanently"}
-										</button>
 									</div>
-								</div>
-							</div>
-						</div>
-						{/* Dismissed through state: Bootstrap's data-bs-dismiss would remove
-                nodes React still owns. */}
-						{debouncedKeyword && displayedItems.length === 0 && (
-							<div
-								className="alert alert-info alert-dismissible rounded-0 mb-1"
-								role="alert"
-							>
-								No objects match &quot;{debouncedKeyword}&quot;.
-								<button
-									type="button"
-									className="btn-close"
-									aria-label="Clear search"
-									onClick={() => {
-										setKeyword("");
-										setDebouncedKeyword("");
-									}}
-								/>
+								))}
 							</div>
 						)}
-						<div className="row g-3">
-							{displayedItems.map((item, index) => (
-								<Single
-									key={item.key}
-									index={index}
-									object={item}
-									handleDelete={handleDeleteIt}
-									isDeleting={deletingKeys.has(item.key)}
-								/>
-							))}
+
+						<div className="mt-4 p-3 rounded admin-multimedia-manager">
+							<h6 className="fw-bold mb-2">Instructions</h6>
+							<ul className="mb-0 small">
+								<li>
+									Upload audio, video, or image files using the upload button
+								</li>
+								<li>Use the camera to take photos or record video</li>
+								<li>Use the microphone to record audio</li>
+								<li>Drag and drop cards to reorder your media files</li>
+								<li>Click the trash icon to remove individual files</li>
+							</ul>
 						</div>
+					</div>
+				</div>
+			</div>
+
+			{/* GET API ENDPOINT ERRORS */}
+			{error && (
+				<div
+					className="alert alert-danger d-flex justify-content-between align-items-center"
+					role="alert"
+				>
+					<span>
+						<strong>Error:</strong> {error}
+					</span>
+					<button
+						type="button"
+						className="btn btn-outline-danger btn-sm"
+						onClick={handleRetry}
+					>
+						Retry
+					</button>
+				</div>
+			)}
+
+			{!error && items.length === 0 && !loading && (
+				<div className="alert alert-info rounded-0 mb-0" role="alert">
+					No files were returned from the API.
+				</div>
+			)}
+
+			{items.length > 0 && (
+				<>
+					<div className="card rounded-0 mb-1">
+						<div className="card-header">
+							<div className="float-start">
+								<form
+									onSubmit={searchData}
+									className="d-none d-md-block"
+									role="search"
+								>
+									<label htmlFor="keyword" className="visually-hidden">
+										Search by title
+									</label>
+									<input
+										id="keyword"
+										name="keyword"
+										value={keyword}
+										onChange={(e) => setKeyword(e.target.value)}
+										type="search"
+										className="form-control"
+										placeholder="Search by title"
+									/>
+								</form>
+							</div>
+							<div className="float-end my-1">
+								<div className="btn-group">
+									<button
+										type="button"
+										className="btn btn-danger btn-sm"
+										onClick={handleDeleteUnused}
+										disabled={deletingUnused || deletingAll}
+									>
+										{deletingUnused ? "..." : "Delete all unused permanently"}
+									</button>
+									<button
+										type="button"
+										className="btn btn-dark btn-sm"
+										onClick={handleDeleteAll}
+										disabled={deletingAll || deletingUnused}
+									>
+										{deletingAll ? "..." : "Delete all permanently"}
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					{/* Dismissed through state: Bootstrap's data-bs-dismiss would remove
+                nodes React still owns. */}
+					{debouncedKeyword && displayedItems.length === 0 && (
+						<div
+							className="alert alert-info alert-dismissible rounded-0 mb-1"
+							role="alert"
+						>
+							No objects match &quot;{debouncedKeyword}&quot;.
+							<button
+								type="button"
+								className="btn-close"
+								aria-label="Clear search"
+								onClick={() => {
+									setKeyword("");
+									setDebouncedKeyword("");
+								}}
+							/>
+						</div>
+					)}
+					<div className="row g-3">
+						{displayedItems.map((item, index) => (
+							<Single
+								key={item.key}
+								index={index}
+								object={item}
+								handleDelete={handleDeleteIt}
+								isDeleting={deletingKeys.has(item.key)}
+							/>
+						))}
+					</div>
+				</>
+			)}
+
+			{/* Sentinel + status row */}
+			<div ref={sentinelRef} className="text-center py-4">
+				{loading && (
+					<div className="d-inline-flex align-items-center gap-2 text-muted">
+						<div
+							className="spinner-border spinner-border-sm text-primary"
+							role="status"
+						>
+							<span className="visually-hidden">Loading...</span>
+						</div>
+						<span>Loading more files...</span>
+						<br />
+						{!error && countBadge}
+					</div>
+				)}
+				{!loading && !hasMore && items.length > 0 && (
+					<>
+						<small className="text-muted">No more files to load.</small>
+						<br />
+						{!error && countBadge}
 					</>
 				)}
-
-				{/* Sentinel + status row */}
-				<div ref={sentinelRef} className="text-center py-4">
-					{loading && (
-						<div className="d-inline-flex align-items-center gap-2 text-muted">
-							<div
-								className="spinner-border spinner-border-sm text-primary"
-								role="status"
-							>
-								<span className="visually-hidden">Loading...</span>
-							</div>
-							<span>Loading more files...</span>
-							<br />
-							{!error && countBadge}
-						</div>
-					)}
-					{!loading && !hasMore && items.length > 0 && (
-						<>
-							<small className="text-muted">No more files to load.</small>
-							<br />
-							{!error && countBadge}
-						</>
-					)}
-				</div>
 			</div>
 		</>
 	);

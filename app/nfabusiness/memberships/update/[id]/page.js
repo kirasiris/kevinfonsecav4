@@ -24,7 +24,11 @@ const UpdateMembership = async ({ params, searchParams }) => {
 	// Redirect if not charges enabled
 	!auth?.userStripeChargesEnabled && <OnboardingLink />;
 
-	return <UpdateMembershipForm token={token} auth={auth} object={membership} />;
+	return (
+		<div className="container-fluid px-0">
+			<UpdateMembershipForm token={token} auth={auth} object={membership} />
+		</div>
+	);
 };
 
 export default UpdateMembership;

@@ -14,19 +14,21 @@ const ReadReport = async ({ params, searchParams }) => {
 	const report = await getReport(`/${awtdParams.id}`);
 
 	return (
-		<div className="row">
-			<div className="col-lg-12">
-				<article>
-					<section className="mb-5">
-						<h1>Report</h1>
-						<ParseHtml text={report?.data?.text} />
-						<hr />
-						<p>
-							<b>Rest of report object:</b>
-						</p>
-						<pre>{JSON.stringify(report.data, null, 4)}</pre>
-					</section>
-				</article>
+		<div className="container-fluid px-0">
+			<div className="row">
+				<div className="col-lg-12">
+					<article>
+						<section className="mb-5">
+							<h1>Report</h1>
+							<ParseHtml text={report?.data?.text} />
+							<hr />
+							<p>
+								<b>Rest of report object:</b>
+							</p>
+							<pre>{JSON.stringify(report.data, null, 4)}</pre>
+						</section>
+					</article>
+				</div>
 			</div>
 		</div>
 	);

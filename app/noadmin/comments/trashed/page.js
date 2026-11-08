@@ -7,7 +7,7 @@ async function getComments(params) {
 	const res = await fetchurl(
 		`/global/comments${params}&status=trash&postType=comment`,
 		"GET",
-		"no-cache"
+		"no-cache",
 	);
 	return res;
 }
@@ -20,7 +20,7 @@ const AdminCommentsTrashedIndex = async ({ params, searchParams }) => {
 	const sort = awtdSearchParams.sort || "-createdAt";
 
 	const comments = await getComments(
-		`?page=${page}&limit=${limit}&sort=${sort}`
+		`?page=${page}&limit=${limit}&sort=${sort}`,
 	);
 
 	const draftIt = async (id) => {
@@ -28,7 +28,7 @@ const AdminCommentsTrashedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/comments/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/comments/trashed?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/comments/trashed?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -37,7 +37,7 @@ const AdminCommentsTrashedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/comments/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/comments/trashed?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/comments/trashed?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -46,7 +46,7 @@ const AdminCommentsTrashedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/comments/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/comments/trashed?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/comments/trashed?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -55,7 +55,7 @@ const AdminCommentsTrashedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/comments/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/comments/trashed?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/comments/trashed?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -64,7 +64,7 @@ const AdminCommentsTrashedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/comments/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`/noadmin/comments/trashed?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/comments/trashed?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -73,7 +73,7 @@ const AdminCommentsTrashedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/comments/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/comments/trashed?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/comments/trashed?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -83,15 +83,15 @@ const AdminCommentsTrashedIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/comments/deleteall/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/comments/trashed?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/comments/trashed?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
 	return (
-		<>
+		<div className="container-fluid px-0">
 			<AdminStatusesMenu
 				allLink="/noadmin/comments"
 				publishedLink="/noadmin/comments/published"
@@ -117,7 +117,7 @@ const AdminCommentsTrashedIndex = async ({ params, searchParams }) => {
 					handleDeleteAllFunction={handleDeleteAll}
 				/>
 			</div>
-		</>
+		</div>
 	);
 };
 

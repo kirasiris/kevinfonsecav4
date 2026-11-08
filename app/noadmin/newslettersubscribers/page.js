@@ -7,7 +7,7 @@ async function getNewsletterSubscribers(params) {
 	const res = await fetchurl(
 		`/global/newslettersubscribers${params}`,
 		"GET",
-		"no-cache"
+		"no-cache",
 	);
 	return res;
 }
@@ -20,7 +20,7 @@ const AdminNewsletterSubscribersIndex = async ({ params, searchParams }) => {
 	const sort = awtdSearchParams.sort || "-createdAt";
 
 	const newslettersubscribers = await getNewsletterSubscribers(
-		`?page=${page}&limit=${limit}&sort=${sort}`
+		`?page=${page}&limit=${limit}&sort=${sort}`,
 	);
 
 	const handleDelete = async (id) => {
@@ -29,11 +29,11 @@ const AdminNewsletterSubscribersIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/newslettersubscribers/${id}/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 
 		revalidatePath(
-			`/noadmin/newslettersubscribers?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/newslettersubscribers?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -43,15 +43,15 @@ const AdminNewsletterSubscribersIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/newslettersubscribers/deleteall/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/newslettersubscribers?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/newslettersubscribers?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
 	return (
-		<>
+		<div className="container-fluid px-0">
 			<AdminStatusesMenu
 				allLink="/noadmin/newslettersubscribers"
 				publishedLink=""
@@ -79,7 +79,7 @@ const AdminNewsletterSubscribersIndex = async ({ params, searchParams }) => {
 					handleDeleteAllFunction={handleDeleteAll}
 				/>
 			</div>
-		</>
+		</div>
 	);
 };
 

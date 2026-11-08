@@ -6,7 +6,7 @@ async function getNewsletterEmail(params) {
 	const res = await fetchurl(
 		`/global/newsletteremails${params}`,
 		"GET",
-		"no-cache"
+		"no-cache",
 	);
 	if (!res.success) notFound();
 	return res;
@@ -18,13 +18,15 @@ const ReadNewsletterEmail = async ({ params, searchParams }) => {
 	const newsletteremail = await getNewsletterEmail(`/${awtdParams.id}`);
 
 	return (
-		<div className="row">
-			<div className="col-lg-12">
-				<article>
-					<section className="mb-5">
-						<ParseHtml text={newsletteremail?.data?.text} />
-					</section>
-				</article>
+		<div className="container-fluid px-0">
+			<div className="row">
+				<div className="col-lg-12">
+					<article>
+						<section className="mb-5">
+							<ParseHtml text={newsletteremail?.data?.text} />
+						</section>
+					</article>
+				</div>
 			</div>
 		</div>
 	);

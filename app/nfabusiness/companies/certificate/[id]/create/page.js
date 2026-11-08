@@ -10,11 +10,10 @@ const CreateCertificate = async ({ params, searchParams }) => {
 	const token = await getAuthTokenOnServer();
 	const auth = await getUserOnServer();
 
-	// Redirect if not company
-	// !auth?.data?.hasCompany && redirect(`/noadmin/companies`);
-
 	return (
-		<CreateCertificateForm token={token} auth={auth} params={awtdParams} />
+		<div className="container-fluid px-0">
+			<CreateCertificateForm token={token} auth={auth} params={awtdParams} />
+		</div>
 	);
 };
 

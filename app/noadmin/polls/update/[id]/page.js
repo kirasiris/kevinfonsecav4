@@ -20,7 +20,11 @@ const UpdatePoll = async ({ params, searchParams }) => {
 
 	const poll = await getPoll(`/${awtdParams.id}`);
 
-	return <UpdatePollForm token={token} auth={auth} object={poll} />;
+	return (
+		<div className="container-fluid px-0">
+			<UpdatePollForm token={token} auth={auth} object={poll} />
+		</div>
+	);
 };
 
 export default UpdatePoll;

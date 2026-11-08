@@ -21,13 +21,15 @@ const ReadNewslettersSubscriber = async ({ params, searchParams }) => {
 	);
 
 	return (
-		<div className="row">
-			<div className="col-lg-12">
-				<article>
-					<section className="mb-5">
-						{newslettersubscriber?.data?.email}
-					</section>
-				</article>
+		<div className="container-fluid px-0">
+			<div className="row">
+				<div className="col-lg-12">
+					<article>
+						<section className="mb-5">
+							{newslettersubscriber?.data?.email}
+						</section>
+					</article>
+				</div>
 			</div>
 		</div>
 	);

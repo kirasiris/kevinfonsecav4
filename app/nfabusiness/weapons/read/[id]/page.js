@@ -14,10 +14,11 @@ const ReadWeapon = async ({ params, searchParams }) => {
 	const weapon = await getWeapon(`/${awtdParams.id}`);
 
 	return (
-		<div className="row">
-			<div className="col-lg-12">
-				<article>
-					{/* <ArticleHeader
+		<div className="container-fluid px-0">
+			<div className="row">
+				<div className="col-lg-12">
+					<article>
+						{/* <ArticleHeader
 						object={weapon}
 						url={`/blog/category/${blog?.data?.category?._id}/${blog?.data?.category?.slug}`}
 					/>
@@ -34,10 +35,11 @@ const ReadWeapon = async ({ params, searchParams }) => {
 							priority
 						/>
 					</figure> */}
-					<section className="mb-5">
-						<ParseHtml text={weapon?.data?.text} />
-					</section>
-				</article>
+						<section className="mb-5">
+							<ParseHtml text={weapon?.data?.text} />
+						</section>
+					</article>
+				</div>
 			</div>
 		</div>
 	);

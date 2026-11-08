@@ -50,7 +50,7 @@ const AdminPresentationsIndex = async ({ params, searchParams }) => {
 	};
 
 	return (
-		<>
+		<div className="container-fluid px-0">
 			<AdminStatusesMenu
 				allLink="/noadmin/presentations"
 				publishedLink="/noadmin/presentations/published"
@@ -80,7 +80,7 @@ const AdminPresentationsIndex = async ({ params, searchParams }) => {
 					handleDeleteAllFunction={handleDeleteAll}
 				/>
 			</div>
-		</>
+		</div>
 	);
 };
 

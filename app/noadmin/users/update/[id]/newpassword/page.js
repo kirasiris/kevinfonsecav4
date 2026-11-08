@@ -14,7 +14,11 @@ const UpdateUserPassword = async ({ params, searchParams }) => {
 
 	const user = await getUser(`/${awtdParams.id}`);
 
-	return <UpdateUserPasswordForm object={user} />;
+	return (
+		<div className="container-fluid px-0">
+			<UpdateUserPasswordForm object={user} />
+		</div>
+	);
 };
 
 export default UpdateUserPassword;

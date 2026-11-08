@@ -7,7 +7,7 @@ async function getThemes(params) {
 	const res = await fetchurl(
 		`/global/themes${params}&postType=theme`,
 		"GET",
-		"no-cache"
+		"no-cache",
 	);
 	return res;
 }
@@ -83,13 +83,13 @@ const AdminThemesIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/themes/deleteall/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(`/noadmin/themes?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	return (
-		<>
+		<div className="container-fluid px-0">
 			<AdminStatusesMenu
 				allLink="/noadmin/themes"
 				publishedLink="/noadmin/themes/published"
@@ -119,7 +119,7 @@ const AdminThemesIndex = async ({ params, searchParams }) => {
 					handleDeleteAllFunction={handleDeleteAll}
 				/>
 			</div>
-		</>
+		</div>
 	);
 };
 

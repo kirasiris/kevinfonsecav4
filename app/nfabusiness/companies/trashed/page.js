@@ -7,7 +7,7 @@ async function getCompanies(params) {
 	const res = await fetchurl(
 		`/global/companies${params}&status=trash`,
 		"GET",
-		"no-cache"
+		"no-cache",
 	);
 	return res;
 }
@@ -20,7 +20,7 @@ const AdminCompaniesTrashedIndex = async ({ params, searchParams }) => {
 	const sort = awtdSearchParams.sort || "-createdAt";
 
 	const companies = await getCompanies(
-		`?page=${page}&limit=${limit}&sort=${sort}`
+		`?page=${page}&limit=${limit}&sort=${sort}`,
 	);
 
 	const draftIt = async (id) => {
@@ -28,7 +28,7 @@ const AdminCompaniesTrashedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/companies/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
-			`/nfabusiness/companies/trashed?page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/companies/trashed?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -37,7 +37,7 @@ const AdminCompaniesTrashedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/companies/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
-			`/nfabusiness/companies/trashed?page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/companies/trashed?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -46,7 +46,7 @@ const AdminCompaniesTrashedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/companies/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
-			`/nfabusiness/companies/trashed?page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/companies/trashed?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -55,7 +55,7 @@ const AdminCompaniesTrashedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/companies/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
-			`/nfabusiness/companies/trashed?page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/companies/trashed?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -65,10 +65,10 @@ const AdminCompaniesTrashedIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/companies/${id}/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/nfabusiness/companies/trashed?page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/companies/trashed?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -77,7 +77,7 @@ const AdminCompaniesTrashedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/companies/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`/nfabusiness/companies/trashed?page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/companies/trashed?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -87,15 +87,15 @@ const AdminCompaniesTrashedIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/companies/deleteall/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/nfabusiness/companies/trashed?page=${page}&limit=${limit}&sort=${sort}`
+			`/nfabusiness/companies/trashed?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
 	return (
-		<>
+		<div className="container-fluid px-0">
 			<NFAStatusesMenu
 				allLink="/nfabusiness/companies"
 				publishedLink="/nfabusiness/companies/published"
@@ -127,7 +127,7 @@ const AdminCompaniesTrashedIndex = async ({ params, searchParams }) => {
 					handleDeleteAllFunction={handleDeleteAll}
 				/>
 			</div>
-		</>
+		</div>
 	);
 };
 

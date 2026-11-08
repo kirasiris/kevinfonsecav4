@@ -7,7 +7,7 @@ async function getSnippets(params) {
 	const res = await fetchurl(
 		`/global/snippets${params}&status=draft`,
 		"GET",
-		"no-cache"
+		"no-cache",
 	);
 	return res;
 }
@@ -20,7 +20,7 @@ const AdminSnippetsDraftIndex = async ({ params, searchParams }) => {
 	const sort = awtdSearchParams.sort || "-createdAt";
 
 	const snippets = await getSnippets(
-		`?page=${page}&limit=${limit}&sort=${sort}`
+		`?page=${page}&limit=${limit}&sort=${sort}`,
 	);
 
 	const draftIt = async (id) => {
@@ -28,7 +28,7 @@ const AdminSnippetsDraftIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/snippets/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/snippets/draft?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/snippets/draft?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -37,7 +37,7 @@ const AdminSnippetsDraftIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/snippets/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/snippets/draft?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/snippets/draft?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -46,7 +46,7 @@ const AdminSnippetsDraftIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/snippets/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/snippets/draft?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/snippets/draft?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -55,7 +55,7 @@ const AdminSnippetsDraftIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/snippets/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/snippets/draft?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/snippets/draft?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -64,7 +64,7 @@ const AdminSnippetsDraftIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/snippets/${id}/featureit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/snippets/draft?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/snippets/draft?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -73,7 +73,7 @@ const AdminSnippetsDraftIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/snippets/${id}/unfeatureit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/snippets/draft?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/snippets/draft?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -82,7 +82,7 @@ const AdminSnippetsDraftIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/snippets/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`/noadmin/snippets/draft?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/snippets/draft?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -91,7 +91,7 @@ const AdminSnippetsDraftIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/snippets/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/snippets/draft?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/snippets/draft?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -101,15 +101,15 @@ const AdminSnippetsDraftIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/snippets/deleteall/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/snippets/draft?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/snippets/draft?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
 	return (
-		<>
+		<div className="container-fluid px-0">
 			<AdminStatusesMenu
 				allLink="/noadmin/snippets"
 				publishedLink="/noadmin/snippets/published"
@@ -139,7 +139,7 @@ const AdminSnippetsDraftIndex = async ({ params, searchParams }) => {
 					handleDeleteAllFunction={handleDeleteAll}
 				/>
 			</div>
-		</>
+		</div>
 	);
 };
 

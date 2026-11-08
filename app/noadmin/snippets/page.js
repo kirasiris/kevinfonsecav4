@@ -16,7 +16,7 @@ const AdminSnippetsIndex = async ({ params, searchParams }) => {
 	const sort = awtdSearchParams.sort || "-createdAt";
 
 	const snippets = await getSnippets(
-		`?page=${page}&limit=${limit}&sort=${sort}`
+		`?page=${page}&limit=${limit}&sort=${sort}`,
 	);
 
 	const draftIt = async (id) => {
@@ -24,7 +24,7 @@ const AdminSnippetsIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/snippets/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/snippets?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/snippets?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -33,7 +33,7 @@ const AdminSnippetsIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/snippets/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/snippets?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/snippets?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -42,7 +42,7 @@ const AdminSnippetsIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/snippets/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/snippets?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/snippets?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -51,7 +51,7 @@ const AdminSnippetsIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/snippets/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/snippets?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/snippets?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -60,7 +60,7 @@ const AdminSnippetsIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/snippets/${id}/featureit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/snippets?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/snippets?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -69,7 +69,7 @@ const AdminSnippetsIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/snippets/${id}/unfeatureit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/snippets?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/snippets?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -78,7 +78,7 @@ const AdminSnippetsIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/snippets/${id}/permanently`, "DELETE", "no-cache");
 		revalidatePath(
-			`/noadmin/snippets?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/snippets?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -87,7 +87,7 @@ const AdminSnippetsIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/snippets/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/snippets?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/snippets?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -97,15 +97,15 @@ const AdminSnippetsIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/snippets/deleteall/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/snippets?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/snippets?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
 	return (
-		<>
+		<div className="container-fluid px-0">
 			<AdminStatusesMenu
 				allLink="/noadmin/snippets"
 				publishedLink="/noadmin/snippets/published"
@@ -135,7 +135,7 @@ const AdminSnippetsIndex = async ({ params, searchParams }) => {
 					handleDeleteAllFunction={handleDeleteAll}
 				/>
 			</div>
-		</>
+		</div>
 	);
 };
 

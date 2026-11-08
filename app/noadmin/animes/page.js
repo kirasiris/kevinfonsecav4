@@ -95,7 +95,7 @@ const AdminAnimesIndex = async ({ params, searchParams }) => {
 	};
 
 	return (
-		<>
+		<div className="container-fluid px-0">
 			<AdminStatusesMenu
 				allLink="/noadmin/animes"
 				publishedLink="/noadmin/animes/published"
@@ -125,7 +125,7 @@ const AdminAnimesIndex = async ({ params, searchParams }) => {
 					handleDeleteAllFunction={handleDeleteAll}
 				/>
 			</div>
-		</>
+		</div>
 	);
 };
 

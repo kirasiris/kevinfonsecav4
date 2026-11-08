@@ -92,7 +92,7 @@ const AdminQRCodesGeneratorTrashedIndex = async ({ params, searchParams }) => {
 	};
 
 	return (
-		<>
+		<div className="container-fluid px-0">
 			<AdminStatusesMenu
 				allLink="/noadmin/qrcodes"
 				publishedLink="/noadmin/qrcodes/published"
@@ -127,7 +127,7 @@ const AdminQRCodesGeneratorTrashedIndex = async ({ params, searchParams }) => {
 					</div>
 				</div>
 			</div>
-		</>
+		</div>
 	);
 };
 

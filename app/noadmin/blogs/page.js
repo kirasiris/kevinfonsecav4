@@ -7,7 +7,7 @@ async function getBlogs(params) {
 	const res = await fetchurl(
 		`/global/blogs${params}&postType=blog`,
 		"GET",
-		"no-cache"
+		"no-cache",
 	);
 	return res;
 }
@@ -83,13 +83,13 @@ const AdminBlogsIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/blogs/deleteall/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(`/noadmin/blogs?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
 	return (
-		<>
+		<div className="container-fluid px-0">
 			<AdminStatusesMenu
 				allLink="/noadmin/blogs"
 				publishedLink="/noadmin/blogs/published"
@@ -119,7 +119,7 @@ const AdminBlogsIndex = async ({ params, searchParams }) => {
 					handleDeleteAllFunction={handleDeleteAll}
 				/>
 			</div>
-		</>
+		</div>
 	);
 };
 

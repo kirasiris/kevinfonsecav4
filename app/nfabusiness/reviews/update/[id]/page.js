@@ -20,7 +20,11 @@ const UpdateReview = async ({ params, searchParams }) => {
 
 	const review = await getReview(`/${awtdParams.id}`);
 
-	return <UpdateReviewForm token={token} auth={auth} object={review} />;
+	return (
+		<div className="container-fluid px-0">
+			<UpdateReviewForm token={token} auth={auth} object={review} />
+		</div>
+	);
 };
 
 export default UpdateReview;

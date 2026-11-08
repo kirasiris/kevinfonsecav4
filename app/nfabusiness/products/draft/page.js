@@ -129,7 +129,7 @@ const NFAProductsDraftIndex = async ({ params, searchParams }) => {
 	};
 
 	return (
-		<>
+		<div className="container-fluid px-0">
 			<NFAStatusesMenu
 				allLink="/nfabusiness/products"
 				publishedLink="/nfabusiness/products/published"
@@ -163,7 +163,7 @@ const NFAProductsDraftIndex = async ({ params, searchParams }) => {
 					handleDeleteAllFunction={handleDeleteAll}
 				/>
 			</div>
-		</>
+		</div>
 	);
 };
 

@@ -7,7 +7,7 @@ async function getPlaylists(params) {
 	const res = await fetchurl(
 		`/global/playlists${params}&onairtype=cd-album&status=published`,
 		"GET",
-		"no-cache"
+		"no-cache",
 	);
 	return res;
 }
@@ -20,7 +20,7 @@ const AdminCDAlbumsPublishedIndex = async ({ params, searchParams }) => {
 	const sort = awtdSearchParams.sort || "-createdAt";
 
 	const cdalbums = await getPlaylists(
-		`?page=${page}&limit=${limit}&sort=${sort}`
+		`?page=${page}&limit=${limit}&sort=${sort}`,
 	);
 
 	const draftIt = async (id) => {
@@ -28,7 +28,7 @@ const AdminCDAlbumsPublishedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/playlists/${id}/draftit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/cdalbums/published?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/cdalbums/published?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -37,7 +37,7 @@ const AdminCDAlbumsPublishedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/playlists/${id}/publishit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/cdalbums/published?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/cdalbums/published?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -46,7 +46,7 @@ const AdminCDAlbumsPublishedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/playlists/${id}/trashit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/cdalbums/published?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/cdalbums/published?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -55,7 +55,7 @@ const AdminCDAlbumsPublishedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/playlists/${id}/scheduleit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/cdalbums/published?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/cdalbums/published?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -64,7 +64,7 @@ const AdminCDAlbumsPublishedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/playlists/${id}/featureit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/cdalbums/published?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/cdalbums/published?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -73,7 +73,7 @@ const AdminCDAlbumsPublishedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/playlists/${id}/unfeatureit`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/cdalbums/published?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/cdalbums/published?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -83,10 +83,10 @@ const AdminCDAlbumsPublishedIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/playlists/${id}/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/cdalbums/published?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/cdalbums/published?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -95,7 +95,7 @@ const AdminCDAlbumsPublishedIndex = async ({ params, searchParams }) => {
 		// const rawFormData = {}
 		await fetchurl(`/noadmin/playlists/deleteall`, "PUT", "no-cache");
 		revalidatePath(
-			`/noadmin/cdalbums/published?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/cdalbums/published?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
@@ -105,15 +105,15 @@ const AdminCDAlbumsPublishedIndex = async ({ params, searchParams }) => {
 		await fetchurl(
 			`/noadmin/playlists/deleteall/permanently`,
 			"DELETE",
-			"no-cache"
+			"no-cache",
 		);
 		revalidatePath(
-			`/noadmin/cdalbums/published?page=${page}&limit=${limit}&sort=${sort}`
+			`/noadmin/cdalbums/published?page=${page}&limit=${limit}&sort=${sort}`,
 		);
 	};
 
 	return (
-		<>
+		<div className="container-fluid px-0">
 			<AdminStatusesMenu
 				allLink="/noadmin/cdalbums"
 				publishedLink="/noadmin/cdalbums/published"
@@ -143,7 +143,7 @@ const AdminCDAlbumsPublishedIndex = async ({ params, searchParams }) => {
 					handleDeleteAllFunction={handleDeleteAll}
 				/>
 			</div>
-		</>
+		</div>
 	);
 };
 

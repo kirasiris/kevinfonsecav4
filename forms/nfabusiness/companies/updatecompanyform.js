@@ -55,6 +55,7 @@ const UpdateCompanyForm = ({ token = {}, auth = {}, object = {} }) => {
 			phoneNumber: formData.get("phoneNumber"),
 			address: formData.get("address"),
 			password: formData.get("password"),
+			status: status,
 			scheduledAt:
 				status === "scheduled" && scheduledAtLocal
 					? new Date(scheduledAtLocal).toISOString()

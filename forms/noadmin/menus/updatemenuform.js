@@ -31,6 +31,7 @@ const UpdateMenuForm = ({ object = {} }) => {
 			text: formData.get("text"),
 			tags: bodyUnchanged && !tags.length ? object?.data?.tags || [] : tags,
 			position: formData.getAll("position"),
+			status: status,
 			scheduledAt:
 				status === "scheduled" && scheduledAtLocal
 					? new Date(scheduledAtLocal).toISOString()

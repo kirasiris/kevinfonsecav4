@@ -31,6 +31,7 @@ const CreateAnimeForm = ({ token = {}, auth = {}, objects = [] }) => {
 			commented: formData.get("commented"),
 			password: formData.get("password"),
 			onairstatus: formData.get("onairstatus"),
+			status: status,
 			scheduledAt:
 				status === "scheduled" && scheduledAtLocal
 					? new Date(scheduledAtLocal).toISOString()

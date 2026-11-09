@@ -26,6 +26,7 @@ const CreatePollForm = ({ token = {}, auth = {} }) => {
 			text: formData.get("text"),
 			tags: JSON.parse(formData.get("text_hashtags") || "[]"),
 			featured: formData.get("featured"),
+			status: status,
 			scheduledAt:
 				status === "scheduled" && scheduledAtLocal
 					? new Date(scheduledAtLocal).toISOString()

@@ -65,6 +65,7 @@ const UpdateBlogForm = ({
 			category: formData.get("category"),
 			commented: formData.get("commented"),
 			password: formData.get("password"),
+			status: status,
 			scheduledAt:
 				status === "scheduled" && scheduledAtLocal
 					? new Date(scheduledAtLocal).toISOString()

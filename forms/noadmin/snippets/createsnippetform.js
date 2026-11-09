@@ -31,6 +31,7 @@ const CreateSnippetForm = ({}) => {
 			js: formData.get("js"),
 			featured: formData.get("featured"),
 			commented: formData.get("commented"),
+			status: status,
 			scheduledAt:
 				status === "scheduled" && scheduledAtLocal
 					? new Date(scheduledAtLocal).toISOString()

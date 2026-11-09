@@ -45,6 +45,7 @@ const CreateQuestionForm = ({
 			text: formData.get("text"),
 			tags: JSON.parse(formData.get("text_hashtags") || "[]"),
 			password: formData.get("password"),
+			status: status,
 			scheduledAt:
 				status === "scheduled" && scheduledAtLocal
 					? new Date(scheduledAtLocal).toISOString()

@@ -51,6 +51,7 @@ const UpdateQuestionForm = ({
 			text: formData.get("text"),
 			tags: bodyUnchanged && !tags.length ? object?.data?.tags || [] : tags,
 			password: formData.get("password"),
+			status: status,
 			scheduledAt:
 				status === "scheduled" && scheduledAtLocal
 					? new Date(scheduledAtLocal).toISOString()

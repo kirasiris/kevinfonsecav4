@@ -108,6 +108,7 @@ const UpdateReviewForm = ({ token = {}, auth = {}, object = {} }) => {
 						? savedFiles.map(toId).filter(Boolean)
 						: extras,
 			},
+			status: status,
 			scheduledAt:
 				status === "scheduled" && scheduledAtLocal
 					? new Date(scheduledAtLocal).toISOString()

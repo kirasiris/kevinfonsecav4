@@ -31,6 +31,7 @@ const CreateQuizForm = ({ token = {}, auth = {}, objects = [] }) => {
 			embedding: formData.get("embedding"),
 			category: formData.get("category"),
 			commented: formData.get("commented"),
+			status: status,
 			scheduledAt:
 				status === "scheduled" && scheduledAtLocal
 					? new Date(scheduledAtLocal).toISOString()

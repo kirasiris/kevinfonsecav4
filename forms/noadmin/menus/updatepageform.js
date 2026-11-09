@@ -73,6 +73,7 @@ const UpdatePageForm = ({
 			},
 			commented: formData.get("commented"),
 			password: formData.get("password"),
+			status: status,
 			scheduledAt:
 				status === "scheduled" && scheduledAtLocal
 					? new Date(scheduledAtLocal).toISOString()

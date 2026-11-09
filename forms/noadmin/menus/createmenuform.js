@@ -26,6 +26,7 @@ const CreateMenuForm = ({}) => {
 			text: formData.get("text"),
 			tags: JSON.parse(formData.get("text_hashtags") || "[]"),
 			position: formData.getAll("position"),
+			status: status,
 			scheduledAt:
 				status === "scheduled" && scheduledAtLocal
 					? new Date(scheduledAtLocal).toISOString()

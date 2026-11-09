@@ -691,6 +691,7 @@ const UpdateVideoForm = ({ token = {}, auth = {}, object = {} }) => {
 			tags: bodyUnchanged && !tags.length ? object?.data?.tags || [] : tags,
 			commented: formData.get("commented"),
 			embedding: formData.get("embedding"),
+			status: status,
 			scheduledAt:
 				status === "scheduled" && scheduledAtLocal
 					? new Date(scheduledAtLocal).toISOString()

@@ -28,6 +28,7 @@ const CreateForumForm = ({ token = {}, auth = {} }) => {
 			category: formData.get("category"),
 			sub_category: formData.get("sub_category"),
 			commented: formData.get("commented"),
+			status: status,
 			scheduledAt:
 				status === "scheduled" && scheduledAtLocal
 					? new Date(scheduledAtLocal).toISOString()

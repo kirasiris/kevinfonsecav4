@@ -77,6 +77,7 @@ const CreateCommentForm = ({
 			text: formData.get("text"),
 			mentions: JSON.parse(formData.get("text_users") || "[]"),
 			tags: JSON.parse(formData.get("text_hashtags") || "[]"),
+			status: status,
 			scheduledAt:
 				status === "scheduled" && scheduledAtLocal
 					? new Date(scheduledAtLocal).toISOString()

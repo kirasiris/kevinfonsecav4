@@ -694,6 +694,7 @@ const UpdateSongForm = ({ token = {}, auth = {}, object = {} }) => {
 			embedding: formData.get("embedding"),
 			category: formData.get("category"),
 			password: formData.get("password"),
+			status: status,
 			scheduledAt:
 				status === "scheduled" && scheduledAtLocal
 					? new Date(scheduledAtLocal).toISOString()

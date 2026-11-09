@@ -7,7 +7,7 @@ import {
 import UpdateReviewForm from "@/forms/nfabusiness/reviews/updatereviewform";
 
 async function getReview(params) {
-	const res = await fetchurl(`/global/reviews${params}`, "GET", "no-cache");
+	const res = await fetchurl(`/global/comments${params}`, "GET", "no-cache");
 	if (!res.success) notFound();
 	return res;
 }

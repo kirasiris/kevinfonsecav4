@@ -46,6 +46,9 @@ const UpdateProductForm = ({ object = {}, token = "", auth = {} }) => {
 
 		const bodyUnchanged = text === (object?.data?.text || "");
 
+		const status = formData.get("status");
+		const scheduledAtLocal = formData.get("scheduledAt");
+
 		const rawFormData = {
 			title: formData.get("title"),
 			text: formData.get("text"),
@@ -79,7 +82,11 @@ const UpdateProductForm = ({ object = {}, token = "", auth = {} }) => {
 			lowStockThreshold: formData.get("lowStockThreshold"),
 			trackInventory: formData.get("trackInventory"),
 			inStock: formData.get("inStock"),
-			status: formData.get("status"),
+			status: status,
+			scheduledAt:
+				status === "scheduled" && scheduledAtLocal
+					? new Date(scheduledAtLocal).toISOString()
+					: null,
 			featured: formData.get("featured"),
 			package_dimensions: {
 				weight: formData.get("weight"),
@@ -520,6 +527,7 @@ const UpdateProductForm = ({ object = {}, token = "", auth = {} }) => {
 					avatar={object?.data?.files}
 					avatarFormat={object?.data?.files?.avatar?.format_type}
 					status={object?.data?.status}
+					scheduledAt={object?.data?.scheduledAt}
 					fullWidth={false}
 					password=""
 					featured={object?.data?.featured.toString()}

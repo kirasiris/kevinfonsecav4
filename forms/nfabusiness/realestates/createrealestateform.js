@@ -18,6 +18,9 @@ const CreateRealStateForm = ({ token = {}, auth = {} }) => {
 		const form = e.target;
 		const formData = new FormData(form);
 
+		const status = formData.get("status");
+		const scheduledAtLocal = formData.get("scheduledAt");
+
 		const rawFormData = {
 			title: formData.get("title"),
 			text: formData.get("text"),
@@ -36,7 +39,11 @@ const CreateRealStateForm = ({ token = {}, auth = {} }) => {
 			inStock: formData.get("inStock"),
 			buldingType: formData.get("buldingType"),
 			amenities: formData.getAll("amenities"),
-			status: formData.get("status"),
+			status: status,
+			scheduledAt:
+				status === "scheduled" && scheduledAtLocal
+					? new Date(scheduledAtLocal).toISOString()
+					: null,
 			builtOnYear: formData.get("builtOnYear"),
 			files: {
 				avatar: formData.get("file") || undefined,
@@ -487,6 +494,7 @@ const CreateRealStateForm = ({ token = {}, auth = {} }) => {
 					avatar={undefined}
 					avatarFormat={"image"}
 					status="draft"
+					scheduledAt={null}
 					fullWidth={false}
 					password=""
 					featured={false}

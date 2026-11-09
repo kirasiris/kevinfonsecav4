@@ -18,6 +18,9 @@ const CreateCourseForm = ({ token = {}, auth = {} }) => {
 		const form = e.target;
 		const formData = new FormData(form);
 
+		const status = formData.get("status");
+		const scheduledAtLocal = formData.get("scheduledAt");
+
 		const rawFormData = {
 			title: formData.get("title"),
 			sub_title: formData.get("sub_title"),
@@ -35,7 +38,11 @@ const CreateCourseForm = ({ token = {}, auth = {} }) => {
 			language: formData.get("language"),
 			difficulty: formData.get("difficulty"),
 			commented: formData.get("commented"),
-			status: formData.get("status"),
+			status: status,
+			scheduledAt:
+				status === "scheduled" && scheduledAtLocal
+					? new Date(scheduledAtLocal).toISOString()
+					: null,
 			files: {
 				avatar: formData.get("file") || undefined,
 				extras: JSON.parse(formData.get("text_files") || "[]"),
@@ -389,6 +396,7 @@ const CreateCourseForm = ({ token = {}, auth = {} }) => {
 					avatar={undefined}
 					avatarFormat={"image"}
 					status="draft"
+					scheduledAt={null}
 					fullWidth={false}
 					password={""}
 					featured={true}

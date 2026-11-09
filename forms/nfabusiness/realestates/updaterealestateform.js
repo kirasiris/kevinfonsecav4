@@ -44,6 +44,9 @@ const UpdateRealEstateForm = ({ token = {}, auth = {}, object = {} }) => {
 
 		const bodyUnchanged = text === (object?.data?.text || "");
 
+		const status = formData.get("status");
+		const scheduledAtLocal = formData.get("scheduledAt");
+
 		const rawFormData = {
 			title: formData.get("title"),
 			text: formData.get("text"),
@@ -65,7 +68,11 @@ const UpdateRealEstateForm = ({ token = {}, auth = {}, object = {} }) => {
 			inStock: formData.get("inStock"),
 			buldingType: formData.get("buldingType"),
 			amenities: formData.getAll("amenities"),
-			status: formData.get("status"),
+			status: status,
+			scheduledAt:
+				status === "scheduled" && scheduledAtLocal
+					? new Date(scheduledAtLocal).toISOString()
+					: null,
 			builtOnYear: formData.get("builtOnYear"),
 			files: {
 				avatar: formData.get("file") || undefined,
@@ -555,6 +562,7 @@ const UpdateRealEstateForm = ({ token = {}, auth = {}, object = {} }) => {
 					avatar={object?.data?.files}
 					avatarFormat={object?.data?.files?.avatar?.format_type}
 					status={object?.data?.status}
+					scheduledAt={object?.data?.scheduledAt}
 					fullWidth={false}
 					password=""
 					featured={false}

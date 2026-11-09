@@ -18,6 +18,9 @@ const CreateLessonForm = ({ token = {}, auth = {}, params = {} }) => {
 		const form = e.target;
 		const formData = new FormData(form);
 
+		const status = formData.get("status");
+		const scheduledAtLocal = formData.get("scheduledAt");
+
 		const rawFormData = {
 			title: formData.get("title"),
 			text: formData.get("text"),
@@ -27,7 +30,11 @@ const CreateLessonForm = ({ token = {}, auth = {}, params = {} }) => {
 			embedding: formData.get("embedding"),
 			category: formData.get("category"),
 			password: formData.get("password"),
-			status: formData.get("status"),
+			status: status,
+			scheduledAt:
+				status === "scheduled" && scheduledAtLocal
+					? new Date(scheduledAtLocal).toISOString()
+					: null,
 			free_preview: formData.get("free_preview"),
 			duration: formData.get("duration"),
 			orderingNumber: formData.get("orderingNumber"),
@@ -158,6 +165,7 @@ const CreateLessonForm = ({ token = {}, auth = {}, params = {} }) => {
 					avatar={undefined}
 					avatarFormat={"video"}
 					status="draft"
+					scheduledAt={null}
 					fullWidth={false}
 					password=""
 					featured={false}

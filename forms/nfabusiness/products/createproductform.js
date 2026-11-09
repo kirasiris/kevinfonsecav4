@@ -20,6 +20,9 @@ const CreateProductForm = ({ token = {}, auth = {} }) => {
 		const form = e.target;
 		const formData = new FormData(form);
 
+		const status = formData.get("status");
+		const scheduledAtLocal = formData.get("scheduledAt");
+
 		const rawFormData = {
 			title: formData.get("title"),
 			text: formData.get("text"),
@@ -47,7 +50,11 @@ const CreateProductForm = ({ token = {}, auth = {} }) => {
 			lowStockThreshold: formData.get("lowStockThreshold"),
 			trackInventory: formData.get("trackInventory"),
 			inStock: formData.get("inStock"),
-			status: formData.get("status"),
+			status: status,
+			scheduledAt:
+				status === "scheduled" && scheduledAtLocal
+					? new Date(scheduledAtLocal).toISOString()
+					: null,
 			featured: formData.get("featured"),
 			package_dimensions: {
 				weight: formData.get("weight"),
@@ -490,6 +497,7 @@ const CreateProductForm = ({ token = {}, auth = {} }) => {
 					avatar={undefined}
 					avatarFormat="image"
 					status="draft"
+					scheduledAt={null}
 					fullWidth={false}
 					password=""
 					featured={true}

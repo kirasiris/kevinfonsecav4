@@ -18,6 +18,9 @@ const UpdateLessonForm = ({ token = {}, auth = {}, object = {} }) => {
 		const form = e.target;
 		const formData = new FormData(form);
 
+		const status = formData.get("status");
+		const scheduledAtLocal = formData.get("scheduledAt");
+
 		const rawFormData = {
 			title: formData.get("title"),
 			text: formData.get("text"),
@@ -27,7 +30,11 @@ const UpdateLessonForm = ({ token = {}, auth = {}, object = {} }) => {
 			embedding: formData.get("embedding"),
 			category: formData.get("category"),
 			password: formData.get("password"),
-			status: formData.get("status"),
+			status: status,
+			scheduledAt:
+				status === "scheduled" && scheduledAtLocal
+					? new Date(scheduledAtLocal).toISOString()
+					: null,
 			free_preview: formData.get("free_preview"),
 			duration: formData.get("duration"),
 			orderingNumber: formData.get("orderingNumber"),
@@ -156,6 +163,7 @@ const UpdateLessonForm = ({ token = {}, auth = {}, object = {} }) => {
 					avatar={object?.data?.files}
 					avatarFormat={object?.data?.files?.avatar?.format_type}
 					status={object?.data?.status}
+					scheduledAt={object?.data?.scheduledAt}
 					fullWidth={false}
 					password={object?.data?.password}
 					featured={false}

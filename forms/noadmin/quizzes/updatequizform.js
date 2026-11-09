@@ -28,6 +28,9 @@ const UpdateQuizForm = ({
 
 		const bodyUnchanged = text === (object?.data?.text || "");
 
+		const status = formData.get("status");
+		const scheduledAtLocal = formData.get("scheduledAt");
+
 		const rawFormData = {
 			title: formData.get("title"),
 			text: formData.get("text"),
@@ -38,7 +41,10 @@ const UpdateQuizForm = ({
 			embedding: formData.get("embedding"),
 			category: formData.get("category"),
 			commented: formData.get("commented"),
-			status: formData.get("status"),
+			scheduledAt:
+				status === "scheduled" && scheduledAtLocal
+					? new Date(scheduledAtLocal).toISOString()
+					: null,
 			attempts: formData.get("attempts"),
 			singlePage: formData.get("singlePage"),
 			files: {
@@ -187,6 +193,7 @@ const UpdateQuizForm = ({
 					avatar={object?.data?.files}
 					avatarFormat={object?.data?.files?.avatar?.format_type}
 					status={object?.data?.status}
+					scheduledAt={object?.data?.scheduledAt}
 					fullWidth={false}
 					password=""
 					featured={false}

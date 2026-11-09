@@ -24,6 +24,9 @@ const UpdateSnippetForm = ({ object = {} }) => {
 
 		const bodyUnchanged = text === (object?.data?.text || "");
 
+		const status = formData.get("status");
+		const scheduledAtLocal = formData.get("scheduledAt");
+
 		const rawFormData = {
 			title: formData.get("title"),
 			text: formData.get("text"),
@@ -33,7 +36,10 @@ const UpdateSnippetForm = ({ object = {} }) => {
 			js: formData.get("js"),
 			featured: formData.get("featured"),
 			commented: formData.get("commented"),
-			status: formData.get("status"),
+			scheduledAt:
+				status === "scheduled" && scheduledAtLocal
+					? new Date(scheduledAtLocal).toISOString()
+					: null,
 		};
 
 		const res = await fetchurl(
@@ -97,6 +103,7 @@ const UpdateSnippetForm = ({ object = {} }) => {
 					avatar={undefined}
 					avatarFormat={"image"}
 					status={object?.data?.status}
+					scheduledAt={object?.data?.scheduledAt}
 					fullWidth={false}
 					password=""
 					featured={object?.data?.featured.toString()}

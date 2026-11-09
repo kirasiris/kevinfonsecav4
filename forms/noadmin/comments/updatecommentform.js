@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { fetchurl } from "@/helpers/setTokenOnServer";
@@ -21,10 +21,53 @@ const toMention = (value) =>
 		? { id: String(value), username: "" }
 		: { id: toId(value), username: value?.username || "" };
 
+const toLocalInputValue = (date) => {
+	const d = new Date(date);
+	if (Number.isNaN(d.getTime())) return "";
+	return new Date(d.getTime() - d.getTimezoneOffset() * 60000)
+		.toISOString()
+		.slice(0, 16);
+};
+
+const isFailedResponse = (res) =>
+	!res ||
+	res instanceof Error ||
+	res.status === "error" ||
+	res.status === "fail" ||
+	res.success === false;
+
 const UpdateCommentForm = ({ token = {}, auth = {}, object = {} }) => {
 	const router = useRouter();
 
-	const [btnText, setBtnText] = useState(`Submit`);
+	const [isSubmitting, setIsSubmitting] = useState(false);
+
+	const recordId = object?.data?._id;
+	const initialStatus = object?.data?.status || "draft";
+	const initialScheduledAt = object?.data?.scheduledAt || null;
+	const [currentStatus, setCurrentStatus] = useState(initialStatus);
+	const selectRef = useRef(null);
+	const dateRef = useRef(null);
+
+	useEffect(() => {
+		const input = dateRef.current;
+		if (!input) return;
+		const value = initialScheduledAt
+			? toLocalInputValue(initialScheduledAt)
+			: "";
+		input.defaultValue = value;
+		input.value = value;
+	}, [recordId, initialScheduledAt]);
+
+	useEffect(() => {
+		setCurrentStatus(initialStatus);
+		const form = selectRef.current?.form;
+		if (!form) return;
+		const onReset = () => setCurrentStatus(initialStatus);
+		form.addEventListener("reset", onReset);
+		return () => form.removeEventListener("reset", onReset);
+	}, [recordId, initialStatus]);
+
+	const isScheduled = currentStatus === "scheduled";
 
 	const savedFiles = Array.isArray(object?.data?.files?.extras)
 		? object.data.files.extras
@@ -32,7 +75,8 @@ const UpdateCommentForm = ({ token = {}, auth = {}, object = {} }) => {
 
 	const upgradeComment = async (e) => {
 		e.preventDefault();
-		setBtnText(`Processing...`);
+		if (isSubmitting) return;
+		setIsSubmitting(true);
 		const form = e.target;
 		const formData = new FormData(form);
 
@@ -42,6 +86,9 @@ const UpdateCommentForm = ({ token = {}, auth = {}, object = {} }) => {
 		const extras = JSON.parse(formData.get("text_files") || "[]");
 
 		const bodyUnchanged = text === (object.data.text || "");
+
+		const status = formData.get("status");
+		const scheduledAtLocal = formData.get("scheduledAt");
 
 		const rawFormData = {
 			user: formData.get("user") || undefined,
@@ -61,7 +108,10 @@ const UpdateCommentForm = ({ token = {}, auth = {}, object = {} }) => {
 						? savedFiles.map(toId).filter(Boolean)
 						: extras,
 			},
-			status: formData.get("status"),
+			scheduledAt:
+				status === "scheduled" && scheduledAtLocal
+					? new Date(scheduledAtLocal).toISOString()
+					: null,
 			resourceId: object?.data?.resourceId?._id,
 			onModel: object?.data?.onModel,
 		};
@@ -76,22 +126,18 @@ const UpdateCommentForm = ({ token = {}, auth = {}, object = {} }) => {
 			false,
 		);
 
-		if (res.status === "error") {
-			toast.error(res.message);
-			setBtnText(btnText);
+		if (isFailedResponse(res)) {
+			toast.error(res?.message || "Something went wrong");
+			setIsSubmitting(false);
 			return;
 		}
-		if (res.status === "fail") {
-			toast.error(res.message);
-			setBtnText(btnText);
-			return;
-		}
-		setBtnText(btnText);
+
+		toast.success(`Comment upgraded`);
 		router.push(`/noadmin/comments`);
 	};
 
 	return (
-		<form key={object?.data?._id} className="row" onSubmit={upgradeComment}>
+		<form key={recordId} className="row" onSubmit={upgradeComment}>
 			<div className="col">
 				<label htmlFor="title" className="form-label">
 					Title
@@ -177,18 +223,33 @@ const UpdateCommentForm = ({ token = {}, auth = {}, object = {} }) => {
 					Status
 				</label>
 				<select
+					ref={selectRef}
 					id="status"
 					name="status"
-					defaultValue={object?.data?.status}
-					className="form-select"
+					defaultValue={initialStatus}
+					onChange={(e) => setCurrentStatus(e.target.value)}
+					className="form-select mb-3"
 				>
 					<option value={`draft`}>Draft</option>
 					<option value={`published`}>Published</option>
 					<option value={`trash`}>Trash</option>
 					<option value={`scheduled`}>Scheduled</option>
 				</select>
+				<div hidden={!isScheduled}>
+					<label htmlFor="scheduledAt" className="form-label">
+						Publish on
+					</label>
+					<input
+						ref={dateRef}
+						id="scheduledAt"
+						name="scheduledAt"
+						type="datetime-local"
+						required={isScheduled}
+						className="form-control mb-3"
+					/>
+				</div>
 				<br />
-				<FormButtons />
+				<FormButtons pending={isSubmitting} />
 			</div>
 		</form>
 	);

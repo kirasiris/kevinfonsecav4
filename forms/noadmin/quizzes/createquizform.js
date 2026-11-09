@@ -18,6 +18,9 @@ const CreateQuizForm = ({ token = {}, auth = {}, objects = [] }) => {
 		const form = e.target;
 		const formData = new FormData(form);
 
+		const status = formData.get("status");
+		const scheduledAtLocal = formData.get("scheduledAt");
+
 		const rawFormData = {
 			title: formData.get("title"),
 			text: formData.get("text"),
@@ -28,7 +31,10 @@ const CreateQuizForm = ({ token = {}, auth = {}, objects = [] }) => {
 			embedding: formData.get("embedding"),
 			category: formData.get("category"),
 			commented: formData.get("commented"),
-			status: formData.get("status"),
+			scheduledAt:
+				status === "scheduled" && scheduledAtLocal
+					? new Date(scheduledAtLocal).toISOString()
+					: null,
 			attempts: formData.get("attempts"),
 			singlePage: formData.get("singlePage"),
 			files: {
@@ -178,6 +184,7 @@ const CreateQuizForm = ({ token = {}, auth = {}, objects = [] }) => {
 					avatar={undefined}
 					avatarFormat={"image"}
 					status="draft"
+					scheduledAt={null}
 					fullWidth={false}
 					password=""
 					featured={false}

@@ -43,12 +43,18 @@ const UpdateQuestionForm = ({
 
 		const bodyUnchanged = text === (object?.data?.text || "");
 
+		const status = formData.get("status");
+		const scheduledAtLocal = formData.get("scheduledAt");
+
 		const rawFormData = {
 			title: formData.get("title"),
 			text: formData.get("text"),
 			tags: bodyUnchanged && !tags.length ? object?.data?.tags || [] : tags,
 			password: formData.get("password"),
-			status: formData.get("status"),
+			scheduledAt:
+				status === "scheduled" && scheduledAtLocal
+					? new Date(scheduledAtLocal).toISOString()
+					: null,
 			correctAnswer: formData.get("correctAnswer"),
 			answers: options,
 		};
@@ -175,6 +181,7 @@ const UpdateQuestionForm = ({
 					avatar={undefined}
 					avatarFormat={"any"}
 					status={object?.data?.status}
+					scheduledAt={object?.data?.scheduledAt}
 					fullWidth={false}
 					password=""
 					featured={false}

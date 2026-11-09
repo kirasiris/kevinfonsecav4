@@ -18,6 +18,9 @@ const CreatePageForm = ({ token = {}, auth = {}, params = {} }) => {
 		const form = e.target;
 		const formData = new FormData(form);
 
+		const status = formData.get("status");
+		const scheduledAtLocal = formData.get("scheduledAt");
+
 		const rawFormData = {
 			title: formData.get("title"),
 			url: formData.get("url"),
@@ -33,7 +36,10 @@ const CreatePageForm = ({ token = {}, auth = {}, params = {} }) => {
 			},
 			commented: formData.get("commented"),
 			password: formData.get("password"),
-			status: formData.get("status"),
+			scheduledAt:
+				status === "scheduled" && scheduledAtLocal
+					? new Date(scheduledAtLocal).toISOString()
+					: null,
 			resourceId: params.id,
 		};
 
@@ -182,6 +188,7 @@ const CreatePageForm = ({ token = {}, auth = {}, params = {} }) => {
 					avatar={undefined}
 					avatarFormat={"image"}
 					status={"draft"}
+					scheduledAt={null}
 					fullWidth={false}
 					password={""}
 					featured={false}

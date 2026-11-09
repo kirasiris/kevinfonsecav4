@@ -173,32 +173,6 @@ const CreateQuickDraftBlogForm = ({ token = {}, auth = {}, objects = [] }) => {
 			submittingRef.current = false;
 			if (isMountedRef.current) setIsSubmitting(false);
 		}
-
-		// const res = await fetchurl(
-		// 	`/noadmin/blogs`,
-		// 	"POST",
-		// 	"no-cache",
-		// 	rawFormData,
-		// 	undefined,
-		// 	false,
-		// 	false,
-		// );
-
-		// setIsSubmitting(false);
-
-		// if (res.status === "error") {
-		// 	toast.error(res.message);
-		// 	return;
-		// }
-
-		// if (res.status === "fail") {
-		// 	toast.error(res.message);
-		// 	return;
-		// }
-
-		// toast.success(`Blog created`);
-		// form.reset();
-		// router.refresh();
 	};
 
 	return (

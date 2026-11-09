@@ -18,12 +18,18 @@ const CreateMenuForm = ({}) => {
 		const form = e.target;
 		const formData = new FormData(form);
 
+		const status = formData.get("status");
+		const scheduledAtLocal = formData.get("scheduledAt");
+
 		const rawFormData = {
 			title: formData.get("title"),
 			text: formData.get("text"),
 			tags: JSON.parse(formData.get("text_hashtags") || "[]"),
 			position: formData.getAll("position"),
-			status: formData.get("status"),
+			scheduledAt:
+				status === "scheduled" && scheduledAtLocal
+					? new Date(scheduledAtLocal).toISOString()
+					: null,
 		};
 
 		const res = await fetchurl(
@@ -100,6 +106,7 @@ const CreateMenuForm = ({}) => {
 					avatar={undefined}
 					avatarFormat={""}
 					status="draft"
+					scheduledAt={null}
 					fullWidth={false}
 					password={""}
 					featured={false}

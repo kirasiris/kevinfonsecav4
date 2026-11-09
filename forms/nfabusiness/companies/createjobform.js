@@ -18,6 +18,9 @@ const CreateJobForm = ({ token = {}, auth = {}, params = {} }) => {
 		const form = e.target;
 		const formData = new FormData(form);
 
+		const status = formData.get("status");
+		const scheduledAtLocal = formData.get("scheduledAt");
+
 		const rawFormData = {
 			title: formData.get("title"),
 			text: formData.get("text"),
@@ -34,7 +37,10 @@ const CreateJobForm = ({ token = {}, auth = {}, params = {} }) => {
 			address: formData.get("address"),
 			commented: formData.get("commented"),
 			password: formData.get("password"),
-			status: formData.get("status"),
+			scheduledAt:
+				status === "scheduled" && scheduledAtLocal
+					? new Date(scheduledAtLocal).toISOString()
+					: null,
 			resourceId: params.id,
 		};
 
@@ -259,6 +265,7 @@ const CreateJobForm = ({ token = {}, auth = {}, params = {} }) => {
 					avatar={undefined}
 					avatarFormat={"image"}
 					status="draft"
+					scheduledAt={null}
 					fullWidth={false}
 					password=""
 					featured={false}

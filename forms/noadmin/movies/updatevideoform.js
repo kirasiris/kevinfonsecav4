@@ -682,13 +682,19 @@ const UpdateVideoForm = ({ token = {}, auth = {}, object = {} }) => {
 
 		const bodyUnchanged = text === (object?.data?.text || "");
 
+		const status = formData.get("status");
+		const scheduledAtLocal = formData.get("scheduledAt");
+
 		const rawFormData = {
 			title: formData.get("title"),
 			text: formData.get("text"),
 			tags: bodyUnchanged && !tags.length ? object?.data?.tags || [] : tags,
 			commented: formData.get("commented"),
 			embedding: formData.get("embedding"),
-			status: formData.get("status"),
+			scheduledAt:
+				status === "scheduled" && scheduledAtLocal
+					? new Date(scheduledAtLocal).toISOString()
+					: null,
 			language: formData.get("language"),
 			captionCert: formData.get("captionCert"),
 			recordingDate: formData.get("recordingDate"),
@@ -1077,6 +1083,7 @@ const UpdateVideoForm = ({ token = {}, auth = {}, object = {} }) => {
 					avatar={object?.data?.files}
 					avatarFormat={object?.data?.files?.avatar?.format_type}
 					status={object?.data?.status}
+					scheduledAt={object?.data?.scheduledAt}
 					fullWidth={false}
 					password=""
 					featured={false}

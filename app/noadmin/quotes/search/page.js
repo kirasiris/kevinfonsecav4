@@ -69,15 +69,6 @@ const AdminQuotesSearchIndex = async ({ params, searchParams }) => {
 		);
 	};
 
-	const scheduleIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/quotes/${id}/scheduleit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/quotes/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
-		);
-	};
-
 	const handleDelete = async (id) => {
 		"use server";
 		// const rawFormData = {}
@@ -115,7 +106,7 @@ const AdminQuotesSearchIndex = async ({ params, searchParams }) => {
 				allLink="/noadmin/quotes"
 				publishedLink="/noadmin/quotes/published"
 				draftLink="/noadmin/quotes/draft"
-				scheduledLink="/noadmin/quotes/scheduled"
+				scheduledLink=""
 				trashedLink="/noadmin/quotes/trashed"
 				categoriesLink=""
 				categoryType=""
@@ -204,7 +195,6 @@ const AdminQuotesSearchIndex = async ({ params, searchParams }) => {
 							<option value={`draft`}>Draft</option>
 							<option value={`published`}>Published</option>
 							<option value={`trash`}>Trash</option>
-							<option value={`scheduled`}>Scheduled</option>
 						</select>
 						<br />
 						<FormButtons />
@@ -223,7 +213,7 @@ const AdminQuotesSearchIndex = async ({ params, searchParams }) => {
 							handleDraft={draftIt}
 							handlePublish={publishIt}
 							handleTrash={trashIt}
-							handleSchedule={scheduleIt}
+							handleSchedule={undefined}
 							handleDelete={handleDelete}
 							handleTrashAllFunction={handleTrashAll}
 							handleDeleteAllFunction={handleDeleteAll}

@@ -19,6 +19,9 @@ const CreateSnippetForm = ({}) => {
 		const form = e.target;
 		const formData = new FormData(form);
 
+		const status = formData.get("status");
+		const scheduledAtLocal = formData.get("scheduledAt");
+
 		const rawFormData = {
 			title: formData.get("title"),
 			text: formData.get("text"),
@@ -28,7 +31,10 @@ const CreateSnippetForm = ({}) => {
 			js: formData.get("js"),
 			featured: formData.get("featured"),
 			commented: formData.get("commented"),
-			status: formData.get("status"),
+			scheduledAt:
+				status === "scheduled" && scheduledAtLocal
+					? new Date(scheduledAtLocal).toISOString()
+					: null,
 		};
 
 		const res = await fetchurl(
@@ -92,6 +98,7 @@ const CreateSnippetForm = ({}) => {
 					avatar={undefined}
 					avatarFormat={"image"}
 					status="draft"
+					scheduledAt={null}
 					fullWidth={false}
 					password=""
 					featured={true}

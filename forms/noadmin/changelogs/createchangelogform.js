@@ -154,7 +154,6 @@ const CreateChangelogForm = ({ token = {}, auth = {} }) => {
 					<option value={`draft`}>Draft</option>
 					<option value={`published`}>Published</option>
 					<option value={`trash`}>Trash</option>
-					<option value={`scheduled`}>Scheduled</option>
 				</select>
 				<br />
 				<FormButtons />

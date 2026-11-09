@@ -51,6 +51,9 @@ const UpdateJobForm = ({ token = {}, auth = {}, object = {} }) => {
 
 		const bodyUnchanged = text === (object?.data?.text || "");
 
+		const status = formData.get("status");
+		const scheduledAtLocal = formData.get("scheduledAt");
+
 		const rawFormData = {
 			title: formData.get("title"),
 			text: formData.get("text"),
@@ -67,7 +70,10 @@ const UpdateJobForm = ({ token = {}, auth = {}, object = {} }) => {
 			address: formData.get("address"),
 			commented: formData.get("commented"),
 			password: formData.get("password"),
-			status: formData.get("status"),
+			scheduledAt:
+				status === "scheduled" && scheduledAtLocal
+					? new Date(scheduledAtLocal).toISOString()
+					: null,
 		};
 
 		const res = await fetchurl(
@@ -291,6 +297,7 @@ const UpdateJobForm = ({ token = {}, auth = {}, object = {} }) => {
 					avatar={undefined}
 					avatarFormat={"image"}
 					status={object?.data?.status}
+					scheduledAt={object?.data?.scheduledAt}
 					fullWidth={false}
 					password=""
 					featured={false}

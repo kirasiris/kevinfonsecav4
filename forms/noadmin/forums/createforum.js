@@ -18,6 +18,9 @@ const CreateForumForm = ({ token = {}, auth = {} }) => {
 		const form = e.target;
 		const formData = new FormData(form);
 
+		const status = formData.get("status");
+		const scheduledAtLocal = formData.get("scheduledAt");
+
 		const rawFormData = {
 			title: formData.get("title"),
 			text: formData.get("text"),
@@ -25,7 +28,10 @@ const CreateForumForm = ({ token = {}, auth = {} }) => {
 			category: formData.get("category"),
 			sub_category: formData.get("sub_category"),
 			commented: formData.get("commented"),
-			status: formData.get("status"),
+			scheduledAt:
+				status === "scheduled" && scheduledAtLocal
+					? new Date(scheduledAtLocal).toISOString()
+					: null,
 		};
 
 		const res = await fetchurl(
@@ -243,6 +249,7 @@ const CreateForumForm = ({ token = {}, auth = {} }) => {
 					avatar={undefined}
 					avatarFormat={"image"}
 					status="draft"
+					scheduledAt={null}
 					fullWidth={false}
 					password=""
 					featured={false}

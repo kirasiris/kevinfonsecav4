@@ -18,6 +18,9 @@ const CreateThemeForm = ({ token = {}, auth = {}, objects = [] }) => {
 		const form = e.target;
 		const formData = new FormData(form);
 
+		const status = formData.get("status");
+		const scheduledAtLocal = formData.get("scheduledAt");
+
 		const rawFormData = {
 			title: formData.get("title"),
 			text: formData.get("text"),
@@ -28,7 +31,10 @@ const CreateThemeForm = ({ token = {}, auth = {}, objects = [] }) => {
 			category: formData.get("category"),
 			commented: formData.get("commented"),
 			password: formData.get("password"),
-			status: formData.get("status"),
+			scheduledAt:
+				status === "scheduled" && scheduledAtLocal
+					? new Date(scheduledAtLocal).toISOString()
+					: null,
 			fullWidth: formData.get("fullWidth"),
 			preview_theme_url: formData.get("preview_theme_url"),
 			github_readme: formData.get("github_readme"),
@@ -128,6 +134,7 @@ const CreateThemeForm = ({ token = {}, auth = {}, objects = [] }) => {
 					avatar={undefined}
 					avatarFormat={"image"}
 					status="draft"
+					scheduledAt={null}
 					fullWidth={true}
 					password=""
 					featured={true}

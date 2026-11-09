@@ -1,7 +1,7 @@
 import { revalidatePath } from "next/cache";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import NFAStatusesMenu from "@/components/nfabusiness/nfastatusesmenu";
-import List from "@/components/noadmin/reviews/list";
+import List from "@/components/nfabusiness/reviews/list";
 
 async function getReviews(params) {
 	const res = await fetchurl(

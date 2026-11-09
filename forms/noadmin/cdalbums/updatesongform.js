@@ -682,6 +682,9 @@ const UpdateSongForm = ({ token = {}, auth = {}, object = {} }) => {
 
 		const bodyUnchanged = text === (object?.data?.text || "");
 
+		const status = formData.get("status");
+		const scheduledAtLocal = formData.get("scheduledAt");
+
 		const rawFormData = {
 			title: formData.get("title"),
 			sub_title: formData.get("sub_title"),
@@ -691,7 +694,10 @@ const UpdateSongForm = ({ token = {}, auth = {}, object = {} }) => {
 			embedding: formData.get("embedding"),
 			category: formData.get("category"),
 			password: formData.get("password"),
-			status: formData.get("status"),
+			scheduledAt:
+				status === "scheduled" && scheduledAtLocal
+					? new Date(scheduledAtLocal).toISOString()
+					: null,
 			duration: formData.get("duration"),
 			averageRating: formData.get("averageRating"),
 			orderingNumber: formData.get("orderingNumber"),
@@ -828,11 +834,12 @@ const UpdateSongForm = ({ token = {}, auth = {}, object = {} }) => {
 					avatar={object?.data?.files}
 					avatarFormat={object?.data?.files?.avatar?.format_type}
 					status={object?.data?.status}
+					scheduledAt={object?.data?.scheduledAt}
 					fullWidth={false}
 					password=""
 					featured={false}
-					commented={String(object?.data?.commented ?? true)}
-					embedding={String(object?.data?.embedding ?? true)}
+					commented={object?.data?.commented.toString()}
+					embedding={object?.data?.embedding.toString()}
 					category={undefined}
 					categories={[]}
 					multiple_categories={false}

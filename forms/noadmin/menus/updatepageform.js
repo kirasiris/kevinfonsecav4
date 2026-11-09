@@ -49,6 +49,9 @@ const UpdatePageForm = ({
 
 		const bodyUnchanged = text === (object?.data?.text || "");
 
+		const status = formData.get("status");
+		const scheduledAtLocal = formData.get("scheduledAt");
+
 		const rawFormData = {
 			title: formData.get("title"),
 			url: formData.get("url"),
@@ -70,7 +73,10 @@ const UpdatePageForm = ({
 			},
 			commented: formData.get("commented"),
 			password: formData.get("password"),
-			status: formData.get("status"),
+			scheduledAt:
+				status === "scheduled" && scheduledAtLocal
+					? new Date(scheduledAtLocal).toISOString()
+					: null,
 		};
 
 		const res = await fetchurl(
@@ -219,6 +225,7 @@ const UpdatePageForm = ({
 					avatar={undefined}
 					avatarFormat={"image"}
 					status={object?.data?.status}
+					scheduledAt={object?.data?.scheduledAt}
 					fullWidth={false}
 					password={""}
 					featured={false}

@@ -18,6 +18,9 @@ const CreateCompanyForm = ({ token = {}, auth = {} }) => {
 		const form = e.target;
 		const formData = new FormData(form);
 
+		const status = formData.get("status");
+		const scheduledAtLocal = formData.get("scheduledAt");
+
 		const rawFormData = {
 			title: formData.get("title"),
 			text: formData.get("text"),
@@ -28,7 +31,10 @@ const CreateCompanyForm = ({ token = {}, auth = {} }) => {
 			phoneNumber: formData.get("phoneNumber"),
 			address: formData.get("address"),
 			password: formData.get("password"),
-			status: formData.get("status"),
+			scheduledAt:
+				status === "scheduled" && scheduledAtLocal
+					? new Date(scheduledAtLocal).toISOString()
+					: null,
 			files: { avatar: formData.get("file") || undefined },
 		};
 
@@ -145,6 +151,7 @@ const CreateCompanyForm = ({ token = {}, auth = {} }) => {
 					avatar={undefined}
 					avatarFormat={"image"}
 					status="draft"
+					scheduledAt={null}
 					fullWidth={false}
 					password=""
 					featured={false}

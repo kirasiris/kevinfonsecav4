@@ -38,13 +38,6 @@ const AdminSecretsIndex = async ({ params, searchParams }) => {
 		revalidatePath(`/noadmin/secrets?page=${page}&limit=${limit}&sort=${sort}`);
 	};
 
-	const scheduleIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/secrets/${id}/scheduleit`, "PUT", "no-cache");
-		revalidatePath(`/noadmin/secrets?page=${page}&limit=${limit}&sort=${sort}`);
-	};
-
 	const handleDelete = async (id) => {
 		"use server";
 		// const rawFormData = {}
@@ -76,7 +69,7 @@ const AdminSecretsIndex = async ({ params, searchParams }) => {
 				allLink="/noadmin/secrets"
 				publishedLink="/noadmin/secrets/published"
 				draftLink="/noadmin/secrets/draft"
-				scheduledLink="/noadmin/secrets/scheduled"
+				scheduledLink=""
 				trashedLink="/noadmin/secrets/trashed"
 				categoriesLink=""
 				categoryType=""
@@ -93,7 +86,7 @@ const AdminSecretsIndex = async ({ params, searchParams }) => {
 					handleDraft={draftIt}
 					handlePublish={publishIt}
 					handleTrash={trashIt}
-					handleSchedule={scheduleIt}
+					handleSchedule={undefined}
 					handleDelete={handleDelete}
 					handleTrashAllFunction={handleTrashAll}
 					handleDeleteAllFunction={handleDeleteAll}

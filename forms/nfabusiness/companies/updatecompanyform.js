@@ -39,6 +39,9 @@ const UpdateCompanyForm = ({ token = {}, auth = {}, object = {} }) => {
 
 		const bodyUnchanged = text === (object?.data?.text || "");
 
+		const status = formData.get("status");
+		const scheduledAtLocal = formData.get("scheduledAt");
+
 		const rawFormData = {
 			title: formData.get("title"),
 			text: formData.get("text"),
@@ -52,7 +55,10 @@ const UpdateCompanyForm = ({ token = {}, auth = {}, object = {} }) => {
 			phoneNumber: formData.get("phoneNumber"),
 			address: formData.get("address"),
 			password: formData.get("password"),
-			status: formData.get("status"),
+			scheduledAt:
+				status === "scheduled" && scheduledAtLocal
+					? new Date(scheduledAtLocal).toISOString()
+					: null,
 			files: { avatar: formData.get("file") || undefined },
 		};
 
@@ -169,6 +175,7 @@ const UpdateCompanyForm = ({ token = {}, auth = {}, object = {} }) => {
 					avatar={object?.data?.files}
 					avatarFormat={object?.data?.files?.avatar?.format_type}
 					status={object?.data?.status}
+					scheduledAt={object?.data?.scheduledAt}
 					fullWidth={false}
 					password={object?.data?.password}
 					featured={false}

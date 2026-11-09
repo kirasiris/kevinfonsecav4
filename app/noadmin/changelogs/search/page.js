@@ -48,15 +48,6 @@ const AdminChangelogsSearchIndex = async ({ params, searchParams }) => {
 		);
 	};
 
-	const scheduleIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/changelogs/${id}/scheduleit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/changelogs/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
-		);
-	};
-
 	const handleDelete = async (id) => {
 		"use server";
 		// const rawFormData = {}
@@ -98,7 +89,7 @@ const AdminChangelogsSearchIndex = async ({ params, searchParams }) => {
 				allLink="/noadmin/changelogs"
 				publishedLink="/noadmin/changelogs/published"
 				draftLink="/noadmin/changelogs/draft"
-				scheduledLink="/noadmin/changelogs/scheduled"
+				scheduledLink=""
 				trashedLink="/noadmin/changelogs/trashed"
 			/>
 			<div className="card rounded-0">
@@ -113,7 +104,7 @@ const AdminChangelogsSearchIndex = async ({ params, searchParams }) => {
 					handleDraft={draftIt}
 					handlePublish={publishIt}
 					handleTrash={trashIt}
-					handleSchedule={scheduleIt}
+					handleSchedule={undefined}
 					handleDelete={handleDelete}
 					handleTrashAllFunction={handleTrashAll}
 					handleDeleteAllFunction={handleDeleteAll}

@@ -1,10 +1,28 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
+
+const toLocalInputValue = (date) => {
+	const d = new Date(date);
+	if (Number.isNaN(d.getTime())) return "";
+	return new Date(d.getTime() - d.getTimezoneOffset() * 60000)
+		.toISOString()
+		.slice(0, 16);
+};
+
+const isFailedResponse = (res) =>
+	!res ||
+	res instanceof Error ||
+	res.status === "error" ||
+	res.status === "fail" ||
+	res.success === false;
+
+const INITIAL_STATUS = "draft";
+const INITIAL_SCHEDULED_AT = null;
 
 const CreateReviewForm = ({
 	token = {},
@@ -14,13 +32,42 @@ const CreateReviewForm = ({
 }) => {
 	const router = useRouter();
 
-	const [btnText, setBtnText] = useState("Submit");
+	const [isSubmitting, setIsSubmitting] = useState(false);
+
+	const [currentStatus, setCurrentStatus] = useState(INITIAL_STATUS);
+	const selectRef = useRef(null);
+	const dateRef = useRef(null);
+
+	useEffect(() => {
+		const input = dateRef.current;
+		if (!input) return;
+		const value = INITIAL_SCHEDULED_AT
+			? toLocalInputValue(INITIAL_SCHEDULED_AT)
+			: "";
+		input.defaultValue = value;
+		input.value = value;
+	}, []);
+
+	useEffect(() => {
+		const form = selectRef.current?.form;
+		if (!form) return;
+		const onReset = () => setCurrentStatus(INITIAL_STATUS);
+		form.addEventListener("reset", onReset);
+		return () => form.removeEventListener("reset", onReset);
+	}, []);
+
+	const isScheduled = currentStatus === "scheduled";
 
 	const addReview = async (e) => {
 		e.preventDefault();
-		setBtnText(`Processing...`);
+		if (isSubmitting) return;
+		setIsSubmitting(true);
 		const form = e.target;
 		const formData = new FormData(form);
+
+		const status = formData.get("status");
+		const scheduledAtLocal = formData.get("scheduledAt");
+
 		const rawFormData = {
 			user: formData.get("user") || undefined,
 			name: formData.get("name"),
@@ -30,7 +77,10 @@ const CreateReviewForm = ({
 			text: formData.get("text"),
 			mentions: JSON.parse(formData.get("text_users") || "[]"),
 			tags: JSON.parse(formData.get("text_hashtags") || "[]"),
-			status: formData.get("status"),
+			scheduledAt:
+				status === "scheduled" && scheduledAtLocal
+					? new Date(scheduledAtLocal).toISOString()
+					: null,
 			resourceId: searchParams.resourceId,
 			parentId: searchParams.parentId || undefined,
 			onModel: searchParams.onModel,
@@ -46,17 +96,13 @@ const CreateReviewForm = ({
 			false,
 		);
 
-		if (res.status === "error") {
-			toast.error(res.message);
-			setBtnText(btnText);
+		if (isFailedResponse(res)) {
+			toast.error(res?.message || "Something went wrong");
+			setIsSubmitting(false);
 			return;
 		}
-		if (res.status === "fail") {
-			toast.error(res.message);
-			setBtnText(btnText);
-			return;
-		}
-		setBtnText(btnText);
+
+		toast.success(`Review created`);
 		router.push(`/nfabusiness/reviews`);
 	};
 
@@ -146,18 +192,33 @@ const CreateReviewForm = ({
 					Status
 				</label>
 				<select
+					ref={selectRef}
 					id="status"
 					name="status"
-					defaultValue="draft"
-					className="form-select"
+					defaultValue={INITIAL_STATUS}
+					onChange={(e) => setCurrentStatus(e.target.value)}
+					className="form-select mb-3"
 				>
 					<option value={`draft`}>Draft</option>
 					<option value={`published`}>Published</option>
 					<option value={`trash`}>Trash</option>
 					<option value={`scheduled`}>Scheduled</option>
 				</select>
+				<div hidden={!isScheduled}>
+					<label htmlFor="scheduledAt" className="form-label">
+						Publish on
+					</label>
+					<input
+						ref={dateRef}
+						id="scheduledAt"
+						name="scheduledAt"
+						type="datetime-local"
+						required={isScheduled}
+						className="form-control mb-3"
+					/>
+				</div>
 				<br />
-				<FormButtons />
+				<FormButtons pending={isSubmitting} />
 			</div>
 		</form>
 	);

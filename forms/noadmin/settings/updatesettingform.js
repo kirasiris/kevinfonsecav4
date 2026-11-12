@@ -1,71 +1,20 @@
 "use client";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
-
-const guessKind = (url, mime) => {
-	const u = (url || "").toLowerCase();
-	if (mime) {
-		if (mime.indexOf("image") === 0) return "image";
-		if (mime.indexOf("video") === 0) return "video";
-		if (mime.indexOf("audio") === 0) return "audio";
-	}
-	if (/\.(png|jpe?g|jfif|gif|webp|avif|svg|bmp)(\?|$)/.test(u)) return "image";
-	if (/\.(mp4|m4v|webm|mov|ogv)(\?|$)/.test(u)) return "video";
-	if (/\.(mp3|wav|m4a|aac|flac|oga|opus)(\?|$)/.test(u)) return "audio";
-	// .ogg can hold either; treat it as both so neither picker hides it.
-	if (/\.ogg(\?|$)/.test(u)) return "ogg";
-	return "file";
-};
-
-// The API's `format_type` ("image" | "video" | "audio" | "application") is the
-// source of truth; the extension guess only covers records without one.
-const kindOf = (item) => {
-	const type = item && item.format_type;
-	if (type === "image" || type === "video" || type === "audio") return type;
-	return guessKind(fileUrlOf(item), item && item.mimetype);
-};
-
-const FILES_PER_PAGE = 28;
-const SEARCH_DELAY_MS = 300;
-
-// The files API answers both "nothing matched" and "page past the end" with
-// this fail response instead of an empty `data` array.
-const isEmptyPageResponse = (json) =>
-	!!json &&
-	json.status === "fail" &&
-	/page does not exist/i.test(json.message || "");
-
-const fileUrlOf = (item) => {
-	const loc = (item && item.location) || {};
-	return loc.secure_location || loc.insecure_location || loc.aws_location || "";
-};
-
-// `title` is the name the file was uploaded under; `location.filename` is the
-// storage name with the owner id and email baked in, so it is only a fallback.
-const fileNameOf = (item) => {
-	if (!item) return "file";
-	const loc = item.location || {};
-	return (
-		item.title ||
-		(item.resourceId && item.resourceId.title) ||
-		loc.filename ||
-		(item._id ? `File ${item._id}` : "file")
-	);
-};
-
-// Accepts a populated document or a bare id string.
-const idOf = (value) => {
-	if (!value) return "";
-	if (typeof value === "object") {
-		const id = value._id || value.id || "";
-		return id ? String(id) : "";
-	}
-	return String(value);
-};
+import {
+	fileNameOf,
+	fileUrlOf,
+	guessKind,
+	idOf,
+} from "@/helpers/filemanagerhelpers";
+import {
+	FileBrowserModal,
+	useFileBrowser,
+} from "@/components/global/filemanagerui";
 
 const FIELD_LABELS = {
 	showcase_image: "Showcase Image",
@@ -96,24 +45,18 @@ const UpdateSettingForm = ({ token = {}, auth = {}, object = {} }) => {
 	const router = useRouter();
 	const submittingRef = useRef(false);
 
-	const [btnText, setBtnText] = useState(`Submit`);
+	// FormButtons reads useFormStatus, which only tracks `action` forms, so this
+	// onSubmit form has to hand it the pending state itself.
+	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	const settingsId = object?.data?._id;
 
 	// Prefilled synchronously so populated refs never flash an empty input
 	const [files, setFiles] = useState(() => hydrateFields(object?.data));
 
-	const [showFiles, setShowFiles] = useState(false);
+	// Every field on this form is an image, so the browser only lists images.
+	const fileBrowser = useFileBrowser({ formatType: "image" });
 	const [fileTarget, setFileTarget] = useState("");
-	const [fileSelection, setFileSelection] = useState(null);
-	const [fileSearch, setFileSearch] = useState("");
-	const [fileState, setFileState] = useState({
-		items: [],
-		page: 1,
-		totalPages: 1,
-		loading: false,
-		error: "",
-	});
 
 	/* ---- Prefill from the DB record ---------------------------------------- */
 
@@ -126,135 +69,9 @@ const UpdateSettingForm = ({ token = {}, auth = {}, object = {} }) => {
 
 	/* ---- File manager ------------------------------------------------------ */
 
-	const isMountedRef = useRef(true);
-	// Only the newest page request may write state, so a slow earlier response
-	// can't overwrite the page the user is on.
-	const requestIdRef = useRef(0);
-	// The keyword of the latest request, read by paging and the search debounce.
-	const keywordRef = useRef("");
-	const searchTimerRef = useRef(0);
-
-	useEffect(() => {
-		isMountedRef.current = true;
-		return () => {
-			isMountedRef.current = false;
-			requestIdRef.current++;
-			clearTimeout(searchTimerRef.current);
-		};
-	}, []);
-
-	// Every field on this form is an image, so `format_type=image` keeps counts
-	// and page totals accurate; `keyword` searches every page, not just this one.
-	const loadFiles = async (page, keyword = keywordRef.current) => {
-		const requestId = ++requestIdRef.current;
-		keywordRef.current = keyword;
-		setFileState((s) => ({ ...s, page, keyword, loading: true, error: "" }));
-		const query =
-			`page=${page}&limit=${FILES_PER_PAGE}&format_type=image` +
-			(keyword ? `&keyword=${encodeURIComponent(keyword)}` : "");
-		try {
-			const json = await fetchurl(
-				`/global/files?${query}`,
-				"GET",
-				"no-cache",
-				{},
-				null,
-				false,
-				false,
-			);
-			if (!isMountedRef.current || requestId !== requestIdRef.current) return;
-			if (!json || !Array.isArray(json.data)) {
-				if (isEmptyPageResponse(json)) {
-					// A remembered page can fall off the end once files are deleted, so
-					// step back to page 1 before calling the list empty.
-					if (page > 1) {
-						loadFiles(1, keyword);
-						return;
-					}
-					setFileState({
-						items: [],
-						page: 1,
-						totalPages: 1,
-						keyword,
-						loading: false,
-						error: "",
-					});
-					return;
-				}
-				throw new Error((json && json.message) || "Failed to load files");
-			}
-			setFileState({
-				items: json.data,
-				page: (json.pagination && json.pagination.current) || page,
-				totalPages: (json.pagination && json.pagination.totalpages) || 1,
-				keyword,
-				loading: false,
-				error: "",
-			});
-		} catch (err) {
-			if (!isMountedRef.current || requestId !== requestIdRef.current) return;
-			setFileState((s) => ({
-				...s,
-				loading: false,
-				error: (err && err.message) || "Failed to load files",
-			}));
-		}
-	};
-
-	const goToPage = (page) => {
-		if (page === fileState.page && !fileState.error) return;
-		setFileSelection(null);
-		loadFiles(page);
-	};
-
-	// Refetch on every open so files uploaded since the last open show up.
 	const openFileManager = (target) => {
-		clearTimeout(searchTimerRef.current);
 		setFileTarget(target);
-		setFileSelection(null);
-		setFileSearch("");
-		setShowFiles(true);
-		loadFiles(fileState.page, "");
-	};
-
-	const closeFileManager = useCallback(() => {
-		// Drop any in-flight response and pending search; the next open fetches fresh anyway.
-		clearTimeout(searchTimerRef.current);
-		requestIdRef.current++;
-		setFileState((s) => (s.loading ? { ...s, loading: false } : s));
-		setShowFiles(false);
-	}, []);
-
-	const runSearch = (value) => {
-		clearTimeout(searchTimerRef.current);
-		const term = value.trim();
-		if (term === keywordRef.current) return;
-		setFileSelection(null);
-		loadFiles(1, term);
-	};
-
-	const onSearchChange = (e) => {
-		const value = e.target.value;
-		setFileSearch(value);
-		clearTimeout(searchTimerRef.current);
-		searchTimerRef.current = setTimeout(() => {
-			if (isMountedRef.current) runSearch(value);
-		}, SEARCH_DELAY_MS);
-	};
-
-	// Enter searches right away instead of waiting out the debounce.
-	const onSearchKeyDown = (e) => {
-		if (e.key !== "Enter") return;
-		e.preventDefault();
-		if (e.nativeEvent.isComposing || e.keyCode === 229) return;
-		runSearch(e.currentTarget.value);
-	};
-
-	const toggleFileSelection = (item) => {
-		if (!fileUrlOf(item)) return;
-		setFileSelection((prev) =>
-			prev && idOf(prev) === idOf(item) ? null : item,
-		);
+		fileBrowser.openFileManager();
 	};
 
 	// Takes the item directly so double-click doesn't read a stale selection.
@@ -268,8 +85,7 @@ const UpdateSettingForm = ({ token = {}, auth = {}, object = {} }) => {
 				name: fileNameOf(item),
 			},
 		}));
-		closeFileManager();
-		setFileSelection(null);
+		fileBrowser.closeFileManager();
 		setFileTarget("");
 	};
 
@@ -304,7 +120,7 @@ const UpdateSettingForm = ({ token = {}, auth = {}, object = {} }) => {
 
 		if (submittingRef.current) return;
 		submittingRef.current = true;
-		setBtnText(`Processing...`);
+		setIsSubmitting(true);
 		const form = e.target;
 		const formData = new FormData(form);
 
@@ -363,7 +179,7 @@ const UpdateSettingForm = ({ token = {}, auth = {}, object = {} }) => {
 
 		if (!res || res.status === "error" || res.status === "fail") {
 			toast.error((res && res.message) || "Something went wrong");
-			setBtnText(btnText);
+			setIsSubmitting(false);
 			submittingRef.current = false;
 			return;
 		}
@@ -452,8 +268,6 @@ const UpdateSettingForm = ({ token = {}, auth = {}, object = {} }) => {
 			</>
 		);
 	};
-
-	const visibleFiles = fileState.items.filter((item) => fileUrlOf(item));
 
 	return (
 		<>
@@ -816,322 +630,20 @@ const UpdateSettingForm = ({ token = {}, auth = {}, object = {} }) => {
 						</div>
 					</div>
 					<br />
-					<FormButtons />
+					<FormButtons pending={isSubmitting} />
 				</div>
 			</form>
-			{showFiles && (
-				<BootstrapModal
-					title={
-						"File Manager" +
-						(fileTarget ? " — " + FIELD_LABELS[fileTarget] : "")
-					}
-					icon="folder-open"
-					size="modal-xl"
-					onClose={closeFileManager}
-				>
-					<div className="modal-body">
-						<div className="input-group input-group-sm mb-3">
-							<span className="input-group-text">
-								<i
-									className="fa-solid fa-magnifying-glass"
-									aria-hidden="true"
-								/>
-							</span>
-							<input
-								type="search"
-								className="form-control"
-								placeholder="Search image files by name..."
-								aria-label="Search image files by name"
-								value={fileSearch}
-								onChange={onSearchChange}
-								onKeyDown={onSearchKeyDown}
-							/>
-						</div>
-						{fileState.loading && <ModalSpinner label="Loading files..." />}
-						{!fileState.loading && fileState.error && (
-							<div
-								className="alert alert-danger d-flex align-items-center justify-content-between gap-2"
-								role="alert"
-							>
-								<span>{fileState.error}</span>
-								<button
-									type="button"
-									className="btn btn-sm btn-outline-danger"
-									onClick={() => loadFiles(fileState.page)}
-								>
-									Retry
-								</button>
-							</div>
-						)}
-						{!fileState.loading && !fileState.error && (
-							<div className="row g-3" role="radiogroup" aria-label="Files">
-								{visibleFiles.length === 0 && (
-									<div className="col-12 text-center text-body-secondary py-4">
-										{fileState.keyword
-											? `No image files match \u201C${fileState.keyword}\u201D.`
-											: "You don't have any image files yet."}
-									</div>
-								)}
-								{visibleFiles.map((item, i) => {
-									const url = fileUrlOf(item);
-									const name = fileNameOf(item);
-									const kind = kindOf(item);
-									const itemId = idOf(item);
-									const isSelected =
-										!!fileSelection && idOf(fileSelection) === itemId;
-									const isCurrent =
-										!!fileTarget && !!itemId && files[fileTarget].id === itemId;
-									return (
-										<div
-											className="col-6 col-md-4 col-lg-3"
-											key={itemId || url || i}
-										>
-											<div
-												className={
-													"card file-card h-100 shadow-sm position-relative" +
-													(isSelected ? " border-primary border-2" : "")
-												}
-												role="radio"
-												aria-checked={isSelected}
-												aria-label={"Select " + name}
-												tabIndex={0}
-												onClick={() => toggleFileSelection(item)}
-												onKeyDown={(e) => {
-													if (e.key === "Enter" || e.key === " ") {
-														e.preventDefault();
-														toggleFileSelection(item);
-													}
-												}}
-												onDoubleClick={() => applyFile(item)}
-											>
-												{isSelected && (
-													<span className="badge text-bg-primary position-absolute top-0 end-0 m-2 z-1">
-														<i
-															className="fa-solid fa-check"
-															aria-hidden="true"
-														/>
-													</span>
-												)}
-												{!isSelected && isCurrent && (
-													<span className="badge text-bg-secondary position-absolute top-0 end-0 m-2 z-1">
-														Current
-													</span>
-												)}
-												{kind === "image" ? (
-													<img
-														src={url}
-														alt={name}
-														className="file-thumb"
-														style={{ height: 120, objectFit: "cover" }}
-														loading="lazy"
-														decoding="async"
-													/>
-												) : (
-													<div
-														className="file-thumb d-flex align-items-center justify-content-center bg-body-tertiary"
-														style={{ height: 120 }}
-													>
-														<i
-															aria-hidden="true"
-															className="fa-solid fa-file fs-1 text-body-secondary"
-														/>
-													</div>
-												)}
-												<div className="card-body p-2">
-													<p className="small text-truncate mb-0" title={name}>
-														{name}
-													</p>
-												</div>
-											</div>
-										</div>
-									);
-								})}
-							</div>
-						)}
-					</div>
-					<div className="modal-footer justify-content-between">
-						<Pagination
-							page={fileState.page}
-							totalPages={fileState.totalPages}
-							onPage={goToPage}
-							disabled={fileState.loading}
-							label="File pages"
-						/>
-						<div className="d-flex align-items-center gap-2">
-							{fileSelection && (
-								<small className="text-body-secondary text-truncate d-none d-md-inline">
-									{fileNameOf(fileSelection)}
-								</small>
-							)}
-							<button
-								type="button"
-								className="btn btn-primary btn-sm"
-								disabled={!fileSelection}
-								onClick={() => applyFile(fileSelection)}
-							>
-								Use file
-							</button>
-							<button
-								type="button"
-								className="btn btn-secondary btn-sm"
-								onClick={closeFileManager}
-							>
-								Close
-							</button>
-						</div>
-					</div>
-				</BootstrapModal>
-			)}
+			<FileBrowserModal
+				browser={fileBrowser}
+				title={
+					"File Manager" + (fileTarget ? " — " + FIELD_LABELS[fileTarget] : "")
+				}
+				noun="image"
+				currentId={fileTarget ? files[fileTarget].id : ""}
+				onApply={applyFile}
+			/>
 		</>
 	);
 };
-
-function BootstrapModal({ title, icon, size = "", onClose, children }) {
-	// Read through a ref so a new onClose identity never tears down the listener
-	// or flickers `modal-open` off and on.
-	const onCloseRef = useRef(onClose);
-	onCloseRef.current = onClose;
-
-	useEffect(() => {
-		function onKey(e) {
-			if (e.key === "Escape") onCloseRef.current();
-		}
-		document.addEventListener("keydown", onKey);
-		document.body.classList.add("modal-open");
-		return () => {
-			document.removeEventListener("keydown", onKey);
-			document.body.classList.remove("modal-open");
-		};
-	}, []);
-
-	return (
-		<>
-			<div
-				className="modal fade show d-block"
-				tabIndex={-1}
-				role="dialog"
-				aria-modal="true"
-				aria-label={title}
-			>
-				<div className={"modal-dialog modal-dialog-scrollable " + size}>
-					<div className="modal-content">
-						<div className="modal-header">
-							<h5 className="modal-title">
-								<i
-									className={"fa-solid fa-" + icon + " align-middle me-2"}
-									aria-hidden="true"
-								/>
-								{title}
-							</h5>
-							<button
-								type="button"
-								className="btn-close"
-								aria-label="Close"
-								onClick={onClose}
-							></button>
-						</div>
-						{children}
-					</div>
-				</div>
-			</div>
-			<div className="modal-backdrop fade show" onClick={onClose}></div>
-		</>
-	);
-}
-
-function ModalSpinner({ label }) {
-	return (
-		<div className="text-center py-5 text-body-secondary">
-			<div className="spinner-border" role="status">
-				<span className="visually-hidden">{label}</span>
-			</div>
-			<p className="mt-2 mb-0">{label}</p>
-		</div>
-	);
-}
-
-// Only a window around the current page is drawn, with the first and last
-// always reachable and an ellipsis standing in for the gap, so a large library
-// can't overflow the modal footer.
-function Pagination({ page, totalPages, onPage, label, disabled = false }) {
-	const total = Math.max(1, Number(totalPages) || 1);
-	const current = Math.min(Math.max(1, Number(page) || 1), total);
-	// The footer is `justify-content-between`: without a first child the action
-	// buttons would slide to the left.
-	if (total <= 1) return <span aria-hidden="true" />;
-
-	const span = 2;
-	const wanted = new Set([1, total]);
-	for (let p = current - span; p <= current + span; p++) {
-		if (p >= 1 && p <= total) wanted.add(p);
-	}
-	const shown = Array.from(wanted).sort((a, b) => a - b);
-
-	const items = [];
-	let previous = 0;
-	for (const p of shown) {
-		if (p - previous > 1) items.push({ gap: true, key: "gap-" + p });
-		items.push({ page: p, key: p });
-		previous = p;
-	}
-
-	const prevDisabled = disabled || current === 1;
-	const nextDisabled = disabled || current === total;
-
-	return (
-		<nav aria-label={label}>
-			<ul className="pagination pagination-sm mb-0 flex-wrap">
-				<li className={"page-item" + (prevDisabled ? " disabled" : "")}>
-					<button
-						type="button"
-						className="page-link"
-						disabled={prevDisabled}
-						onClick={() => onPage(current - 1)}
-					>
-						<span aria-hidden="true">&lsaquo;</span>
-						<span className="visually-hidden">Previous page</span>
-					</button>
-				</li>
-				{items.map((item) =>
-					item.gap ? (
-						<li key={item.key} className="page-item disabled">
-							<span className="page-link">&hellip;</span>
-						</li>
-					) : (
-						<li
-							key={item.key}
-							className={
-								"page-item" +
-								(item.page === current ? " active" : "") +
-								(disabled && item.page !== current ? " disabled" : "")
-							}
-						>
-							<button
-								type="button"
-								className="page-link"
-								disabled={disabled && item.page !== current}
-								aria-current={item.page === current ? "page" : undefined}
-								onClick={() => onPage(item.page)}
-							>
-								{item.page}
-							</button>
-						</li>
-					),
-				)}
-				<li className={"page-item" + (nextDisabled ? " disabled" : "")}>
-					<button
-						type="button"
-						className="page-link"
-						disabled={nextDisabled}
-						onClick={() => onPage(current + 1)}
-					>
-						<span aria-hidden="true">&rsaquo;</span>
-						<span className="visually-hidden">Next page</span>
-					</button>
-				</li>
-			</ul>
-		</nav>
-	);
-}
 
 export default UpdateSettingForm;

@@ -6,6 +6,7 @@ import AdminMenu from "@/components/noadmin/adminmenu";
 import Loading from "@/app/noadmin/loading";
 import Head from "@/app/head";
 import { getGlobalData } from "@/helpers/globalData";
+import PublishDueButton from "@/components/noadmin/publishduebutton";
 
 export default async function AdminLayout({ children }) {
 	const { auth, settings } = await getGlobalData();
@@ -53,6 +54,7 @@ export default async function AdminLayout({ children }) {
 				</button>
 				<h5 className="mb-0">Dashboard</h5>
 				<div className="ms-auto">
+					<PublishDueButton />
 					<Link
 						href={{
 							pathname: process.env.NEXT_PUBLIC_WEBSITE_URL,

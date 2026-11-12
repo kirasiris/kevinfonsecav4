@@ -25,6 +25,7 @@ import {
 	isPublished,
 } from "@/helpers/dashboard/dashboardstats";
 import CreateQuickDraftBlogForm from "@/forms/noadmin/dashboard/quickdraftform";
+import DueItems from "@/components/noadmin/dashboard/dueitems";
 
 const ALL = `limit=500`;
 const COUNT_ONLY = `limit=1`;
@@ -41,6 +42,9 @@ async function getApi(path) {
 		return { success: false };
 	}
 }
+
+const getPrivate = (resource, params = "") =>
+	getApi(`/noadmin/${resource}${params}`);
 
 const getGlobal = (resource, params = "") =>
 	getApi(`/global/${resource}${params}`);
@@ -64,6 +68,7 @@ const AdminHome = async ({ params, searchParams }) => {
 		files,
 		quotes,
 		events,
+		dueitems,
 		activities,
 		logs,
 		failLogs,
@@ -80,6 +85,7 @@ const AdminHome = async ({ params, searchParams }) => {
 		getGlobal("files", `?${ALL}`),
 		getGlobal("quotes", `?${ALL}`),
 		getGlobal("events", `?${ALL}&postType=appointment&status=scheduled`),
+		getPrivate("maintenanceoperations/scheduler", `?${ALL}`),
 		getGlobal("activities", `?${ALL}`),
 		getGlobal("logs", `?${ALL}`),
 		getGlobal("logs", `?status=fail&${COUNT_ONLY}`),
@@ -417,7 +423,11 @@ const AdminHome = async ({ params, searchParams }) => {
 				</Panel>
 			</div>
 			<div className="row">
-				<Panel title="Quick draft" subtitle="" colClasses="col-lg-2">
+				<Panel
+					title="Quick draft"
+					subtitle="Create a draft"
+					colClasses="col-lg-2"
+				>
 					<CreateQuickDraftBlogForm
 						token={token}
 						auth={auth}
@@ -444,9 +454,17 @@ const AdminHome = async ({ params, searchParams }) => {
 			</div>
 			<div className="row">
 				<Panel
+					title="Schedulable Models"
+					subtitle="Models with `scheduledAt` field"
+					colClasses="col-6"
+					isEmpty={dueitems?.data?.length === 0}
+				>
+					<DueItems items={dueitems.data} />
+				</Panel>
+				<Panel
 					title="Recent activity"
 					subtitle="Latest eight actions across the site"
-					colClasses="col-12"
+					colClasses="col-6"
 					isEmpty={stats.recentActivity.length === 0}
 				>
 					<RecentActivity items={stats.recentActivity} />

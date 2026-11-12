@@ -2,6 +2,12 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import { unfurlUrl } from "@/helpers/unfurl";
+import {
+	BootstrapModal,
+	ModalSpinner,
+	Pagination,
+} from "@/components/global/filemanagerui";
+import { fileNameOf, fileUrlOf } from "@/helpers/filemanagerhelpers";
 
 const escapeHtml = (s) => {
 	return String(s).replace(/[&<>"']/g, (c) => {
@@ -205,26 +211,6 @@ const uploadFileToServer = (
 };
 
 const generateUploadId = () => Math.random().toString(36).slice(2, 9);
-
-const fileUrlOf = (item) => {
-	const loc = item.location || {};
-	return loc.secure_location || loc.insecure_location || loc.aws_location || "";
-};
-
-// The API carries two names per file: `title` is what the user uploaded it
-// under ("Screaming Skull.jfif"), while `location.filename` is the mangled
-// storage name with the owner id and email baked in
-// ("screaming-skull-6665c4a6…-kuaf1998-gmail-com.jfif"). Only `title` is fit
-// to show a reader, so it wins; the storage name is the last-ditch fallback.
-const fileNameOf = (item) => {
-	const loc = item.location || {};
-	return (
-		item.title ||
-		(item.resourceId && item.resourceId.title) ||
-		loc.filename ||
-		"file"
-	);
-};
 
 // Captions read as labels, not filenames, so drop a trailing extension —
 // "Screaming Skull.jfif" becomes "Screaming Skull". Titles without one
@@ -4586,149 +4572,5 @@ const MyTextArea = ({
 		</div>
 	);
 };
-
-// ---- Small presentational helpers (Bootstrap markup, React state) -----------
-
-function BootstrapModal({ title, icon, size = "", onClose, children }) {
-	// Every caller passes an inline arrow, so depending on `onClose` directly
-	// would tear down and re-add the listener — and flicker `modal-open` off
-	// and on — on every parent render, which happens on each keystroke.
-	const onCloseRef = useRef(onClose);
-	onCloseRef.current = onClose;
-
-	useEffect(() => {
-		function onKey(e) {
-			if (e.key === "Escape") onCloseRef.current();
-		}
-		document.addEventListener("keydown", onKey);
-		document.body.classList.add("modal-open");
-		return () => {
-			document.removeEventListener("keydown", onKey);
-			document.body.classList.remove("modal-open");
-		};
-	}, []);
-
-	return (
-		<>
-			<div
-				className="modal fade show d-block"
-				tabIndex={-1}
-				role="dialog"
-				aria-modal="true"
-				aria-label={title}
-			>
-				<div className={"modal-dialog modal-dialog-scrollable " + size}>
-					<div className="modal-content">
-						<div className="modal-header">
-							<h5 className="modal-title">
-								<i
-									className={"fa-solid fa-" + icon + " align-middle me-2"}
-									aria-hidden={true}
-								/>
-								{title}
-							</h5>
-							<button
-								type="button"
-								className="btn-close"
-								aria-label="Close"
-								onClick={onClose}
-							></button>
-						</div>
-						{children}
-					</div>
-				</div>
-			</div>
-			<div className="modal-backdrop fade show" onClick={onClose}></div>
-		</>
-	);
-}
-
-function ModalSpinner({ label }) {
-	return (
-		<div className="text-center py-5 text-body-secondary">
-			<div className="spinner-border" role="status">
-				<span className="visually-hidden">{label}</span>
-			</div>
-			<p className="mt-2 mb-0">{label}</p>
-		</div>
-	);
-}
-
-// A library with hundreds of pages used to render one button per page, which
-// overflowed the modal footer and re-rendered the whole strip on every hop.
-// Only a window around the current page is drawn, with the first and last
-// always reachable and an ellipsis standing in for the gap.
-function Pagination({ page, totalPages, onPage, label }) {
-	const total = Math.max(1, Number(totalPages) || 1);
-	const current = Math.min(Math.max(1, Number(page) || 1), total);
-	// A single page needs no controls, but the footer is `justify-content-
-	// between`: without a first child the action buttons slide to the left.
-	if (total <= 1) return <span aria-hidden="true" />;
-
-	const span = 2;
-	const wanted = new Set([1, total]);
-	for (let p = current - span; p <= current + span; p++) {
-		if (p >= 1 && p <= total) wanted.add(p);
-	}
-	const shown = Array.from(wanted).sort((a, b) => a - b);
-
-	const items = [];
-	let previous = 0;
-	for (const p of shown) {
-		if (p - previous > 1) items.push({ gap: true, key: "gap-" + p });
-		items.push({ page: p, key: p });
-		previous = p;
-	}
-
-	return (
-		<nav aria-label={label}>
-			<ul className="pagination pagination-sm mb-0 flex-wrap">
-				<li className={"page-item" + (current === 1 ? " disabled" : "")}>
-					<button
-						type="button"
-						className="page-link"
-						disabled={current === 1}
-						onClick={() => onPage(current - 1)}
-					>
-						<span aria-hidden="true">&lsaquo;</span>
-						<span className="visually-hidden">Previous page</span>
-					</button>
-				</li>
-				{items.map((item) =>
-					item.gap ? (
-						<li key={item.key} className="page-item disabled">
-							<span className="page-link">&hellip;</span>
-						</li>
-					) : (
-						<li
-							key={item.key}
-							className={"page-item" + (item.page === current ? " active" : "")}
-						>
-							<button
-								type="button"
-								className="page-link"
-								aria-current={item.page === current ? "page" : undefined}
-								onClick={() => onPage(item.page)}
-							>
-								{item.page}
-							</button>
-						</li>
-					),
-				)}
-				<li className={"page-item" + (current === total ? " disabled" : "")}>
-					<button
-						type="button"
-						className="page-link"
-						disabled={current === total}
-						onClick={() => onPage(current + 1)}
-					>
-						<span aria-hidden="true">&rsaquo;</span>
-						<span className="visually-hidden">Next page</span>
-					</button>
-				</li>
-			</ul>
-		</nav>
-	);
-}
 
 export default MyTextArea;

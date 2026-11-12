@@ -10,44 +10,18 @@ import {
 import { createPortal } from "react-dom";
 import AdminFeaturedImage from "./adminfeaturedimage";
 import { fetchurl } from "@/helpers/setTokenOnServer";
-
-const guessKind = (url, mime) => {
-	const u = (url || "").toLowerCase();
-	if (mime) {
-		if (mime.indexOf("image") === 0) return "image";
-		if (mime.indexOf("video") === 0) return "video";
-		if (mime.indexOf("audio") === 0) return "audio";
-	}
-	if (/\.(png|jpe?g|gif|webp|svg|bmp)(\?|$)/.test(u)) return "image";
-	if (/\.(mp4|webm|ogg|mov)(\?|$)/.test(u)) return "video";
-	if (/\.(mp3|wav|m4a|aac|flac)(\?|$)/.test(u)) return "audio";
-	return "file";
-};
-
-const fileUrlOf = (item) => {
-	const loc = (item && item.location) || {};
-	return loc.secure_location || loc.insecure_location || loc.aws_location || "";
-};
-
-const fileNameOf = (item) => {
-	if (!item) return "file";
-	const loc = item.location || {};
-	return (
-		item.title ||
-		(item.resourceId && item.resourceId.title) ||
-		loc.filename ||
-		"file"
-	);
-};
-
-const idOf = (value) => {
-	if (!value) return "";
-	if (typeof value === "object") {
-		const id = value._id || value.id || "";
-		return id ? String(id) : "";
-	}
-	return String(value);
-};
+import {
+	BootstrapModal,
+	ModalSpinner,
+	Pagination,
+} from "@/components/global/filemanagerui";
+import {
+	fileNameOf,
+	fileUrlOf,
+	idOf,
+	isFailure,
+	kindOf,
+} from "@/helpers/filemanagerhelpers";
 
 const toIdList = (value) =>
 	(Array.isArray(value) ? value : value ? [value] : [])
@@ -118,13 +92,6 @@ const flattenCategoryTree = (list) => {
 };
 
 const indentLabel = (node) => "\u2014\u00A0".repeat(node.depth) + node.title;
-
-const isFailedResponse = (res) =>
-	!res ||
-	res instanceof Error ||
-	res.status === "error" ||
-	res.status === "fail" ||
-	res.success === false;
 
 const toLocalInputValue = (date) => {
 	const d = new Date(date);
@@ -428,7 +395,7 @@ const AdminSidebar = ({
 											{visibleFiles.map((item, i) => {
 												const url = fileUrlOf(item);
 												const name = fileNameOf(item);
-												const kind = guessKind(url, item.mimetype);
+												const kind = kindOf(item);
 												const itemId = idOf(item);
 												const isSelected =
 													!!selectedId && selectedId === itemId;
@@ -829,7 +796,7 @@ function CategoryField({
 				false,
 			);
 			if (!isMountedRef.current) return;
-			if (isFailedResponse(res)) {
+			if (isFailure(res)) {
 				throw new Error(
 					(res && res.message) || "Couldn't create the category.",
 				);
@@ -1057,154 +1024,6 @@ function CategoryField({
 				</>
 			)}
 		</div>
-	);
-}
-
-function BootstrapModal({ title, icon, size = "", onClose, children }) {
-	// Read through a ref so a new onClose identity never tears down the listener
-	// or flickers `modal-open` off and on.
-	const onCloseRef = useRef(onClose);
-	onCloseRef.current = onClose;
-
-	useEffect(() => {
-		function onKey(e) {
-			if (e.key === "Escape") onCloseRef.current();
-		}
-		document.addEventListener("keydown", onKey);
-		document.body.classList.add("modal-open");
-		return () => {
-			document.removeEventListener("keydown", onKey);
-			document.body.classList.remove("modal-open");
-		};
-	}, []);
-
-	return (
-		<>
-			<div
-				className="modal fade show d-block"
-				tabIndex={-1}
-				role="dialog"
-				aria-modal="true"
-				aria-label={title}
-			>
-				<div className={"modal-dialog modal-dialog-scrollable " + size}>
-					<div className="modal-content">
-						<div className="modal-header">
-							<h5 className="modal-title">
-								<i
-									className={"fa-solid fa-" + icon + " align-middle me-2"}
-									aria-hidden="true"
-								/>
-								{title}
-							</h5>
-							<button
-								type="button"
-								className="btn-close"
-								aria-label="Close"
-								onClick={onClose}
-							></button>
-						</div>
-						{children}
-					</div>
-				</div>
-			</div>
-			<div className="modal-backdrop fade show" onClick={onClose}></div>
-		</>
-	);
-}
-
-function ModalSpinner({ label }) {
-	return (
-		<div className="text-center py-5 text-body-secondary">
-			<div className="spinner-border" role="status">
-				<span className="visually-hidden">{label}</span>
-			</div>
-			<p className="mt-2 mb-0">{label}</p>
-		</div>
-	);
-}
-
-// Only a window around the current page is drawn, with the first and last
-// always reachable and an ellipsis standing in for the gap, so a large library
-// can't overflow the modal footer.
-function Pagination({ page, totalPages, onPage, label, disabled = false }) {
-	const total = Math.max(1, Number(totalPages) || 1);
-	const current = Math.min(Math.max(1, Number(page) || 1), total);
-	// The footer is `justify-content-between`: without a first child the action
-	// buttons would slide to the left.
-	if (total <= 1) return <span aria-hidden="true" />;
-
-	const span = 2;
-	const wanted = new Set([1, total]);
-	for (let p = current - span; p <= current + span; p++) {
-		if (p >= 1 && p <= total) wanted.add(p);
-	}
-	const shown = Array.from(wanted).sort((a, b) => a - b);
-
-	const items = [];
-	let previous = 0;
-	for (const p of shown) {
-		if (p - previous > 1) items.push({ gap: true, key: "gap-" + p });
-		items.push({ page: p, key: p });
-		previous = p;
-	}
-
-	const prevDisabled = disabled || current === 1;
-	const nextDisabled = disabled || current === total;
-
-	return (
-		<nav aria-label={label}>
-			<ul className="pagination pagination-sm mb-0 flex-wrap">
-				<li className={"page-item" + (prevDisabled ? " disabled" : "")}>
-					<button
-						type="button"
-						className="page-link"
-						disabled={prevDisabled}
-						onClick={() => onPage(current - 1)}
-					>
-						<span aria-hidden="true">&lsaquo;</span>
-						<span className="visually-hidden">Previous page</span>
-					</button>
-				</li>
-				{items.map((item) =>
-					item.gap ? (
-						<li key={item.key} className="page-item disabled">
-							<span className="page-link">&hellip;</span>
-						</li>
-					) : (
-						<li
-							key={item.key}
-							className={
-								"page-item" +
-								(item.page === current ? " active" : "") +
-								(disabled && item.page !== current ? " disabled" : "")
-							}
-						>
-							<button
-								type="button"
-								className="page-link"
-								disabled={disabled && item.page !== current}
-								aria-current={item.page === current ? "page" : undefined}
-								onClick={() => onPage(item.page)}
-							>
-								{item.page}
-							</button>
-						</li>
-					),
-				)}
-				<li className={"page-item" + (nextDisabled ? " disabled" : "")}>
-					<button
-						type="button"
-						className="page-link"
-						disabled={nextDisabled}
-						onClick={() => onPage(current + 1)}
-					>
-						<span aria-hidden="true">&rsaquo;</span>
-						<span className="visually-hidden">Next page</span>
-					</button>
-				</li>
-			</ul>
-		</nav>
 	);
 }
 

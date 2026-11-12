@@ -1,108 +1,26 @@
 "use client";
 import { useState, useRef, useCallback, useEffect, useMemo } from "react";
 import { toast } from "react-toastify";
-import { fetchurl } from "@/helpers/setTokenOnServer";
 import { formatFileSize } from "@/helpers/formatFileSize";
 import Single from "@/components/noadmin/files/single";
-
-/* -------------------------------------------------------------------------- */
-/* List helpers                                                               */
-/* -------------------------------------------------------------------------- */
-
-const FILE_TYPE_MAP = {
-	image: {
-		label: "Image",
-		className: "bg-success",
-		textClass: "text-info",
-		exts: ["jpg", "jpeg", "png", "gif", "webp", "svg", "bmp"],
-	},
-	video: {
-		label: "Video",
-		className: "bg-primary",
-		textClass: "text-success",
-		exts: ["mp4", "webm", "mov", "avi", "mkv"],
-	},
-	audio: {
-		label: "Audio",
-		className: "bg-warning text-dark",
-		textClass: "text-warning",
-		exts: ["mp3", "wav", "ogg", "m4a", "flac", "mpeg"],
-	},
-	document: {
-		label: "Document",
-		className: "bg-danger",
-		textClass: "text-danger",
-		exts: ["pdf", "doc", "docx", "txt", "xls", "xlsx", "ppt", "pptx"],
-	},
-};
-
-const getExtension = (filename = "") => {
-	const dot = filename.lastIndexOf(".");
-	return dot >= 0 ? filename.slice(dot + 1).toLowerCase() : "";
-};
-
-const classifyFile = (file) => {
-	const apiType =
-		typeof file?.format_type === "string" ? file.format_type.toLowerCase() : "";
-	if (FILE_TYPE_MAP[apiType]) {
-		return { type: apiType, ...FILE_TYPE_MAP[apiType] };
-	}
-	const ext = getExtension(file?.location?.filename || "");
-	for (const key of Object.keys(FILE_TYPE_MAP)) {
-		if (FILE_TYPE_MAP[key].exts.includes(ext)) {
-			return { type: key, ...FILE_TYPE_MAP[key] };
-		}
-	}
-	return {
-		type: "other",
-		label: ext ? ext.toUpperCase() : "File",
-		className: "bg-secondary",
-		textClass: "text-secondary",
-	};
-};
-
-const buildKey = (file, pageHint) =>
-	file?._id ||
-	file?.location?.public_id ||
-	`${file?.location?.filename || "file"}-${pageHint}-${Math.random()
-		.toString(36)
-		.slice(2)}`;
-
-const seedFromObjects = (objects, pageHint, seenSet) => {
-	const rawList = Array.isArray(objects?.data) ? objects.data : [];
-	const result = [];
-	for (const file of rawList) {
-		const key = buildKey(file, pageHint);
-		if (!seenSet.has(key)) {
-			seenSet.add(key);
-			result.push({ ...file, __key: key });
-		}
-	}
-	return result;
-};
-
-/* -------------------------------------------------------------------------- */
-/* Request helpers                                                            */
-/* -------------------------------------------------------------------------- */
-
-// fetchurl can reject (network drop, abort) or resolve to nothing; turn both
-// into the API's own error shape so every caller has a single path to check.
-const safeFetch = async (...args) => {
-	try {
-		const res = await fetchurl(...args);
-		return res || { status: "error", message: "No response from the server" };
-	} catch (err) {
-		return { status: "error", message: err?.message || "Network error" };
-	}
-};
-
-const isFailure = (res) =>
-	!res || res.status === "error" || res.status === "fail";
-
-// The API answers an empty list (or a page past the end) with a "fail", which
-// must be shown as "no files" rather than as an error.
-const isEmptyPage = (res) =>
-	res?.status === "fail" && /does not exist/i.test(res?.message || "");
+import {
+	useInfiniteList,
+	useListSearch,
+	useMediaElements,
+	useObjectUrls,
+	useUploadReorder,
+} from "@/components/global/filemanagerui";
+import {
+	classifyFile,
+	generateId,
+	getFileType,
+	getMediaIcon,
+	isFailure,
+	matchesAccept,
+	safeFetch,
+	uploadFileToServer,
+	uploaderFields,
+} from "@/helpers/filemanagerhelpers";
 
 /* -------------------------------------------------------------------------- */
 /* Upload helpers                                                             */
@@ -110,101 +28,7 @@ const isEmptyPage = (res) =>
 
 const ACCEPTED_FILE_TYPES = "image/*,video/*";
 
-const isAcceptedFile = (file) => /^(image|video)\//.test(file?.type || "");
-
-const generateId = () => Math.random().toString(36).slice(2, 9);
-
-const getFileType = (mimeType = "") => {
-	if (mimeType.startsWith("image/")) return "image";
-	return "video";
-};
-
-const getMediaIcon = (type) => {
-	switch (type) {
-		case "audio":
-			return <i aria-hidden className="fa-solid fa-file-audio fa-xl" />;
-		case "video":
-			return <i aria-hidden className="fa-solid fa-file-video fa-xl" />;
-		case "image":
-			return <i aria-hidden className="fa-solid fa-file-image fa-xl" />;
-		default:
-			return <i aria-hidden className="fa-solid fa-file-pdf fa-xl" />;
-	}
-};
-
-const uploadFileToServer = (
-	blob,
-	filename,
-	onProgress,
-	auth = {},
-	token = {},
-	object = {},
-) => {
-	const xhr = new XMLHttpRequest();
-	const res = new Promise((resolve, reject) => {
-		const formData = new FormData();
-		formData.append("userId", auth?.data?._id);
-		formData.append("username", auth?.data?.username);
-		formData.append("userEmail", auth?.data?.email);
-		// Themes are Blog records with postType "theme".
-		formData.append("onModel", "Blog");
-		formData.append("resourceId", object?._id);
-		formData.append("file", blob, filename);
-		formData.append("album", "themes");
-
-		xhr.upload.addEventListener("progress", (event) => {
-			if (event.lengthComputable) {
-				onProgress(Math.round((event.loaded * 100) / event.total));
-			}
-		});
-
-		xhr.addEventListener("load", () => {
-			if (xhr.status < 200 || xhr.status >= 300) {
-				reject(
-					new Error(
-						`Upload failed with status ${xhr.status}: ${xhr.statusText}`,
-					),
-				);
-				return;
-			}
-			let parsed;
-			try {
-				parsed = JSON.parse(xhr.responseText);
-			} catch {
-				reject(
-					new Error("Upload finished but the server reply was not valid JSON"),
-				);
-				return;
-			}
-			if (parsed?.success === false) {
-				reject(new Error(parsed?.message || "Upload failed"));
-				return;
-			}
-			resolve({ file: parsed });
-		});
-
-		xhr.addEventListener("error", () =>
-			reject(new Error("Network error during upload")),
-		);
-		xhr.addEventListener("abort", () =>
-			reject(
-				Object.assign(new Error("Upload aborted"), { name: "AbortError" }),
-			),
-		);
-		xhr.addEventListener("timeout", () =>
-			reject(new Error("Upload timed out")),
-		);
-
-		xhr.open(
-			"PUT",
-			`${process.env.NEXT_PUBLIC_FILE_UPLOADER_URL}/uploads/uploadobject`,
-		);
-		xhr.setRequestHeader("Authorization", `Bearer ${token?.value}`);
-		xhr.send(formData);
-	});
-
-	return { res, xhr };
-};
+const isAcceptedFile = (file) => matchesAccept(file, ACCEPTED_FILE_TYPES);
 
 /* -------------------------------------------------------------------------- */
 /* Component                                                                  */
@@ -219,69 +43,33 @@ const ThemesMediaManager = ({
 }) => {
 	/* ------------------------------ Paging setup ---------------------------- */
 
-	const initialPage = useMemo(() => {
-		const fromSearch = Number(searchParams?.page);
-		if (Number.isFinite(fromSearch) && fromSearch > 0) {
-			return fromSearch;
-		}
-		const fromPayload = Number(objects?.pagination?.current);
-		if (Number.isFinite(fromPayload) && fromPayload > 0) {
-			return fromPayload;
-		}
-		return 1;
-	}, [searchParams?.page, objects?.pagination?.current]);
-
-	const limit = useMemo(() => {
-		const fromSearch = Number(searchParams?.limit);
-		if (Number.isFinite(fromSearch) && fromSearch > 0) {
-			return fromSearch;
-		}
-		const fromPayload = Number(objects?.pagination?.next?.limit);
-		if (Number.isFinite(fromPayload) && fromPayload > 0) {
-			return fromPayload;
-		}
-		return 32;
-	}, [searchParams?.limit, objects?.pagination?.next?.limit]);
-
-	const sort = searchParams?.sort || "-createdAt";
-	const prependNew = !sort || sort.startsWith("-");
-	const hasSsrPayload = Array.isArray(objects?.data);
+	const {
+		seenKeysRef,
+		sentinelRef,
+		newobjects,
+		setNewObjects,
+		countAll,
+		setCountAll,
+		hasMore,
+		loading,
+		error,
+		handleRetry,
+		insertItem,
+	} = useInfiniteList({
+		objects,
+		searchParams,
+		endpoint: "/global/files",
+		query: `resourceId=${object?._id}`,
+		defaultSort: "-createdAt",
+		failMessage: "Failed to retrieve files",
+	});
 
 	/* ------------------------------- List state ----------------------------- */
 
-	const seenKeysRef = useRef(null);
-	if (seenKeysRef.current === null) {
-		seenKeysRef.current = new Set();
-	}
-	const activeRequestRef = useRef(null);
 	const isMountedRef = useRef(false);
-	const sentinelRef = useRef(null);
 	// The ref (not state) blocks a double click before the re-render lands.
 	const deletingKeysRef = useRef(new Set());
 
-	const [newobjects, setNewObjects] = useState(() =>
-		seedFromObjects(objects, initialPage, seenKeysRef.current),
-	);
-	// Without a payload nothing is loaded yet, so the first fetch (and its
-	// Retry) must request initialPage itself.
-	const [lastLoadedPage, setLastLoadedPage] = useState(
-		hasSsrPayload ? initialPage : initialPage - 1,
-	);
-	const [countAll, setCountAll] = useState(
-		typeof objects?.countAll === "number" ? objects.countAll : null,
-	);
-	const [hasMore, setHasMore] = useState(() => {
-		if (objects?.pagination?.next?.page) {
-			return true;
-		}
-		const total = Number(objects?.pagination?.totalpages);
-		if (Number.isFinite(total)) {
-			return initialPage < total;
-		}
-		return !hasSsrPayload;
-	});
-	const [loading, setLoading] = useState(!hasSsrPayload);
-	const [error, setError] = useState(null);
 	// A Set, so deleting two files at once doesn't re-enable the first button
 	// when the second request finishes.
 	const [deletingKeys, setDeletingKeys] = useState(() => new Set());
@@ -294,23 +82,13 @@ const ThemesMediaManager = ({
 	const [showPermissionModal, setShowPermissionModal] = useState(false);
 	const [pendingMediaType, setPendingMediaType] = useState(null);
 	const [permissions, setPermissions] = useState({ video: false });
-	const [draggedIndex, setDraggedIndex] = useState(null);
-	const [dragOverIndex, setDragOverIndex] = useState(null);
-
 	const fileInputRef = useRef(null);
 	const videoPreviewRef = useRef(null);
 	const mediaRecorderRef = useRef(null);
 	const streamRef = useRef(null);
 	const chunksRef = useRef([]);
-	const mediaElementsRef = useRef(new Map());
 	const uploadsRef = useRef([]);
 	const uploadXhrsRef = useRef(new Map());
-	// Every object URL created here, so unmount can revoke them all — including
-	// ones created in the same tick as the unmount, before uploadsRef caught up.
-	const objectUrlsRef = useRef(new Set());
-	// Object URLs the saved list is displaying (the server sent no location).
-	// Removing the tray card must not revoke these.
-	const keptUrlsRef = useRef(new Set());
 	const startingMediaRef = useRef(false);
 	const attachQueueRef = useRef(Promise.resolve());
 
@@ -324,17 +102,11 @@ const ThemesMediaManager = ({
 		// Strict Mode runs this cleanup on its fake unmount, so the flag has to
 		// be set back to true on every setup.
 		isMountedRef.current = true;
-		const activeRequest = activeRequestRef;
 		const recorder = mediaRecorderRef;
 		const stream = streamRef;
 		const xhrs = uploadXhrsRef;
-		const objectUrls = objectUrlsRef;
-		const keptUrls = keptUrlsRef;
-		const mediaElements = mediaElementsRef;
 		return () => {
 			isMountedRef.current = false;
-			activeRequest.current?.abort();
-			activeRequest.current = null;
 			// Detach first: stopping a live recorder fires onstop, which would
 			// otherwise start a new upload after the component is gone.
 			const rec = recorder.current;
@@ -348,146 +120,12 @@ const ThemesMediaManager = ({
 			stream.current = null;
 			xhrs.current.forEach((xhr) => xhr.abort());
 			xhrs.current.clear();
-			objectUrls.current.forEach((url) => URL.revokeObjectURL(url));
-			objectUrls.current.clear();
-			keptUrls.current.clear();
-			mediaElements.current.clear();
 		};
 	}, []);
 
 	/* ------------------------------- Object URLs ---------------------------- */
 
-	const createObjectUrl = useCallback((blob) => {
-		const url = URL.createObjectURL(blob);
-		objectUrlsRef.current.add(url);
-		return url;
-	}, []);
-
-	const revokeObjectUrl = useCallback((url) => {
-		if (!url || keptUrlsRef.current.has(url)) {
-			return;
-		}
-		URL.revokeObjectURL(url);
-		objectUrlsRef.current.delete(url);
-	}, []);
-
-	/* ---------------------------- List data loading ------------------------- */
-
-	const fetchPage = useCallback(
-		async (pageToLoad) => {
-			if (activeRequestRef.current) {
-				return;
-			}
-			const controller = new AbortController();
-			activeRequestRef.current = controller;
-			setLoading(true);
-			setError(null);
-
-			try {
-				const res = await safeFetch(
-					`/global/files?resourceId=${object?._id}&page=${pageToLoad}&limit=${limit}&sort=${sort}`,
-					"GET",
-					"no-cache",
-					{},
-					// Never pass an AbortSignal here: fetchurl is a Server Action, and the
-					// signal arrives on the server as an opaque reference it cannot read.
-					undefined,
-					false,
-					false,
-				);
-				if (controller.signal.aborted) {
-					return;
-				}
-				if (isEmptyPage(res)) {
-					setHasMore(false);
-					setLastLoadedPage(pageToLoad);
-					return;
-				}
-				if (!res?.success) {
-					// lastLoadedPage is left alone so Retry requests this same page.
-					const message = res?.message || "Failed to retrieve files";
-					setError(message);
-					toast.error(message);
-					return;
-				}
-
-				const rawList = Array.isArray(res?.data) ? res.data : [];
-				const fresh = [];
-				for (const file of rawList) {
-					const key = buildKey(file, pageToLoad);
-					if (!seenKeysRef.current.has(key)) {
-						seenKeysRef.current.add(key);
-						fresh.push({ ...file, __key: key });
-					}
-				}
-				if (fresh.length > 0) {
-					setNewObjects((prev) => [...prev, ...fresh]);
-				}
-				if (typeof res?.countAll === "number") {
-					setCountAll(res.countAll);
-				}
-
-				const nextPage = res?.pagination?.next?.page;
-				const totalPages = Number(res?.pagination?.totalpages);
-				if (nextPage) {
-					setHasMore(true);
-				} else if (Number.isFinite(totalPages)) {
-					setHasMore(pageToLoad < totalPages);
-				} else {
-					setHasMore(rawList.length >= limit);
-				}
-
-				setLastLoadedPage(pageToLoad);
-			} finally {
-				if (activeRequestRef.current === controller) {
-					activeRequestRef.current = null;
-					setLoading(false);
-				}
-			}
-		},
-		[object?._id, limit, sort],
-	);
-
-	// Clearing the ref here (not in fetchPage's finally, which runs later) lets
-	// a Strict Mode remount start its own fetch instead of being skipped.
-	const abortActiveFetch = useCallback(() => {
-		activeRequestRef.current?.abort();
-		activeRequestRef.current = null;
-		setLoading(false);
-	}, []);
-
-	useEffect(() => {
-		if (hasSsrPayload) {
-			return;
-		}
-		fetchPage(initialPage);
-		return abortActiveFetch;
-	}, [hasSsrPayload, initialPage, fetchPage, abortActiveFetch]);
-
-	useEffect(() => {
-		if (!hasMore || error) {
-			return;
-		}
-		const node = sentinelRef.current;
-		if (!node) {
-			return;
-		}
-		const observer = new IntersectionObserver(
-			(entries) => {
-				if (entries[0]?.isIntersecting && !activeRequestRef.current) {
-					fetchPage(lastLoadedPage + 1);
-				}
-			},
-			{ rootMargin: "200px 0px" },
-		);
-		observer.observe(node);
-		return () => observer.disconnect();
-	}, [lastLoadedPage, hasMore, error, fetchPage]);
-
-	const handleRetry = useCallback(() => {
-		setError(null);
-		fetchPage(lastLoadedPage + 1);
-	}, [fetchPage, lastLoadedPage]);
+	const { createObjectUrl, revokeObjectUrl, keepObjectUrl } = useObjectUrls();
 
 	/* ------------------------------- Row actions ---------------------------- */
 
@@ -497,36 +135,39 @@ const ThemesMediaManager = ({
 		setDeletingKeys(new Set(deletingKeysRef.current));
 	};
 
-	const handleDeleteIt = useCallback(async (item) => {
-		if (!item?._id || deletingKeysRef.current.has(item.__key)) {
-			return;
-		}
-		setDeleting(item.__key, true);
-		const res = await safeFetch(
-			`/noadmin/files/${item._id}/permanently`,
-			"DELETE",
-			"no-cache",
-			{},
-			undefined,
-			false,
-			false,
-		);
-		if (!isMountedRef.current) {
-			return;
-		}
-		if (isFailure(res)) {
-			toast.error(res?.message || "Could not delete the file");
+	const handleDeleteIt = useCallback(
+		async (item) => {
+			if (!item?._id || deletingKeysRef.current.has(item.__key)) {
+				return;
+			}
+			setDeleting(item.__key, true);
+			const res = await safeFetch(
+				`/noadmin/files/${item._id}/permanently`,
+				"DELETE",
+				"no-cache",
+				{},
+				undefined,
+				false,
+				false,
+			);
+			if (!isMountedRef.current) {
+				return;
+			}
+			if (isFailure(res)) {
+				toast.error(res?.message || "Could not delete the file");
+				setDeleting(item.__key, false);
+				return;
+			}
+			toast.success("File deleted");
+			setNewObjects((prev) => prev.filter((f) => f.__key !== item.__key));
+			seenKeysRef.current.delete(item.__key);
+			setCountAll((prev) =>
+				typeof prev === "number" ? Math.max(0, prev - 1) : prev,
+			);
 			setDeleting(item.__key, false);
-			return;
-		}
-		toast.success("File deleted");
-		setNewObjects((prev) => prev.filter((f) => f.__key !== item.__key));
-		seenKeysRef.current.delete(item.__key);
-		setCountAll((prev) =>
-			typeof prev === "number" ? Math.max(0, prev - 1) : prev,
-		);
-		setDeleting(item.__key, false);
-	}, []);
+		},
+		[seenKeysRef, setCountAll, setNewObjects],
+	);
 
 	/* ------------------------------- Derived list --------------------------- */
 
@@ -545,39 +186,10 @@ const ThemesMediaManager = ({
 
 	/* ------------------------------ Media elements -------------------------- */
 
-	const pauseAllMedia = (exceptId) => {
-		mediaElementsRef.current.forEach((element, id) => {
-			if (id !== exceptId && !element.paused) {
-				element.pause();
-			}
-		});
-	};
-
-	const registerMediaElement = (id, element) => {
-		if (element) {
-			mediaElementsRef.current.set(id, element);
-		} else {
-			mediaElementsRef.current.delete(id);
-		}
-	};
+	const { pauseAllMedia, registerMediaElement, forgetMediaElement } =
+		useMediaElements();
 
 	/* -------------------------------- Uploading ----------------------------- */
-
-	const insertUploadedFile = useCallback(
-		(file) => {
-			const key = buildKey(file, "upload");
-			if (seenKeysRef.current.has(key)) {
-				return;
-			}
-			seenKeysRef.current.add(key);
-			const entry = { ...file, __key: key };
-			setNewObjects((prev) =>
-				prependNew ? [entry, ...prev] : [...prev, entry],
-			);
-			setCountAll((prev) => (typeof prev === "number" ? prev + 1 : prev));
-		},
-		[prependNew],
-	);
 
 	// Uploads run in parallel, but the theme is updated one file at a time so two
 	// requests never read and save the same document concurrently.
@@ -611,12 +223,12 @@ const ThemesMediaManager = ({
 			if (loc.secure_location) {
 				revokeObjectUrl(fileObj.url);
 			} else {
-				keptUrlsRef.current.add(fileObj.url);
+				keepObjectUrl(fileObj.url);
 			}
-			mediaElementsRef.current.delete(fileObj.id);
+			forgetMediaElement(fileObj.id);
 			setFiles((prev) => prev.filter((f) => f.id !== fileObj.id));
 
-			insertUploadedFile({
+			insertItem({
 				_id: serverObj._id,
 				title: serverObj.title || fileObj.name,
 				size:
@@ -630,7 +242,7 @@ const ThemesMediaManager = ({
 				},
 			});
 		},
-		[insertUploadedFile, revokeObjectUrl],
+		[insertItem, revokeObjectUrl, keepObjectUrl, forgetMediaElement],
 	);
 
 	const attachAndFinish = useCallback(
@@ -689,19 +301,24 @@ const ThemesMediaManager = ({
 				{ ...fileObj, uploading: true, progress: 0, uploadError: null },
 			]);
 
-			const { res, xhr } = uploadFileToServer(
-				fileObj.blob,
-				fileObj.name,
-				(progress) => {
+			const { res, xhr } = uploadFileToServer({
+				blob: fileObj.blob,
+				filename: fileObj.name,
+				token,
+				fields: {
+					...uploaderFields(auth),
+					// Themes are Blog records with postType "theme".
+					onModel: "Blog",
+					resourceId: object?._id,
+					album: "themes",
+				},
+				onProgress: (progress) => {
 					if (!isMountedRef.current) return;
 					setFiles((prev) =>
 						prev.map((f) => (f.id === fileObj.id ? { ...f, progress } : f)),
 					);
 				},
-				auth,
-				token,
-				object,
-			);
+			});
 
 			uploadXhrsRef.current.set(fileObj.id, xhr);
 
@@ -774,7 +391,7 @@ const ThemesMediaManager = ({
 			xhr.abort();
 			uploadXhrsRef.current.delete(id);
 		}
-		mediaElementsRef.current.delete(id);
+		forgetMediaElement(id);
 		// Revoked outside the state updater: updaters must stay pure (Strict Mode
 		// runs them twice).
 		const fileToRemove = uploadsRef.current.find((f) => f.id === id);
@@ -996,82 +613,26 @@ const ThemesMediaManager = ({
 
 	/* ----------------------------- Reorder uploads -------------------------- */
 
-	const handleDragStart = (e, index) => {
-		setDraggedIndex(index);
-		e.dataTransfer.effectAllowed = "move";
-	};
-
-	// dragover fires continuously; only update state when the index changes.
-	const handleDragOver = useCallback((e, index) => {
-		e.preventDefault();
-		e.dataTransfer.dropEffect = "move";
-		setDragOverIndex((prev) => (prev === index ? prev : index));
-	}, []);
-
-	// dragleave also fires when the pointer moves onto a child of the card;
-	// ignore those so the highlight doesn't flicker.
-	const handleDragLeave = (e) => {
-		if (e.currentTarget.contains(e.relatedTarget)) {
-			return;
-		}
-		setDragOverIndex(null);
-	};
-
-	const handleDrop = useCallback(
-		(e, dropIndex) => {
-			e.preventDefault();
-			if (
-				draggedIndex === null ||
-				draggedIndex === dropIndex ||
-				dropIndex >= uploadsRef.current.length
-			) {
-				setDraggedIndex(null);
-				setDragOverIndex(null);
-				return;
-			}
-			setFiles((prev) => {
-				const next = [...prev];
-				const [moved] = next.splice(draggedIndex, 1);
-				next.splice(dropIndex, 0, moved);
-				return next;
-			});
-			setDraggedIndex(null);
-			setDragOverIndex(null);
-		},
-		[draggedIndex],
-	);
-
-	const handleDragEnd = () => {
-		setDraggedIndex(null);
-		setDragOverIndex(null);
-	};
+	const {
+		draggedIndex,
+		dragOverIndex,
+		handleDragStart,
+		handleDragOver,
+		handleDragLeave,
+		handleDrop,
+		handleDragEnd,
+	} = useUploadReorder(setFiles, uploadsRef);
 
 	/* --------------------------------- Search ------------------------------- */
 
-	const [keyword, setKeyword] = useState("");
-	const [debouncedKeyword, setDebouncedKeyword] = useState("");
-
-	useEffect(() => {
-		const timer = setTimeout(() => {
-			setDebouncedKeyword(keyword.trim());
-		}, 400);
-		return () => clearTimeout(timer);
-	}, [keyword]);
-
-	const searchData = (e) => {
-		e.preventDefault();
-		setDebouncedKeyword(keyword.trim());
-	};
-
-	const displayedItems = useMemo(() => {
-		if (!debouncedKeyword) {
-			return items;
-		}
-		const needle = debouncedKeyword.toLowerCase();
-		return items.filter((item) =>
-			(item?.raw?.title || item.filename || "").toLowerCase().includes(needle),
-		);
-	}, [items, debouncedKeyword]);
+	const {
+		keyword,
+		setKeyword,
+		debouncedKeyword,
+		searchData,
+		clearSearch,
+		displayedItems,
+	} = useListSearch(items, (item) => item?.raw?.title || item.filename);
 
 	/* --------------------------------- Render ------------------------------- */
 
@@ -1475,10 +1036,7 @@ const ThemesMediaManager = ({
 								type="button"
 								className="btn-close"
 								aria-label="Clear search"
-								onClick={() => {
-									setKeyword("");
-									setDebouncedKeyword("");
-								}}
+								onClick={clearSearch}
 							/>
 						</div>
 					)}

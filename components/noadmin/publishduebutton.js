@@ -13,7 +13,7 @@ const PublishDueButton = ({ models }) => {
 	const publishDue = async () => {
 		setBtnText("Publishing...");
 		const res = await fetchurl(
-			`/noadmin/maintenanceoperations/scheduler/publishdue`,
+			`/noadmin/maintenanceops/scheduler/publishdue`,
 			"PUT",
 			"no-cache",
 			models,

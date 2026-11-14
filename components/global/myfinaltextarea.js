@@ -256,6 +256,58 @@ const BLOCK_TAGS = [
 	"LI",
 ];
 
+// Collapses whatever was typed into a clean, de-duplicated token list.
+const normalizeTokens = (value) =>
+	Array.from(
+		new Set(
+			String(value || "")
+				.split(/\s+/)
+				.filter(Boolean),
+		),
+	).join(" ");
+
+const setOrRemoveAttr = (el, attr, value) => {
+	if (value) el.setAttribute(attr, value);
+	else el.removeAttribute(attr);
+};
+
+const MEDIA_TAGS = ["IMG", "VIDEO", "AUDIO"];
+
+// Classes a media wrapper cannot work without. The classes dialog hides them
+// and always writes them back, so custom classes only ever add to them.
+const PROTECTED_CLASSES = {
+	figure: ["figure"],
+	gallery: ["row"],
+	carousel: ["carousel", "slide"],
+};
+
+const MEDIA_LABELS = {
+	image: "Image",
+	video: "Video",
+	audio: "Audio",
+	gallery: "Gallery",
+	carousel: "Carousel",
+};
+
+const mediaKindOf = (el) =>
+	el.tagName === "IMG" ? "image" : el.tagName === "VIDEO" ? "video" : "audio";
+
+// A gallery is a Bootstrap row whose tiles are <figure>s holding images.
+const isGalleryRow = (el) =>
+	!!el &&
+	el.tagName === "DIV" &&
+	el.classList.contains("row") &&
+	!!el.querySelector(":scope > figure img");
+
+const singleMediaOf = (figure) =>
+	figure.querySelector(":scope > img, :scope > video, :scope > audio");
+
+const classesWithout = (el, keep) =>
+	(el.getAttribute("class") || "")
+		.split(/\s+/)
+		.filter((c) => c && keep.indexOf(c) === -1)
+		.join(" ");
+
 const BLOCK_MENU_ITEMS = [
 	{ tag: "p", label: "Paragraph", icon: "fa-paragraph", hint: "Default" },
 	{ tag: "h1", label: "Heading 1", icon: "fa-heading" },
@@ -331,6 +383,42 @@ const BLOCK_DND_CSS = `
 .editor-surface a {
   color: #0d6efd;
   text-decoration: underline !important;
+}
+.editor-link-tip {
+  position: absolute;
+  z-index: 7;
+  max-width: min(420px, calc(100% - 8px));
+  padding: 2px 8px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--bs-body-color, #212529);
+  background: var(--bs-tertiary-bg, #f8f9fa);
+  border: 1px solid var(--bs-border-color, #dee2e6);
+  border-radius: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  pointer-events: none;
+}
+.editor-media-outline {
+  position: absolute;
+  z-index: 4;
+  pointer-events: none;
+  outline: 2px solid var(--bs-primary, #0d6efd);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+.editor-media-outline-label {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  padding: 1px 6px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #fff;
+  background: var(--bs-primary, #0d6efd);
+  border-radius: 3px;
+  white-space: nowrap;
 }
 .editor-surface [data-block-dragging] {
   opacity: 0.45;
@@ -479,6 +567,15 @@ const MyTextArea = ({
 	const [linkText, setLinkText] = useState("");
 	const [linkUrl, setLinkUrl] = useState("");
 	const [linkTarget, setLinkTarget] = useState("_blank");
+	const [linkRel, setLinkRel] = useState("noopener noreferrer");
+	const [linkClass, setLinkClass] = useState("");
+	const [blockClassModal, setBlockClassModal] = useState(null); // { tag, value }
+	const blockClassTargetRef = useRef(null);
+	const mediaClassTargetRef = useRef(null);
+	const selectedMediaRef = useRef(null); // { kind, wrapper, media }
+	const [mediaSel, setMediaSel] = useState(null); // { kind, top, left, width, height }
+	const [linkTip, setLinkTip] = useState(null); // { href, top, left }
+	const editingLinkRef = useRef(null);
 
 	// Formatting commands whose on/off state is reflected on the toolbar buttons.
 	const [activeFormats, setActiveFormats] = useState({});
@@ -937,6 +1034,8 @@ const MyTextArea = ({
 		}
 		// Inline code has no execCommand, so its state comes from the DOM.
 		next.inlineCode = !!findInlineCodeAncestor();
+		// Same for links: queryCommandState has no "link" state.
+		next.link = !!findLinkAncestor();
 		setActiveFormats((prev) => {
 			// Avoid a re-render when nothing changed (selectionchange fires often).
 			for (const key of Object.keys(next)) {
@@ -945,6 +1044,21 @@ const MyTextArea = ({
 			return prev;
 		});
 	};
+
+	const findLinkAncestor = () => {
+		const editor = editorRef.current;
+		const sel = window.getSelection();
+		if (!editor || !sel || sel.rangeCount === 0) return null;
+		let node = sel.anchorNode;
+		if (!node || !editor.contains(node)) return null;
+		if (node.nodeType === 3) node = node.parentNode;
+		const a = node && node.closest ? node.closest("a[href]") : null;
+		return a && editor.contains(a) ? a : null;
+	};
+
+	// Mention chips and link-preview cards are inert, so only a plain inline
+	// link can be rewritten through the link dialog.
+	const isEditableLink = (a) => !!a && !a.closest('[contenteditable="false"]');
 
 	const findInlineCodeAncestor = () => {
 		const editor = editorRef.current;
@@ -1366,6 +1480,175 @@ const MyTextArea = ({
 		return null;
 	};
 
+	// ---- Block classes ---------------------------------------------------------
+
+	// Resolves any node to the media structure it belongs to, always at the
+	// outermost level: a gallery tile or its ratio box resolves to the gallery,
+	// a slide to the carousel, an <img> to its <figure>. Inner parts are never
+	// returned, so their structural classes can't be overwritten.
+	const mediaTargetFrom = (start) => {
+		const editor = editorRef.current;
+		let node = start;
+		if (!editor || !node || node === editor || !editor.contains(node))
+			return null;
+		if (node.nodeType === 3) node = node.parentNode;
+		let loose = null;
+		while (node && node !== editor) {
+			if (node.nodeType === 1) {
+				if (node.tagName === "DIV" && node.classList.contains("carousel"))
+					return { kind: "carousel", wrapper: node, media: null };
+				if (isGalleryRow(node))
+					return { kind: "gallery", wrapper: node, media: null };
+				if (node.tagName === "FIGURE" && !isGalleryRow(node.parentElement)) {
+					const media = singleMediaOf(node);
+					if (media) return { kind: mediaKindOf(media), wrapper: node, media };
+				}
+				// Older posts may hold a bare <img>/<video> with no <figure> around it.
+				if (!loose && MEDIA_TAGS.indexOf(node.tagName) !== -1) loose = node;
+			}
+			node = node.parentNode;
+		}
+		return loose
+			? { kind: mediaKindOf(loose), wrapper: null, media: loose }
+			: null;
+	};
+
+	// With the caret parked on the editor itself (beside an atomic block such
+	// as a carousel), the blocks on both sides of the offset are checked.
+	const mediaTargetFromCaret = () => {
+		const editor = editorRef.current;
+		const sel = window.getSelection();
+		if (!editor || !sel || sel.rangeCount === 0) return null;
+		const node = sel.anchorNode;
+		if (node === editor) {
+			return (
+				mediaTargetFrom(editor.childNodes[sel.anchorOffset]) ||
+				mediaTargetFrom(editor.childNodes[sel.anchorOffset - 1])
+			);
+		}
+		return mediaTargetFrom(node);
+	};
+
+	const mediaElementOf = (target) =>
+		target ? target.wrapper || target.media : null;
+
+	// The outline is drawn beside the contentEditable, never on the media
+	// itself, so selecting something never adds markup to the saved HTML.
+	const positionMediaOutline = () => {
+		const target = selectedMediaRef.current;
+		const el = mediaElementOf(target);
+		const wrapper = wrapperRef.current;
+		if (!el || !el.isConnected || !wrapper) {
+			selectedMediaRef.current = null;
+			setMediaSel((prev) => (prev ? null : prev));
+			return;
+		}
+		const rect = el.getBoundingClientRect();
+		const wrapRect = wrapper.getBoundingClientRect();
+		const next = {
+			kind: target.kind,
+			top: rect.top - wrapRect.top,
+			left: rect.left - wrapRect.left,
+			width: rect.width,
+			height: rect.height,
+		};
+		setMediaSel((prev) =>
+			prev &&
+			prev.kind === next.kind &&
+			Math.abs(prev.top - next.top) < 0.5 &&
+			Math.abs(prev.left - next.left) < 0.5 &&
+			Math.abs(prev.width - next.width) < 0.5 &&
+			Math.abs(prev.height - next.height) < 0.5
+				? prev
+				: next,
+		);
+	};
+
+	const selectMedia = (target) => {
+		selectedMediaRef.current = target;
+		positionMediaOutline();
+	};
+
+	const clearMediaSelection = () => {
+		if (!selectedMediaRef.current) return;
+		selectedMediaRef.current = null;
+		setMediaSel(null);
+	};
+
+	const openBlockClassModal = () => {
+		saveSelection();
+		const selected = selectedMediaRef.current;
+		const media =
+			(selected && mediaElementOf(selected).isConnected ? selected : null) ||
+			mediaTargetFromCaret();
+		if (media) {
+			const keep = !media.wrapper
+				? []
+				: media.kind === "gallery"
+					? PROTECTED_CLASSES.gallery
+					: media.kind === "carousel"
+						? PROTECTED_CLASSES.carousel
+						: PROTECTED_CLASSES.figure;
+			blockClassTargetRef.current = media.wrapper;
+			mediaClassTargetRef.current = media.media;
+			setBlockClassModal({
+				kind: media.kind,
+				tag: media.wrapper ? media.wrapper.tagName.toLowerCase() : null,
+				keep,
+				value: media.wrapper ? classesWithout(media.wrapper, keep) : "",
+				mediaTag: media.media ? media.media.tagName.toLowerCase() : null,
+				mediaValue: media.media ? media.media.getAttribute("class") || "" : "",
+			});
+			return;
+		}
+		const block = currentBlock();
+		if (!block) {
+			setStatus("Place the cursor inside a paragraph or select an image first");
+			return;
+		}
+		blockClassTargetRef.current = block;
+		mediaClassTargetRef.current = null;
+		setBlockClassModal({
+			kind: "block",
+			tag: block.tagName.toLowerCase(),
+			keep: [],
+			value: block.getAttribute("class") || "",
+			mediaTag: null,
+			mediaValue: "",
+		});
+	};
+
+	const closeBlockClassModal = () => {
+		blockClassTargetRef.current = null;
+		mediaClassTargetRef.current = null;
+		setBlockClassModal(null);
+	};
+
+	const applyBlockClass = () => {
+		const modal = blockClassModal;
+		const wrapper = blockClassTargetRef.current;
+		const media = mediaClassTargetRef.current;
+		let changed = false;
+		if (modal && modal.tag && wrapper && wrapper.isConnected) {
+			setOrRemoveAttr(
+				wrapper,
+				"class",
+				normalizeTokens(modal.keep.join(" ") + " " + modal.value),
+			);
+			changed = true;
+		}
+		if (modal && modal.mediaTag && media && media.isConnected) {
+			setOrRemoveAttr(media, "class", normalizeTokens(modal.mediaValue));
+			changed = true;
+		}
+		if (changed) setStatus("Classes updated");
+		closeBlockClassModal();
+		restoreSelection();
+		editorRef.current && editorRef.current.focus();
+		// New classes can resize the media, so the outline follows on next paint.
+		requestAnimationFrame(positionMediaOutline);
+	};
+
 	const topLevelBlockOf = (node) => {
 		const editor = editorRef.current;
 		let top = node;
@@ -1459,6 +1742,9 @@ const MyTextArea = ({
 	const onEditorMouseMove = (e) => {
 		// While dragging, the handle owns the pointer; the hover target is frozen.
 		if (blockDragRef.current) return;
+		updateLinkTip(e.target);
+		// Media can move under the outline (images loading, blocks reordered).
+		if (selectedMediaRef.current) positionMediaOutline();
 		const el = topLevelBlockFrom(e.target);
 		if (!el || el === hoveredBlockRef.current) return;
 		positionBlockHandle(el);
@@ -1624,6 +1910,7 @@ const MyTextArea = ({
 	}, []);
 
 	const handleKeyDown = (e) => {
+		clearMediaSelection();
 		// @mention dropdown captures navigation keys while open.
 		if (mention) {
 			if (e.key === "ArrowDown") {
@@ -1723,28 +2010,112 @@ const MyTextArea = ({
 
 	const openLinkModal = () => {
 		saveSelection();
-		const sel = window.getSelection();
-		setLinkText(sel ? sel.toString() : "");
-		setLinkUrl("");
-		setLinkTarget("_blank");
+		const existing = findLinkAncestor();
+		if (isEditableLink(existing)) {
+			editingLinkRef.current = existing;
+			setLinkText(existing.textContent);
+			setLinkUrl(existing.getAttribute("href") || "");
+			setLinkTarget(existing.getAttribute("target") || "_self");
+			setLinkRel(existing.getAttribute("rel") || "");
+			setLinkClass(existing.getAttribute("class") || "");
+		} else {
+			editingLinkRef.current = null;
+			const sel = window.getSelection();
+			setLinkText(sel ? sel.toString() : "");
+			setLinkUrl("");
+			setLinkTarget("_blank");
+			setLinkRel("noopener noreferrer");
+			setLinkClass("");
+		}
 		setShowLink(true);
+	};
+
+	// Picking "New tab" with no rel yet fills in the safe default, but a rel the
+	// user already typed is never overwritten.
+	const changeLinkTarget = (value) => {
+		setLinkTarget(value);
+		if (value === "_blank" && !linkRel.trim())
+			setLinkRel("noopener noreferrer");
+	};
+
+	const closeLinkModal = () => {
+		editingLinkRef.current = null;
+		setShowLink(false);
+	};
+
+	const applyLinkAttributes = (a) => {
+		setOrRemoveAttr(
+			a,
+			"target",
+			linkTarget && linkTarget !== "_self" ? linkTarget : "",
+		);
+		setOrRemoveAttr(a, "rel", normalizeTokens(linkRel));
+		setOrRemoveAttr(a, "class", normalizeTokens(linkClass));
 	};
 
 	const insertLink = () => {
 		const url = linkUrl.trim();
 		if (!url) return;
 		const text = linkText.trim() || url;
+		const existing = editingLinkRef.current;
+		if (existing && existing.isConnected) {
+			existing.setAttribute("href", url);
+			// Rewriting textContent would drop bold/italic inside the link, so the
+			// children are only replaced when the text actually changed.
+			if (text !== existing.textContent) existing.textContent = text;
+			applyLinkAttributes(existing);
+			closeLinkModal();
+			updateActiveFormats();
+			setStatus("Link updated");
+			return;
+		}
 		const a = document.createElement("a");
 		a.href = url;
 		a.textContent = text;
-		if (linkTarget && linkTarget !== "_self") {
-			a.target = linkTarget;
-			// Prevent reverse tabnabbing whenever the link opens a new browsing context.
-			a.rel = "noopener noreferrer";
-		}
+		applyLinkAttributes(a);
 		insertNodeAtCursor(a);
-		setShowLink(false);
+		closeLinkModal();
+		updateActiveFormats();
 		setStatus("Link inserted");
+	};
+
+	const removeLink = () => {
+		const a = editingLinkRef.current;
+		if (a && a.isConnected) {
+			a.replaceWith(...a.childNodes);
+			setStatus("Link removed");
+		}
+		setLinkTip(null);
+		closeLinkModal();
+		updateActiveFormats();
+	};
+
+	// The status-bar URL never appears for links inside a contentEditable host,
+	// so the editor shows its own tip under the hovered link.
+	const updateLinkTip = (target) => {
+		const editor = editorRef.current;
+		const wrapper = wrapperRef.current;
+		const a =
+			target && typeof target.closest === "function"
+				? target.closest("a[href]")
+				: null;
+		if (!editor || !wrapper || !a || !editor.contains(a)) {
+			setLinkTip((prev) => (prev ? null : prev));
+			return;
+		}
+		const href = a.getAttribute("href") || "";
+		const rects = a.getClientRects();
+		const rect = rects.length
+			? rects[rects.length - 1]
+			: a.getBoundingClientRect();
+		const wrapRect = wrapper.getBoundingClientRect();
+		const top = rect.bottom - wrapRect.top + 4;
+		const left = Math.max(4, rect.left - wrapRect.left);
+		setLinkTip((prev) =>
+			prev && prev.href === href && prev.top === top && prev.left === left
+				? prev
+				: { href, top, left },
+		);
 	};
 
 	// ---- Device upload ----------------------------------------------------------
@@ -2319,6 +2690,11 @@ const MyTextArea = ({
 	const handleEditorClick = (e) => {
 		const target = e.target;
 		if (!target || typeof target.closest !== "function") return;
+		// Images, videos, audio, galleries and carousels can't hold a caret, so a
+		// click selects them for the classes dialog instead.
+		const media = mediaTargetFrom(target);
+		if (media) selectMedia(media);
+		else clearMediaSelection();
 		const chip = target.closest("a.user-chip");
 		if (!chip || !editorRef.current || !editorRef.current.contains(chip))
 			return;
@@ -3183,6 +3559,26 @@ const MyTextArea = ({
 							<option value="blockquote">Quote</option>
 							<option value="pre">Code block</option>
 						</select>
+						<button
+							type="button"
+							className={
+								"btn btn-outline-secondary btn-sm" + (mediaSel ? " active" : "")
+							}
+							onMouseDown={(e) => e.preventDefault()}
+							onClick={openBlockClassModal}
+							title={
+								mediaSel
+									? MEDIA_LABELS[mediaSel.kind] + " classes"
+									: "Paragraph classes"
+							}
+						>
+							<i className="fa-solid fa-tags align-middle" aria-hidden={true} />
+							<span className="visually-hidden">
+								{mediaSel
+									? MEDIA_LABELS[mediaSel.kind] + " classes"
+									: "Paragraph classes"}
+							</span>
+						</button>
 						<span className="vr mx-1"></span>
 						<div
 							className="btn-group btn-group-sm"
@@ -3358,12 +3754,15 @@ const MyTextArea = ({
 						<span className="vr mx-1"></span>
 						<button
 							type="button"
-							className="btn btn-outline-secondary btn-sm"
+							className={tbtn("link")}
+							aria-pressed={!!activeFormats.link}
 							onClick={openLinkModal}
-							title="Insert link"
+							title={activeFormats.link ? "Edit link" : "Insert link"}
 						>
 							<i className="fa-solid fa-link align-middle" aria-hidden={true} />
-							<span className="visually-hidden">Insert link</span>
+							<span className="visually-hidden">
+								{activeFormats.link ? "Edit link" : "Insert link"}
+							</span>
 						</button>
 						<button
 							type="button"
@@ -3454,7 +3853,10 @@ const MyTextArea = ({
 				<div
 					className="card-body p-0 position-relative"
 					ref={wrapperRef}
-					onMouseLeave={hideBlockHandle}
+					onMouseLeave={() => {
+						hideBlockHandle();
+						setLinkTip(null);
+					}}
 				>
 					<div
 						ref={editorRef}
@@ -3708,6 +4110,33 @@ const MyTextArea = ({
 					{/* Floating table toolbar: visible only while the caret sits
                 inside a table, so rows, columns and classes can be changed
                 after the table was inserted. */}
+					{mediaSel && (
+						<div
+							className="editor-media-outline"
+							style={{
+								top: mediaSel.top,
+								left: mediaSel.left,
+								width: mediaSel.width,
+								height: mediaSel.height,
+							}}
+							aria-hidden="true"
+						>
+							<span className="editor-media-outline-label">
+								<i className="fa-solid fa-tags me-1" aria-hidden={true} />
+								{MEDIA_LABELS[mediaSel.kind]}
+							</span>
+						</div>
+					)}
+					{linkTip && (
+						<div
+							className="editor-link-tip shadow-sm"
+							style={{ top: linkTip.top, left: linkTip.left }}
+							aria-hidden="true"
+						>
+							<i className="fa-solid fa-link me-1" aria-hidden={true} />
+							{linkTip.href}
+						</div>
+					)}
 					{tableBar && (
 						<div
 							className="table-bar shadow-sm"
@@ -4121,9 +4550,9 @@ const MyTextArea = ({
 			{/* Link modal */}
 			{showLink && (
 				<BootstrapModal
-					title="Insert Link"
+					title={editingLinkRef.current ? "Edit Link" : "Insert Link"}
 					icon="link"
-					onClose={() => setShowLink(false)}
+					onClose={closeLinkModal}
 				>
 					<div className="modal-body">
 						<div className="mb-3">
@@ -4160,7 +4589,7 @@ const MyTextArea = ({
 								id="linkTargetSelect"
 								className="form-select"
 								value={linkTarget}
-								onChange={(e) => setLinkTarget(e.target.value)}
+								onChange={(e) => changeLinkTarget(e.target.value)}
 							>
 								<option value="_blank">New tab (_blank)</option>
 								<option value="_self">Same tab (_self)</option>
@@ -4168,12 +4597,56 @@ const MyTextArea = ({
 								<option value="_top">Top frame (_top)</option>
 							</select>
 						</div>
+						<div className="mb-3">
+							<label htmlFor="linkRelInput" className="form-label">
+								Rel
+							</label>
+							<input
+								id="linkRelInput"
+								type="text"
+								className="form-control font-monospace"
+								placeholder="noopener noreferrer"
+								value={linkRel}
+								onChange={(e) => setLinkRel(e.target.value)}
+								aria-describedby="linkRelHelp"
+							/>
+							<p id="linkRelHelp" className="form-text">
+								Space-separated — e.g. <code>nofollow</code>,{" "}
+								<code>sponsored</code>, <code>ugc</code>. Leave empty for none.
+							</p>
+						</div>
+						<div className="mb-3">
+							<label htmlFor="linkClassInput" className="form-label">
+								Classes
+							</label>
+							<input
+								id="linkClassInput"
+								type="text"
+								className="form-control font-monospace"
+								placeholder="link-primary fw-semibold"
+								value={linkClass}
+								onChange={(e) => setLinkClass(e.target.value)}
+								aria-describedby="linkClassHelp"
+							/>
+							<p id="linkClassHelp" className="form-text">
+								Written straight to the {"<a>"} element.
+							</p>
+						</div>
 					</div>
 					<div className="modal-footer">
+						{editingLinkRef.current && (
+							<button
+								type="button"
+								className="btn btn-outline-danger btn-sm me-auto"
+								onClick={removeLink}
+							>
+								Remove link
+							</button>
+						)}
 						<button
 							type="button"
 							className="btn btn-secondary btn-sm"
-							onClick={() => setShowLink(false)}
+							onClick={closeLinkModal}
 						>
 							Cancel
 						</button>
@@ -4182,7 +4655,134 @@ const MyTextArea = ({
 							className="btn btn-primary btn-sm"
 							onClick={insertLink}
 						>
-							Insert
+							{editingLinkRef.current ? "Update" : "Insert"}
+						</button>
+					</div>
+				</BootstrapModal>
+			)}
+			{/* Block classes modal: edits the class attribute of the paragraph
+              (or heading, quote, list item…) holding the caret */}
+			{blockClassModal && (
+				<BootstrapModal
+					title={
+						blockClassModal.kind === "block"
+							? "Paragraph Classes"
+							: MEDIA_LABELS[blockClassModal.kind] + " Classes"
+					}
+					icon="tags"
+					onClose={closeBlockClassModal}
+				>
+					<div className="modal-body">
+						{blockClassModal.tag && (
+							<div className={blockClassModal.mediaTag ? "mb-3" : undefined}>
+								<label htmlFor="blockClassInput" className="form-label">
+									{blockClassModal.kind === "block"
+										? "Classes for <" + blockClassModal.tag + ">"
+										: blockClassModal.kind === "gallery" ||
+											  blockClassModal.kind === "carousel"
+											? MEDIA_LABELS[blockClassModal.kind] +
+												" classes (<" +
+												blockClassModal.tag +
+												">)"
+											: "Wrapper classes (<" + blockClassModal.tag + ">)"}
+								</label>
+								<input
+									id="blockClassInput"
+									type="text"
+									className="form-control font-monospace"
+									placeholder={
+										blockClassModal.kind === "block"
+											? "lead text-center"
+											: blockClassModal.kind === "carousel"
+												? "carousel-fade shadow"
+												: "text-center shadow-sm"
+									}
+									value={blockClassModal.value}
+									onChange={(e) =>
+										setBlockClassModal((m) => ({ ...m, value: e.target.value }))
+									}
+									onKeyDown={(e) => {
+										if (
+											e.key === "Enter" &&
+											!e.nativeEvent.isComposing &&
+											e.keyCode !== 229
+										) {
+											e.preventDefault();
+											applyBlockClass();
+										}
+									}}
+									aria-describedby="blockClassHelp"
+									autoFocus
+								/>
+								<p id="blockClassHelp" className="form-text">
+									Space-separated. Leave empty to remove{" "}
+									{blockClassModal.keep.length ? "your extra" : "all"} classes.
+									{blockClassModal.keep.length > 0 && (
+										<>
+											{" "}
+											Always kept: <code>{blockClassModal.keep.join(" ")}</code>
+											.
+										</>
+									)}
+								</p>
+							</div>
+						)}
+						{blockClassModal.mediaTag && (
+							<div>
+								<label htmlFor="mediaClassInput" className="form-label">
+									{MEDIA_LABELS[blockClassModal.kind]} classes (
+									{"<" + blockClassModal.mediaTag + ">"})
+								</label>
+								<input
+									id="mediaClassInput"
+									type="text"
+									className="form-control font-monospace"
+									placeholder={
+										blockClassModal.kind === "image"
+											? "img-fluid rounded-circle"
+											: "w-100 rounded"
+									}
+									value={blockClassModal.mediaValue}
+									onChange={(e) =>
+										setBlockClassModal((m) => ({
+											...m,
+											mediaValue: e.target.value,
+										}))
+									}
+									onKeyDown={(e) => {
+										if (
+											e.key === "Enter" &&
+											!e.nativeEvent.isComposing &&
+											e.keyCode !== 229
+										) {
+											e.preventDefault();
+											applyBlockClass();
+										}
+									}}
+									aria-describedby="mediaClassHelp"
+									autoFocus={!blockClassModal.tag}
+								/>
+								<p id="mediaClassHelp" className="form-text">
+									Written straight to the {"<" + blockClassModal.mediaTag + ">"}{" "}
+									element. Leave empty to remove all classes.
+								</p>
+							</div>
+						)}
+					</div>
+					<div className="modal-footer">
+						<button
+							type="button"
+							className="btn btn-secondary btn-sm"
+							onClick={closeBlockClassModal}
+						>
+							Cancel
+						</button>
+						<button
+							type="button"
+							className="btn btn-primary btn-sm"
+							onClick={applyBlockClass}
+						>
+							Apply
 						</button>
 					</div>
 				</BootstrapModal>

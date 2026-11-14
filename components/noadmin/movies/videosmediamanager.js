@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { useState, useRef, useCallback, useEffect, useMemo } from "react";
 import { toast } from "react-toastify";
 import { formatFileSize } from "@/helpers/formatFileSize";
@@ -965,6 +966,15 @@ const VideosMediaManager = ({
 						</div>
 						<div className="float-end my-1">
 							<div className="btn-group">
+								<Link
+									href={{
+										pathname: `/noadmin/movies/video/${object._id}/create`,
+										query: {},
+									}}
+									className="btn btn-primary btn-sm"
+								>
+									Add new
+								</Link>
 								<button
 									type="button"
 									className="btn btn-danger btn-sm"

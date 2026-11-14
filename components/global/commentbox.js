@@ -16,8 +16,6 @@
  * whatever the API returns reaches the DOM verbatim and the API's own
  * sanitiser is the only thing standing between a commenter and stored XSS.
  *
- * Transport is the app's own `fetchurl`, and paging is the app's own
- * `NumericPagination`. Adjust those two import paths to wherever they live.
  */
 
 import Link from "next/link";
@@ -25,7 +23,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useId, useMemo, useRef, useState } from "react";
 import he from "he";
 import useSWR from "swr";
-
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import NumericPagination from "@/layout/numericpagination";
 import MyTextArea from "@/components/global/myfinaltextarea";

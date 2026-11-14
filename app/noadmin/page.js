@@ -85,7 +85,7 @@ const AdminHome = async ({ params, searchParams }) => {
 		getGlobal("files", `?${ALL}`),
 		getGlobal("quotes", `?${ALL}`),
 		getGlobal("events", `?${ALL}&postType=appointment&status=scheduled`),
-		getPrivate("maintenanceoperations/scheduler", `?${ALL}`),
+		getPrivate("maintenanceops/scheduler", `?${ALL}`),
 		getGlobal("activities", `?${ALL}`),
 		getGlobal("logs", `?${ALL}`),
 		getGlobal("logs", `?status=fail&${COUNT_ONLY}`),
@@ -454,12 +454,15 @@ const AdminHome = async ({ params, searchParams }) => {
 			</div>
 			<div className="row">
 				<Panel
-					title="Schedulable Models"
-					subtitle="Models with `scheduledAt` field"
+					title="Scheduled content"
+					subtitle={loaded(
+						dueitems,
+						`${(dueitems?.totalDue ?? 0).toLocaleString()} due to publish · ${(dueitems?.totalUpcoming ?? 0).toLocaleString()} upcoming`,
+					)}
 					colClasses="col-6"
-					isEmpty={dueitems?.data?.length === 0}
+					isEmpty={getItems(dueitems).length === 0}
 				>
-					<DueItems items={dueitems.data} />
+					<DueItems items={getItems(dueitems)} />
 				</Panel>
 				<Panel
 					title="Recent activity"

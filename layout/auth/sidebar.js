@@ -39,6 +39,9 @@ const Sidebar = () => {
 				<li className={`list-group-item ${isActive(`/auth/referrals`)}`}>
 					<Link href={`/auth/referrals`}>Referrals</Link>
 				</li>
+				<li className={`list-group-item ${isActive(`/auth/fediverse`)}`}>
+					<Link href={`/auth/fediverse`}>Fediverse Settings</Link>
+				</li>
 				<li className={`list-group-item ${isActive(`/auth/stripe`)}`}>
 					<Link href={`/auth/stripe`}>Stripe Settings</Link>
 				</li>

@@ -2,7 +2,7 @@ import {
 	getAuthTokenOnServer,
 	getUserOnServer,
 } from "@/helpers/setTokenOnServer";
-import CreateTaskForm from "@/forms/noadmin/backlogs/createtaskform";
+// import CreateTaskForm from "@/forms/noadmin/backlogs/createtaskform";
 
 const CreateTask = async ({ params, searchParams }) => {
 	const awtdParams = await params;
@@ -12,12 +12,12 @@ const CreateTask = async ({ params, searchParams }) => {
 
 	return (
 		<div className="container-fluid px-0">
-			<CreateTaskForm
+			{/* <CreateTaskForm
 				token={token}
 				auth={auth}
 				params={awtdParams}
 				searchParams={awtdSearchParams}
-			/>
+			/> */}
 		</div>
 	);
 };

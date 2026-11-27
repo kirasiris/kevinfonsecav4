@@ -4,7 +4,7 @@ import {
 	getAuthTokenOnServer,
 	getUserOnServer,
 } from "@/helpers/setTokenOnServer";
-import UpdateTaskForm from "@/forms/noadmin/animes/updatetaskform";
+// import UpdateTaskForm from "@/forms/noadmin/backlogs/updatetaskform";
 
 async function getTask(params) {
 	const res = await fetchurl(`/global/tasks${params}`, "GET", "no-cache");
@@ -22,12 +22,12 @@ const UpdateTask = async ({ params, searchParams }) => {
 
 	return (
 		<div className="container-fluid px-0">
-			<UpdateTaskForm
+			{/* <UpdateTaskForm
 				token={token}
 				auth={auth}
 				object={task}
 				searchParams={awtdSearchParams}
-			/>
+			/> */}
 		</div>
 	);
 };

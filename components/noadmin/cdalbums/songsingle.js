@@ -1,7 +1,8 @@
 "use client";
 import Link from "next/link";
 import DropdownButton from "react-bootstrap/DropdownButton";
-import { formatDateWithoutTime } from "befree-utilities";
+import DeleteModal from "@/components/global/deletemodal";
+import LocalDate from "@/components/global/localdate";
 import { formatFileSize } from "@/helpers/formatFileSize";
 
 const FileIcon = ({ type }) => {
@@ -31,6 +32,7 @@ const Single = ({
 	isScheduling = false,
 	isDeleting = false,
 	dragProps = {},
+	onDeleted = () => {},
 }) => {
 	const { className = "", ...restDragProps } = dragProps;
 
@@ -54,7 +56,7 @@ const Single = ({
 					</div>
 					<div className="d-flex align-items-center gap-2">
 						<span className="badge bg-dark">
-							{formatDateWithoutTime(object.raw.createdAt)}
+							<LocalDate value={object.raw.createdAt} />
 						</span>
 						<span className={`badge bg-dark`}>{object.raw.status}</span>
 						<span className={`badge ${object.info.className}`}>
@@ -67,7 +69,7 @@ const Single = ({
 					object?.url ? (
 						<img
 							src={object?.url || "/placeholder.svg"}
-							alt={object?.filename}
+							alt={`${object.filename}' avatar`}
 							loading="lazy"
 							className="img-fluid"
 							style={{
@@ -162,7 +164,7 @@ const Single = ({
 									disabled={isBusy}
 									onClick={() => handleDraft(object.raw)}
 								>
-									{isDrafting ? "..." : "Draft It"}
+									{isDrafting ? <>Drafting&hellip;</> : <>Draft&nbsp;It</>}
 								</button>
 								<button
 									type="button"
@@ -170,7 +172,11 @@ const Single = ({
 									disabled={isBusy}
 									onClick={() => handlePublish(object.raw)}
 								>
-									{isPublishing ? "..." : "Publish It"}
+									{isPublishing ? (
+										<>Publishing&hellip;</>
+									) : (
+										<>Publish&nbsp;It</>
+									)}
 								</button>
 								<button
 									type="button"
@@ -178,7 +184,7 @@ const Single = ({
 									disabled={isBusy}
 									onClick={() => handleTrash(object.raw)}
 								>
-									{isTrashing ? "..." : "Trash It"}
+									{isTrashing ? <>Trashing&hellip;</> : <>Trash&nbsp;It</>}
 								</button>
 								<button
 									type="button"
@@ -186,7 +192,11 @@ const Single = ({
 									disabled={isBusy}
 									onClick={() => handleSchedule(object.raw)}
 								>
-									{isScheduling ? "..." : "Schedule It"}
+									{isScheduling ? (
+										<>Scheduling&hellip;</>
+									) : (
+										<>Schedule&nbsp;It</>
+									)}
 								</button>
 								<hr />
 								<Link
@@ -214,16 +224,19 @@ const Single = ({
 									Add&nbsp;Report
 								</Link>
 							</DropdownButton>
-							<button
-								type="button"
-								className="btn btn-danger btn-sm"
+							<DeleteModal
+								id={object.raw._id}
+								sId={null}
+								location=""
+								as="button"
+								size="sm"
+								classStr=""
+								action={() => handleDelete(object.raw)}
+								itemTitle={object.raw.title}
 								disabled={isBusy}
-								onClick={() => {
-									handleDelete(object?.raw);
-								}}
-							>
-								{isDeleting ? "..." : "Delete it"}
-							</button>
+								onDeleted={() => onDeleted(object.key)}
+								displayText={true}
+							/>
 						</div>
 					</div>
 				</div>

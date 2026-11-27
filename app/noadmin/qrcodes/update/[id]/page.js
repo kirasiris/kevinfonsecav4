@@ -1,19 +1,11 @@
 import { notFound } from "next/navigation";
-import { revalidatePath } from "next/cache";
-import { fetchurl, getUserOnServer } from "@/helpers/setTokenOnServer";
 import AdminStatusesMenu from "@/components/noadmin/adminstatusesmenu";
 import UpdateQRCodeForm from "@/forms/noadmin/qrcodes/updateqrcodeform";
 import List from "@/components/noadmin/qrcodes/list";
 
-async function getQRCode(params) {
-	const res = await fetchurl(`/global/qrcodes${params}`, "GET", "no-cache");
-	if (!res.success) notFound();
-	return res;
-}
-
 async function getQRCodes(params) {
 	const res = await fetchurl(`/global/qrcodes${params}`, "GET", "no-cache");
-	return res;
+	return res instanceof Error ? { status: "error", message: res.message } : res;
 }
 
 const UpdateQRCode = async ({ params, searchParams }) => {
@@ -23,63 +15,14 @@ const UpdateQRCode = async ({ params, searchParams }) => {
 	const limit = awtdSearchParams.limit || 10;
 	const sort = awtdSearchParams.sort || "-createdAt";
 
-	const auth = await getUserOnServer();
+	const [qrcode, qrcodes] = await Promise.all([
+		getQRCodes(`/${awtdParams.id}`),
+		getQRCodes(`?page=${page}&limit=${limit}&sort=${sort}`),
+	]);
 
-	const qrcode = await getQRCode(`/${awtdParams.id}`);
-	const qrcodes = await getQRCodes(`?page=${page}&limit=${limit}&sort=${sort}`);
-
-	const draftIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/qrcodes/${id}/draftit`, "PUT", "no-cache");
-		revalidatePath(`?page=${page}&limit=${limit}&sort=${sort}`);
-	};
-
-	const publishIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/qrcodes/${id}/publishit`, "PUT", "no-cache");
-		revalidatePath(`?page=${page}&limit=${limit}&sort=${sort}`);
-	};
-
-	const trashIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/qrcodes/${id}/trashit`, "PUT", "no-cache");
-		revalidatePath(`?page=${page}&limit=${limit}&sort=${sort}`);
-	};
-
-	const scheduleIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/qrcodes/${id}/scheduleit`, "PUT", "no-cache");
-		revalidatePath(`?page=${page}&limit=${limit}&sort=${sort}`);
-	};
-
-	const handleDelete = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/qrcodes/${id}/permanently`, "DELETE", "no-cache");
-		revalidatePath(`?page=${page}&limit=${limit}&sort=${sort}`);
-	};
-
-	const handleTrashAll = async () => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/qrcodes/deleteall`, "PUT", "no-cache");
-		revalidatePath(`?page=${page}&limit=${limit}&sort=${sort}`);
-	};
-
-	const handleDeleteAll = async () => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/qrcodes/deleteall/permanently`,
-			"DELETE",
-			"no-cache",
-		);
-		revalidatePath(`?page=${page}&limit=${limit}&sort=${sort}`);
-	};
+	if (!qrcode?.success) {
+		notFound();
+	}
 
 	return (
 		<div className="container-fluid px-0">
@@ -89,12 +32,16 @@ const UpdateQRCode = async ({ params, searchParams }) => {
 				draftLink="/noadmin/qrcodes/draft"
 				scheduledLink="/noadmin/qrcodes/scheduled"
 				trashedLink="/noadmin/qrcodes/trashed"
+				filledLink=""
 				categoriesLink=""
 				categoryType=""
 			/>
 			<div className="row">
 				<div className="col">
-					<UpdateQRCodeForm object={qrcode} />
+					<UpdateQRCodeForm
+						currentpage={`/noadmin/qrcodes?page=${page}&limit=${limit}&sort=${sort}`}
+						object={qrcode}
+					/>
 				</div>
 				<div className="col-lg-10">
 					<div className="card rounded-0">
@@ -106,13 +53,6 @@ const UpdateQRCode = async ({ params, searchParams }) => {
 							searchedKeyword=""
 							objects={qrcodes}
 							searchParams={awtdSearchParams}
-							handleDraft={draftIt}
-							handlePublish={publishIt}
-							handleTrash={trashIt}
-							handleSchedule={scheduleIt}
-							handleDelete={handleDelete}
-							handleTrashAllFunction={handleTrashAll}
-							handleDeleteAllFunction={handleDeleteAll}
 						/>
 					</div>
 				</div>

@@ -1,4 +1,3 @@
-import { revalidatePath } from "next/cache";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import AdminStatusesMenu from "@/components/noadmin/adminstatusesmenu";
 import List from "@/components/noadmin/cdalbums/list";
@@ -9,7 +8,7 @@ async function getPlaylists(params) {
 		"GET",
 		"no-cache",
 	);
-	return res;
+	return res instanceof Error ? { status: "error", message: res.message } : res;
 }
 
 const AdminCDAlbumsSearchIndex = async ({ params, searchParams }) => {
@@ -26,95 +25,6 @@ const AdminCDAlbumsSearchIndex = async ({ params, searchParams }) => {
 		`?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 	);
 
-	const draftIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/playlists/${id}/draftit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/cdalbums/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
-		);
-	};
-
-	const publishIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/playlists/${id}/publishit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/cdalbums/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
-		);
-	};
-
-	const trashIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/playlists/${id}/trashit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/cdalbums/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
-		);
-	};
-
-	const scheduleIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/playlists/${id}/scheduleit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/cdalbums/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
-		);
-	};
-
-	const featureIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/playlists/${id}/featureit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/cdalbums/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
-		);
-	};
-
-	const unfeatureIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/playlists/${id}/unfeatureit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/cdalbums/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
-		);
-	};
-
-	const handleDelete = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/playlists/${id}/permanently`,
-			"DELETE",
-			"no-cache",
-		);
-		revalidatePath(
-			`/noadmin/cdalbums/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
-		);
-	};
-
-	const handleTrashAll = async () => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/playlists/deleteall`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/cdalbums/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
-		);
-	};
-
-	const handleDeleteAll = async () => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/playlists/deleteall/permanently`,
-			"DELETE",
-			"no-cache",
-		);
-		revalidatePath(
-			`/noadmin/cdalbums/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
-		);
-	};
-
 	return (
 		<div className="container-fluid px-0">
 			<AdminStatusesMenu
@@ -123,8 +33,9 @@ const AdminCDAlbumsSearchIndex = async ({ params, searchParams }) => {
 				draftLink="/noadmin/cdalbums/draft"
 				scheduledLink="/noadmin/cdalbums/scheduled"
 				trashedLink="/noadmin/cdalbums/trashed"
+				filledLink=""
 				categoriesLink="/noadmin/cdalbums/categories"
-				categoryType="song"
+				categoryType="album"
 			/>
 			<div className="card rounded-0">
 				<List
@@ -135,15 +46,8 @@ const AdminCDAlbumsSearchIndex = async ({ params, searchParams }) => {
 					searchedKeyword={keyword}
 					objects={cdalbums}
 					searchParams={awtdSearchParams}
-					handleDraft={draftIt}
-					handlePublish={publishIt}
-					handleTrash={trashIt}
-					handleSchedule={scheduleIt}
-					handleFeature={featureIt}
-					handleUnfeature={unfeatureIt}
-					handleDelete={handleDelete}
-					handleTrashAllFunction={handleTrashAll}
-					handleDeleteAllFunction={handleDeleteAll}
+					statusFilter=""
+					onairType="cd-album"
 				/>
 			</div>
 		</div>

@@ -1,10 +1,12 @@
 "use client";
-import { useState } from "react";
 import AdminCardHeaderMenu from "@/components/noadmin/admincardheadermenu";
+import {
+	useAdminListActions,
+	usePagedList,
+} from "@/components/noadmin/adminlistactions";
 import Single from "./single";
 import NumericPagination from "@/layout/numericpagination";
 import NothingFoundAlert from "@/layout/nothingfoundalert";
-import ErrorPage from "@/layout/errorpage";
 
 const List = ({
 	allLink = "",
@@ -14,156 +16,53 @@ const List = ({
 	searchedKeyword = "",
 	objects = [],
 	searchParams = {},
-	handleDraft = () => {},
-	handlePublish = () => {},
-	handleTrash = () => {},
-	handleSchedule = () => {},
-	handleFeature = () => {},
-	handleUnfeature = () => {},
-	handleDelete = () => {},
-	handleTrashAllFunction = () => {},
-	handleDeleteAllFunction = () => {},
+	statusFilter = "",
+	postType = "",
 }) => {
-	const [newobjects, setNewObjects] = useState(objects);
-	const [, setTotalResults] = useState({
-		...objects,
-		countAll: objects?.countAll,
+	const list = usePagedList({ objects, searchParams });
+	const {
+		rows,
+		visibleCount,
+		visibleCountAll,
+		leavingIds,
+		enteringIds,
+		currentPage,
+		totalPages,
+		loadError,
+		leaveRow,
+		finishLeave,
+		finishEnter,
+	} = list;
+
+	const {
+		isBusy,
+		handleDraftIt,
+		handlePublishIt,
+		handleTrashIt,
+		handleScheduleIt,
+		handleFeatureIt,
+		handleUnfeatureIt,
+		handleDeleteIt,
+		trashingAll,
+		deletingAll,
+		handleTrashAll,
+		handleDeleteAll,
+	} = useAdminListActions({
+		list,
+		endpoint: "/noadmin/blogs",
+		noun: "blog",
+		nounPlural: "blogs",
+		statusFilter,
+		bulkBody: { postType },
 	});
 
-	if (
-		typeof handleDraft !== "function" &&
-		handleDraft !== "" &&
-		handleDraft !== undefined &&
-		handleDraft !== null
-	) {
-		return (
-			<ErrorPage
-				statusCodeMessage={
-					"The handleDraft parameter is not a function!. Please try again"
-				}
-			/>
-		);
-	}
+	const canRunBulk = postType !== "";
 
-	if (
-		typeof handlePublish !== "function" &&
-		handlePublish !== "" &&
-		handlePublish !== undefined &&
-		handlePublish !== null
-	) {
-		return (
-			<ErrorPage
-				statusCodeMessage={
-					"The handlePublish parameter is not a function!. Please try again"
-				}
-			/>
-		);
-	}
-
-	if (
-		typeof handleTrash !== "function" &&
-		handleTrash !== "" &&
-		handleTrash !== undefined &&
-		handleTrash !== null
-	) {
-		return (
-			<ErrorPage
-				statusCodeMessage={
-					"The handleTrash parameter is not a function!. Please try again"
-				}
-			/>
-		);
-	}
-
-	if (
-		typeof handleSchedule !== "function" &&
-		handleSchedule !== "" &&
-		handleSchedule !== undefined &&
-		handleSchedule !== null
-	) {
-		return (
-			<ErrorPage
-				statusCodeMessage={
-					"The handleSchedule parameter is not a function!. Please try again"
-				}
-			/>
-		);
-	}
-
-	if (
-		typeof handleFeature !== "function" &&
-		handleFeature !== "" &&
-		handleFeature !== undefined &&
-		handleFeature !== null
-	) {
-		return (
-			<ErrorPage
-				statusCodeMessage={
-					"The handleFeature parameter is not a function!. Please try again"
-				}
-			/>
-		);
-	}
-
-	if (
-		typeof handleUnfeature !== "function" &&
-		handleUnfeature !== "" &&
-		handleUnfeature !== undefined &&
-		handleUnfeature !== null
-	) {
-		return (
-			<ErrorPage
-				statusCodeMessage={
-					"The handleUnfeature parameter is not a function!. Please try again"
-				}
-			/>
-		);
-	}
-
-	if (
-		typeof handleDelete !== "function" &&
-		handleDelete !== "" &&
-		handleDelete !== undefined &&
-		handleDelete !== null
-	) {
-		return (
-			<ErrorPage
-				statusCodeMessage={
-					"The handleDelete parameter is not a function!. Please try again"
-				}
-			/>
-		);
-	}
-
-	if (
-		typeof handleTrashAllFunction !== "function" &&
-		handleTrashAllFunction !== "" &&
-		handleTrashAllFunction !== undefined &&
-		handleTrashAllFunction !== null
-	) {
-		return (
-			<ErrorPage
-				statusCodeMessage={
-					"The handleTrashAllFunction parameter is not a function!. Please try again"
-				}
-			/>
-		);
-	}
-
-	if (
-		typeof handleDeleteAllFunction !== "function" &&
-		handleDeleteAllFunction !== "" &&
-		handleDeleteAllFunction !== undefined &&
-		handleDeleteAllFunction !== null
-	) {
-		return (
-			<ErrorPage
-				statusCodeMessage={
-					"The handleDeleteAllFunction parameter is not a function!. Please try again"
-				}
-			/>
-		);
-	}
+	const emptyText =
+		loadError ||
+		(searchedKeyword
+			? `Nothing found with "${searchedKeyword}"`
+			: "Nothing found");
 
 	return (
 		<>
@@ -171,48 +70,58 @@ const List = ({
 				stripeChargesEnabled={false}
 				allLink={allLink}
 				pageText={pageText}
-				currentResults={objects?.count}
-				totalResults={objects?.countAll}
+				currentResults={visibleCount}
+				totalResults={visibleCountAll}
 				addLink={addLink}
 				searchOn={searchOn}
-				handleTrashAllFunction={handleTrashAllFunction}
-				handleDeleteAllFunction={handleDeleteAllFunction}
+				handleTrashAllFunction={canRunBulk ? handleTrashAll : ""}
+				handleDeleteAllFunction={canRunBulk ? handleDeleteAll : ""}
 				classList=""
 				handleAllUsageCountEnabled={false}
 				handleAllUsageCount={undefined}
+				countingAll={false}
 				// isDirty={isDirty}
 				// saving={saving}
 				// handleSave={handleSave}
 			/>
-			{objects?.data?.length > 0 ? (
+			{rows.length > 0 ? (
 				<>
-					<ul className="list-group list-group-flush">
-						{objects?.data?.map((blog) => (
+					<ul
+						className="list-group list-group-flush"
+						aria-busy={trashingAll || deletingAll || undefined}
+					>
+						{rows.map((blog) => (
 							<Single
 								key={blog._id}
 								object={blog}
-								handleDraft={handleDraft}
-								handlePublish={handlePublish}
-								handleTrash={handleTrash}
-								handleSchedule={handleSchedule}
-								handleFeature={handleFeature}
-								handleUnfeature={handleUnfeature}
-								handleDelete={handleDelete}
-								objects={newobjects.data}
-								setObjects={setNewObjects}
-								setTotalResults={setTotalResults}
+								handleDraft={handleDraftIt}
+								handlePublish={handlePublishIt}
+								handleTrash={handleTrashIt}
+								handleSchedule={handleScheduleIt}
+								handleFeature={handleFeatureIt}
+								handleUnfeature={handleUnfeatureIt}
+								handleDelete={handleDeleteIt}
+								isDrafting={isBusy(blog._id, "draft")}
+								isPublishing={isBusy(blog._id, "publish")}
+								isTrashing={isBusy(blog._id, "trash")}
+								isScheduling={isBusy(blog._id, "schedule")}
+								isFeaturing={isBusy(blog._id, "feature")}
+								isUnfeaturing={isBusy(blog._id, "unfeature")}
+								isDeleting={isBusy(blog._id, "delete")}
+								leaving={leavingIds.has(blog._id)}
+								entering={enteringIds.has(blog._id)}
+								onLeft={finishLeave}
+								onEntered={finishEnter}
+								onDeleted={leaveRow}
 							/>
 						))}
 						<li className="list-group-item">
-							{objects?.pagination?.current}&nbsp;/&nbsp;
-							{objects?.pagination?.totalpages}
+							{currentPage}&nbsp;/&nbsp;
+							{totalPages}
 						</li>
 					</ul>
 					<NumericPagination
-						totalPages={
-							objects?.pagination?.totalpages ||
-							Math.ceil(objects?.data?.length / searchParams.limit)
-						}
+						totalPages={totalPages}
 						searchParams={searchParams}
 						siblings={1}
 					/>
@@ -220,7 +129,7 @@ const List = ({
 			) : (
 				<NothingFoundAlert
 					classList="alert-danger rounded-0 m-0 border-0"
-					text={`Nothing found with ${searchedKeyword}`}
+					text={emptyText}
 				/>
 			)}
 		</>

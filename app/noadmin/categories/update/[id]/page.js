@@ -1,4 +1,3 @@
-import { revalidatePath } from "next/cache";
 import { notFound } from "next/navigation";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import AdminStatusesMenu from "@/components/noadmin/adminstatusesmenu";
@@ -7,8 +6,7 @@ import UpdateCategoryForm from "@/forms/noadmin/categories/updatecategoryform";
 
 async function getCategories(params) {
 	const res = await fetchurl(`/global/categories${params}`, "GET", "no-cache");
-	if (!res.success) notFound();
-	return res;
+	return res instanceof Error ? { status: "error", message: res.message } : res;
 }
 
 const UpdateCategory = async ({ params, searchParams }) => {
@@ -18,84 +16,14 @@ const UpdateCategory = async ({ params, searchParams }) => {
 	const limit = awtdSearchParams.limit || 10;
 	const sort = awtdSearchParams.sort || "-createdAt";
 
-	const category = await getCategories(`/${awtdParams.id}`);
-	const parentId = category?.data?.parentId;
+	const [category, categories] = await Promise.all([
+		getCategories(`/${awtdParams.id}`),
+		getCategories(`?page=${page}&limit=${limit}&sort=${sort}`),
+	]);
 
-	const categories = await getCategories(
-		`?page=${page}&limit=${limit}&sort=${sort}`,
-	);
-
-	const draftIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/categories/${id}/draftit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/categories?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const publishIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/categories/${id}/publishit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/categories?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const trashIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/categories/${id}/trashit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/categories?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const scheduleIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/categories/${id}/scheduleit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/categories?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const handleDelete = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/categories/${id}/permanently`,
-			"DELETE",
-			"no-cache",
-		);
-		revalidatePath(
-			`/noadmin/categories?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const handleTrashAll = async () => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/categories/deleteall`, "PUT", "no-cache", {});
-		revalidatePath(
-			`/noadmin/categories?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const handleDeleteAll = async () => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/categories/deleteall/permanently`,
-			"DELETE",
-			"no-cache",
-			{},
-		);
-		revalidatePath(
-			`/noadmin/categories?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
+	if (!category?.success) {
+		notFound();
+	}
 
 	return (
 		<>
@@ -105,6 +33,7 @@ const UpdateCategory = async ({ params, searchParams }) => {
 				draftLink="/noadmin/categories/draft"
 				scheduledLink="/noadmin/categories/scheduled"
 				trashedLink="/noadmin/categories/trashed"
+				filledLink=""
 				categoriesLink=""
 				categoryType=""
 			/>
@@ -114,7 +43,6 @@ const UpdateCategory = async ({ params, searchParams }) => {
 						currentpage={`/noadmin/categories?page=${page}&limit=${limit}&sort=${sort}`}
 						object={category}
 						objects={categories}
-						parent={parentId ? category?.data : null}
 					/>
 				</div>
 				<div className="col-lg-10">
@@ -124,15 +52,12 @@ const UpdateCategory = async ({ params, searchParams }) => {
 							pageText="Categories"
 							addLink="/noadmin/categories"
 							searchOn="/noadmin/categories"
+							searchedKeyword=""
 							objects={categories}
 							searchParams={awtdSearchParams}
-							handleDraft={draftIt}
-							handlePublish={publishIt}
-							handleTrash={trashIt}
-							handleSchedule={scheduleIt}
-							handleDelete={handleDelete}
-							handleTrashAllFunction={handleTrashAll}
-							handleDeleteAllFunction={handleDeleteAll}
+							// statusFilter=""
+							// categoryType=""
+							// handleAllUsageCountEnabled={true}
 						/>
 					</div>
 				</div>

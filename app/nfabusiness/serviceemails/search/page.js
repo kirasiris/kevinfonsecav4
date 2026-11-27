@@ -1,4 +1,3 @@
-import { revalidatePath } from "next/cache";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import NFAStatusesMenu from "@/components/nfabusiness/nfastatusesmenu";
 import List from "@/components/nfabusiness/serviceemails/list";
@@ -9,7 +8,7 @@ async function getServiceEmails(params) {
 		"GET",
 		"no-cache",
 	);
-	return res;
+	return res instanceof Error ? { status: "error", message: res.message } : res;
 }
 
 const NFAServiceEmailsSearchIndex = async ({ params, searchParams }) => {
@@ -26,40 +25,40 @@ const NFAServiceEmailsSearchIndex = async ({ params, searchParams }) => {
 		`?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 	);
 
-	const handleDelete = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/serviceemails/${id}/permanently`,
-			"DELETE",
-			"no-cache",
-		);
-		revalidatePath(
-			`/nfabusiness/serviceemails/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
-		);
-	};
+	// const handleDelete = async (id) => {
+	// 	"use server";
+	// 	// const rawFormData = {}
+	// 	await fetchurl(
+	// 		`/noadmin/serviceemails/${id}/permanently`,
+	// 		"DELETE",
+	// 		"no-cache",
+	// 	);
+	// 	revalidatePath(
+	// 		`/nfabusiness/serviceemails/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
+	// 	);
+	// };
 
-	const handleTrashAll = async () => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/serviceemails/deleteall`, "PUT", "no-cache");
-		revalidatePath(
-			`/nfabusiness/serviceemails?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
+	// const handleTrashAll = async () => {
+	// 	"use server";
+	// 	// const rawFormData = {}
+	// 	await fetchurl(`/noadmin/serviceemails/deleteall`, "PUT", "no-cache");
+	// 	revalidatePath(
+	// 		`/nfabusiness/serviceemails?page=${page}&limit=${limit}&sort=${sort}`,
+	// 	);
+	// };
 
-	const handleDeleteAll = async () => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/serviceemails/deleteall/permanently`,
-			"DELETE",
-			"no-cache",
-		);
-		revalidatePath(
-			`/nfabusiness/serviceemails/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
-		);
-	};
+	// const handleDeleteAll = async () => {
+	// 	"use server";
+	// 	// const rawFormData = {}
+	// 	await fetchurl(
+	// 		`/noadmin/serviceemails/deleteall/permanently`,
+	// 		"DELETE",
+	// 		"no-cache",
+	// 	);
+	// 	revalidatePath(
+	// 		`/nfabusiness/serviceemails/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
+	// 	);
+	// };
 
 	return (
 		<div className="container-fluid px-0">
@@ -69,6 +68,7 @@ const NFAServiceEmailsSearchIndex = async ({ params, searchParams }) => {
 				draftLink=""
 				scheduledLink=""
 				trashedLink=""
+				filledLink=""
 				categoriesLink=""
 				categoryType=""
 				pendingLink=""
@@ -85,9 +85,7 @@ const NFAServiceEmailsSearchIndex = async ({ params, searchParams }) => {
 					searchedKeyword={keyword}
 					objects={serviceemails}
 					searchParams={awtdSearchParams}
-					handleDelete={handleDelete}
-					handleTrashAllFunction={handleTrashAll}
-					handleDeleteAllFunction={handleDeleteAll}
+					statusFilter=""
 				/>
 			</div>
 		</div>

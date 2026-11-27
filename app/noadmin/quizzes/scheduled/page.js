@@ -1,4 +1,3 @@
-import { revalidatePath } from "next/cache";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import AdminStatusesMenu from "@/components/noadmin/adminstatusesmenu";
 import List from "@/components/noadmin/quizzes/list";
@@ -9,7 +8,7 @@ async function getQuizzes(params) {
 		"GET",
 		"no-cache",
 	);
-	return res;
+	return res instanceof Error ? { status: "error", message: res.message } : res;
 }
 
 const AdminQuizzesScheduledIndex = async ({ params, searchParams }) => {
@@ -21,73 +20,6 @@ const AdminQuizzesScheduledIndex = async ({ params, searchParams }) => {
 
 	const quizzes = await getQuizzes(`?page=${page}&limit=${limit}&sort=${sort}`);
 
-	const draftIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/quizzes/${id}/draftit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/quizzes/scheduled?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const publishIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/quizzes/${id}/publishit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/quizzes/scheduled?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const trashIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/quizzes/${id}/trashit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/quizzes/scheduled?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const scheduleIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/quizzes/${id}/scheduleit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/quizzes/scheduled?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const handleDelete = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/quizzes/${id}/permanently`, "DELETE", "no-cache");
-		revalidatePath(
-			`/noadmin/quizzes/scheduled?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const handleTrashAll = async () => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/quizzes/deleteall`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/quizzes/scheduled?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const handleDeleteAll = async () => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/quizzes/deleteall/permanently`,
-			"DELETE",
-			"no-cache",
-		);
-		revalidatePath(
-			`/noadmin/quizzes/scheduled?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
 	return (
 		<div className="container-fluid px-0">
 			<AdminStatusesMenu
@@ -96,6 +28,7 @@ const AdminQuizzesScheduledIndex = async ({ params, searchParams }) => {
 				draftLink="/noadmin/quizzes/draft"
 				scheduledLink="/noadmin/quizzes/scheduled"
 				trashedLink="/noadmin/quizzes/trashed"
+				filledLink=""
 				categoriesLink="/noadmin/quizzes/categories"
 				categoryType="quiz"
 			/>
@@ -108,13 +41,7 @@ const AdminQuizzesScheduledIndex = async ({ params, searchParams }) => {
 					searchedKeyword=""
 					objects={quizzes}
 					searchParams={awtdSearchParams}
-					handleDraft={draftIt}
-					handlePublish={publishIt}
-					handleTrash={trashIt}
-					handleSchedule={scheduleIt}
-					handleDelete={handleDelete}
-					handleTrashAllFunction={handleTrashAll}
-					handleDeleteAllFunction={handleDeleteAll}
+					statusFilter="scheduled"
 				/>
 			</div>
 		</div>

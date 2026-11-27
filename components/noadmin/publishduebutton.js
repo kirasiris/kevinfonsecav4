@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { toast } from "react-toastify";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 
@@ -8,7 +9,7 @@ import { fetchurl } from "@/helpers/setTokenOnServer";
 const PublishDueButton = ({ models }) => {
 	const router = useRouter();
 
-	const [btnText, setBtnText] = useState("Publish due items");
+	const [btnText, setBtnText] = useState("Publish due Items");
 
 	const publishDue = async () => {
 		setBtnText("Publishing...");
@@ -45,13 +46,25 @@ const PublishDueButton = ({ models }) => {
 	};
 
 	return (
-		<button
-			type="button"
-			onClick={publishDue}
-			className="btn btn-secondary btn-sm me-1"
-		>
-			{btnText}
-		</button>
+		<div className="btn-group ms-auto">
+			<button
+				type="button"
+				onClick={publishDue}
+				className="btn btn-secondary btn-sm"
+			>
+				{btnText}
+			</button>
+			<Link
+				href={{
+					pathname: process.env.NEXT_PUBLIC_WEBSITE_URL,
+					query: {},
+				}}
+				className="btn btn-secondary btn-sm"
+				target="_blank"
+			>
+				View Site
+			</Link>
+		</div>
 	);
 };
 

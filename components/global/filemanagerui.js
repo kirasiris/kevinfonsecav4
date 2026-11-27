@@ -26,12 +26,6 @@ import {
 	toFileObject,
 } from "@/helpers/filemanagerhelpers";
 
-/* -------------------------------------------------------------------------- */
-/* Lifecycle                                                                  */
-/* -------------------------------------------------------------------------- */
-
-// Strict Mode runs effect cleanups on its fake unmount, so the flag is set
-// back to true on every setup rather than only once.
 export function useIsMounted() {
 	const isMountedRef = useRef(false);
 	useEffect(() => {
@@ -43,17 +37,9 @@ export function useIsMounted() {
 	return isMountedRef;
 }
 
-/* -------------------------------------------------------------------------- */
-/* Presentational components                                                  */
-/* -------------------------------------------------------------------------- */
-
-// Counts open modals so closing a nested one doesn't unlock the page scroll
-// while another is still on screen.
 let openModalCount = 0;
 
 export function BootstrapModal({ title, icon, size = "", onClose, children }) {
-	// Callers pass inline arrows; reading through a ref keeps the listener (and
-	// `modal-open`) from being torn down and re-added on every parent render.
 	const onCloseRef = useRef(onClose);
 	onCloseRef.current = onClose;
 
@@ -117,9 +103,6 @@ export function ModalSpinner({ label }) {
 	);
 }
 
-// Only a window around the current page is drawn, with the first and last
-// always reachable and an ellipsis standing in for the gap, so a large library
-// can't overflow the modal footer.
 export function Pagination({
 	page,
 	totalPages,
@@ -129,8 +112,7 @@ export function Pagination({
 }) {
 	const total = Math.max(1, Number(totalPages) || 1);
 	const current = Math.min(Math.max(1, Number(page) || 1), total);
-	// The footer is `justify-content-between`: without a first child the action
-	// buttons would slide to the left.
+
 	if (total <= 1) return <span aria-hidden="true" />;
 
 	const span = 2;
@@ -207,10 +189,6 @@ export function Pagination({
 	);
 }
 
-/* -------------------------------------------------------------------------- */
-/* File browser (single-select picker)                                        */
-/* -------------------------------------------------------------------------- */
-
 const EMPTY_FILE_STATE = {
 	items: [],
 	page: 1,
@@ -220,11 +198,6 @@ const EMPTY_FILE_STATE = {
 	error: "",
 };
 
-// `formatType` makes the API return only one kind, so counts and page totals
-// stay accurate; `keyword` searches every page, not just the loaded one.
-// `kinds` (a module-level map of `{ label, noun, icon, query }`) instead lets
-// the user switch between kinds: the files API has no OR filter, so each kind
-// is its own exact query.
 export function useFileBrowser({ formatType = null, kinds = null } = {}) {
 	const isMountedRef = useIsMounted();
 	const [showFiles, setShowFiles] = useState(false);
@@ -235,13 +208,11 @@ export function useFileBrowser({ formatType = null, kinds = null } = {}) {
 		kinds ? Object.keys(kinds)[0] : null,
 	);
 
-	// Only the newest page request may write state, so a slow earlier response
-	// can't overwrite the page the user is on.
 	const requestIdRef = useRef(0);
-	// The keyword of the latest request, read by paging and the search debounce.
+
 	const keywordRef = useRef("");
 	const searchTimerRef = useRef(0);
-	// The kind of the latest request, read the same way as `keywordRef`.
+
 	const kindRef = useRef(fileKind);
 
 	useEffect(
@@ -287,8 +258,6 @@ export function useFileBrowser({ formatType = null, kinds = null } = {}) {
 				return;
 			}
 			if (isEmptyPage(json)) {
-				// A remembered page can fall off the end once files are deleted, so
-				// step back to page 1 before calling the list empty.
 				if (page > 1) {
 					loadFiles(1, keyword);
 					return;
@@ -311,9 +280,6 @@ export function useFileBrowser({ formatType = null, kinds = null } = {}) {
 		loadFiles(page);
 	};
 
-	// Refetch on every open so files uploaded since the last open show up.
-	// `kind` opens on that kind (e.g. the current file's) when `kinds` is set;
-	// a different kind starts over at page 1.
 	const openFileManager = (kind) => {
 		clearTimeout(searchTimerRef.current);
 		const nextKind = kinds && kinds[kind] ? kind : kindRef.current;
@@ -326,7 +292,6 @@ export function useFileBrowser({ formatType = null, kinds = null } = {}) {
 		loadFiles(sameKind ? fileState.page : 1, "");
 	};
 
-	// Keeps the search term so switching kinds narrows the same way.
 	const switchFileKind = (kind) => {
 		if (!kinds || !kinds[kind] || kind === kindRef.current) return;
 		clearTimeout(searchTimerRef.current);
@@ -337,7 +302,6 @@ export function useFileBrowser({ formatType = null, kinds = null } = {}) {
 	};
 
 	const closeFileManager = useCallback(() => {
-		// Drop any in-flight response and pending search; the next open fetches fresh anyway.
 		clearTimeout(searchTimerRef.current);
 		requestIdRef.current++;
 		setFileState((s) => (s.loading ? { ...s, loading: false } : s));
@@ -362,7 +326,6 @@ export function useFileBrowser({ formatType = null, kinds = null } = {}) {
 		}, SEARCH_DELAY_MS);
 	};
 
-	// Enter searches right away instead of waiting out the debounce.
 	const onSearchKeyDown = (e) => {
 		if (e.key !== "Enter") return;
 		e.preventDefault();
@@ -407,8 +370,6 @@ const thumbIconOf = (kind) =>
 				? "fa-file-pdf"
 				: "fa-file";
 
-// Portaled to <body> so Enter in the search box can never submit the
-// surrounding form, and the modal escapes any overflow/transform parent.
 export function FileBrowserModal({
 	browser,
 	title,
@@ -651,18 +612,15 @@ export function MediaFilePicker({
 	const seedId = idOf(seed);
 	const seedRef = useRef(seed);
 	seedRef.current = seed;
-	// Whether the user has picked or cleared a file since the last seed.
+
 	const touchedRef = useRef(false);
 	const [chosenFile, setChosenFile] = useState(seed);
 
-	// On an edit page the record can arrive a render late; adopt it unless the
-	// user has already made a choice of their own.
 	useEffect(() => {
 		if (touchedRef.current) return;
 		setChosenFile(seedRef.current);
 	}, [seedId]);
 
-	// The hidden input is controlled, so a native form reset would not touch our state.
 	useEffect(() => {
 		const form = wrapperRef.current?.closest("form");
 		if (!form) return;
@@ -674,7 +632,6 @@ export function MediaFilePicker({
 		return () => form.removeEventListener("reset", onReset);
 	}, []);
 
-	// Takes the item directly so double-click doesn't read a stale selection.
 	const applyFile = (item) => {
 		if (!item) return;
 		touchedRef.current = true;
@@ -696,7 +653,6 @@ export function MediaFilePicker({
 				{label}
 			</label>
 
-			{/* Keyed so the player drops the old file's buffer instead of reusing it. */}
 			{chosenUrl && kind === "video" && (
 				<video
 					key={chosenId}
@@ -760,10 +716,6 @@ export function MediaFilePicker({
 	);
 }
 
-/* -------------------------------------------------------------------------- */
-/* Infinite list (paging setup, list state, list data loading)                */
-/* -------------------------------------------------------------------------- */
-
 export function useInfiniteList({
 	objects,
 	searchParams,
@@ -784,8 +736,6 @@ export function useInfiniteList({
 	);
 	const sort = searchParams?.sort || defaultSort;
 	const prependNew = !sort || sort.startsWith("-");
-	// `objects` defaults to `[]`, which is truthy, so "did the server send a
-	// page?" must be decided by the presence of a `data` array instead.
 	const hasSsrPayload = Array.isArray(objects?.data);
 
 	const isMountedRef = useIsMounted();
@@ -799,8 +749,6 @@ export function useInfiniteList({
 	const [newobjects, setNewObjects] = useState(() =>
 		seedFromObjects(objects, initialPage, seenKeysRef.current),
 	);
-	// Without a payload nothing is loaded yet, so the first fetch (and its
-	// Retry) must request initialPage itself.
 	const [lastLoadedPage, setLastLoadedPage] = useState(
 		hasSsrPayload ? initialPage : initialPage - 1,
 	);
@@ -832,8 +780,6 @@ export function useInfiniteList({
 					"GET",
 					"no-cache",
 					{},
-					// Never pass an AbortSignal here: fetchurl is a Server Action, and the
-					// signal arrives on the server as an opaque reference it cannot read.
 					undefined,
 					false,
 					false,
@@ -845,7 +791,6 @@ export function useInfiniteList({
 					return;
 				}
 				if (!res?.success) {
-					// lastLoadedPage is left alone so Retry requests this same page.
 					const message = res?.message || failMessage;
 					setError(message);
 					toast.error(message);
@@ -882,8 +827,6 @@ export function useInfiniteList({
 		[endpoint, query, limit, sort, failMessage, isMountedRef],
 	);
 
-	// Clearing the ref here (not in fetchPage's finally, which runs later) lets
-	// a Strict Mode remount start its own fetch instead of being skipped.
 	const abortActiveFetch = useCallback(() => {
 		activeRequestRef.current?.abort();
 		activeRequestRef.current = null;
@@ -925,7 +868,6 @@ export function useInfiniteList({
 		fetchPage(lastLoadedPage + 1);
 	}, [fetchPage, lastLoadedPage]);
 
-	// Rebuilds the list from the server instead of guessing what changed.
 	const reloadList = useCallback(() => {
 		abortActiveFetch();
 		seenKeysRef.current = new Set();
@@ -951,8 +893,14 @@ export function useInfiniteList({
 		[prependNew],
 	);
 
-	// Empties the list after a bulk delete; also stops a page that was in
-	// flight from re-adding deleted entries.
+	const removeItem = useCallback((key) => {
+		if (!seenKeysRef.current.delete(key)) return;
+		setNewObjects((prev) => prev.filter((f) => f.__key !== key));
+		setCountAll((prev) =>
+			typeof prev === "number" ? Math.max(0, prev - 1) : prev,
+		);
+	}, []);
+
 	const clearList = useCallback(() => {
 		abortActiveFetch();
 		seenKeysRef.current.clear();
@@ -978,20 +926,13 @@ export function useInfiniteList({
 		handleRetry,
 		reloadList,
 		insertItem,
+		removeItem,
 		clearList,
 	};
 }
 
-/* -------------------------------------------------------------------------- */
-/* Object URLs                                                                */
-/* -------------------------------------------------------------------------- */
-
 export function useObjectUrls() {
-	// Every object URL created here, so unmount can revoke them all — including
-	// ones created in the same tick as the unmount.
 	const objectUrlsRef = useRef(new Set());
-	// Object URLs the saved list is displaying (the server sent no location).
-	// Removing the tray card must not revoke these.
 	const keptUrlsRef = useRef(new Set());
 
 	useEffect(() => {
@@ -1023,10 +964,6 @@ export function useObjectUrls() {
 	return { createObjectUrl, revokeObjectUrl, keepObjectUrl };
 }
 
-/* -------------------------------------------------------------------------- */
-/* Row and bulk actions (records: songs, videos, chapters)                    */
-/* -------------------------------------------------------------------------- */
-
 const STATUS_ACTIONS = {
 	draft: { path: "draftit", status: "draft", verb: "draft", done: "drafted" },
 	publish: {
@@ -1046,8 +983,6 @@ const STATUS_ACTIONS = {
 
 const capitalize = (s) => s.charAt(0).toUpperCase() + s.slice(1);
 
-// Busy flags are tracked per row *and* per action, so two rows can run at
-// once without the first one to finish clearing the other's spinner.
 export function useListActions({
 	list,
 	endpoint,
@@ -1057,10 +992,9 @@ export function useListActions({
 	onAllDeleted,
 }) {
 	const isMountedRef = useIsMounted();
-	const { setNewObjects, seenKeysRef, setCountAll, clearList } = list;
+	const { setNewObjects, clearList } = list;
 	const busyRef = useRef(new Map());
 	const [busy, setBusy] = useState({});
-	// Both bulk actions share one lock so they can never run at the same time.
 	const bulkBusyRef = useRef(false);
 	const [trashingAll, setTrashingAll] = useState(false);
 	const [deletingAll, setDeletingAll] = useState(false);
@@ -1073,42 +1007,43 @@ export function useListActions({
 
 	const isBusy = (key, action) => busy[key] === action;
 
-	const runRowAction = async (item, action, request, onSuccess) => {
-		// The ref (not state) blocks a double click before the re-render lands.
-		if (!item?._id || busyRef.current.has(item.__key)) return;
+	const runRowAction = async (item, action, request) => {
+		if (!item?._id)
+			return { status: "error", message: `This ${noun} has no id` };
+
+		if (busyRef.current.has(item.__key)) {
+			return {
+				status: "error",
+				message: `This ${noun} is still being updated`,
+			};
+		}
 		setRowBusy(item.__key, action);
 		const res = await safeFetch(...request);
-		if (!isMountedRef.current) return;
-		setRowBusy(item.__key, null);
-		if (isFailure(res)) {
-			const verb = STATUS_ACTIONS[action]?.verb || action;
-			toast.error(res?.message || `Could not ${verb} the ${noun}`);
-			return;
-		}
-		onSuccess();
+		if (isMountedRef.current) setRowBusy(item.__key, null);
+		return res;
 	};
 
-	const changeStatus = (action) => (item) => {
-		const { path, status, done } = STATUS_ACTIONS[action];
-		return runRowAction(
-			item,
-			action,
-			[
-				`${endpoint}/${item?._id}/${path}`,
-				"PUT",
-				"no-cache",
-				{},
-				undefined,
-				false,
-				false,
-			],
-			() => {
-				toast.success(`${capitalize(noun)} ${done}`);
-				setNewObjects((prev) =>
-					prev.map((f) => (f.__key === item.__key ? { ...f, status } : f)),
-				);
-			},
+	const changeStatus = (action) => async (item) => {
+		const { path, status, verb, done } = STATUS_ACTIONS[action];
+		const res = await runRowAction(item, action, [
+			`${endpoint}/${item?._id}/${path}`,
+			"PUT",
+			"no-cache",
+			{},
+			undefined,
+			false,
+			false,
+		]);
+		if (!isMountedRef.current) return res;
+		if (isFailure(res)) {
+			toast.error(res?.message || `Could not ${verb} the ${noun}`);
+			return res;
+		}
+		toast.success(`${capitalize(noun)} ${done}`);
+		setNewObjects((prev) =>
+			prev.map((f) => (f.__key === item.__key ? { ...f, status } : f)),
 		);
+		return res;
 	};
 
 	const handleDraftIt = changeStatus("draft");
@@ -1116,82 +1051,69 @@ export function useListActions({
 	const handleTrashIt = changeStatus("trash");
 	const handleScheduleIt = changeStatus("schedule");
 
-	const handleDeleteIt = (item) =>
-		runRowAction(
-			item,
-			"delete",
-			[
-				`${endpoint}/${item?._id}/permanently`,
-				"DELETE",
-				"no-cache",
-				{},
-				undefined,
-				false,
-				false,
-			],
-			() => {
-				toast.success(`${capitalize(noun)} deleted`);
-				setNewObjects((prev) => prev.filter((f) => f.__key !== item.__key));
-				seenKeysRef.current.delete(item.__key);
-				setCountAll((prev) =>
-					typeof prev === "number" ? Math.max(0, prev - 1) : prev,
-				);
-			},
-		);
+	const handleDeleteIt = async (item) => {
+		const res = await runRowAction(item, "delete", [
+			`${endpoint}/${item?._id}/permanently`,
+			"DELETE",
+			"no-cache",
+			{},
+			undefined,
+			false,
+			false,
+		]);
+		if (isMountedRef.current && !isFailure(res)) {
+			toast.success(`${capitalize(noun)} deleted`);
+		}
+		return res;
+	};
 
-	const runBulk = async (setFlag, request, onSuccess, failText) => {
-		if (bulkBusyRef.current) return;
+	const runBulk = async (setFlag, request) => {
+		if (bulkBusyRef.current) {
+			return {
+				status: "error",
+				message: "Another bulk action is still running",
+			};
+		}
 		bulkBusyRef.current = true;
 		setFlag(true);
 		const res = await safeFetch(...request);
 		bulkBusyRef.current = false;
-		if (!isMountedRef.current) return;
-		setFlag(false);
-		if (isFailure(res)) {
-			toast.error(res?.message || failText);
-			return;
-		}
-		onSuccess();
+		if (isMountedRef.current) setFlag(false);
+		return res;
 	};
 
-	const handleTrashAll = () =>
-		runBulk(
-			setTrashingAll,
-			[
-				`${endpoint}/deleteall`,
-				"PUT",
-				"no-cache",
-				bulkBody,
-				undefined,
-				false,
-				false,
-			],
-			() => {
-				setNewObjects((prev) => prev.map((f) => ({ ...f, status: "trash" })));
-				toast.success(`All ${nounPlural} trashed`);
-			},
-			`Could not trash all ${nounPlural}`,
-		);
+	const handleTrashAll = async () => {
+		const res = await runBulk(setTrashingAll, [
+			`${endpoint}/deleteall`,
+			"PUT",
+			"no-cache",
+			bulkBody,
+			undefined,
+			false,
+			false,
+		]);
+		if (!isMountedRef.current || isFailure(res)) return res;
+		setNewObjects((prev) => prev.map((f) => ({ ...f, status: "trash" })));
+		toast.success(`All ${nounPlural} trashed`);
+		return res;
+	};
 
-	const handleDeleteAll = () =>
-		runBulk(
-			setDeletingAll,
-			[
-				`${endpoint}/deleteall/permanently`,
-				"DELETE",
-				"no-cache",
-				bulkBody,
-				undefined,
-				false,
-				false,
-			],
-			() => {
-				clearList();
-				onAllDeleted?.();
-				toast.success(`All ${nounPlural} deleted`);
-			},
-			`Could not delete all ${nounPlural}`,
-		);
+	const handleDeleteAll = async () => {
+		const res = await runBulk(setDeletingAll, [
+			`${endpoint}/deleteall/permanently`,
+			"DELETE",
+			"no-cache",
+			bulkBody,
+			undefined,
+			false,
+			false,
+		]);
+		if (!isMountedRef.current || isFailure(res)) return res;
+		clearList();
+		onAllDeleted?.();
+		toast.success(`All ${nounPlural} deleted`);
+		return res;
+	};
 
 	return {
 		isBusy,
@@ -1207,9 +1129,100 @@ export function useListActions({
 	};
 }
 
-/* -------------------------------------------------------------------------- */
-/* Media elements                                                             */
-/* -------------------------------------------------------------------------- */
+export function useFileActions({ list = {} } = {}) {
+	const isMountedRef = useIsMounted();
+	const { clearList, reloadList } = list;
+
+	const deletingKeysRef = useRef(new Set());
+
+	const [deletingKeys, setDeletingKeys] = useState(() => new Set());
+
+	const bulkBusyRef = useRef(false);
+	const [deletingAll, setDeletingAll] = useState(false);
+	const [deletingUnused, setDeletingUnused] = useState(false);
+
+	const setDeleting = (key, isDeleting) => {
+		if (isDeleting) deletingKeysRef.current.add(key);
+		else deletingKeysRef.current.delete(key);
+		setDeletingKeys(new Set(deletingKeysRef.current));
+	};
+
+	const isDeleting = (key) => deletingKeys.has(key);
+
+	const handleDeleteIt = async (item) => {
+		if (!item?._id) return { status: "error", message: "This file has no id" };
+		if (deletingKeysRef.current.has(item.__key)) {
+			return { status: "error", message: "This file is still being deleted" };
+		}
+		setDeleting(item.__key, true);
+		const res = await safeFetch(
+			`/noadmin/files/${item._id}/permanently`,
+			"DELETE",
+			"no-cache",
+			{},
+			undefined,
+			false,
+			false,
+		);
+		if (!isMountedRef.current) return res;
+		setDeleting(item.__key, false);
+		if (!isFailure(res)) toast.success("File deleted");
+		return res;
+	};
+
+	const runBulk = async (setFlag, url) => {
+		if (bulkBusyRef.current) {
+			return {
+				status: "error",
+				message: "Another bulk action is still running",
+			};
+		}
+		bulkBusyRef.current = true;
+		setFlag(true);
+		const res = await safeFetch(
+			url,
+			"DELETE",
+			"no-cache",
+			{},
+			undefined,
+			false,
+			false,
+		);
+		bulkBusyRef.current = false;
+		if (isMountedRef.current) setFlag(false);
+		return res;
+	};
+
+	const handleDeleteAll = async () => {
+		const res = await runBulk(setDeletingAll, "/noadmin/files/deleteall");
+		if (!isMountedRef.current || isFailure(res)) return res;
+
+		clearList?.();
+		toast.success("All files deleted");
+		return res;
+	};
+
+	const handleDeleteUnused = async () => {
+		const res = await runBulk(
+			setDeletingUnused,
+			"/noadmin/files/deleteall/unused/permanently",
+		);
+		if (!isMountedRef.current || isFailure(res)) return res;
+		toast.success("Unused files deleted");
+
+		reloadList?.();
+		return res;
+	};
+
+	return {
+		isDeleting,
+		handleDeleteIt,
+		deletingAll,
+		deletingUnused,
+		handleDeleteAll,
+		handleDeleteUnused,
+	};
+}
 
 export function useMediaElements() {
 	const mediaElementsRef = useRef(new Map());
@@ -1219,7 +1232,6 @@ export function useMediaElements() {
 		return () => elements.clear();
 	}, []);
 
-	// Stable identities, so callers can list them in useCallback deps.
 	const pauseAllMedia = useCallback((exceptId) => {
 		mediaElementsRef.current.forEach((element, id) => {
 			if (id !== exceptId && !element.paused) element.pause();
@@ -1238,10 +1250,6 @@ export function useMediaElements() {
 	return { pauseAllMedia, registerMediaElement, forgetMediaElement };
 }
 
-/* -------------------------------------------------------------------------- */
-/* Reorder uploads (the tray)                                                 */
-/* -------------------------------------------------------------------------- */
-
 export function useUploadReorder(setFiles, uploadsRef) {
 	const [draggedIndex, setDraggedIndex] = useState(null);
 	const [dragOverIndex, setDragOverIndex] = useState(null);
@@ -1251,15 +1259,12 @@ export function useUploadReorder(setFiles, uploadsRef) {
 		e.dataTransfer.effectAllowed = "move";
 	};
 
-	// dragover fires continuously; only update state when the index changes.
 	const handleDragOver = useCallback((e, index) => {
 		e.preventDefault();
 		e.dataTransfer.dropEffect = "move";
 		setDragOverIndex((prev) => (prev === index ? prev : index));
 	}, []);
 
-	// dragleave also fires when the pointer moves onto a child of the card;
-	// ignore those so the highlight doesn't flicker.
 	const handleDragLeave = (e) => {
 		if (e.currentTarget.contains(e.relatedTarget)) return;
 		setDragOverIndex(null);
@@ -1277,7 +1282,6 @@ export function useUploadReorder(setFiles, uploadsRef) {
 		if (from === null || from === dropIndex) return;
 		if (dropIndex >= uploadsRef.current.length) return;
 		setFiles((prev) => {
-			// A card can be removed mid-drag, leaving either index out of range.
 			if (dropIndex >= prev.length || from >= prev.length) return prev;
 			const next = [...prev];
 			const [moved] = next.splice(from, 1);
@@ -1297,10 +1301,6 @@ export function useUploadReorder(setFiles, uploadsRef) {
 	};
 }
 
-/* -------------------------------------------------------------------------- */
-/* Reorder list (saved items)                                                 */
-/* -------------------------------------------------------------------------- */
-
 export function useListReorder({ list, saveEndpoint }) {
 	const isMountedRef = useIsMounted();
 	const { setNewObjects, newobjects, initialPage, limit } = list;
@@ -1310,7 +1310,7 @@ export function useListReorder({ list, saveEndpoint }) {
 	const [saving, setSaving] = useState(false);
 	const [saveError, setSaveError] = useState("");
 	const [success, setSuccess] = useState("");
-	// State alone can't stop a double click: both clicks see `saving === false`.
+
 	const savingRef = useRef(false);
 
 	const handleItemDragStart = (e, index) => {
@@ -1358,7 +1358,6 @@ export function useListReorder({ list, saveEndpoint }) {
 		setSaveError("");
 		setSuccess("");
 
-		// Only the loaded pages are on screen; number them from where they start.
 		const offset = (initialPage - 1) * limit;
 		const order = newobjects
 			.filter((it) => it?._id)
@@ -1403,10 +1402,6 @@ export function useListReorder({ list, saveEndpoint }) {
 		handleSave,
 	};
 }
-
-/* -------------------------------------------------------------------------- */
-/* Search (client-side filter of the loaded list)                             */
-/* -------------------------------------------------------------------------- */
 
 const titleOf = (item) => item?.raw?.title || "";
 

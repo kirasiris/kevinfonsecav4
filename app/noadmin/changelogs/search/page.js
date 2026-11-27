@@ -91,6 +91,9 @@ const AdminChangelogsSearchIndex = async ({ params, searchParams }) => {
 				draftLink="/noadmin/changelogs/draft"
 				scheduledLink=""
 				trashedLink="/noadmin/changelogs/trashed"
+				filledLink=""
+				categoriesLink=""
+				categoryType=""
 			/>
 			<div className="card rounded-0">
 				<List

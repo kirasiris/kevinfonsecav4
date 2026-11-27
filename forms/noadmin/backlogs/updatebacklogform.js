@@ -1,0 +1,182 @@
+"use client";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
+import { fetchurl } from "@/helpers/setTokenOnServer";
+import AdminSidebar from "@/components/noadmin/myfinaladminsidebar";
+import MyTextArea from "@/components/global/myfinaltextarea";
+import FormButtons from "@/components/global/formbuttons";
+
+const toId = (value) => {
+	if (!value) {
+		return "";
+	}
+	if (typeof value === "string" || typeof value === "number") {
+		return String(value);
+	}
+	return String(value._id || value.id || "");
+};
+
+const toMention = (value) =>
+	typeof value === "string" || typeof value === "number"
+		? { id: String(value), username: "" }
+		: { id: toId(value), username: value?.username || "" };
+
+const UpdateBacklogForm = ({
+	token = {},
+	auth = {},
+	object = {},
+	objects = [],
+}) => {
+	const router = useRouter();
+
+	const [btnText, setBtnText] = useState(`Submit`);
+
+	const savedFiles = Array.isArray(object?.data?.files?.extras)
+		? object?.data?.files.extras
+		: [];
+
+	const upgradeAnime = async (e) => {
+		e.preventDefault();
+		setBtnText(`Processing...`);
+		const form = e.target;
+		const formData = new FormData(form);
+
+		const text = formData.get("text") || "";
+		const mentions = JSON.parse(formData.get("text_users") || "[]");
+		const tags = JSON.parse(formData.get("text_hashtags") || "[]");
+		const extras = JSON.parse(formData.get("text_files") || "[]");
+
+		const bodyUnchanged = text === (object?.data?.text || "");
+
+		const status = formData.get("status");
+		const scheduledAtLocal = formData.get("scheduledAt");
+
+		const rawFormData = {
+			title: formData.get("title"),
+			text: formData.get("text"),
+			mentions:
+				bodyUnchanged && !mentions.length
+					? (object?.data?.mentions || []).map(toMention)
+					: mentions,
+			tags: bodyUnchanged && !tags.length ? object?.data?.tags || [] : tags,
+			featured: formData.get("featured"),
+			category: formData.getAll("category"), // Needs to be getAll due to Model receiving array
+			commented: formData.get("commented"),
+			password: formData.get("password"),
+			onairstatus: formData.get("onairstatus"),
+			status: status,
+			scheduledAt:
+				status === "scheduled" && scheduledAtLocal
+					? new Date(scheduledAtLocal).toISOString()
+					: null,
+			files: {
+				avatar: formData.get("file") || undefined,
+				extras:
+					bodyUnchanged && !extras.length
+						? savedFiles.map(toId).filter(Boolean)
+						: extras,
+			},
+			onairtype: "anime",
+			playlistType: "video",
+		};
+
+		const res = await fetchurl(
+			`/noadmin/playlists/${object?.data?._id}`,
+			"PUT",
+			"no-cache",
+			rawFormData,
+			undefined,
+			false,
+			false,
+		);
+
+		if (res.status === "error") {
+			toast.error(res.message);
+			setBtnText(btnText);
+			return;
+		}
+		if (res.status === "fail") {
+			toast.error(res.message);
+			setBtnText(btnText);
+			return;
+		}
+		toast.success(`Anime updated`);
+		router.push(`/noadmin/animes`);
+	};
+
+	return (
+		<form key={object?.data?._id} className="row" onSubmit={upgradeAnime}>
+			<div className="col">
+				<label htmlFor="blog-title" className="form-label">
+					Title
+				</label>
+				<input
+					id="blog-title"
+					name="title"
+					defaultValue={object?.data?.title}
+					type="text"
+					className="form-control mb-3"
+					required
+					placeholder=""
+				/>
+				<label htmlFor="text" className="form-label">
+					Text
+				</label>
+				<MyTextArea
+					auth={auth}
+					token={token}
+					id="text"
+					name="text"
+					defaultValue={object?.data?.text}
+					defaultFiles={savedFiles}
+					onModel="Playlist"
+					advancedTextEditor={true}
+					customPlaceholder="No description"
+					charactersLimit={99999}
+					isRequired={true}
+				/>
+				<div className="row">
+					<div className="col">
+						<label htmlFor="onairstatus" className="form-label">
+							On Air Status
+						</label>
+						<select
+							id="onairstatus"
+							name="onairstatus"
+							defaultValue={object?.data?.onairstatus}
+							className="form-select"
+							required
+						>
+							<option value={`onair`}>On Air</option>
+							<option value={`finished`}>Finished</option>
+							<option value={`soon`}>Soon</option>
+						</select>
+					</div>
+				</div>
+			</div>
+			<div className="col-lg-3">
+				<AdminSidebar
+					displayCategoryField={true}
+					displayAvatar={true}
+					avatar={object?.data?.files}
+					avatarFormat={object?.data?.files?.avatar?.format_type}
+					status={object?.data?.status}
+					scheduledAt={object?.data?.scheduledAt}
+					fullWidth={false}
+					password=""
+					featured={object?.data?.featured.toString()}
+					commented={object?.data?.commented.toString()}
+					embedding={false}
+					category={object?.data?.category?._id || object?.data?.category}
+					categories={objects?.data}
+					multiple_categories={false}
+				/>
+				<br />
+				<FormButtons />
+			</div>
+		</form>
+	);
+};
+
+export default UpdateBacklogForm;

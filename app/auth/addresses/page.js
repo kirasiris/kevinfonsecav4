@@ -100,7 +100,7 @@ const AddressesPage = async ({ params, searchParams }) => {
 													}}
 													className="btn btn-primary btn-sm"
 												>
-													Add&nbsp;Email
+													Add&nbsp;Address
 												</Link>
 											</div>
 										</div>

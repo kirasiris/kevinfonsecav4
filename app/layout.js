@@ -11,7 +11,7 @@ const RootLayout = async ({ children }) => {
 	const { auth, settings, menus } = await getGlobalData();
 
 	return (
-		<html lang="en">
+		<html lang="en" data-scroll-behavior="smooth">
 			{/* HEAD SHOULD NEVER BE WITHIN LAYOUT FILE AS IT WILL ALWAYS TRY TO FETCH INFORMATION FROM ITSELF UNLESS CHILD PAGES USE THEIR OWN LAYOUT FILES WHICH ARE NOT BEING USED */}
 			<body>
 				<Menu

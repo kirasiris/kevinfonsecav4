@@ -1,4 +1,3 @@
-import { revalidatePath } from "next/cache";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import NFAStatusesMenu from "@/components/nfabusiness/nfastatusesmenu";
 import List from "@/components/nfabusiness/weapons/list";
@@ -9,7 +8,7 @@ async function getWeapons(params) {
 		"GET",
 		"no-cache",
 	);
-	return res;
+	return res instanceof Error ? { status: "error", message: res.message } : res;
 }
 
 const NFAWeaponsPublishedIndex = async ({ params, searchParams }) => {
@@ -21,45 +20,45 @@ const NFAWeaponsPublishedIndex = async ({ params, searchParams }) => {
 
 	const weapons = await getWeapons(`?page=${page}&limit=${limit}&sort=${sort}`);
 
-	const draftIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/weapons/${id}/draftit`, "PUT", "no-cache");
-		revalidatePath(
-			`/nfabusiness/weapons/published?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
+	// const draftIt = async (id) => {
+	// 	"use server";
+	// 	// const rawFormData = {}
+	// 	await fetchurl(`/noadmin/weapons/${id}/draftit`, "PUT", "no-cache");
+	// 	revalidatePath(
+	// 		`/nfabusiness/weapons/published?page=${page}&limit=${limit}&sort=${sort}`,
+	// 	);
+	// };
 
-	const publishIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/weapons/${id}/publishit`, "PUT", "no-cache");
-		revalidatePath(
-			`/nfabusiness/weapons/published?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
+	// const publishIt = async (id) => {
+	// 	"use server";
+	// 	// const rawFormData = {}
+	// 	await fetchurl(`/noadmin/weapons/${id}/publishit`, "PUT", "no-cache");
+	// 	revalidatePath(
+	// 		`/nfabusiness/weapons/published?page=${page}&limit=${limit}&sort=${sort}`,
+	// 	);
+	// };
 
-	const handleDelete = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/weapons/${id}/permanently`, "DELETE", "no-cache");
-		revalidatePath(
-			`/nfabusiness/weapons/published?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
+	// const handleDelete = async (id) => {
+	// 	"use server";
+	// 	// const rawFormData = {}
+	// 	await fetchurl(`/noadmin/weapons/${id}/permanently`, "DELETE", "no-cache");
+	// 	revalidatePath(
+	// 		`/nfabusiness/weapons/published?page=${page}&limit=${limit}&sort=${sort}`,
+	// 	);
+	// };
 
-	const handleDeleteAll = async () => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/weapons/deleteall/permanently`,
-			"DELETE",
-			"no-cache",
-		);
-		revalidatePath(
-			`/nfabusiness/weapons/published?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
+	// const handleDeleteAll = async () => {
+	// 	"use server";
+	// 	// const rawFormData = {}
+	// 	await fetchurl(
+	// 		`/noadmin/weapons/deleteall/permanently`,
+	// 		"DELETE",
+	// 		"no-cache",
+	// 	);
+	// 	revalidatePath(
+	// 		`/nfabusiness/weapons/published?page=${page}&limit=${limit}&sort=${sort}`,
+	// 	);
+	// };
 
 	return (
 		<div className="container-fluid px-0">
@@ -69,6 +68,7 @@ const NFAWeaponsPublishedIndex = async ({ params, searchParams }) => {
 				draftLink="/nfabusiness/weapons/draft"
 				scheduledLink=""
 				trashedLink=""
+				filledLink=""
 				categoriesLink=""
 				categoryType=""
 				pendingLink=""
@@ -85,15 +85,7 @@ const NFAWeaponsPublishedIndex = async ({ params, searchParams }) => {
 					searchedKeyword=""
 					objects={weapons}
 					searchParams={awtdSearchParams}
-					handleDraft={draftIt}
-					handlePublish={publishIt}
-					handleTrash={undefined}
-					handleSchedule={undefined}
-					handleFeature={undefined}
-					handleUnfeature={undefined}
-					handleDelete={handleDelete}
-					handleTrashAllFunction={undefined}
-					handleDeleteAllFunction={handleDeleteAll}
+					statusFilter="published"
 				/>
 			</div>
 		</div>

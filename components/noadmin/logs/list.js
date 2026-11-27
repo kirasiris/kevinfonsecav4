@@ -1,76 +1,122 @@
 "use client";
-import { useState } from "react";
-import AdminCardHeaderMenu from "@/components/noadmin/logs/logcardheadermenu";
+import AdminCardHeaderMenu from "@/components/noadmin/admincardheadermenu";
+import {
+	useAdminListActions,
+	usePagedList,
+} from "@/components/noadmin/adminlistactions";
 import Single from "./single";
 import NumericPagination from "@/layout/numericpagination";
 import NothingFoundAlert from "@/layout/nothingfoundalert";
-import ErrorPage from "@/layout/errorpage";
 
 const List = ({
 	allLink = "",
 	pageText = "",
+	addLink = "",
 	searchOn = "",
 	searchedKeyword = "",
 	objects = [],
 	searchParams = {},
-	handleDelete = () => {},
-	handleDeleteAllFunction = () => {},
+	statusFilter = "",
 }) => {
-	const [newobjects, setNewObjects] = useState(objects);
-	const [, setTotalResults] = useState({
-		...objects,
-		countAll: objects?.countAll,
+	const list = usePagedList({ objects, searchParams });
+	const {
+		rows,
+		visibleCount,
+		visibleCountAll,
+		leavingIds,
+		enteringIds,
+		currentPage,
+		totalPages,
+		loadError,
+		leaveRow,
+		finishLeave,
+		finishEnter,
+	} = list;
+
+	const {
+		isBusy,
+		handleDraftIt,
+		handlePublishIt,
+		handleTrashIt,
+		handleScheduleIt,
+		handleFeatureIt,
+		handleUnfeatureIt,
+		handleDeleteIt,
+		trashingAll,
+		deletingAll,
+		handleTrashAll,
+		handleDeleteAll,
+	} = useAdminListActions({
+		list,
+		endpoint: "/noadmin/logs",
+		noun: "log",
+		nounPlural: "logs",
+		statusFilter,
 	});
 
-	if (
-		typeof handleDelete !== "function" &&
-		handleDelete !== "" &&
-		handleDelete !== undefined &&
-		handleDelete !== null
-	) {
-		return (
-			<ErrorPage
-				statusCodeMessage={
-					"The handleDelete parameter is not a function!. Please try again"
-				}
-			/>
-		);
-	}
+	const emptyText =
+		loadError ||
+		(searchedKeyword
+			? `Nothing found with "${searchedKeyword}"`
+			: "Nothing found");
 
 	return (
 		<>
 			<AdminCardHeaderMenu
+				stripeChargesEnabled={false}
 				allLink={allLink}
 				pageText={pageText}
-				currentResults={objects?.count}
-				totalResults={objects?.countAll}
+				currentResults={visibleCount}
+				totalResults={visibleCountAll}
+				addLink={addLink}
 				searchOn={searchOn}
-				handleDeleteAllFunction={handleDeleteAllFunction}
+				handleTrashAllFunction=""
+				handleDeleteAllFunction={handleDeleteAll}
 				classList=""
+				handleAllUsageCountEnabled={false}
+				handleAllUsageCount={undefined}
+				// isDirty={isDirty}
+				// saving={saving}
+				// handleSave={handleSave}
 			/>
-			{objects?.data?.length > 0 ? (
+			{rows.length > 0 ? (
 				<>
-					<ul className="list-group list-group-flush">
-						{objects?.data?.map((log) => (
+					<ul
+						className="list-group list-group-flush"
+						aria-busy={trashingAll || deletingAll || undefined}
+					>
+						{rows.map((log) => (
 							<Single
 								key={log._id}
 								object={log}
-								handleDelete={handleDelete}
-								objects={newobjects.data}
-								setObjects={setNewObjects}
-								setTotalResults={setTotalResults}
+								handleDraft={undefined}
+								handlePublish={undefined}
+								handleTrash={undefined}
+								handleSchedule={undefined}
+								handleFeature={undefined}
+								handleUnfeature={undefined}
+								handleDelete={handleDeleteIt}
+								isDrafting={false}
+								isPublishing={false}
+								isTrashing={false}
+								isScheduling={false}
+								isFeaturing={false}
+								isUnfeaturing={false}
+								isDeleting={isBusy(log._id, "delete")}
+								leaving={leavingIds.has(log._id)}
+								entering={enteringIds.has(log._id)}
+								onLeft={finishLeave}
+								onEntered={finishEnter}
+								onDeleted={leaveRow}
 							/>
 						))}
 						<li className="list-group-item">
-							{objects?.pagination?.current}&nbsp;/&nbsp;
-							{objects?.pagination?.totalpages}
+							{currentPage}&nbsp;/&nbsp;
+							{totalPages}
 						</li>
 					</ul>
 					<NumericPagination
-						totalPages={
-							objects?.pagination?.totalpages ||
-							Math.ceil(objects?.data?.length / searchParams.limit)
-						}
+						totalPages={totalPages}
 						searchParams={searchParams}
 						siblings={1}
 					/>
@@ -78,7 +124,7 @@ const List = ({
 			) : (
 				<NothingFoundAlert
 					classList="alert-danger rounded-0 m-0 border-0"
-					text={`Nothing found with ${searchedKeyword}`}
+					text={emptyText}
 				/>
 			)}
 		</>

@@ -1,23 +1,34 @@
 "use client";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-import { fetchurl } from "@/helpers/setTokenOnServer";
 import QRC from "@/components/global/qrcode";
 import FormButtons from "@/components/global/formbuttons";
+import { isFailure, safeFetch } from "@/helpers/filemanagerhelpers";
+import { useIsMounted } from "@/components/global/filemanagerui";
+import {
+	actionMessage,
+	shakeElement,
+} from "@/components/global/actionfeedback";
+
+const emptyQrCode = {
+	url: "",
+	qrmargin: 5,
+	qrcodesize: 300,
+	securitylevel: "L",
+	imageurl: "",
+	imagewidth: 100,
+	imageheight: 100,
+};
 
 const CreateQrCodeForm = ({ auth = {} }) => {
 	const router = useRouter();
+	const isMountedRef = useIsMounted();
+	const submittingRef = useRef(false);
+	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [error, setError] = useState("");
 
-	const [qrcodeData, setQrCodeData] = useState({
-		url: "",
-		qrmargin: 5,
-		qrcodesize: 300,
-		securitylevel: "L",
-		imageurl: "",
-		imagewidth: 100,
-		imageheight: 100,
-	});
+	const [qrcodeData, setQrCodeData] = useState(emptyQrCode);
 
 	const {
 		url,
@@ -29,12 +40,12 @@ const CreateQrCodeForm = ({ auth = {} }) => {
 		imageheight,
 	} = qrcodeData;
 
-	const [btnText, setBtnText] = useState(`Submit`);
-
 	const addQrCode = async (e) => {
 		e.preventDefault();
-		setBtnText("Processing...");
-		const form = e.target;
+		if (submittingRef.current) {
+			return;
+		}
+		const form = e.currentTarget;
 		const formData = new FormData(form);
 
 		const rawFormData = {
@@ -53,7 +64,10 @@ const CreateQrCodeForm = ({ auth = {} }) => {
 			status: "published",
 		};
 
-		const res = await fetchurl(
+		submittingRef.current = true;
+		setIsSubmitting(true);
+		setError("");
+		const res = await safeFetch(
 			`/global/qrcodes`,
 			"POST",
 			"no-cache",
@@ -62,22 +76,26 @@ const CreateQrCodeForm = ({ auth = {} }) => {
 			false,
 			false,
 		);
-
-		if (res.status === "error") {
-			toast.error(res.message);
-			setBtnText(btnText);
+		submittingRef.current = false;
+		if (!isMountedRef.current) {
 			return;
 		}
+		setIsSubmitting(false);
 
-		if (res.status === "fail") {
-			toast.error(res.message);
-			setBtnText(btnText);
+		if (isFailure(res)) {
+			setError(actionMessage(res, "Could not create the QR code"));
+			shakeElement(form);
 			return;
 		}
-
 		toast.success("QR Code created");
-		setBtnText(btnText);
-		router.push(`/noadmin/qrcodes?page=1&limit=10&sort=-createdAt`);
+		form.reset();
+		form.elements.namedItem("title")?.focus();
+		router.refresh();
+	};
+
+	const resetForm = () => {
+		setError("");
+		setQrCodeData(emptyQrCode);
 	};
 
 	return (
@@ -91,9 +109,10 @@ const CreateQrCodeForm = ({ auth = {} }) => {
 					imgsrc={imageurl}
 					imgwidth={imagewidth}
 					imgheight={imageheight}
+					title={url ? `QR code preview for ${url}` : "QR code preview"}
 				/>
 			</div>
-			<form onSubmit={addQrCode}>
+			<form onSubmit={addQrCode} onReset={resetForm}>
 				<label htmlFor="title" className="form-label">
 					Title
 				</label>
@@ -227,7 +246,12 @@ const CreateQrCodeForm = ({ auth = {} }) => {
 					className="form-control mb-3"
 					placeholder="100"
 				/>
-				<FormButtons />
+				{error && (
+					<div className="alert alert-danger py-2 px-3 mb-3 small" role="alert">
+						{error}
+					</div>
+				)}
+				<FormButtons pending={isSubmitting} />
 			</form>
 		</>
 	);

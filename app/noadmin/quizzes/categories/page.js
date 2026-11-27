@@ -1,4 +1,3 @@
-import { revalidatePath } from "next/cache";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import AdminStatusesMenu from "@/components/noadmin/adminstatusesmenu";
 import List from "@/components/noadmin/categories/list";
@@ -10,7 +9,7 @@ async function getCategories(params) {
 		"GET",
 		"no-cache",
 	);
-	return res;
+	return res instanceof Error ? { status: "error", message: res.message } : res;
 }
 
 const AdminPageCategoriesIndex = async ({ params, searchParams }) => {
@@ -24,104 +23,6 @@ const AdminPageCategoriesIndex = async ({ params, searchParams }) => {
 		`?page=${page}&limit=${limit}&sort=${sort}`,
 	);
 
-	const draftIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/categories/${id}/draftit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/quizzes/categories?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const publishIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/categories/${id}/publishit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/quizzes/categories?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const trashIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/categories/${id}/trashit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/quizzes/categories?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const scheduleIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/categories/${id}/scheduleit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/quizzes/categories?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const handleDelete = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/categories/${id}/permanently`,
-			"DELETE",
-			"no-cache",
-		);
-		revalidatePath(
-			`/noadmin/quizzes/categories?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const handleTrashAll = async () => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/categories/deleteall`, "PUT", "no-cache", {
-			categoryType: "quiz",
-		});
-		revalidatePath(
-			`/noadmin/quizzes/categories?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const handleDeleteAll = async () => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/categories/deleteall/permanently`,
-			"DELETE",
-			"no-cache",
-			{
-				categoryType: "quiz",
-			},
-		);
-		revalidatePath(
-			`/noadmin/quizzes/categories?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const usageCountIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/categories/${id}/usagecount`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/quizzes/categories?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const usageCountItAll = async () => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/maintenanceops/categories/allusagecount`,
-			"PUT",
-			"no-cache",
-		);
-		revalidatePath(
-			`/noadmin/quizzes/categories?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
 	return (
 		<div className="container-fluid px-0">
 			<AdminStatusesMenu
@@ -130,17 +31,13 @@ const AdminPageCategoriesIndex = async ({ params, searchParams }) => {
 				draftLink="/noadmin/quizzes/draft"
 				scheduledLink="/noadmin/quizzes/scheduled"
 				trashedLink="/noadmin/quizzes/trashed"
+				filledLink=""
 				categoriesLink="/noadmin/quizzes/categories"
 				categoryType="quiz"
 			/>
 			<div className="row">
 				<div className="col">
-					<CreateQuizCategoryForm
-						page={page}
-						limit={limit}
-						sort={sort}
-						objects={categories}
-					/>
+					<CreateQuizCategoryForm objects={categories} />
 				</div>
 				<div className="col-lg-10">
 					<div className="card rounded-0">
@@ -149,18 +46,12 @@ const AdminPageCategoriesIndex = async ({ params, searchParams }) => {
 							pageText="Quizzes Categories"
 							addLink="/noadmin/quizzes/categories"
 							searchOn="/noadmin/categories"
+							searchedKeyword=""
 							objects={categories}
 							searchParams={awtdSearchParams}
-							handleDraft={draftIt}
-							handlePublish={publishIt}
-							handleTrash={trashIt}
-							handleSchedule={scheduleIt}
-							handleDelete={handleDelete}
-							handleTrashAllFunction={handleTrashAll}
-							handleDeleteAllFunction={handleDeleteAll}
-							handleUsageCount={usageCountIt}
+							statusFilter=""
+							categoryType="quiz"
 							handleAllUsageCountEnabled={true}
-							handleAllUsageCount={usageCountItAll}
 						/>
 					</div>
 				</div>

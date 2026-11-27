@@ -1,4 +1,3 @@
-import { revalidatePath } from "next/cache";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import AdminStatusesMenu from "@/components/noadmin/adminstatusesmenu";
 import List from "@/components/noadmin/contactemails/list";
@@ -9,7 +8,7 @@ async function getContactEmails(params) {
 		"GET",
 		"no-cache",
 	);
-	return res;
+	return res instanceof Error ? { status: "error", message: res.message } : res;
 }
 
 const AdminContactEmailsIndex = async ({ params, searchParams }) => {
@@ -23,41 +22,6 @@ const AdminContactEmailsIndex = async ({ params, searchParams }) => {
 		`?page=${page}&limit=${limit}&sort=${sort}`,
 	);
 
-	const handleDelete = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/contactemails/${id}/permanently`,
-			"DELETE",
-			"no-cache",
-		);
-		revalidatePath(
-			`/noadmin/contactemails?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const handleTrashAll = async () => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/contactemails/deleteall`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/contactemails?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const handleDeleteAll = async () => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/contactemails/deleteall/permanently`,
-			"DELETE",
-			"no-cache",
-		);
-		revalidatePath(
-			`/noadmin/contactemails?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
 	return (
 		<div className="container-fluid px-0">
 			<AdminStatusesMenu
@@ -66,6 +30,7 @@ const AdminContactEmailsIndex = async ({ params, searchParams }) => {
 				draftLink=""
 				scheduledLink=""
 				trashedLink=""
+				filledLink=""
 				categoriesLink=""
 				categoryType=""
 			/>
@@ -73,13 +38,11 @@ const AdminContactEmailsIndex = async ({ params, searchParams }) => {
 				<List
 					allLink="/noadmin/contactemails"
 					pageText="Contact Emails"
+					addLink=""
 					searchOn="/noadmin/contactemails"
 					searchedKeyword=""
 					objects={contactemails}
 					searchParams={awtdSearchParams}
-					handleDelete={handleDelete}
-					handleTrashAllFunction={handleTrashAll}
-					handleDeleteAllFunction={handleDeleteAll}
 				/>
 			</div>
 		</div>

@@ -1,4 +1,3 @@
-import { revalidatePath } from "next/cache";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import AdminStatusesMenu from "@/components/noadmin/adminstatusesmenu";
 import List from "@/components/noadmin/snippets/list";
@@ -9,7 +8,7 @@ async function getSnippets(params) {
 		"GET",
 		"no-cache",
 	);
-	return res;
+	return res instanceof Error ? { status: "error", message: res.message } : res;
 }
 
 const AdminSnippetsDraftIndex = async ({ params, searchParams }) => {
@@ -23,91 +22,6 @@ const AdminSnippetsDraftIndex = async ({ params, searchParams }) => {
 		`?page=${page}&limit=${limit}&sort=${sort}`,
 	);
 
-	const draftIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/snippets/${id}/draftit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/snippets/draft?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const publishIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/snippets/${id}/publishit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/snippets/draft?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const trashIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/snippets/${id}/trashit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/snippets/draft?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const scheduleIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/snippets/${id}/scheduleit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/snippets/draft?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const featureIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/snippets/${id}/featureit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/snippets/draft?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const unfeatureIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/snippets/${id}/unfeatureit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/snippets/draft?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const handleDelete = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/snippets/${id}/permanently`, "DELETE", "no-cache");
-		revalidatePath(
-			`/noadmin/snippets/draft?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const handleTrashAll = async () => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/snippets/deleteall`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/snippets/draft?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const handleDeleteAll = async () => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/snippets/deleteall/permanently`,
-			"DELETE",
-			"no-cache",
-		);
-		revalidatePath(
-			`/noadmin/snippets/draft?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
 	return (
 		<div className="container-fluid px-0">
 			<AdminStatusesMenu
@@ -116,6 +30,7 @@ const AdminSnippetsDraftIndex = async ({ params, searchParams }) => {
 				draftLink="/noadmin/snippets/draft"
 				scheduledLink="/noadmin/snippets/scheduled"
 				trashedLink="/noadmin/snippets/trashed"
+				filledLink=""
 				categoriesLink="/noadmin/snippets/categories"
 				categoryType="snippet"
 			/>
@@ -128,15 +43,7 @@ const AdminSnippetsDraftIndex = async ({ params, searchParams }) => {
 					searchedKeyword=""
 					objects={snippets}
 					searchParams={awtdSearchParams}
-					handleDraft={draftIt}
-					handlePublish={publishIt}
-					handleTrash={trashIt}
-					handleSchedule={scheduleIt}
-					handleFeature={featureIt}
-					handleUnfeature={unfeatureIt}
-					handleDelete={handleDelete}
-					handleTrashAllFunction={handleTrashAll}
-					handleDeleteAllFunction={handleDeleteAll}
+					statusFilter="draft"
 				/>
 			</div>
 		</div>

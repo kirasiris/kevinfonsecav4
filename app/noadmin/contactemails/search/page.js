@@ -9,7 +9,7 @@ async function getContactEmails(params) {
 		"GET",
 		"no-cache",
 	);
-	return res;
+	return res instanceof Error ? { status: "error", message: res.message } : res;
 }
 
 const AdminContactEmailsSearchIndex = async ({ params, searchParams }) => {
@@ -26,41 +26,6 @@ const AdminContactEmailsSearchIndex = async ({ params, searchParams }) => {
 		`?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 	);
 
-	const handleDelete = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/contactemails/${id}/permanently`,
-			"DELETE",
-			"no-cache",
-		);
-		revalidatePath(
-			`/noadmin/contactemails/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
-		);
-	};
-
-	const handleTrashAll = async () => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/contactemails/deleteall`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/contactemails/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
-		);
-	};
-
-	const handleDeleteAll = async () => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/contactemails/deleteall/permanently`,
-			"DELETE",
-			"no-cache",
-		);
-		revalidatePath(
-			`/noadmin/contactemails/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
-		);
-	};
-
 	return (
 		<div className="container-fluid px-0">
 			<AdminStatusesMenu
@@ -69,6 +34,7 @@ const AdminContactEmailsSearchIndex = async ({ params, searchParams }) => {
 				draftLink=""
 				scheduledLink=""
 				trashedLink=""
+				filledLink=""
 				categoriesLink=""
 				categoryType=""
 			/>
@@ -81,9 +47,6 @@ const AdminContactEmailsSearchIndex = async ({ params, searchParams }) => {
 					searchedKeyword={keyword}
 					objects={contactemails}
 					searchParams={awtdSearchParams}
-					handleDelete={handleDelete}
-					handleTrashAllFunction={handleTrashAll}
-					handleDeleteAllFunction={handleDeleteAll}
 				/>
 			</div>
 		</div>

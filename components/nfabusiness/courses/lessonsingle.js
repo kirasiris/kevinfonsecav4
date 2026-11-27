@@ -2,128 +2,185 @@
 import Link from "next/link";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import DeleteModal from "@/components/global/deletemodal";
+import LocalDate from "@/components/global/localdate";
 import PreviewModal from "@/components/nfabusiness/courses/lessonpreviewmodal";
+import { formatFileSize } from "@/helpers/formatFileSize";
+
+const FileIcon = ({ type }) => {
+	switch (type) {
+		case "audio":
+			return <i aria-hidden className="fa-solid fa-file-audio fa-xl" />;
+		case "video":
+			return <i aria-hidden className="fa-solid fa-file-video fa-xl" />;
+		case "image":
+			return <i aria-hidden className="fa-solid fa-file-image fa-xl" />;
+		default:
+			return <i aria-hidden className="fa-solid fa-file-pdf fa-xl" />;
+	}
+};
 
 const Single = ({
+	index = 0,
 	object = {},
 	handleDraft = () => {},
 	handlePublish = () => {},
 	handleTrash = () => {},
 	handleSchedule = () => {},
 	handleDelete = () => {},
-	objects = [],
-	setObjects = () => {},
-	setTotalResults = () => {},
+	isDrafting = false,
+	isPublishing = false,
+	isTrashing = false,
+	isScheduling = false,
+	isDeleting = false,
+	dragProps = {},
+	onDeleted = () => {},
 }) => {
+	const { className = "", ...restDragProps } = dragProps;
+
+	const isBusy =
+		isDrafting || isPublishing || isTrashing || isScheduling || isDeleting;
+
 	return (
-		<li className="list-group-item">
-			<div className="float-start">
-				<Link
-					href={{
-						pathname: `/nfabusiness/courses/lesson/${object?._id}/update`,
-						query: {},
-					}}
-					className="me-1"
-				>
-					<span className="badge bg-secondary me-1">
-						{object?.orderingNumber}
+		<li
+			className={`list-group-item d-flex flex-wrap justify-content-between align-items-center gap-2 ${className}`}
+			{...restDragProps}
+		>
+			<Link
+				className="d-block text-break"
+				href={{
+					pathname: `/nfabusiness/courses/lesson/${object.key}/update`,
+					query: {},
+				}}
+				style={{ minWidth: 0 }}
+			>
+				{object.raw.title}
+			</Link>
+			<div className="blog-item__meta d-flex flex-wrap align-items-center gap-1">
+				<span className="badge bg-secondary me-1">{index + 1}</span>
+				{object.raw.files?.video_url?.format_type && (
+					<span className={`${object.info.textClass} me-1`}>
+						<FileIcon type={object.raw.files.video_url.format_type} />
 					</span>
-					{object?.title}
-				</Link>
-				<span className="badge bg-secondary me-1">{object?.rel}</span>
-				<span className="badge bg-dark me-1">{object?.target}</span>
+				)}
+				{object.raw.files?.video_url?.size && (
+					<span className="badge bg-secondary me-1">
+						{formatFileSize(object.raw.files.video_url.size)}
+					</span>
+				)}
+				<span className="badge bg-dark me-1">
+					<LocalDate value={object.raw.createdAt} />
+				</span>
+				<span className="badge bg-dark me-1">{object.raw.status}</span>
+				<span className={`badge ${object.info.className}`}>
+					{object.info.label}
+				</span>
 			</div>
-			<div className="float-end">
-				<div className="blog-item__panel">
-					{object.free_preview && <PreviewModal object={object} />}
-					<span className="badge bg-info me-1">{object.duration}</span>
-					<span className="badge bg-secondary me-1">
-						{object.views}&nbsp;Views
-					</span>
+
+			<div className="blog-item__panel d-flex flex-wrap align-items-center gap-1">
+				{object.raw.free_preview && <PreviewModal object={object.raw} />}
+				<span className="badge bg-info me-1">{object.raw.duration}</span>
+				<span className="badge bg-secondary me-1">
+					{object.raw.views}&nbsp;Views
+				</span>
+				{object.raw.language && (
 					<span className="badge bg-dark me-1">
-						{object.language.toUpperCase()}
+						{object.raw.language.toUpperCase()}
 					</span>
-					<div className="blog-actions-ellipsis-menu">
-						<span className="ellipsis-menu">
-							<DropdownButton title="Options" variant="secondary">
-								<Link
-									href={{
-										pathname: object?.url,
-										query: {
-											isAdmin: true,
-										},
-									}}
-									className="dropdown-item btn btn-link"
-								>
-									View&nbsp;It
-								</Link>
-								<button
-									className="dropdown-item btn btn-sm"
-									onClick={() => handleDraft(object._id)}
-								>
-									Draft&nbsp;It
-								</button>
-								<button
-									className="dropdown-item btn btn-sm"
-									onClick={() => handlePublish(object._id)}
-								>
-									Publish&nbsp;It
-								</button>
-								<button
-									className="dropdown-item btn btn-sm"
-									onClick={() => handleTrash(object._id)}
-								>
-									Trash&nbsp;It
-								</button>
-								<button
-									className="dropdown-item btn btn-sm"
-									onClick={() => handleSchedule(object._id)}
-								>
-									Schedule&nbsp;It
-								</button>
-								<hr />
-								<Link
-									href={{
-										pathname: `/noadmin/comments/create`,
-										query: {
-											resourceId: object._id,
-											onModel: `Lesson`,
-										},
-									}}
-									className="dropdown-item btn btn-link"
-								>
-									Add&nbsp;Comment
-								</Link>
-								<Link
-									href={{
-										pathname: `/noadmin/reports/create`,
-										query: {
-											resourceId: object._id,
-											onModel: `Lesson`,
-										},
-									}}
-									className="dropdown-item btn btn-link"
-								>
-									Add&nbsp;Report
-								</Link>
-								<hr />
-								<DeleteModal
-									id={object._id}
-									sId={null}
-									location=""
-									as="button"
-									size="sm"
-									classStr={`dropdown-item`}
-									action={handleDelete}
-									action2={() => {}}
-									objects={objects}
-									setObjects={setObjects}
-									setTotalResults={setTotalResults}
-									displayText={true}
-								/>
-							</DropdownButton>
-						</span>
-					</div>
+				)}
+				<div className="blog-actions-ellipsis-menu">
+					<DropdownButton title="Options" variant="secondary">
+						{object.url && (
+							<a
+								href={object.url}
+								target="_blank"
+								rel="noopener noreferrer"
+								className="dropdown-item"
+							>
+								Open
+							</a>
+						)}
+						<Link
+							href={{
+								pathname: `/nfabusiness/courses/lesson/${object.key}/update`,
+								query: {},
+							}}
+							className="dropdown-item"
+						>
+							Update
+						</Link>
+						<hr />
+						<button
+							type="button"
+							className="dropdown-item btn btn-sm"
+							disabled={isBusy}
+							onClick={() => handleDraft(object.raw)}
+						>
+							{isDrafting ? <>Drafting&hellip;</> : <>Draft&nbsp;It</>}
+						</button>
+						<button
+							type="button"
+							className="dropdown-item btn btn-sm"
+							disabled={isBusy}
+							onClick={() => handlePublish(object.raw)}
+						>
+							{isPublishing ? <>Publishing&hellip;</> : <>Publish&nbsp;It</>}
+						</button>
+						<button
+							type="button"
+							className="dropdown-item btn btn-sm"
+							disabled={isBusy}
+							onClick={() => handleTrash(object.raw)}
+						>
+							{isTrashing ? <>Trashing&hellip;</> : <>Trash&nbsp;It</>}
+						</button>
+						<button
+							type="button"
+							className="dropdown-item btn btn-sm"
+							disabled={isBusy}
+							onClick={() => handleSchedule(object.raw)}
+						>
+							{isScheduling ? <>Scheduling&hellip;</> : <>Schedule&nbsp;It</>}
+						</button>
+						<hr />
+						<Link
+							href={{
+								pathname: `/noadmin/comments/create`,
+								query: {
+									resourceId: object.raw._id,
+									onModel: `Lesson`,
+								},
+							}}
+							className="dropdown-item btn btn-link"
+						>
+							Add&nbsp;Comment
+						</Link>
+						<Link
+							href={{
+								pathname: `/noadmin/reports/create`,
+								query: {
+									resourceId: object.raw._id,
+									onModel: `Lesson`,
+								},
+							}}
+							className="dropdown-item btn btn-link"
+						>
+							Add&nbsp;Report
+						</Link>
+						<hr />
+						<DeleteModal
+							id={object.raw._id}
+							sId={null}
+							location=""
+							as="button"
+							size="sm"
+							classStr={`dropdown-item`}
+							action={() => handleDelete(object.raw)}
+							itemTitle={object.raw.title}
+							disabled={isBusy}
+							onDeleted={() => onDeleted(object.key)}
+							displayText={true}
+						/>
+					</DropdownButton>
 				</div>
 			</div>
 		</li>

@@ -1,11 +1,10 @@
-import { revalidatePath } from "next/cache";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import AdminStatusesMenu from "@/components/noadmin/adminstatusesmenu";
 import List from "@/components/noadmin/logs/list";
 
 async function getLogs(params) {
 	const res = await fetchurl(`/global/logs${params}`, "GET", "no-cache");
-	return res;
+	return res instanceof Error ? { status: "error", message: res.message } : res;
 }
 
 const AdminLogsSearchIndex = async ({ params, searchParams }) => {
@@ -22,24 +21,6 @@ const AdminLogsSearchIndex = async ({ params, searchParams }) => {
 		`?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 	);
 
-	const handleDelete = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/logs/${id}/permanently`, "DELETE", "no-cache");
-		revalidatePath(
-			`/noadmin/logs/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
-		);
-	};
-
-	const handleDeleteAll = async () => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/logs/deleteall/permanently`, "DELETE", "no-cache");
-		revalidatePath(
-			`/noadmin/logs/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
-		);
-	};
-
 	return (
 		<div className="container-fluid px-0">
 			<AdminStatusesMenu
@@ -48,6 +29,7 @@ const AdminLogsSearchIndex = async ({ params, searchParams }) => {
 				draftLink=""
 				scheduledLink=""
 				trashedLink=""
+				filledLink=""
 				categoriesLink=""
 				categoryType=""
 			/>
@@ -55,12 +37,12 @@ const AdminLogsSearchIndex = async ({ params, searchParams }) => {
 				<List
 					allLink="/noadmin/logs"
 					pageText="Logs"
+					addLink=""
 					searchOn="/noadmin/logs"
 					searchedKeyword={keyword}
 					objects={logs}
 					searchParams={awtdSearchParams}
-					handleDelete={handleDelete}
-					handleDeleteAllFunction={handleDeleteAll}
+					statusFilter=""
 				/>
 			</div>
 		</div>

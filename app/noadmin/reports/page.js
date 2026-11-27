@@ -1,11 +1,10 @@
-import { revalidatePath } from "next/cache";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import AdminStatusesMenu from "@/components/noadmin/adminstatusesmenu";
 import List from "@/components/noadmin/reports/list";
 
 async function getReports(params) {
 	const res = await fetchurl(`/global/reports${params}`, "GET", "no-cache");
-	return res;
+	return res instanceof Error ? { status: "error", message: res.message } : res;
 }
 
 const AdminReportsIndex = async ({ params, searchParams }) => {
@@ -17,24 +16,6 @@ const AdminReportsIndex = async ({ params, searchParams }) => {
 
 	const reports = await getReports(`?page=${page}&limit=${limit}&sort=${sort}`);
 
-	const handleDelete = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/reports/${id}/permanently`, "DELETE", "no-cache");
-		revalidatePath(`/noadmin/reports?page=${page}&limit=${limit}&sort=${sort}`);
-	};
-
-	const handleDeleteAll = async () => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/reports/deleteall/permanently`,
-			"DELETE",
-			"no-cache",
-		);
-		revalidatePath(`/noadmin/reports?page=${page}&limit=${limit}&sort=${sort}`);
-	};
-
 	return (
 		<div className="container-fluid px-0">
 			<AdminStatusesMenu
@@ -43,6 +24,7 @@ const AdminReportsIndex = async ({ params, searchParams }) => {
 				draftLink=""
 				scheduledLink=""
 				trashedLink=""
+				filledLink=""
 				categoriesLink=""
 				categoryType=""
 			/>
@@ -55,13 +37,7 @@ const AdminReportsIndex = async ({ params, searchParams }) => {
 					searchedKeyword=""
 					objects={reports}
 					searchParams={awtdSearchParams}
-					handleDraft={undefined}
-					handlePublish={undefined}
-					handleTrash={undefined}
-					handleSchedule={undefined}
-					handleDelete={handleDelete}
-					handleTrashAllFunction={undefined}
-					handleDeleteAllFunction={handleDeleteAll}
+					statusFilter=""
 				/>
 			</div>
 		</div>

@@ -1,29 +1,91 @@
 "use client";
+import { useRef } from "react";
 import Link from "next/link";
 import DropdownButton from "react-bootstrap/DropdownButton";
-import { formatDateWithoutTime } from "befree-utilities";
+import LocalDate from "@/components/global/localdate";
 import DeleteModal from "@/components/global/deletemodal";
+import {
+	actionFailed,
+	flashElement,
+	shakeElement,
+	useRowMotion,
+} from "@/components/global/actionfeedback";
+
+const excerptOf = (text = "", words = 8) => {
+	const parts = String(text).trim().split(/\s+/);
+	return parts.length > words
+		? `${parts.slice(0, words).join(" ")}…`
+		: parts.join(" ");
+};
 
 const Single = ({
 	object = {},
 	handleDraft = () => {},
 	handlePublish = () => {},
 	handleTrash = () => {},
-	handleSchedule = () => {},
 	handleDelete = () => {},
-	objects = [],
-	setObjects = () => {},
-	setTotalResults = () => {},
+	isDrafting = false,
+	isPublishing = false,
+	isTrashing = false,
+	isDeleting = false,
+	leaving = false,
+	entering = false,
+	onLeft = () => {},
+	onEntered = () => {},
+	onDeleted = () => {},
 }) => {
+	const rowRef = useRef(null);
+	const id = object._id;
+	const author = object.authorName || "Unknown author";
+
+	const busyLabel =
+		(isDrafting && "Drafting") ||
+		(isPublishing && "Publishing") ||
+		(isTrashing && "Trashing") ||
+		(isDeleting && "Deleting") ||
+		"";
+	const isBusy = busyLabel !== "";
+
+	useRowMotion(rowRef, { id, leaving, entering, onLeft, onEntered });
+
+	const run = async (handler) => {
+		const res = await handler(object);
+		const node = rowRef.current;
+		if (!node) return;
+		if (actionFailed(res)) {
+			flashElement(node, "error");
+			shakeElement(node);
+		} else {
+			flashElement(node, "success");
+		}
+	};
+
 	return (
-		<li className="list-group-item">
+		<li
+			ref={rowRef}
+			className="list-group-item"
+			aria-busy={isBusy || undefined}
+			style={
+				leaving
+					? { overflow: "hidden", pointerEvents: "none" }
+					: entering
+						? { overflow: "hidden" }
+						: undefined
+			}
+		>
 			<div className="blog-item__panel">
-				<div className="blog-item__detail">
+				<div
+					className="blog-item__detail"
+					style={{
+						opacity: isBusy ? 0.55 : 1,
+						transition: "opacity 150ms ease",
+					}}
+				>
 					<div className="blog-item__info">{object.text}</div>
 					<h1 className="blog-item__title">
 						<Link
 							href={{
-								pathname: `/noadmin/quotes/update/${object._id}`,
+								pathname: `/noadmin/quotes/update/${id}`,
 								query: {},
 							}}
 							className="blog-item__title-link"
@@ -33,17 +95,36 @@ const Single = ({
 					</h1>
 					<div className="blog-item__meta">
 						<span className="badge bg-dark me-1">
-							{formatDateWithoutTime(object.createdAt)}
+							<LocalDate value={object.createdAt} />
 						</span>
 						<span className="badge bg-dark me-1">{object.status}</span>
 					</div>
 				</div>
 				<div className="blog-actions-ellipsis-menu">
 					<span className="ellipsis-menu">
-						<DropdownButton title="Options" variant="secondary">
+						<DropdownButton
+							title={
+								<span className="position-relative d-inline-block">
+									<span className={isBusy ? "invisible" : undefined}>
+										Options
+									</span>
+									{isBusy && (
+										<span className="position-absolute top-50 start-50 translate-middle d-flex">
+											<span
+												className="spinner-border spinner-border-sm"
+												aria-hidden="true"
+											/>
+											<span className="visually-hidden">{busyLabel}...</span>
+										</span>
+									)}
+								</span>
+							}
+							variant="secondary"
+							disabled={isBusy || leaving}
+						>
 							<Link
 								href={{
-									pathname: `/noadmin/quotes/update/${object._id}`,
+									pathname: `/noadmin/quotes/update/${id}`,
 									query: {
 										isAdmin: true,
 									},
@@ -53,42 +134,41 @@ const Single = ({
 								View&nbsp;It
 							</Link>
 							<button
+								type="button"
 								className="dropdown-item btn btn-sm"
-								onClick={() => handleDraft(object._id)}
+								disabled={isBusy}
+								onClick={() => run(handleDraft)}
 							>
-								Draft&nbsp;It
+								{isDrafting ? <>Drafting&hellip;</> : <>Draft&nbsp;It</>}
 							</button>
 							<button
+								type="button"
 								className="dropdown-item btn btn-sm"
-								onClick={() => handlePublish(object._id)}
+								disabled={isBusy}
+								onClick={() => run(handlePublish)}
 							>
-								Publish&nbsp;It
+								{isPublishing ? <>Publishing&hellip;</> : <>Publish&nbsp;It</>}
 							</button>
 							<button
+								type="button"
 								className="dropdown-item btn btn-sm"
-								onClick={() => handleTrash(object._id)}
+								disabled={isBusy}
+								onClick={() => run(handleTrash)}
 							>
-								Trash&nbsp;It
-							</button>
-							<button
-								className="dropdown-item btn btn-sm"
-								onClick={() => handleSchedule(object._id)}
-							>
-								Schedule&nbsp;It
+								{isTrashing ? <>Trashing&hellip;</> : <>Trash&nbsp;It</>}
 							</button>
 							<hr />
 							<DeleteModal
-								id={object._id}
+								id={id}
 								sId={null}
 								location=""
 								as="button"
 								size="sm"
 								classStr={`dropdown-item`}
-								action={handleDelete}
-								action2={() => {}}
-								objects={objects}
-								setObjects={setObjects}
-								setTotalResults={setTotalResults}
+								action={() => handleDelete(object)}
+								itemTitle={`"${excerptOf(object.text)}" by ${author}`}
+								disabled={isBusy}
+								onDeleted={() => onDeleted(id)}
 								displayText={true}
 							/>
 						</DropdownButton>

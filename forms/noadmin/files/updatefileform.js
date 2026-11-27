@@ -205,6 +205,7 @@ const UpdateFileForm = ({ token = {}, auth = {}, object = {} }) => {
 					<option value={`all`}>None</option>
 					<option value={`profile-avatars`}>Profile Avatars</option>
 					<option value={`profile-covers`}>Profile Covers</option>
+					<option value={`profile-nfa-avatars`}>Profile NFA Avatar</option>
 					<option value={`posts`}>Posts</option>
 					<option value={`atf-files`}>ATF Files</option>
 					<option value={`albums`}>Albums</option>

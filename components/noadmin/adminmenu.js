@@ -56,6 +56,15 @@ const AdminMenu = ({ auth = {}, settings = {} }) => {
 					</Link>
 					<Link
 						href={{
+							pathname: `/noadmin/backlogs`,
+							query: {},
+						}}
+						className={`nav-link d-flex align-items-center gap-2 ${isActive(`/noadmin/backlogs`)}`}
+					>
+						Backlogs
+					</Link>
+					<Link
+						href={{
 							pathname: `/noadmin/blogs`,
 							query: {},
 						}}

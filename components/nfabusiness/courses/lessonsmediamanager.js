@@ -1,8 +1,11 @@
 "use client";
+import Link from "next/link";
 import { useState, useRef, useCallback, useEffect, useMemo } from "react";
 import { toast } from "react-toastify";
 import { formatFileSize } from "@/helpers/formatFileSize";
 import Single from "./lessonsingle";
+import DeleteAllModal from "@/components/global/deleteallmodal";
+import TrashAllModal from "@/components/global/trashallmodal";
 import {
 	useInfiniteList,
 	useListActions,
@@ -86,17 +89,16 @@ const LessonsMediaManager = ({
 	const {
 		initialPage,
 		limit,
-		seenKeysRef,
 		sentinelRef,
 		newobjects,
 		setNewObjects,
 		countAll,
-		setCountAll,
 		hasMore,
 		loading,
 		error,
 		handleRetry,
 		insertItem,
+		removeItem,
 		clearList,
 	} = useInfiniteList({
 		objects,
@@ -176,7 +178,7 @@ const LessonsMediaManager = ({
 		handleTrashAll,
 		handleDeleteAll,
 	} = useListActions({
-		list: { setNewObjects, seenKeysRef, setCountAll, clearList },
+		list: { setNewObjects, clearList },
 		endpoint: "/noadmin/videos",
 		noun: "video",
 		bulkBody: { onModel: "Course", resourceId: object?._id },
@@ -924,175 +926,180 @@ const LessonsMediaManager = ({
 				</div>
 			)}
 
-			{!error && items.length === 0 && !loading && (
-				<div className="alert alert-info rounded-0 mb-0" role="alert">
-					No files were returned from the API.
-				</div>
-			)}
-
-			{items.length > 0 && (
-				<div className="card rounded-0 mb-1">
-					<div className="card-header">
-						<div className="float-start">
-							<form
-								onSubmit={searchData}
-								className="d-none d-md-block"
-								role="search"
+			{/* The header stays when the list is empty, so "Add new" can attach a
+			    file that is already in the library instead of uploading it again. */}
+			<div className="card rounded-0 mb-1">
+				<div className="card-header">
+					<div className="float-start">
+						<form
+							onSubmit={searchData}
+							className="d-none d-md-block"
+							role="search"
+						>
+							<label htmlFor="keyword" className="visually-hidden">
+								Search by title
+							</label>
+							<input
+								id="keyword"
+								name="keyword"
+								value={keyword}
+								onChange={(e) => setKeyword(e.target.value)}
+								type="search"
+								className="form-control"
+								placeholder="Search by title"
+							/>
+						</form>
+					</div>
+					<div className="float-end my-1">
+						<div className="btn-group">
+							{isDirty && (
+								<button
+									type="button"
+									className="btn btn-success btn-sm"
+									onClick={handleSave}
+									disabled={saving}
+								>
+									{saving ? (
+										<>
+											<span
+												className="spinner-border spinner-border-sm me-1"
+												role="status"
+												aria-hidden="true"
+											/>
+											Saving...
+										</>
+									) : (
+										<>
+											<i aria-hidden className="fa-solid fa-floppy-disk me-1" />
+											Save Order
+										</>
+									)}
+								</button>
+							)}
+							<Link
+								href={{
+									pathname: `/nfabusiness/courses/lesson/${object._id}/create`,
+									query: {},
+								}}
+								className="btn btn-primary btn-sm"
 							>
-								<label htmlFor="keyword" className="visually-hidden">
-									Search by title
-								</label>
-								<input
-									id="keyword"
-									name="keyword"
-									value={keyword}
-									onChange={(e) => setKeyword(e.target.value)}
-									type="search"
-									className="form-control"
-									placeholder="Search by title"
-								/>
-							</form>
-						</div>
-						<div className="float-end my-1">
-							<div className="btn-group">
-								{isDirty && (
-									<button
-										type="button"
-										className="btn btn-success btn-sm"
-										onClick={handleSave}
-										disabled={saving}
-									>
-										{saving ? (
-											<>
-												<span
-													className="spinner-border spinner-border-sm me-1"
-													role="status"
-													aria-hidden="true"
-												/>
-												Saving...
-											</>
-										) : (
-											<>
-												<i
-													aria-hidden
-													className="fa-solid fa-floppy-disk me-1"
-												/>
-												Save Order
-											</>
-										)}
-									</button>
-								)}
-								<button
-									type="button"
-									className="btn btn-danger btn-sm"
-									onClick={handleTrashAll}
-									disabled={trashingAll}
-								>
-									{trashingAll ? "..." : "Trash all"}
-								</button>
-								<button
-									type="button"
-									className="btn btn-dark btn-sm"
-									onClick={handleDeleteAll}
-									disabled={deletingAll}
-								>
-									{deletingAll ? "..." : "Delete all permanently"}
-								</button>
-							</div>
+								Add new
+							</Link>
+							<TrashAllModal
+								action={handleTrashAll}
+								classList="btn-danger"
+								disabled={items.length === 0 || deletingAll}
+							/>
+							<DeleteAllModal
+								action={handleDeleteAll}
+								classList="btn-dark"
+								text="Delete all permanently"
+								disabled={items.length === 0 || trashingAll}
+							/>
 						</div>
 					</div>
-					<div className="card-body">
-						<small className="text-muted">
-							{debouncedKeyword
-								? "Clear the search to reorder."
-								: "Drag the cards to reorder, then save your changes."}
-						</small>
-					</div>
-					{/* Dismissed through state: Bootstrap's data-bs-dismiss would remove
-              nodes React still owns. */}
-					{saveError && (
-						<div
-							className="alert alert-danger alert-dismissible rounded-0 mb-0"
-							role="alert"
-						>
-							{saveError}
-							<button
-								type="button"
-								className="btn-close"
-								aria-label="Close"
-								onClick={() => setSaveError("")}
-							/>
-						</div>
-					)}
-					{success && (
-						<div
-							className="alert alert-success alert-dismissible rounded-0 mb-0"
-							role="alert"
-						>
-							{success}
-							<button
-								type="button"
-								className="btn-close"
-								aria-label="Close"
-								onClick={() => setSuccess("")}
-							/>
-						</div>
-					)}
-					{debouncedKeyword && displayedItems.length === 0 && (
-						<div
-							className="alert alert-info alert-dismissible rounded-0 mb-0"
-							role="alert"
-						>
-							No objects match &quot;{debouncedKeyword}&quot;.
-							<button
-								type="button"
-								className="btn-close"
-								aria-label="Clear search"
-								onClick={clearSearch}
-							/>
-						</div>
-					)}
-					<ul className="list-group list-group-flush">
-						{displayedItems.map((item, index) => (
-							<Single
-								key={item.key}
-								index={index}
-								object={item}
-								handleDraft={handleDraftIt}
-								handlePublish={handlePublishIt}
-								handleTrash={handleTrashIt}
-								handleSchedule={handleScheduleIt}
-								handleDelete={handleDeleteIt}
-								isDrafting={isBusy(item.key, "draft")}
-								isPublishing={isBusy(item.key, "publish")}
-								isTrashing={isBusy(item.key, "trash")}
-								isScheduling={isBusy(item.key, "schedule")}
-								isDeleting={isBusy(item.key, "delete")}
-								dragProps={
-									debouncedKeyword
-										? DRAG_DISABLED
-										: {
-												draggable: true,
-												onDragStart: (e) => handleItemDragStart(e, index),
-												onDragOver: (e) => handleItemDragOver(e, index),
-												onDragLeave: handleItemDragLeave,
-												onDrop: (e) => handleItemDrop(e, index),
-												onDragEnd: handleItemDragEnd,
-												style: { cursor: "grab" },
-												className: `${
-													itemDraggedIndex === index ? "opacity-50" : ""
-												} ${
-													itemDragOverIndex === index
-														? "border border-primary border-2 rounded"
-														: ""
-												}`,
-											}
-								}
-							/>
-						))}
-					</ul>
 				</div>
-			)}
+				{!error && items.length === 0 && !loading && (
+					<div className="alert alert-info rounded-0 mb-0" role="alert">
+						No files were returned from the API.
+					</div>
+				)}
+				{items.length > 0 && (
+					<>
+						<div className="card-body">
+							<small className="text-muted">
+								{debouncedKeyword
+									? "Clear the search to reorder."
+									: "Drag the cards to reorder, then save your changes."}
+							</small>
+						</div>
+						{/* Dismissed through state: Bootstrap's data-bs-dismiss would remove
+              nodes React still owns. */}
+						{saveError && (
+							<div
+								className="alert alert-danger alert-dismissible rounded-0 mb-0"
+								role="alert"
+							>
+								{saveError}
+								<button
+									type="button"
+									className="btn-close"
+									aria-label="Close"
+									onClick={() => setSaveError("")}
+								/>
+							</div>
+						)}
+						{success && (
+							<div
+								className="alert alert-success alert-dismissible rounded-0 mb-0"
+								role="alert"
+							>
+								{success}
+								<button
+									type="button"
+									className="btn-close"
+									aria-label="Close"
+									onClick={() => setSuccess("")}
+								/>
+							</div>
+						)}
+						{debouncedKeyword && displayedItems.length === 0 && (
+							<div
+								className="alert alert-info alert-dismissible rounded-0 mb-0"
+								role="alert"
+							>
+								No objects match &quot;{debouncedKeyword}&quot;.
+								<button
+									type="button"
+									className="btn-close"
+									aria-label="Clear search"
+									onClick={clearSearch}
+								/>
+							</div>
+						)}
+						<ul className="list-group list-group-flush">
+							{displayedItems.map((item, index) => (
+								<Single
+									key={item.key}
+									index={index}
+									object={item}
+									handleDraft={handleDraftIt}
+									handlePublish={handlePublishIt}
+									handleTrash={handleTrashIt}
+									handleSchedule={handleScheduleIt}
+									handleDelete={handleDeleteIt}
+									isDrafting={isBusy(item.key, "draft")}
+									isPublishing={isBusy(item.key, "publish")}
+									isTrashing={isBusy(item.key, "trash")}
+									isScheduling={isBusy(item.key, "schedule")}
+									isDeleting={isBusy(item.key, "delete")}
+									dragProps={
+										debouncedKeyword
+											? DRAG_DISABLED
+											: {
+													draggable: true,
+													onDragStart: (e) => handleItemDragStart(e, index),
+													onDragOver: (e) => handleItemDragOver(e, index),
+													onDragLeave: handleItemDragLeave,
+													onDrop: (e) => handleItemDrop(e, index),
+													onDragEnd: handleItemDragEnd,
+													style: { cursor: "grab" },
+													className: `${
+														itemDraggedIndex === index ? "opacity-50" : ""
+													} ${
+														itemDragOverIndex === index
+															? "border border-primary border-2 rounded"
+															: ""
+													}`,
+												}
+									}
+									onDeleted={removeItem}
+								/>
+							))}
+						</ul>
+					</>
+				)}
+			</div>
 
 			{/* Sentinel + status row */}
 			<div ref={sentinelRef} className="text-center py-4">

@@ -1,56 +1,85 @@
 "use client";
-import { useState } from "react";
+import { useId } from "react";
 import Modal from "react-bootstrap/Modal";
+import { useConfirmAction } from "@/components/global/actionfeedback";
 
-const TrashAllModal = ({ action = () => {} }) => {
-	const [confirmTrashAllModal, setConfirmTrashAllModal] = useState(false);
+const TrashAllModal = ({
+	action = () => {},
+	classList = "btn-dark",
+	disabled = false,
+}) => {
+	const titleId = useId();
 
-	const deleteObject = async (e) => {
-		e.preventDefault();
-		await action()
-			.then(() => {
-				setConfirmTrashAllModal(true);
-			})
-			.catch((err) => {
-				console.error(err);
-			});
-	};
+	const { show, pending, error, bodyRef, open, close, confirm, handleExited } =
+		useConfirmAction({
+			action,
+			failText: "Could not move everything to the trash. Please try again.",
+		});
 
 	return (
 		<>
 			<button
-				className="btn btn-dark btn-sm"
+				className={`btn ${classList} btn-sm`}
 				type="button"
-				onClick={() => setConfirmTrashAllModal(!confirmTrashAllModal)}
+				onClick={open}
+				disabled={disabled}
 			>
 				Trash all
 			</button>
 			<Modal
-				show={confirmTrashAllModal}
-				onHide={() => setConfirmTrashAllModal(!confirmTrashAllModal)}
+				show={show}
+				onHide={close}
+				onExited={handleExited}
 				size={`xl`}
-				backdrop={true}
+				backdrop={pending ? "static" : true}
+				keyboard={!pending}
 				animation={true}
+				aria-labelledby={titleId}
 			>
 				<Modal.Header closeButton>
-					<div className="modal-title h4">Are you sure about this?</div>
+					<div className="modal-title h4" id={titleId}>
+						Are you sure about this?
+					</div>
 				</Modal.Header>
-				<div className="modal-body">
+				<div className="modal-body" ref={bodyRef}>
 					You are about to move everything to trash!
+					{error && (
+						<div
+							className="alert alert-danger py-2 px-3 mt-3 mb-0 small"
+							role="alert"
+						>
+							{error}
+						</div>
+					)}
 				</div>
 				<div className="modal-footer">
 					<button
+						type="button"
 						className="btn btn-secondary btn-sm"
-						onClick={() => setConfirmTrashAllModal(!confirmTrashAllModal)}
+						onClick={close}
+						disabled={pending}
 					>
 						Close
 					</button>
 					<button
 						className="btn btn-primary btn-sm"
 						type="submit"
-						onClick={deleteObject}
+						onClick={confirm}
+						disabled={pending}
 					>
-						Submit
+						{pending ? (
+							<>
+								<span
+									className="spinner-border spinner-border-sm me-1"
+									aria-hidden="true"
+								/>
+								Trashing...
+							</>
+						) : error ? (
+							"Try again"
+						) : (
+							"Submit"
+						)}
 					</button>
 				</div>
 			</Modal>

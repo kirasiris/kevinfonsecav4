@@ -1,20 +1,29 @@
 "use client";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-import { fetchurl } from "@/helpers/setTokenOnServer";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
+import { isFailure, safeFetch } from "@/helpers/filemanagerhelpers";
+import { useIsMounted } from "@/components/global/filemanagerui";
+import {
+	actionMessage,
+	shakeElement,
+} from "@/components/global/actionfeedback";
 
-const CreateShortUrlForm = ({ auth = {}, currentpage = "" }) => {
+const CreateShortUrlForm = ({ auth = {} }) => {
 	const router = useRouter();
-
-	const [btnText, setBtnText] = useState("Submit");
+	const isMountedRef = useIsMounted();
+	const submittingRef = useRef(false);
+	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [error, setError] = useState("");
 
 	const addShortUrl = async (e) => {
 		e.preventDefault();
-		setBtnText(`Processing...`);
-		const form = e.target;
+		if (submittingRef.current) {
+			return;
+		}
+		const form = e.currentTarget;
 		const formData = new FormData(form);
 
 		const rawFormData = {
@@ -27,7 +36,10 @@ const CreateShortUrlForm = ({ auth = {}, currentpage = "" }) => {
 			website: process.env.NEXT_PUBLIC_WEBSITE_NAME,
 		};
 
-		const res = await fetchurl(
+		submittingRef.current = true;
+		setIsSubmitting(true);
+		setError("");
+		const res = await safeFetch(
 			`/global/extras/tools/urls/regression`,
 			"POST",
 			"no-cache",
@@ -36,24 +48,26 @@ const CreateShortUrlForm = ({ auth = {}, currentpage = "" }) => {
 			false,
 			false,
 		);
+		submittingRef.current = false;
+		if (!isMountedRef.current) {
+			return;
+		}
+		setIsSubmitting(false);
 
-		if (res.status === "error") {
-			toast.error(res.message);
-			setBtnText(btnText);
+		if (isFailure(res)) {
+			setError(actionMessage(res, "Could not create the short URL"));
+			shakeElement(form);
 			return;
 		}
-		if (res.status === "fail") {
-			toast.error(res.message);
-			setBtnText(btnText);
-			return;
-		}
-		setBtnText(btnText);
-		router.push(currentpage);
+		toast.success(`Short URL "${rawFormData.title}" created`);
+		form.reset();
+		form.elements.namedItem("title")?.focus();
+		router.refresh();
 	};
 
 	return (
 		<div className="d-grid gap-2 mb-4">
-			<form onSubmit={addShortUrl}>
+			<form onSubmit={addShortUrl} onReset={() => setError("")}>
 				<label htmlFor="title" className="form-label">
 					Title
 				</label>
@@ -93,8 +107,13 @@ const CreateShortUrlForm = ({ auth = {}, currentpage = "" }) => {
 					charactersLimit={99999}
 					isRequired={true}
 				/>
+				{error && (
+					<div className="alert alert-danger py-2 px-3 mb-0 small" role="alert">
+						{error}
+					</div>
+				)}
 				<br />
-				<FormButtons />
+				<FormButtons pending={isSubmitting} />
 			</form>
 		</div>
 	);

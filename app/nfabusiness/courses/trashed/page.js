@@ -1,4 +1,3 @@
-import { revalidatePath } from "next/cache";
 import { fetchurl, getUserOnServer } from "@/helpers/setTokenOnServer";
 import NFAStatusesMenu from "@/components/nfabusiness/nfastatusesmenu";
 import List from "@/components/nfabusiness/courses/list";
@@ -9,7 +8,7 @@ async function getCourses(params) {
 		"GET",
 		"no-cache",
 	);
-	return res;
+	return res instanceof Error ? { status: "error", message: res.message } : res;
 }
 
 const NFACoursesTrashedIndex = async ({ params, searchParams }) => {
@@ -22,111 +21,6 @@ const NFACoursesTrashedIndex = async ({ params, searchParams }) => {
 	const auth = await getUserOnServer();
 	const courses = await getCourses(`?page=${page}&limit=${limit}&sort=${sort}`);
 
-	const draftIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/stripe/courses/${id}/draftit`, "PUT", "no-cache");
-		revalidatePath(
-			`/nfabusiness/courses/trashed?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const publishIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/stripe/courses/${id}/publishit`,
-			"PUT",
-			"no-cache",
-		);
-		revalidatePath(
-			`/nfabusiness/courses/trashed?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const trashIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/stripe/courses/${id}/trashit`, "PUT", "no-cache");
-		revalidatePath(
-			`/nfabusiness/courses/trashed?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const scheduleIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/stripe/courses/${id}/scheduleit`,
-			"PUT",
-			"no-cache",
-		);
-		revalidatePath(
-			`/nfabusiness/courses/trashed?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const featureIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/stripe/courses/${id}/featureit`,
-			"PUT",
-			"no-cache",
-		);
-		revalidatePath(
-			`/nfabusiness/courses/trashed?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const unfeatureIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/stripe/courses/${id}/unfeatureit`,
-			"PUT",
-			"no-cache",
-		);
-		revalidatePath(
-			`/nfabusiness/courses/trashed?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const handleDelete = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/stripe/courses/${id}/permanently`,
-			"DELETE",
-			"no-cache",
-		);
-		revalidatePath(
-			`/nfabusiness/courses/trashed?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const handleTrashAll = async () => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/stripe/courses/deleteall`, "PUT", "no-cache");
-		revalidatePath(
-			`/nfabusiness/courses/trashed?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const handleDeleteAll = async () => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/stripe/courses/deleteall/permanently`,
-			"DELETE",
-			"no-cache",
-		);
-		revalidatePath(
-			`/nfabusiness/courses/trashed?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
 	return (
 		<div className="container-fluid px-0">
 			<NFAStatusesMenu
@@ -135,6 +29,7 @@ const NFACoursesTrashedIndex = async ({ params, searchParams }) => {
 				draftLink="/nfabusiness/courses/draft"
 				scheduledLink="/nfabusiness/courses/scheduled"
 				trashedLink="/nfabusiness/courses/trashed"
+				filledLink=""
 				categoriesLink=""
 				categoryType=""
 				pendingLink=""
@@ -152,15 +47,8 @@ const NFACoursesTrashedIndex = async ({ params, searchParams }) => {
 					searchedKeyword=""
 					objects={courses}
 					searchParams={awtdSearchParams}
-					handleDraft={draftIt}
-					handlePublish={publishIt}
-					handleTrash={trashIt}
-					handleSchedule={scheduleIt}
-					handleFeature={featureIt}
-					handleUnfeature={unfeatureIt}
-					handleDelete={handleDelete}
-					handleTrashAllFunction={handleTrashAll}
-					handleDeleteAllFunction={handleDeleteAll}
+					statusFilter="archived"
+					postType="course"
 				/>
 			</div>
 		</div>

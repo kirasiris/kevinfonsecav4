@@ -1,4 +1,3 @@
-import { revalidatePath } from "next/cache";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import NFAStatusesMenu from "@/components/nfabusiness/nfastatusesmenu";
 import List from "@/components/nfabusiness/reviews/list";
@@ -9,7 +8,7 @@ async function getReviews(params) {
 		"GET",
 		"no-cache",
 	);
-	return res;
+	return res instanceof Error ? { status: "error", message: res.message } : res;
 }
 
 const NFAReviewsSearchIndex = async ({ params, searchParams }) => {
@@ -26,73 +25,6 @@ const NFAReviewsSearchIndex = async ({ params, searchParams }) => {
 		`?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 	);
 
-	const draftIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/reviews/${id}/draftit`, "PUT", "no-cache");
-		revalidatePath(
-			`/nfabusiness/reviews/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
-		);
-	};
-
-	const publishIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/reviews/${id}/publishit`, "PUT", "no-cache");
-		revalidatePath(
-			`/nfabusiness/reviews/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
-		);
-	};
-
-	const trashIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/reviews/${id}/trashit`, "PUT", "no-cache");
-		revalidatePath(
-			`/nfabusiness/reviews/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
-		);
-	};
-
-	const scheduleIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/reviews/${id}/scheduleit`, "PUT", "no-cache");
-		revalidatePath(
-			`/nfabusiness/reviews/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
-		);
-	};
-
-	const handleDelete = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/reviews/${id}/permanently`, "DELETE", "no-cache");
-		revalidatePath(
-			`/nfabusiness/reviews/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
-		);
-	};
-
-	const handleTrashAll = async () => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/reviews/deleteall`, "PUT", "no-cache");
-		revalidatePath(
-			`/nfabusiness/reviews/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
-		);
-	};
-
-	const handleDeleteAll = async () => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/reviews/deleteall/permanently`,
-			"DELETE",
-			"no-cache",
-		);
-		revalidatePath(
-			`/nfabusiness/reviews/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
-		);
-	};
-
 	return (
 		<div className="container-fluid px-0">
 			<NFAStatusesMenu
@@ -101,6 +33,7 @@ const NFAReviewsSearchIndex = async ({ params, searchParams }) => {
 				draftLink="/nfabusiness/reviews/draft"
 				scheduledLink="/nfabusiness/reviews/scheduled"
 				trashedLink="/nfabusiness/reviews/trashed"
+				filledLink=""
 				categoriesLink=""
 				categoryType=""
 				pendingLink=""
@@ -117,13 +50,8 @@ const NFAReviewsSearchIndex = async ({ params, searchParams }) => {
 					searchedKeyword={keyword}
 					objects={reviews}
 					searchParams={awtdSearchParams}
-					handleDraft={draftIt}
-					handlePublish={publishIt}
-					handleTrash={trashIt}
-					handleSchedule={scheduleIt}
-					handleDelete={handleDelete}
-					handleTrashAllFunction={handleTrashAll}
-					handleDeleteAllFunction={handleDeleteAll}
+					statusFilter=""
+					postType="review"
 				/>
 			</div>
 		</div>

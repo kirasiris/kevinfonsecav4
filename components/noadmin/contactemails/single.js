@@ -1,24 +1,93 @@
 "use client";
+import { useRef } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import DropdownButton from "react-bootstrap/DropdownButton";
+import LocalDate from "@/components/global/localdate";
 import DeleteModal from "@/components/global/deletemodal";
+import {
+	actionFailed,
+	flashElement,
+	shakeElement,
+	useRowMotion,
+} from "@/components/global/actionfeedback";
 
 const Single = ({
 	object = {},
+	handleDraft = () => {},
+	handlePublish = () => {},
+	handleTrash = () => {},
+	handleSchedule = () => {},
+	handleFeature = () => {},
+	handleUnfeature = () => {},
 	handleDelete = () => {},
-	objects = [],
-	setObjects = () => {},
-	setTotalResults = () => {},
+	isDrafting = false,
+	isPublishing = false,
+	isTrashing = false,
+	isScheduling = false,
+	isFeaturing = false,
+	isUnfeaturing = false,
+	isDeleting = false,
+	leaving = false,
+	entering = false,
+	onLeft = () => {},
+	onEntered = () => {},
+	onDeleted = () => {},
 }) => {
+	const rowRef = useRef(null);
+	const id = object._id;
+
+	const busyLabel =
+		(isDrafting && "Drafting") ||
+		(isPublishing && "Publishing") ||
+		(isTrashing && "Trashing") ||
+		(isScheduling && "Scheduling") ||
+		(isFeaturing && "Featuring") ||
+		(isUnfeaturing && "Unfeaturing") ||
+		(isDeleting && "Deleting") ||
+		"";
+	const isBusy = busyLabel !== "";
+
+	useRowMotion(rowRef, { id, leaving, entering, onLeft, onEntered });
+
+	const run = async (handler) => {
+		const res = await handler(object);
+		const node = rowRef.current;
+		if (!node) return;
+		if (actionFailed(res)) {
+			flashElement(node, "error");
+			shakeElement(node);
+		} else {
+			flashElement(node, "success");
+		}
+	};
+
 	return (
-		<li className="list-group-item">
+		<li
+			ref={rowRef}
+			className="list-group-item"
+			aria-busy={isBusy || undefined}
+			style={
+				leaving
+					? { overflow: "hidden", pointerEvents: "none" }
+					: entering
+						? { overflow: "hidden" }
+						: undefined
+			}
+		>
 			<div className="blog-item__panel">
-				<div className="blog-item__detail">
+				<div
+					className="blog-item__detail"
+					style={{
+						opacity: isBusy ? 0.55 : 1,
+						transition: "opacity 150ms ease",
+					}}
+				>
 					<div className="blog-item__info"></div>
 					<h1 className="blog-item__title">
 						<Link
 							href={{
-								pathname: `/noadmin/contactemails/read/${object._id}`,
+								pathname: `/noadmin/contactemails/read/${id}`,
 								query: {},
 							}}
 							className="blog-item__title-link"
@@ -37,7 +106,7 @@ const Single = ({
 						<DropdownButton title="Options" variant="secondary">
 							<Link
 								href={{
-									pathname: `/noadmin/contactemails/read/${object._id}`,
+									pathname: `/noadmin/contactemails/read/${id}`,
 									query: {
 										isAdmin: true,
 									},
@@ -48,17 +117,16 @@ const Single = ({
 							</Link>
 							<hr />
 							<DeleteModal
-								id={object._id}
+								id={id}
 								sId={null}
 								location=""
 								as="button"
 								size="sm"
 								classStr={`dropdown-item`}
-								action={handleDelete}
-								action2={() => {}}
-								objects={objects}
-								setObjects={setObjects}
-								setTotalResults={setTotalResults}
+								action={() => handleDelete(object)}
+								itemTitle={object.title}
+								disabled={isBusy}
+								onDeleted={() => onDeleted(id)}
 								displayText={true}
 							/>
 						</DropdownButton>

@@ -4,6 +4,8 @@ import { useState, useRef, useCallback, useEffect, useMemo } from "react";
 import { toast } from "react-toastify";
 import { formatFileSize } from "@/helpers/formatFileSize";
 import Single from "./songsingle";
+import DeleteAllModal from "@/components/global/deleteallmodal";
+import TrashAllModal from "@/components/global/trashallmodal";
 import {
 	useInfiniteList,
 	useListActions,
@@ -25,20 +27,12 @@ import {
 	uploaderFields,
 } from "@/helpers/filemanagerhelpers";
 
-// Used while a search filter is active: drop indexes refer to the filtered
-// list, so reordering it would move the wrong items in the full list.
 const DRAG_DISABLED = { draggable: false, style: {}, className: "" };
-
-/* -------------------------------------------------------------------------- */
-/* Upload helpers                                                             */
-/* -------------------------------------------------------------------------- */
 
 const ACCEPTED_FILE_TYPES = "audio/*";
 
 const isAcceptedFile = (file) => matchesAccept(file, ACCEPTED_FILE_TYPES);
 
-// The file is already stored when this runs; failing here reports the error
-// instead of listing an entry that has no record behind it.
 const createSongRecord = async (parsed, object) => {
 	const record = await safeFetch(
 		`/noadmin/songs`,
@@ -71,10 +65,6 @@ const createSongRecord = async (parsed, object) => {
 	return { record };
 };
 
-/* -------------------------------------------------------------------------- */
-/* Component                                                                  */
-/* -------------------------------------------------------------------------- */
-
 const SongsMediaManager = ({
 	auth = {},
 	token = {},
@@ -82,22 +72,19 @@ const SongsMediaManager = ({
 	objects = [],
 	searchParams = {},
 }) => {
-	/* ------------------------------ Paging setup ---------------------------- */
-
 	const {
 		initialPage,
 		limit,
-		seenKeysRef,
 		sentinelRef,
 		newobjects,
 		setNewObjects,
 		countAll,
-		setCountAll,
 		hasMore,
 		loading,
 		error,
 		handleRetry,
 		insertItem,
+		removeItem,
 		clearList,
 	} = useInfiniteList({
 		objects,
@@ -108,10 +95,7 @@ const SongsMediaManager = ({
 		failMessage: "Failed to retrieve songs",
 	});
 
-	/* ------------------------------- List state ----------------------------- */
-
 	const isMountedRef = useRef(false);
-	/* ------------------------------ Upload state ---------------------------- */
 
 	const [files, setFiles] = useState([]);
 	const [isRecording, setIsRecording] = useState(false);
@@ -131,15 +115,11 @@ const SongsMediaManager = ({
 	const uploadXhrsRef = useRef(new Map());
 	const startingMediaRef = useRef(false);
 
-	/* -------------------------------- Lifecycle ----------------------------- */
-
 	useEffect(() => {
 		uploadsRef.current = files;
 	}, [files]);
 
 	useEffect(() => {
-		// Strict Mode runs this cleanup on its fake unmount, so the flag has to
-		// be set back to true on every setup.
 		isMountedRef.current = true;
 		const animFrame = animationFrameRef;
 		const audioCtx = audioContextRef;
@@ -154,8 +134,6 @@ const SongsMediaManager = ({
 			audioCtx.current?.close().catch(() => {});
 			audioCtx.current = null;
 			analyser.current = null;
-			// Detach first: stopping a live recorder fires onstop, which would
-			// otherwise start a new upload after the component is gone.
 			const rec = recorder.current;
 			if (rec) {
 				rec.ondataavailable = null;
@@ -170,11 +148,7 @@ const SongsMediaManager = ({
 		};
 	}, []);
 
-	/* ------------------------------- Object URLs ---------------------------- */
-
 	const { createObjectUrl, revokeObjectUrl, keepObjectUrl } = useObjectUrls();
-
-	/* ------------------------------- Row actions ---------------------------- */
 
 	const {
 		isBusy,
@@ -188,15 +162,14 @@ const SongsMediaManager = ({
 		handleTrashAll,
 		handleDeleteAll,
 	} = useListActions({
-		list: { setNewObjects, seenKeysRef, setCountAll, clearList },
+		list: { setNewObjects, clearList },
 		endpoint: "/noadmin/songs",
 		noun: "song",
+		nounPlural: "song",
 		bulkBody: { onModel: "Playlist", resourceId: object?._id },
-		// A reorder of rows that no longer exist must not stay pending.
+
 		onAllDeleted: () => setIsDirty(false),
 	});
-
-	/* ------------------------------- Derived list --------------------------- */
 
 	const items = useMemo(
 		() =>
@@ -211,12 +184,8 @@ const SongsMediaManager = ({
 		[newobjects],
 	);
 
-	/* ------------------------------ Media elements -------------------------- */
-
 	const { pauseAllMedia, registerMediaElement, forgetMediaElement } =
 		useMediaElements();
-
-	/* -------------------------------- Uploading ----------------------------- */
 
 	const addAndUploadFile = useCallback(
 		(fileObj) => {
@@ -258,8 +227,7 @@ const SongsMediaManager = ({
 					const serverObj = uploaded?.data || uploaded || {};
 					const loc = serverObj.location || {};
 					const recordData = record?.data || {};
-					// With no remote URL the list keeps showing the local preview, so
-					// that URL has to outlive the tray card.
+
 					if (loc.secure_location) {
 						revokeObjectUrl(fileObj.url);
 					} else {
@@ -277,8 +245,6 @@ const SongsMediaManager = ({
 						: fileObj.type;
 
 					insertItem({
-						// The record's id, not the file's: the row actions call
-						// /noadmin/songs/:id, which expects the record.
 						_id: recordData._id,
 						status: recordData.status || "draft",
 						title: recordData.title || serverObj.title || fileObj.name,
@@ -333,7 +299,6 @@ const SongsMediaManager = ({
 	);
 
 	const handleFileUpload = (e) => {
-		// Copied before the input is reset, which empties its FileList.
 		const selected = Array.from(e.target.files || []);
 		if (fileInputRef.current) {
 			fileInputRef.current.value = "";
@@ -342,7 +307,7 @@ const SongsMediaManager = ({
 		if (accepted.length < selected.length) {
 			toast.error("Only audio files can be uploaded here.");
 		}
-		// A File already is a Blob, so it is uploaded as-is.
+
 		accepted.forEach((file) => {
 			addAndUploadFile({
 				id: generateId(),
@@ -366,16 +331,13 @@ const SongsMediaManager = ({
 			uploadXhrsRef.current.delete(id);
 		}
 		forgetMediaElement(id);
-		// Revoked outside the state updater: updaters must stay pure (Strict Mode
-		// runs them twice).
+
 		const fileToRemove = uploadsRef.current.find((f) => f.id === id);
 		if (fileToRemove) {
 			revokeObjectUrl(fileToRemove.url);
 		}
 		setFiles((prev) => prev.filter((f) => f.id !== id));
 	};
-
-	/* ------------------------------- Permissions ---------------------------- */
 
 	const grantAndStart = async (type) => {
 		const ok = await startMediaStream(type);
@@ -386,13 +348,11 @@ const SongsMediaManager = ({
 	};
 
 	const requestPermission = async (type) => {
-		// Skip the modal if permission was already granted this session.
 		if (permissions[type]) {
 			startMediaStream(type);
 			return;
 		}
-		// The in-memory flag resets on remount, but the browser persists the
-		// grant. Query the Permissions API so an approved user isn't re-prompted.
+
 		try {
 			if (navigator.permissions?.query) {
 				const states = await Promise.all(
@@ -408,9 +368,7 @@ const SongsMediaManager = ({
 					return;
 				}
 			}
-		} catch {
-			// Permissions API unsupported for these names — fall back to the modal.
-		}
+		} catch {}
 		if (!isMountedRef.current) {
 			return;
 		}
@@ -433,18 +391,14 @@ const SongsMediaManager = ({
 		setPendingMediaType(null);
 	};
 
-	/* --------------------------------- Capture ------------------------------ */
-
 	const startMediaStream = async (type) => {
-		// Two quick clicks would otherwise open two streams, and the first one
-		// would keep the microphone on with nothing left to stop it.
 		if (startingMediaRef.current || streamRef.current) {
 			return false;
 		}
 		startingMediaRef.current = true;
 		try {
 			const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-			// The user may have left the page while the browser prompt was open.
+
 			if (!isMountedRef.current) {
 				stream.getTracks().forEach((track) => track.stop());
 				return false;
@@ -470,7 +424,7 @@ const SongsMediaManager = ({
 		if (!AudioCtx) {
 			return;
 		}
-		// Browsers cap the number of live AudioContexts; close any previous one.
+
 		audioContextRef.current?.close().catch(() => {});
 		const audioContext = new AudioCtx();
 		audioContextRef.current = audioContext;
@@ -559,7 +513,7 @@ const SongsMediaManager = ({
 			toast.error("Recording is not supported in this browser.");
 			return;
 		}
-		// Captured per recording, so a late onstop can't mix up chunks.
+
 		const chunks = [];
 		chunksRef.current = chunks;
 		mediaRecorderRef.current = mediaRecorder;
@@ -577,7 +531,7 @@ const SongsMediaManager = ({
 				return;
 			}
 			setIsRecording(false);
-			// Use the format the browser actually produced (Safari records mp4).
+
 			const mimeType = mediaRecorder.mimeType || "audio/webm";
 			const blob = new Blob(chunks, { type: mimeType });
 			chunks.length = 0;
@@ -612,16 +566,12 @@ const SongsMediaManager = ({
 	};
 
 	const closeMediaStream = () => {
-		// Stop the recorder before its tracks so the final chunk is flushed and
-		// the recording is still saved.
 		stopRecording();
 		streamRef.current?.getTracks().forEach((track) => track.stop());
 		streamRef.current = null;
 		stopAudioVisualization();
 		setShowMicrophone(false);
 	};
-
-	/* ----------------------------- Reorder uploads -------------------------- */
 
 	const {
 		draggedIndex,
@@ -632,8 +582,6 @@ const SongsMediaManager = ({
 		handleDrop,
 		handleDragEnd,
 	} = useUploadReorder(setFiles, uploadsRef);
-
-	/* ------------------------------ Reorder list ---------------------------- */
 
 	const {
 		itemDraggedIndex,
@@ -656,8 +604,6 @@ const SongsMediaManager = ({
 		saveEndpoint: `/noadmin/songs/${object?._id}/updateorder`,
 	});
 
-	/* --------------------------------- Search ------------------------------- */
-
 	const {
 		keyword,
 		setKeyword,
@@ -666,8 +612,6 @@ const SongsMediaManager = ({
 		clearSearch,
 		displayedItems,
 	} = useListSearch(items);
-
-	/* --------------------------------- Render ------------------------------- */
 
 	const permissionLabel = "microphone";
 	const totalSize = files.reduce((acc, f) => acc + (f.size || 0), 0);
@@ -681,7 +625,6 @@ const SongsMediaManager = ({
 
 	return (
 		<>
-			{/* FILE UPLOADER */}
 			<div className="mb-1">
 				{showPermissionModal && (
 					<div
@@ -779,7 +722,6 @@ const SongsMediaManager = ({
 							</div>
 						</div>
 
-						{/* Live capture panel */}
 						{showMicrophone && (
 							<div className="card mb-3 border-2 border-primary">
 								<div className="card-body">
@@ -993,7 +935,6 @@ const SongsMediaManager = ({
 				</div>
 			</div>
 
-			{/* GET API ENDPOINT ERRORS */}
 			{error && (
 				<div
 					className="alert alert-danger d-flex justify-content-between align-items-center"
@@ -1012,103 +953,95 @@ const SongsMediaManager = ({
 				</div>
 			)}
 
-			{!error && items.length === 0 && !loading && (
-				<div className="alert alert-info rounded-0 mb-0" role="alert">
-					No files were returned from the API.
+			<div className="card rounded-0 mb-1">
+				<div className="card-header">
+					<div className="float-start">
+						<form
+							onSubmit={searchData}
+							className="d-none d-md-block"
+							role="search"
+						>
+							<label htmlFor="keyword" className="visually-hidden">
+								Search by title
+							</label>
+							<input
+								id="keyword"
+								name="keyword"
+								value={keyword}
+								onChange={(e) => setKeyword(e.target.value)}
+								type="search"
+								className="form-control"
+								placeholder="Search by title"
+							/>
+						</form>
+					</div>
+					<div className="float-end my-1">
+						<div className="btn-group">
+							{isDirty && (
+								<button
+									type="button"
+									className="btn btn-success btn-sm"
+									onClick={handleSave}
+									disabled={saving}
+								>
+									{saving ? (
+										<>
+											<span
+												className="spinner-border spinner-border-sm me-1"
+												role="status"
+												aria-hidden="true"
+											/>
+											Saving...
+										</>
+									) : (
+										<>
+											<i aria-hidden className="fa-solid fa-floppy-disk me-1" />
+											Save Order
+										</>
+									)}
+								</button>
+							)}
+							<Link
+								href={{
+									pathname: `/noadmin/cdalbums/song/${object._id}/create`,
+									query: {},
+								}}
+								className="btn btn-primary btn-sm"
+							>
+								Add new
+							</Link>
+							<TrashAllModal
+								action={handleTrashAll}
+								classList="btn-danger"
+								disabled={items.length === 0 || deletingAll}
+							/>
+							<DeleteAllModal
+								action={handleDeleteAll}
+								classList="btn-dark"
+								text="Delete all permanently"
+								disabled={items.length === 0 || trashingAll}
+							/>
+						</div>
+					</div>
 				</div>
-			)}
+				{!error && items.length === 0 && !loading && (
+					<div className="alert alert-info rounded-0 mb-0" role="alert">
+						No files were returned from the API.
+					</div>
+				)}
+				{items.length > 0 && (
+					<div className="card-body">
+						<small className="text-muted">
+							{debouncedKeyword
+								? "Clear the search to reorder."
+								: "Drag the cards to reorder, then save your changes."}
+						</small>
+					</div>
+				)}
+			</div>
 
 			{items.length > 0 && (
 				<>
-					<div className="card rounded-0 mb-1">
-						<div className="card-header">
-							<div className="float-start">
-								<form
-									onSubmit={searchData}
-									className="d-none d-md-block"
-									role="search"
-								>
-									<label htmlFor="keyword" className="visually-hidden">
-										Search by title
-									</label>
-									<input
-										id="keyword"
-										name="keyword"
-										value={keyword}
-										onChange={(e) => setKeyword(e.target.value)}
-										type="search"
-										className="form-control"
-										placeholder="Search by title"
-									/>
-								</form>
-							</div>
-							<div className="float-end my-1">
-								<div className="btn-group">
-									{isDirty && (
-										<button
-											type="button"
-											className="btn btn-success btn-sm"
-											onClick={handleSave}
-											disabled={saving}
-										>
-											{saving ? (
-												<>
-													<span
-														className="spinner-border spinner-border-sm me-1"
-														role="status"
-														aria-hidden="true"
-													/>
-													Saving...
-												</>
-											) : (
-												<>
-													<i
-														aria-hidden
-														className="fa-solid fa-floppy-disk me-1"
-													/>
-													Save Order
-												</>
-											)}
-										</button>
-									)}
-									<Link
-										href={{
-											pathname: `/noadmin/cdalbums/songs/${object._id}/create`,
-											query: {},
-										}}
-										className="btn btn-primary btn-sm"
-									>
-										Add new
-									</Link>
-									<button
-										type="button"
-										className="btn btn-danger btn-sm"
-										onClick={handleTrashAll}
-										disabled={trashingAll}
-									>
-										{trashingAll ? "..." : "Trash all"}
-									</button>
-									<button
-										type="button"
-										className="btn btn-dark btn-sm"
-										onClick={handleDeleteAll}
-										disabled={deletingAll}
-									>
-										{deletingAll ? "..." : "Delete all permanently"}
-									</button>
-								</div>
-							</div>
-						</div>
-						<div className="card-body">
-							<small className="text-muted">
-								{debouncedKeyword
-									? "Clear the search to reorder."
-									: "Drag the cards to reorder, then save your changes."}
-							</small>
-						</div>
-					</div>
-					{/* Dismissed through state: Bootstrap's data-bs-dismiss would remove
-              nodes React still owns. */}
 					{saveError && (
 						<div
 							className="alert alert-danger alert-dismissible rounded-0 mb-0"
@@ -1187,13 +1120,13 @@ const SongsMediaManager = ({
 												}`,
 											}
 								}
+								onDeleted={removeItem}
 							/>
 						))}
 					</div>
 				</>
 			)}
 
-			{/* Sentinel + status row */}
 			<div ref={sentinelRef} className="text-center py-4">
 				{loading && (
 					<div className="d-inline-flex align-items-center gap-2 text-muted">

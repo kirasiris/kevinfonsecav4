@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { formatFileSize } from "@/helpers/formatFileSize";
 import Single from "@/components/noadmin/files/single";
 import {
+	useFileActions,
 	useInfiniteList,
 	useListSearch,
 	useMediaElements,
@@ -44,17 +45,15 @@ const ThemesMediaManager = ({
 	/* ------------------------------ Paging setup ---------------------------- */
 
 	const {
-		seenKeysRef,
 		sentinelRef,
 		newobjects,
-		setNewObjects,
 		countAll,
-		setCountAll,
 		hasMore,
 		loading,
 		error,
 		handleRetry,
 		insertItem,
+		removeItem,
 	} = useInfiniteList({
 		objects,
 		searchParams,
@@ -67,12 +66,6 @@ const ThemesMediaManager = ({
 	/* ------------------------------- List state ----------------------------- */
 
 	const isMountedRef = useRef(false);
-	// The ref (not state) blocks a double click before the re-render lands.
-	const deletingKeysRef = useRef(new Set());
-
-	// A Set, so deleting two files at once doesn't re-enable the first button
-	// when the second request finishes.
-	const [deletingKeys, setDeletingKeys] = useState(() => new Set());
 
 	/* ------------------------------ Upload state ---------------------------- */
 
@@ -129,45 +122,7 @@ const ThemesMediaManager = ({
 
 	/* ------------------------------- Row actions ---------------------------- */
 
-	const setDeleting = (key, isDeleting) => {
-		if (isDeleting) deletingKeysRef.current.add(key);
-		else deletingKeysRef.current.delete(key);
-		setDeletingKeys(new Set(deletingKeysRef.current));
-	};
-
-	const handleDeleteIt = useCallback(
-		async (item) => {
-			if (!item?._id || deletingKeysRef.current.has(item.__key)) {
-				return;
-			}
-			setDeleting(item.__key, true);
-			const res = await safeFetch(
-				`/noadmin/files/${item._id}/permanently`,
-				"DELETE",
-				"no-cache",
-				{},
-				undefined,
-				false,
-				false,
-			);
-			if (!isMountedRef.current) {
-				return;
-			}
-			if (isFailure(res)) {
-				toast.error(res?.message || "Could not delete the file");
-				setDeleting(item.__key, false);
-				return;
-			}
-			toast.success("File deleted");
-			setNewObjects((prev) => prev.filter((f) => f.__key !== item.__key));
-			seenKeysRef.current.delete(item.__key);
-			setCountAll((prev) =>
-				typeof prev === "number" ? Math.max(0, prev - 1) : prev,
-			);
-			setDeleting(item.__key, false);
-		},
-		[seenKeysRef, setCountAll, setNewObjects],
-	);
+	const { isDeleting, handleDeleteIt } = useFileActions();
 
 	/* ------------------------------- Derived list --------------------------- */
 
@@ -991,39 +946,39 @@ const ThemesMediaManager = ({
 				</div>
 			)}
 
-			{!error && items.length === 0 && !loading && (
-				<div className="alert alert-info rounded-0 mb-0" role="alert">
-					No files were returned from the API.
+			<div className="card rounded-0 mb-1">
+				<div className="card-header">
+					<div className="float-start">
+						<form
+							onSubmit={searchData}
+							className="d-none d-md-block"
+							role="search"
+						>
+							<label htmlFor="keyword" className="visually-hidden">
+								Search by title
+							</label>
+							<input
+								id="keyword"
+								name="keyword"
+								value={keyword}
+								onChange={(e) => setKeyword(e.target.value)}
+								type="search"
+								className="form-control"
+								placeholder="Search by title"
+							/>
+						</form>
+					</div>
+					<div className="float-end my-1">{countBadge}</div>
 				</div>
-			)}
+				{!error && items.length === 0 && !loading && (
+					<div className="alert alert-info rounded-0 mb-0" role="alert">
+						No files were returned from the API.
+					</div>
+				)}
+			</div>
 
 			{items.length > 0 && (
 				<>
-					<div className="card rounded-0 mb-1">
-						<div className="card-header">
-							<div className="float-start">
-								<form
-									onSubmit={searchData}
-									className="d-none d-md-block"
-									role="search"
-								>
-									<label htmlFor="keyword" className="visually-hidden">
-										Search by title
-									</label>
-									<input
-										id="keyword"
-										name="keyword"
-										value={keyword}
-										onChange={(e) => setKeyword(e.target.value)}
-										type="search"
-										className="form-control"
-										placeholder="Search by title"
-									/>
-								</form>
-							</div>
-							<div className="float-end my-1">{countBadge}</div>
-						</div>
-					</div>
 					{/* Dismissed through state: Bootstrap's data-bs-dismiss would remove
               nodes React still owns. */}
 					{debouncedKeyword && displayedItems.length === 0 && (
@@ -1047,7 +1002,8 @@ const ThemesMediaManager = ({
 								index={index}
 								object={item}
 								handleDelete={handleDeleteIt}
-								isDeleting={deletingKeys.has(item.key)}
+								isDeleting={isDeleting(item.key)}
+								onDeleted={removeItem}
 							/>
 						))}
 					</div>

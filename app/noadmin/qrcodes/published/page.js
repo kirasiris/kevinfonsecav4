@@ -1,4 +1,3 @@
-import { revalidatePath } from "next/cache";
 import { fetchurl, getUserOnServer } from "@/helpers/setTokenOnServer";
 import AdminStatusesMenu from "@/components/noadmin/adminstatusesmenu";
 import CreateQrCodeForm from "@/forms/noadmin/qrcodes/createqrcodeform";
@@ -10,7 +9,7 @@ async function getQRCodes(params) {
 		"GET",
 		"no-cache",
 	);
-	return res;
+	return res instanceof Error ? { status: "error", message: res.message } : res;
 }
 
 const AdminQRCodesGeneratorPublishedIndex = async ({
@@ -27,73 +26,6 @@ const AdminQRCodesGeneratorPublishedIndex = async ({
 
 	const qrcodes = await getQRCodes(`?page=${page}&limit=${limit}&sort=${sort}`);
 
-	const draftIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/qrcodes/${id}/draftit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/qrcodes/published?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const publishIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/qrcodes/${id}/publishit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/qrcodes/published?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const trashIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/qrcodes/${id}/trashit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/qrcodes/published?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const scheduleIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/qrcodes/${id}/scheduleit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/qrcodes/published?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const handleDelete = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/qrcodes/${id}/permanently`, "DELETE", "no-cache");
-		revalidatePath(
-			`/noadmin/qrcodes/published?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const handleTrashAll = async () => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/qrcodes/deleteall`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/qrcodes/published?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const handleDeleteAll = async () => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/qrcodes/deleteall/permanently`,
-			"DELETE",
-			"no-cache",
-		);
-		revalidatePath(
-			`/noadmin/qrcodes/published?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
 	return (
 		<div className="container-fluid px-0">
 			<AdminStatusesMenu
@@ -102,6 +34,7 @@ const AdminQRCodesGeneratorPublishedIndex = async ({
 				draftLink="/noadmin/qrcodes/draft"
 				scheduledLink="/noadmin/qrcodes/scheduled"
 				trashedLink="/noadmin/qrcodes/trashed"
+				filledLink=""
 				categoriesLink=""
 				categoryType=""
 			/>
@@ -119,13 +52,7 @@ const AdminQRCodesGeneratorPublishedIndex = async ({
 							searchedKeyword=""
 							objects={qrcodes}
 							searchParams={awtdSearchParams}
-							handleDraft={draftIt}
-							handlePublish={publishIt}
-							handleTrash={trashIt}
-							handleSchedule={scheduleIt}
-							handleDelete={handleDelete}
-							handleTrashAllFunction={handleTrashAll}
-							handleDeleteAllFunction={handleDeleteAll}
+							statusFilter="published"
 						/>
 					</div>
 				</div>

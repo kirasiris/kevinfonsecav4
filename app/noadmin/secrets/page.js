@@ -1,11 +1,10 @@
-import { revalidatePath } from "next/cache";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import AdminStatusesMenu from "@/components/noadmin/adminstatusesmenu";
 import List from "@/components/noadmin/secrets/list";
 
 async function getSecrets(params) {
 	const res = await fetchurl(`/global/secrets${params}`, "GET", "no-cache");
-	return res;
+	return res instanceof Error ? { status: "error", message: res.message } : res;
 }
 
 const AdminSecretsIndex = async ({ params, searchParams }) => {
@@ -17,52 +16,6 @@ const AdminSecretsIndex = async ({ params, searchParams }) => {
 
 	const secrets = await getSecrets(`?page=${page}&limit=${limit}&sort=${sort}`);
 
-	const draftIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/secrets/${id}/draftit`, "PUT", "no-cache");
-		revalidatePath(`/noadmin/secrets?page=${page}&limit=${limit}&sort=${sort}`);
-	};
-
-	const publishIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/secrets/${id}/publishit`, "PUT", "no-cache");
-		revalidatePath(`/noadmin/secrets?page=${page}&limit=${limit}&sort=${sort}`);
-	};
-
-	const trashIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/secrets/${id}/trashit`, "PUT", "no-cache");
-		revalidatePath(`/noadmin/secrets?page=${page}&limit=${limit}&sort=${sort}`);
-	};
-
-	const handleDelete = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/secrets/${id}/permanently`, "DELETE", "no-cache");
-		revalidatePath(`/noadmin/secrets?page=${page}&limit=${limit}&sort=${sort}`);
-	};
-
-	const handleTrashAll = async () => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/secrets/deleteall`, "PUT", "no-cache");
-		revalidatePath(`/noadmin/secrets?page=${page}&limit=${limit}&sort=${sort}`);
-	};
-
-	const handleDeleteAll = async () => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/secrets/deleteall/permanently`,
-			"DELETE",
-			"no-cache",
-		);
-		revalidatePath(`/noadmin/secrets?page=${page}&limit=${limit}&sort=${sort}`);
-	};
-
 	return (
 		<div className="container-fluid px-0">
 			<AdminStatusesMenu
@@ -71,6 +24,7 @@ const AdminSecretsIndex = async ({ params, searchParams }) => {
 				draftLink="/noadmin/secrets/draft"
 				scheduledLink=""
 				trashedLink="/noadmin/secrets/trashed"
+				filledLink=""
 				categoriesLink=""
 				categoryType=""
 			/>
@@ -83,13 +37,7 @@ const AdminSecretsIndex = async ({ params, searchParams }) => {
 					searchedKeyword=""
 					objects={secrets}
 					searchParams={awtdSearchParams}
-					handleDraft={draftIt}
-					handlePublish={publishIt}
-					handleTrash={trashIt}
-					handleSchedule={undefined}
-					handleDelete={handleDelete}
-					handleTrashAllFunction={handleTrashAll}
-					handleDeleteAllFunction={handleDeleteAll}
+					statusFilter=""
 				/>
 			</div>
 		</div>

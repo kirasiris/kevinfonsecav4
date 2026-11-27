@@ -1,6 +1,5 @@
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
-import Link from "next/link";
 import "@/src/css/admin.css";
 import AdminMenu from "@/components/noadmin/adminmenu";
 import Loading from "@/app/noadmin/loading";
@@ -53,19 +52,7 @@ export default async function AdminLayout({ children }) {
 					<i className="fa-solid fa-bars" />
 				</button>
 				<h5 className="mb-0">Dashboard</h5>
-				<div className="ms-auto">
-					<PublishDueButton />
-					<Link
-						href={{
-							pathname: process.env.NEXT_PUBLIC_WEBSITE_URL,
-							query: {},
-						}}
-						className="btn btn-secondary btn-sm"
-						target="_blank"
-					>
-						View Site
-					</Link>
-				</div>
+				<PublishDueButton />
 			</div>
 			<div className="d-flex" style={{ minWidth: 0 }}>
 				{/* Desktop Sidebar - visible on lg and up */}

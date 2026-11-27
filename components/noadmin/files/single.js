@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import DropdownButton from "react-bootstrap/DropdownButton";
+import DeleteModal from "@/components/global/deletemodal";
 import { formatFileSize } from "@/helpers/formatFileSize";
 
 const FileIcon = ({ type }) => {
@@ -21,6 +22,7 @@ const Single = ({
 	object = {},
 	handleDelete = () => {},
 	isDeleting = false,
+	onDeleted = () => {},
 }) => {
 	return (
 		<div className="col-12 col-sm-6 col-md-4 col-lg-3">
@@ -132,16 +134,19 @@ const Single = ({
 									Add&nbsp;Report
 								</Link>
 							</DropdownButton>
-							<button
-								type="button"
-								className="btn btn-danger btn-sm py-0"
+							<DeleteModal
+								id={object.raw._id}
+								sId={null}
+								location=""
+								as="button"
+								size="sm"
+								classStr="py-0"
+								action={() => handleDelete(object.raw)}
+								itemTitle={object.raw.title}
 								disabled={isDeleting}
-								onClick={() => {
-									handleDelete(object?.raw);
-								}}
-							>
-								{isDeleting ? "..." : "Delete"}
-							</button>
+								onDeleted={() => onDeleted(object.key)}
+								displayText={true}
+							/>
 						</div>
 					</div>
 				</div>

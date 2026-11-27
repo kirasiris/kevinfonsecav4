@@ -1,24 +1,26 @@
 "use client";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-import { fetchurl } from "@/helpers/setTokenOnServer";
-import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
+import { isFailure, safeFetch } from "@/helpers/filemanagerhelpers";
+import { useIsMounted } from "@/components/global/filemanagerui";
+import {
+	actionMessage,
+	shakeElement,
+} from "@/components/global/actionfeedback";
+import MyTextArea from "@/components/global/myfinaltextarea";
 
-const CreateQuizCategoryForm = ({
-	page = "1",
-	limit = "10",
-	sort = "-createdAt",
-	objects = [],
-}) => {
+const CreateQuizCategoryForm = ({ objects = [] }) => {
 	const router = useRouter();
-
-	const [btnText, setBtnText] = useState(`Submit`);
+	const isMountedRef = useIsMounted();
+	const submittingRef = useRef(false);
+	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [error, setError] = useState("");
 
 	const createCategory = async (e) => {
 		e.preventDefault();
-		setBtnText(`Processing...`);
+		if (submittingRef.current) return;
 		const form = e.target;
 		const formData = new FormData(form);
 
@@ -32,7 +34,11 @@ const CreateQuizCategoryForm = ({
 			categoryType: "quiz",
 		};
 
-		const res = await fetchurl(
+		submittingRef.current = true;
+		setIsSubmitting(true);
+		setError("");
+
+		const res = await safeFetch(
 			`/noadmin/categories`,
 			"POST",
 			"no-cache",
@@ -42,24 +48,23 @@ const CreateQuizCategoryForm = ({
 			false,
 		);
 
-		if (res.status === "error") {
-			toast.error(res.message);
-			setBtnText(btnText);
+		submittingRef.current = false;
+		if (!isMountedRef.current) return;
+		setIsSubmitting(false);
+
+		if (isFailure(res)) {
+			setError(actionMessage(res, "Could not create the category"));
+			shakeElement(form);
 			return;
 		}
-		if (res.status === "fail") {
-			toast.error(res.message);
-			setBtnText(btnText);
-			return;
-		}
-		setBtnText(btnText);
-		router.push(
-			`/noadmin/quizzes/categories?page=${page}&limit=${limit}&sort=${sort}`,
-		);
+		toast.success(`Category "${rawFormData.title}" created`);
+		form.reset();
+		form.elements.namedItem("title")?.focus();
+		router.refresh();
 	};
 
 	return (
-		<form onSubmit={createCategory}>
+		<form onSubmit={createCategory} onReset={() => setError("")}>
 			<label htmlFor="category-title" className="form-label">
 				Title
 			</label>
@@ -115,8 +120,16 @@ const CreateQuizCategoryForm = ({
 				<option value={true}>Yes</option>
 				<option value={false}>No</option>
 			</select>
+			{error && (
+				<div
+					className="alert alert-danger py-2 px-3 mt-3 mb-0 small"
+					role="alert"
+				>
+					{error}
+				</div>
+			)}
 			<br />
-			<FormButtons />
+			<FormButtons pending={isSubmitting} />
 		</form>
 	);
 };

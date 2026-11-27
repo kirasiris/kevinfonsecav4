@@ -1,4 +1,3 @@
-import { revalidatePath } from "next/cache";
 import { fetchurl, getUserOnServer } from "@/helpers/setTokenOnServer";
 import AdminStatusesMenu from "@/components/noadmin/adminstatusesmenu";
 import List from "@/components/noadmin/shorturls/list";
@@ -10,7 +9,7 @@ async function getShortUrls(params) {
 		"GET",
 		"no-cache",
 	);
-	return res;
+	return res instanceof Error ? { status: "error", message: res.message } : res;
 }
 
 const AdminShortUrlsSearchIndex = async ({ params, searchParams }) => {
@@ -29,97 +28,6 @@ const AdminShortUrlsSearchIndex = async ({ params, searchParams }) => {
 		`?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 	);
 
-	const draftIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/extras/tools/urls/regression/${id}/draftit`,
-			"PUT",
-			"no-cache",
-		);
-		revalidatePath(
-			`/noadmin/shorturls/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
-		);
-	};
-
-	const publishIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/extras/tools/urls/regression/${id}/publishit`,
-			"PUT",
-			"no-cache",
-		);
-		revalidatePath(
-			`/noadmin/shorturls/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
-		);
-	};
-
-	const trashIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/extras/tools/urls/regression/${id}/trashit`,
-			"PUT",
-			"no-cache",
-		);
-		revalidatePath(
-			`/noadmin/shorturls/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
-		);
-	};
-
-	const scheduleIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/extras/tools/urls/regression/${id}/scheduleit`,
-			"PUT",
-			"no-cache",
-		);
-		revalidatePath(
-			`/noadmin/shorturls/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
-		);
-	};
-
-	const handleDelete = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/extras/tools/urls/regression/${id}/permanently`,
-			"DELETE",
-			"no-cache",
-		);
-		revalidatePath(
-			`/noadmin/shorturls/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
-		);
-	};
-
-	const handleTrashAll = async () => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/extras/tools/urls/regression/deleteall`,
-			"PUT",
-			"no-cache",
-		);
-		revalidatePath(
-			`/noadmin/shorturls/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
-		);
-	};
-
-	const handleDeleteAll = async () => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/extras/tools/urls/regression/deleteall/permanently`,
-			"DELETE",
-			"no-cache",
-		);
-		revalidatePath(
-			`/noadmin/shorturls/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
-		);
-	};
-
 	return (
 		<div className="container-fluid px-0">
 			<AdminStatusesMenu
@@ -128,6 +36,7 @@ const AdminShortUrlsSearchIndex = async ({ params, searchParams }) => {
 				draftLink="/noadmin/shorturls/draft"
 				scheduledLink="/noadmin/shorturls/scheduled"
 				trashedLink="/noadmin/shorturls/trashed"
+				filledLink=""
 				categoriesLink=""
 				categoryType=""
 			/>
@@ -148,13 +57,8 @@ const AdminShortUrlsSearchIndex = async ({ params, searchParams }) => {
 							searchedKeyword={keyword}
 							objects={shorturls}
 							searchParams={awtdSearchParams}
-							handleDraft={draftIt}
-							handlePublish={publishIt}
-							handleTrash={trashIt}
-							handleSchedule={scheduleIt}
-							handleDelete={handleDelete}
-							handleTrashAllFunction={handleTrashAll}
-							handleDeleteAllFunction={handleDeleteAll}
+							statusFilter=""
+							postType="short"
 						/>
 					</div>
 				</div>

@@ -1,4 +1,3 @@
-import { revalidatePath } from "next/cache";
 import { notFound } from "next/navigation";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import AdminStatusesMenu from "@/components/noadmin/adminstatusesmenu";
@@ -7,8 +6,7 @@ import UpdateQuoteForm from "@/forms/noadmin/quotes/updatequoteform";
 
 async function getQuotes(params) {
 	const res = await fetchurl(`/global/quotes${params}`, "GET", "no-cache");
-	if (!res.success) notFound();
-	return res;
+	return res instanceof Error ? { status: "error", message: res.message } : res;
 }
 
 const UpdateQuote = async ({ params, searchParams }) => {
@@ -18,61 +16,14 @@ const UpdateQuote = async ({ params, searchParams }) => {
 	const limit = awtdSearchParams.limit || 10;
 	const sort = awtdSearchParams.sort || "-createdAt";
 
-	const quote = await getQuotes(`/${awtdParams.id}`);
-	const quotes = await getQuotes(`?page=${page}&limit=${limit}&sort=${sort}`);
+	const [quote, quotes] = await Promise.all([
+		getQuotes(`/${awtdParams.id}`),
+		getQuotes(`?page=${page}&limit=${limit}&sort=${sort}`),
+	]);
 
-	const draftIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/quotes/${id}/draftit`, "PUT", "no-cache");
-		revalidatePath(`/noadmin/quotes?page=${page}&limit=${limit}&sort=${sort}`);
-	};
-
-	const publishIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/quotes/${id}/publishit`, "PUT", "no-cache");
-		revalidatePath(`/noadmin/quotes?page=${page}&limit=${limit}&sort=${sort}`);
-	};
-
-	const trashIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/quotes/${id}/trashit`, "PUT", "no-cache");
-		revalidatePath(`/noadmin/quotes?page=${page}&limit=${limit}&sort=${sort}`);
-	};
-
-	const scheduleIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/quotes/${id}/scheduleit`, "PUT", "no-cache");
-		revalidatePath(`/noadmin/quotes?page=${page}&limit=${limit}&sort=${sort}`);
-	};
-
-	const handleDelete = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/quotes/${id}/permanently`, "DELETE", "no-cache");
-		revalidatePath(`/noadmin/quotes?page=${page}&limit=${limit}&sort=${sort}`);
-	};
-
-	const handleTrashAll = async () => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/quotes/deleteall`, "PUT", "no-cache");
-		revalidatePath(`/noadmin/quotes?page=${page}&limit=${limit}&sort=${sort}`);
-	};
-
-	const handleDeleteAll = async () => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/quotes/deleteall/permanently`,
-			"DELETE",
-			"no-cache",
-		);
-		revalidatePath(`/noadmin/quotes?page=${page}&limit=${limit}&sort=${sort}`);
-	};
+	if (!quote?.success) {
+		notFound();
+	}
 
 	return (
 		<div className="container-fluid px-0">
@@ -82,6 +33,9 @@ const UpdateQuote = async ({ params, searchParams }) => {
 				draftLink="/noadmin/quotes/draft"
 				scheduledLink="/noadmin/quotes/scheduled"
 				trashedLink="/noadmin/quotes/trashed"
+				filledLink=""
+				categoriesLink=""
+				categoryType=""
 			/>
 			<div className="row">
 				<div className="col">
@@ -97,15 +51,9 @@ const UpdateQuote = async ({ params, searchParams }) => {
 							pageText="Quotes"
 							addLink="/noadmin/quotes"
 							searchOn="/noadmin/quotes"
+							searchedKeyword=""
 							objects={quotes}
 							searchParams={awtdSearchParams}
-							handleDraft={draftIt}
-							handlePublish={publishIt}
-							handleTrash={trashIt}
-							handleSchedule={scheduleIt}
-							handleDelete={handleDelete}
-							handleTrashAllFunction={handleTrashAll}
-							handleDeleteAllFunction={handleDeleteAll}
 						/>
 					</div>
 				</div>

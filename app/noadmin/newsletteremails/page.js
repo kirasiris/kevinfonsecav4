@@ -1,4 +1,3 @@
-import { revalidatePath } from "next/cache";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import AdminStatusesMenu from "@/components/noadmin/adminstatusesmenu";
 import List from "@/components/noadmin/newsletteremails/list";
@@ -9,7 +8,7 @@ async function getNewsletterEmails(params) {
 		"GET",
 		"no-cache",
 	);
-	return res;
+	return res instanceof Error ? { status: "error", message: res.message } : res;
 }
 
 const AdminNewsletterEmailsIndex = async ({ params, searchParams }) => {
@@ -23,93 +22,6 @@ const AdminNewsletterEmailsIndex = async ({ params, searchParams }) => {
 		`?page=${page}&limit=${limit}&sort=${sort}`,
 	);
 
-	const draftIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/newsletteremails/${id}/draftit`,
-			"PUT",
-			"no-cache",
-		);
-		revalidatePath(
-			`/noadmin/newsletteremails?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const publishIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/newsletteremails/${id}/publishit`,
-			"PUT",
-			"no-cache",
-		);
-		revalidatePath(
-			`/noadmin/newsletteremails?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const trashIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/newsletteremails/${id}/trashit`,
-			"PUT",
-			"no-cache",
-		);
-		revalidatePath(
-			`/noadmin/newsletteremails?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const scheduleIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/newsletteremails/${id}/scheduleit`,
-			"PUT",
-			"no-cache",
-		);
-		revalidatePath(
-			`/noadmin/newsletteremails?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const handleDelete = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/newsletteremails/${id}/permanently`,
-			"DELETE",
-			"no-cache",
-		);
-		revalidatePath(
-			`/noadmin/newsletteremails?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const handleTrashAll = async () => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/newsletteremails/deleteall`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/newsletteremails?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const handleDeleteAll = async () => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/newsletteremails/deleteall/permanently`,
-			"DELETE",
-			"no-cache",
-		);
-		revalidatePath(
-			`/noadmin/newsletteremails?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
 	return (
 		<div className="container-fluid px-0">
 			<AdminStatusesMenu
@@ -118,6 +30,7 @@ const AdminNewsletterEmailsIndex = async ({ params, searchParams }) => {
 				draftLink="/noadmin/newsletteremails/draft"
 				scheduledLink="/noadmin/newsletteremails/scheduled"
 				trashedLink="/noadmin/newsletteremails/trashed"
+				filledLink=""
 				categoriesLink=""
 				categoryType=""
 			/>
@@ -130,13 +43,7 @@ const AdminNewsletterEmailsIndex = async ({ params, searchParams }) => {
 					searchedKeyword=""
 					objects={newsletteremails}
 					searchParams={awtdSearchParams}
-					handleDraft={draftIt}
-					handlePublish={publishIt}
-					handleTrash={trashIt}
-					handleSchedule={scheduleIt}
-					handleDelete={handleDelete}
-					handleTrashAllFunction={handleTrashAll}
-					handleDeleteAllFunction={handleDeleteAll}
+					statusFilter=""
 				/>
 			</div>
 		</div>

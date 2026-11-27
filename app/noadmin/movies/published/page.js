@@ -1,4 +1,3 @@
-import { revalidatePath } from "next/cache";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import AdminStatusesMenu from "@/components/noadmin/adminstatusesmenu";
 import List from "@/components/noadmin/movies/list";
@@ -9,7 +8,7 @@ async function getPlaylists(params) {
 		"GET",
 		"no-cache",
 	);
-	return res;
+	return res instanceof Error ? { status: "error", message: res.message } : res;
 }
 
 const AdminMoviesPublishedIndex = async ({ params, searchParams }) => {
@@ -23,95 +22,6 @@ const AdminMoviesPublishedIndex = async ({ params, searchParams }) => {
 		`?page=${page}&limit=${limit}&sort=${sort}`,
 	);
 
-	const draftIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/playlists/${id}/draftit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/movies/published?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const publishIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/playlists/${id}/publishit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/movies/published?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const trashIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/playlists/${id}/trashit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/movies/published?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const scheduleIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/playlists/${id}/scheduleit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/movies/published?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const featureIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/playlists/${id}/featureit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/movies/published?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const unfeatureIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/playlists/${id}/unfeatureit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/movies/published?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const handleDelete = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/playlists/${id}/permanently`,
-			"DELETE",
-			"no-cache",
-		);
-		revalidatePath(
-			`/noadmin/movies/published?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const handleTrashAll = async () => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/playlists/deleteall`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/movies/published?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const handleDeleteAll = async () => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/playlists/deleteall/permanently`,
-			"DELETE",
-			"no-cache",
-		);
-		revalidatePath(
-			`/noadmin/movies/published?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
 	return (
 		<div className="container-fluid px-0">
 			<AdminStatusesMenu
@@ -120,6 +30,7 @@ const AdminMoviesPublishedIndex = async ({ params, searchParams }) => {
 				draftLink="/noadmin/movies/draft"
 				scheduledLink="/noadmin/movies/scheduled"
 				trashedLink="/noadmin/movies/trashed"
+				filledLink=""
 				categoriesLink="/noadmin/movies/categories"
 				categoryType="movie"
 			/>
@@ -132,15 +43,8 @@ const AdminMoviesPublishedIndex = async ({ params, searchParams }) => {
 					searchedKeyword=""
 					objects={movies}
 					searchParams={awtdSearchParams}
-					handleDraft={draftIt}
-					handlePublish={publishIt}
-					handleTrash={trashIt}
-					handleSchedule={scheduleIt}
-					handleFeature={featureIt}
-					handleUnfeature={unfeatureIt}
-					handleDelete={handleDelete}
-					handleTrashAllFunction={handleTrashAll}
-					handleDeleteAllFunction={handleDeleteAll}
+					statusFilter="published"
+					onairType="movie"
 				/>
 			</div>
 		</div>

@@ -1,4 +1,3 @@
-import { revalidatePath } from "next/cache";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import NFAStatusesMenu from "@/components/nfabusiness/nfastatusesmenu";
 import List from "@/components/nfabusiness/acquisitionsdisposals/list";
@@ -9,7 +8,7 @@ async function getAcquisitionsDisposals(params) {
 		"GET",
 		"no-cache",
 	);
-	return res;
+	return res instanceof Error ? { status: "error", message: res.message } : res;
 }
 
 const NFAAcquisitionDisposalsIndex = async ({ params, searchParams }) => {
@@ -23,31 +22,31 @@ const NFAAcquisitionDisposalsIndex = async ({ params, searchParams }) => {
 		`?page=${page}&limit=${limit}&sort=${sort}`,
 	);
 
-	const acquireIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/weaponacquisitionsdisposals/${id}/acquireit`,
-			"PUT",
-			"no-cache",
-		);
-		revalidatePath(
-			`/nfabusiness/acquisitionsdisposals?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
+	// const acquireIt = async (id) => {
+	// 	"use server";
+	// 	// const rawFormData = {}
+	// 	await fetchurl(
+	// 		`/noadmin/weaponacquisitionsdisposals/${id}/acquireit`,
+	// 		"PUT",
+	// 		"no-cache",
+	// 	);
+	// 	revalidatePath(
+	// 		`/nfabusiness/acquisitionsdisposals?page=${page}&limit=${limit}&sort=${sort}`,
+	// 	);
+	// };
 
-	const disposeIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/weaponacquisitionsdisposals/${id}/disposeit`,
-			"PUT",
-			"no-cache",
-		);
-		revalidatePath(
-			`/nfabusiness/acquisitionsdisposals?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
+	// const disposeIt = async (id) => {
+	// 	"use server";
+	// 	// const rawFormData = {}
+	// 	await fetchurl(
+	// 		`/noadmin/weaponacquisitionsdisposals/${id}/disposeit`,
+	// 		"PUT",
+	// 		"no-cache",
+	// 	);
+	// 	revalidatePath(
+	// 		`/nfabusiness/acquisitionsdisposals?page=${page}&limit=${limit}&sort=${sort}`,
+	// 	);
+	// };
 
 	return (
 		<div className="container-fluid px-0">
@@ -57,6 +56,7 @@ const NFAAcquisitionDisposalsIndex = async ({ params, searchParams }) => {
 				draftLink=""
 				scheduledLink=""
 				trashedLink=""
+				filledLink=""
 				categoriesLink=""
 				categoryType=""
 				pendingLink="/nfabusiness/acquisitionsdisposals/pending"
@@ -73,8 +73,7 @@ const NFAAcquisitionDisposalsIndex = async ({ params, searchParams }) => {
 					searchedKeyword=""
 					objects={acquisitionsdisposals}
 					searchParams={awtdSearchParams}
-					handleDraft={acquireIt}
-					handlePublish={disposeIt}
+					statusFilter=""
 				/>
 			</div>
 		</div>

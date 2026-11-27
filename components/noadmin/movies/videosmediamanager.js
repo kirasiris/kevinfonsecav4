@@ -4,6 +4,8 @@ import { useState, useRef, useCallback, useEffect, useMemo } from "react";
 import { toast } from "react-toastify";
 import { formatFileSize } from "@/helpers/formatFileSize";
 import Single from "./videosingle";
+import DeleteAllModal from "@/components/global/deleteallmodal";
+import TrashAllModal from "@/components/global/trashallmodal";
 import {
 	useInfiniteList,
 	useListActions,
@@ -23,16 +25,10 @@ import {
 	uploaderFields,
 } from "@/helpers/filemanagerhelpers";
 
-/* -------------------------------------------------------------------------- */
-/* Upload helpers                                                             */
-/* -------------------------------------------------------------------------- */
-
 const ACCEPTED_FILE_TYPES = "video/*";
 
 const isAcceptedFile = (file) => matchesAccept(file, ACCEPTED_FILE_TYPES);
 
-// The file is already stored when this runs; failing here reports the error
-// instead of listing an entry that has no record behind it.
 const createVideoRecord = async (parsed, object) => {
 	const record = await safeFetch(
 		`/noadmin/videos`,
@@ -65,10 +61,6 @@ const createVideoRecord = async (parsed, object) => {
 	return { record };
 };
 
-/* -------------------------------------------------------------------------- */
-/* Component                                                                  */
-/* -------------------------------------------------------------------------- */
-
 const VideosMediaManager = ({
 	auth = {},
 	token = {},
@@ -76,20 +68,17 @@ const VideosMediaManager = ({
 	objects = [],
 	searchParams = {},
 }) => {
-	/* ------------------------------ Paging setup ---------------------------- */
-
 	const {
-		seenKeysRef,
 		sentinelRef,
 		newobjects,
 		setNewObjects,
 		countAll,
-		setCountAll,
 		hasMore,
 		loading,
 		error,
 		handleRetry,
 		insertItem,
+		removeItem,
 		clearList,
 	} = useInfiniteList({
 		objects,
@@ -100,10 +89,7 @@ const VideosMediaManager = ({
 		failMessage: "Failed to retrieve videos",
 	});
 
-	/* ------------------------------- List state ----------------------------- */
-
 	const isMountedRef = useRef(false);
-	/* ------------------------------ Upload state ---------------------------- */
 
 	const [files, setFiles] = useState([]);
 	const [isRecording, setIsRecording] = useState(false);
@@ -128,28 +114,22 @@ const VideosMediaManager = ({
 		: pendingUploads.length > 0
 			? "A video is already being uploaded. Wait for it to finish, or remove it, before adding another."
 			: "";
-	// Kept in a ref so callbacks created earlier (e.g. MediaRecorder.onstop)
-	// still check the latest state rather than the one from their render.
+
 	const uploadBlockedRef = useRef(uploadBlockedMessage);
 	uploadBlockedRef.current = uploadBlockedMessage;
-
-	/* -------------------------------- Lifecycle ----------------------------- */
 
 	useEffect(() => {
 		uploadsRef.current = files;
 	}, [files]);
 
 	useEffect(() => {
-		// Strict Mode runs this cleanup on its fake unmount, so the flag has to
-		// be set back to true on every setup.
 		isMountedRef.current = true;
 		const recorder = mediaRecorderRef;
 		const stream = streamRef;
 		const xhrs = uploadXhrsRef;
 		return () => {
 			isMountedRef.current = false;
-			// Detach first: stopping a live recorder fires onstop, which would
-			// otherwise start a new upload after the component is gone.
+
 			const rec = recorder.current;
 			if (rec) {
 				rec.ondataavailable = null;
@@ -164,11 +144,7 @@ const VideosMediaManager = ({
 		};
 	}, []);
 
-	/* ------------------------------- Object URLs ---------------------------- */
-
 	const { createObjectUrl, revokeObjectUrl, keepObjectUrl } = useObjectUrls();
-
-	/* ------------------------------- Row actions ---------------------------- */
 
 	const {
 		isBusy,
@@ -182,13 +158,12 @@ const VideosMediaManager = ({
 		handleTrashAll,
 		handleDeleteAll,
 	} = useListActions({
-		list: { setNewObjects, seenKeysRef, setCountAll, clearList },
+		list: { setNewObjects, clearList },
 		endpoint: "/noadmin/videos",
 		noun: "video",
+		nounPlural: "video",
 		bulkBody: { onModel: "Playlist", resourceId: object?._id },
 	});
-
-	/* ------------------------------- Derived list --------------------------- */
 
 	const items = useMemo(
 		() =>
@@ -203,12 +178,8 @@ const VideosMediaManager = ({
 		[newobjects],
 	);
 
-	/* ------------------------------ Media elements -------------------------- */
-
 	const { pauseAllMedia, registerMediaElement, forgetMediaElement } =
 		useMediaElements();
-
-	/* -------------------------------- Uploading ----------------------------- */
 
 	const ensureCanUpload = () => {
 		if (uploadBlockedRef.current) {
@@ -229,11 +200,10 @@ const VideosMediaManager = ({
 				toast.error(uploadBlockedRef.current);
 				return;
 			}
-			// Block synchronously so a second call in the same tick is rejected.
+
 			uploadBlockedRef.current =
 				"A video is already being uploaded. Wait for it to finish, or remove it, before adding another.";
 
-			// A failed attempt is replaced by the new one, so only one card remains.
 			uploadsRef.current.forEach((f) => {
 				forgetMediaElement(f.id);
 				revokeObjectUrl(f.url);
@@ -271,8 +241,7 @@ const VideosMediaManager = ({
 					const serverObj = uploaded?.data || uploaded || {};
 					const loc = serverObj.location || {};
 					const recordData = record?.data || {};
-					// With no remote URL the list keeps showing the local preview, so
-					// that URL has to outlive the tray card.
+
 					if (loc.secure_location) {
 						revokeObjectUrl(fileObj.url);
 					} else {
@@ -290,8 +259,6 @@ const VideosMediaManager = ({
 						: fileObj.type;
 
 					insertItem({
-						// The record's id, not the file's: the row actions call
-						// /noadmin/videos/:id, which expects the record.
 						_id: recordData._id,
 						status: recordData.status || "draft",
 						title: recordData.title || serverObj.title || fileObj.name,
@@ -347,7 +314,6 @@ const VideosMediaManager = ({
 	);
 
 	const handleFileUpload = (e) => {
-		// Copied before the input is reset, which empties its FileList.
 		const selected = Array.from(e.target.files || []);
 		if (fileInputRef.current) {
 			fileInputRef.current.value = "";
@@ -365,7 +331,7 @@ const VideosMediaManager = ({
 				"Only one video can be uploaded. Using the first one selected.",
 			);
 		}
-		// A File already is a Blob, so it is uploaded as-is.
+
 		addAndUploadFile({
 			id: generateId(),
 			blob: file,
@@ -390,16 +356,13 @@ const VideosMediaManager = ({
 			uploadXhrsRef.current.delete(id);
 		}
 		forgetMediaElement(id);
-		// Revoked outside the state updater: updaters must stay pure (Strict Mode
-		// runs them twice).
+
 		const fileToRemove = uploadsRef.current.find((f) => f.id === id);
 		if (fileToRemove) {
 			revokeObjectUrl(fileToRemove.url);
 		}
 		setFiles((prev) => prev.filter((f) => f.id !== id));
 	};
-
-	/* ------------------------------- Permissions ---------------------------- */
 
 	const grantAndStart = async (type) => {
 		const ok = await startMediaStream(type);
@@ -413,13 +376,12 @@ const VideosMediaManager = ({
 		if (!ensureCanUpload()) {
 			return;
 		}
-		// Skip the modal if permission was already granted this session.
+
 		if (permissions[type]) {
 			startMediaStream(type);
 			return;
 		}
-		// The in-memory flag resets on remount, but the browser persists the
-		// grant. Query the Permissions API so an approved user isn't re-prompted.
+
 		try {
 			if (navigator.permissions?.query) {
 				const states = await Promise.all(
@@ -435,9 +397,7 @@ const VideosMediaManager = ({
 					return;
 				}
 			}
-		} catch {
-			// Permissions API unsupported for these names — fall back to the modal.
-		}
+		} catch {}
 		if (!isMountedRef.current) {
 			return;
 		}
@@ -460,11 +420,7 @@ const VideosMediaManager = ({
 		setPendingMediaType(null);
 	};
 
-	/* --------------------------------- Capture ------------------------------ */
-
 	const startMediaStream = async (type) => {
-		// Two quick clicks would otherwise open two streams, and the first one
-		// would keep the camera light on with nothing left to stop it.
 		if (startingMediaRef.current || streamRef.current) {
 			return false;
 		}
@@ -474,7 +430,7 @@ const VideosMediaManager = ({
 				video: true,
 				audio: true,
 			});
-			// The user may have left the page while the browser prompt was open.
+
 			if (!isMountedRef.current) {
 				stream.getTracks().forEach((track) => track.stop());
 				return false;
@@ -516,7 +472,7 @@ const VideosMediaManager = ({
 			toast.error("Recording is not supported in this browser.");
 			return;
 		}
-		// Captured per recording, so a late onstop can't mix up chunks.
+
 		const chunks = [];
 		chunksRef.current = chunks;
 		mediaRecorderRef.current = mediaRecorder;
@@ -534,7 +490,7 @@ const VideosMediaManager = ({
 				return;
 			}
 			setIsRecording(false);
-			// Use the format the browser actually produced (Safari records mp4).
+
 			const mimeType = mediaRecorder.mimeType || "video/webm";
 			const blob = new Blob(chunks, { type: mimeType });
 			chunks.length = 0;
@@ -565,15 +521,11 @@ const VideosMediaManager = ({
 	};
 
 	const closeMediaStream = () => {
-		// Stop the recorder before its tracks so the final chunk is flushed and
-		// the recording is still saved.
 		stopRecording();
 		streamRef.current?.getTracks().forEach((track) => track.stop());
 		streamRef.current = null;
 		setShowCamera(false);
 	};
-
-	/* --------------------------------- Search ------------------------------- */
 
 	const {
 		keyword,
@@ -583,8 +535,6 @@ const VideosMediaManager = ({
 		clearSearch,
 		displayedItems,
 	} = useListSearch(items);
-
-	/* --------------------------------- Render ------------------------------- */
 
 	const permissionLabel = "camera and microphone";
 	const totalSize = files.reduce((acc, f) => acc + (f.size || 0), 0);
@@ -598,7 +548,6 @@ const VideosMediaManager = ({
 
 	return (
 		<>
-			{/* FILE UPLOADER */}
 			<div className="mb-1">
 				{showPermissionModal && (
 					<div
@@ -710,7 +659,6 @@ const VideosMediaManager = ({
 							</div>
 						)}
 
-						{/* Live capture panel */}
 						{showCamera && (
 							<div className="card mb-3 border-2 border-primary">
 								<div className="card-body">
@@ -726,15 +674,6 @@ const VideosMediaManager = ({
 									</div>
 
 									<div className="d-flex flex-wrap justify-content-center gap-2">
-										{/* {showCamera && (
-                                                <button
-                                                    className="btn btn-info btn-sm"
-                                                    onClick={takePhoto}
-                                                >
-                                                    <i aria-hidden className="fa-solid fa-camera me-1" />
-                                                    Take Photo
-                                                </button>
-                                            )} */}
 										{!isRecording ? (
 											<button
 												type="button"
@@ -916,7 +855,6 @@ const VideosMediaManager = ({
 				</div>
 			</div>
 
-			{/* GET API ENDPOINT ERRORS */}
 			{error && (
 				<div
 					className="alert alert-danger d-flex justify-content-between align-items-center"
@@ -935,104 +873,98 @@ const VideosMediaManager = ({
 				</div>
 			)}
 
-			{!error && items.length === 0 && !loading && (
-				<div className="alert alert-info rounded-0 mb-0" role="alert">
-					No files were returned from the API.
-				</div>
-			)}
-
-			{items.length > 0 && (
-				<div className="card rounded-0 mb-1">
-					<div className="card-header">
-						<div className="float-start">
-							<form
-								onSubmit={searchData}
-								className="d-none d-md-block"
-								role="search"
+			<div className="card rounded-0 mb-1">
+				<div className="card-header">
+					<div className="float-start">
+						<form
+							onSubmit={searchData}
+							className="d-none d-md-block"
+							role="search"
+						>
+							<label htmlFor="keyword" className="visually-hidden">
+								Search by title
+							</label>
+							<input
+								id="keyword"
+								name="keyword"
+								value={keyword}
+								onChange={(e) => setKeyword(e.target.value)}
+								type="search"
+								className="form-control"
+								placeholder="Search by title"
+							/>
+						</form>
+					</div>
+					<div className="float-end my-1">
+						<div className="btn-group">
+							<Link
+								href={{
+									pathname: `/noadmin/movies/video/${object._id}/create`,
+									query: {},
+								}}
+								className="btn btn-primary btn-sm"
 							>
-								<label htmlFor="keyword" className="visually-hidden">
-									Search by title
-								</label>
-								<input
-									id="keyword"
-									name="keyword"
-									value={keyword}
-									onChange={(e) => setKeyword(e.target.value)}
-									type="search"
-									className="form-control"
-									placeholder="Search by title"
-								/>
-							</form>
-						</div>
-						<div className="float-end my-1">
-							<div className="btn-group">
-								<Link
-									href={{
-										pathname: `/noadmin/movies/video/${object._id}/create`,
-										query: {},
-									}}
-									className="btn btn-primary btn-sm"
-								>
-									Add new
-								</Link>
-								<button
-									type="button"
-									className="btn btn-danger btn-sm"
-									onClick={handleTrashAll}
-									disabled={trashingAll}
-								>
-									{trashingAll ? "..." : "Trash all"}
-								</button>
-								<button
-									type="button"
-									className="btn btn-dark btn-sm"
-									onClick={handleDeleteAll}
-									disabled={deletingAll}
-								>
-									{deletingAll ? "..." : "Delete all permanently"}
-								</button>
-							</div>
+								Add new
+							</Link>
+							<TrashAllModal
+								action={handleTrashAll}
+								classList="btn-danger"
+								disabled={items.length === 0 || deletingAll}
+							/>
+							<DeleteAllModal
+								action={handleDeleteAll}
+								classList="btn-dark"
+								text="Delete all permanently"
+								disabled={items.length === 0 || trashingAll}
+							/>
 						</div>
 					</div>
-					{/* Dismissed through state: Bootstrap's data-bs-dismiss would remove
-              nodes React still owns. */}
-					{debouncedKeyword && displayedItems.length === 0 && (
-						<div
-							className="alert alert-info alert-dismissible rounded-0 mb-0"
-							role="alert"
-						>
-							No objects match &quot;{debouncedKeyword}&quot;.
-							<button
-								type="button"
-								className="btn-close"
-								aria-label="Clear search"
-								onClick={clearSearch}
-							/>
-						</div>
-					)}
-					<ul className="list-group list-group-flush">
-						{displayedItems.map((item, index) => (
-							<Single
-								key={item.key}
-								index={index}
-								object={item}
-								handleDraft={handleDraftIt}
-								handlePublish={handlePublishIt}
-								handleTrash={handleTrashIt}
-								handleSchedule={handleScheduleIt}
-								handleDelete={handleDeleteIt}
-								isDrafting={isBusy(item.key, "draft")}
-								isPublishing={isBusy(item.key, "publish")}
-								isTrashing={isBusy(item.key, "trash")}
-								isScheduling={isBusy(item.key, "schedule")}
-								isDeleting={isBusy(item.key, "delete")}
-							/>
-						))}
-					</ul>
 				</div>
-			)}
+				{!error && items.length === 0 && !loading && (
+					<div className="alert alert-info rounded-0 mb-0" role="alert">
+						No files were returned from the API.
+					</div>
+				)}
+				{items.length > 0 && (
+					<>
+						{debouncedKeyword && displayedItems.length === 0 && (
+							<div
+								className="alert alert-info alert-dismissible rounded-0 mb-0"
+								role="alert"
+							>
+								No objects match &quot;{debouncedKeyword}&quot;.
+								<button
+									type="button"
+									className="btn-close"
+									aria-label="Clear search"
+									onClick={clearSearch}
+								/>
+							</div>
+						)}
+						<ul className="list-group list-group-flush">
+							{displayedItems.map((item, index) => (
+								<Single
+									key={item.key}
+									index={index}
+									object={item}
+									handleDraft={handleDraftIt}
+									handlePublish={handlePublishIt}
+									handleTrash={handleTrashIt}
+									handleSchedule={handleScheduleIt}
+									handleDelete={handleDeleteIt}
+									isDrafting={isBusy(item.key, "draft")}
+									isPublishing={isBusy(item.key, "publish")}
+									isTrashing={isBusy(item.key, "trash")}
+									isScheduling={isBusy(item.key, "schedule")}
+									isDeleting={isBusy(item.key, "delete")}
+									onDeleted={removeItem}
+								/>
+							))}
+						</ul>
+					</>
+				)}
+			</div>
 
-			{/* Sentinel + status row */}
 			<div ref={sentinelRef} className="text-center py-4">
 				{loading && (
 					<div className="d-inline-flex align-items-center gap-2 text-muted">

@@ -1,5 +1,4 @@
-import { revalidatePath } from "next/cache";
-import { fetchurl } from "@/helpers/setTokenOnServer";
+import { fetchurl, getUserOnServer } from "@/helpers/setTokenOnServer";
 import NFAStatusesMenu from "@/components/nfabusiness/nfastatusesmenu";
 import List from "@/components/nfabusiness/realestates/list";
 
@@ -9,7 +8,7 @@ async function getRealEstates(params) {
 		"GET",
 		"no-cache",
 	);
-	return res;
+	return res instanceof Error ? { status: "error", message: res.message } : res;
 }
 
 const NFARealEstatesDraftIndex = async ({ params, searchParams }) => {
@@ -19,122 +18,10 @@ const NFARealEstatesDraftIndex = async ({ params, searchParams }) => {
 	const limit = awtdSearchParams.limit || 10;
 	const sort = awtdSearchParams.sort || "-createdAt";
 
+	const auth = await getUserOnServer();
 	const realestates = await getRealEstates(
 		`?page=${page}&limit=${limit}&sort=${sort}`,
 	);
-
-	const draftIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/stripe/realestates/${id}/draftit`,
-			"PUT",
-			"no-cache",
-		);
-		revalidatePath(
-			`/nfabusiness/realestates/draft?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const publishIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/stripe/realestates/${id}/publishit`,
-			"PUT",
-			"no-cache",
-		);
-		revalidatePath(
-			`/nfabusiness/realestates/draft?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const trashIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/stripe/realestates/${id}/trashit`,
-			"PUT",
-			"no-cache",
-		);
-		revalidatePath(
-			`/nfabusiness/realestates/draft?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const scheduleIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/stripe/realestates/${id}/scheduleit`,
-			"PUT",
-			"no-cache",
-		);
-		revalidatePath(
-			`/nfabusiness/realestates/draft?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const featureIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/stripe/realestates/${id}/featureit`,
-			"PUT",
-			"no-cache",
-		);
-		revalidatePath(
-			`/nfabusiness/realestates/draft?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const unfeatureIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/stripe/realestates/${id}/unfeatureit`,
-			"PUT",
-			"no-cache",
-		);
-		revalidatePath(
-			`/nfabusiness/realestates/draft?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const handleDelete = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/stripe/realestates/${id}/permanently`,
-			"DELETE",
-			"no-cache",
-		);
-		revalidatePath(
-			`/nfabusiness/realestates/draft?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const handleTrashAll = async () => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/stripe/realestates/deleteall`, "PUT", "no-cache");
-		revalidatePath(
-			`/nfabusiness/realestates/draft?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const handleDeleteAll = async () => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/stripe/realestates/deleteall/permanently`,
-			"DELETE",
-			"no-cache",
-		);
-		revalidatePath(
-			`/nfabusiness/realestates/draft?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
 
 	return (
 		<div className="container-fluid px-0">
@@ -144,6 +31,7 @@ const NFARealEstatesDraftIndex = async ({ params, searchParams }) => {
 				draftLink="/nfabusiness/realestates/draft"
 				scheduledLink="/nfabusiness/realestates/scheduled"
 				trashedLink="/nfabusiness/realestates/trashed"
+				filledLink=""
 				categoriesLink=""
 				categoryType=""
 				pendingLink=""
@@ -153,6 +41,7 @@ const NFARealEstatesDraftIndex = async ({ params, searchParams }) => {
 			/>
 			<div className="card rounded-0">
 				<List
+					stripeChargesEnabled={auth?.userStripeChargesEnabled}
 					allLink="/nfabusiness/realestates"
 					pageText="Real Estates"
 					addLink="/nfabusiness/realestates/create"
@@ -160,15 +49,8 @@ const NFARealEstatesDraftIndex = async ({ params, searchParams }) => {
 					searchedKeyword=""
 					objects={realestates}
 					searchParams={awtdSearchParams}
-					handleDraft={draftIt}
-					handlePublish={publishIt}
-					handleTrash={trashIt}
-					handleSchedule={scheduleIt}
-					handleFeature={featureIt}
-					handleUnfeature={unfeatureIt}
-					handleDelete={handleDelete}
-					handleTrashAllFunction={handleTrashAll}
-					handleDeleteAllFunction={handleDeleteAll}
+					statusFilter="draft"
+					postType="realestate"
 				/>
 			</div>
 		</div>

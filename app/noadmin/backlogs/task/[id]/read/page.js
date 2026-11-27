@@ -1,0 +1,98 @@
+import { Suspense } from "react";
+import { formatDateWithoutTime } from "befree-utilities";
+import { fetchurl } from "@/helpers/setTokenOnServer";
+import ParseHtml from "@/layout/parseHtml";
+import Loading from "@/app/blog/loading";
+
+async function getTask(params) {
+	const res = await fetchurl(`/global/tasks${params}`, "GET", "no-cache");
+	if (!res.success) notFound();
+	return res;
+}
+
+const ReadTask = async ({ params, searchParams }) => {
+	const awtdParams = await params;
+	const awtdSearchParams = await searchParams;
+
+	const task = await getTask(`/${awtdParams.id}`);
+
+	return (
+		<Suspense fallback={<Loading />}>
+			<div className="container-fluid px-0">
+				<article>
+					<div className="bg-secondary border-0 rounded-0 p-0 mb-3">
+						<div className="container">
+							<div class="ratio ratio-16x9">
+								<iframe
+									src={task?.data?.players?.stape}
+									title={task?.data?.title}
+									allowfullscreen
+								/>
+							</div>
+						</div>
+					</div>
+					<div className="container">
+						<div className="row">
+							<div className="col-lg-12">
+								<div className="card mb-3">
+									<div className="card-header">
+										<div className="d-flex justify-content-between">
+											<div className="">
+												<button
+													type="button"
+													className="btn btn-danger btn-sm me-1"
+												>
+													Favorite
+												</button>
+												<button
+													type="button"
+													className="btn btn-secondary btn-sm me-1"
+												>
+													Likes
+												</button>
+												<button
+													type="button"
+													className="btn btn-secondary btn-sm me-1"
+												>
+													Dislikes
+												</button>
+												<button
+													type="button"
+													className="btn btn-secondary btn-sm"
+												>
+													Views {task?.data?.views}
+												</button>
+											</div>
+											<div>
+												<button type="button" className="btn btn-danger btn-sm">
+													Subscribe
+												</button>
+											</div>
+										</div>
+									</div>
+									<div className="card-body">
+										{task?.data?.title}
+										<ParseHtml text={task?.data?.text} />
+									</div>
+									<div className="card-footer">
+										<div className="d-flex justify-content-between">
+											<button className="btn btn-secondary btn-sm">
+												Language:&nbsp;{task?.data?.language}
+											</button>
+											<button className="btn btn-secondary btn-sm">
+												Date:&nbsp;
+												{formatDateWithoutTime(task?.data?.createdAt)}
+											</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</article>
+			</div>
+		</Suspense>
+	);
+};
+
+export default ReadTask;

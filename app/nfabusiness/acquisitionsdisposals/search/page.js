@@ -1,4 +1,3 @@
-import { revalidatePath } from "next/cache";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import NFAStatusesMenu from "@/components/nfabusiness/nfastatusesmenu";
 import List from "@/components/nfabusiness/acquisitionsdisposals/list";
@@ -9,7 +8,7 @@ async function getAcquisitionsDisposals(params) {
 		"GET",
 		"no-cache",
 	);
-	return res;
+	return res instanceof Error ? { status: "error", message: res.message } : res;
 }
 
 const NFAAcquisitionDisposalsSearchIndex = async ({ params, searchParams }) => {
@@ -26,31 +25,31 @@ const NFAAcquisitionDisposalsSearchIndex = async ({ params, searchParams }) => {
 		`?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 	);
 
-	const acquireIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/weaponacquisitionsdisposals/${id}/acquireit`,
-			"PUT",
-			"no-cache",
-		);
-		revalidatePath(
-			`/nfabusiness/acquisitionsdisposals/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
-		);
-	};
+	// const acquireIt = async (id) => {
+	// 	"use server";
+	// 	// const rawFormData = {}
+	// 	await fetchurl(
+	// 		`/noadmin/weaponacquisitionsdisposals/${id}/acquireit`,
+	// 		"PUT",
+	// 		"no-cache",
+	// 	);
+	// 	revalidatePath(
+	// 		`/nfabusiness/acquisitionsdisposals/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
+	// 	);
+	// };
 
-	const disposeIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/weaponacquisitionsdisposals/${id}/disposeit`,
-			"PUT",
-			"no-cache",
-		);
-		revalidatePath(
-			`/nfabusiness/acquisitionsdisposals/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
-		);
-	};
+	// const disposeIt = async (id) => {
+	// 	"use server";
+	// 	// const rawFormData = {}
+	// 	await fetchurl(
+	// 		`/noadmin/weaponacquisitionsdisposals/${id}/disposeit`,
+	// 		"PUT",
+	// 		"no-cache",
+	// 	);
+	// 	revalidatePath(
+	// 		`/nfabusiness/acquisitionsdisposals/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
+	// 	);
+	// };
 
 	return (
 		<div className="container-fluid px-0">
@@ -60,6 +59,7 @@ const NFAAcquisitionDisposalsSearchIndex = async ({ params, searchParams }) => {
 				draftLink=""
 				scheduledLink=""
 				trashedLink=""
+				filledLink=""
 				categoriesLink=""
 				categoryType=""
 				pendingLink="/nfabusiness/acquisitionsdisposals/pending"
@@ -76,15 +76,7 @@ const NFAAcquisitionDisposalsSearchIndex = async ({ params, searchParams }) => {
 					searchedKeyword={keyword}
 					objects={acquisitionsdisposals}
 					searchParams={awtdSearchParams}
-					handleDraft={acquireIt}
-					handlePublish={disposeIt}
-					handleTrash={undefined}
-					handleSchedule={undefined}
-					handleFeature={undefined}
-					handleUnfeature={undefined}
-					handleDelete={undefined}
-					handleTrashAllFunction={""}
-					handleDeleteAllFunction={""}
+					statusFilter=""
 				/>
 			</div>
 		</div>

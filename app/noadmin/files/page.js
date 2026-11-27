@@ -1,4 +1,3 @@
-import { revalidatePath } from "next/cache";
 import { fetchurl, getAuthTokenOnServer } from "@/helpers/setTokenOnServer";
 import { getGlobalData } from "@/helpers/globalData";
 import FilesManager from "@/components/noadmin/files/filesmanager";
@@ -20,24 +19,6 @@ const AdminFilesIndex = async ({ params, searchParams }) => {
 
 	const files = await getFiles(`?page=${page}&limit=${limit}&sort=${sort}`);
 
-	const handleDeleteAllPermanently = async () => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/files/deleteall`, "DELETE", "no-cache");
-		revalidatePath(`/noadmin/files?page=${page}&limit=${limit}&sort=${sort}`);
-	};
-
-	const handleDeleteAllUnusedPermanently = async () => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/files/deleteall/unused/permanently`,
-			"DELETE",
-			"no-cache",
-		);
-		revalidatePath(`/noadmin/files?page=${page}&limit=${limit}&sort=${sort}`);
-	};
-
 	return (
 		<div className="container-fluid px-0">
 			<div className="row">
@@ -51,8 +32,6 @@ const AdminFilesIndex = async ({ params, searchParams }) => {
 						searchOn="/noadmin/files"
 						objects={files}
 						searchParams={awtdSearchParams}
-						handleDeleteAllFunction={handleDeleteAllPermanently}
-						handleDeleteAllUnusedPermanently={handleDeleteAllUnusedPermanently}
 					/>
 				</div>
 			</div>

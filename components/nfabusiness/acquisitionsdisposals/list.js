@@ -1,9 +1,12 @@
 "use client";
 import AdminCardHeaderMenu from "@/components/noadmin/admincardheadermenu";
+import {
+	useAdminListActions,
+	usePagedList,
+} from "@/components/noadmin/adminlistactions";
 import Single from "./single";
 import NumericPagination from "@/layout/numericpagination";
 import NothingFoundAlert from "@/layout/nothingfoundalert";
-import ErrorPage from "@/layout/errorpage";
 
 const List = ({
 	allLink = "",
@@ -13,77 +16,113 @@ const List = ({
 	searchedKeyword = "",
 	objects = [],
 	searchParams = {},
-	handleDraft = () => {},
-	handlePublish = () => {},
+	statusFilter = "",
 }) => {
-	if (
-		typeof handleDraft !== "function" &&
-		handleDraft !== "" &&
-		handleDraft !== undefined &&
-		handleDraft !== null
-	) {
-		return (
-			<ErrorPage
-				statusCodeMessage={
-					"The handleDraft parameter is not a function!. Please try again"
-				}
-			/>
-		);
-	}
+	const list = usePagedList({ objects, searchParams });
+	const {
+		rows,
+		visibleCount,
+		visibleCountAll,
+		leavingIds,
+		enteringIds,
+		currentPage,
+		totalPages,
+		loadError,
+		leaveRow,
+		finishLeave,
+		finishEnter,
+	} = list;
 
-	if (
-		typeof handlePublish !== "function" &&
-		handlePublish !== "" &&
-		handlePublish !== undefined &&
-		handlePublish !== null
-	) {
-		return (
-			<ErrorPage
-				statusCodeMessage={
-					"The handlePublish parameter is not a function!. Please try again"
-				}
-			/>
-		);
-	}
+	const {
+		isBusy,
+		handleAcquireIt,
+		handleDisposeIt,
+		handleDraftIt,
+		handlePublishIt,
+		handleTrashIt,
+		handleScheduleIt,
+		handleFeatureIt,
+		handleUnfeatureIt,
+		handleDeleteIt,
+		trashingAll,
+		deletingAll,
+		handleTrashAll,
+		handleDeleteAll,
+	} = useAdminListActions({
+		list,
+		endpoint: "/noadmin/weaponacquisitionsdisposals",
+		noun: "weapon acquisition and disposal",
+		nounPlural: "weapons acquisitions and disposals",
+		statusFilter,
+	});
 
+	const emptyText =
+		loadError ||
+		(searchedKeyword
+			? `Nothing found with "${searchedKeyword}"`
+			: "Nothing found");
 	return (
 		<>
 			<AdminCardHeaderMenu
 				stripeChargesEnabled={false}
 				allLink={allLink}
 				pageText={pageText}
-				currentResults={objects?.count}
-				totalResults={objects?.countAll}
+				currentResults={visibleCount}
+				totalResults={visibleCountAll}
 				addLink={addLink}
 				searchOn={searchOn}
-				handleTrashAllFunction={undefined}
-				handleDeleteAllFunction={undefined}
+				handleTrashAllFunction=""
+				handleDeleteAllFunction=""
 				classList=""
+				handleAllUsageCountEnabled={false}
+				handleAllUsageCount={undefined}
+				countingAll={false}
 				// isDirty={isDirty}
 				// saving={saving}
 				// handleSave={handleSave}
 			/>
-			{objects?.data?.length > 0 ? (
+			{rows.length > 0 ? (
 				<>
-					<ul className="list-group list-group-flush">
-						{objects?.data?.map((acquisitiondisposal) => (
+					<ul
+						className="list-group list-group-flush"
+						aria-busy={trashingAll || deletingAll || undefined}
+					>
+						{rows.map((wad) => (
 							<Single
-								key={acquisitiondisposal._id}
-								object={acquisitiondisposal}
-								handleDraft={handleDraft}
-								handlePublish={handlePublish}
+								key={wad._id}
+								object={wad}
+								handleAcquire={handleAcquireIt}
+								handleDispose={handleDisposeIt}
+								handleDraft={undefined}
+								handlePublish={undefined}
+								handleTrash={undefined}
+								handleSchedule={undefined}
+								handleFeature={undefined}
+								handleUnfeature={undefined}
+								handleDelete={undefined}
+								isAcquiring={isBusy(wad._id, "acquire")}
+								isDisposing={isBusy(wad._id, "dispose")}
+								isDrafting={false}
+								isPublishing={false}
+								isTrashing={false}
+								isScheduling={false}
+								isFeaturing={false}
+								isUnfeaturing={false}
+								isDeleting={false}
+								leaving={leavingIds.has(wad._id)}
+								entering={enteringIds.has(wad._id)}
+								onLeft={finishLeave}
+								onEntered={finishEnter}
+								onDeleted={leaveRow}
 							/>
 						))}
 						<li className="list-group-item">
-							{objects?.pagination?.current}&nbsp;/&nbsp;
-							{objects?.pagination?.totalpages}
+							{currentPage}&nbsp;/&nbsp;
+							{totalPages}
 						</li>
 					</ul>
 					<NumericPagination
-						totalPages={
-							objects?.pagination?.totalpages ||
-							Math.ceil(objects?.data?.length / searchParams.limit)
-						}
+						totalPages={totalPages}
 						searchParams={searchParams}
 						siblings={1}
 					/>
@@ -91,7 +130,7 @@ const List = ({
 			) : (
 				<NothingFoundAlert
 					classList="alert-danger rounded-0 m-0 border-0"
-					text={`Nothing found with ${searchedKeyword}`}
+					text={emptyText}
 				/>
 			)}
 		</>

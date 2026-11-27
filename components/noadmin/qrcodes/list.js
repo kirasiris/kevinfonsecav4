@@ -1,10 +1,12 @@
 "use client";
-import { useState } from "react";
 import AdminCardHeaderMenu from "@/components/noadmin/admincardheadermenu";
+import {
+	useAdminListActions,
+	usePagedList,
+} from "@/components/noadmin/adminlistactions";
 import Single from "./single";
 import NumericPagination from "@/layout/numericpagination";
 import NothingFoundAlert from "@/layout/nothingfoundalert";
-import ErrorPage from "@/layout/errorpage";
 
 const List = ({
 	allLink = "",
@@ -14,124 +16,47 @@ const List = ({
 	searchedKeyword = "",
 	objects = [],
 	searchParams = {},
-	handleDraft = () => {},
-	handlePublish = () => {},
-	handleTrash = () => {},
-	handleSchedule = () => {},
-	handleDelete = () => {},
-	handleTrashAllFunction = () => {},
-	handleDeleteAllFunction = () => {},
+	statusFilter = "",
 }) => {
-	const [newobjects, setNewObjects] = useState(objects);
-	const [, setTotalResults] = useState({
-		...objects,
-		countAll: objects?.countAll,
+	const list = usePagedList({ objects, searchParams });
+	const {
+		rows,
+		visibleCount,
+		visibleCountAll,
+		leavingIds,
+		enteringIds,
+		currentPage,
+		totalPages,
+		loadError,
+		leaveRow,
+		finishLeave,
+		finishEnter,
+	} = list;
+
+	const {
+		isBusy,
+		handleDraftIt,
+		handlePublishIt,
+		handleTrashIt,
+		handleScheduleIt,
+		handleDeleteIt,
+		trashingAll,
+		deletingAll,
+		handleTrashAll,
+		handleDeleteAll,
+	} = useAdminListActions({
+		list,
+		endpoint: "/noadmin/qrcodes",
+		noun: "QR code",
+		nounPlural: "QR codes",
+		statusFilter,
 	});
 
-	if (
-		typeof handleDraft !== "function" &&
-		handleDraft !== "" &&
-		handleDraft !== undefined &&
-		handleDraft !== null
-	) {
-		return (
-			<ErrorPage
-				statusCodeMessage={
-					"The handleDraft parameter is not a function!. Please try again"
-				}
-			/>
-		);
-	}
-
-	if (
-		typeof handlePublish !== "function" &&
-		handlePublish !== "" &&
-		handlePublish !== undefined &&
-		handlePublish !== null
-	) {
-		return (
-			<ErrorPage
-				statusCodeMessage={
-					"The handlePublish parameter is not a function!. Please try again"
-				}
-			/>
-		);
-	}
-
-	if (
-		typeof handleTrash !== "function" &&
-		handleTrash !== "" &&
-		handleTrash !== undefined &&
-		handleTrash !== null
-	) {
-		return (
-			<ErrorPage
-				statusCodeMessage={
-					"The handleTrash parameter is not a function!. Please try again"
-				}
-			/>
-		);
-	}
-
-	if (
-		typeof handleSchedule !== "function" &&
-		handleSchedule !== "" &&
-		handleSchedule !== undefined &&
-		handleSchedule !== null
-	) {
-		return (
-			<ErrorPage
-				statusCodeMessage={
-					"The handleSchedule parameter is not a function!. Please try again"
-				}
-			/>
-		);
-	}
-
-	if (
-		typeof handleDelete !== "function" &&
-		handleDelete !== "" &&
-		handleDelete !== undefined &&
-		handleDelete !== null
-	) {
-		return (
-			<ErrorPage
-				statusCodeMessage={
-					"The handleDelete parameter is not a function!. Please try again"
-				}
-			/>
-		);
-	}
-
-	if (
-		typeof handleTrashAllFunction !== "function" &&
-		handleTrashAllFunction !== "" &&
-		handleTrashAllFunction !== undefined &&
-		handleTrashAllFunction !== null
-	) {
-		return (
-			<ErrorPage
-				statusCodeMessage={
-					"The handleTrashAllFunction parameter is not a function!. Please try again"
-				}
-			/>
-		);
-	}
-
-	if (
-		typeof handleDeleteAllFunction !== "function" &&
-		handleDeleteAllFunction !== "" &&
-		handleDeleteAllFunction !== undefined &&
-		handleDeleteAllFunction !== null
-	) {
-		return (
-			<ErrorPage
-				statusCodeMessage={
-					"The handleDeleteAllFunction parameter is not a function!. Please try again"
-				}
-			/>
-		);
-	}
+	const emptyText =
+		loadError ||
+		(searchedKeyword
+			? `Nothing found with "${searchedKeyword}"`
+			: "Nothing found");
 
 	return (
 		<>
@@ -139,44 +64,54 @@ const List = ({
 				stripeChargesEnabled={false}
 				allLink={allLink}
 				pageText={pageText}
-				currentResults={objects?.count}
-				totalResults={objects?.countAll}
+				currentResults={visibleCount}
+				totalResults={visibleCountAll}
 				addLink={addLink}
 				searchOn={searchOn}
-				handleTrashAllFunction={handleTrashAllFunction}
-				handleDeleteAllFunction={handleDeleteAllFunction}
+				handleTrashAllFunction={handleTrashAll}
+				handleDeleteAllFunction={handleDeleteAll}
 				classList=""
+				handleAllUsageCountEnabled={false}
+				handleAllUsageCount={undefined}
+				countingAll={false}
 				// isDirty={isDirty}
 				// saving={saving}
 				// handleSave={handleSave}
 			/>
-			{objects?.data?.length > 0 ? (
+			{rows.length > 0 ? (
 				<>
-					<ul className="list-group list-group-flush">
-						{objects?.data?.map((qrcode) => (
+					<ul
+						className="list-group list-group-flush"
+						aria-busy={trashingAll || deletingAll || undefined}
+					>
+						{rows.map((qrcode) => (
 							<Single
 								key={qrcode._id}
 								object={qrcode}
-								handleDraft={handleDraft}
-								handlePublish={handlePublish}
-								handleTrash={handleTrash}
-								handleSchedule={handleSchedule}
-								handleDelete={handleDelete}
-								objects={newobjects.data}
-								setObjects={setNewObjects}
-								setTotalResults={setTotalResults}
+								handleDraft={handleDraftIt}
+								handlePublish={handlePublishIt}
+								handleTrash={handleTrashIt}
+								handleSchedule={handleScheduleIt}
+								handleDelete={handleDeleteIt}
+								isDrafting={isBusy(qrcode._id, "draft")}
+								isPublishing={isBusy(qrcode._id, "publish")}
+								isTrashing={isBusy(qrcode._id, "trash")}
+								isScheduling={isBusy(qrcode._id, "schedule")}
+								isDeleting={isBusy(qrcode._id, "delete")}
+								leaving={leavingIds.has(qrcode._id)}
+								entering={enteringIds.has(qrcode._id)}
+								onLeft={finishLeave}
+								onEntered={finishEnter}
+								onDeleted={leaveRow}
 							/>
 						))}
 						<li className="list-group-item">
-							{objects?.pagination?.current}&nbsp;/&nbsp;
-							{objects?.pagination?.totalpages}
+							{currentPage}&nbsp;/&nbsp;
+							{totalPages}
 						</li>
 					</ul>
 					<NumericPagination
-						totalPages={
-							objects?.pagination?.totalpages ||
-							Math.ceil(objects?.data?.length / searchParams.limit)
-						}
+						totalPages={totalPages}
 						searchParams={searchParams}
 						siblings={1}
 					/>
@@ -184,7 +119,7 @@ const List = ({
 			) : (
 				<NothingFoundAlert
 					classList="alert-danger rounded-0 m-0 border-0"
-					text={`Nothing found with ${searchedKeyword}`}
+					text={emptyText}
 				/>
 			)}
 		</>

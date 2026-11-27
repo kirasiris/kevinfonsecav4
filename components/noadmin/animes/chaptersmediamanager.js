@@ -4,6 +4,8 @@ import { useState, useRef, useCallback, useEffect, useMemo } from "react";
 import { toast } from "react-toastify";
 import { formatFileSize } from "@/helpers/formatFileSize";
 import Single from "./chaptersingle";
+import DeleteAllModal from "@/components/global/deleteallmodal";
+import TrashAllModal from "@/components/global/trashallmodal";
 import {
 	useInfiniteList,
 	useListActions,
@@ -25,20 +27,12 @@ import {
 	uploaderFields,
 } from "@/helpers/filemanagerhelpers";
 
-// Used while a search filter is active: drop indexes refer to the filtered
-// list, so reordering it would move the wrong items in the full list.
 const DRAG_DISABLED = { draggable: false, style: {}, className: "" };
-
-/* -------------------------------------------------------------------------- */
-/* Upload helpers                                                             */
-/* -------------------------------------------------------------------------- */
 
 const ACCEPTED_FILE_TYPES = "video/*";
 
 const isAcceptedFile = (file) => matchesAccept(file, ACCEPTED_FILE_TYPES);
 
-// The file is already stored when this runs; failing here reports the error
-// instead of listing an entry that has no record behind it.
 const createVideoRecord = async (parsed, object) => {
 	const record = await safeFetch(
 		`/noadmin/videos`,
@@ -71,10 +65,6 @@ const createVideoRecord = async (parsed, object) => {
 	return { record };
 };
 
-/* -------------------------------------------------------------------------- */
-/* Component                                                                  */
-/* -------------------------------------------------------------------------- */
-
 const ChaptersMediaManager = ({
 	auth = {},
 	token = {},
@@ -82,22 +72,19 @@ const ChaptersMediaManager = ({
 	objects = [],
 	searchParams = {},
 }) => {
-	/* ------------------------------ Paging setup ---------------------------- */
-
 	const {
 		initialPage,
 		limit,
-		seenKeysRef,
 		sentinelRef,
 		newobjects,
 		setNewObjects,
 		countAll,
-		setCountAll,
 		hasMore,
 		loading,
 		error,
 		handleRetry,
 		insertItem,
+		removeItem,
 		clearList,
 	} = useInfiniteList({
 		objects,
@@ -108,10 +95,7 @@ const ChaptersMediaManager = ({
 		failMessage: "Failed to retrieve videos",
 	});
 
-	/* ------------------------------- List state ----------------------------- */
-
 	const isMountedRef = useRef(false);
-	/* ------------------------------ Upload state ---------------------------- */
 
 	const [files, setFiles] = useState([]);
 	const [isRecording, setIsRecording] = useState(false);
@@ -128,23 +112,18 @@ const ChaptersMediaManager = ({
 	const uploadXhrsRef = useRef(new Map());
 	const startingMediaRef = useRef(false);
 
-	/* -------------------------------- Lifecycle ----------------------------- */
-
 	useEffect(() => {
 		uploadsRef.current = files;
 	}, [files]);
 
 	useEffect(() => {
-		// Strict Mode runs this cleanup on its fake unmount, so the flag has to
-		// be set back to true on every setup.
 		isMountedRef.current = true;
 		const recorder = mediaRecorderRef;
 		const stream = streamRef;
 		const xhrs = uploadXhrsRef;
 		return () => {
 			isMountedRef.current = false;
-			// Detach first: stopping a live recorder fires onstop, which would
-			// otherwise start a new upload after the component is gone.
+
 			const rec = recorder.current;
 			if (rec) {
 				rec.ondataavailable = null;
@@ -159,11 +138,7 @@ const ChaptersMediaManager = ({
 		};
 	}, []);
 
-	/* ------------------------------- Object URLs ---------------------------- */
-
 	const { createObjectUrl, revokeObjectUrl, keepObjectUrl } = useObjectUrls();
-
-	/* ------------------------------- Row actions ---------------------------- */
 
 	const {
 		isBusy,
@@ -177,15 +152,14 @@ const ChaptersMediaManager = ({
 		handleTrashAll,
 		handleDeleteAll,
 	} = useListActions({
-		list: { setNewObjects, seenKeysRef, setCountAll, clearList },
+		list: { setNewObjects, clearList },
 		endpoint: "/noadmin/videos",
 		noun: "video",
+		nounPlural: "video",
 		bulkBody: { onModel: "Playlist", resourceId: object?._id },
-		// A reorder of rows that no longer exist must not stay pending.
+
 		onAllDeleted: () => setIsDirty(false),
 	});
-
-	/* ------------------------------- Derived list --------------------------- */
 
 	const items = useMemo(
 		() =>
@@ -200,12 +174,8 @@ const ChaptersMediaManager = ({
 		[newobjects],
 	);
 
-	/* ------------------------------ Media elements -------------------------- */
-
 	const { pauseAllMedia, registerMediaElement, forgetMediaElement } =
 		useMediaElements();
-
-	/* -------------------------------- Uploading ----------------------------- */
 
 	const addAndUploadFile = useCallback(
 		(fileObj) => {
@@ -247,8 +217,6 @@ const ChaptersMediaManager = ({
 					const serverObj = uploaded?.data || uploaded || {};
 					const loc = serverObj.location || {};
 					const recordData = record?.data || {};
-					// With no remote URL the list keeps showing the local preview, so
-					// that URL has to outlive the tray card.
 					if (loc.secure_location) {
 						revokeObjectUrl(fileObj.url);
 					} else {
@@ -266,8 +234,6 @@ const ChaptersMediaManager = ({
 						: fileObj.type;
 
 					insertItem({
-						// The record's id, not the file's: the row actions call
-						// /noadmin/videos/:id, which expects the record.
 						_id: recordData._id,
 						status: recordData.status || "draft",
 						title: recordData.title || serverObj.title || fileObj.name,
@@ -323,7 +289,6 @@ const ChaptersMediaManager = ({
 	);
 
 	const handleFileUpload = (e) => {
-		// Copied before the input is reset, which empties its FileList.
 		const selected = Array.from(e.target.files || []);
 		if (fileInputRef.current) {
 			fileInputRef.current.value = "";
@@ -332,7 +297,6 @@ const ChaptersMediaManager = ({
 		if (accepted.length < selected.length) {
 			toast.error("Only video files can be uploaded here.");
 		}
-		// A File already is a Blob, so it is uploaded as-is.
 		accepted.forEach((file) => {
 			addAndUploadFile({
 				id: generateId(),
@@ -356,16 +320,12 @@ const ChaptersMediaManager = ({
 			uploadXhrsRef.current.delete(id);
 		}
 		forgetMediaElement(id);
-		// Revoked outside the state updater: updaters must stay pure (Strict Mode
-		// runs them twice).
 		const fileToRemove = uploadsRef.current.find((f) => f.id === id);
 		if (fileToRemove) {
 			revokeObjectUrl(fileToRemove.url);
 		}
 		setFiles((prev) => prev.filter((f) => f.id !== id));
 	};
-
-	/* ------------------------------- Permissions ---------------------------- */
 
 	const grantAndStart = async (type) => {
 		const ok = await startMediaStream(type);
@@ -376,13 +336,11 @@ const ChaptersMediaManager = ({
 	};
 
 	const requestPermission = async (type) => {
-		// Skip the modal if permission was already granted this session.
 		if (permissions[type]) {
 			startMediaStream(type);
 			return;
 		}
-		// The in-memory flag resets on remount, but the browser persists the
-		// grant. Query the Permissions API so an approved user isn't re-prompted.
+
 		try {
 			if (navigator.permissions?.query) {
 				const states = await Promise.all(
@@ -398,9 +356,7 @@ const ChaptersMediaManager = ({
 					return;
 				}
 			}
-		} catch {
-			// Permissions API unsupported for these names — fall back to the modal.
-		}
+		} catch {}
 		if (!isMountedRef.current) {
 			return;
 		}
@@ -423,11 +379,7 @@ const ChaptersMediaManager = ({
 		setPendingMediaType(null);
 	};
 
-	/* --------------------------------- Capture ------------------------------ */
-
 	const startMediaStream = async (type) => {
-		// Two quick clicks would otherwise open two streams, and the first one
-		// would keep the camera light on with nothing left to stop it.
 		if (startingMediaRef.current || streamRef.current) {
 			return false;
 		}
@@ -437,7 +389,7 @@ const ChaptersMediaManager = ({
 				video: true,
 				audio: true,
 			});
-			// The user may have left the page while the browser prompt was open.
+
 			if (!isMountedRef.current) {
 				stream.getTracks().forEach((track) => track.stop());
 				return false;
@@ -479,7 +431,7 @@ const ChaptersMediaManager = ({
 			toast.error("Recording is not supported in this browser.");
 			return;
 		}
-		// Captured per recording, so a late onstop can't mix up chunks.
+
 		const chunks = [];
 		chunksRef.current = chunks;
 		mediaRecorderRef.current = mediaRecorder;
@@ -497,7 +449,7 @@ const ChaptersMediaManager = ({
 				return;
 			}
 			setIsRecording(false);
-			// Use the format the browser actually produced (Safari records mp4).
+
 			const mimeType = mediaRecorder.mimeType || "video/webm";
 			const blob = new Blob(chunks, { type: mimeType });
 			chunks.length = 0;
@@ -528,15 +480,11 @@ const ChaptersMediaManager = ({
 	};
 
 	const closeMediaStream = () => {
-		// Stop the recorder before its tracks so the final chunk is flushed and
-		// the recording is still saved.
 		stopRecording();
 		streamRef.current?.getTracks().forEach((track) => track.stop());
 		streamRef.current = null;
 		setShowCamera(false);
 	};
-
-	/* ----------------------------- Reorder uploads -------------------------- */
 
 	const {
 		draggedIndex,
@@ -547,8 +495,6 @@ const ChaptersMediaManager = ({
 		handleDrop,
 		handleDragEnd,
 	} = useUploadReorder(setFiles, uploadsRef);
-
-	/* ------------------------------ Reorder list ---------------------------- */
 
 	const {
 		itemDraggedIndex,
@@ -571,8 +517,6 @@ const ChaptersMediaManager = ({
 		saveEndpoint: `/noadmin/videos/${object?._id}/updateorder`,
 	});
 
-	/* --------------------------------- Search ------------------------------- */
-
 	const {
 		keyword,
 		setKeyword,
@@ -581,8 +525,6 @@ const ChaptersMediaManager = ({
 		clearSearch,
 		displayedItems,
 	} = useListSearch(items);
-
-	/* --------------------------------- Render ------------------------------- */
 
 	const permissionLabel = "camera and microphone";
 	const totalSize = files.reduce((acc, f) => acc + (f.size || 0), 0);
@@ -596,7 +538,6 @@ const ChaptersMediaManager = ({
 
 	return (
 		<>
-			{/* FILE UPLOADER */}
 			<div className="mb-1">
 				{showPermissionModal && (
 					<div
@@ -694,7 +635,6 @@ const ChaptersMediaManager = ({
 							</div>
 						</div>
 
-						{/* Live capture panel */}
 						{showCamera && (
 							<div className="card mb-3 border-2 border-primary">
 								<div className="card-body">
@@ -710,15 +650,6 @@ const ChaptersMediaManager = ({
 									</div>
 
 									<div className="d-flex flex-wrap justify-content-center gap-2">
-										{/* {showCamera && (
-                                                <button
-                                                    className="btn btn-info btn-sm"
-                                                    onClick={takePhoto}
-                                                >
-                                                    <i aria-hidden className="fa-solid fa-camera me-1" />
-                                                    Take Photo
-                                                </button>
-                                            )} */}
 										{!isRecording ? (
 											<button
 												type="button"
@@ -906,7 +837,6 @@ const ChaptersMediaManager = ({
 				</div>
 			</div>
 
-			{/* GET API ENDPOINT ERRORS */}
 			{error && (
 				<div
 					className="alert alert-danger d-flex justify-content-between align-items-center"
@@ -925,186 +855,178 @@ const ChaptersMediaManager = ({
 				</div>
 			)}
 
-			{!error && items.length === 0 && !loading && (
-				<div className="alert alert-info rounded-0 mb-0" role="alert">
-					No files were returned from the API.
-				</div>
-			)}
-
-			{items.length > 0 && (
-				<div className="card rounded-0 mb-1">
-					<div className="card-header">
-						<div className="float-start">
-							<form
-								onSubmit={searchData}
-								className="d-none d-md-block"
-								role="search"
+			<div className="card rounded-0 mb-1">
+				<div className="card-header">
+					<div className="float-start">
+						<form
+							onSubmit={searchData}
+							className="d-none d-md-block"
+							role="search"
+						>
+							<label htmlFor="keyword" className="visually-hidden">
+								Search by title
+							</label>
+							<input
+								id="keyword"
+								name="keyword"
+								value={keyword}
+								onChange={(e) => setKeyword(e.target.value)}
+								type="search"
+								className="form-control"
+								placeholder="Search by title"
+							/>
+						</form>
+					</div>
+					<div className="float-end my-1">
+						<div className="btn-group">
+							{isDirty && (
+								<button
+									type="button"
+									className="btn btn-success btn-sm"
+									onClick={handleSave}
+									disabled={saving}
+								>
+									{saving ? (
+										<>
+											<span
+												className="spinner-border spinner-border-sm me-1"
+												role="status"
+												aria-hidden="true"
+											/>
+											Saving...
+										</>
+									) : (
+										<>
+											<i aria-hidden className="fa-solid fa-floppy-disk me-1" />
+											Save Order
+										</>
+									)}
+								</button>
+							)}
+							<Link
+								href={{
+									pathname: `/noadmin/animes/chapter/${object._id}/create`,
+									query: {},
+								}}
+								className="btn btn-primary btn-sm"
 							>
-								<label htmlFor="keyword" className="visually-hidden">
-									Search by title
-								</label>
-								<input
-									id="keyword"
-									name="keyword"
-									value={keyword}
-									onChange={(e) => setKeyword(e.target.value)}
-									type="search"
-									className="form-control"
-									placeholder="Search by title"
-								/>
-							</form>
-						</div>
-						<div className="float-end my-1">
-							<div className="btn-group">
-								{isDirty && (
-									<button
-										type="button"
-										className="btn btn-success btn-sm"
-										onClick={handleSave}
-										disabled={saving}
-									>
-										{saving ? (
-											<>
-												<span
-													className="spinner-border spinner-border-sm me-1"
-													role="status"
-													aria-hidden="true"
-												/>
-												Saving...
-											</>
-										) : (
-											<>
-												<i
-													aria-hidden
-													className="fa-solid fa-floppy-disk me-1"
-												/>
-												Save Order
-											</>
-										)}
-									</button>
-								)}
-								<Link
-									href={{
-										pathname: `/noadmin/animes/chapter/${object._id}/create`,
-										query: {},
-									}}
-									className="btn btn-primary btn-sm"
-								>
-									Add new
-								</Link>
-								<button
-									type="button"
-									className="btn btn-danger btn-sm"
-									onClick={handleTrashAll}
-									disabled={trashingAll}
-								>
-									{trashingAll ? "..." : "Trash all"}
-								</button>
-								<button
-									type="button"
-									className="btn btn-dark btn-sm"
-									onClick={handleDeleteAll}
-									disabled={deletingAll}
-								>
-									{deletingAll ? "..." : "Delete all permanently"}
-								</button>
-							</div>
+								Add new
+							</Link>
+							<TrashAllModal
+								action={handleTrashAll}
+								classList="btn-danger"
+								disabled={items.length === 0 || deletingAll}
+							/>
+							<DeleteAllModal
+								action={handleDeleteAll}
+								classList="btn-dark"
+								text="Delete all permanently"
+								disabled={items.length === 0 || trashingAll}
+							/>
 						</div>
 					</div>
-					<div className="card-body">
-						<small className="text-muted">
-							{debouncedKeyword
-								? "Clear the search to reorder."
-								: "Drag the cards to reorder, then save your changes."}
-						</small>
-					</div>
-					{/* Dismissed through state: Bootstrap's data-bs-dismiss would remove
-              nodes React still owns. */}
-					{saveError && (
-						<div
-							className="alert alert-danger alert-dismissible rounded-0 mb-0"
-							role="alert"
-						>
-							{saveError}
-							<button
-								type="button"
-								className="btn-close"
-								aria-label="Close"
-								onClick={() => setSaveError("")}
-							/>
-						</div>
-					)}
-					{success && (
-						<div
-							className="alert alert-success alert-dismissible rounded-0 mb-0"
-							role="alert"
-						>
-							{success}
-							<button
-								type="button"
-								className="btn-close"
-								aria-label="Close"
-								onClick={() => setSuccess("")}
-							/>
-						</div>
-					)}
-					{debouncedKeyword && displayedItems.length === 0 && (
-						<div
-							className="alert alert-info alert-dismissible rounded-0 mb-0"
-							role="alert"
-						>
-							No objects match &quot;{debouncedKeyword}&quot;.
-							<button
-								type="button"
-								className="btn-close"
-								aria-label="Clear search"
-								onClick={clearSearch}
-							/>
-						</div>
-					)}
-					<ul className="list-group list-group-flush">
-						{displayedItems.map((item, index) => (
-							<Single
-								key={item.key}
-								index={index}
-								object={item}
-								handleDraft={handleDraftIt}
-								handlePublish={handlePublishIt}
-								handleTrash={handleTrashIt}
-								handleSchedule={handleScheduleIt}
-								handleDelete={handleDeleteIt}
-								isDrafting={isBusy(item.key, "draft")}
-								isPublishing={isBusy(item.key, "publish")}
-								isTrashing={isBusy(item.key, "trash")}
-								isScheduling={isBusy(item.key, "schedule")}
-								isDeleting={isBusy(item.key, "delete")}
-								dragProps={
-									debouncedKeyword
-										? DRAG_DISABLED
-										: {
-												draggable: true,
-												onDragStart: (e) => handleItemDragStart(e, index),
-												onDragOver: (e) => handleItemDragOver(e, index),
-												onDragLeave: handleItemDragLeave,
-												onDrop: (e) => handleItemDrop(e, index),
-												onDragEnd: handleItemDragEnd,
-												style: { cursor: "grab" },
-												className: `${
-													itemDraggedIndex === index ? "opacity-50" : ""
-												} ${
-													itemDragOverIndex === index
-														? "border border-primary border-2 rounded"
-														: ""
-												}`,
-											}
-								}
-							/>
-						))}
-					</ul>
 				</div>
-			)}
+				{!error && items.length === 0 && !loading && (
+					<div className="alert alert-info rounded-0 mb-0" role="alert">
+						No files were returned from the API.
+					</div>
+				)}
+				{items.length > 0 && (
+					<>
+						<div className="card-body">
+							<small className="text-muted">
+								{debouncedKeyword
+									? "Clear the search to reorder."
+									: "Drag the cards to reorder, then save your changes."}
+							</small>
+						</div>
 
-			{/* Sentinel + status row */}
+						{saveError && (
+							<div
+								className="alert alert-danger alert-dismissible rounded-0 mb-0"
+								role="alert"
+							>
+								{saveError}
+								<button
+									type="button"
+									className="btn-close"
+									aria-label="Close"
+									onClick={() => setSaveError("")}
+								/>
+							</div>
+						)}
+						{success && (
+							<div
+								className="alert alert-success alert-dismissible rounded-0 mb-0"
+								role="alert"
+							>
+								{success}
+								<button
+									type="button"
+									className="btn-close"
+									aria-label="Close"
+									onClick={() => setSuccess("")}
+								/>
+							</div>
+						)}
+						{debouncedKeyword && displayedItems.length === 0 && (
+							<div
+								className="alert alert-info alert-dismissible rounded-0 mb-0"
+								role="alert"
+							>
+								No objects match &quot;{debouncedKeyword}&quot;.
+								<button
+									type="button"
+									className="btn-close"
+									aria-label="Clear search"
+									onClick={clearSearch}
+								/>
+							</div>
+						)}
+						<ul className="list-group list-group-flush">
+							{displayedItems.map((item, index) => (
+								<Single
+									key={item.key}
+									index={index}
+									object={item}
+									handleDraft={handleDraftIt}
+									handlePublish={handlePublishIt}
+									handleTrash={handleTrashIt}
+									handleSchedule={handleScheduleIt}
+									handleDelete={handleDeleteIt}
+									isDrafting={isBusy(item.key, "draft")}
+									isPublishing={isBusy(item.key, "publish")}
+									isTrashing={isBusy(item.key, "trash")}
+									isScheduling={isBusy(item.key, "schedule")}
+									isDeleting={isBusy(item.key, "delete")}
+									dragProps={
+										debouncedKeyword
+											? DRAG_DISABLED
+											: {
+													draggable: true,
+													onDragStart: (e) => handleItemDragStart(e, index),
+													onDragOver: (e) => handleItemDragOver(e, index),
+													onDragLeave: handleItemDragLeave,
+													onDrop: (e) => handleItemDrop(e, index),
+													onDragEnd: handleItemDragEnd,
+													style: { cursor: "grab" },
+													className: `${
+														itemDraggedIndex === index ? "opacity-50" : ""
+													} ${
+														itemDragOverIndex === index
+															? "border border-primary border-2 rounded"
+															: ""
+													}`,
+												}
+									}
+									onDeleted={removeItem}
+								/>
+							))}
+						</ul>
+					</>
+				)}
+			</div>
+
 			<div ref={sentinelRef} className="text-center py-4">
 				{loading && (
 					<div className="d-inline-flex align-items-center gap-2 text-muted">

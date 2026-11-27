@@ -253,11 +253,11 @@ const ActivityChart = ({
 		<>
 			<div className="w-100">
 				<div className="d-flex flex-wrap align-items-baseline justify-content-between mb-2">
-					<span style={{ fontSize: "0.9rem", color: "#24292f" }}>
+					<span style={{ fontSize: "0.9rem" }}>
 						{totalInWindow.toLocaleString()}{" "}
 						{totalInWindow === 1 ? "activity" : "activities"} in the last year
 					</span>
-					<span style={{ fontSize: "0.75rem", color: "#6c757d" }}>
+					<span style={{ fontSize: "0.75rem" }}>
 						Busiest day: {maxCount.toLocaleString()}
 					</span>
 				</div>
@@ -282,7 +282,6 @@ const ActivityChart = ({
 											fontSize: "0.7rem",
 											lineHeight: "16px",
 											whiteSpace: "nowrap",
-											color: "#57606a",
 										}}
 									>
 										{label.text}
@@ -305,7 +304,6 @@ const ActivityChart = ({
 											marginBottom: CELL_GAP,
 											fontSize: "0.7rem",
 											lineHeight: `${CELL_SIZE}px`,
-											color: "#57606a",
 										}}
 									>
 										{label}
@@ -387,7 +385,6 @@ const ActivityChart = ({
 					<span
 						style={{
 							fontSize: "0.75rem",
-							color: "#57606a",
 							marginRight: 3,
 						}}
 					>
@@ -410,11 +407,7 @@ const ActivityChart = ({
 							}}
 						/>
 					))}
-					<span
-						style={{ fontSize: "0.75rem", color: "#57606a", marginLeft: 3 }}
-					>
-						More
-					</span>
+					<span style={{ fontSize: "0.75rem", marginLeft: 3 }}>More</span>
 				</div>
 
 				<Modal
@@ -441,7 +434,7 @@ const ActivityChart = ({
 										className="list-group-item d-flex justify-content-between align-items-start gap-3"
 									>
 										<span>{activity.text}</span>
-										<small className="text-muted text-nowrap">
+										<small className="text-nowrap">
 											{new Date(activity.createdAt).toLocaleTimeString([], {
 												hour: "2-digit",
 												minute: "2-digit",

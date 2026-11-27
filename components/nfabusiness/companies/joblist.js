@@ -14,6 +14,7 @@ const JobList = ({
 	searchedKeyword = "",
 	objects = [],
 	searchParams = {},
+	statusFilter = "",
 	handleDraft = () => {},
 	handlePublish = () => {},
 	handleTrash = () => {},

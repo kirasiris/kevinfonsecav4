@@ -1,5 +1,4 @@
-import { revalidatePath } from "next/cache";
-import { fetchurl } from "@/helpers/setTokenOnServer";
+import { fetchurl, getUserOnServer } from "@/helpers/setTokenOnServer";
 import NFAStatusesMenu from "@/components/nfabusiness/nfastatusesmenu";
 import List from "@/components/nfabusiness/products/list";
 
@@ -9,7 +8,7 @@ async function getProducts(params) {
 		"GET",
 		"no-cache",
 	);
-	return res;
+	return res instanceof Error ? { status: "error", message: res.message } : res;
 }
 
 const NFAProductsSearchIndex = async ({ params, searchParams }) => {
@@ -22,114 +21,10 @@ const NFAProductsSearchIndex = async ({ params, searchParams }) => {
 	const keywordQuery =
 		keyword !== "" && keyword !== undefined ? `&keyword=${keyword}` : "";
 
+	const auth = await getUserOnServer();
 	const products = await getProducts(
 		`?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 	);
-
-	const draftIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/stripe/products/${id}/draftit`, "PUT", "no-cache");
-		revalidatePath(
-			`/nfabusiness/products/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
-		);
-	};
-
-	const publishIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/stripe/products/${id}/publishit`,
-			"PUT",
-			"no-cache",
-		);
-		revalidatePath(
-			`/nfabusiness/products/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
-		);
-	};
-
-	const trashIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/stripe/products/${id}/trashit`, "PUT", "no-cache");
-		revalidatePath(
-			`/nfabusiness/products/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
-		);
-	};
-
-	const scheduleIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/stripe/products/${id}/scheduleit`,
-			"PUT",
-			"no-cache",
-		);
-		revalidatePath(
-			`/nfabusiness/products/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
-		);
-	};
-
-	const featureIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/stripe/products/${id}/featureit`,
-			"PUT",
-			"no-cache",
-		);
-		revalidatePath(
-			`/nfabusiness/products/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
-		);
-	};
-
-	const unfeatureIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/stripe/products/${id}/unfeatureit`,
-			"PUT",
-			"no-cache",
-		);
-		revalidatePath(
-			`/nfabusiness/products/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
-		);
-	};
-
-	const handleDelete = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/stripe/products/${id}/permanently`,
-			"DELETE",
-			"no-cache",
-		);
-		revalidatePath(
-			`/nfabusiness/products/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
-		);
-	};
-
-	const handleTrashAll = async () => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/stripe/products/deleteall`, "PUT", "no-cache");
-		revalidatePath(
-			`/nfabusiness/products/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
-		);
-	};
-
-	const handleDeleteAll = async () => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/stripe/products/deleteall/permanently`,
-			"DELETE",
-			"no-cache",
-		);
-		revalidatePath(
-			`/nfabusiness/products/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
-		);
-	};
 
 	return (
 		<div className="container-fluid px-0">
@@ -139,6 +34,7 @@ const NFAProductsSearchIndex = async ({ params, searchParams }) => {
 				draftLink="/nfabusiness/products/draft"
 				scheduledLink="/nfabusiness/products/scheduled"
 				trashedLink="/nfabusiness/products/trashed"
+				filledLink=""
 				categoriesLink=""
 				categoryType=""
 				pendingLink=""
@@ -148,6 +44,7 @@ const NFAProductsSearchIndex = async ({ params, searchParams }) => {
 			/>
 			<div className="card rounded-0">
 				<List
+					stripeChargesEnabled={auth?.userStripeChargesEnabled}
 					allLink="/nfabusiness/products"
 					pageText="Products"
 					addLink="/nfabusiness/products/create"
@@ -155,15 +52,8 @@ const NFAProductsSearchIndex = async ({ params, searchParams }) => {
 					searchedKeyword={keyword}
 					objects={products}
 					searchParams={awtdSearchParams}
-					handleDraft={draftIt}
-					handlePublish={publishIt}
-					handleTrash={trashIt}
-					handleSchedule={scheduleIt}
-					handleFeature={featureIt}
-					handleUnfeature={unfeatureIt}
-					handleDelete={handleDelete}
-					handleTrashAllFunction={handleTrashAll}
-					handleDeleteAllFunction={handleDeleteAll}
+					statusFilter=""
+					postType="product"
 				/>
 			</div>
 		</div>

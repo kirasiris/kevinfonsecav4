@@ -1,10 +1,15 @@
 "use client";
-import { useState } from "react";
+import { useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-import { fetchurl } from "@/helpers/setTokenOnServer";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
+import { isFailure, safeFetch } from "@/helpers/filemanagerhelpers";
+import { useIsMounted } from "@/components/global/filemanagerui";
+import {
+	actionMessage,
+	shakeElement,
+} from "@/components/global/actionfeedback";
 
 const toId = (value) => {
 	if (!value) {
@@ -23,33 +28,51 @@ const toMention = (value) =>
 
 const UpdateShortUrlForm = ({ object = {}, currentpage = "" }) => {
 	const router = useRouter();
+	const isMountedRef = useIsMounted();
+	const submittingRef = useRef(false);
+	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [isLeaving, startLeaving] = useTransition();
+	const [error, setError] = useState("");
 
-	const [btnText, setBtnText] = useState(`Submit`);
+	const savedText = object?.data?.text;
+	const textIsHidden = savedText != null && typeof savedText !== "string";
 
 	const upgradeShortUrl = async (e) => {
 		e.preventDefault();
-		setBtnText(`Processing...`);
-		const form = e.target;
+		if (submittingRef.current) {
+			return;
+		}
+		const form = e.currentTarget;
 		const formData = new FormData(form);
 
 		const text = formData.get("text") || "";
 		const mentions = JSON.parse(formData.get("text_users") || "[]");
 		const tags = JSON.parse(formData.get("text_hashtags") || "[]");
 
-		const bodyUnchanged = text === (object?.data?.text || "");
+		const bodyUnchanged = !textIsHidden && text === (savedText || "");
+		const textFields =
+			textIsHidden && !text.trim()
+				? {}
+				: {
+						text,
+						mentions:
+							bodyUnchanged && !mentions.length
+								? (object?.data?.mentions || []).map(toMention)
+								: mentions,
+						tags:
+							bodyUnchanged && !tags.length ? object?.data?.tags || [] : tags,
+					};
 
 		const rawFormData = {
 			title: formData.get("title"),
 			longUrl: formData.get("longUrl"),
-			text: formData.get("text"),
-			mentions:
-				bodyUnchanged && !mentions.length
-					? (object?.data?.mentions || []).map(toMention)
-					: mentions,
-			tags: bodyUnchanged && !tags.length ? object?.data?.tags || [] : tags,
+			...textFields,
 		};
 
-		const res = await fetchurl(
+		submittingRef.current = true;
+		setIsSubmitting(true);
+		setError("");
+		const res = await safeFetch(
 			`/noadmin/extras/tools/urls/regression/${object?.data?._id}`,
 			"PUT",
 			"no-cache",
@@ -58,24 +81,28 @@ const UpdateShortUrlForm = ({ object = {}, currentpage = "" }) => {
 			false,
 			false,
 		);
+		submittingRef.current = false;
+		if (!isMountedRef.current) {
+			return;
+		}
+		setIsSubmitting(false);
 
-		if (res.status === "error") {
-			toast.error(res.message);
-			setBtnText(btnText);
+		if (isFailure(res)) {
+			setError(actionMessage(res, "Could not update the short URL"));
+			shakeElement(form);
 			return;
 		}
-		if (res.status === "fail") {
-			toast.error(res.message);
-			setBtnText(btnText);
-			return;
-		}
-		setBtnText(btnText);
-		router.push(currentpage);
+		toast.success(`Short URL "${rawFormData.title}" updated`);
+		startLeaving(() => router.push(currentpage));
 	};
 
 	return (
 		<div className="d-grid gap-2 mb-4">
-			<form key={object?.data?._id} onSubmit={upgradeShortUrl}>
+			<form
+				key={object?.data?._id}
+				onSubmit={upgradeShortUrl}
+				onReset={() => setError("")}
+			>
 				<label htmlFor="title" className="form-label">
 					Title
 				</label>
@@ -108,15 +135,27 @@ const UpdateShortUrlForm = ({ object = {}, currentpage = "" }) => {
 					token={undefined}
 					id="text"
 					name="text"
-					defaultValue={object?.data?.text}
+					defaultValue={textIsHidden ? "" : savedText}
 					onModel="ShortUrl"
 					advancedTextEditor={false}
 					customPlaceholder="Type something..."
 					charactersLimit={99999}
-					isRequired={true}
+					isRequired={!textIsHidden}
 				/>
+				{textIsHidden && (
+					<div className="form-text mb-3">
+						The saved text can&apos;t be shown here because the API sends it
+						encrypted. Leave this empty to keep it, or type a new text to
+						replace it.
+					</div>
+				)}
+				{error && (
+					<div className="alert alert-danger py-2 px-3 mb-0 small" role="alert">
+						{error}
+					</div>
+				)}
 				<br />
-				<FormButtons />
+				<FormButtons pending={isSubmitting || isLeaving} />
 			</form>
 		</div>
 	);

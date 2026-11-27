@@ -1,10 +1,15 @@
 "use client";
-import { useState } from "react";
+import { useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-import { fetchurl } from "@/helpers/setTokenOnServer";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
+import { isFailure, safeFetch } from "@/helpers/filemanagerhelpers";
+import { useIsMounted } from "@/components/global/filemanagerui";
+import {
+	actionMessage,
+	shakeElement,
+} from "@/components/global/actionfeedback";
 
 const toId = (value) => {
 	if (!value) {
@@ -23,13 +28,18 @@ const toMention = (value) =>
 
 const UpdateQuoteForm = ({ currentpage = "", object = {} }) => {
 	const router = useRouter();
-
-	const [btnText, setBtnText] = useState(`Submit`);
+	const isMountedRef = useIsMounted();
+	const submittingRef = useRef(false);
+	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [isLeaving, startLeaving] = useTransition();
+	const [error, setError] = useState("");
 
 	const upgradeQuote = async (e) => {
 		e.preventDefault();
-		setBtnText(`Processing...`);
-		const form = e.target;
+		if (submittingRef.current) {
+			return;
+		}
+		const form = e.currentTarget;
 		const formData = new FormData(form);
 
 		const text = formData.get("text") || "";
@@ -53,7 +63,10 @@ const UpdateQuoteForm = ({ currentpage = "", object = {} }) => {
 			embedding: formData.get("embedding"),
 		};
 
-		const res = await fetchurl(
+		submittingRef.current = true;
+		setIsSubmitting(true);
+		setError("");
+		const res = await safeFetch(
 			`/extras/quotes/${object?.data?._id}`,
 			"PUT",
 			"no-cache",
@@ -62,23 +75,27 @@ const UpdateQuoteForm = ({ currentpage = "", object = {} }) => {
 			false,
 			false,
 		);
+		submittingRef.current = false;
+		if (!isMountedRef.current) {
+			return;
+		}
+		setIsSubmitting(false);
 
-		if (res.status === "error") {
-			toast.error(res.message);
-			setBtnText(btnText);
+		if (isFailure(res)) {
+			setError(actionMessage(res, "Could not update the quote"));
+			shakeElement(form);
 			return;
 		}
-		if (res.status === "fail") {
-			toast.error(res.message);
-			setBtnText(btnText);
-			return;
-		}
-		setBtnText(btnText);
-		router.push(currentpage);
+		toast.success("Quote updated");
+		startLeaving(() => router.push(currentpage));
 	};
 
 	return (
-		<form key={object?.data?._id} onSubmit={upgradeQuote}>
+		<form
+			key={object?.data?._id}
+			onSubmit={upgradeQuote}
+			onReset={() => setError("")}
+		>
 			<label htmlFor="text" className="form-label">
 				Text
 			</label>
@@ -144,7 +161,7 @@ const UpdateQuoteForm = ({ currentpage = "", object = {} }) => {
 			<select
 				id="embedding"
 				name="embedding"
-				defaultValue={object?.data?.embedding.toString()}
+				defaultValue={String(object?.data?.embedding ?? false)}
 				className="form-select"
 			>
 				<option value={true}>Yes</option>
@@ -163,8 +180,16 @@ const UpdateQuoteForm = ({ currentpage = "", object = {} }) => {
 				<option value={`published`}>Published</option>
 				<option value={`trash`}>Trash</option>
 			</select>
+			{error && (
+				<div
+					className="alert alert-danger py-2 px-3 mt-3 mb-0 small"
+					role="alert"
+				>
+					{error}
+				</div>
+			)}
 			<br />
-			<FormButtons />
+			<FormButtons pending={isSubmitting || isLeaving} />
 		</form>
 	);
 };

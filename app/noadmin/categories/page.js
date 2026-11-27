@@ -1,4 +1,3 @@
-import { revalidatePath } from "next/cache";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import AdminStatusesMenu from "@/components/noadmin/adminstatusesmenu";
 import List from "@/components/noadmin/categories/list";
@@ -6,7 +5,7 @@ import CreateCategoryForm from "@/forms/noadmin/categories/createcategoryform";
 
 async function getCategories(params) {
 	const res = await fetchurl(`/global/categories${params}`, "GET", "no-cache");
-	return res;
+	return res instanceof Error ? { status: "error", message: res.message } : res;
 }
 
 const AdminCategoriesIndex = async ({ params, searchParams }) => {
@@ -20,99 +19,6 @@ const AdminCategoriesIndex = async ({ params, searchParams }) => {
 		`?page=${page}&limit=${limit}&sort=${sort}`,
 	);
 
-	const draftIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/categories/${id}/draftit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/categories?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const publishIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/categories/${id}/publishit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/categories?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const trashIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/categories/${id}/trashit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/categories?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const scheduleIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/categories/${id}/scheduleit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/categories?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const handleDelete = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/categories/${id}/permanently`,
-			"DELETE",
-			"no-cache",
-		);
-		revalidatePath(
-			`/noadmin/categories?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const handleTrashAll = async () => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/categories/deleteall`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/categories?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const handleDeleteAll = async () => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/categories/deleteall/permanently`,
-			"DELETE",
-			"no-cache",
-		);
-		revalidatePath(
-			`/noadmin/categories?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const usageCountIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/categories/${id}/usagecount`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/categories?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const usageCountItAll = async () => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/maintenanceops/categories/allusagecount`,
-			"PUT",
-			"no-cache",
-		);
-		revalidatePath(
-			`/noadmin/categories?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
 	return (
 		<>
 			<AdminStatusesMenu
@@ -121,13 +27,13 @@ const AdminCategoriesIndex = async ({ params, searchParams }) => {
 				draftLink="/noadmin/categories/draft"
 				scheduledLink="/noadmin/categories/scheduled"
 				trashedLink="/noadmin/categories/trashed"
+				filledLink=""
+				categoriesLink="/noadmin/categories"
+				categoryType=""
 			/>
 			<div className="row">
 				<div className="col">
-					<CreateCategoryForm
-						currentpage={`/noadmin/categories?page=${page}&limit=${limit}&sort=${sort}`}
-						objects={categories}
-					/>
+					<CreateCategoryForm objects={categories} />
 				</div>
 				<div className="col-lg-10">
 					<div className="card rounded-0">
@@ -136,18 +42,12 @@ const AdminCategoriesIndex = async ({ params, searchParams }) => {
 							pageText="Categories"
 							addLink="/noadmin/categories"
 							searchOn="/noadmin/categories"
+							searchedKeyword=""
 							objects={categories}
 							searchParams={awtdSearchParams}
-							handleDraft={draftIt}
-							handlePublish={publishIt}
-							handleTrash={trashIt}
-							handleSchedule={scheduleIt}
-							handleDelete={handleDelete}
-							handleTrashAllFunction={handleTrashAll}
-							handleDeleteAllFunction={handleDeleteAll}
-							handleUsageCount={usageCountIt}
+							statusFilter=""
+							categoryType=""
 							handleAllUsageCountEnabled={true}
-							handleAllUsageCount={usageCountItAll}
 						/>
 					</div>
 				</div>

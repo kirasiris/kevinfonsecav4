@@ -1,4 +1,3 @@
-import { revalidatePath } from "next/cache";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import AdminStatusesMenu from "@/components/noadmin/adminstatusesmenu";
 import List from "@/components/noadmin/themes/list";
@@ -9,7 +8,7 @@ async function getThemes(params) {
 		"GET",
 		"no-cache",
 	);
-	return res;
+	return res instanceof Error ? { status: "error", message: res.message } : res;
 }
 
 const AdminThemesScheduledIndex = async ({ params, searchParams }) => {
@@ -21,91 +20,6 @@ const AdminThemesScheduledIndex = async ({ params, searchParams }) => {
 
 	const themes = await getThemes(`?page=${page}&limit=${limit}&sort=${sort}`);
 
-	const draftIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/themes/${id}/draftit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/themes/scheduled?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const publishIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/themes/${id}/publishit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/themes/scheduled?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const trashIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/themes/${id}/trashit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/themes/scheduled?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const scheduleIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/themes/${id}/scheduleit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/themes/scheduled?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const featureIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/themes/${id}/featureit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/themes/scheduled?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const unfeatureIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/themes/${id}/unfeatureit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/themes/scheduled?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const handleDelete = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/themes/${id}/permanently`, "DELETE", "no-cache");
-		revalidatePath(
-			`/noadmin/themes/scheduled?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const handleTrashAll = async () => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/themes/deleteall`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/themes/scheduled?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const handleDeleteAll = async () => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/themes/deleteall/permanently`,
-			"DELETE",
-			"no-cache",
-		);
-		revalidatePath(
-			`/noadmin/themes/scheduled?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
 	return (
 		<div className="container-fluid px-0">
 			<AdminStatusesMenu
@@ -114,6 +28,7 @@ const AdminThemesScheduledIndex = async ({ params, searchParams }) => {
 				draftLink="/noadmin/themes/draft"
 				scheduledLink="/noadmin/themes/scheduled"
 				trashedLink="/noadmin/themes/trashed"
+				filledLink=""
 				categoriesLink="/noadmin/themes/categories"
 				categoryType="theme"
 			/>
@@ -126,15 +41,8 @@ const AdminThemesScheduledIndex = async ({ params, searchParams }) => {
 					searchedKeyword=""
 					objects={themes}
 					searchParams={awtdSearchParams}
-					handleDraft={draftIt}
-					handlePublish={publishIt}
-					handleTrash={trashIt}
-					handleSchedule={scheduleIt}
-					handleFeature={featureIt}
-					handleUnfeature={unfeatureIt}
-					handleDelete={handleDelete}
-					handleTrashAllFunction={handleTrashAll}
-					handleDeleteAllFunction={handleDeleteAll}
+					statusFilter="scheduled"
+					postType="theme"
 				/>
 			</div>
 		</div>

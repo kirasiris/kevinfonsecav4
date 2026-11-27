@@ -95,6 +95,8 @@ const UpdateCover = async ({ params, searchParams }) => {
 										<MasonryLayout
 											setNewAvatar={setCover}
 											objects={files.data}
+											currentId={auth?.data?.files?.cover?._id}
+											label="Cover"
 										/>
 									</div>
 								</div>

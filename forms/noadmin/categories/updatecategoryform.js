@@ -1,10 +1,15 @@
 "use client";
-import { useState } from "react";
+import { useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-import { fetchurl } from "@/helpers/setTokenOnServer";
 import MyTextArea from "@/components/global/myfinaltextarea";
 import FormButtons from "@/components/global/formbuttons";
+import { isFailure, safeFetch } from "@/helpers/filemanagerhelpers";
+import { useIsMounted } from "@/components/global/filemanagerui";
+import {
+	actionMessage,
+	shakeElement,
+} from "@/components/global/actionfeedback";
 
 const toId = (value) => {
 	if (!value) {
@@ -21,56 +26,70 @@ const toMention = (value) =>
 		? { id: String(value), username: "" }
 		: { id: toId(value), username: value?.username || "" };
 
-const resolveParent = (parentId, parent, list) => {
-	if (!parentId) {
+const resolveParent = (parentId, list) => {
+	const id = toId(parentId);
+	if (!id) {
 		return null;
 	}
-	if (typeof parentId === "object" && parentId.title) {
-		return { _id: toId(parentId), title: parentId.title };
+	if (parentId?.title) {
+		return { _id: id, title: parentId.title };
 	}
-	const fromProp = parent?.data || parent;
-	if (fromProp && toId(fromProp) === parentId && fromProp.title) {
-		return { _id: parentId, title: fromProp.title };
-	}
-	const inList = list.find((item) => toId(item._id) === parentId);
+	const inList = list.find((item) => toId(item._id) === id);
 	if (inList) {
-		return { _id: parentId, title: inList.title };
+		return { _id: id, title: inList.title };
 	}
 	const viaSibling = list.find(
-		(item) => toId(item.parentId) === parentId && item.parentId?.title,
+		(item) => toId(item.parentId) === id && item.parentId?.title,
 	);
 	if (viaSibling) {
-		return { _id: parentId, title: viaSibling.parentId.title };
+		return { _id: id, title: viaSibling.parentId.title };
 	}
-	return { _id: parentId, title: `Current parent (${parentId})` };
+	return { _id: id, title: `Current parent (${id})` };
+};
+
+const selfAndDescendantIds = (categoryId, list) => {
+	const ids = new Set([categoryId]);
+	let grew = true;
+	while (grew) {
+		grew = false;
+		for (const item of list) {
+			const id = toId(item._id);
+			if (!ids.has(id) && ids.has(toId(item.parentId))) {
+				ids.add(id);
+				grew = true;
+			}
+		}
+	}
+	return ids;
 };
 
 const UpdateCategoryForm = ({
 	currentpage = "",
 	object = {},
 	objects = [],
-	parent = null,
 }) => {
 	const router = useRouter();
-
-	const [btnText, setBtnText] = useState(`Submit`);
+	const isMountedRef = useIsMounted();
+	const submittingRef = useRef(false);
+	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [isLeaving, startLeaving] = useTransition();
+	const [error, setError] = useState("");
 
 	const categoryId = toId(object?.data?._id);
 	const currentParentId = toId(object?.data?.parentId);
 	const categoryList = Array.isArray(objects?.data) ? objects.data : [];
-	const currentParent = resolveParent(
-		object?.data?.parentId ? currentParentId : "",
-		parent,
-		categoryList,
-	);
+	const currentParent = resolveParent(object?.data?.parentId, categoryList);
+	const unavailableIds = selfAndDescendantIds(categoryId, categoryList);
 	const parentOptions = categoryList.filter((item) => {
 		const id = toId(item._id);
-		return id !== categoryId && id !== currentParentId;
+		return !unavailableIds.has(id) && id !== currentParentId;
 	});
 
 	const upgradeCategory = async (e) => {
 		e.preventDefault();
-		setBtnText(`Processing...`);
+		if (submittingRef.current) {
+			return;
+		}
 		const form = e.target;
 		const formData = new FormData(form);
 
@@ -88,11 +107,15 @@ const UpdateCategoryForm = ({
 					? (object?.data?.mentions || []).map(toMention)
 					: mentions,
 			tags: bodyUnchanged && !tags.length ? object?.data?.tags || [] : tags,
-			parentId: formData.get("parentId") || undefined,
+			parentId: parentId || (currentParentId ? null : undefined),
 			deletable: formData.get("deletable"),
 		};
 
-		const res = await fetchurl(
+		submittingRef.current = true;
+		setIsSubmitting(true);
+		setError("");
+
+		const res = await safeFetch(
 			`/noadmin/categories/${categoryId}`,
 			"PUT",
 			"no-cache",
@@ -102,22 +125,27 @@ const UpdateCategoryForm = ({
 			false,
 		);
 
-		if (res.status === "error") {
-			toast.error(res.message);
-			setBtnText(btnText);
+		submittingRef.current = false;
+		if (!isMountedRef.current) {
 			return;
 		}
-		if (res.status === "fail") {
-			toast.error(res.message);
-			setBtnText(btnText);
+		setIsSubmitting(false);
+
+		if (isFailure(res)) {
+			setError(actionMessage(res, "Could not update the category"));
+			shakeElement(form);
 			return;
 		}
-		setBtnText(btnText);
-		router.push(currentpage);
+		toast.success(`Category "${rawFormData.title}" updated`);
+		startLeaving(() => router.push(currentpage));
 	};
 
 	return (
-		<form key={`${categoryId}-${currentParentId}`} onSubmit={upgradeCategory}>
+		<form
+			key={`${categoryId}-${currentParentId}`}
+			onSubmit={upgradeCategory}
+			onReset={() => setError("")}
+		>
 			<label htmlFor="category-title" className="form-label">
 				Title
 			</label>
@@ -175,8 +203,16 @@ const UpdateCategoryForm = ({
 				<option value="true">Yes</option>
 				<option value="false">No</option>
 			</select>
+			{error && (
+				<div
+					className="alert alert-danger py-2 px-3 mt-3 mb-0 small"
+					role="alert"
+				>
+					{error}
+				</div>
+			)}
 			<br />
-			<FormButtons />
+			<FormButtons pending={isSubmitting || isLeaving} />
 		</form>
 	);
 };

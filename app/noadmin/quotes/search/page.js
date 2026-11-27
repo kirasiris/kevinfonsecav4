@@ -1,13 +1,11 @@
-import { revalidatePath } from "next/cache";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import AdminStatusesMenu from "@/components/noadmin/adminstatusesmenu";
-import MyTextArea from "@/components/global/myfinaltextarea";
-import FormButtons from "@/components/global/formbuttons";
 import List from "@/components/noadmin/quotes/list";
+import CreateQuoteForm from "@/forms/noadmin/quotes/createquoteform";
 
 async function getQuotes(params) {
 	const res = await fetchurl(`/global/quotes${params}`, "GET", "no-cache");
-	return res;
+	return res instanceof Error ? { status: "error", message: res.message } : res;
 }
 
 const AdminQuotesSearchIndex = async ({ params, searchParams }) => {
@@ -24,82 +22,6 @@ const AdminQuotesSearchIndex = async ({ params, searchParams }) => {
 		`?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 	);
 
-	const createQuote = async (formData) => {
-		"use server";
-		const rawFormData = {
-			text: formData.get("text"),
-			authorName: formData.get("authorName"),
-			authorUrl: formData.get("authorUrl"),
-			sourceWebsite: formData.get("sourceWebsite"),
-			sourceUrl: formData.get("sourceUrl"),
-			status: formData.get("status"),
-			embedding: formData.get("embedding"),
-		};
-
-		await fetchurl(`/noadmin/quotes`, "POST", "no-cache", rawFormData);
-		revalidatePath(
-			`/noadmin/quotes/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
-		);
-	};
-
-	const draftIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/quotes/${id}/draftit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/quotes/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
-		);
-	};
-
-	const publishIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/quotes/${id}/publishit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/quotes/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
-		);
-	};
-
-	const trashIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/quotes/${id}/trashit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/quotes/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
-		);
-	};
-
-	const handleDelete = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/quotes/${id}/permanently`, "DELETE", "no-cache");
-		revalidatePath(
-			`/noadmin/quotes/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
-		);
-	};
-
-	const handleTrashAll = async () => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/quotes/deleteall`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/quotes/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
-		);
-	};
-
-	const handleDeleteAll = async () => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/quotes/deleteall/permanently`,
-			"DELETE",
-			"no-cache",
-		);
-		revalidatePath(
-			`/noadmin/quotes/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
-		);
-	};
-
 	return (
 		<div className="container-fluid px-0">
 			<AdminStatusesMenu
@@ -108,97 +30,13 @@ const AdminQuotesSearchIndex = async ({ params, searchParams }) => {
 				draftLink="/noadmin/quotes/draft"
 				scheduledLink=""
 				trashedLink="/noadmin/quotes/trashed"
+				filledLink=""
 				categoriesLink=""
 				categoryType=""
 			/>
 			<div className="row">
 				<div className="col">
-					<form action={createQuote}>
-						<label htmlFor="text" className="form-label">
-							Text
-						</label>
-						<MyTextArea
-							auth={undefined}
-							token={undefined}
-							id="text"
-							name="text"
-							customPlaceholder="Type something..."
-							defaultValue=""
-							onModel="Quote"
-							advancedTextEditor={false}
-						/>
-						<label htmlFor="authorName" className="form-label">
-							Author Name
-						</label>
-						<input
-							id="authorName"
-							name="authorName"
-							defaultValue="John Doe"
-							type="text"
-							className="form-control mb-3"
-							placeholder="Someone"
-						/>
-						<label htmlFor="authorUrl" className="form-label">
-							Author Url
-						</label>
-						<input
-							id="authorUrl"
-							name="authorUrl"
-							defaultValue="#"
-							type="text"
-							className="form-control mb-3"
-							placeholder="#"
-						/>
-						<label htmlFor="sourceWebsite" className="form-label">
-							Source Website
-						</label>
-						<input
-							id="sourceWebsite"
-							name="sourceWebsite"
-							defaultValue=""
-							type="text"
-							className="form-control mb-3"
-							placeholder="Somewhere"
-						/>
-						<label htmlFor="sourceUrl" className="form-label">
-							Source Url
-						</label>
-						<input
-							id="sourceUrl"
-							name="sourceUrl"
-							defaultValue="#"
-							type="text"
-							className="form-control mb-3"
-							placeholder="#"
-						/>
-						<label htmlFor="embedding" className="form-label">
-							Embedding
-						</label>
-						<select
-							id="embedding"
-							name="embedding"
-							defaultValue={true}
-							className="form-control"
-						>
-							<option value={true}>Yes</option>
-							<option value={false}>No</option>
-						</select>
-						<label htmlFor="status" className="form-label">
-							Status
-						</label>
-						<select
-							id="status"
-							name="status"
-							defaultValue="draft"
-							className="form-control"
-						>
-							<option value={`draft`}>Draft</option>
-							<option value={`published`}>Published</option>
-							<option value={`trash`}>Trash</option>
-						</select>
-						<br />
-						<FormButtons />
-					</form>
+					<CreateQuoteForm />
 				</div>
 				<div className="col-lg-10">
 					<div className="card rounded-0">
@@ -210,13 +48,7 @@ const AdminQuotesSearchIndex = async ({ params, searchParams }) => {
 							searchedKeyword={keyword}
 							objects={quotes}
 							searchParams={awtdSearchParams}
-							handleDraft={draftIt}
-							handlePublish={publishIt}
-							handleTrash={trashIt}
-							handleSchedule={undefined}
-							handleDelete={handleDelete}
-							handleTrashAllFunction={handleTrashAll}
-							handleDeleteAllFunction={handleDeleteAll}
+							statusFilter=""
 						/>
 					</div>
 				</div>

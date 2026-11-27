@@ -2,8 +2,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import DeleteAllModal from "../global/deleteallmodal";
-import TrashAllModal from "../global/trashallmodal";
+import DeleteAllModal from "@/components/global/deleteallmodal";
+import TrashAllModal from "@/components/global/trashallmodal";
 
 const AdminCardHeaderMenu = ({
 	stripeChargesEnabled = false,
@@ -18,6 +18,7 @@ const AdminCardHeaderMenu = ({
 	classList = "",
 	handleAllUsageCountEnabled = false,
 	handleAllUsageCount = () => {},
+	countingAll = false,
 	isDirty = false,
 	saving = false,
 	handleSave = () => {},
@@ -140,10 +141,22 @@ const AdminCardHeaderMenu = ({
 					)}
 					{handleAllUsageCountEnabled && (
 						<button
+							type="button"
 							className="btn btn-secondary btn-sm"
 							onClick={() => handleAllUsageCount()}
+							disabled={countingAll}
 						>
-							Count&nbsp;docs
+							{countingAll ? (
+								<>
+									<span
+										className="spinner-border spinner-border-sm me-1"
+										aria-hidden="true"
+									/>
+									Counting...
+								</>
+							) : (
+								<>Count&nbsp;docs</>
+							)}
 						</button>
 					)}
 					{handleTrashAllFunction !== "" && (

@@ -1,7 +1,8 @@
 "use client";
-import { useState } from "react";
+import { useId } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
+import { useConfirmAction } from "@/components/global/actionfeedback";
 
 const DeleteModal = ({
 	id = null,
@@ -16,44 +17,44 @@ const DeleteModal = ({
 	setObjects = () => {},
 	setTotalResults = () => {},
 	displayText = true,
+	itemTitle = ``,
+	disabled = false,
+	onDeleted = () => {},
 }) => {
-	const [confirmDeleteModal, setConfirmDeleteModal] = useState(false);
-	const [, setError] = useState(false);
+	const titleId = useId();
 
-	const deleteObject = async (e) => {
-		e.preventDefault();
-		await action(id, sId)
-			.then(() => {
-				if (typeof action2 === `function`) {
-					action2(location)
-						.then(() => {
-							console.log(`Done`);
-						})
-						.catch((err) => {
-							setError(true);
-						});
-				}
-			})
-			.catch((err) => {
-				setError(true);
-			});
-		if (sId) {
-			setObjects(objects?.filter((object) => object._id !== sId));
-		} else {
-			setObjects(objects?.filter((object) => object._id !== id));
+	const runFollowUp = () => {
+		if (typeof action2 !== `function`) return;
+		try {
+			Promise.resolve(action2(location)).catch((err) => console.error(err));
+		} catch (err) {
+			console.error(err);
 		}
-		setTotalResults(objects?.length - 1);
 	};
+
+	const { show, pending, error, bodyRef, open, close, confirm, handleExited } =
+		useConfirmAction({
+			action: () => action(id, sId),
+			failText: "Could not delete it. Please try again.",
+			onSuccess: () => {
+				runFollowUp();
+				const removedId = sId || id;
+				setObjects(objects?.filter((object) => object._id !== removedId));
+				setTotalResults(objects?.length - 1);
+			},
+			onDone: onDeleted,
+		});
 
 	return (
 		<>
 			<Button
 				variant={`danger`}
 				size={size}
-				onClick={() => setConfirmDeleteModal(!confirmDeleteModal)}
+				onClick={open}
 				data-target={`deleteModal#${id}`}
 				as={as}
 				className={classStr}
+				disabled={disabled}
 			>
 				{displayText ? (
 					"Delete"
@@ -62,30 +63,66 @@ const DeleteModal = ({
 				)}
 			</Button>
 			<Modal
-				show={confirmDeleteModal}
-				onHide={() => setConfirmDeleteModal(!confirmDeleteModal)}
-				backdrop={true}
+				show={show}
+				onHide={close}
+				onExited={handleExited}
+				backdrop={pending ? "static" : true}
+				keyboard={!pending}
 				animation={true}
 				size={`sm`}
 				id={`deleteModal#${id}`}
+				aria-labelledby={titleId}
 			>
 				<Modal.Header closeButton>
-					<div className="modal-title h4">Are you sure?</div>
+					<div className="modal-title h4" id={titleId}>
+						Are you sure?
+					</div>
 				</Modal.Header>
-				<div className="modal-body">{id}</div>
+				<div className="modal-body" ref={bodyRef}>
+					{itemTitle ? (
+						<>
+							<strong>{itemTitle}</strong> will be deleted permanently.
+						</>
+					) : (
+						id
+					)}
+					{error && (
+						<div
+							className="alert alert-danger py-2 px-3 mt-3 mb-0 small"
+							role="alert"
+						>
+							{error}
+						</div>
+					)}
+				</div>
 				<div className="modal-footer">
 					<button
+						type="button"
 						className="btn btn-secondary btn-sm"
-						onClick={() => setConfirmDeleteModal(!confirmDeleteModal)}
+						onClick={close}
+						disabled={pending}
 					>
 						Close
 					</button>
 					<button
 						className="btn btn-primary btn-sm"
 						type="submit"
-						onClick={deleteObject}
+						onClick={confirm}
+						disabled={pending}
 					>
-						Submit
+						{pending ? (
+							<>
+								<span
+									className="spinner-border spinner-border-sm me-1"
+									aria-hidden="true"
+								/>
+								Deleting...
+							</>
+						) : error ? (
+							"Try again"
+						) : (
+							"Submit"
+						)}
 					</button>
 				</div>
 			</Modal>

@@ -1,23 +1,38 @@
 "use client";
-import { useState } from "react";
+import { useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-import { fetchurl } from "@/helpers/setTokenOnServer";
 import QRC from "@/components/global/qrcode";
 import FormButtons from "@/components/global/formbuttons";
+import { isFailure, safeFetch } from "@/helpers/filemanagerhelpers";
+import { useIsMounted } from "@/components/global/filemanagerui";
+import {
+	actionMessage,
+	shakeElement,
+} from "@/components/global/actionfeedback";
 
-const UpdateQRCodeForm = ({ object = {} }) => {
+const savedQrCodeOf = (object) => ({
+	url: object?.data?.url,
+	qrmargin: object?.data?.qrmargin,
+	qrcodesize: object?.data?.qrcodesize,
+	securitylevel: object?.data?.securitylevel,
+	imageurl: object?.data?.logo?.url,
+	imagewidth: object?.data?.logo?.width,
+	imageheight: object?.data?.logo?.height,
+});
+
+const UpdateQRCodeForm = ({
+	currentpage = "/noadmin/qrcodes?page=1&limit=10&sort=-createdAt",
+	object = {},
+}) => {
 	const router = useRouter();
+	const isMountedRef = useIsMounted();
+	const submittingRef = useRef(false);
+	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [isLeaving, startLeaving] = useTransition();
+	const [error, setError] = useState("");
 
-	const [qrcodeData, setQrCodeData] = useState({
-		url: object?.data?.url,
-		qrmargin: object?.data?.qrmargin,
-		qrcodesize: object?.data?.qrcodesize,
-		securitylevel: object?.data?.securitylevel,
-		imageurl: object?.data?.logo.url,
-		imagewidth: object?.data?.logo.width,
-		imageheight: object?.data?.logo.height,
-	});
+	const [qrcodeData, setQrCodeData] = useState(() => savedQrCodeOf(object));
 
 	const {
 		url,
@@ -29,12 +44,12 @@ const UpdateQRCodeForm = ({ object = {} }) => {
 		imageheight,
 	} = qrcodeData;
 
-	const [btnText, setBtnText] = useState(`Submit`);
-
 	const upgradeQrCode = async (e) => {
 		e.preventDefault();
-		setBtnText("Processing...");
-		const form = e.target;
+		if (submittingRef.current) {
+			return;
+		}
+		const form = e.currentTarget;
 		const formData = new FormData(form);
 
 		const rawFormData = {
@@ -50,7 +65,10 @@ const UpdateQRCodeForm = ({ object = {} }) => {
 			},
 		};
 
-		const res = await fetchurl(
+		submittingRef.current = true;
+		setIsSubmitting(true);
+		setError("");
+		const res = await safeFetch(
 			`/noadmin/qrcodes/${object?.data?._id}`,
 			"PUT",
 			"no-cache",
@@ -59,22 +77,24 @@ const UpdateQRCodeForm = ({ object = {} }) => {
 			false,
 			false,
 		);
-
-		if (res.status === "error") {
-			toast.error(res.message);
-			setBtnText(btnText);
+		submittingRef.current = false;
+		if (!isMountedRef.current) {
 			return;
 		}
+		setIsSubmitting(false);
 
-		if (res.status === "fail") {
-			toast.error(res.message);
-			setBtnText(btnText);
+		if (isFailure(res)) {
+			setError(actionMessage(res, "Could not update the QR code"));
+			shakeElement(form);
 			return;
 		}
-
 		toast.success("QR Code upgraded");
-		setBtnText(btnText);
-		router.push(`/noadmin/qrcodes?page=1&limit=10&sort=-createdAt`);
+		startLeaving(() => router.push(currentpage));
+	};
+
+	const resetForm = () => {
+		setError("");
+		setQrCodeData(savedQrCodeOf(object));
 	};
 
 	return (
@@ -88,9 +108,14 @@ const UpdateQRCodeForm = ({ object = {} }) => {
 					imgsrc={imageurl}
 					imgwidth={imagewidth}
 					imgheight={imageheight}
+					title={url ? `QR code preview for ${url}` : "QR code preview"}
 				/>
 			</div>
-			<form key={object?.data?._id} onSubmit={upgradeQrCode}>
+			<form
+				key={object?.data?._id}
+				onSubmit={upgradeQrCode}
+				onReset={resetForm}
+			>
 				<label htmlFor="title" className="form-label">
 					Title
 				</label>
@@ -179,7 +204,7 @@ const UpdateQRCodeForm = ({ object = {} }) => {
 				<input
 					id="imageurl"
 					name="imageurl"
-					defaultValue={object?.data?.logo.url}
+					defaultValue={object?.data?.logo?.url}
 					onChange={(e) => {
 						setQrCodeData({
 							...qrcodeData,
@@ -196,7 +221,7 @@ const UpdateQRCodeForm = ({ object = {} }) => {
 				<input
 					id="imagewidth"
 					name="imagewidth"
-					defaultValue={object?.data?.logo.width}
+					defaultValue={object?.data?.logo?.width}
 					onChange={(e) => {
 						setQrCodeData({
 							...qrcodeData,
@@ -213,7 +238,7 @@ const UpdateQRCodeForm = ({ object = {} }) => {
 				<input
 					id="imageheight"
 					name="imageheight"
-					defaultValue={object?.data?.logo.height}
+					defaultValue={object?.data?.logo?.height}
 					onChange={(e) => {
 						setQrCodeData({
 							...qrcodeData,
@@ -224,7 +249,12 @@ const UpdateQRCodeForm = ({ object = {} }) => {
 					className="form-control mb-3"
 					placeholder="30"
 				/>
-				<FormButtons />
+				{error && (
+					<div className="alert alert-danger py-2 px-3 mb-3 small" role="alert">
+						{error}
+					</div>
+				)}
+				<FormButtons pending={isSubmitting || isLeaving} />
 			</form>
 		</>
 	);

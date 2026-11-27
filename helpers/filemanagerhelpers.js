@@ -1,9 +1,5 @@
 import { fetchurl } from "@/helpers/setTokenOnServer";
 
-/* -------------------------------------------------------------------------- */
-/* Constants                                                                  */
-/* -------------------------------------------------------------------------- */
-
 export const FILES_PER_PAGE = 28;
 export const SEARCH_DELAY_MS = 300;
 
@@ -34,11 +30,6 @@ export const FILE_TYPE_MAP = {
 	},
 };
 
-/* -------------------------------------------------------------------------- */
-/* File record helpers                                                        */
-/* -------------------------------------------------------------------------- */
-
-// Accepts a populated document or a bare id string.
 export const idOf = (value) => {
 	if (!value) return "";
 	if (typeof value === "object") {
@@ -48,7 +39,6 @@ export const idOf = (value) => {
 	return String(value);
 };
 
-// A record may hold the populated file or just its id; either way keep an object.
 export const toFileObject = (value) => {
 	if (!value) return null;
 	if (typeof value === "object") return idOf(value) ? value : null;
@@ -60,8 +50,6 @@ export const fileUrlOf = (item) => {
 	return loc.secure_location || loc.insecure_location || loc.aws_location || "";
 };
 
-// `title` is the name the file was uploaded under; `location.filename` is the
-// storage name with the owner id and email baked in, so it is only a fallback.
 export const fileNameOf = (item) => {
 	if (!item) return "file";
 	const loc = item.location || {};
@@ -89,8 +77,6 @@ export const guessKind = (url, mime) => {
 	return "file";
 };
 
-// The API's `format_type` ("image" | "video" | "audio" | "application") is the
-// source of truth; the extension guess only covers records without one.
 export const kindOf = (item) => {
 	const type = item && item.format_type;
 	if (type === "image" || type === "video" || type === "audio") return type;
@@ -123,10 +109,6 @@ export const classifyFile = (file) => {
 	};
 };
 
-/* -------------------------------------------------------------------------- */
-/* List helpers                                                               */
-/* -------------------------------------------------------------------------- */
-
 export const buildKey = (file, pageHint) =>
 	file?._id ||
 	file?.location?.public_id ||
@@ -134,7 +116,6 @@ export const buildKey = (file, pageHint) =>
 		.toString(36)
 		.slice(2)}`;
 
-// Tags every new item with a stable `__key`, skipping ones already listed.
 export const keyItems = (rawList, pageHint, seenSet) => {
 	const result = [];
 	for (const file of Array.isArray(rawList) ? rawList : []) {
@@ -158,12 +139,6 @@ export const positiveNumber = (...candidates) => {
 	return null;
 };
 
-/* -------------------------------------------------------------------------- */
-/* Request helpers                                                            */
-/* -------------------------------------------------------------------------- */
-
-// fetchurl can reject (network drop, abort) or resolve to nothing; turn both
-// into the API's own error shape so every caller has a single path to check.
 export const safeFetch = async (...args) => {
 	try {
 		const res = await fetchurl(...args);
@@ -173,8 +148,6 @@ export const safeFetch = async (...args) => {
 	}
 };
 
-// fetchurl resolves with the caught error instead of rejecting, so an Error
-// instance (or `success: false`) has to count as a failure too.
 export const isFailure = (res) =>
 	!res ||
 	res instanceof Error ||
@@ -182,18 +155,11 @@ export const isFailure = (res) =>
 	res.status === "fail" ||
 	res.success === false;
 
-// The API answers an empty list (or a page past the end) with a "fail", which
-// must be shown as "no files" rather than as an error.
 export const isEmptyPage = (res) =>
 	res?.status === "fail" && /does not exist/i.test(res?.message || "");
 
-/* -------------------------------------------------------------------------- */
-/* Upload helpers                                                             */
-/* -------------------------------------------------------------------------- */
-
 export const generateId = () => Math.random().toString(36).slice(2, 9);
 
-// `fallback` is what an unrecognised type becomes in this manager.
 export const getFileType = (mimeType = "", fallback = "video") => {
 	if (mimeType.startsWith("image/")) return "image";
 	if (mimeType.startsWith("audio/")) return "audio";
@@ -201,8 +167,6 @@ export const getFileType = (mimeType = "", fallback = "video") => {
 	return fallback;
 };
 
-// Mirrors an <input accept="audio/*,video/*"> value, so the input attribute
-// and the JS check can never drift apart.
 export const matchesAccept = (file, accept) => {
 	const type = file?.type || "";
 	return String(accept)
@@ -229,16 +193,12 @@ export const getMediaIcon = (type) => {
 	}
 };
 
-// The admin forms receive `{ data: user }`, while the comment editor receives
-// a flat user; read both so the uploader never gets "undefined".
 export const uploaderFields = (auth = {}) => ({
 	userId: auth?.data?._id ?? auth?.userId,
 	username: auth?.data?.username ?? auth?.username,
 	userEmail: auth?.data?.email ?? auth?.email,
 });
 
-// Resolves `{ file, ...extra }`, where `extra` comes from `afterUpload` (used
-// to create the record that owns the stored file).
 export const uploadFileToServer = ({
 	blob,
 	filename,
@@ -276,8 +236,7 @@ export const uploadFileToServer = ({
 				);
 				return;
 			}
-			// A throw inside this listener would never reach the Promise, leaving
-			// the caller stuck on "Uploading..." forever, so parse defensively.
+
 			let parsed;
 			try {
 				parsed = JSON.parse(xhr.responseText);
@@ -319,8 +278,6 @@ export const uploadFileToServer = ({
 	return { res, xhr };
 };
 
-// Builds the list entry for a freshly uploaded file that a record (song,
-// video...) points at under `files[fileField]`.
 export const buildUploadedRecordEntry = ({
 	uploaded,
 	record,
@@ -336,7 +293,6 @@ export const buildUploadedRecordEntry = ({
 			? serverObj.format_type.toLowerCase()
 			: "";
 	return {
-		// The record's id, not the file's: row actions call /noadmin/<type>/:id.
 		_id: recordData._id,
 		status: recordData.status || "draft",
 		title: recordData.title || serverObj.title || fileObj.name,
@@ -367,12 +323,6 @@ export const recordingExtension = (mimeType, kind) => {
 	return "webm";
 };
 
-/* -------------------------------------------------------------------------- */
-/* Form helpers                                                               */
-/* -------------------------------------------------------------------------- */
-
-// The hidden `text_hashtags` field is JSON; a malformed value must not throw
-// mid-submit and leave the form locked.
 export const readJsonList = (formData, name) => {
 	try {
 		const parsed = JSON.parse(formData.get(name) || "[]");
@@ -382,7 +332,6 @@ export const readJsonList = (formData, name) => {
 	}
 };
 
-// Keeps the stored tags when the body is untouched and no new ones were found.
 export const resolveTags = (formData, previous = {}) => {
 	const tags = readJsonList(formData, "text_hashtags");
 	const bodyUnchanged = (formData.get("text") || "") === (previous.text || "");

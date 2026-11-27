@@ -1,4 +1,3 @@
-import { revalidatePath } from "next/cache";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import AdminStatusesMenu from "@/components/noadmin/adminstatusesmenu";
 import List from "@/components/noadmin/newslettersubscribers/list";
@@ -9,7 +8,7 @@ async function getNewsletterSubscribers(params) {
 		"GET",
 		"no-cache",
 	);
-	return res;
+	return res instanceof Error ? { status: "error", message: res.message } : res;
 }
 
 const AdminNewsletterSubscribersSearchIndex = async ({
@@ -29,32 +28,6 @@ const AdminNewsletterSubscribersSearchIndex = async ({
 		`?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 	);
 
-	const handleDelete = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/newslettersubscribers/${id}/permanently`,
-			"DELETE",
-			"no-cache",
-		);
-		revalidatePath(
-			`/noadmin/newslettersubscribers/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
-		);
-	};
-
-	const handleDeleteAll = async () => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/newslettersubscribers/deleteall/permanently`,
-			"DELETE",
-			"no-cache",
-		);
-		revalidatePath(
-			`/noadmin/newslettersubscribers/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
-		);
-	};
-
 	return (
 		<div className="container-fluid px-0">
 			<AdminStatusesMenu
@@ -63,6 +36,7 @@ const AdminNewsletterSubscribersSearchIndex = async ({
 				draftLink=""
 				scheduledLink=""
 				trashedLink=""
+				filledLink=""
 				categoriesLink=""
 				categoryType=""
 			/>
@@ -72,16 +46,10 @@ const AdminNewsletterSubscribersSearchIndex = async ({
 					pageText="Newsletter Subscribers"
 					addLink=""
 					searchOn="/noadmin/newslettersubscribers"
-					searchedKeyword={keyword}
+					searchedKeyword=""
 					objects={newslettersubscribers}
 					searchParams={awtdSearchParams}
-					handleDraft={undefined}
-					handlePublish={undefined}
-					handleTrash={undefined}
-					handleSchedule={undefined}
-					handleDelete={handleDelete}
-					handleTrashAllFunction={undefined}
-					handleDeleteAllFunction={handleDeleteAll}
+					statusFilter=""
 				/>
 			</div>
 		</div>

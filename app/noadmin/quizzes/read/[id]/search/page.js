@@ -1,4 +1,3 @@
-import { revalidatePath } from "next/cache";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { fetchurl } from "@/helpers/setTokenOnServer";
@@ -31,63 +30,6 @@ const AdminReadQuizSearchIndex = async ({ params, searchParams }) => {
 		`?resourceId=${quiz?.data?._id}&page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 	);
 
-	const draftIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/questions/${id}/draftit`, "PUT", "no-cache");
-		revalidatePath(`/noadmin/quizzes/read/${awtdParams.id}`);
-	};
-
-	const publishIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/questions/${id}/publishit`, "PUT", "no-cache");
-		revalidatePath(`/noadmin/quizzes/read/${awtdParams.id}`);
-	};
-
-	const trashIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/questions/${id}/trashit`, "PUT", "no-cache");
-		revalidatePath(`/noadmin/quizzes/read/${awtdParams.id}`);
-	};
-
-	const scheduleIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/questions/${id}/scheduleit`, "PUT", "no-cache");
-		revalidatePath(`/noadmin/quizzes/read/${awtdParams.id}`);
-	};
-
-	const handleDelete = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/questions/${id}/permanently`,
-			"DELETE",
-			"no-cache",
-		);
-		revalidatePath(`/noadmin/quizzes/read/${awtdParams.id}`);
-	};
-
-	const handleTrashAll = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/questions/deleteall`, "PUT", "no-cache");
-		revalidatePath(`/noadmin/quizzes/read/${awtdParams.id}`);
-	};
-
-	const handleDeleteAll = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/questions/deleteall/permanently`,
-			"DELETE",
-			"no-cache",
-		);
-		revalidatePath(`/noadmin/quizzes/read/${awtdParams.id}`);
-	};
-
 	return (
 		<div className="container-fluid px-0">
 			<div className="row">
@@ -107,13 +49,7 @@ const AdminReadQuizSearchIndex = async ({ params, searchParams }) => {
 							searchedKeyword={keyword}
 							objects={questions}
 							searchParams={awtdSearchParams}
-							handleDraft={draftIt}
-							handlePublish={publishIt}
-							handleTrash={trashIt}
-							handleSchedule={scheduleIt}
-							handleDelete={handleDelete}
-							handleTrashAllFunction={handleTrashAll}
-							handleDeleteAllFunction={handleDeleteAll}
+							statusFilter=""
 						/>
 					</div>
 				</div>

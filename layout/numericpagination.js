@@ -116,9 +116,8 @@ const NumericPagination = ({
 
 	const handlePageLimit = (value) => {
 		const newParams = buildExtraParams();
-		router.push(
-			`?page=${Number(currentPage)}&limit=${Number(value)}${newParams}`,
-		);
+		// The current page may not exist at the new size, so start over at page 1
+		router.push(`?page=1&limit=${Number(value)}${newParams}`);
 	};
 
 	const selectLimit = () => {
@@ -126,6 +125,8 @@ const NumericPagination = ({
 			<select
 				id="pagination"
 				name="pagination"
+				aria-label="Results per page"
+				value={limit}
 				onChange={(e) => handlePageLimit(e.target.value)}
 				className="form-select form-select-sm d-none d-md-block d-lg-block d-xl-block d-xxl-block p-2"
 			>

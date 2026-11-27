@@ -1,11 +1,10 @@
-import { revalidatePath } from "next/cache";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import AdminStatusesMenu from "@/components/noadmin/adminstatusesmenu";
 import List from "@/components/noadmin/settings/list";
 
 async function getSettings(params) {
 	const res = await fetchurl(`/global/settings${params}`, "GET", "no-cache");
-	return res;
+	return res instanceof Error ? { status: "error", message: res.message } : res;
 }
 
 const AdminSettingsIndex = async ({ params, searchParams }) => {
@@ -19,28 +18,6 @@ const AdminSettingsIndex = async ({ params, searchParams }) => {
 		`?page=${page}&limit=${limit}&sort=${sort}`,
 	);
 
-	const handleDelete = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/settings/${id}/permanently`, "DELETE", "no-cache");
-		revalidatePath(
-			`/noadmin/settings?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
-	const handleDeleteAll = async () => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/settings/deleteall/permanently`,
-			"DELETE",
-			"no-cache",
-		);
-		revalidatePath(
-			`/noadmin/settings?page=${page}&limit=${limit}&sort=${sort}`,
-		);
-	};
-
 	return (
 		<div className="container-fluid px-0">
 			<AdminStatusesMenu
@@ -49,6 +26,7 @@ const AdminSettingsIndex = async ({ params, searchParams }) => {
 				draftLink=""
 				scheduledLink=""
 				trashedLink=""
+				filledLink=""
 				categoriesLink=""
 				categoryType=""
 			/>
@@ -58,15 +36,10 @@ const AdminSettingsIndex = async ({ params, searchParams }) => {
 					pageText="Settings"
 					addLink="/noadmin/settings/create"
 					searchOn="/noadmin/settings"
+					searchedKeyword=""
 					objects={settings}
 					searchParams={awtdSearchParams}
-					handleDraft={undefined}
-					handlePublish={undefined}
-					handleTrash={undefined}
-					handleSchedule={undefined}
-					handleDelete={handleDelete}
-					handleTrashAllFunction={undefined}
-					handleDeleteAllFunction={handleDeleteAll}
+					statusFilter=""
 				/>
 			</div>
 		</div>

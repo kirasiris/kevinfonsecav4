@@ -3,7 +3,9 @@ import { useState, useRef, useCallback, useEffect, useMemo } from "react";
 import { toast } from "react-toastify";
 import { formatFileSize } from "@/helpers/formatFileSize";
 import Single from "./single";
+import DeleteAllModal from "@/components/global/deleteallmodal";
 import {
+	useFileActions,
 	useInfiniteList,
 	useListSearch,
 	useMediaElements,
@@ -15,24 +17,14 @@ import {
 	generateId,
 	getFileType,
 	getMediaIcon,
-	isFailure,
 	matchesAccept,
-	safeFetch,
 	uploadFileToServer,
 	uploaderFields,
 } from "@/helpers/filemanagerhelpers";
 
-/* -------------------------------------------------------------------------- */
-/* Upload helpers                                                             */
-/* -------------------------------------------------------------------------- */
-
 const ACCEPTED_FILE_TYPES = "audio/*,video/*,image/*";
 
 const isAcceptedFile = (file) => matchesAccept(file, ACCEPTED_FILE_TYPES);
-
-/* -------------------------------------------------------------------------- */
-/* Component                                                                  */
-/* -------------------------------------------------------------------------- */
 
 const FilesManager = ({
 	auth = {},
@@ -41,21 +33,17 @@ const FilesManager = ({
 	objects = [],
 	searchParams = {},
 }) => {
-	/* ------------------------------ Paging setup ---------------------------- */
-
 	const {
-		seenKeysRef,
 		sentinelRef,
 		newobjects,
-		setNewObjects,
 		countAll,
-		setCountAll,
 		hasMore,
 		loading,
 		error,
 		handleRetry,
 		reloadList,
 		insertItem,
+		removeItem,
 		clearList,
 	} = useInfiniteList({
 		objects,
@@ -65,21 +53,7 @@ const FilesManager = ({
 		failMessage: "Failed to retrieve files",
 	});
 
-	/* ------------------------------- List state ----------------------------- */
-
 	const isMountedRef = useRef(false);
-	// The ref (not state) blocks a double click before the re-render lands.
-	const deletingKeysRef = useRef(new Set());
-
-	// A Set, so deleting two files at once doesn't re-enable the first button
-	// when the second request finishes.
-	const [deletingKeys, setDeletingKeys] = useState(() => new Set());
-	const [deletingAll, setDeletingAll] = useState(false);
-	const [deletingUnused, setDeletingUnused] = useState(false);
-	// Both bulk deletes share one lock so they can never run at the same time.
-	const bulkBusyRef = useRef(false);
-
-	/* ------------------------------ Upload state ---------------------------- */
 
 	const [files, setFiles] = useState([]);
 	const [isRecording, setIsRecording] = useState(false);
@@ -105,15 +79,11 @@ const FilesManager = ({
 	const uploadXhrsRef = useRef(new Map());
 	const startingMediaRef = useRef(false);
 
-	/* -------------------------------- Lifecycle ----------------------------- */
-
 	useEffect(() => {
 		uploadsRef.current = files;
 	}, [files]);
 
 	useEffect(() => {
-		// Strict Mode runs this cleanup on its fake unmount, so the flag has to
-		// be set back to true on every setup.
 		isMountedRef.current = true;
 		const animFrame = animationFrameRef;
 		const audioCtx = audioContextRef;
@@ -128,8 +98,7 @@ const FilesManager = ({
 			audioCtx.current?.close().catch(() => {});
 			audioCtx.current = null;
 			analyser.current = null;
-			// Detach first: stopping a live recorder fires onstop, which would
-			// otherwise start a new upload after the component is gone.
+
 			const rec = recorder.current;
 			if (rec) {
 				rec.ondataavailable = null;
@@ -144,113 +113,16 @@ const FilesManager = ({
 		};
 	}, []);
 
-	/* ------------------------------- Object URLs ---------------------------- */
-
 	const { createObjectUrl, revokeObjectUrl, keepObjectUrl } = useObjectUrls();
 
-	/* ------------------------------- Row actions ---------------------------- */
-
-	const setDeleting = (key, isDeleting) => {
-		if (isDeleting) deletingKeysRef.current.add(key);
-		else deletingKeysRef.current.delete(key);
-		setDeletingKeys(new Set(deletingKeysRef.current));
-	};
-
-	const handleDeleteIt = useCallback(
-		async (item) => {
-			if (!item?._id || deletingKeysRef.current.has(item.__key)) {
-				return;
-			}
-			setDeleting(item.__key, true);
-			const res = await safeFetch(
-				`/noadmin/files/${item._id}/permanently`,
-				"DELETE",
-				"no-cache",
-				{},
-				undefined,
-				false,
-				false,
-			);
-			if (!isMountedRef.current) {
-				return;
-			}
-			if (isFailure(res)) {
-				toast.error(res?.message || "Could not delete the file");
-				setDeleting(item.__key, false);
-				return;
-			}
-			toast.success("File deleted");
-			setNewObjects((prev) => prev.filter((f) => f.__key !== item.__key));
-			seenKeysRef.current.delete(item.__key);
-			setCountAll((prev) =>
-				typeof prev === "number" ? Math.max(0, prev - 1) : prev,
-			);
-			setDeleting(item.__key, false);
-		},
-		[seenKeysRef, setCountAll, setNewObjects],
-	);
-
-	/* ------------------------------ Bulk actions ---------------------------- */
-
-	const handleDeleteAll = async () => {
-		if (bulkBusyRef.current) {
-			return;
-		}
-		bulkBusyRef.current = true;
-		setDeletingAll(true);
-		const res = await safeFetch(
-			`/noadmin/files/deleteall`,
-			"DELETE",
-			"no-cache",
-			{},
-			undefined,
-			false,
-			false,
-		);
-		bulkBusyRef.current = false;
-		if (!isMountedRef.current) {
-			return;
-		}
-		setDeletingAll(false);
-		if (isFailure(res)) {
-			toast.error(res?.message || "Could not delete all files");
-			return;
-		}
-		// Stops a page that was in flight from re-adding deleted files.
-		clearList();
-		toast.success("All files deleted");
-	};
-
-	const handleDeleteUnused = async () => {
-		if (bulkBusyRef.current) {
-			return;
-		}
-		bulkBusyRef.current = true;
-		setDeletingUnused(true);
-		const res = await safeFetch(
-			`/noadmin/files/deleteall/unused/permanently`,
-			"DELETE",
-			"no-cache",
-			{},
-			undefined,
-			false,
-			false,
-		);
-		bulkBusyRef.current = false;
-		if (!isMountedRef.current) {
-			return;
-		}
-		setDeletingUnused(false);
-		if (isFailure(res)) {
-			toast.error(res?.message || "Could not delete the unused files");
-			return;
-		}
-		toast.success("Unused files deleted");
-		// Only the server knows which files were unused, so the list is rebuilt.
-		reloadList();
-	};
-
-	/* ------------------------------- Derived list --------------------------- */
+	const {
+		isDeleting,
+		handleDeleteIt,
+		deletingAll,
+		deletingUnused,
+		handleDeleteAll,
+		handleDeleteUnused,
+	} = useFileActions({ list: { clearList, reloadList } });
 
 	const items = useMemo(
 		() =>
@@ -265,12 +137,8 @@ const FilesManager = ({
 		[newobjects],
 	);
 
-	/* ------------------------------ Media elements -------------------------- */
-
 	const { pauseAllMedia, registerMediaElement, forgetMediaElement } =
 		useMediaElements();
-
-	/* -------------------------------- Uploading ----------------------------- */
 
 	const addAndUploadFile = useCallback(
 		(fileObj) => {
@@ -305,12 +173,11 @@ const FilesManager = ({
 					}
 					const serverObj = uploaded?.data || uploaded || {};
 					const loc = serverObj.location || {};
-					// With no remote URL the list shows the local preview, so that URL
-					// has to outlive the tray card.
+
 					if (!loc.secure_location) {
 						keepObjectUrl(fileObj.url);
 					}
-					// The finished card stays in the tray (marked done) until removed.
+
 					setFiles((prev) =>
 						prev.map((f) =>
 							f.id === fileObj.id
@@ -359,7 +226,6 @@ const FilesManager = ({
 	);
 
 	const handleFileUpload = (e) => {
-		// Copied before the input is reset, which empties its FileList.
 		const selected = Array.from(e.target.files || []);
 		if (fileInputRef.current) {
 			fileInputRef.current.value = "";
@@ -368,7 +234,7 @@ const FilesManager = ({
 		if (accepted.length < selected.length) {
 			toast.error("Only audio, video, or image files can be uploaded here.");
 		}
-		// A File already is a Blob, so it is uploaded as-is.
+
 		accepted.forEach((file) => {
 			addAndUploadFile({
 				id: generateId(),
@@ -392,8 +258,7 @@ const FilesManager = ({
 			uploadXhrsRef.current.delete(id);
 		}
 		forgetMediaElement(id);
-		// Revoked outside the state updater: updaters must stay pure (Strict Mode
-		// runs them twice). URLs the saved list still shows are skipped.
+
 		const fileToRemove = uploadsRef.current.find((f) => f.id === id);
 		if (fileToRemove) {
 			revokeObjectUrl(fileToRemove.url);
@@ -401,12 +266,9 @@ const FilesManager = ({
 		setFiles((prev) => prev.filter((f) => f.id !== id));
 	};
 
-	/* ------------------------------- Permissions ---------------------------- */
-
 	const grantAndStart = async (type) => {
 		const ok = await startMediaStream(type);
 		if (ok) {
-			// The camera stream includes audio, so it grants the microphone too.
 			setPermissions((prev) =>
 				type === "video"
 					? { video: true, audio: true }
@@ -417,13 +279,11 @@ const FilesManager = ({
 	};
 
 	const requestPermission = async (type) => {
-		// Skip the modal if permission was already granted this session.
 		if (permissions[type]) {
 			startMediaStream(type);
 			return;
 		}
-		// The in-memory flag resets on remount, but the browser persists the
-		// grant. Query the Permissions API so an approved user isn't re-prompted.
+
 		try {
 			if (navigator.permissions?.query) {
 				const names =
@@ -441,9 +301,7 @@ const FilesManager = ({
 					return;
 				}
 			}
-		} catch {
-			// Permissions API unsupported for these names — fall back to the modal.
-		}
+		} catch {}
 		if (!isMountedRef.current) {
 			return;
 		}
@@ -466,11 +324,7 @@ const FilesManager = ({
 		setPendingMediaType(null);
 	};
 
-	/* --------------------------------- Capture ------------------------------ */
-
 	const startMediaStream = async (type) => {
-		// Two quick clicks would otherwise open two streams, and the first one
-		// would keep the camera/mic on with nothing left to stop it.
 		if (startingMediaRef.current || streamRef.current) {
 			return false;
 		}
@@ -479,7 +333,7 @@ const FilesManager = ({
 			const constraints =
 				type === "video" ? { video: true, audio: true } : { audio: true };
 			const stream = await navigator.mediaDevices.getUserMedia(constraints);
-			// The user may have left the page while the browser prompt was open.
+
 			if (!isMountedRef.current) {
 				stream.getTracks().forEach((track) => track.stop());
 				return false;
@@ -514,7 +368,7 @@ const FilesManager = ({
 		if (!AudioCtx) {
 			return;
 		}
-		// Browsers cap the number of live AudioContexts; close any previous one.
+
 		audioContextRef.current?.close().catch(() => {});
 		const audioContext = new AudioCtx();
 		audioContextRef.current = audioContext;
@@ -606,7 +460,7 @@ const FilesManager = ({
 		if (!video || !streamRef.current) {
 			return;
 		}
-		// Before the first frame arrives the size is 0x0 and toBlob gives null.
+
 		if (!video.videoWidth || !video.videoHeight) {
 			toast.info("The camera is still starting. Try again in a moment.");
 			return;
@@ -646,7 +500,7 @@ const FilesManager = ({
 			toast.error("Recording is not supported in this browser.");
 			return;
 		}
-		// Captured per recording, so a late onstop can't mix up chunks or type.
+
 		const kind = recordingType || "video";
 		const chunks = [];
 		chunksRef.current = chunks;
@@ -665,7 +519,7 @@ const FilesManager = ({
 				return;
 			}
 			setIsRecording(false);
-			// Use the format the browser actually produced (Safari records mp4).
+
 			const mimeType =
 				mediaRecorder.mimeType ||
 				(kind === "video" ? "video/webm" : "audio/webm");
@@ -704,8 +558,6 @@ const FilesManager = ({
 	};
 
 	const closeMediaStream = () => {
-		// Stop the recorder before its tracks so the final chunk is flushed and
-		// the recording is still saved.
 		stopRecording();
 		streamRef.current?.getTracks().forEach((track) => track.stop());
 		streamRef.current = null;
@@ -714,8 +566,6 @@ const FilesManager = ({
 		setShowMicrophone(false);
 		setRecordingType(null);
 	};
-
-	/* ----------------------------- Reorder uploads -------------------------- */
 
 	const {
 		draggedIndex,
@@ -727,8 +577,6 @@ const FilesManager = ({
 		handleDragEnd,
 	} = useUploadReorder(setFiles, uploadsRef);
 
-	/* --------------------------------- Search ------------------------------- */
-
 	const {
 		keyword,
 		setKeyword,
@@ -737,8 +585,6 @@ const FilesManager = ({
 		clearSearch,
 		displayedItems,
 	} = useListSearch(items, (item) => item?.raw?.title || item.filename);
-
-	/* --------------------------------- Render ------------------------------- */
 
 	const permissionLabel =
 		pendingMediaType === "video" ? "camera and microphone" : "microphone";
@@ -753,7 +599,6 @@ const FilesManager = ({
 
 	return (
 		<>
-			{/* FILE UPLOADER */}
 			<div className="mb-1">
 				{showPermissionModal && (
 					<div
@@ -863,7 +708,6 @@ const FilesManager = ({
 							</div>
 						</div>
 
-						{/* Live capture panel */}
 						{(showCamera || showMicrophone) && (
 							<div className="card mb-3 border-2 border-primary">
 								<div className="card-body">
@@ -1136,7 +980,6 @@ const FilesManager = ({
 				</div>
 			</div>
 
-			{/* GET API ENDPOINT ERRORS */}
 			{error && (
 				<div
 					className="alert alert-danger d-flex justify-content-between align-items-center"
@@ -1155,60 +998,56 @@ const FilesManager = ({
 				</div>
 			)}
 
-			{!error && items.length === 0 && !loading && (
-				<div className="alert alert-info rounded-0 mb-0" role="alert">
-					No files were returned from the API.
+			<div className="card rounded-0 mb-1">
+				<div className="card-header">
+					<div className="float-start">
+						<form
+							onSubmit={searchData}
+							className="d-none d-md-block"
+							role="search"
+						>
+							<label htmlFor="keyword" className="visually-hidden">
+								Search by title
+							</label>
+							<input
+								id="keyword"
+								name="keyword"
+								value={keyword}
+								onChange={(e) => setKeyword(e.target.value)}
+								type="search"
+								className="form-control"
+								placeholder="Search by title"
+							/>
+						</form>
+					</div>
+					<div className="float-end my-1">
+						<div className="btn-group">
+							<DeleteAllModal
+								action={handleDeleteUnused}
+								classList="btn-danger"
+								text="Delete all unused permanently"
+								message="You are about to permanently delete every file that nothing uses!"
+								disabled={items.length === 0 || deletingAll}
+							/>
+							<DeleteAllModal
+								action={handleDeleteAll}
+								classList="btn-dark"
+								text="Delete all permanently"
+								message="You are about to permanently delete every file in the library, including the ones in use!"
+								disabled={items.length === 0 || deletingUnused}
+							/>
+						</div>
+					</div>
 				</div>
-			)}
+				{!error && items.length === 0 && !loading && (
+					<div className="alert alert-info rounded-0 mb-0" role="alert">
+						No files were returned from the API.
+					</div>
+				)}
+			</div>
 
 			{items.length > 0 && (
 				<>
-					<div className="card rounded-0 mb-1">
-						<div className="card-header">
-							<div className="float-start">
-								<form
-									onSubmit={searchData}
-									className="d-none d-md-block"
-									role="search"
-								>
-									<label htmlFor="keyword" className="visually-hidden">
-										Search by title
-									</label>
-									<input
-										id="keyword"
-										name="keyword"
-										value={keyword}
-										onChange={(e) => setKeyword(e.target.value)}
-										type="search"
-										className="form-control"
-										placeholder="Search by title"
-									/>
-								</form>
-							</div>
-							<div className="float-end my-1">
-								<div className="btn-group">
-									<button
-										type="button"
-										className="btn btn-danger btn-sm"
-										onClick={handleDeleteUnused}
-										disabled={deletingUnused || deletingAll}
-									>
-										{deletingUnused ? "..." : "Delete all unused permanently"}
-									</button>
-									<button
-										type="button"
-										className="btn btn-dark btn-sm"
-										onClick={handleDeleteAll}
-										disabled={deletingAll || deletingUnused}
-									>
-										{deletingAll ? "..." : "Delete all permanently"}
-									</button>
-								</div>
-							</div>
-						</div>
-					</div>
-					{/* Dismissed through state: Bootstrap's data-bs-dismiss would remove
-                nodes React still owns. */}
 					{debouncedKeyword && displayedItems.length === 0 && (
 						<div
 							className="alert alert-info alert-dismissible rounded-0 mb-1"
@@ -1230,14 +1069,14 @@ const FilesManager = ({
 								index={index}
 								object={item}
 								handleDelete={handleDeleteIt}
-								isDeleting={deletingKeys.has(item.key)}
+								isDeleting={isDeleting(item.key)}
+								onDeleted={removeItem}
 							/>
 						))}
 					</div>
 				</>
 			)}
 
-			{/* Sentinel + status row */}
 			<div ref={sentinelRef} className="text-center py-4">
 				{loading && (
 					<div className="d-inline-flex align-items-center gap-2 text-muted">

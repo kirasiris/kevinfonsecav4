@@ -14,6 +14,7 @@ const List = ({
 	searchedKeyword = "",
 	objects = [],
 	searchParams = {},
+	statusFilter = "",
 	handleDraft = () => {},
 	handlePublish = () => {},
 	handleTrash = () => {},

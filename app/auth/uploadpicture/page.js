@@ -95,6 +95,8 @@ const UploadPicture = async ({ params, searchParams }) => {
 										<MasonryLayout
 											setNewAvatar={setAvatar}
 											objects={files.data}
+											currentId={auth?.data?.files?.avatar?._id}
+											label="Avatar"
 										/>
 									</div>
 								</div>

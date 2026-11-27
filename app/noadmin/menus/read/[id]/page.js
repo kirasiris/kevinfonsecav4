@@ -1,4 +1,3 @@
-import { revalidatePath } from "next/cache";
 import { notFound } from "next/navigation";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import ParseHtml from "@/layout/parseHtml";
@@ -12,7 +11,7 @@ async function getMenu(params) {
 
 async function getPages(params) {
 	const res = await fetchurl(`/global/pages${params}`, "GET", "no-cache");
-	return res;
+	return res instanceof Error ? { status: "error", message: res.message } : res;
 }
 
 const ReadMenu = async ({ params, searchParams }) => {
@@ -26,59 +25,6 @@ const ReadMenu = async ({ params, searchParams }) => {
 	const pages = await getPages(
 		`?resourceId=${menu?.data?._id}&page=${page}&limit=${limit}&sort=${sort}`,
 	);
-
-	const draftIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/pages/${id}/draftit`, "PUT", "no-cache");
-		revalidatePath(`/noadmin/menus/read/${awtdParams.id}`);
-	};
-
-	const publishIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/pages/${id}/publishit`, "PUT", "no-cache");
-		revalidatePath(`/noadmin/menus/read/${awtdParams.id}`);
-	};
-
-	const trashIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/pages/${id}/trashit`, "PUT", "no-cache");
-		revalidatePath(`/noadmin/menus/read/${awtdParams.id}`);
-	};
-
-	const scheduleIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/pages/${id}/scheduleit`, "PUT", "no-cache");
-		revalidatePath(`/noadmin/menus/read/${awtdParams.id}`);
-	};
-
-	const handleDelete = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/pages/${id}/permanently`, "DELETE", "no-cache");
-		revalidatePath(`/noadmin/menus/read/${awtdParams.id}`);
-	};
-
-	const handleTrashAll = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/pages/deleteall`, "PUT", "no-cache");
-		revalidatePath(`/noadmin/menus/read/${awtdParams.id}`);
-	};
-
-	const handleDeleteAll = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/pages/deleteall/permanently`,
-			"DELETE",
-			"no-cache",
-		);
-		revalidatePath(`/noadmin/menus/read/${awtdParams.id}`);
-	};
 
 	return (
 		<div className="container-fluid px-0">
@@ -96,15 +42,10 @@ const ReadMenu = async ({ params, searchParams }) => {
 							pageText="Pages"
 							addLink={`/noadmin/menus/page/${menu?.data?._id}/create`}
 							searchOn={`/noadmin/menus/read/${menu?.data?._id}`}
+							searchedKeyword=""
 							objects={pages}
 							searchParams={awtdSearchParams}
-							handleDraft={draftIt}
-							handlePublish={publishIt}
-							handleTrash={trashIt}
-							handleSchedule={scheduleIt}
-							handleDelete={handleDelete}
-							handleTrashAllFunction={handleTrashAll}
-							handleDeleteAllFunction={handleDeleteAll}
+							statusFilter=""
 						/>
 					</div>
 				</div>

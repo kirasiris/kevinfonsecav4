@@ -3,15 +3,25 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import DeleteAllModal from "@/components/global/deleteallmodal";
+import TrashAllModal from "@/components/global/trashallmodal";
 
 const AdminEmailCardHeaderMenu = ({
+	stripeChargesEnabled = false,
 	allLink = "",
 	pageText = "",
 	currentResults = 0,
 	totalResults = 0,
+	addLink = "#",
 	searchOn = "/nfabusiness",
+	handleTrashAllFunction = () => {},
 	handleDeleteAllFunction = () => {},
 	classList = "",
+	handleAllUsageCountEnabled = false,
+	handleAllUsageCount = () => {},
+	countingAll = false,
+	isDirty = false,
+	saving = false,
+	handleSave = () => {},
 }) => {
 	const router = useRouter();
 
@@ -24,7 +34,7 @@ const AdminEmailCardHeaderMenu = ({
 	const searchData = async (e) => {
 		e.preventDefault();
 		router.push(
-			`${searchOn}/search?keyword=${keyword}&page=1&limit=10&sort=-createdAt`
+			`${searchOn}/search?keyword=${keyword}&page=1&limit=10&sort=-createdAt`,
 		);
 	};
 
@@ -41,30 +51,124 @@ const AdminEmailCardHeaderMenu = ({
 					>
 						{pageText} - ({currentResults} / {totalResults})
 					</Link>
-					<form
-						onSubmit={searchData}
-						className="d-none d-md-block d-lg-block d-xl-block d-xxl-block"
-					>
-						<input
-							id="keyword"
-							name="keyword"
-							value={keyword}
-							onChange={(e) => {
-								setSearchParams({
-									...searchParams,
-									keyword: e.target.value,
-								});
-							}}
-							type="text"
-							className="form-control"
-							placeholder="Search title of object (EXACT MATCH)"
-						/>
-					</form>
+					{searchOn !== "" && searchOn !== undefined && searchOn !== null && (
+						<form
+							onSubmit={searchData}
+							className="d-none d-md-block d-lg-block d-xl-block d-xxl-block"
+						>
+							<input
+								id="keyword"
+								name="keyword"
+								value={keyword}
+								onChange={(e) => {
+									setSearchParams({
+										...searchParams,
+										keyword: e.target.value,
+									});
+								}}
+								type="text"
+								className="form-control"
+								placeholder="Search title of object (EXACT MATCH)"
+							/>
+						</form>
+					)}
 				</div>
 			</div>
 			<div className="float-end my-1">
 				<div className="btn-group">
-					<DeleteAllModal action={handleDeleteAllFunction} />
+					{addLink === "/noadmin/courses/create" && stripeChargesEnabled ? (
+						<Link
+							href={{
+								pathname: addLink,
+								query: {},
+							}}
+							className="btn btn-primary btn-sm"
+						>
+							Add new
+						</Link>
+					) : (
+						<></>
+					)}
+					{addLink === "/noadmin/memberships/create" && stripeChargesEnabled ? (
+						<Link
+							href={{
+								pathname: addLink,
+								query: {},
+							}}
+							className="btn btn-primary btn-sm"
+						>
+							Add new
+						</Link>
+					) : (
+						<></>
+					)}
+					{isDirty && (
+						<>
+							<button
+								type="button"
+								className="btn btn-sm btn-success"
+								onClick={handleSave}
+								disabled={saving}
+							>
+								{saving ? (
+									<>
+										<span
+											className="spinner-border spinner-border-sm me-1"
+											role="status"
+											aria-hidden="true"
+										></span>
+										Saving...
+									</>
+								) : (
+									<>
+										<i className="bi bi-save me-1" />
+										Save order
+									</>
+								)}
+							</button>
+						</>
+					)}
+					{addLink !== "" && addLink !== undefined && addLink !== null && (
+						<Link
+							href={{
+								pathname: addLink,
+								query: {},
+							}}
+							className="btn btn-primary btn-sm"
+						>
+							Add new
+						</Link>
+					)}
+					{handleAllUsageCountEnabled && (
+						<button
+							type="button"
+							className="btn btn-secondary btn-sm"
+							onClick={() => handleAllUsageCount()}
+							disabled={countingAll}
+						>
+							{countingAll ? (
+								<>
+									<span
+										className="spinner-border spinner-border-sm me-1"
+										aria-hidden="true"
+									/>
+									Counting...
+								</>
+							) : (
+								<>Count&nbsp;docs</>
+							)}
+						</button>
+					)}
+					{handleTrashAllFunction !== "" && (
+						<TrashAllModal action={handleTrashAllFunction} />
+					)}
+					{handleDeleteAllFunction !== "" && (
+						<DeleteAllModal
+							action={handleDeleteAllFunction}
+							classList="btn-danger"
+							text="Delete all permanently"
+						/>
+					)}
 				</div>
 			</div>
 		</div>

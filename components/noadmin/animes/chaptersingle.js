@@ -1,7 +1,8 @@
 "use client";
 import Link from "next/link";
 import DropdownButton from "react-bootstrap/DropdownButton";
-import { formatDateWithoutTime } from "befree-utilities";
+import DeleteModal from "@/components/global/deletemodal";
+import LocalDate from "@/components/global/localdate";
 import PreviewModal from "@/components/noadmin/animes/chapterpreviewmodal";
 import { formatFileSize } from "@/helpers/formatFileSize";
 
@@ -32,6 +33,7 @@ const Single = ({
 	isScheduling = false,
 	isDeleting = false,
 	dragProps = {},
+	onDeleted = () => {},
 }) => {
 	const { className = "", ...restDragProps } = dragProps;
 
@@ -40,7 +42,7 @@ const Single = ({
 
 	return (
 		<li
-			className={`list-group-item d-flex flex-wrap justify-content-between align-items-start gap-2 ${object?.raw.orderingNumber} ${className}`}
+			className={`list-group-item d-flex flex-wrap justify-content-between align-items-center gap-2 ${object?.raw.orderingNumber} ${className}`}
 			{...restDragProps}
 		>
 			<Link
@@ -66,7 +68,7 @@ const Single = ({
 					</span>
 				)}
 				<span className="badge bg-dark me-1">
-					{formatDateWithoutTime(object.raw.createdAt)}
+					<LocalDate value={object.raw.createdAt} />
 				</span>
 				<span className="badge bg-dark me-1">{object.raw.status}</span>
 				<span className={`badge ${object.info.className}`}>
@@ -78,7 +80,7 @@ const Single = ({
 			</div>
 
 			<div className="blog-item__panel d-flex flex-wrap align-items-center gap-1">
-				{object.raw.free_preview && <PreviewModal object={object} />}
+				{object.raw.free_preview && <PreviewModal object={object.raw} />}
 				<span className="badge bg-info me-1">{object.raw.duration}</span>
 				<span className="badge bg-secondary me-1">
 					{object.raw.views}&nbsp;Views
@@ -125,7 +127,7 @@ const Single = ({
 							disabled={isBusy}
 							onClick={() => handleDraft(object.raw)}
 						>
-							{isDrafting ? "..." : "Draft It"}
+							{isDrafting ? <>Drafting&hellip;</> : <>Draft&nbsp;It</>}
 						</button>
 						<button
 							type="button"
@@ -133,7 +135,7 @@ const Single = ({
 							disabled={isBusy}
 							onClick={() => handlePublish(object.raw)}
 						>
-							{isPublishing ? "..." : "Publish It"}
+							{isPublishing ? <>Publishing&hellip;</> : <>Publish&nbsp;It</>}
 						</button>
 						<button
 							type="button"
@@ -141,7 +143,7 @@ const Single = ({
 							disabled={isBusy}
 							onClick={() => handleTrash(object.raw)}
 						>
-							{isTrashing ? "..." : "Trash It"}
+							{isTrashing ? <>Trashing&hellip;</> : <>Trash&nbsp;It</>}
 						</button>
 						<button
 							type="button"
@@ -149,7 +151,7 @@ const Single = ({
 							disabled={isBusy}
 							onClick={() => handleSchedule(object.raw)}
 						>
-							{isScheduling ? "..." : "Schedule It"}
+							{isScheduling ? <>Scheduling&hellip;</> : <>Schedule&nbsp;It</>}
 						</button>
 						<hr />
 						<Link
@@ -177,14 +179,19 @@ const Single = ({
 							Add&nbsp;Report
 						</Link>
 						<hr />
-						<button
-							type="button"
-							className="dropdown-item btn-danger btn-sm"
+						<DeleteModal
+							id={object.raw._id}
+							sId={null}
+							location=""
+							as="button"
+							size="sm"
+							classStr={`dropdown-item`}
+							action={() => handleDelete(object.raw)}
+							itemTitle={object.raw.title}
 							disabled={isBusy}
-							onClick={() => handleDelete(object.raw)}
-						>
-							{isDeleting ? "..." : "Delete it"}
-						</button>
+							onDeleted={() => onDeleted(object.key)}
+							displayText={true}
+						/>
 					</DropdownButton>
 				</div>
 			</div>

@@ -1,4 +1,3 @@
-import { revalidatePath } from "next/cache";
 import { fetchurl } from "@/helpers/setTokenOnServer";
 import AdminStatusesMenu from "@/components/noadmin/adminstatusesmenu";
 import List from "@/components/noadmin/comments/list";
@@ -9,7 +8,7 @@ async function getComments(params) {
 		"GET",
 		"no-cache",
 	);
-	return res;
+	return res instanceof Error ? { status: "error", message: res.message } : res;
 }
 
 const AdminCommentsSearchIndex = async ({ params, searchParams }) => {
@@ -26,81 +25,17 @@ const AdminCommentsSearchIndex = async ({ params, searchParams }) => {
 		`?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
 	);
 
-	const draftIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/comments/${id}/draftit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/comments/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
-		);
-	};
-
-	const publishIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/comments/${id}/publishit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/comments/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
-		);
-	};
-
-	const trashIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/comments/${id}/trashit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/comments/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
-		);
-	};
-
-	const scheduleIt = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/comments/${id}/scheduleit`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/comments/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
-		);
-	};
-
-	const handleDelete = async (id) => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/comments/${id}/permanently`, "DELETE", "no-cache");
-		revalidatePath(
-			`/noadmin/comments/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
-		);
-	};
-
-	const handleTrashAll = async () => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(`/noadmin/comments/deleteall`, "PUT", "no-cache");
-		revalidatePath(
-			`/noadmin/comments/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
-		);
-	};
-
-	const handleDeleteAll = async () => {
-		"use server";
-		// const rawFormData = {}
-		await fetchurl(
-			`/noadmin/comments/deleteall/permanently`,
-			"DELETE",
-			"no-cache",
-		);
-		revalidatePath(
-			`/noadmin/comments/search?page=${page}&limit=${limit}&sort=${sort}${keywordQuery}`,
-		);
-	};
-
 	return (
 		<div className="container-fluid px-0">
 			<AdminStatusesMenu
 				allLink="/noadmin/comments"
 				publishedLink="/noadmin/comments/published"
 				draftLink="/noadmin/comments/draft"
-				scheduledLink="/noadmin/comments/scheduled"
+				scheduledLink=""
 				trashedLink="/noadmin/comments/trashed"
+				filledLink=""
+				categoriesLink=""
+				categoryType=""
 			/>
 			<div className="card rounded-0">
 				<List
@@ -111,13 +46,8 @@ const AdminCommentsSearchIndex = async ({ params, searchParams }) => {
 					searchedKeyword={keyword}
 					objects={comments}
 					searchParams={awtdSearchParams}
-					handleDraft={draftIt}
-					handlePublish={publishIt}
-					handleTrash={trashIt}
-					handleSchedule={scheduleIt}
-					handleDelete={handleDelete}
-					handleTrashAllFunction={handleTrashAll}
-					handleDeleteAllFunction={handleDeleteAll}
+					statusFilter=""
+					postType="comment"
 				/>
 			</div>
 		</div>

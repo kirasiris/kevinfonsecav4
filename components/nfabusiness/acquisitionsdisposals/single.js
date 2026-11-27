@@ -1,22 +1,100 @@
 "use client";
+import { useRef } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import DropdownButton from "react-bootstrap/DropdownButton";
-import { formatDateWithoutTime } from "befree-utilities";
+import LocalDate from "@/components/global/localdate";
+import DeleteModal from "@/components/global/deletemodal";
+import {
+	actionFailed,
+	flashElement,
+	shakeElement,
+	useRowMotion,
+} from "@/components/global/actionfeedback";
 
 const Single = ({
 	object = {},
+	handleAcquire = () => {},
+	handleDispose = () => {},
 	handleDraft = () => {},
 	handlePublish = () => {},
+	handleTrash = () => {},
+	handleSchedule = () => {},
+	handleFeature = () => {},
+	handleUnfeature = () => {},
+	handleDelete = () => {},
+	isAcquiring = false,
+	isDisposing = false,
+	isDrafting = false,
+	isPublishing = false,
+	isTrashing = false,
+	isScheduling = false,
+	isFeaturing = false,
+	isUnfeaturing = false,
+	isDeleting = false,
+	leaving = false,
+	entering = false,
+	onLeft = () => {},
+	onEntered = () => {},
+	onDeleted = () => {},
 }) => {
+	const rowRef = useRef(null);
+	const id = object._id;
+
+	const busyLabel =
+		(isAcquiring && "Acquiring") ||
+		(isDisposing && "Disposing") ||
+		(isDrafting && "Drafting") ||
+		(isPublishing && "Publishing") ||
+		(isTrashing && "Trashing") ||
+		(isScheduling && "Scheduling") ||
+		(isFeaturing && "Featuring") ||
+		(isUnfeaturing && "Unfeaturing") ||
+		(isDeleting && "Deleting") ||
+		"";
+
+	const isBusy = busyLabel !== "";
+
+	useRowMotion(rowRef, { id, leaving, entering, onLeft, onEntered });
+
+	const run = async (handler) => {
+		const res = await handler(object);
+		const node = rowRef.current;
+		if (!node) return;
+		if (actionFailed(res)) {
+			flashElement(node, "error");
+			shakeElement(node);
+		} else {
+			flashElement(node, "success");
+		}
+	};
+
 	return (
-		<li className="list-group-item">
+		<li
+			ref={rowRef}
+			className="list-group-item"
+			aria-busy={isBusy || undefined}
+			style={
+				leaving
+					? { overflow: "hidden", pointerEvents: "none" }
+					: entering
+						? { overflow: "hidden" }
+						: undefined
+			}
+		>
 			<div className="blog-item__panel">
-				<div className="blog-item__detail">
+				<div
+					className="blog-item__detail"
+					style={{
+						opacity: isBusy ? 0.55 : 1,
+						transition: "opacity 150ms ease",
+					}}
+				>
 					<div className="blog-item__info"></div>
 					<h1 className="blog-item__title">
 						<Link
 							href={{
-								pathname: `/nfabusiness/acquisitionsdisposals/update/${object._id}`,
+								pathname: `/nfabusiness/acquisitionsdisposals/update/${id}`,
 								query: {},
 							}}
 							className="blog-item__title-link"
@@ -31,7 +109,7 @@ const Single = ({
 							Transfer:&nbsp;#{object.orderingNumber}
 						</span>
 						<span className="badge bg-dark me-1">
-							{formatDateWithoutTime(object.createdAt)}
+							<LocalDate value={object.createdAt} />
 						</span>
 						<span className="badge bg-danger me-1">
 							Account:&nbsp;-&nbsp;{object.hasAccount.toString()}
@@ -41,10 +119,29 @@ const Single = ({
 				</div>
 				<div className="blog-actions-ellipsis-menu">
 					<span className="ellipsis-menu">
-						<DropdownButton title="Options" variant="secondary">
+						<DropdownButton
+							title={
+								<span className="position-relative d-inline-block">
+									<span className={isBusy ? "invisible" : undefined}>
+										Options
+									</span>
+									{isBusy && (
+										<span className="position-absolute top-50 start-50 translate-middle d-flex">
+											<span
+												className="spinner-border spinner-border-sm"
+												aria-hidden="true"
+											/>
+											<span className="visually-hidden">{busyLabel}...</span>
+										</span>
+									)}
+								</span>
+							}
+							variant="secondary"
+							disabled={isBusy || leaving}
+						>
 							<Link
 								href={{
-									pathname: `/nfabusiness/acquisitionsdisposals/read/${object._id}`,
+									pathname: `/nfabusiness/acquisitionsdisposals/read/${id}`,
 									query: {
 										isAdmin: true,
 									},
@@ -56,7 +153,7 @@ const Single = ({
 							{!object.hasAccount && (
 								<Link
 									href={{
-										pathname: `/nfabusiness/acquisitionsdisposals/read/${object._id}/create/useraccount`,
+										pathname: `/nfabusiness/acquisitionsdisposals/read/${id}/create/useraccount`,
 										query: {},
 									}}
 									className="dropdown-item btn btn-link"
@@ -65,16 +162,20 @@ const Single = ({
 								</Link>
 							)}
 							<button
+								type="button"
 								className="dropdown-item btn btn-sm"
-								onClick={() => handleDraft(object._id)}
+								disabled={isBusy}
+								onClick={() => run(handleAcquire())}
 							>
-								Acquire&nbsp;It
+								{isAcquiring ? <>Acquiring&hellip;</> : <>Acquire&nbsp;It</>}
 							</button>
 							<button
+								type="button"
 								className="dropdown-item btn btn-sm"
-								onClick={() => handlePublish(object._id)}
+								disabled={isBusy}
+								onClick={() => run(handleDispose())}
 							>
-								Dispose&nbsp;It
+								{isDisposing ? <>Disposing&hellip;</> : <>Dispose&nbsp;It</>}
 							</button>
 						</DropdownButton>
 					</span>

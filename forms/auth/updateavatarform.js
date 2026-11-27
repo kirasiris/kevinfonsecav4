@@ -1,167 +1,262 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-import Image from "next/image";
-import { fetchurl, getAuthTokenOnServer } from "@/helpers/setTokenOnServer";
+import { getAuthTokenOnServer } from "@/helpers/setTokenOnServer";
+import {
+	isFailure,
+	safeFetch,
+	uploadFileToServer,
+	uploaderFields,
+} from "@/helpers/filemanagerhelpers";
 import UseProgress from "@/components/global/useprogress";
+import PictureEditor, {
+	isSamePictureEdit,
+	loadPictureImage,
+	normalizePictureEdit,
+	preparePictureFile,
+	readPictureFile,
+	renderPicture,
+} from "@/components/auth/pictureeditor";
+
+const AVATAR_SIZE = 800;
+const MIN_AVATAR_SIZE = 180;
+
+const savedAvatarOf = (auth) => {
+	const edit = auth?.data?.pictureEdits?.avatar;
+	if (edit?.original?.location?.secure_location) {
+		return {
+			url: edit.original.location.secure_location,
+			originalId: edit.original._id,
+			edit: normalizePictureEdit(edit),
+			isEdited: true,
+		};
+	}
+	const avatar = auth?.data?.files?.avatar;
+	return {
+		url: avatar?.location?.secure_location || "",
+		originalId: avatar?._id || null,
+		edit: normalizePictureEdit(),
+		isEdited: false,
+	};
+};
+
+const uploadInOrder = async (items, token, fields, onProgress) => {
+	const totalBytes = items.reduce((sum, item) => sum + item.blob.size, 0) || 1;
+	const stored = [];
+	let sentBytes = 0;
+	for (const item of items) {
+		const { res } = uploadFileToServer({
+			blob: item.blob,
+			filename: item.filename,
+			token,
+			fields: { ...fields, album: item.album },
+			onProgress: (percent) =>
+				onProgress(
+					Math.round(
+						((sentBytes + (item.blob.size * percent) / 100) * 100) / totalBytes,
+					),
+				),
+		});
+		const { file } = await res;
+		if (!file?.data?._id) {
+			throw new Error("The upload finished but no file came back");
+		}
+		stored.push(file.data);
+		sentBytes += item.blob.size;
+	}
+	return stored;
+};
 
 const UpdateAvatarForm = ({ auth = {} }) => {
-	const [avatarData, setAvatarData] = useState({
+	const router = useRouter();
+	const saved = useMemo(() => savedAvatarOf(auth), [auth]);
+
+	const [source, setSource] = useState(() => ({
+		url: saved.url,
+		originalId: saved.originalId,
 		file: null,
-		filename: `Choose file`,
-		fileurl:
-			auth?.data?.files?.avatar?.location?.secure_location ||
-			`https://static.vecteezy.com/system/resources/previews/005/337/799/original/icon-image-not-found-free-vector.jpg`,
-	});
-
-	const { file, filename, fileurl } = avatarData;
-
+	}));
+	const [edit, setEdit] = useState(saved.edit);
+	const [editorStatus, setEditorStatus] = useState("loading");
 	const [uploadPercentage, setUploadPercentage] = useState(0);
-
+	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [btnText, setBtnText] = useState("Submit");
+	const [error, setError] = useState("");
+
+	const fileInputRef = useRef(null);
+	const selectionRef = useRef(0);
+
+	useEffect(() => {
+		if (!source.url.startsWith("blob:")) return;
+		const url = source.url;
+		return () => URL.revokeObjectURL(url);
+	}, [source.url]);
+
+	useEffect(
+		() => () => {
+			selectionRef.current += 1;
+		},
+		[],
+	);
+
+	const hasChanges =
+		Boolean(source.file) ||
+		source.originalId !== saved.originalId ||
+		!isSamePictureEdit(edit, saved.edit);
+	const canSave =
+		editorStatus === "ready" &&
+		!isSubmitting &&
+		(hasChanges || !saved.isEdited);
+
+	const handleFileChange = async (e) => {
+		const input = e.currentTarget;
+		const file = input.files?.[0];
+		if (!file) return;
+		const selection = ++selectionRef.current;
+		setError("");
+		try {
+			const picture = await readPictureFile(file, {
+				minWidth: MIN_AVATAR_SIZE,
+				minHeight: MIN_AVATAR_SIZE,
+			});
+			if (selection !== selectionRef.current) {
+				URL.revokeObjectURL(picture.url);
+				return;
+			}
+			setSource({ url: picture.url, originalId: null, file });
+			setEdit(normalizePictureEdit());
+		} catch (err) {
+			if (selection !== selectionRef.current) return;
+			input.value = "";
+			setError(err.message);
+		}
+	};
 
 	const upgradeAvatar = async (e) => {
 		e.preventDefault();
-		const token = await getAuthTokenOnServer();
-		setBtnText(`Processing...`);
+		if (!canSave) return;
+		selectionRef.current += 1;
+		setIsSubmitting(true);
+		setError("");
+		setUploadPercentage(0);
+		let picture;
 		try {
-			const res = await new Promise((resolve, reject) => {
-				const formData = new FormData();
-				formData.append("userId", auth?.data?._id);
-				formData.append("username", auth?.data?.username);
-				formData.append("userEmail", auth?.data?.email);
-				formData.append("onModel", "User");
-				formData.append("file", file);
-				formData.append("album", "profile-avatars");
-
-				const xhr = new XMLHttpRequest();
-
-				xhr.upload.addEventListener("progress", (event) => {
-					if (event.lengthComputable) {
-						setUploadPercentage(Math.round((event.loaded * 100) / event.total));
-						setTimeout(() => setUploadPercentage(0), 10000);
-					}
-				});
-
-				xhr.addEventListener("load", () => {
-					if (xhr.status >= 200 && xhr.status < 300) {
-						const parsed = JSON.parse(xhr.responseText);
-						resolve(parsed);
-						setAvatarData({
-							file: file,
-							filename: parsed.data.location.filename,
-							fileurl: parsed.data.location.secure_location,
-						});
-					} else {
-						reject(
-							new Error(
-								`Upload failed with status ${xhr.status}: ${xhr.statusText}`,
-							),
-						);
-					}
-				});
-
-				xhr.addEventListener("error", () =>
-					reject(new Error("Network error during upload")),
-				);
-				xhr.addEventListener("abort", () =>
-					reject(new Error("Upload aborted")),
-				);
-				xhr.addEventListener("timeout", () =>
-					reject(new Error("Upload timed out")),
-				);
-
-				xhr.open(
-					"PUT",
-					`${process.env.NEXT_PUBLIC_FILE_UPLOADER_URL}/uploads/uploadobject`,
-				);
-				xhr.setRequestHeader("Authorization", `Bearer ${token?.value}`);
-
-				xhr.send(formData);
+			setBtnText("Preparing...");
+			picture = await loadPictureImage(source.url);
+			const settings = normalizePictureEdit(edit);
+			const avatar = await renderPicture(picture.image, settings, {
+				width: AVATAR_SIZE,
+				height: AVATAR_SIZE,
+				name: "avatar",
 			});
+			const original = source.file
+				? await preparePictureFile(source.file, picture.image)
+				: null;
 
-			await fetchurl(
-				`/auth/updateavatar`,
-				"PUT",
-				"no-cache",
-				{
-					avatar: res?.data?._id,
-				},
-				undefined,
-				false,
-				false,
+			setBtnText("Uploading...");
+			const token = await getAuthTokenOnServer();
+			const stored = await uploadInOrder(
+				[
+					...(original ? [{ ...original, album: "all" }] : []),
+					{ ...avatar, album: "profile-avatars" },
+				],
+				token,
+				{ ...uploaderFields(auth), onModel: "User" },
+				setUploadPercentage,
 			);
+			const originalId = original ? stored[0]._id : source.originalId;
+
+			setBtnText("Saving...");
+			const res = await safeFetch(`/auth/updateavatar`, "PUT", "no-cache", {
+				avatar: stored.at(-1)._id,
+				edit: { ...settings, original: originalId },
+			});
+			if (isFailure(res)) {
+				throw new Error(
+					res?.message || res?.error || "Your avatar could not be saved",
+				);
+			}
+
+			setSource((current) => ({ ...current, originalId, file: null }));
+			if (fileInputRef.current) fileInputRef.current.value = "";
+			toast.success("Avatar updated");
+			router.refresh();
 		} catch (err) {
-			toast.error(err?.message || "Something went wrong during upload");
+			const message = err?.message || "Something went wrong during upload";
+			setError(message);
+			toast.error(message);
 		} finally {
-			toast.success("Avatar uploaded");
-			setBtnText(btnText);
+			picture?.release();
+			setIsSubmitting(false);
+			setBtnText("Submit");
 		}
 	};
 
 	const resetForm = () => {
-		setAvatarData({
-			file: null,
-			filename: `Choose file`,
-			fileurl:
-				auth?.data?.files?.avatar?.location?.secure_location ||
-				`https://static.vecteezy.com/system/resources/previews/005/337/799/original/icon-image-not-found-free-vector.jpg`,
-		});
+		selectionRef.current += 1;
+		setSource({ url: saved.url, originalId: saved.originalId, file: null });
+		setEdit(saved.edit);
+		setError("");
+		if (fileInputRef.current) fileInputRef.current.value = "";
 	};
 
 	return (
 		<div className="card-body">
-			<div className="align-content-center d-flex justify-content-center mb-3">
-				<Image
-					src={fileurl}
-					alt="xD"
-					width={150}
-					height={150}
-					style={{
-						width: `150px`,
-						height: `150px`,
-						objectFit: "cover",
-					}}
-					priority={true}
-					className="img-thumbnail rounded-circle"
+			<form onSubmit={upgradeAvatar} aria-busy={isSubmitting}>
+				<PictureEditor
+					src={source.url}
+					alt={`${auth?.data?.username || "Your"} avatar`}
+					label="Avatar"
+					shape="circle"
+					aspectRatio={1}
+					maxWidth={320}
+					value={edit}
+					onChange={setEdit}
+					onStatusChange={setEditorStatus}
+					disabled={isSubmitting}
 				/>
-			</div>
-			<form onSubmit={upgradeAvatar}>
 				<label htmlFor="avatar" className="form-label">
-					File
+					Choose a new picture
 				</label>
 				<input
+					ref={fileInputRef}
 					id="avatar"
 					name="file"
-					label={file}
-					onChange={(e) => {
-						const myFile = e.target.files[0];
-						let preview = "";
-						if (myFile instanceof Blob || myFile instanceof File) {
-							preview = URL.createObjectURL(myFile);
-						}
-						setAvatarData({
-							file: myFile,
-							filename: myFile.name,
-							fileurl: preview,
-						});
-					}}
 					type="file"
-					className="form-control mb-3"
-					placeholder={fileurl || filename}
-					accept={`image/*`}
+					accept="image/*"
+					className="form-control mb-1"
+					onChange={handleFileChange}
+					disabled={isSubmitting}
+					aria-describedby="avatar-help"
 				/>
+				<div id="avatar-help" className="form-text mb-3">
+					JPG, PNG, WebP or GIF of at least {MIN_AVATAR_SIZE} ×{" "}
+					{MIN_AVATAR_SIZE} px. Big photos are resized before uploading.
+				</div>
+				{error ? (
+					<div className="alert alert-danger py-2" role="alert">
+						{error}
+					</div>
+				) : null}
 				<UseProgress percentage={uploadPercentage} />
-				<button type="submit" className="btn btn-secondary btn-sm float-start">
-					{btnText}
-				</button>
-				<button
-					type="button"
-					className="btn btn-secondary btn-sm float-end"
-					onClick={resetForm}
-				>
-					Reset
-				</button>
+				<div className="d-flex justify-content-between">
+					<button
+						type="submit"
+						className="btn btn-secondary btn-sm"
+						disabled={!canSave}
+					>
+						{btnText}
+					</button>
+					<button
+						type="button"
+						className="btn btn-secondary btn-sm"
+						onClick={resetForm}
+						disabled={isSubmitting}
+					>
+						Reset
+					</button>
+				</div>
 			</form>
 		</div>
 	);

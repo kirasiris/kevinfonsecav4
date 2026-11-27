@@ -1,167 +1,262 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-import Image from "next/image";
-import { fetchurl, getAuthTokenOnServer } from "@/helpers/setTokenOnServer";
+import { getAuthTokenOnServer } from "@/helpers/setTokenOnServer";
+import {
+	isFailure,
+	safeFetch,
+	uploadFileToServer,
+	uploaderFields,
+} from "@/helpers/filemanagerhelpers";
 import UseProgress from "@/components/global/useprogress";
+import PictureEditor, {
+	isSamePictureEdit,
+	loadPictureImage,
+	normalizePictureEdit,
+	preparePictureFile,
+	readPictureFile,
+	renderPicture,
+} from "@/components/auth/pictureeditor";
+
+const COVER_WIDTH = 1920;
+const COVER_HEIGHT = 768;
+const MIN_COVER_WIDTH = 640;
+const MIN_COVER_HEIGHT = 256;
+
+const savedCoverOf = (auth) => {
+	const edit = auth?.data?.pictureEdits?.cover;
+	if (edit?.original?.location?.secure_location) {
+		return {
+			url: edit.original.location.secure_location,
+			originalId: edit.original._id,
+			edit: normalizePictureEdit(edit),
+			isEdited: true,
+		};
+	}
+	const cover = auth?.data?.files?.cover;
+	return {
+		url: cover?.location?.secure_location || "",
+		originalId: cover?._id || null,
+		edit: normalizePictureEdit(),
+		isEdited: false,
+	};
+};
+
+const uploadInOrder = async (items, token, fields, onProgress) => {
+	const totalBytes = items.reduce((sum, item) => sum + item.blob.size, 0) || 1;
+	const stored = [];
+	let sentBytes = 0;
+	for (const item of items) {
+		const { res } = uploadFileToServer({
+			blob: item.blob,
+			filename: item.filename,
+			token,
+			fields: { ...fields, album: item.album },
+			onProgress: (percent) =>
+				onProgress(
+					Math.round(
+						((sentBytes + (item.blob.size * percent) / 100) * 100) / totalBytes,
+					),
+				),
+		});
+		const { file } = await res;
+		if (!file?.data?._id) {
+			throw new Error("The upload finished but no file came back");
+		}
+		stored.push(file.data);
+		sentBytes += item.blob.size;
+	}
+	return stored;
+};
 
 const UpdateCoverForm = ({ auth = {} }) => {
-	const [coverData, setCoverData] = useState({
+	const router = useRouter();
+	const saved = useMemo(() => savedCoverOf(auth), [auth]);
+
+	const [source, setSource] = useState(() => ({
+		url: saved.url,
+		originalId: saved.originalId,
 		file: null,
-		filename: `Choose file`,
-		fileurl:
-			auth?.data?.files?.cover?.location?.secure_location ||
-			`https://static.vecteezy.com/system/resources/previews/005/337/799/original/icon-image-not-found-free-vector.jpg`,
-	});
-
-	const { file, filename, fileurl } = coverData;
-
+	}));
+	const [edit, setEdit] = useState(saved.edit);
+	const [editorStatus, setEditorStatus] = useState("loading");
 	const [uploadPercentage, setUploadPercentage] = useState(0);
-
+	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [btnText, setBtnText] = useState("Submit");
+	const [error, setError] = useState("");
+
+	const fileInputRef = useRef(null);
+	const selectionRef = useRef(0);
+
+	useEffect(() => {
+		if (!source.url.startsWith("blob:")) return;
+		const url = source.url;
+		return () => URL.revokeObjectURL(url);
+	}, [source.url]);
+
+	useEffect(
+		() => () => {
+			selectionRef.current += 1;
+		},
+		[],
+	);
+
+	const hasChanges =
+		Boolean(source.file) ||
+		source.originalId !== saved.originalId ||
+		!isSamePictureEdit(edit, saved.edit);
+	const canSave =
+		editorStatus === "ready" &&
+		!isSubmitting &&
+		(hasChanges || !saved.isEdited);
+
+	const handleFileChange = async (e) => {
+		const input = e.currentTarget;
+		const file = input.files?.[0];
+		if (!file) return;
+		const selection = ++selectionRef.current;
+		setError("");
+		try {
+			const picture = await readPictureFile(file, {
+				minWidth: MIN_COVER_WIDTH,
+				minHeight: MIN_COVER_HEIGHT,
+			});
+			if (selection !== selectionRef.current) {
+				URL.revokeObjectURL(picture.url);
+				return;
+			}
+			setSource({ url: picture.url, originalId: null, file });
+			setEdit(normalizePictureEdit());
+		} catch (err) {
+			if (selection !== selectionRef.current) return;
+			input.value = "";
+			setError(err.message);
+		}
+	};
 
 	const upgradeCover = async (e) => {
 		e.preventDefault();
-		setBtnText(`Processing...`);
-		const token = await getAuthTokenOnServer();
+		if (!canSave) return;
+		selectionRef.current += 1;
+		setIsSubmitting(true);
+		setError("");
+		setUploadPercentage(0);
+		let picture;
 		try {
-			const res = await new Promise((resolve, reject) => {
-				const formData = new FormData();
-				formData.append("userId", auth?.data?._id);
-				formData.append("username", auth?.data?.username);
-				formData.append("userEmail", auth?.data?.email);
-				formData.append("onModel", "User");
-				formData.append("file", file);
-				formData.append("album", "profile-covers");
-
-				const xhr = new XMLHttpRequest();
-
-				xhr.upload.addEventListener("progress", (event) => {
-					if (event.lengthComputable) {
-						setUploadPercentage(Math.round((event.loaded * 100) / event.total));
-						setTimeout(() => setUploadPercentage(0), 10000);
-					}
-				});
-
-				xhr.addEventListener("load", () => {
-					if (xhr.status >= 200 && xhr.status < 300) {
-						const parsed = JSON.parse(xhr.responseText);
-						resolve(parsed);
-						setCoverData({
-							file: file,
-							filename: parsed.data.location.filename,
-							fileurl: parsed.data.location.secure_location,
-						});
-					} else {
-						reject(
-							new Error(
-								`Upload failed with status ${xhr.status}: ${xhr.statusText}`,
-							),
-						);
-					}
-				});
-
-				xhr.addEventListener("error", () =>
-					reject(new Error("Network error during upload")),
-				);
-				xhr.addEventListener("abort", () =>
-					reject(new Error("Upload aborted")),
-				);
-				xhr.addEventListener("timeout", () =>
-					reject(new Error("Upload timed out")),
-				);
-
-				xhr.open(
-					"PUT",
-					`${process.env.NEXT_PUBLIC_FILE_UPLOADER_URL}/uploads/uploadobject`,
-				);
-				xhr.setRequestHeader("Authorization", `Bearer ${token?.value}`);
-
-				xhr.send(formData);
+			setBtnText("Preparing...");
+			picture = await loadPictureImage(source.url);
+			const settings = normalizePictureEdit(edit);
+			const cover = await renderPicture(picture.image, settings, {
+				width: COVER_WIDTH,
+				height: COVER_HEIGHT,
+				name: "cover",
 			});
+			const original = source.file
+				? await preparePictureFile(source.file, picture.image)
+				: null;
 
-			await fetchurl(
-				`/auth/updatecover`,
-				"PUT",
-				"no-cache",
-				{
-					cover: res?.data?._id,
-				},
-				undefined,
-				false,
-				false,
+			setBtnText("Uploading...");
+			const token = await getAuthTokenOnServer();
+			const stored = await uploadInOrder(
+				[
+					...(original ? [{ ...original, album: "all" }] : []),
+					{ ...cover, album: "profile-covers" },
+				],
+				token,
+				{ ...uploaderFields(auth), onModel: "User" },
+				setUploadPercentage,
 			);
+			const originalId = original ? stored[0]._id : source.originalId;
+
+			setBtnText("Saving...");
+			const res = await safeFetch(`/auth/updatecover`, "PUT", "no-cache", {
+				cover: stored.at(-1)._id,
+				edit: { ...settings, original: originalId },
+			});
+			if (isFailure(res)) {
+				throw new Error(
+					res?.message || res?.error || "Your cover could not be saved",
+				);
+			}
+
+			setSource((current) => ({ ...current, originalId, file: null }));
+			if (fileInputRef.current) fileInputRef.current.value = "";
+			toast.success("Cover updated");
+			router.refresh();
 		} catch (err) {
-			toast.error(err?.message || "Something went wrong during upload");
+			const message = err?.message || "Something went wrong during upload";
+			setError(message);
+			toast.error(message);
 		} finally {
-			toast.success("Cover uploaded");
-			setBtnText(btnText);
+			picture?.release();
+			setIsSubmitting(false);
+			setBtnText("Submit");
 		}
 	};
 
 	const resetForm = () => {
-		setCoverData({
-			file: null,
-			filename: `Choose file`,
-			fileurl:
-				auth?.data?.files?.cover?.location?.secure_location ||
-				`https://static.vecteezy.com/system/resources/previews/005/337/799/original/icon-image-not-found-free-vector.jpg`,
-		});
+		selectionRef.current += 1;
+		setSource({ url: saved.url, originalId: saved.originalId, file: null });
+		setEdit(saved.edit);
+		setError("");
+		if (fileInputRef.current) fileInputRef.current.value = "";
 	};
 
 	return (
 		<div className="card-body">
-			<div className="align-content-center d-flex justify-content-center mb-3">
-				<Image
-					src={fileurl}
-					alt="xD"
-					width={813}
-					height={457}
-					style={{
-						width: `813px`,
-						height: `457px`,
-						objectFit: "cover",
-					}}
-					priority={true}
-					className="img-thumbnail"
+			<form onSubmit={upgradeCover} aria-busy={isSubmitting}>
+				<PictureEditor
+					src={source.url}
+					alt={`${auth?.data?.username || "Your"} cover`}
+					label="Cover"
+					aspectRatio={COVER_WIDTH / COVER_HEIGHT}
+					value={edit}
+					onChange={setEdit}
+					onStatusChange={setEditorStatus}
+					disabled={isSubmitting}
 				/>
-			</div>
-			<form onSubmit={upgradeCover}>
 				<label htmlFor="cover" className="form-label">
-					File
+					Choose a new picture
 				</label>
 				<input
+					ref={fileInputRef}
 					id="cover"
 					name="file"
-					label={file}
-					onChange={(e) => {
-						const myFile = e.target.files[0];
-						let preview = "";
-						if (myFile instanceof Blob || myFile instanceof File) {
-							preview = URL.createObjectURL(myFile);
-						}
-						setCoverData({
-							file: myFile,
-							filename: myFile.name,
-							fileurl: preview,
-						});
-					}}
 					type="file"
-					className="form-control mb-3"
-					placeholder={fileurl || filename}
-					accept={`image/*`}
+					accept="image/*"
+					className="form-control mb-1"
+					onChange={handleFileChange}
+					disabled={isSubmitting}
+					aria-describedby="cover-help"
 				/>
+				<div id="cover-help" className="form-text mb-3">
+					JPG, PNG, WebP or GIF of at least {MIN_COVER_WIDTH} ×{" "}
+					{MIN_COVER_HEIGHT} px. Big photos are resized before uploading.
+				</div>
+				{error ? (
+					<div className="alert alert-danger py-2" role="alert">
+						{error}
+					</div>
+				) : null}
 				<UseProgress percentage={uploadPercentage} />
-				<button type="submit" className="btn btn-secondary btn-sm float-start">
-					{btnText}
-				</button>
-				<button
-					type="button"
-					className="btn btn-secondary btn-sm float-end"
-					onClick={resetForm}
-				>
-					Reset
-				</button>
+				<div className="d-flex justify-content-between">
+					<button
+						type="submit"
+						className="btn btn-secondary btn-sm"
+						disabled={!canSave}
+					>
+						{btnText}
+					</button>
+					<button
+						type="button"
+						className="btn btn-secondary btn-sm"
+						onClick={resetForm}
+						disabled={isSubmitting}
+					>
+						Reset
+					</button>
+				</div>
 			</form>
 		</div>
 	);
